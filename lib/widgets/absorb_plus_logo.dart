@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../services/player_settings.dart';
 import '../utils/app_motion.dart';
@@ -197,21 +198,37 @@ class AnimatedAbsorbDrop extends StatefulWidget {
   State<AnimatedAbsorbDrop> createState() => _AnimatedAbsorbDropState();
 }
 
-class _AnimatedAbsorbDropState extends State<AnimatedAbsorbDrop> {
+class _AnimatedAbsorbDropState extends State<AnimatedAbsorbDrop>
+    with SingleTickerProviderStateMixin {
   /// The motion runs at a steady 15 updates a second instead of every display
   /// frame: at 24 px it looks the same, and the app doesn't redraw at 60-144
   /// fps for the whole time audio plays.
   static const _step = Duration(milliseconds: 66);
-  Timer? _timer;
+
+  /// A gap longer than this between two updates means the motion was paused
+  /// (muted or no frames); it carries on from where it was instead of jumping.
+  static const _maxGap = Duration(milliseconds: 200);
+
+  /// Each update is one frame of this ticker, started by [_pace] 66 ms after
+  /// the last. A ticker under TickerMode(enabled: false) (a covered route, a
+  /// hidden tab) or with frames off (minimized, backgrounded) never fires, so
+  /// the motion simply waits there and nothing wakes up 15 times a second.
+  Ticker? _ticker;
+  Timer? _pace;
+  bool _running = false;
+  Duration? _lastStepAt; // frame time of the last update
+  Duration? _dueAt; // frame time the next update is due
   final _motion = _DropMotion();
   bool _reduced = false;
   double _time = 0;
 
-  bool get _running => _timer != null;
-
-  void _stopTimer() {
-    _timer?.cancel();
-    _timer = null;
+  void _stopMotion() {
+    _pace?.cancel();
+    _pace = null;
+    _ticker?.stop();
+    _running = false;
+    _lastStepAt = null;
+    _dueAt = null;
   }
 
   bool get _wantsMotion => widget.animating && !_reduced;
@@ -238,29 +255,55 @@ class _AnimatedAbsorbDropState extends State<AnimatedAbsorbDrop> {
   void _sync() {
     if (_reduced) {
       // Snap to the static logo; no fade-out frames.
-      _stopTimer();
+      _stopMotion();
       _motion.set(0, 0);
       return;
     }
     if (_wantsMotion && !_running) {
       _time = 0;
-      _timer = Timer.periodic(_step, (_) => _onTick());
+      _running = true;
+      _waitFor(_step);
     }
     // When motion is no longer wanted, the running ticker fades the bars back
-    // to the logo heights and stops itself (see _onTick).
+    // to the logo heights and stops itself (see _onFrame).
   }
 
-  void _onTick() {
-    const dt = 66 / 1000;
+  void _waitFor(Duration delay) {
+    _pace?.cancel();
+    _pace = Timer(delay, () {
+      _pace = null;
+      final ticker = _ticker ??= createTicker(_onFrame);
+      if (_running && !ticker.isActive) ticker.start();
+    });
+  }
+
+  void _onFrame(Duration _) {
+    _ticker?.stop();
+    final now = SchedulerBinding.instance.currentFrameTimeStamp;
+    final last = _lastStepAt;
+    _lastStepAt = now;
+    var dt = last == null ? _step : now - last;
+    if (dt > _maxGap) dt = _step;
+    _onTick(dt.inMicroseconds / Duration.microsecondsPerSecond);
+    if (!_running) return;
+    // Aim at 66 ms after the previous update was due, so waiting for the
+    // frame doesn't slow the steady 15 a second; after a pause, start over.
+    var due = (_dueAt ?? now) + _step;
+    if (due <= now) due = now + _step; // more than a step behind
+    _dueAt = due;
+    _waitFor(due - now);
+  }
+
+  void _onTick(double dt) {
     _time += dt;
     final t = _time;
-    const step = dt / AnimatedAbsorbDrop.rampSeconds;
+    final step = dt / AnimatedAbsorbDrop.rampSeconds;
     final envelope = (_motion.envelope + (_wantsMotion ? step : -step)).clamp(
       0.0,
       1.0,
     );
     if (!_wantsMotion && envelope == 0) {
-      _stopTimer();
+      _stopMotion();
       _motion.set(0, 0);
       return;
     }
@@ -269,7 +312,8 @@ class _AnimatedAbsorbDropState extends State<AnimatedAbsorbDrop> {
 
   @override
   void dispose() {
-    _stopTimer();
+    _stopMotion();
+    _ticker?.dispose();
     _motion.dispose();
     super.dispose();
   }
