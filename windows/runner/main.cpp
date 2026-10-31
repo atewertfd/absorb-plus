@@ -43,6 +43,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
 
   project.set_dart_entrypoint_arguments(std::move(command_line_arguments));
 
+  // Skia instead of Impeller (owner OK to try, 2026-10-31): Impeller held
+  // the window for ~900 ms at every launch while compiling shaders; with
+  // Skia the window shows in ~360 ms instead of ~1.2 s (probe build,
+  // docs/audit/perf-and-fixes-2026-10-31.md).
+  project.set_impeller_switch(flutter::ImpellerSwitch::Disabled);
+
   FlutterWindow window(project, launch);
   Win32Window::Point origin(10, 10);
   Win32Window::Size size(1280, 720);
