@@ -7177,5 +7177,21 @@
   "desktopDownloadFolderOpenFailed": "Couldn't open the folder",
   "desktopDownloadFolderNotWritable": "Absorb can't save files in that folder. Choose another one.",
   "desktopDownloadFolderPickFailed": "Couldn't show the folder picker",
-  "desktopDownloadFolderDefault": "Default folder"
+  "desktopDownloadFolderDefault": "Default folder",
+  "bookSettingsTitle": "Book settings",
+  "bookSettingsSeries": "Series: {name}",
+  "@bookSettingsSeries": {"placeholders": {"name": {"type": "String"}}},
+  "bookSettingsSpeed": "Speed",
+  "bookSettingsSpeedFromSeries": "From the last book you played in this series",
+  "bookSettingsSkipIntro": "Skip intro",
+  "bookSettingsSkipIntroHint": "Only when the book starts from the beginning",
+  "bookSettingsSkipOutro": "Skip outro",
+  "bookSettingsSkipOutroHint": "Ends the book early and marks it finished",
+  "bookSettingsSkipOff": "Off",
+  "bookSettingsSeconds": "{seconds} s",
+  "@bookSettingsSeconds": {"placeholders": {"seconds": {"type": "int"}}},
+  "bookSettingsWholeSeries": "Use for the whole series",
+  "bookSettingsWholeSeriesHint": "Intro and outro apply to every book in this series",
+  "bookSettingsReset": "Reset",
+  "bookSettingsResetDone": "Book settings reset"
 }

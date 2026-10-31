@@ -43,6 +43,8 @@ import '../services/bookmark_service.dart';
 import '../services/download_service.dart';
 import '../services/narrated_books.dart';
 import 'book_files_sheet.dart';
+import 'book_settings_sheet.dart';
+import '../services/book_settings_service.dart';
 import '../services/transcription_service.dart';
 import '../services/ebook_cache.dart';
 import '../services/progress_sync_service.dart';
@@ -84,6 +86,7 @@ String _recentDetailKey(String itemId) =>
     '${UserAccountService().activeScopeKey}|$itemId';
 
 void _rememberDetailItem(String itemId, Map<String, dynamic> item) {
+  BookSettingsService.rememberSeriesFromItem(itemId, item); // Absorb Plus
   final key = _recentDetailKey(itemId);
   _recentDetailItems.remove(key);
   _recentDetailItems[key] = item;
@@ -2030,6 +2033,10 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         }
         if (serverEbookFile != null && auth.ereaderDevices.isNotEmpty) {
           add(Icons.send_to_mobile_rounded, l.sendToEreader, () => _sendToEreader(context, auth));
+        }
+        if (!isEbookOnly && !lib.isPodcastLibrary) { // Absorb Plus
+          add(Icons.tune_rounded, l.bookSettingsTitle, () => showBookSettingsSheet(context,
+            itemId: widget.itemId, item: _item, accent: _coverScheme?.primary ?? cs.primary));
         }
         if (progress > 0 || isFinished) {
           add(Icons.restart_alt_rounded, l.resetProgress, () => _resetProgress(context, auth, duration));
