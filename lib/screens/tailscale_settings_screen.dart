@@ -10,6 +10,7 @@ import '../services/tailscale_routing.dart';
 import '../services/tailscale_service.dart';
 import '../ui_themes/ui_theme_hooks.dart';
 import '../widgets/overlay_toast.dart';
+import '../widgets/tailscale_login_panel.dart';
 
 /// One-line status for the built-in Tailscale node, shared by the settings
 /// tile and the screen.
@@ -88,8 +89,8 @@ class TailscaleLoginShortcut extends StatelessWidget {
       listenable: Listenable.merge([server, svc]),
       builder: (context, _) => showsFor(svc, server.value.text)
           ? Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: TailscaleSettingsTile(service: svc),
+              padding: const EdgeInsets.only(top: 12),
+              child: TailscaleLoginPanel(service: svc),
             )
           // Everyone else: one quiet line, so the feature is easy to find.
           : Align(

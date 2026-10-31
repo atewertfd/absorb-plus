@@ -6,6 +6,7 @@ import 'package:absorb/services/api_service.dart';
 import 'package:absorb/services/tailscale_native.dart';
 import 'package:absorb/services/tailscale_service.dart';
 import 'package:absorb/services/windows_media_cover.dart';
+import 'package:absorb/widgets/tailscale_login_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -399,5 +400,24 @@ void main() {
     await ts.setEnabled(true);
     expect(TailscaleLoginShortcut.showsFor(ts, 'abs.example.com'), isTrue);
     await ts.setEnabled(false);
+  });
+
+  testWidgets('sign-in panel: off shows the pitch and a switch; Advanced opens the full screen',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final ts = make();
+    await tester.runAsync(ts.init);
+    await tester.pumpWidget(MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: Scaffold(body: TailscaleLoginPanel(service: ts)),
+    ));
+    expect(find.text('Tailscale (built-in)'), findsOneWidget);
+    expect(find.textContaining('without turning on the Tailscale VPN'), findsOneWidget);
+    expect(find.byType(Switch), findsOneWidget);
+    expect(find.text('Sign in with Tailscale'), findsNothing);
+    await tester.tap(find.text('Advanced'));
+    await tester.pumpAndSettle();
+    expect(find.byType(TailscaleSettingsScreen), findsOneWidget);
   });
 }
