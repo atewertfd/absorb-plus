@@ -18,6 +18,9 @@ void initializeDesktopAudio() {
   // default) ran dry for a moment. A second of buffer rides out short
   // stalls; pause and seek stay instant (mpv drops the buffer for those).
   JustAudioMediaKit.mpvProperties = const {'audio-buffer': '1.0'};
+  // Diagnosing crackling (owner, 2026-10-31): mpv's info level logs the
+  // audio output it opens (device format, rate) and warns on underruns.
+  JustAudioMediaKit.mpvLogLevel = MPVLogLevel.info;
   JustAudioMediaKit.ensureInitialized(windows: true, linux: true);
   _initialized = true;
 }

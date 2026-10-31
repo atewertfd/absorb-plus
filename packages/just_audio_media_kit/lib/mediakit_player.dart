@@ -1,5 +1,6 @@
 library just_audio_media_kit;
 
+import 'package:flutter/foundation.dart';
 import 'dart:async';
 
 import 'package:just_audio_media_kit/just_audio_media_kit.dart';
@@ -174,8 +175,9 @@ class MediaKitPlayer extends AudioPlayerPlatform {
         _dataController.add(PlayerDataMessage(speed: rate));
       }),
       _player.stream.log.listen((event) {
-        // ignore: avoid_print
-        print("MPV: [${event.level}] ${event.prefix}: ${event.text}");
+        // Absorb Plus patch: through debugPrint, so mpv's warnings (audio
+        // underruns, output format) reach the app's log file.
+        debugPrint('[mpv] [${event.level}] ${event.prefix}: ${event.text.trim()}');
       }),
     ];
   }

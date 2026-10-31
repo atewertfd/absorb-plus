@@ -9,4 +9,7 @@ that the plugin doesn't expose.
   Windows/Linux against crackling and pops
   (`lib/services/desktop_audio_native.dart`).
 
+- mpv log lines go through `debugPrint` (was `print`), so they reach the
+  app's log file.
+
 Everything else is unchanged from the published 2.1.0.

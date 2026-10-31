@@ -10,6 +10,9 @@ import 'package:logging/logging.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:universal_platform/universal_platform.dart';
 
+// Absorb Plus patch: lets the app pick the mpv log level (see PATCHES.md).
+export 'package:media_kit/media_kit.dart' show MPVLogLevel;
+
 class JustAudioMediaKit extends JustAudioPlatform {
   JustAudioMediaKit();
 
