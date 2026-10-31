@@ -427,9 +427,16 @@ class _AppShellState extends State<AppShell>
     context.read<LibraryProvider>().addListener(_onLibraryChanged);
     _loadPodcastTabPrefs();
     PlayerSettings.settingsChanged.addListener(_loadPodcastTabPrefs);
-    _showLaunchPrompts();
-    _checkForUpdate();
+    // Update check after the launch prompts, so its dialog never lands on
+    // What's new; then hourly, for a copy that stays open for days (tray).
+    _showLaunchPrompts().whenComplete(() {
+      if (mounted) _checkForUpdate();
+    });
+    _updateTimer = Timer.periodic(const Duration(hours: 1), (_) => _checkForUpdate());
   }
+
+  Timer? _updateTimer;
+  bool _updateDialogOpen = false;
 
   /// One after another, so they never land on top of each other.
   Future<void> _showLaunchPrompts() async {
@@ -518,19 +525,25 @@ class _AppShellState extends State<AppShell>
   static bool get _updatesEnabled => _isGithubBuild || Platform.isWindows;
 
   void _checkForUpdate() async {
-    if (!_updatesEnabled) return;
+    if (!_updatesEnabled || _updateDialogOpen) return;
     final includePreReleases = await PlayerSettings.getIncludePreReleases();
     final info = await UpdateCheckerService.checkAutomatically(
       includePreReleases: includePreReleases,
     );
-    if (info == null || !mounted) return;
-    await UpdateDialog.show(context, info);
+    if (info == null || !mounted || _updateDialogOpen) return;
+    _updateDialogOpen = true;
+    try {
+      await UpdateDialog.show(context, info);
+    } finally {
+      _updateDialogOpen = false;
+    }
   }
 
   StreamSubscription<ServerNotification>? _incomingNotifications;
 
   @override
   void dispose() {
+    _updateTimer?.cancel();
     _incomingNotifications?.cancel();
     _fadeController.dispose();
     _detachNavBarListener();
