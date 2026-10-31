@@ -2,7 +2,7 @@
 
 #include <optional>
 
-#include "flutter/generated_plugin_registrant.h"
+#include "deferred_plugins.h"
 
 FlutterWindow::FlutterWindow(const flutter::DartProject& project,
                              const LaunchOptions& launch)
@@ -28,7 +28,8 @@ bool FlutterWindow::OnCreate() {
   if (!flutter_controller_->engine() || !flutter_controller_->view()) {
     return false;
   }
-  RegisterPlugins(flutter_controller_->engine());
+  // All but the in-app WebView, which follows the first frame.
+  RegisterStartupPlugins(flutter_controller_->engine());
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
   shell_ = std::make_unique<WindowsShell>(
       this, flutter_controller_->engine()->messenger(), launch_);
@@ -40,6 +41,7 @@ bool FlutterWindow::OnCreate() {
     } else {
       this->Show();
     }
+    RegisterDeferredPlugins();
   });
 
   // Flutter can complete the first frame before the "show window" callback is

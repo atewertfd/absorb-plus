@@ -51,6 +51,23 @@ Measured startup (owner's PC, `[Startup]` log):
 | B12 | Stats rebuilds all content every animation frame; Absorbing reads prefs in `build`; Settings is one huge Column; series caches unbounded; reader page-curl images never disposed | `stats_screen.dart:484`, `absorbing_screen.dart:602`, `settings_screen.dart:1890`, `_lp_state.dart:79`, `ebook_reader_view.dart:1276` (up) | As named | low |
 | B13 | Small items | various | Settings-sync hash every 45 s; download progress builds Android Auto signatures on Windows; `sessionData` decoded repeatedly; podcasts load the personalized view twice; sub-series one request per book; stats then sessions run in sequence; per-line `RegExp` in `LogService`; per-download and per-card log lines | low |
 
+### B2 and B6 follow-up (`claude/faster-launch`)
+
+Where the 1.2 s before `main()` goes. Measured on the probe (`tool/windows_shell_probe.dart timing`, no account data), warm runs on the owner's PC: process start to `main()` about 1150 ms, with Dart `main()` running only after the runner's `OnCreate` returns.
+
+| Step | Time |
+|---|---|
+| Loader and DLLs up to `wWinMain` | ~13 ms |
+| `FlutterViewController` constructor | ~1080 ms |
+| ...of which ANGLE's Direct3D 11 device on the NVIDIA GPU (driver load and signature checks) | ~165 ms |
+| ...of which **Impeller's start-up**: the main thread waits ~900 ms while worker threads compile shaders with `d3dcompiler_47` (the engine logs "Using the Impeller rendering backend (OpenGLESSDF)") | ~900 ms |
+| Plugin registration (the in-app WebView took ~45 ms of it) | ~50 ms → ~6 ms |
+| Window setup to the first frame | ~35 ms |
+
+- **Done:** the WebView plugin is registered after the first frame (`windows/runner/deferred_plugins.cpp`). Launch → `main()` dropped from 1151 to 1095 ms (median of 12), window visible from 1201 to 1132 ms.
+- **Not done, owner decision:** with `project.set_impeller_switch(flutter::ImpellerSwitch::Disabled)` (Skia), launch → `main()` measured about 280 ms and the window showed at about 360 ms. That changes the renderer, so it needs a visual check and an owner OK first.
+- B6 done: authorize overlaps the ping when no local address is set, `/status` is skipped when authorize carried the version, and the last library's shelves load alongside the library list.
+
 Not worth changing:
 
 - Logging volume (about 60 lines/min, under 5 ms/min).

@@ -38,6 +38,7 @@ import '../services/ebook_cache.dart';
 import '../services/screen_wake.dart';
 import '../services/up_next_narration.dart';
 import '../services/narrated_books.dart';
+import '../services/startup_overlap.dart';
 
 part '_lp_state.dart';
 part '_lp_core.dart';
@@ -406,6 +407,16 @@ class LibraryProvider extends ChangeNotifier
     _errorMessage = null;
     notifyListeners();
 
+    // Fork (B6): on a cold start the last library's shelves load alongside
+    // the library list.
+    final early = EarlyShelves.start(
+      librariesFromCache: _librariesFromCache,
+      selectedLibraryId: _selectedLibraryId,
+      load: () async {
+        await _loadSectionPrefs();
+        await loadPersonalizedView(force: true);
+      },
+    );
     try {
       final fetched = await _api!.getLibraries();
       debugPrint('[Library] loadLibraries: got ${fetched.length} libraries');
@@ -417,9 +428,19 @@ class LibraryProvider extends ChangeNotifier
         debugPrint('[Library] Saved ${fetched.length} libraries for offline starts');
         await _restoreSelectedLibrary();
 
-        await _loadSectionPrefs();
-        await loadPersonalizedView(force: true);
+        if (early == null || !await early.covers(() => _selectedLibraryId)) {
+          // The early load was for a library that is gone: drop its shelves.
+          if (early != null) {
+            debugPrint('[Library] Library ${early.libraryId} is gone - reloading shelves');
+            _personalizedSections = [];
+            _sectionsByLibrary.remove(_selectedLibraryId);
+            _sectionsFetchedAt.remove(_selectedLibraryId);
+          }
+          await _loadSectionPrefs();
+          await loadPersonalizedView(force: true);
+        }
       } else {
+        await early?.settle();
         // getLibraries swallows network/auth failures and returns an empty
         // list, so empty is indistinguishable from a failed fetch. Keep the
         // current list, cache, and selection instead of wiping them.

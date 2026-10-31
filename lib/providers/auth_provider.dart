@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/startup_timing.dart';
+import '../services/startup_overlap.dart';
 import '../services/api_service.dart';
 import '../services/bookorbit_admin.dart';
 import '../services/auth_tokens.dart';
@@ -187,7 +188,9 @@ class AuthProvider extends ChangeNotifier {
   /// version cache stayed empty for a process that only ever restored a
   /// session - stream URLs would fall back to the tokened form even on a
   /// server whose version had already been learned in an earlier process.
-  void _applyAuthorizeServerInfo(Map<String, dynamic> auth, String serverUrl) {
+  /// Returns whether the answer carried the version (fork: then /status
+  /// isn't asked again).
+  bool _applyAuthorizeServerInfo(Map<String, dynamic> auth, String serverUrl) {
     final sSettings = auth['serverSettings'] as Map<String, dynamic>?;
     if (sSettings != null) _serverSettings = sSettings;
     final version =
@@ -195,7 +198,9 @@ class AuthProvider extends ChangeNotifier {
     if (version != null && version.isNotEmpty) {
       _serverVersion = version;
       ApiService.cacheServerVersion(serverUrl, version);
+      return true;
     }
+    return false;
   }
 
   /// Re-cache server settings after an admin saves them via PATCH /api/settings
@@ -617,14 +622,20 @@ class AuthProvider extends ChangeNotifier {
         // Load local server config
         await _loadLocalServerSettings();
 
-        final reachable = await _pingServers(restoredUrl, sw);
+        // Fork: with no local address to pick first, authorize goes out
+        // alongside the ping instead of after it (B6).
+        final overlap = !(_localServerEnabled && _localServerUrl.isNotEmpty);
+        final ((:reachable, auth: earlyAuth), overlapApi) = overlap
+            ? await _authorizeWhilePinging(restoredUrl, sw)
+            : ((reachable: await _pingServers(restoredUrl, sw), auth: null), null);
         _serverReachable = reachable;
 
         // Fetch full user info (needed for isAdmin, permissions, etc.)
         if (reachable) {
+          var versionKnown = false; // fork
           try {
             debugPrint('[Auth] fetching /me... (${sw.elapsedMilliseconds}ms)');
-            final api = _createSessionApi(
+            final api = overlapApi ?? _createSessionApi(
               baseUrl: activeServerUrl!,
               token: savedToken,
               refreshToken: savedRefreshToken,
@@ -634,7 +645,7 @@ class AuthProvider extends ChangeNotifier {
             // full login payload (including ereaderDevices) — /api/me drops
             // those extras. Fall back to /api/me if authorize fails (older
             // server versions).
-            final auth = await api.authorize();
+            final auth = overlap ? earlyAuth : await api.authorize();
             if (auth != null) {
               final user = auth['user'] as Map<String, dynamic>?;
               if (user != null) {
@@ -646,7 +657,7 @@ class AuthProvider extends ChangeNotifier {
                 _ereaderDevices = devicesRaw.cast<Map<String, dynamic>>();
                 await _persistEreaderDevices();
               }
-              _applyAuthorizeServerInfo(auth, activeServerUrl!);
+              versionKnown = _applyAuthorizeServerInfo(auth, activeServerUrl!);
               final defaultLib = auth['userDefaultLibraryId'] as String?;
               if (defaultLib != null) _defaultLibraryId = defaultLib;
             } else {
@@ -662,7 +673,7 @@ class AuthProvider extends ChangeNotifier {
               '[Auth] authorize/me done (${sw.elapsedMilliseconds}ms)',
             );
           } catch (_) {}
-          _fetchServerVersion(activeServerUrl!);
+          if (!versionKnown) _fetchServerVersion(activeServerUrl!);
         }
       } else if (savedUrl != null) {
         // A rejected refresh clears credentials but keeps enough identity to
@@ -1296,6 +1307,40 @@ class AuthProvider extends ChangeNotifier {
     return reachable;
   }
 
+  /// Fork (B6): a launch with no local address sends authorize alongside the
+  /// ping; see [authorizeWhilePinging] for how the answers are combined.
+  /// Returns the session API it used, for the `/api/me` fallback.
+  ///
+  /// A session that expires during this authorize only signs out when the
+  /// launch went on as reachable: before, an unreachable launch never sent
+  /// authorize at all. Refreshed tokens are always kept.
+  Future<(RestoreProbe, ApiService)> _authorizeWhilePinging(
+    String remoteUrl,
+    Stopwatch sw,
+  ) async {
+    await TailscaleService.instance.waitUntilReady(remoteUrl);
+    final api = _createSessionApi(
+      baseUrl: remoteUrl,
+      token: _accessToken!,
+      refreshToken: _refreshToken,
+      isLegacyToken: _isLegacyToken,
+    );
+    final onAuthExpired = api.onAuthExpired;
+    var expired = false;
+    api.onAuthExpired = () => expired = true;
+    debugPrint('[Auth] authorizing alongside the ping (${sw.elapsedMilliseconds}ms)');
+    final probe = await authorizeWhilePinging(
+      ping: _pingServers(remoteUrl, sw),
+      authorize: api.authorize(),
+    );
+    // Unreachable: an authorize still on its way stays without the sign-out.
+    if (probe.reachable) {
+      api.onAuthExpired = onAuthExpired;
+      if (expired) onAuthExpired?.call();
+    }
+    return (probe, api);
+  }
+
   void _adoptLateLocalAnswer(bool reachable) {
     if (!reachable || _useLocalServer) return;
     if (!_localServerEnabled || _localServerUrl.isEmpty || _serverUrl == null) {
@@ -1601,6 +1646,7 @@ class AuthProvider extends ChangeNotifier {
     debugPrint('[Auth] switchToAccount: reachable=$_serverReachable (${sw.elapsedMilliseconds}ms)');
 
     if (_serverReachable) {
+      var versionKnown = false; // fork
       try {
         final api = _createSessionApi(
           baseUrl: activeServerUrl!,
@@ -1621,7 +1667,7 @@ class AuthProvider extends ChangeNotifier {
             _ereaderDevices = devicesRaw.cast<Map<String, dynamic>>();
             await _persistEreaderDevices();
           }
-          _applyAuthorizeServerInfo(auth, activeServerUrl!);
+          versionKnown = _applyAuthorizeServerInfo(auth, activeServerUrl!);
           final defaultLib = auth['userDefaultLibraryId'] as String?;
           if (defaultLib != null) _defaultLibraryId = defaultLib;
         } else {
@@ -1635,7 +1681,7 @@ class AuthProvider extends ChangeNotifier {
       } catch (_) {
         _serverReachable = false;
       }
-      _fetchServerVersion(activeServerUrl!);
+      if (!versionKnown) _fetchServerVersion(activeServerUrl!);
       // The server answered the ping but not with the user (a refresh that
       // ran out, a slow reply): try again shortly rather than leaving the
       // admin pages hidden until the next minute's check.
