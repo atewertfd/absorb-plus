@@ -13212,4 +13212,54 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get desktopDownloadFolderDefault => 'Default folder';
+
+  @override
+  String get bookSettingsTitle => 'Book settings';
+
+  @override
+  String bookSettingsSeries(String name) {
+    return 'Series: $name';
+  }
+
+  @override
+  String get bookSettingsSpeed => 'Speed';
+
+  @override
+  String get bookSettingsSpeedFromSeries =>
+      'From the last book you played in this series';
+
+  @override
+  String get bookSettingsSkipIntro => 'Skip intro';
+
+  @override
+  String get bookSettingsSkipIntroHint =>
+      'Only when the book starts from the beginning';
+
+  @override
+  String get bookSettingsSkipOutro => 'Skip outro';
+
+  @override
+  String get bookSettingsSkipOutroHint =>
+      'Ends the book early and marks it finished';
+
+  @override
+  String get bookSettingsSkipOff => 'Off';
+
+  @override
+  String bookSettingsSeconds(int seconds) {
+    return '$seconds s';
+  }
+
+  @override
+  String get bookSettingsWholeSeries => 'Use for the whole series';
+
+  @override
+  String get bookSettingsWholeSeriesHint =>
+      'Intro and outro apply to every book in this series';
+
+  @override
+  String get bookSettingsReset => 'Reset';
+
+  @override
+  String get bookSettingsResetDone => 'Book settings reset';
 }

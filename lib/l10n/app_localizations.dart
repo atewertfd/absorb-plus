@@ -22454,6 +22454,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Default folder'**
   String get desktopDownloadFolderDefault;
+
+  /// No description provided for @bookSettingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Book settings'**
+  String get bookSettingsTitle;
+
+  /// No description provided for @bookSettingsSeries.
+  ///
+  /// In en, this message translates to:
+  /// **'Series: {name}'**
+  String bookSettingsSeries(String name);
+
+  /// No description provided for @bookSettingsSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Speed'**
+  String get bookSettingsSpeed;
+
+  /// No description provided for @bookSettingsSpeedFromSeries.
+  ///
+  /// In en, this message translates to:
+  /// **'From the last book you played in this series'**
+  String get bookSettingsSpeedFromSeries;
+
+  /// No description provided for @bookSettingsSkipIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip intro'**
+  String get bookSettingsSkipIntro;
+
+  /// No description provided for @bookSettingsSkipIntroHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Only when the book starts from the beginning'**
+  String get bookSettingsSkipIntroHint;
+
+  /// No description provided for @bookSettingsSkipOutro.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip outro'**
+  String get bookSettingsSkipOutro;
+
+  /// No description provided for @bookSettingsSkipOutroHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends the book early and marks it finished'**
+  String get bookSettingsSkipOutroHint;
+
+  /// No description provided for @bookSettingsSkipOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get bookSettingsSkipOff;
+
+  /// No description provided for @bookSettingsSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds} s'**
+  String bookSettingsSeconds(int seconds);
+
+  /// No description provided for @bookSettingsWholeSeries.
+  ///
+  /// In en, this message translates to:
+  /// **'Use for the whole series'**
+  String get bookSettingsWholeSeries;
+
+  /// No description provided for @bookSettingsWholeSeriesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Intro and outro apply to every book in this series'**
+  String get bookSettingsWholeSeriesHint;
+
+  /// No description provided for @bookSettingsReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get bookSettingsReset;
+
+  /// No description provided for @bookSettingsResetDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Book settings reset'**
+  String get bookSettingsResetDone;
 }
 
 class _AppLocalizationsDelegate
