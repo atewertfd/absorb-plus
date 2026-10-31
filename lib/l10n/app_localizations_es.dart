@@ -13132,6 +13132,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Couldn\'t show the folder picker';
 
   @override
+  String get desktopDownloadFolderNetworkPath =>
+      'Network folders (\\\\server\\share) can\'t hold downloads. Map the share to a drive letter in File Explorer, such as Z:, and choose that instead.';
+
+  @override
   String get desktopDownloadFolderDefault => 'Default folder';
 
   @override
@@ -13323,6 +13327,10 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get tailscaleSignInNoLink =>
       'No sign-in link yet. Try again in a moment.';
+
+  @override
+  String get tailscaleToggleFailed =>
+      'Couldn\'t turn built-in Tailscale on or off. Try again.';
 
   @override
   String get tailscaleSignOut => 'Sign out of Tailscale';

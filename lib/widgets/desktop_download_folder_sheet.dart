@@ -81,6 +81,15 @@ class _DesktopDownloadFolderSheetState
           title: l.chooseDownloadFolder,
           initialDirectory: _dl.desktopDownloadDir,
         );
+      } on NetworkDownloadFolderException {
+        if (mounted) {
+          showOverlayToast(
+            context,
+            l.desktopDownloadFolderNetworkPath,
+            icon: Icons.error_outline_rounded,
+          );
+        }
+        return;
       } catch (e) {
         debugPrint('[DesktopDownloadFolderSheet] folder picker failed: $e');
         if (mounted) {

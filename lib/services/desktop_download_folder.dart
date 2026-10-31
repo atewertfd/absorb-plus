@@ -33,18 +33,43 @@ abstract final class DesktopDownloadFolder {
     lockParentWindow: true,
   );
 
-  /// Lets the user choose a folder. Null when they cancel.
-  static Future<String?> pick({String? title, String? initialDirectory}) =>
-      picker(title: title, initialDirectory: initialDirectory);
+  /// Lets the user choose a folder. Null when they cancel. Throws
+  /// [NetworkDownloadFolderException] for a network folder on Windows.
+  static Future<String?> pick({String? title, String? initialDirectory}) async {
+    final picked = await picker(title: title, initialDirectory: initialDirectory);
+    if (picked != null && _unusableNetworkPath(picked)) {
+      throw const NetworkDownloadFolderException();
+    }
+    return picked;
+  }
+
+  /// True for a Windows network path (`\\server\share`, `//server/share`,
+  /// `\\?\UNC\server\share`). Device paths such as `\\?\C:\` are not.
+  static bool isUncPath(String path) {
+    final p = path.trim().replaceAll('/', r'\');
+    if (!p.startsWith(r'\\')) return false;
+    if (p.startsWith(r'\\?\') || p.startsWith(r'\\.\')) {
+      return p.substring(4).toUpperCase().startsWith(r'UNC\');
+    }
+    return true;
+  }
+
+  /// background_downloader drops the leading separator of a Windows network
+  /// path, so downloads there never finish and land on the current drive.
+  /// Network shares work once mapped to a drive letter.
+  static bool _unusableNetworkPath(String path) =>
+      ForkPlatform.isWindows && isUncPath(path);
 
   /// The folder new downloads go to, or null for the default location:
   /// - on Android, iOS and web this is always null (they don't use it);
   /// - a saved folder that no longer exists (an unplugged drive, a deleted
   ///   folder) also gives null, so downloads fall back to the default folder
-  ///   instead of failing or recreating the path on another drive.
+  ///   instead of failing or recreating the path on another drive;
+  /// - so does a Windows network folder saved before they were refused.
   static String? activeRoot(String? saved) {
     if (!ForkPlatform.supportsDesktopDownloadFolder) return null;
     if (saved == null || saved.trim().isEmpty) return null;
+    if (_unusableNetworkPath(saved)) return null;
     try {
       return Directory(saved).existsSync() ? saved : null;
     } catch (_) {
@@ -106,6 +131,7 @@ abstract final class DesktopDownloadFolder {
   /// Whether the app can create and delete a file in [path]. Checked before a
   /// picked folder is saved, so downloads don't fail later.
   static Future<bool> isWritable(String path) async {
+    if (_unusableNetworkPath(path)) return false;
     final probe = File(
       '$path${Platform.pathSeparator}.absorb_write_test_${Random().nextInt(1 << 30)}',
     );
@@ -134,4 +160,13 @@ abstract final class DesktopDownloadFolder {
       return false;
     }
   }
+}
+
+/// A network folder (`\\server\share`) was picked on Windows, where
+/// downloads need a mapped drive letter instead.
+class NetworkDownloadFolderException implements Exception {
+  const NetworkDownloadFolderException();
+
+  @override
+  String toString() => 'Network folders need a mapped drive letter';
 }

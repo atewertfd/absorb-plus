@@ -23,6 +23,7 @@ import 'narrated_books.dart';
 import 'narration_service.dart';
 import 'offline_source.dart';
 import 'server_backend.dart';
+import 'tailscale_service.dart'; // fork
 import '../utils/percent_escapes.dart';
 import '../utils/fork_platform.dart';
 import '../utils/unmetered_network.dart';
@@ -2472,7 +2473,7 @@ class DownloadService extends ChangeNotifier {
         if (Platform.isIOS || desktopRoot != null) {
           task = DownloadTask(
             taskId: _taskId(itemId, i),
-            url: files[i].url,
+            url: TailscaleService.instance.mediaUrl(files[i].url), // fork
             headers: api.downloadHeadersFor(files[i].url),
             filename: files[i].filename,
             baseDirectory: BaseDirectory.root,
@@ -2487,7 +2488,7 @@ class DownloadService extends ChangeNotifier {
         } else {
           task = DownloadTask(
             taskId: _taskId(itemId, i),
-            url: files[i].url,
+            url: TailscaleService.instance.mediaUrl(files[i].url), // fork
             headers: api.downloadHeadersFor(files[i].url),
             filename: files[i].filename,
             baseDirectory: BaseDirectory.applicationDocuments,
@@ -2605,7 +2606,7 @@ class DownloadService extends ChangeNotifier {
       final size = (fileMeta?['size'] as num?)?.toInt();
       final target = await api.narratedEpubDownload(itemId, ino);
       _narrationApis[itemId] = api;
-      final url = target.url;
+      final url = TailscaleService.instance.mediaUrl(target.url); // fork
       final wifiOnly = await PlayerSettings.getWifiOnlyDownloads();
       // BookOrbit streams and keeps places by its own timings, so the
       // download keeps them too, saved now while the server is reachable.
@@ -2688,7 +2689,7 @@ class DownloadService extends ChangeNotifier {
       );
       final ok = await FileDownloader().enqueue(task);
       debugPrint('[Download] narration EPUB for "$title" ($itemId) enqueued ok=$ok: $filename, '
-          '${size ?? '?'} bytes, from ${Uri.parse(url).path}, dir=${bookDir.path}, '
+          '${size ?? '?'} bytes, from file $ino, dir=${bookDir.path}, '
           '${serverTimings ? "BookOrbit's timings kept, " : ''}'
           'audio goes to ${useSaf ? 'the custom folder' : 'app storage'} once it lands');
       if (!ok) throw Exception('Failed to enqueue the EPUB');

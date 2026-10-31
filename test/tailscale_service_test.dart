@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:absorb/l10n/app_localizations.dart';
 import 'package:absorb/screens/tailscale_settings_screen.dart';
+import 'package:absorb/services/api_service.dart';
 import 'package:absorb/services/tailscale_native.dart';
 import 'package:absorb/services/tailscale_service.dart';
+import 'package:absorb/services/windows_media_cover.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,8 +43,13 @@ class FakeNative implements TailscaleNative {
   @override
   void logout() => logouts++;
 
+  bool failStop = false;
+
   @override
-  Future<void> stop() async => stops++;
+  Future<void> stop() async {
+    stops++;
+    if (failStop) throw StateError('stop failed');
+  }
 
   @override
   String logs() => '';
@@ -209,6 +216,148 @@ void main() {
     expect(ts.libraryAvailable, isFalse);
     expect(ts.status.hasError, isTrue);
     expect(ts.findProxy(Uri.parse('http://100.64.0.1/ping')), envDefault('http://100.64.0.1/ping'));
+  });
+
+  group('URLs fetched outside Dart HTTP', () {
+    final appInstance = TailscaleService.instance;
+    tearDown(() => TailscaleService.instance = appInstance);
+
+    ApiService api(String base) => ApiService(baseUrl: base, token: 'tok');
+
+    test('with Tailscale on, download, ebook and cover URLs go through the proxy', () async {
+      SharedPreferences.setMockInitialValues({});
+      final ts = make();
+      await ts.setEnabled(true);
+      TailscaleService.instance = ts;
+      final secret = native.starts.single['secret'];
+      const proxied = 'http://127.0.0.1:41234/_ts';
+
+      final tailnet = api('http://100.64.0.1:13378');
+      expect(tailnet.buildDownloadFileUrl('li_1', '42'),
+          '$proxied/$secret/http/100.64.0.1:13378/api/items/li_1/file/42?token=tok');
+      expect(tailnet.buildFileUrl('li_1', '42'), tailnet.buildDownloadFileUrl('li_1', '42'));
+      expect(tailnet.buildEbookUrl('li_1', '7'),
+          '$proxied/$secret/http/100.64.0.1:13378/api/items/li_1/file/7?token=tok');
+      expect(tailnet.buildReaderEbookUrl('li_1', '7'), tailnet.buildEbookUrl('li_1', '7'));
+      expect((await tailnet.narratedEpubDownload('li_1', '7')).url, startsWith('$proxied/$secret/'));
+      expect(windowsMediaCoverUri(coverUrl: 'https://nas.tail1.ts.net/api/items/li_1/cover?token=tok'),
+          '$proxied/$secret/https/nas.tail1.ts.net:443/api/items/li_1/cover?token=tok');
+
+      // Servers outside the tailnet keep their own address.
+      final public = api('https://abs.example.com');
+      expect(public.buildDownloadFileUrl('li_1', '42'),
+          'https://abs.example.com/api/items/li_1/file/42?token=tok');
+      expect(public.buildEbookUrl('li_1', '7'),
+          'https://abs.example.com/api/items/li_1/file/7?token=tok');
+      await ts.setEnabled(false);
+    });
+
+    test('with Tailscale off, the URLs are unchanged', () async {
+      SharedPreferences.setMockInitialValues({});
+      final ts = make();
+      await ts.init();
+      TailscaleService.instance = ts;
+      final tailnet = api('http://100.64.0.1:13378');
+      expect(tailnet.buildDownloadFileUrl('li_1', '42'),
+          'http://100.64.0.1:13378/api/items/li_1/file/42?token=tok');
+      expect(tailnet.buildEbookUrl('li_1', '7'),
+          'http://100.64.0.1:13378/api/items/li_1/file/7?token=tok');
+      expect(windowsMediaCoverUri(coverUrl: 'http://100.64.0.1:13378/api/items/li_1/cover'),
+          'http://100.64.0.1:13378/api/items/li_1/cover');
+    });
+  });
+
+  group('settings screen', () {
+    Future<void> pumpScreen(WidgetTester tester, TailscaleService ts) async {
+      await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        routes: {
+          '/': (_) => Builder(
+                builder: (context) => TextButton(
+                  onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                      builder: (_) => TailscaleSettingsScreen(service: ts, serverUrl: 'http://nas:13378'))),
+                  child: const Text('open'),
+                ),
+              ),
+        },
+      ));
+      await tester.tap(find.text('open'));
+      await tester.pumpAndSettle();
+    }
+
+    Future<String?> savedHosts(WidgetTester tester) async {
+      String? hosts;
+      await tester.runAsync(() async {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+        hosts = (await SharedPreferences.getInstance()).getString(TailscaleService.prefHosts);
+      });
+      return hosts;
+    }
+
+    testWidgets('typed hosts are saved after a pause in typing', (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final ts = make();
+      await tester.runAsync(ts.init);
+      await pumpScreen(tester, ts);
+      await tester.enterText(find.byType(TextField), 'nas, media.home.arpa');
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(ts.extraHosts, isEmpty);
+      await tester.pump(TailscaleSettingsScreen.hostsSaveDelay);
+      expect(ts.extraHosts, {'nas', 'media.home.arpa'});
+      expect(await savedHosts(tester), 'nas, media.home.arpa');
+    });
+
+    testWidgets('typed hosts are saved when the screen closes right away', (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final ts = make();
+      await tester.runAsync(ts.init);
+      await pumpScreen(tester, ts);
+      await tester.enterText(find.byType(TextField), 'nas');
+      tester.state<NavigatorState>(find.byType(Navigator)).pop();
+      await tester.pumpAndSettle();
+      expect(find.byType(TailscaleSettingsScreen), findsNothing);
+      expect(ts.extraHosts, {'nas'});
+      expect(await savedHosts(tester), 'nas');
+    });
+
+    testWidgets('tapping outside the field closes the keyboard and saves', (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final ts = make();
+      await tester.runAsync(ts.init);
+      await pumpScreen(tester, ts);
+      await tester.tap(find.byType(TextField));
+      await tester.pump();
+      await tester.enterText(find.byType(TextField), 'nas');
+      expect(tester.testTextInput.isVisible, isTrue);
+      await tester.tapAt(tester.getCenter(find.byType(AppBar)));
+      await tester.pump();
+      expect(tester.testTextInput.isVisible, isFalse);
+      expect(ts.extraHosts, {'nas'});
+      await tester.pump(TailscaleSettingsScreen.hostsSaveDelay);
+    });
+
+    testWidgets('a toggle that fails shows a message instead of an error', (tester) async {
+      SharedPreferences.setMockInitialValues({TailscaleService.prefEnabled: true});
+      final ts = make();
+      await tester.runAsync(ts.init);
+      native.failStop = true;
+      await pumpScreen(tester, ts);
+      await tester.tap(find.byType(Switch));
+      // The service started on the real clock (runAsync), so let both run.
+      for (var i = 0; i < 5; i++) {
+        await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 20)));
+        await tester.pump();
+      }
+      final l = lookupAppLocalizations(const Locale('en'));
+      expect(find.text(l.tailscaleToggleFailed), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      // The switch is usable again.
+      expect(tester.widget<Switch>(find.byType(Switch)).onChanged, isNotNull);
+      await tester.pump(const Duration(seconds: 5));
+      native.failStop = false;
+      await tester.runAsync(() => ts.setEnabled(false));
+    });
   });
 
   testWidgets('settings screen: switch, sign-in button, routed server', (tester) async {

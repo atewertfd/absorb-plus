@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'tailscale_service.dart';
+
 /// The cover for the Windows media flyout (SMTC), as a URI string for
 /// `MediaItem.artUri`, or null for none.
 ///
@@ -8,7 +10,8 @@ import 'dart:io';
 /// 1. the downloaded book's cover file, when it exists;
 /// 2. otherwise the server cover URL. audio_service caches it to a local file
 ///    (its `artCacheFile`) and the plugin also lets Windows fetch the URL
-///    itself until then. The URL carries `?token=`: never log it.
+///    itself until then. The URL carries `?token=`: never log it. A tailnet
+///    server's URL goes through built-in Tailscale's loopback proxy.
 /// 3. a [coverUrl] that is already a local file (offline items) when it exists.
 String? windowsMediaCoverUri({
   String? localCoverPath,
@@ -26,7 +29,9 @@ String? windowsMediaCoverUri({
   final url = coverUrl?.trim();
   if (url == null || url.isEmpty) return null;
   final lower = url.toLowerCase();
-  if (lower.startsWith('https://') || lower.startsWith('http://')) return url;
+  if (lower.startsWith('https://') || lower.startsWith('http://')) {
+    return TailscaleService.instance.mediaUrl(url);
+  }
   final path = lower.startsWith('file:') ? _filePath(url) : url;
   if (path != null && _isAbsolutePath(path) && exists(path)) {
     return Uri.file(path, windows: true).toString();

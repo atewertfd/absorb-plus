@@ -7179,6 +7179,7 @@
   "desktopDownloadFolderOpenFailed": "Couldn't open the folder",
   "desktopDownloadFolderNotWritable": "Absorb can't save files in that folder. Choose another one.",
   "desktopDownloadFolderPickFailed": "Couldn't show the folder picker",
+  "desktopDownloadFolderNetworkPath": "Network folders (\\\\server\\share) can't hold downloads. Map the share to a drive letter in File Explorer, such as Z:, and choose that instead.",
   "desktopDownloadFolderDefault": "Default folder",
   "bookSettingsTitle": "Book settings",
   "bookSettingsSeries": "Series: {name}",
@@ -7280,6 +7281,7 @@
   "tailscaleNotIncluded": "Not included in this build",
   "tailscaleSignIn": "Sign in with Tailscale",
   "tailscaleSignInNoLink": "No sign-in link yet. Try again in a moment.",
+  "tailscaleToggleFailed": "Couldn't turn built-in Tailscale on or off. Try again.",
   "tailscaleSignOut": "Sign out of Tailscale",
   "tailscaleDeviceAddress": "This device: {address}",
   "@tailscaleDeviceAddress": {
