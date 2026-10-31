@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'history_write_buffer.dart';
 import 'scoped_prefs.dart';
+import 'user_account_service.dart';
 
 /// Types of playback events we track.
 enum PlaybackEventType {
@@ -142,6 +144,13 @@ class PlaybackHistoryService {
 
   static const int _maxEventsPerBook = 1000;
 
+  /// Absorb Plus: sync lines (every 20 s while streaming) are held back and
+  /// written with the next ordinary line instead of one write each.
+  final HistoryWriteBuffer _held = HistoryWriteBuffer(maxLines: _maxEventsPerBook);
+
+  static String _fullKey(String key) =>
+      ScopedPrefs.keyForScope(UserAccountService().activeScopeKey, key);
+
   /// Log an event for a book.
   Future<void> log({
     required String itemId,
@@ -157,9 +166,20 @@ class PlaybackHistoryService {
     );
 
     final key = 'playback_history_$itemId';
+    final line = jsonEncode(event.toJson());
+    if (type == PlaybackEventType.syncServer ||
+        type == PlaybackEventType.syncLocal) {
+      _held.add(_fullKey(key), line);
+      return;
+    }
+    final fullKey = _fullKey(key);
+    // One write at a time per service (body kept at its upstream indent).
+    await _held.serial(() async {
+    final held = _held.take(fullKey);
     final existing = await ScopedPrefs.getStringList(key);
 
-    existing.add(jsonEncode(event.toJson()));
+    existing.addAll(held);
+    existing.add(line);
 
     // Trim to max size (keep most recent)
     if (existing.length > _maxEventsPerBook) {
@@ -167,12 +187,16 @@ class PlaybackHistoryService {
     }
 
     await ScopedPrefs.setStringList(key, existing);
+    });
   }
 
   /// Get all events for a book, newest first.
   Future<List<PlaybackEvent>> getHistory(String itemId) async {
     final key = 'playback_history_$itemId';
-    final stored = await ScopedPrefs.getStringList(key);
+    final stored = [
+      ...await ScopedPrefs.getStringList(key),
+      ..._held.peek(_fullKey(key)),
+    ];
 
     final events = <PlaybackEvent>[];
     for (final json in stored) {
@@ -188,6 +212,7 @@ class PlaybackHistoryService {
 
   /// Clear history for a book.
   Future<void> clearHistory(String itemId) async {
+    _held.drop(_fullKey('playback_history_$itemId'));
     await ScopedPrefs.remove('playback_history_$itemId');
   }
 }
