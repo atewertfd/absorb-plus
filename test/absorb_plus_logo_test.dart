@@ -174,6 +174,69 @@ void main() {
       expect(rest.buffer.asUint8List(), equals(logo.buffer.asUint8List()));
     });
 
+    testWidgets('pauses under TickerMode off (covered route, hidden tab)', (
+      tester,
+    ) async {
+      Widget drop(bool enabled) => _host(
+        TickerMode(
+          enabled: enabled,
+          child: const AnimatedAbsorbDrop(
+            size: 48,
+            animating: true,
+            color: _ink,
+          ),
+        ),
+      );
+      await tester.pumpWidget(drop(true));
+      for (var i = 0; i < 20; i++) {
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+
+      await tester.pumpWidget(drop(false));
+      // Let a pending step come due: the muted ticker takes it nowhere.
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(_framesPending, isFalse);
+      final (still, _) = await _capture(tester);
+      await tester.pump(const Duration(seconds: 2));
+      expect(_framesPending, isFalse);
+      final (later, _) = await _capture(tester);
+      expect(
+        still.buffer.asUint8List(),
+        equals(later.buffer.asUint8List()),
+        reason: 'no motion while muted',
+      );
+
+      // Shown again: it carries on moving.
+      await tester.pumpWidget(drop(true));
+      for (var i = 0; i < 20; i++) {
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      final (moved, _) = await _capture(tester);
+      expect(
+        moved.buffer.asUint8List(),
+        isNot(equals(still.buffer.asUint8List())),
+      );
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('steps about 15 times a second', (tester) async {
+      await tester.pumpWidget(
+        _host(const AnimatedAbsorbDrop(size: 48, animating: true, color: _ink)),
+      );
+      var frames = 0;
+      // Over one second, in 16 ms slices: count the frames it asks for and
+      // draw each one, like a 60 Hz display would.
+      for (var i = 0; i < 63; i++) {
+        await tester.binding.delayed(const Duration(milliseconds: 16));
+        if (_framesPending) {
+          frames++;
+          await tester.pump();
+        }
+      }
+      expect(frames, inInclusiveRange(14, 16));
+      await tester.pumpWidget(const SizedBox());
+    });
+
     testWidgets('stays static with reduced motion', (tester) async {
       await tester.pumpWidget(
         _host(

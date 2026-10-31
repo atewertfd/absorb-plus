@@ -1895,7 +1895,13 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
             }
           }());
         }
-        notifyListeners();
+        // Absorb Plus: our own sync echoed back while playing changes
+        // nothing on screen; stored, but no rebuild of every tab.
+        if (!isOwnPlayingProgressEcho(mp,
+            playbackSessionId: player.playbackSessionId,
+            playing: player.isPlaying)) {
+          notifyListeners();
+        }
       }
       return;
     }

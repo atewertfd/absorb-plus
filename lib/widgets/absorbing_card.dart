@@ -31,6 +31,7 @@ import 'text_scale_room.dart';
 import '../utils/local_path.dart';
 import 'item_download_watch.dart';
 import '../utils/cover_cache.dart';
+import '../utils/cover_decode_size.dart';
 
 class AbsorbingCard extends StatefulWidget {
   final Map<String, dynamic> item;
@@ -83,6 +84,11 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
   double _savedSpeed = 1.0; // per-book or default speed for inactive display
   final ValueNotifier<bool> _edgeBarExpanded = ValueNotifier(false);
   String? _lastRenderLogSig;
+  // Absorb Plus: the stats row's position stream, kept across builds (a new
+  // stream each build resubscribed it) and cut to whole seconds, which is
+  // all its texts show.
+  Stream<int>? _statsStream;
+  Object? _statsStreamKey;
 
   @override
   bool get wantKeepAlive => true;
@@ -605,6 +611,20 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
   String get _lyricsKey =>
       _episodeId != null ? '$_itemId-$_episodeId' : _itemId;
 
+  Stream<int>? _statsPositionStream(ChromecastService cast) {
+    final casting = _isCastingThis;
+    final active = _isActive;
+    final castStream = casting ? cast.castPositionStream : null;
+    final key = (casting, active, widget.player, castStream);
+    if (key != _statsStreamKey) {
+      _statsStreamKey = key;
+      final Stream<Duration>? source =
+          casting ? castStream : (active ? widget.player.absolutePositionStream : null);
+      _statsStream = source?.map((d) => d.inSeconds).distinct();
+    }
+    return _statsStream;
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context); // required for AutomaticKeepAliveClientMixin
@@ -789,12 +809,10 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                 ),
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(24, compact ? 6 : 10, 24, 0),
-                  child: StreamBuilder<Duration>(
+                  child: StreamBuilder<int>(
                     // Only the playing card needs live positions; other
                     // cards show saved progress and ignore the stream.
-                    stream: _isCastingThis
-                        ? cast.castPositionStream
-                        : (_isActive ? widget.player.absolutePositionStream : null),
+                    stream: _statsPositionStream(cast),
                     builder: (_, snap) {
                       final double pos;
                       final double dur;
@@ -802,7 +820,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                         pos = cast.castPosition.inMilliseconds / 1000.0;
                         dur = cast.castingDuration;
                       } else if (_isActive) {
-                        pos = (snap.data?.inMilliseconds ?? 0) / 1000.0;
+                        pos = (snap.data ?? 0).toDouble();
                         dur = _effectiveDuration;
                       } else {
                         // Use exact currentTime from server progress if available,
@@ -880,6 +898,9 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                         coverW = s;
                         coverH = s;
                       }
+                      // Absorb Plus: decode at the drawn size, not 1200 px.
+                      final decodeW = coverDecodeWidth(
+                          coverW, coverH, MediaQuery.devicePixelRatioOf(context));
                       final dlKey = _episodeId != null ? '$_itemId-$_episodeId' : _itemId;
                       final isDownloaded = DownloadService().isDownloaded(dlKey);
                       final castService = ChromecastService();
@@ -951,20 +972,22 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                                   child: EinkCoverTone(child: coverUrl != null && coverIdentity != null
                                     ? isLocalCover
                                         ? BlurPaddedCover(blurChild: Image.file(File(coverUrl), fit: BoxFit.cover,
-                                            gaplessPlayback: true,
+                                            gaplessPlayback: true, cacheWidth: decodeW,
                                             errorBuilder: (_, __, ___) => const SizedBox.shrink()),
                                             enabled: !_rectangleCovers, child: Image.file(File(coverUrl), fit: _rectangleCovers ? BoxFit.cover : BoxFit.contain,
-                                            gaplessPlayback: true,
+                                            gaplessPlayback: true, cacheWidth: decodeW,
                                             errorBuilder: (_, __, ___) => CoverPlaceholder(title: _title, author: _author)))
                                         : BlurPaddedCover(blurChild: StableCachedNetworkImage(imageUrl: coverUrl, cacheKey: coverIdentity, cacheManager: coverCacheManager, fit: BoxFit.cover,
-                                              httpHeaders: mediaHeaders,
+                                              httpHeaders: mediaHeaders, memCacheWidth: decodeW,
                                               errorWidget: (_, __, ___) => const SizedBox.shrink()),
                                             enabled: !_rectangleCovers, child: StableCachedNetworkImage(imageUrl: coverUrl, cacheKey: coverIdentity, cacheManager: coverCacheManager,
                                               fit: _rectangleCovers ? BoxFit.cover : BoxFit.contain,
-                                              httpHeaders: mediaHeaders,
+                                              httpHeaders: mediaHeaders, memCacheWidth: decodeW,
                                               imageBuilder: (_, provider) {
                                                 _onCoverLoaded(provider, coverIdentity);
-                                                return Image(image: provider, fit: _rectangleCovers ? BoxFit.cover : BoxFit.contain);
+                                                // imageBuilder hands over the full-size provider.
+                                                return Image(image: ResizeImage.resizeIfNeeded(decodeW, null, provider),
+                                                    fit: _rectangleCovers ? BoxFit.cover : BoxFit.contain, gaplessPlayback: true);
                                               },
                                               placeholder: (_, __) => CoverPlaceholder(title: _title, author: _author),
                                               errorWidget: (_, __, ___) => CoverPlaceholder(title: _title, author: _author)))
