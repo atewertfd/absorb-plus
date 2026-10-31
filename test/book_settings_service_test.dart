@@ -273,6 +273,20 @@ void main() {
       expect(rules.outro.armedKey, 'b1');
       expect(rules.outro.outroSeconds, 30);
     });
+
+    test('a series skip set from another book re-arms the playing book', () async {
+      await BookSettingsService.rememberSeries('b1', series);
+      await BookSettingsService.rememberSeries('b2', series);
+      final rules = BookPlaybackRules();
+      rules.commit(itemId: 'b2', skip: BookSkip.none); // b2 is playing
+      await BookSettingsService.setSeriesSkip(
+          series.id, 'b1', const BookSkip(outro: 45)); // edited on b1
+      await rules.updateLiveSeries(series.id);
+      expect(rules.outro.armedKey, 'b2');
+      expect(rules.outro.outroSeconds, 45);
+      await rules.updateLiveSeries('other-series');
+      expect(rules.outro.armedKey, 'b2');
+    });
   });
 
   group('per-book and per-series skip', () {

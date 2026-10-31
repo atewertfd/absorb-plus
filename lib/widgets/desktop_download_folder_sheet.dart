@@ -163,8 +163,9 @@ class _DesktopDownloadFolderSheetState
     final tt = Theme.of(context).textTheme;
     final hasExistingDownloads = _dl.downloadedItems.isNotEmpty;
 
+    // Scrolls when it can't fit (400x600 window, large text, the warning).
     return SafeArea(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
         child: Column(
           mainAxisSize: MainAxisSize.min,

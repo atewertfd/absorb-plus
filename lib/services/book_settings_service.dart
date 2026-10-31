@@ -379,6 +379,22 @@ class BookPlaybackRules {
     outro.arm(skip.outro > 0 ? itemId : null, skip.outro);
   }
 
+  /// [seriesId]'s skip changed (from another book's sheet): re-arm the outro
+  /// of the loaded book if it belongs to that series, using whatever now
+  /// applies to it (its own value still wins over the series one).
+  Future<void> updateLiveSeries(String seriesId) async {
+    final itemId = _itemId;
+    if (itemId == null) return;
+    try {
+      if (await BookSettingsService.seriesIdFor(itemId) != seriesId) return;
+      final skip = await BookSettingsService.skipFor(itemId);
+      if (itemId != _itemId) return;
+      outro.arm(skip.outro > 0 ? itemId : null, skip.outro);
+    } catch (e) {
+      debugPrint('[BookSettings] Could not update the playing book: $e');
+    }
+  }
+
   /// Read the skip that applies to this start (books only). Has no side
   /// effects, so a superseded start can drop the result; pass it to [commit].
   /// Never throws: a failure means no skip.

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
@@ -137,6 +139,9 @@ class _BookSettingsSheetState extends State<BookSettingsSheet> {
       await BookSettingsService.setBookSkip(_itemId, _skip);
     }
     BookPlaybackRules.instance.updateLive(_itemId, _skip);
+    if (_wholeSeries && series != null) {
+      unawaited(BookPlaybackRules.instance.updateLiveSeries(series.id));
+    }
   }
 
   void _setSkip(BookSkip skip) {
@@ -160,6 +165,7 @@ class _BookSettingsSheetState extends State<BookSettingsSheet> {
       );
     }
     BookPlaybackRules.instance.updateLive(_itemId, _skip);
+    unawaited(BookPlaybackRules.instance.updateLiveSeries(series.id));
   }
 
   Future<void> _reset() async {
