@@ -1,50 +1,91 @@
 ## Beta 11
 
-The biggest Absorb Plus update so far: pick how the app looks, smoother and lighter on Windows, a long list of crash and reliability fixes, and everything new from upstream Absorb.
+The biggest Absorb Plus update so far: built-in Tailscale, a much faster app, new looks, a Windows version that feels at home with a mouse and keyboard, a long list of fixes, and everything new from upstream Absorb.
 
 ### New: built-in Tailscale
-- **Reach your server on your tailnet without the Tailscale VPN.** Absorb joins your tailnet as its own device, for its own connections only, so the rest of your phone or PC stays on its normal network.
-- **Easy to find:** a **Tailscale** button at the bottom of the sign-in screen (next to Import), and a card at the top of **Settings**.
-- Sign in to Tailscale once in your browser; your 100.x or `.ts.net` server address is then routed automatically, including streaming and downloads.
-- Off by default; nothing changes unless you turn it on.
+- **Reach a server on your tailnet without turning on the Tailscale VPN.** Absorb joins your tailnet by itself, for its own connections only, so your phone or PC stays on its normal network.
+- Find it with the **Tailscale** button on the sign-in screen (next to Import) or the card at the top of **Settings**. Tap **Connect with Tailscale** and sign in once in your browser. Streaming and downloads then work with your 100.x or `.ts.net` address.
+- Off by default. It's brand new, so please report anything that doesn't work on GitHub.
 
-### New: choose your look
-- **Three looks:** Absorb Plus (today's look), Classic (the look of the first Windows version) and Frosted (soft frosted-glass panels with your cover colors glowing through).
-- **Glass strength** for Frosted: Light, Medium or Strong.
-- Asked once on first launch, and any time in **Settings > Appearance > UI theme**.
-- **Real previews:** each choice shows the actual app shrunk down, with your own covers, shaped like your screen.
-- **Try it:** see a look across the whole app before deciding, then Keep or Go back. Nothing is saved until you keep it.
-- Pick an accent color in the same place.
-
-### Smoother and lighter
+### Faster
+- **Quicker start**, especially on Windows, where the window appears much sooner.
+- **Home appears instantly** with your shelves from last time, then refreshes when the server answers.
+- **Book pages open instantly.**
+- **Covers are downloaded once and kept**, even in big libraries.
+- Absorb keeps its connection to your server open instead of reconnecting for every request.
+- Fewer redraws while a book plays, less memory used by covers, and less disk writing while you listen.
 - Smooth mouse-wheel scrolling on Windows and Linux.
-- Upstream's original animation timings are back.
-- The Absorbing screen no longer redraws non-stop while idle (it was redrawing up to 64 times a second).
-- The chapter-name marquee only scrolls while playing.
-- Fewer needless library rebuilds and progress-bar repaints.
+
+### Choose your look
+- **Standard** (the usual look), **Frosted** (glass panels with your cover colors glowing through; Light, Medium or Strong glass) or **Midnight** (true black, or paper white in light mode, with outlined cards).
+- Pick one on first launch or any time in **Settings > Appearance**, with live previews of your own covers and **Try it** to see it across the whole app first.
+- **Look details** work with any look: full-quality covers, extra cover badges, Continue Reading as a shelf and compact header buttons.
+- "Classic wording" is now called **Plain wording**.
+
+### More at home on Windows
+- **Mouse and keyboard:** right-click does what a long press does, and you can drag shelves and cards. **Esc** closes the player, **Alt+Left** (or the mouse's back button) goes back, and **F5** refreshes. Settings lists every shortcut.
+- **The Windows media popup** shows the book cover and a seek bar.
+- **Taskbar buttons** for rewind, play/pause and forward.
+- **New settings:** close to tray, start with Windows, always on top, and keep the PC awake while playing. **F11** goes full screen.
+- **Choose your download folder** (also on Linux).
+- Wired (Ethernet) connections count as Wi-Fi, and phone-only settings are hidden.
+- Closing the window saves your last seconds of progress and quits cleanly instead of sometimes crashing.
+
+### Book settings
+- A **Book settings** button on every book page: speed, skip intro and skip outro, for that book or the whole series.
+- A new book in a series starts at the speed you last used for that series.
+
+### Admin dashboard
+- For server admins, one page at the top of **Admin > Manage** shows who's listening now, lets you scan libraries and run a backup, lists users with when they were last seen, and shows the server's recent warnings.
+
+### Pre-load covers and book pages
+- After Home loads, Absorb quietly fetches the covers and book pages you're likely to open next, on Wi-Fi or a wired connection only. Turn it off in **Settings > Downloads & Storage**.
+
+### Also new
+- **What's new inside the app:** after an update, these notes open in Absorb instead of your browser. Reopen them from **Settings > See what's new**.
+- **A new logo:** a teal drop with sound bars, which move on the Absorbing tab while a book plays.
 
 ### Fixes
-- Pausing one book no longer cancels the next book's sleep timer or closes its session.
-- Multi-disc books (CD1/01.mp3, CD2/01.mp3) no longer overwrite their own tracks when downloading.
-- Offline listening time is kept until the server accepts it, instead of being dropped when the server is unreachable.
-- An "end of chapter" sleep timer turns off when you switch books.
-- Seeking back to the start in a book's last seconds no longer marks it finished.
-- A downloaded book's listening session can't end up on another account after switching.
-- Stopping a podcast episode saves its position under the right episode.
-- Frosted: search bars and the Server Admin tile are glass too.
-- 11 places where the app could crash after leaving a screen mid-load.
-- Leaked timers and listeners after signing out.
-- Desktop keyboard shortcuts no longer eat what you type.
-- Server health check never sticks on "Checking", and doesn't over-report failures.
-- Updater: cancel works, portable copies are handled, and it says when it couldn't reach GitHub.
-- The Libation import from Beta 10 is gone. You can still upload files to your server from Manage › Upload.
-- Failures in sync, downloads and sign-in now show up in the log (when logging is on), so problems are easier to track down. Tokens and passwords are never logged.
-- The upstream author's "Support the Dev" card is hidden.
+- **Playback**
+  - Pausing one book no longer cancels the next book's sleep timer, and an "end of chapter" timer turns off when you switch books.
+  - Seeking back to the start in a book's last seconds no longer marks it finished.
+  - Stopping a podcast episode saves the position to the right episode.
+  - Cleaner sound on Windows and Linux: speech at 1x now plays exactly as recorded (no speed filter in the way), with a bigger audio buffer for steadier playback on busy PCs.
+- **Downloads**
+  - Multi-disc books (CD1, CD2…) no longer overwrite their own tracks.
+  - On Windows, books with titles ending in "..." now download.
+  - Deleting a download never removes a download folder you picked.
+- **Sync and accounts**
+  - Offline listening time is kept until the server accepts it, instead of being dropped.
+  - A downloaded book's listening can't end up on another account after you switch.
+  - Switching accounts fully leaves the old one behind.
+  - A failed load no longer blanks Home.
+- **Sign-in and privacy**
+  - The server check never gets stuck on "Checking".
+  - Tokens, cookies and sign-in codes are hidden in logs.
+- **Windows**
+  - Keyboard shortcuts no longer swallow what you type or act behind open dialogs.
+  - Updates: Cancel works, portable copies are handled, and you're told when GitHub couldn't be reached.
+- **Web**
+  - Fixed errors during sign-in and in Settings. Ctrl+L and Ctrl+N belong to the browser again.
+- **Everywhere**
+  - Text no longer gets cut off, especially with larger text sizes.
+  - Fixed 11 ways the app could crash when you left a screen while it was loading.
 
 ### From upstream Absorb
-- BookOrbit: stats with Year in Review, notifications, achievements, admin tools, Book Dock, book requests, magic-link sign-in, faster narrated-book downloads.
-- Reader: Slide, Curl and Ripple page turns, an editable tap grid, paragraph spacing, a Translate button, scroll mode, and settings grouped into sections.
-- EPUB3 narration with read-along, and streaming narrated EPUBs without downloading first.
-- Playback: the sleep-timer rewind sticks, paused books don't jump back, finished books don't restart in the car, and big downloads don't knock Absorb offline.
-- Choose what the media controls show on each line.
-- Every genre and tag on the book page, a left-aligned text option, an Authentication admin page, and many more fixes.
+- BookOrbit support with stats and Year in Review, achievements, Book Dock and book requests.
+- EPUB3 narration with read-along, streamed without downloading first.
+- Reader: new page turns, an editable tap grid, paragraph spacing, a Translate button and a smoother scroll mode.
+- Playback: the sleep-timer rewind sticks, cars don't restart finished books, and play doesn't come back silent after a long pause.
+- Choose what the media controls show, and see every genre and tag on the book page.
+
+### Removed
+- The Libation import. You can still upload files to your server from Manage > Upload.
+- Contact and Discord. Support links now point to Absorb Plus on GitHub.
+- The upstream author's "Support the Dev" card.
+
+### Good to know
+- Built-in Tailscale has mostly been tested on Windows and barely on phones. It isn't available in the web version.
+- Chromecast and the cover in the phone's notification don't go through built-in Tailscale yet.
+- Network folders (`\\server\share`) can't be download folders. Use a mapped drive letter.
+- Crackly or harsh audio that also happens in other players usually comes from the file itself (for example a low-quality export) or from headset software like surround sound or volume levelling, not from Absorb Plus.
