@@ -65,6 +65,20 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  testWidgets('Space and arrows do nothing while a dialog is open',
+      variant: windows, (tester) async {
+    await pumpApp(tester, const Text('shell'));
+    navKey.currentState!.push(DialogRoute<void>(
+      context: navKey.currentContext!,
+      builder: (_) => const AlertDialog(content: Text('Scan all libraries?')),
+    ));
+    await tester.pumpAndSettle();
+    await tester.sendKeyEvent(LogicalKeyboardKey.space);
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.bracketRight);
+    expect(ran, isEmpty);
+  });
+
   group('full-screen player', () {
     testWidgets('Esc closes it', variant: windows, (tester) async {
       await pumpApp(tester, const Text('shell'));

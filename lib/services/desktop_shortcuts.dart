@@ -234,10 +234,16 @@ final FocusNode desktopShellFocusNode =
 
 /// True while the shell holds focus, or a page, sheet or the full-screen
 /// player is open with nothing inside it focused (its route's focus scope is
-/// the primary focus). A focused button, slider or text field returns false.
+/// the primary focus). A focused button, slider or text field returns false,
+/// and so does an open dialog: Space and the arrows must not play or seek
+/// the book behind a confirmation.
 bool nothingMoreSpecificHasFocus() {
   final focus = FocusManager.instance.primaryFocus;
-  return focus == desktopShellFocusNode || focus is FocusScopeNode;
+  if (focus == desktopShellFocusNode) return true;
+  if (focus is! FocusScopeNode) return false;
+  final context = focus.context;
+  if (context == null) return true;
+  return ModalRoute.of(context) is! RawDialogRoute;
 }
 
 /// Runs desktop shortcuts. Plain-key ones (Space, arrows, brackets) only run
