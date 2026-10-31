@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'book_settings_service.dart';
 import 'narrated_books.dart';
 import 'scoped_prefs.dart';
 import 'update_check_policy.dart';
@@ -1432,11 +1433,13 @@ class PlayerSettings {
 
   // ── Per-book speed persistence ──
 
+  // Absorb Plus: a book with no speed of its own falls back to its series'
+  // last speed; saving also remembers it for the series.
   static Future<double?> getBookSpeed(String itemId) =>
-      ScopedPrefs.getDouble('bookSpeed_$itemId');
+      BookSettingsService.bookSpeedOrSeries(itemId);
 
   static Future<void> setBookSpeed(String itemId, double speed) =>
-      _set('bookSpeed_$itemId', speed);
+      BookSettingsService.saveBookSpeed(itemId, speed);
 
   // ── Per-book sleep-rewind override (falls back to the global default) ──
 

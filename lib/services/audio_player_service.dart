@@ -31,6 +31,7 @@ import 'now_playing_layout.dart';
 import 'cold_start_play_policy.dart';
 import 'playback_error_policy.dart';
 import 'player_settings.dart';
+import 'book_settings_service.dart';
 import 'session_cache.dart';
 import 'home_widget_service.dart';
 import 'bookmark_service.dart';
@@ -3850,6 +3851,18 @@ class AudioPlayerService extends ChangeNotifier {
       }
     }
 
+    // Absorb Plus: this book's intro/outro skip. The intro is applied in
+    // _sessionStartRewound, once the start position is final.
+    final bookSkip = await BookPlaybackRules.skipForStart(itemId, episodeId);
+    if (_startSuperseded(playbackGeneration)) {
+      return _abandonStart(null, null, 'after the book settings');
+    }
+    _bookRules.commit(
+      itemId: itemId,
+      skip: bookSkip,
+      allowIntro: !forceStartTime,
+    );
+
     // Set seek target early so the UI doesn't flash chapter 1 while loading
     if (startTime > 0) {
       _lastSeekTargetSeconds = startTime;
@@ -4068,6 +4081,12 @@ class AudioPlayerService extends ChangeNotifier {
     required bool forceStartTime,
     required double speed,
   }) async {
+    // Absorb Plus: skip the book's intro when the final start (after the
+    // server/local reconcile) is the very beginning, and don't rewind into it.
+    if (!forceStartTime) {
+      startTime = _bookRules.introStart(startTime, _totalDuration);
+      if (_bookRules.isIntroStart(startTime)) return startTime;
+    }
     if (forceStartTime || startTime <= 0) return startTime;
     final rewindSettings = await AutoRewindSettings.load();
     if (!rewindSettings.enabled || !rewindSettings.sessionStartRewind) {
@@ -5810,6 +5829,12 @@ class AudioPlayerService extends ChangeNotifier {
   void _captureNowPlayingCredits(Map<String, dynamic>? session) {
     final meta = session?['mediaMetadata'];
     if (meta is! Map) return;
+    // Absorb Plus: remember the book's series for series speed memory.
+    final sessionItemId = session?['libraryItemId'];
+    if (_currentEpisodeId == null) {
+      unawaited(BookSettingsService.rememberSeriesFromMetadata(
+          sessionItemId is String ? sessionItemId : _currentItemId, meta));
+    }
     String? joined(Object? names) {
       if (names is! List) return null;
       final parts = names
@@ -6498,6 +6523,25 @@ class AudioPlayerService extends ChangeNotifier {
           _repushNotifiedMediaItem(positionSec: posSec);
         }
 
+        // Absorb Plus: the book's outro skip ends it early, finished the same
+        // way as a natural end (marked finished, then the queue moves on).
+        if (_currentEpisodeId == null &&
+            _bookRules.outro.shouldFinish(
+              key: _currentItemId,
+              positionSec: posSec,
+              totalDuration: _totalDuration,
+              playing: _player?.playing ?? false,
+              seekedRecently: _lastSeekAt != null &&
+                  DateTime.now().difference(_lastSeekAt!) <
+                      const Duration(seconds: 3),
+            )) {
+          debugPrint('[BookSettings] Outro skip: finishing at '
+              '${posSec.toStringAsFixed(1)}s of ${_totalDuration.toStringAsFixed(1)}s');
+          _lastKnownPositionSec = posSec;
+          _onPlaybackComplete(userRequested: true);
+          return;
+        }
+
         // ─── Completion detection (fallback) ───────────────────
         // processingStateStream is the primary signal; this is a safety net.
         // Files that run longer than the server indexed them (changed on
@@ -6792,6 +6836,9 @@ class AudioPlayerService extends ChangeNotifier {
   }
 
   bool _isCompletingBook = false;
+
+  // Absorb Plus: per-book intro/outro skip (book_settings_service.dart).
+  final BookPlaybackRules _bookRules = BookPlaybackRules.instance;
 
   String? _overrunLoggedFor;
 
