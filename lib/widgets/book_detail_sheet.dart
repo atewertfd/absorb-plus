@@ -95,6 +95,11 @@ void _rememberDetailItem(String itemId, Map<String, dynamic> item) {
   }
 }
 
+/// Hands a book page fetched ahead of time (PrecacheService) to the
+/// recent-copy cache, so it opens complete at once.
+void primeBookDetailItem(String itemId, Map<String, dynamic> item) =>
+    _rememberDetailItem(itemId, item);
+
 /// The recent full copy, unless the tile's map is newer.
 Map<String, dynamic>? _initialDetailItem(
     String itemId, Map<String, dynamic>? tile) {

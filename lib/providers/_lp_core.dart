@@ -2052,6 +2052,61 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     }
   }
 
+  /// Background pre-cache of covers and likely book pages once Home has
+  /// loaded (see PrecacheService). Books only; podcasts are skipped.
+  void _schedulePrecache(String libraryId, String scope) {
+    if (isPodcastLibrary) return;
+    final home = <String>[];
+    final detail = <String>{};
+    for (final section in _personalizedSections) {
+      final continueListening = section['id'] == 'continue-listening';
+      var n = 0;
+      for (final e in (section['entities'] as List<dynamic>? ?? const [])) {
+        if (e is! Map<String, dynamic>) continue;
+        final id = e['id'] as String?;
+        if (id == null || id.length > 36) continue;
+        home.add(id);
+        if (continueListening || n < 2) detail.add(id);
+        n++;
+      }
+    }
+    ApiService requireApi() => _api ?? (throw StateError('signed out'));
+    PrecacheService.instance.schedule(PrecacheSource(
+      scope: scope,
+      libraryId: libraryId,
+      homeItemIds: home,
+      detailItemIds: detail.toList(),
+      libraryPage: (page, limit) async {
+        final result = await requireApi()
+            .getLibraryItems(libraryId, page: page, limit: limit);
+        final results = [
+          for (final r in (result?['results'] as List<dynamic>? ?? const []))
+            if (r is Map<String, dynamic>) r,
+        ];
+        // Same cover URLs (with the item's revision) the library grid uses.
+        _registerSectionEntities([
+          {'entities': results},
+        ]);
+        return results;
+      },
+      fetchItem: (id) async {
+        final item = await requireApi().getLibraryItem(id);
+        if (item == null) return null;
+        final ts = item['updatedAt'] as num?;
+        if (ts != null) registerUpdatedAt(id, ts.toInt());
+        final overrides = MetadataOverrideService();
+        final override = await overrides.get(id);
+        return override == null ? item : overrides.applyOverrides(item, override);
+      },
+      coverUrl: (id) => getCoverUrl(id),
+      headers: mediaHeaders,
+      stillValid: () =>
+          _api != null &&
+          !isOffline &&
+          UserAccountService().activeScopeKey == scope,
+    ));
+  }
+
   /// Cold start: paint Home from the last load's shelves while the server
   /// answers (see HomeShelfSnapshot). Skipped if the answer came first.
   Future<void> _showHomeSnapshot() async {
@@ -2113,6 +2168,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       // returning early here left Home spinning.)
       if (scope.isNotEmpty && scope == UserAccountService().activeScopeKey) {
         unawaited(HomeShelfSnapshot.instance.save(scope, libraryId, view));
+        _schedulePrecache(libraryId, scope);
       }
       // Playlists and collections load straight away: they came last, and a
       // podcast-only step below that threw skipped them (GH #413).

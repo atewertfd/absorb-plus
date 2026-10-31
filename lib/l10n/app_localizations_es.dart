@@ -13078,6 +13078,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get githubProjectTitle => 'Absorb Plus on GitHub';
 
   @override
+  String get precacheTitle => 'Pre-load covers and book pages';
+
+  @override
+  String get precacheSubtitle =>
+      'Fetches them in the background on Wi-Fi or a wired connection, so screens open instantly. Uses a little disk space, not memory.';
+
+  @override
   String get githubProjectSubtitle => 'Releases, source code and project news';
 
   @override

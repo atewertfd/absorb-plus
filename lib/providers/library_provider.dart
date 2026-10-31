@@ -7,6 +7,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import '../services/scoped_prefs.dart';
 import '../services/startup_timing.dart';
 import '../services/home_shelf_snapshot.dart';
+import '../services/precache_service.dart';
 import '../services/user_account_service.dart';
 import '../services/audio_player_service.dart';
 import 'auth_provider.dart';

@@ -7162,6 +7162,8 @@
   "windowsTaskbarForward": "Fast-forward",
   "supportContactSubtitle": "Ask a question on the Absorb Plus GitHub",
   "githubProjectTitle": "Absorb Plus on GitHub",
+  "precacheTitle": "Pre-load covers and book pages",
+  "precacheSubtitle": "Fetches them in the background on Wi-Fi or a wired connection, so screens open instantly. Uses a little disk space, not memory.",
   "githubProjectSubtitle": "Releases, source code and project news",
   "supportSaveLogsSubtitle": "Save the log file to attach to a GitHub issue",
   "supportSaveLogsDialogTitle": "Save Absorb Plus logs",

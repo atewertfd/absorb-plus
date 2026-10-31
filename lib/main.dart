@@ -50,6 +50,7 @@ import 'screens/app_shell.dart';
 import 'widgets/auth_loading_screen.dart';
 import 'widgets/beta_logging_notice.dart';
 import 'widgets/setup_link_login.dart';
+import 'widgets/book_detail_sheet.dart';
 import 'utils/app_motion.dart';
 import 'utils/scroll_diagnostics.dart';
 import 'utils/smooth_wheel_scroll.dart';
@@ -57,6 +58,7 @@ import 'utils/memory_policy.dart';
 import 'ui_themes/ui_theme.dart';
 import 'ui_themes/frosted.dart';
 import 'services/tailscale_service.dart';
+import 'services/precache_service.dart';
 
 /// Global notifier so any widget (e.g. settings) can change the theme instantly.
 final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.dark);
@@ -254,6 +256,7 @@ Future<void> applyOrientationLock() async {
 
 void main() async {
   StartupTiming.markMain();
+  PrecacheService.itemSink = primeBookDetailItem;
   HttpOverrides.global = _CertOverrides();
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   bool smoothWheel() =>

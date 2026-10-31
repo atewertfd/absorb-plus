@@ -22233,6 +22233,18 @@ abstract class AppLocalizations {
   /// **'Absorb Plus on GitHub'**
   String get githubProjectTitle;
 
+  /// No description provided for @precacheTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-load covers and book pages'**
+  String get precacheTitle;
+
+  /// No description provided for @precacheSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetches them in the background on Wi-Fi or a wired connection, so screens open instantly. Uses a little disk space, not memory.'**
+  String get precacheSubtitle;
+
   /// No description provided for @githubProjectSubtitle.
   ///
   /// In en, this message translates to:

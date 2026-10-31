@@ -62,6 +62,7 @@ import '../widgets/collapsible_section.dart';
 import '../widgets/windows_settings_tiles.dart';
 import '../widgets/desktop_download_folder_sheet.dart';
 import '../widgets/desktop_shortcut_help.dart';
+import '../widgets/precache_setting_tile.dart';
 import '../widgets/overlay_toast.dart';
 import '../widgets/tips_sheet.dart';
 import '../widgets/feature_hint.dart';
@@ -4160,6 +4161,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ],
                       ),
                     ),
+                    const Divider(height: 1, indent: 16, endIndent: 16),
+                    const PrecacheSettingTile(),
                   ],
                 ),
                 const SizedBox(height: 16),
