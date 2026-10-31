@@ -59,6 +59,7 @@ import 'ui_themes/ui_theme.dart';
 import 'ui_themes/frosted.dart';
 import 'services/tailscale_service.dart';
 import 'services/precache_service.dart';
+import 'services/pending_writes.dart';
 
 /// Global notifier so any widget (e.g. settings) can change the theme instantly.
 final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.dark);
@@ -264,6 +265,7 @@ void main() async {
   installSmoothWheelScroll(enabled: smoothWheel);
   installScrollDiagnostics(smoothingEnabled: smoothWheel); // ABSORB_SCROLL_DIAG=1
   configureImageCache(PaintingBinding.instance.imageCache);
+  PendingWrites.installLifecycleFlush(); // fork: flush held-back writes on background
   ReadListenSync.instance.start();
   unawaited(TailscaleService.instance.init()); // fork; no-op unless turned on
   BookOrbitApiService.placeReadingSpot = NarrationService.readingSpotSeconds;

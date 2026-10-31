@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import 'audio_player_service.dart';
 import 'download_service.dart';
+import 'pending_writes.dart';
 
 /// What the taskbar button shows for the current book.
 enum TaskbarPlayback { none, playing, paused }
@@ -274,6 +275,9 @@ class WindowsShell {
         debugPrint('[WindowsShell] Saving before quit: $e');
       }
     }
+    // Debounced files (the download list), buffered history and the
+    // streaming listening counter go to disk now.
+    await PendingWrites.flushAll();
     // Let writes started just before (preferences, logs) reach the disk.
     await Future<void>.delayed(const Duration(milliseconds: 150));
   }

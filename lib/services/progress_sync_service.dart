@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'api_service.dart';
 import 'download_service.dart';
 import 'scoped_prefs.dart';
+import 'streaming_pending_ledger.dart';
 import 'sync_logic.dart';
 import 'user_account_service.dart';
 
@@ -22,6 +23,9 @@ class ProgressSyncService {
   bool _flushAgain = false;
   Completer<void>? _flushCompleter;
   bool _isFlushingOfflineListening = false;
+  /// Absorb Plus: the streaming safety buffer lives in memory and is written
+  /// with the progress save (streaming_pending_ledger.dart).
+  final StreamingPendingLedger _streaming = StreamingPendingLedger();
   int _consecutiveFailures = 0;
   static const _maxConsecutiveFailures = 10;
 
@@ -103,6 +107,7 @@ class ProgressSyncService {
       'isFinished': isFinished,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
     };
+    _streaming.attach(itemId, data, existing);
     await ScopedPrefs.setString('progress_$itemId', jsonEncode(data));
     if (_staysOnPhone(itemId)) return;
 
@@ -139,6 +144,7 @@ class ProgressSyncService {
       'isFinished': isFinished,
       'timestamp': 0,
     };
+    _streaming.attach(itemId, data, await getLocal(itemId));
     await ScopedPrefs.setString('progress_$itemId', jsonEncode(data));
     return true;
   }
@@ -176,6 +182,7 @@ class ProgressSyncService {
 
   /// Delete locally saved progress for an item.
   Future<void> deleteLocal(String itemId) async {
+    await _streaming.keepBeforeDelete(itemId);
     await ScopedPrefs.remove('progress_$itemId');
     await _mutatePending((list) => list.remove(itemId));
   }
@@ -618,9 +625,7 @@ class ProgressSyncService {
   /// lost is one accrual tick.
   Future<void> addStreamingPendingTime(String itemId, int seconds) async {
     if (seconds <= 0) return;
-    final key = 'streaming_pending_$itemId';
-    final existing = await ScopedPrefs.getInt(key) ?? 0;
-    await ScopedPrefs.setInt(key, existing + seconds);
+    await _streaming.add(itemId, seconds);
     final pending = await ScopedPrefs.getStringList('pending_streaming_listening');
     if (!pending.contains(itemId)) {
       pending.add(itemId);
@@ -628,27 +633,17 @@ class ProgressSyncService {
     }
   }
 
-  Future<int> getStreamingPendingTime(String itemId) async =>
-      await ScopedPrefs.getInt('streaming_pending_$itemId') ?? 0;
+  Future<int> getStreamingPendingTime(String itemId) =>
+      _streaming.current(itemId);
 
   /// Clear [seconds] from the streaming safety buffer after a sync confirmed
   /// that much listening reached the server. Anything accrued during the
   /// in-flight sync is left for the next round.
-  Future<void> reduceStreamingPendingTime(String itemId, int seconds) async {
-    if (seconds <= 0) return;
-    final key = 'streaming_pending_$itemId';
-    final cur = await ScopedPrefs.getInt(key) ?? 0;
-    final next = cur - seconds;
-    if (next > 0) {
-      await ScopedPrefs.setInt(key, next);
-    } else {
-      await ScopedPrefs.remove(key);
-      final pending =
-          List<String>.from(await ScopedPrefs.getStringList('pending_streaming_listening'));
-      pending.remove(itemId);
-      await ScopedPrefs.setStringList('pending_streaming_listening', pending);
-    }
-  }
+  /// The item stays on `pending_streaming_listening` at zero (Absorb Plus):
+  /// dropping it and adding it back on the next tick cost two more writes
+  /// every sync, and launch clears the list anyway.
+  Future<void> reduceStreamingPendingTime(String itemId, int seconds) =>
+      _streaming.reduce(itemId, seconds);
 
   /// On launch, a non-empty streaming buffer means a stream was killed before
   /// its last span synced. Move it into the offline ledger so the normal flush
@@ -659,10 +654,8 @@ class ProgressSyncService {
         await ScopedPrefs.getStringList('pending_streaming_listening'));
     if (pending.isEmpty) return;
     for (final itemId in pending) {
-      final key = 'streaming_pending_$itemId';
-      final secs = await ScopedPrefs.getInt(key) ?? 0;
+      final secs = await _streaming.takeOrphan(itemId);
       if (secs > 0) await addOfflineListeningTime(itemId, secs);
-      await ScopedPrefs.remove(key);
     }
     await ScopedPrefs.setStringList('pending_streaming_listening', []);
   }

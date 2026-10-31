@@ -17,6 +17,8 @@ import '../widgets/overlay_toast.dart';
 import 'api_service.dart';
 import 'audio_player_service.dart';
 import 'desktop_download_folder.dart';
+import 'download_folder_guard.dart';
+import 'download_index_store.dart';
 import 'download_track_names.dart';
 import 'ebook_cache.dart';
 import 'narrated_books.dart';
@@ -431,7 +433,8 @@ class DownloadService extends ChangeNotifier {
   DownloadService._()
       : _initializeOverride = null,
         _cancelTasksOverride = null,
-        _deleteTaskRecordOverride = null {
+        _deleteTaskRecordOverride = null,
+        _indexStore = DownloadIndexStore.platformDefault() {
     UserAccountService.onScopeMoved = _moveOrigins;
   }
 
@@ -440,9 +443,15 @@ class DownloadService extends ChangeNotifier {
     required Future<void> Function() initialize,
     Future<void> Function(List<String>)? cancelTasks,
     Future<void> Function(String)? deleteTaskRecord,
+    DownloadIndexStore? indexStore,
   })  : _initializeOverride = initialize,
         _cancelTasksOverride = cancelTasks,
-        _deleteTaskRecordOverride = deleteTaskRecord;
+        _deleteTaskRecordOverride = deleteTaskRecord,
+        _indexStore = indexStore ?? PrefsDownloadIndexStore();
+
+  /// Where the download list is kept: its own file on native builds,
+  /// preferences on web (Absorb Plus, see download_index_store.dart).
+  final DownloadIndexStore _indexStore;
 
   final Future<void> Function()? _initializeOverride;
   final Future<void> Function(List<String>)? _cancelTasksOverride;
@@ -678,6 +687,8 @@ class DownloadService extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     if (_desktopDownloadDir != null) {
       await prefs.setString(DesktopDownloadFolder.prefKey, _desktopDownloadDir!);
+      _knownDesktopRoots =
+          await DesktopDownloadFolder.recordUsedRoot(prefs, _desktopDownloadDir!);
     } else {
       await prefs.remove(DesktopDownloadFolder.prefKey);
     }
@@ -1254,48 +1265,11 @@ class DownloadService extends ChangeNotifier {
     if (prefs.getString('custom_download_path') != null) {
       await prefs.remove('custom_download_path');
     }
-    try {
-      final origins = jsonDecode(prefs.getString('download_origins') ?? '{}') as Map<String, dynamic>;
-      for (final e in origins.entries) {
-        if (e.value is String) _origins[e.key] = e.value as String;
-      }
-    } catch (e) {
-      debugPrint('[Download] download origins init error: $e');
+    _knownDesktopRoots = DesktopDownloadFolder.usedRoots(prefs);
+    if (_desktopDownloadDir != null && !_knownDesktopRoots.contains(_desktopDownloadDir)) {
+      _knownDesktopRoots = await DesktopDownloadFolder.recordUsedRoot(prefs, _desktopDownloadDir!);
     }
-    final keptJson = prefs.getString('kept_ebooks');
-    if (keptJson != null) {
-      try {
-        final map = jsonDecode(keptJson) as Map<String, dynamic>;
-        for (final entry in map.entries) {
-          _keptEbooks[entry.key] =
-              DownloadInfo.fromJson(entry.value as Map<String, dynamic>);
-        }
-      } catch (e) {
-        debugPrint('[Download] kept ebooks init error: $e');
-      }
-    }
-    final json = prefs.getString('downloads');
-    if (json != null) {
-      try {
-        final map = jsonDecode(json) as Map<String, dynamic>;
-        for (final entry in map.entries) {
-          final info =
-              DownloadInfo.fromJson(entry.value as Map<String, dynamic>);
-          debugPrint('[Download] Loaded: ${entry.key} '
-              'title="${info.title}" author="${info.author}" '
-              'cover=${info.coverUrl != null ? "yes" : "null"} '
-              'sessionData=${info.sessionData != null ? "${info.sessionData!.length} chars" : "null"}');
-          if (info.status == DownloadStatus.downloaded ||
-              info.status == DownloadStatus.error) {
-            _downloads[entry.key] = info;
-          } else {
-            debugPrint('[Download] Skipping stale ${info.status} entry: ${entry.key}');
-          }
-        }
-      } catch (e) {
-        debugPrint('[Download] Init error: $e');
-      }
-    }
+    await _loadIndex();
     // On iOS, remap paths when the app container UUID changes after updates
     await _migrateIOSPaths();
 
@@ -1312,7 +1286,8 @@ class DownloadService extends ChangeNotifier {
       unawaited(_iosAudioMigrationFuture!);
     }
 
-    // Re-save to persist any metadata extracted from sessionData
+    // Re-save to persist any metadata extracted from sessionData. The store
+    // skips the write when nothing changed (Absorb Plus).
     if (_downloads.isNotEmpty) await _save();
 
     // Wire up native background downloads: configure the grouped notification,
@@ -1775,11 +1750,19 @@ class DownloadService extends ChangeNotifier {
           debugPrint('[Download] Cleaning up orphaned entry: $id');
           try {
             final dir = Directory('$basePath/$id');
-            if (await dir.exists()) await dir.delete(recursive: true);
+            if (DownloadFolderGuard.mayDeleteTree(dir.path, [basePath],
+                    windows: Platform.isWindows) &&
+                await dir.exists()) {
+              await dir.delete(recursive: true);
+            }
           } catch (_) {}
           try {
             final coverDir = Directory('$internalBase/$id');
-            if (await coverDir.exists()) await coverDir.delete(recursive: true);
+            if (DownloadFolderGuard.mayDeleteTree(coverDir.path, [internalBase],
+                    windows: Platform.isWindows) &&
+                await coverDir.exists()) {
+              await coverDir.delete(recursive: true);
+            }
           } catch (_) {}
         }
       }
@@ -1910,8 +1893,12 @@ class DownloadService extends ChangeNotifier {
     }
   }
 
-  Future<void> _save() async {
-    final prefs = await SharedPreferences.getInstance();
+  /// Absorb Plus: the list goes to [_indexStore] (its own file on native
+  /// builds, written off the UI thread a moment later; see
+  /// download_index_store.dart). Unchanged data is not rewritten.
+  Future<void> _save() => _indexStore.save(_indexSnapshot);
+
+  DownloadIndex _indexSnapshot() {
     final map = <String, dynamic>{};
     for (final entry in _downloads.entries) {
       if (entry.value.status == DownloadStatus.downloaded ||
@@ -1919,12 +1906,54 @@ class DownloadService extends ChangeNotifier {
         map[entry.key] = entry.value.toJson();
       }
     }
-    await prefs.setString('downloads', jsonEncode(map));
-    await prefs.setString('kept_ebooks', jsonEncode({
-      for (final e in _keptEbooks.entries) e.key: e.value.toJson(),
-    }));
-    await prefs.setString('download_origins', jsonEncode(_origins));
+    return DownloadIndex(
+      downloads: map,
+      keptEbooks: {for (final e in _keptEbooks.entries) e.key: e.value.toJson()},
+      origins: Map<String, dynamic>.of(_origins),
+    );
   }
+
+  /// Waits until the download list is on disk (exit paths and tests).
+  Future<void> flushIndex() => _indexStore.flush();
+
+  Future<void> _loadIndex() async {
+    final index = await _indexStore.load();
+    for (final e in index.origins.entries) {
+      if (e.value is String) _origins[e.key] = e.value as String;
+    }
+    for (final entry in index.keptEbooks.entries) {
+      try {
+        _keptEbooks[entry.key] =
+            DownloadInfo.fromJson(entry.value as Map<String, dynamic>);
+      } catch (e) {
+        debugPrint('[Download] kept ebooks init error: $e');
+      }
+    }
+    for (final entry in index.downloads.entries) {
+      try {
+        final info =
+            DownloadInfo.fromJson(entry.value as Map<String, dynamic>);
+        debugPrint('[Download] Loaded: ${entry.key} '
+            'title="${info.title}" author="${info.author}" '
+            'cover=${info.coverUrl != null ? "yes" : "null"} '
+            'sessionData=${info.sessionData != null ? "${info.sessionData!.length} chars" : "null"}');
+        if (info.status == DownloadStatus.downloaded ||
+            info.status == DownloadStatus.error) {
+          _downloads[entry.key] = info;
+        } else {
+          debugPrint('[Download] Skipping stale ${info.status} entry: ${entry.key}');
+        }
+      } catch (e) {
+        debugPrint('[Download] Init error: $e');
+      }
+    }
+  }
+
+  @visibleForTesting
+  Future<void> debugLoadIndex() => _loadIndex();
+
+  @visibleForTesting
+  Future<void> debugSaveIndex() => _save();
 
   List<String>? getLocalPaths(String itemId) {
     final info = _downloads[itemId];
@@ -3567,16 +3596,29 @@ class DownloadService extends ChangeNotifier {
   Future<void> _cleanupBookDir(String? bookDir, String itemId) async {
     if (bookDir == null || isContentUri(bookDir)) return;
     if (_dirSharedWithOther(bookDir, itemId)) return;
-    final dir = Directory(bookDir);
     try {
-      if (dir.existsSync()) {
-        dir.deleteSync(recursive: true);
-        final parent = dir.parent;
-        if (parent.existsSync() && parent.listSync().isEmpty &&
-            !DesktopDownloadFolder.isRoot(parent.path, _desktopDownloadDir)) parent.deleteSync();
-      }
+      DownloadFolderGuard.removeBookFolder(bookDir, await _downloadRoots(),
+          windows: Platform.isWindows);
     } catch (_) {}
   }
+
+  /// Folders downloads may be made in: the default one, plus every folder
+  /// picked on Windows/Linux (Absorb Plus). Cleanup stays inside these.
+  List<String> _knownDesktopRoots = const [];
+
+  Future<List<String>> _downloadRoots() async {
+    final roots = <String>[];
+    try {
+      roots.add(await _internalBasePath);
+      roots.add(await downloadBasePath);
+    } catch (_) {}
+    if (_desktopDownloadDir != null) roots.add(_desktopDownloadDir!);
+    roots.addAll(_knownDesktopRoots);
+    return roots;
+  }
+
+  @visibleForTesting
+  set debugKnownDesktopRoots(List<String> roots) => _knownDesktopRoots = roots;
 
   /// True when another download already lives in [nestedName] ("Author/Title").
   /// Books sharing a title and author (a release split into parts) used to
@@ -3584,8 +3626,10 @@ class DownloadService extends ChangeNotifier {
   bool _folderTakenByOther(String nestedName, String itemId) {
     bool matches(String? dir) {
       if (dir == null) return false;
-      final d = undoPercentEscapes(dir).replaceAll(r'\', '/');
-      return d.endsWith('/$nestedName');
+      // Windows folder names ignore case: "Title" and "title" are one folder.
+      return DownloadFolderGuard.endsWithFolder(
+          undoPercentEscapes(dir), nestedName,
+          windows: Platform.isWindows);
     }
 
     for (final e in _downloads.entries) {
@@ -3604,15 +3648,22 @@ class DownloadService extends ChangeNotifier {
   /// before folders were made unique can still share one, and removing the
   /// whole folder then deletes books the user never touched.
   bool _dirSharedWithOther(String dirPath, String itemId) {
-    final prefix = dirPath.endsWith('/') ? dirPath : '$dirPath/';
+    // Absorb Plus: compared as folders (slashes, trailing separator and, on
+    // Windows, case), not as exact strings.
+    final w = Platform.isWindows;
+    bool same(String? other) =>
+        other != null && DownloadFolderGuard.samePath(other, dirPath, windows: w);
     for (final e in _downloads.entries) {
       if (e.key == itemId) continue;
       final info = e.value;
-      if (info.localDirPath == dirPath) return true;
-      if (info.localPaths.any((p) => p.startsWith(prefix))) return true;
+      if (same(info.localDirPath)) return true;
+      if (info.localPaths
+          .any((p) => DownloadFolderGuard.isInside(p, dirPath, windows: w))) {
+        return true;
+      }
     }
     for (final p in _pending.values) {
-      if (p.itemId != itemId && p.bookDir == dirPath) return true;
+      if (p.itemId != itemId && same(p.bookDir)) return true;
     }
     return false;
   }
@@ -3819,18 +3870,15 @@ class DownloadService extends ChangeNotifier {
           await FileDownloader().uri.deleteFile(Uri.parse(dirPath));
         } catch (_) {}
       } else if (dirPath != null && Directory(dirPath).existsSync()) {
-        Directory(dirPath).deleteSync(recursive: true);
-        // Clean up empty parent (Author folder) if it's now empty
-        final parent = Directory(dirPath).parent;
-        if (parent.existsSync() && parent.listSync().isEmpty &&
-            !DesktopDownloadFolder.isRoot(parent.path, _desktopDownloadDir)) {
-          parent.deleteSync();
-        }
+        // Absorb Plus: only inside a known download folder, and the emptied
+        // Author folder too - never a picked folder itself (A9).
+        DownloadFolderGuard.removeBookFolder(dirPath, await _downloadRoots(),
+            windows: Platform.isWindows);
       } else {
         // Legacy fallback: UUID-based directory
         final basePath = await downloadBasePath;
-        final bookDir = Directory('$basePath/$itemId');
-        if (bookDir.existsSync()) bookDir.deleteSync(recursive: true);
+        DownloadFolderGuard.removeBookFolder('$basePath/$itemId', [basePath],
+            windows: Platform.isWindows);
       }
     } catch (_) {}
 
@@ -3844,7 +3892,11 @@ class DownloadService extends ChangeNotifier {
             .evict(FileImage(coverFile));
         debugPrint('[Download] evict cover ${coverFile.path} -> $evicted');
       }
-      if (coverDir.existsSync()) coverDir.deleteSync(recursive: true);
+      if (DownloadFolderGuard.mayDeleteTree(coverDir.path, [internalBase],
+              windows: Platform.isWindows) &&
+          coverDir.existsSync()) {
+        coverDir.deleteSync(recursive: true);
+      }
     } catch (e) {
       debugPrint('[Download] cover cleanup failed: $e');
     }

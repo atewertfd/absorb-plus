@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,7 @@ import '../providers/auth_provider.dart';
 import '../providers/library_provider.dart';
 import '../services/audio_player_service.dart';
 import '../services/device_time_zone.dart';
-import '../services/scoped_prefs.dart';
+import '../services/stats_cache_store.dart';
 import '../services/user_account_service.dart';
 import '../widgets/absorb_page_header.dart';
 import '../widgets/finished_books_this_year_sheet.dart';
@@ -342,18 +341,14 @@ class _StatsScreenState extends State<StatsScreen>
     );
   }
 
-  static const _kStats = 'cached_stats';
-  static const _kSessions = 'cached_sessions';
-
   Future<void> _loadStats() async {
     final accountScope = UserAccountService().activeScopeKey;
     bool isActiveAccount() =>
         UserAccountService().activeScopeKey == accountScope;
     final api = context.read<AuthProvider>().apiService;
     final lib = context.read<LibraryProvider>();
-    final prefs = await SharedPreferences.getInstance();
-    final statsCacheKey = ScopedPrefs.keyForScope(accountScope, _kStats);
-    final sessionsCacheKey = ScopedPrefs.keyForScope(accountScope, _kSessions);
+    // Absorb Plus: kept in a file on native builds (stats_cache_store.dart).
+    final cache = StatsCacheStore.instance;
 
     // The saved-by-speed counter banks while listening, so re-read it on
     // every load (incl. pull-to-refresh), not just at screen creation.
@@ -368,14 +363,16 @@ class _StatsScreenState extends State<StatsScreen>
     }
 
     // Load cached data first so the page renders immediately even offline.
-    if (_isLoading) {
-      final cachedStats = prefs.getString(statsCacheKey);
-      final cachedSessions = prefs.getString(sessionsCacheKey);
+    // Absorb Plus: the cache is a file read now, so it runs alongside the
+    // network load and only shows if it arrives before the fresh data.
+    var freshShown = false;
+    void showCached(
+        ({Map<String, dynamic>? stats, List<dynamic>? sessions}) cached) {
+      if (freshShown || !isActiveAccount()) return;
+      final cachedStats = cached.stats;
       if (cachedStats != null) {
-        final stats = jsonDecode(cachedStats) as Map<String, dynamic>;
-        final sessions = cachedSessions != null
-            ? (jsonDecode(cachedSessions) as List<dynamic>)
-            : <dynamic>[];
+        final stats = cachedStats;
+        final sessions = cached.sessions ?? <dynamic>[];
         if (mounted) {
           setState(() {
             _stats = stats;
@@ -392,6 +389,13 @@ class _StatsScreenState extends State<StatsScreen>
       }
     }
 
+    if (_isLoading) {
+      final cachedRead = cache
+          .read(accountScope)
+          .then(showCached, onError: (Object e) => debugPrint('[Stats] cache read failed: $e'));
+      if (api == null) await cachedRead;
+    }
+
     if (api == null) {
       if (mounted) setState(() => _isLoading = false);
       return;
@@ -406,7 +410,8 @@ class _StatsScreenState extends State<StatsScreen>
     final finishedEpisodesYear = lib.finishedEpisodesThisYearCount;
 
     if (stats != null) {
-      prefs.setString(statsCacheKey, jsonEncode(stats));
+      freshShown = true;
+      unawaited(cache.writeStats(accountScope, stats));
     }
 
     if (stats != null) unawaited(_checkTimeZone(stats));
@@ -432,7 +437,8 @@ class _StatsScreenState extends State<StatsScreen>
     if (!mounted || !isActiveAccount()) return;
     final sessions = sessionsData?['sessions'] as List<dynamic>? ?? [];
     if (sessions.isNotEmpty) {
-      prefs.setString(sessionsCacheKey, jsonEncode(sessions));
+      freshShown = true;
+      unawaited(cache.writeSessions(accountScope, sessions));
     }
     if (mounted) {
       setState(() {
