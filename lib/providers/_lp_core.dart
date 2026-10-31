@@ -2007,11 +2007,19 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
 
   // ── Personalized home view ──
 
+  /// Library the in-flight Home load is for, and a counter that tells a
+  /// load whether a newer one has started since (account or library switch).
+  String? _personalizedInFlightLibrary;
+  int _personalizedGeneration = 0;
+
   Future<void> loadPersonalizedView({bool force = false}) async {
     final existing = _personalizedInFlight;
     if (existing != null) {
+      // Joining is only right for the same library: after a library switch
+      // the running load is for the old one.
+      final sameLibrary = _personalizedInFlightLibrary == _selectedLibraryId;
       await existing;
-      return;
+      if (sameLibrary || _personalizedInFlight != null) return;
     }
 
     // Per-library cooldown, so a book <-> podcast tab flip that returns
@@ -2027,6 +2035,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
 
     final inFlight = _doLoadPersonalizedView();
     _personalizedInFlight = inFlight;
+    _personalizedInFlightLibrary = _selectedLibraryId;
     try {
       await inFlight;
     } finally {
@@ -2145,21 +2154,40 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       unawaited(_showHomeSnapshot());
     }
 
+    final generation = ++_personalizedGeneration;
     try {
       final libraryId = _selectedLibraryId!;
       final api = _api!;
       final scope = UserAccountService().activeScopeKey;
       // Progress and shelves load side by side (one round trip, not two).
       final progress = _refreshProgress();
-      final List<dynamic> view;
+      final List<dynamic>? view;
       try {
         view = await api.getPersonalizedView(
-              libraryId,
-              include: const ['numEpisodesIncomplete'],
-            ) ??
-            [];
+          libraryId,
+          include: const ['numEpisodesIncomplete'],
+        );
       } finally {
         await progress;
+      }
+      // Switched account or library meanwhile: the answer isn't for what's
+      // on screen. A newer load takes over; if none started, start one.
+      if (_selectedLibraryId != libraryId ||
+          UserAccountService().activeScopeKey != scope) {
+        if (generation == _personalizedGeneration) {
+          _isLoading = false;
+          notifyListeners();
+          Future(() => loadPersonalizedView(force: true));
+        }
+        return;
+      }
+      // No answer (timeout, server error): keep what Home shows (the saved
+      // copy or the last load) and the saved copy itself.
+      if (view == null) {
+        debugPrint('[Library] Home shelves not loaded; keeping current ones');
+        _isLoading = false;
+        notifyListeners();
+        return;
       }
       _personalizedSections = _withoutJustHidden(view);
       _registerSectionEntities(_personalizedSections);
