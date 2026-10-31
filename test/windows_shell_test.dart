@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:absorb/l10n/app_localizations.dart';
+import 'package:absorb/services/pending_writes.dart';
 import 'package:absorb/services/windows_shell.dart';
 import 'package:absorb/widgets/windows_settings_tiles.dart';
 import 'package:flutter/foundation.dart';
@@ -199,6 +200,39 @@ void main() {
       playback.set(book: true, playing: true);
       await nativeCalls('prepareToExit');
       expect(playback.calls, ['save']);
+    });
+
+    test('quitting flushes held-back writes after saving', () async {
+      final flushes = <List<String>>[];
+      final owner = Object();
+      // Records what the player had done by the time the flush ran.
+      PendingWrites.register(
+          owner, () async => flushes.add(List.of(playback.calls)));
+      addTearDown(() => PendingWrites.unregister(owner));
+      await shell.start();
+      playback.set(book: true, playing: true);
+      await nativeCalls('prepareToExit');
+      expect(flushes, [
+        ['save'],
+      ]);
+    });
+
+    testWidgets('leaving the foreground flushes held-back writes',
+        (tester) async {
+      var flushed = 0;
+      final owner = Object();
+      PendingWrites.register(owner, () async => flushed++);
+      addTearDown(() => PendingWrites.unregister(owner));
+      PendingWrites.installLifecycleFlush();
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      expect(flushed, 0);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+      await tester.pump();
+      expect(flushed, 1);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+      await tester.pump();
+      expect(flushed, 2);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
     });
 
     test('quitting while paused does not touch the player', () async {
