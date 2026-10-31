@@ -5,6 +5,7 @@ import '../providers/auth_provider.dart';
 import '../providers/library_provider.dart';
 import 'overlay_toast.dart';
 import 'accessible_header_action.dart';
+import 'sign_in_again.dart';
 
 /// Cloud icon in page headers showing online/offline state.
 ///
@@ -24,19 +25,31 @@ class OfflineStatusIcon extends StatelessWidget {
     final offline = lib.isOffline;
     final reconnecting = lib.isReconnecting;
     final onLocal = !offline && auth.useLocalServer;
+    if (auth.isSignedOut) {
+      return Semantics(
+        button: true,
+        label: l.signedOutTapToSignIn,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => openSignInAgain(context),
+          child: const Padding(
+            padding: EdgeInsets.all(8),
+            child: Icon(Icons.cloud_off_rounded, size: 20, color: Colors.redAccent),
+          ),
+        ),
+      );
+    }
     return AccessibleHeaderAction(
       label: offline ? l.offline : l.online,
-      onPressed: reconnecting || (!offline && onTapWhenOnline == null)
+      onPressed: reconnecting
+           || (!offline && onTapWhenOnline == null)
           ? null
           : () async {
               if (offline) {
                 final ok = await lib.tryReconnect();
                 if (!ok && context.mounted) {
-                  showOverlayToast(
-                    context,
-                    l.stillOffline,
-                    icon: Icons.cloud_off_rounded,
-                  );
+                  showOverlayToast(context, l.stillOffline,
+                      icon: Icons.cloud_off_rounded);
                 }
               } else {
                 onTapWhenOnline?.call();
@@ -61,8 +74,8 @@ class OfflineStatusIcon extends StatelessWidget {
                   color: offline
                       ? Colors.orange
                       : onLocal
-                      ? Colors.lightBlueAccent
-                      : Colors.green,
+                          ? Colors.lightBlueAccent
+                          : Colors.green,
                 ),
         ),
       ),

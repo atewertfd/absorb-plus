@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../services/audio_player_service.dart';
@@ -41,7 +42,11 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
 
   // ── Smooth position tracking (same pattern as CardDualProgressBar) ──
   Timer? _smoothTicker;
-  final _tickNotifier = ChangeNotifier(); // drives ListenableBuilder rebuilds
+  final _tickNotifier = ChangeNotifier(); // repaints the bar (100 ms)
+  // Absorb Plus: rebuilds the time labels, only when what they show changes
+  // (about once a second, and only while expanded).
+  final _textNotifier = ChangeNotifier();
+  Object? _builtTextSig;
   double _lastKnownPos = 0;
   DateTime _lastPosTime = DateTime.now();
   double _currentSpeed = 1.0;
@@ -52,6 +57,7 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
 
   // ── Expand/collapse animation ──
   late AnimationController _expandController;
+  late final CurvedAnimation _expandCurve;
   double? _dragValue;
   double _dragStartDy = 0;
   double _lastLongPressDx = 0;
@@ -69,6 +75,13 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
     _expandController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 250),
+    );
+    // Created once: a CurvedAnimation adds a listener to its parent, so
+    // building one per tick (10x/s while playing) leaked listeners.
+    _expandCurve = CurvedAnimation(
+      parent: _expandController,
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
     );
     _expandController.addListener(() {
       widget.expandedNotifier?.value = _expandController.value > 0.1;
@@ -105,7 +118,8 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
       _backgrounded = false;
       _loadSettings();
       _syncTicker();
-    } else if (state == AppLifecycleState.paused) {
+    } else if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden) {
       _backgrounded = true;
       _smoothTicker?.cancel();
       _smoothTicker = null;
@@ -118,17 +132,68 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
     if (old.isActive != widget.isActive) _subscribePosition();
   }
 
+  // Hidden tabs and covered routes turn TickerMode off; stop the 100 ms
+  // repaint timer there too. The bar re-anchors to the position when shown.
+  ValueListenable<bool>? _tickerMode;
+  bool get _tickerEnabled => _tickerMode?.value ?? true;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final notifier = TickerMode.getNotifier(context);
+    if (!identical(notifier, _tickerMode)) {
+      _tickerMode?.removeListener(_syncTicker);
+      _tickerMode = notifier;
+      notifier.addListener(_syncTicker);
+      _syncTicker();
+    }
+  }
+
   void _syncTicker() {
-    final shouldRun = _isPlaying && (widget.isActive || _isCastMode) && !_backgrounded;
+    final shouldRun = _isPlaying && (widget.isActive || _isCastMode) && !_backgrounded && _tickerEnabled;
     if (shouldRun && _smoothTicker == null) {
-      _smoothTicker = Timer.periodic(const Duration(milliseconds: 100), (_) {
-        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-        _tickNotifier.notifyListeners();
-      });
+      _smoothTicker = Timer.periodic(const Duration(milliseconds: 100), (_) => _onTick());
     } else if (!shouldRun && _smoothTicker != null) {
       _smoothTicker!.cancel();
       _smoothTicker = null;
     }
+  }
+
+  /// Repaints the bar, and rebuilds the labels when what they show changed.
+  void _onTick() {
+    if (!mounted) return;
+    if (_textSig(_displayPos) != _builtTextSig) {
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      _textNotifier.notifyListeners();
+    }
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    _tickNotifier.notifyListeners();
+  }
+
+  double get _displayPos => (widget.isActive || _isCastMode)
+      ? _smoothPos
+      : widget.staticProgress * widget.staticDuration;
+
+  double get _totalDur => _isCastMode
+      ? ChromecastService().castingDuration
+      : (widget.isActive ? widget.player.totalDuration : widget.staticDuration);
+
+  double _bookProgressAt(double posS) {
+    final totalDur = _totalDur;
+    return totalDur > 0 ? (posS / totalDur).clamp(0.0, 1.0) : 0.0;
+  }
+
+  /// What the labels show at [posS]; nothing while they are hidden.
+  Object? _textSig(double posS) {
+    if (_expandCurve.value <= 0.2) return null;
+    final speed = (widget.isActive || _isCastMode) ? _currentSpeed : 1.0;
+    var speedDiv = _speedAdjustedTime ? speed : 1.0;
+    if (!speedDiv.isFinite || speedDiv <= 0) speedDiv = 1.0;
+    int whole(double v) => v.isFinite ? v.floor() : 0;
+    return (
+      whole(posS / speedDiv),
+      whole((_totalDur - posS) / speedDiv),
+    );
   }
 
   void _subscribePosition() {
@@ -167,6 +232,7 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
             _currentSpeed = widget.player.speed;
             _isPlaying = widget.player.isPlaying;
             _syncTicker();
+            if (_smoothTicker == null && _tickerEnabled && !_backgrounded) _onTick();
             widget.player.clearSeekTarget();
             return;
           }
@@ -180,6 +246,7 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
         _currentSpeed = widget.player.speed;
         _isPlaying = widget.player.isPlaying;
         _syncTicker();
+        if (_smoothTicker == null && _tickerEnabled && !_backgrounded) _onTick();
       });
       _currentSpeed = widget.player.speed;
       _isPlaying = widget.player.isPlaying;
@@ -233,11 +300,14 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _tickerMode?.removeListener(_syncTicker);
     PlayerSettings.settingsChanged.removeListener(_loadSettings);
     ChromecastService().removeListener(_onCastChanged);
     _posSub?.cancel();
     _smoothTicker?.cancel();
     _tickNotifier.dispose();
+    _textNotifier.dispose();
+    _expandCurve.dispose();
     _expandController.dispose();
     super.dispose();
   }
@@ -252,7 +322,11 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
   }
 
   @override
-  Widget build(BuildContext context) {
+  // Absorb Plus: the 100 ms position ticker repaints only the bar, not the card;
+  // the labels rebuild when they change (_onTick).
+  Widget build(BuildContext context) => RepaintBoundary(child: _buildBar(context));
+
+  Widget _buildBar(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
     final l = AppLocalizations.of(context)!;
@@ -261,7 +335,7 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
     final active = widget.isActive || _isCastMode;
 
     return ListenableBuilder(
-      listenable: Listenable.merge([_tickNotifier, _expandController]),
+      listenable: Listenable.merge([_textNotifier, _expandController]),
       builder: (context, _) {
         final staticPos = widget.staticProgress * widget.staticDuration;
         final posS = active ? _smoothPos : staticPos;
@@ -273,12 +347,9 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
         final speedDiv = _speedAdjustedTime ? speed : 1.0;
         final bookElapsed = posS / speedDiv;
         final bookRemaining = (totalDur - posS) / speedDiv;
+        _builtTextSig = _textSig(posS);
 
-        final expandT = CurvedAnimation(
-          parent: _expandController,
-          curve: Curves.easeOutCubic,
-          reverseCurve: Curves.easeInCubic,
-        ).value;
+        final expandT = _expandCurve.value;
 
         final totalHeight = lerpDouble(_hitTargetHeight, _expandedHeight, expandT)!;
         final barHeight = lerpDouble(_thinHeight, 8.0, expandT)!;
@@ -349,6 +420,8 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
                       expandProgress: expandT,
                       isDragging: _dragValue != null,
                       trackBackground: cs.onSurface.withValues(alpha: 0.08),
+                      repaint: _tickNotifier,
+                      progressOf: () => _dragValue ?? _bookProgressAt(_displayPos),
                     ),
                   ),
                 ),
@@ -419,6 +492,9 @@ class EdgeProgressPainter extends CustomPainter {
   final double expandProgress;
   final bool isDragging;
   final Color trackBackground;
+  /// Absorb Plus: the live progress, read at paint time so [repaint] can
+  /// move the bar without rebuilding it.
+  final double Function()? progressOf;
 
   EdgeProgressPainter({
     required this.progress,
@@ -426,10 +502,13 @@ class EdgeProgressPainter extends CustomPainter {
     required this.expandProgress,
     required this.isDragging,
     required this.trackBackground,
+    this.progressOf,
+    super.repaint,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
+    final progress = progressOf?.call() ?? this.progress;
     final h = size.height;
     final w = size.width;
     final r = h / 2;

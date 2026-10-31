@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../screens/library_screen.dart';
+import '../services/server_backend.dart';
 import 'library_grid_tiles.dart';
+import 'text_scale_room.dart';
 
 /// Library "Lists" tab: a stacked-cover grid of all collections and playlists
 /// together (sorted by the screen). Each [entry] carries an injected
@@ -60,6 +62,8 @@ class LibraryListsTab extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
     final l = AppLocalizations.of(context)!;
+    // BookOrbit has collections and Smart Scopes, no playlists.
+    final bookOrbit = ServerBackend.active.isBookOrbit;
     final headers = <Widget>[if (headerSliver != null) headerSliver!];
 
     Widget body;
@@ -84,7 +88,12 @@ class LibraryListsTab extends StatelessWidget {
                             size: 56,
                             color: cs.onSurfaceVariant.withValues(alpha: 0.3)),
                         const SizedBox(height: 12),
-                        Text(hasError ? l.listsLoadFailed : l.listsNone,
+                        Text(
+                            hasError
+                                ? l.listsLoadFailed
+                                : bookOrbit
+                                    ? l.listsNoneBookOrbit
+                                    : l.listsNone,
                             style: tt.bodyLarge
                                 ?.copyWith(color: cs.onSurfaceVariant)),
                         const SizedBox(height: 6),
@@ -93,8 +102,12 @@ class LibraryListsTab extends StatelessWidget {
                               const EdgeInsets.symmetric(horizontal: 40),
                           child: Text(
                             hasError
-                                ? l.listsLoadFailedHint
-                                : l.listsNoneHint,
+                                ? bookOrbit
+                                    ? l.listsLoadFailedHintBookOrbit
+                                    : l.listsLoadFailedHint
+                                : bookOrbit
+                                    ? l.listsNoneHintBookOrbit
+                                    : l.listsNoneHint,
                             textAlign: TextAlign.center,
                             style: tt.bodySmall?.copyWith(
                                 color: cs.onSurfaceVariant
@@ -123,7 +136,8 @@ class LibraryListsTab extends StatelessWidget {
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, libraryGridBottomPadding),
             sliver: SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: LabelRoomGridDelegate(
+                labelRoom: textScaleRoom(context, 30),
                 crossAxisCount: responsiveGridCount(context),
                 childAspectRatio: coverAspectRatio < 1 ? 0.48 : 0.68,
                 crossAxisSpacing: 10,
@@ -139,12 +153,15 @@ class LibraryListsTab extends StatelessWidget {
                       : _collectionBookIds(entry);
                   final count = isPlaylist
                       ? (entry['items'] as List<dynamic>?)?.length ?? ids.length
-                      : (entry['books'] as List<dynamic>?)?.length ?? ids.length;
+                      : ((entry['bookOrbit'] as Map?)?['total'] as num?)?.toInt() ??
+                          (entry['books'] as List<dynamic>?)?.length ??
+                          ids.length;
                   return GridListTile(
                     name: name,
                     bookIds: ids,
                     count: count,
                     isPlaylist: isPlaylist,
+                    isSmartScope: (entry['bookOrbit'] as Map?)?['smartScope'] == true,
                     coverAspectRatio: coverAspectRatio,
                     onTap: () =>
                         isPlaylist ? onOpenPlaylist(entry) : onOpenCollection(entry),

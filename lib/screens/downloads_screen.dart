@@ -7,13 +7,16 @@ import '../providers/auth_provider.dart';
 import '../providers/library_provider.dart';
 import '../services/audio_player_service.dart';
 import '../services/download_service.dart';
-import '../services/signed_out_playback.dart';
+import '../services/ebook_cache.dart';
+import '../widgets/ebook_router.dart';
 import '../services/wording.dart';
 import '../widgets/absorb_page_header.dart';
 import '../widgets/card_buttons.dart' show showErrorToast;
 import 'app_shell.dart';
 import '../widgets/overlay_toast.dart';
 import '../l10n/app_localizations.dart';
+import '../utils/local_path.dart';
+import '../widgets/desktop_input.dart';
 
 String _downloadRate(double? bytesPerSecond) {
   if (bytesPerSecond == null || bytesPerSecond <= 0) return '';
@@ -42,11 +45,7 @@ String _formatDownloadBytes(int bytes) {
 }
 
 class DownloadsScreen extends StatefulWidget {
-  /// Opened from the sign-in screen after the session expired: plays without
-  /// a server and keeps the user here instead of heading into the app.
-  final bool signedOut;
-
-  const DownloadsScreen({super.key, this.signedOut = false});
+  const DownloadsScreen({super.key});
   @override
   State<DownloadsScreen> createState() => _DownloadsScreenState();
 }
@@ -113,8 +112,7 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
   List<DownloadInfo> _visibleCompleted() {
     final lib = context.read<LibraryProvider>();
     final activeLibId = lib.selectedLibraryId;
-    final shouldFilter =
-        !lib.isOffline && !_mergeLibraries && activeLibId != null;
+    final shouldFilter = !lib.isOffline && !_mergeLibraries && activeLibId != null;
     final completed = DownloadService().downloadedItems;
     if (!shouldFilter) return completed;
     return completed
@@ -166,11 +164,8 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
     await _load();
 
     if (mounted) {
-      showOverlayToast(
-        context,
-        l.downloadsDeletedCount(count),
-        icon: Icons.delete_outline_rounded,
-      );
+      showOverlayToast(context, l.downloadsDeletedCount(count),
+          icon: Icons.delete_outline_rounded);
     }
   }
 
@@ -198,11 +193,53 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
     await DownloadService().deleteDownload(info.itemId, byUser: true);
     await _load();
     if (mounted) {
-      showOverlayToast(
-        context,
-        l.downloadsRemovedTitle(info.title ?? ''),
-        icon: Icons.delete_outline_rounded,
-      );
+      showOverlayToast(context, l.downloadsRemovedTitle(info.title ?? ''),
+          icon: Icons.delete_outline_rounded);
+    }
+  }
+
+  Future<void> _openEbook(DownloadInfo info) async {
+    final l = AppLocalizations.of(context)!;
+    final ebookFile = await cachedEbookFileFor(info.itemId);
+    if (!mounted) return;
+    if (ebookFile == null) {
+      showOverlayToast(context, l.findInEbookNoEbook,
+          icon: Icons.menu_book_outlined);
+      return;
+    }
+    await openEbookReader(
+      context,
+      itemId: info.itemId,
+      title: info.title ?? '',
+      ebookFile: ebookFile,
+    );
+  }
+
+  Future<void> _deleteEbook(DownloadInfo info) async {
+    final l = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        icon: const Icon(Icons.delete_outline_rounded),
+        title: Text(l.downloadsDeleteCount(1)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(l.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(l.delete),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    await DownloadService().deleteKeptEbook(info.itemId);
+    await _load();
+    if (mounted) {
+      showOverlayToast(context, l.downloadsRemovedTitle(info.title ?? ''),
+          icon: Icons.delete_outline_rounded);
     }
   }
 
@@ -210,14 +247,10 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
   /// any library - the one way to reach a downloaded podcast when the app
   /// started offline stuck in a book library.
   Future<void> _play(DownloadInfo info) async {
-    final api = widget.signedOut
-        ? SignedOutPlayback.api()
-        : context.read<AuthProvider>().apiService;
+    final api = context.read<AuthProvider>().apiService;
     if (api == null || info.localPaths.isEmpty) return;
-    if (widget.signedOut) SignedOutPlayback.started();
     debugPrint(
-      '[Downloads] Play ${info.itemId} from the downloads list (signedOut=${widget.signedOut} library=${info.libraryId})',
-    );
+        '[Downloads] Play ${info.itemId} from the downloads list (library=${info.libraryId})');
     final isEpisode = info.itemId.length > 36;
     final itemId = isEpisode ? info.itemId.substring(0, 36) : info.itemId;
     final episodeId = isEpisode ? info.itemId.substring(37) : null;
@@ -252,7 +285,6 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
       showErrorToast(context, error);
       return;
     }
-    if (widget.signedOut) return;
     context.read<LibraryProvider>().addToAbsorbing(info.itemId);
     Navigator.of(context).popUntil((route) => route.isFirst);
     AppShell.goToAbsorbingGlobal();
@@ -282,85 +314,59 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                   // Header
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 12, 8, 0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: AbsorbPageHeader(
-                            title: l.downloadsTitle,
-                            padding: EdgeInsets.zero,
-                          ),
+                    child: Row(children: [
+                      Expanded(
+                        child: AbsorbPageHeader(
+                          title: l.downloadsTitle,
+                          padding: EdgeInsets.zero,
                         ),
-                        if (_selecting) ...[
-                          // Listens to DownloadService so a download completing
-                          // mid-selection doesn't leave a stale all-selected look.
-                          ListenableBuilder(
-                            listenable: DownloadService(),
-                            builder: (_, __) {
-                              final visible = _visibleCompleted();
-                              final allSelected =
-                                  visible.isNotEmpty &&
-                                  visible.every(
-                                    (d) => _selected.contains(d.itemId),
-                                  );
-                              return IconButton(
-                                icon: Icon(
+                      ),
+                      if (_selecting) ...[
+                        // Listens to DownloadService so a download completing
+                        // mid-selection doesn't leave a stale all-selected look.
+                        ListenableBuilder(
+                          listenable: DownloadService(),
+                          builder: (_, __) {
+                            final visible = _visibleCompleted();
+                            final allSelected = visible.isNotEmpty &&
+                                visible.every((d) => _selected.contains(d.itemId));
+                            return IconButton(
+                              icon: Icon(
                                   allSelected
                                       ? Icons.deselect_rounded
                                       : Icons.select_all_rounded,
-                                  color: cs.onSurfaceVariant,
-                                ),
-                                tooltip: allSelected
-                                    ? l.deselectAll
-                                    : l.selectAll,
-                                onPressed: _toggleSelectAll,
-                              );
-                            },
-                          ),
+                                  color: cs.onSurfaceVariant),
+                              tooltip: allSelected ? l.deselectAll : l.selectAll,
+                              onPressed: _toggleSelectAll,
+                            );
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close_rounded,
+                              color: cs.onSurfaceVariant),
+                          tooltip: l.downloadsCancelSelection,
+                          onPressed: _exitSelection,
+                        ),
+                      ] else ...[
+                        if (_items.isNotEmpty)
                           IconButton(
-                            icon: Icon(
-                              Icons.close_rounded,
-                              color: cs.onSurfaceVariant,
-                            ),
-                            tooltip: l.downloadsCancelSelection,
-                            onPressed: _exitSelection,
+                            icon: Icon(Icons.checklist_rounded,
+                                color: cs.onSurfaceVariant),
+                            tooltip: l.downloadsSelect,
+                            onPressed: () =>
+                                setState(() => _selecting = true),
                           ),
-                        ] else ...[
-                          if (_items.isNotEmpty)
-                            IconButton(
-                              icon: Icon(
-                                Icons.checklist_rounded,
-                                color: cs.onSurfaceVariant,
-                              ),
-                              tooltip: l.downloadsSelect,
-                              onPressed: () =>
-                                  setState(() => _selecting = true),
-                            ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.close_rounded,
-                              color: cs.onSurfaceVariant,
-                            ),
-                            tooltip: MaterialLocalizations.of(
+                        IconButton(
+                          icon: Icon(Icons.close_rounded,
+                              color: cs.onSurfaceVariant),
+                          tooltip: MaterialLocalizations.of(
                               context,
                             ).closeButtonTooltip,
                             onPressed: () => Navigator.pop(context),
-                          ),
-                        ],
+                        ),
                       ],
-                    ),
+                    ]),
                   ),
-                  if (widget.signedOut)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
-                      child: Text(
-                        l.signedOutDownloadsNote(
-                          SignedOutPlayback.expiredAccount()?.username ?? '',
-                        ),
-                        style: tt.bodySmall?.copyWith(
-                          color: cs.onSurfaceVariant,
-                        ),
-                      ),
-                    ),
                   const SizedBox(height: 12),
 
                   // Content
@@ -371,53 +377,40 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                         final ds = DownloadService();
                         final lib = context.watch<LibraryProvider>();
                         final activeLibId = lib.selectedLibraryId;
-                        final shouldFilter =
-                            !lib.isOffline &&
-                            !_mergeLibraries &&
-                            activeLibId != null;
+                        final shouldFilter = !lib.isOffline && !_mergeLibraries && activeLibId != null;
 
-                        List<DownloadInfo> filterByLibrary(
-                          List<DownloadInfo> items,
-                        ) {
+                        List<DownloadInfo> filterByLibrary(List<DownloadInfo> items) {
                           if (!shouldFilter) return items;
-                          return items
-                              .where(
-                                (d) =>
-                                    d.libraryId == null ||
-                                    d.libraryId == activeLibId,
-                              )
-                              .toList();
+                          return items.where((d) => d.libraryId == null || d.libraryId == activeLibId).toList();
                         }
 
                         final active = filterByLibrary(ds.activeDownloads);
                         final queued = filterByLibrary(ds.queuedDownloads);
                         final failed = filterByLibrary(ds.failedDownloads);
                         final completed = filterByLibrary(ds.downloadedItems);
-                        final hasAny =
-                            active.isNotEmpty ||
+                        final downloadedIds = completed.map((d) => d.itemId).toSet();
+                        final ebooks = filterByLibrary(ds.keptEbooks)
+                            .where((e) => !downloadedIds.contains(e.itemId))
+                            .toList();
+                        final hasAny = active.isNotEmpty ||
                             queued.isNotEmpty ||
                             failed.isNotEmpty ||
-                            completed.isNotEmpty;
+                            completed.isNotEmpty ||
+                            ebooks.isNotEmpty;
 
                         if (!hasAny) {
                           return Center(
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
-                                  Icons.download_done_rounded,
-                                  size: 48,
-                                  color: cs.onSurfaceVariant.withValues(
-                                    alpha: 0.4,
-                                  ),
-                                ),
+                                Icon(Icons.download_done_rounded,
+                                    size: 48,
+                                    color: cs.onSurfaceVariant
+                                        .withValues(alpha: 0.4)),
                                 const SizedBox(height: 12),
-                                Text(
-                                  l.downloadsNoDownloads,
-                                  style: tt.bodyLarge?.copyWith(
-                                    color: cs.onSurfaceVariant,
-                                  ),
-                                ),
+                                Text(l.downloadsNoDownloads,
+                                    style: tt.bodyLarge?.copyWith(
+                                        color: cs.onSurfaceVariant)),
                               ],
                             ),
                           );
@@ -429,45 +422,29 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                             // Active downloads
                             if (active.isNotEmpty) ...[
                               Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 4,
-                                  bottom: 8,
-                                ),
-                                child: Text(
-                                  l.downloadsDownloading,
-                                  style: tt.labelMedium?.copyWith(
-                                    color: cs.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
+                                padding: const EdgeInsets.only(left: 4, bottom: 8),
+                                child: Text(l.downloadsDownloading,
+                                    style: tt.labelMedium?.copyWith(
+                                        color: cs.primary,
+                                        fontWeight: FontWeight.w600)),
                               ),
                               for (final info in active)
                                 _ActiveDownloadCard(
                                   info: info,
                                   cs: cs,
                                   tt: tt,
-                                  onCancel: () =>
-                                      ds.cancelDownload(info.itemId),
-                                  mediaHeaders: context
-                                      .read<LibraryProvider>()
-                                      .mediaHeaders,
+                                  onCancel: () => ds.cancelDownload(info.itemId),
+                                  mediaHeaders: context.read<LibraryProvider>().mediaHeaders,
                                 ),
                             ],
                             // Queued downloads
                             if (queued.isNotEmpty) ...[
                               Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 4,
-                                  top: 4,
-                                  bottom: 8,
-                                ),
-                                child: Text(
-                                  l.downloadsQueued,
-                                  style: tt.labelMedium?.copyWith(
-                                    color: cs.onSurfaceVariant,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
+                                padding: const EdgeInsets.only(left: 4, top: 4, bottom: 8),
+                                child: Text(l.downloadsQueued,
+                                    style: tt.labelMedium?.copyWith(
+                                        color: cs.onSurfaceVariant,
+                                        fontWeight: FontWeight.w600)),
                               ),
                               for (final info in queued)
                                 _ActiveDownloadCard(
@@ -475,11 +452,8 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                                   cs: cs,
                                   tt: tt,
                                   isQueued: true,
-                                  onCancel: () =>
-                                      ds.cancelDownload(info.itemId),
-                                  mediaHeaders: context
-                                      .read<LibraryProvider>()
-                                      .mediaHeaders,
+                                  onCancel: () => ds.cancelDownload(info.itemId),
+                                  mediaHeaders: context.read<LibraryProvider>().mediaHeaders,
                                 ),
                             ],
                             // Failed downloads remain available for retry
@@ -526,18 +500,11 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                             if (completed.isNotEmpty) ...[
                               if (active.isNotEmpty || queued.isNotEmpty)
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 4,
-                                    top: 4,
-                                    bottom: 8,
-                                  ),
-                                  child: Text(
-                                    l.downloadsCompleted,
-                                    style: tt.labelMedium?.copyWith(
-                                      color: cs.onSurfaceVariant,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
+                                  padding: const EdgeInsets.only(left: 4, top: 4, bottom: 8),
+                                  child: Text(l.downloadsCompleted,
+                                      style: tt.labelMedium?.copyWith(
+                                          color: cs.onSurfaceVariant,
+                                          fontWeight: FontWeight.w600)),
                                 ),
                               for (final info in completed)
                                 _DownloadCard(
@@ -549,13 +516,37 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                                   isSelected: _selected.contains(info.itemId),
                                   onToggle: () => _toggleSelect(info.itemId),
                                   onPlay: () => _play(info),
-                                  onLongPress: () =>
-                                      _enterSelection(info.itemId),
+                                  onLongPress: () => _enterSelection(info.itemId),
                                   onDelete: () => _deleteSingle(info),
                                   formatBytes: _formatBytes,
-                                  mediaHeaders: context
-                                      .read<LibraryProvider>()
-                                      .mediaHeaders,
+                                  mediaHeaders: context.read<LibraryProvider>().mediaHeaders,
+                                ),
+                            ],
+                            // Ebooks kept from the reader, no audio on the phone
+                            if (ebooks.isNotEmpty) ...[
+                              Padding(
+                                padding: const EdgeInsets.only(left: 4, top: 4, bottom: 8),
+                                child: Text(l.downloadsEbooks,
+                                    style: tt.labelMedium?.copyWith(
+                                        color: cs.onSurfaceVariant,
+                                        fontWeight: FontWeight.w600)),
+                              ),
+                              for (final info in ebooks)
+                                _DownloadCard(
+                                  info: info,
+                                  fileSize: cachedEbookBytesSync(info.itemId),
+                                  cs: cs,
+                                  tt: tt,
+                                  selecting: false,
+                                  isSelected: false,
+                                  onToggle: () {},
+                                  onPlay: () => _openEbook(info),
+                                  onLongPress: () {},
+                                  onDelete: () => _deleteEbook(info),
+                                  formatBytes: _formatBytes,
+                                  mediaHeaders: context.read<LibraryProvider>().mediaHeaders,
+                                  playIcon: Icons.menu_book_rounded,
+                                  playTooltip: l.readEbook,
                                 ),
                             ],
                           ],
@@ -563,9 +554,6 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                       },
                     ),
                   ),
-
-                  if (widget.signedOut && !_selecting)
-                    const _SignedOutPlayerBar(),
 
                   // Bottom delete bar
                   if (_selecting && _selected.isNotEmpty)
@@ -575,35 +563,32 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                         color: cs.surfaceContainerHigh,
                         border: Border(
                           top: BorderSide(
-                            color: cs.outlineVariant.withValues(alpha: 0.3),
+                            color: cs.outlineVariant
+                                .withValues(alpha: 0.3),
                           ),
                         ),
                       ),
                       child: SafeArea(
                         top: false,
-                        child: Row(
-                          children: [
-                            Text(
-                              l.downloadsSelectedCount(_selected.length),
-                              style: tt.bodyMedium?.copyWith(
-                                color: cs.onSurface,
-                              ),
-                            ),
-                            const Spacer(),
-                            FilledButton.tonalIcon(
-                              icon: const Icon(
+                        child: Row(children: [
+                          Text(
+                            l.downloadsSelectedCount(_selected.length),
+                            style: tt.bodyMedium
+                                ?.copyWith(color: cs.onSurface),
+                          ),
+                          const Spacer(),
+                          FilledButton.tonalIcon(
+                            icon: const Icon(
                                 Icons.delete_outline_rounded,
-                                size: 18,
-                              ),
-                              label: Text(l.delete),
-                              style: FilledButton.styleFrom(
-                                backgroundColor: cs.errorContainer,
-                                foregroundColor: cs.onErrorContainer,
-                              ),
-                              onPressed: _deleteSelected,
+                                size: 18),
+                            label: Text(l.delete),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: cs.errorContainer,
+                              foregroundColor: cs.onErrorContainer,
                             ),
-                          ],
-                        ),
+                            onPressed: _deleteSelected,
+                          ),
+                        ]),
                       ),
                     ),
                 ],
@@ -688,6 +673,8 @@ class _DownloadCard extends StatelessWidget {
   final VoidCallback onDelete;
   final String Function(int) formatBytes;
   final Map<String, String> mediaHeaders;
+  final IconData playIcon;
+  final String? playTooltip;
 
   const _DownloadCard({
     required this.info,
@@ -702,6 +689,8 @@ class _DownloadCard extends StatelessWidget {
     required this.onDelete,
     required this.formatBytes,
     required this.mediaHeaders,
+    this.playIcon = Icons.play_circle_outline_rounded,
+    this.playTooltip,
   });
 
   @override
@@ -713,12 +702,12 @@ class _DownloadCard extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: selecting ? onToggle : onPlay,
         onLongPress: !selecting ? onLongPress : null,
+        onSecondaryTap: desktopSecondaryTap(!selecting ? onLongPress : null),
         child: Card(
           elevation: 0,
           color: cs.surfaceContainerHigh,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
@@ -739,7 +728,11 @@ class _DownloadCard extends StatelessWidget {
                 // Cover art
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: SizedBox(width: 48, height: 48, child: _buildCover()),
+                  child: SizedBox(
+                    width: 48,
+                    height: 48,
+                    child: _buildCover(),
+                  ),
                 ),
                 const SizedBox(width: 12),
                 // Title, author, size
@@ -749,9 +742,8 @@ class _DownloadCard extends StatelessWidget {
                     children: [
                       Text(
                         info.title ?? l.unknown,
-                        style: tt.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: tt.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w600),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -760,9 +752,8 @@ class _DownloadCard extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 2),
                           child: Text(
                             info.author!,
-                            style: tt.bodySmall?.copyWith(
-                              color: cs.onSurfaceVariant,
-                            ),
+                            style: tt.bodySmall
+                                ?.copyWith(color: cs.onSurfaceVariant),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -773,7 +764,8 @@ class _DownloadCard extends StatelessWidget {
                           child: Text(
                             formatBytes(fileSize),
                             style: tt.labelSmall?.copyWith(
-                              color: cs.onSurfaceVariant.withValues(alpha: 0.7),
+                              color:
+                                  cs.onSurfaceVariant.withValues(alpha: 0.7),
                             ),
                           ),
                         ),
@@ -782,21 +774,14 @@ class _DownloadCard extends StatelessWidget {
                 ),
                 if (!selecting)
                   IconButton(
-                    icon: Icon(
-                      Icons.play_circle_outline_rounded,
-                      color: cs.primary,
-                      size: 26,
-                    ),
-                    tooltip: Wording.of(context).absorb,
+                    icon: Icon(playIcon, color: cs.primary, size: 26),
+                    tooltip: playTooltip ?? Wording.of(context).absorb,
                     onPressed: onPlay,
                   ),
                 if (!selecting)
                   IconButton(
-                    icon: Icon(
-                      Icons.delete_outline_rounded,
-                      color: cs.error,
-                      size: 22,
-                    ),
+                    icon: Icon(Icons.delete_outline_rounded,
+                        color: cs.error, size: 22),
                     tooltip: l.delete,
                     onPressed: onDelete,
                   ),
@@ -813,24 +798,20 @@ class _DownloadCard extends StatelessWidget {
     if (info.localCoverPath != null && info.localCoverPath!.isNotEmpty) {
       final file = File(info.localCoverPath!);
       if (file.existsSync()) {
-        return Image.file(
-          file,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => _coverPlaceholder(),
-        );
+        return Image.file(file,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => _coverPlaceholder());
       }
     }
 
     // Try coverUrl via CachedNetworkImage
     if (info.coverUrl != null && info.coverUrl!.isNotEmpty) {
-      if (info.coverUrl!.startsWith('/')) {
+      if (isLocalCoverPath(info.coverUrl!)) {
         final file = File(info.coverUrl!);
         if (file.existsSync()) {
-          return Image.file(
-            file,
-            fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => _coverPlaceholder(),
-          );
+          return Image.file(file,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => _coverPlaceholder());
         }
         return _coverPlaceholder();
       }
@@ -850,11 +831,8 @@ class _DownloadCard extends StatelessWidget {
     return Container(
       color: cs.surfaceContainerHighest,
       child: Center(
-        child: Icon(
-          Icons.headphones_rounded,
-          size: 24,
-          color: cs.onSurfaceVariant.withValues(alpha: 0.4),
-        ),
+        child: Icon(Icons.headphones_rounded,
+            size: 24, color: cs.onSurfaceVariant.withValues(alpha: 0.4)),
       ),
     );
   }
@@ -896,7 +874,11 @@ class _ActiveDownloadCard extends StatelessWidget {
               // Cover art
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: SizedBox(width: 48, height: 48, child: _buildCover()),
+                child: SizedBox(
+                  width: 48,
+                  height: 48,
+                  child: _buildCover(),
+                ),
               ),
               const SizedBox(width: 12),
               // Title, status, progress
@@ -906,20 +888,15 @@ class _ActiveDownloadCard extends StatelessWidget {
                   children: [
                     Text(
                       info.title ?? l.unknown,
-                      style: tt.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: tt.titleSmall?.copyWith(fontWeight: FontWeight.w600),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     if (isQueued)
-                      Text(
-                        l.downloadsWaiting,
-                        style: tt.bodySmall?.copyWith(
-                          color: cs.onSurfaceVariant,
-                        ),
-                      )
+                      Text(l.downloadsWaiting,
+                          style: tt.bodySmall?.copyWith(
+                              color: cs.onSurfaceVariant))
                     else ...[
                       Row(
                         children: [
@@ -933,29 +910,24 @@ class _ActiveDownloadCard extends StatelessWidget {
                                   '${_downloadRate(info.speedBytesPerSecond).isEmpty ? '' : ', ${_downloadRate(info.speedBytesPerSecond)}'}'
                                   '${_downloadEta(info.etaSeconds).isEmpty ? '' : ', ${_downloadEta(info.etaSeconds)} remaining'}',
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(4),
-                                child: LinearProgressIndicator(
-                                  value: progress,
-                                  minHeight: 6,
-                                  backgroundColor: cs.surfaceContainerHighest,
-                                  valueColor: AlwaysStoppedAnimation(
-                                    cs.primary,
-                                  ),
+                              borderRadius: BorderRadius.circular(4),
+                              child: LinearProgressIndicator(
+                                value: progress,
+                                minHeight: 6,
+                                backgroundColor: cs.surfaceContainerHighest,
+                                valueColor: AlwaysStoppedAnimation(cs.primary,),
                                 ),
                               ),
                             ),
                           ),
                           const SizedBox(width: 8),
-                          Text(
-                            '$pct%',
-                            style: tt.labelSmall?.copyWith(
-                              color: cs.onSurfaceVariant,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                          Text('$pct%',
+                              style: tt.labelSmall?.copyWith(
+                                  color: cs.onSurfaceVariant,
+                                  fontWeight: FontWeight.w600)),
                         ],
                       ),
-                      if (info.bytesDone != null &&
+                    if (info.bytesDone != null &&
                           info.bytesTotal != null) ...[
                         const SizedBox(height: 4),
                         Text(
@@ -973,11 +945,8 @@ class _ActiveDownloadCard extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               IconButton(
-                icon: Icon(
-                  Icons.close_rounded,
-                  color: cs.onSurfaceVariant,
-                  size: 20,
-                ),
+                icon: Icon(Icons.close_rounded,
+                    color: cs.onSurfaceVariant, size: 20),
                 tooltip: l.cancel,
                 onPressed: onCancel,
               ),
@@ -990,14 +959,12 @@ class _ActiveDownloadCard extends StatelessWidget {
 
   Widget _buildCover() {
     if (info.coverUrl != null && info.coverUrl!.isNotEmpty) {
-      if (info.coverUrl!.startsWith('/')) {
+      if (isLocalCoverPath(info.coverUrl!)) {
         final file = File(info.coverUrl!);
         if (file.existsSync()) {
-          return Image.file(
-            file,
-            fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => _coverPlaceholder(),
-          );
+          return Image.file(file,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => _coverPlaceholder());
         }
         return _coverPlaceholder();
       }
@@ -1016,121 +983,9 @@ class _ActiveDownloadCard extends StatelessWidget {
     return Container(
       color: cs.surfaceContainerHighest,
       child: Center(
-        child: Icon(
-          Icons.headphones_rounded,
-          size: 24,
-          color: cs.onSurfaceVariant.withValues(alpha: 0.4),
-        ),
+        child: Icon(Icons.headphones_rounded,
+            size: 24, color: cs.onSurfaceVariant.withValues(alpha: 0.4)),
       ),
-    );
-  }
-}
-
-/// A small player for signed-out listening, where the main app with its
-/// cards isn't reachable. The notification and lock screen controls work as
-/// usual on top of this.
-class _SignedOutPlayerBar extends StatelessWidget {
-  const _SignedOutPlayerBar();
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final tt = Theme.of(context).textTheme;
-    final l = AppLocalizations.of(context)!;
-    final player = AudioPlayerService();
-    return ListenableBuilder(
-      listenable: player,
-      builder: (context, _) {
-        if (!player.hasBook) return const SizedBox.shrink();
-        final total = player.totalDuration;
-        return Container(
-          padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
-          decoration: BoxDecoration(
-            color: cs.surfaceContainerHigh,
-            border: Border(
-              top: BorderSide(color: cs.outlineVariant.withValues(alpha: 0.3)),
-            ),
-          ),
-          child: SafeArea(
-            top: false,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            player.currentEpisodeTitle ??
-                                player.currentTitle ??
-                                '',
-                            style: tt.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            player.currentAuthor ?? '',
-                            style: tt.bodySmall?.copyWith(
-                              color: cs.onSurfaceVariant,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.fast_rewind_rounded),
-                      tooltip: l.skipBack,
-                      onPressed: () async => player.skipBackward(
-                        await PlayerSettings.getBackSkip(),
-                      ),
-                    ),
-                    IconButton.filled(
-                      icon: Icon(
-                        player.isPlaying
-                            ? Icons.pause_rounded
-                            : Icons.play_arrow_rounded,
-                      ),
-                      tooltip: player.isPlaying ? l.pauseAction : l.playAction,
-                      onPressed: () => player.togglePlayPause(fromUi: true),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.fast_forward_rounded),
-                      tooltip: l.skipForward,
-                      onPressed: () async => player.skipForward(
-                        await PlayerSettings.getForwardSkip(),
-                      ),
-                    ),
-                  ],
-                ),
-                if (total > 0)
-                  StreamBuilder<Duration>(
-                    stream: player.absolutePositionStream,
-                    builder: (context, _) {
-                      final pos = player.position.inMilliseconds / 1000;
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 6, right: 8),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: LinearProgressIndicator(
-                            value: (pos / total).clamp(0.0, 1.0),
-                            minHeight: 4,
-                            backgroundColor: cs.surfaceContainerHighest,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }

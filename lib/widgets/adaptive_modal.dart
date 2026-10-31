@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/desktop_workspace.dart';
+import '../ui_themes/frosted.dart';
 
 enum DialogWidthClass {
   action(480),
@@ -213,39 +214,39 @@ Future<T?> showDesktopModalDialog<T>({
     useRootNavigator: true,
     barrierDismissible: isDismissible,
     builder: (dialogContext) => Stack(
-      fit: StackFit.expand,
-      children: [
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: isDismissible
-              ? () => Navigator.of(dialogContext).maybePop()
-              : null,
-        ),
-        Dialog(
-          backgroundColor: bg,
-          clipBehavior: Clip.antiAlias,
-          insetPadding: const EdgeInsets.all(24),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-            side: BorderSide(color: cs.outlineVariant.withValues(alpha: 0.4)),
+        fit: StackFit.expand,
+        children: [
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: isDismissible
+                ? () => Navigator.of(dialogContext).maybePop()
+                : null,
           ),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight:
-                  MediaQuery.sizeOf(dialogContext).height * maxHeightFraction,
+          Dialog(
+            backgroundColor: lookSheetColor(dialogContext, bg),
+            clipBehavior: Clip.antiAlias,
+            insetPadding: const EdgeInsets.all(24),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              side: BorderSide(color: cs.outlineVariant.withValues(alpha: 0.4)),
             ),
-            child: SizedBox(
-              width: maxWidth,
-              child: _DesktopDialogBody(
-                builder: builder,
-                closeButton: closeButton,
-                onRouteCaptured: onRouteCaptured,
-                onRouteDisposed: onRouteDisposed,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight:
+                    MediaQuery.sizeOf(dialogContext).height * maxHeightFraction,
+              ),
+              child: SizedBox(
+                width: maxWidth,
+                child: FrostedSurface(child: _DesktopDialogBody(
+                  builder: builder,
+                  closeButton: closeButton,
+                  onRouteCaptured: onRouteCaptured,
+                  onRouteDisposed: onRouteDisposed,
+                )),
               ),
             ),
           ),
-        ),
-      ],
+        ],
     ),
   );
 }

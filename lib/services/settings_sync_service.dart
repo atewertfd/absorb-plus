@@ -16,7 +16,14 @@ import 'player_settings.dart';
 import 'scoped_prefs.dart';
 import 'user_account_service.dart';
 
-enum SyncStatus { ok, notConfigured, noRemote, authFailed, network, tooLarge }
+enum SyncStatus {
+  ok,
+  notConfigured,
+  noRemote,
+  authFailed,
+  network,
+  tooLarge,
+}
 
 class SyncResult {
   final SyncStatus status;
@@ -52,11 +59,7 @@ class SettingsSyncService {
   @visibleForTesting
   static http.Client? testClient;
 
-  Future<http.Response> _put(
-    Uri url,
-    Map<String, String> headers,
-    String body,
-  ) {
+  Future<http.Response> _put(Uri url, Map<String, String> headers, String body) {
     final c = testClient;
     return c != null
         ? c.put(url, headers: headers, body: body)
@@ -65,9 +68,7 @@ class SettingsSyncService {
 
   Future<http.Response> _getUrl(Uri url, Map<String, String> headers) {
     final c = testClient;
-    return c != null
-        ? c.get(url, headers: headers)
-        : http.get(url, headers: headers);
+    return c != null ? c.get(url, headers: headers) : http.get(url, headers: headers);
   }
 
   /// The ONLY top-level backup keys that ever leave the device. This is an
@@ -202,6 +203,36 @@ class SettingsSyncService {
   void _noteReachable() {
     _networkFailures = 0;
     _retryAfter = null;
+    _authPausedFor = null;
+  }
+
+  /// A rejected password retried on every tick can trip the server's
+  /// brute-force lockout, so automatic pushes stop until the address or
+  /// sign-in changes (or the user taps Sync). Holds a hash of the rejected
+  /// address and headers, never the credentials themselves.
+  String? _authPausedFor;
+
+  static String _credentialPrint(Uri uri, Map<String, String> headers) =>
+      _hash({'uri': uri.toString(), 'headers': headers});
+
+  Future<bool> _authPaused() async {
+    final paused = _authPausedFor;
+    if (paused == null) return false;
+    final base = await getUrl();
+    final uri = base == null ? null : _remoteUri(base);
+    final headers = await _authHeaders();
+    if (uri != null && headers != null &&
+        _credentialPrint(uri, headers) == paused) {
+      return true;
+    }
+    debugPrint('[SettingsSync] sign-in changed - automatic sync resumes');
+    _noteReachable();
+    return false;
+  }
+
+  @visibleForTesting
+  void debugResetBackoff() {
+    _noteReachable();
   }
 
   /// Applying a remote payload writes every setting locally, which fires the
@@ -327,9 +358,10 @@ class SettingsSyncService {
   /// themselves, ABS rotates refresh tokens, so a stale one arriving from the
   /// file could overwrite a freshly rotated one and strand the session.
   Future<Set<String>> _activeKeys() async => {
-    ..._syncedKeys,
-    if (await getSyncRmab()) 'rmab',
-  };
+        ..._syncedKeys,
+        if (await getSyncRmab()) 'rmab',
+      };
+
 
   /// Epoch ms of the newest payload this device has either written or applied.
   /// Both directions compare against it, so a device never re-imports its own
@@ -429,12 +461,21 @@ class SettingsSyncService {
 
   Future<void> onAppForegrounded() async {
     if (!await getEnabled()) return;
+
+    _changeCheck?.cancel();
+    _changeCheck = Timer.periodic(
+      _changeCheckInterval,
+      (_) => unawaited(pushIfChanged()),
+    );
+
     final now = DateTime.now();
     if (_lastPullAt != null &&
         now.difference(_lastPullAt!) < _foregroundPullGuard) {
       return;
     }
     _lastPullAt = now;
+    // A rejected sign-in waits for new credentials or the Sync button.
+    if (await _authPaused()) return;
     // Coming back to the app is a natural moment to try again.
     _retryAfter = null;
     // Send anything this device is still holding BEFORE taking the remote copy.
@@ -444,9 +485,7 @@ class SettingsSyncService {
     // losing the change silently. Pushing first stamps our copy as the newest,
     // and the pull below then sees its own timestamp and skips.
     if (await _hasUnsentChanges()) {
-      debugPrint(
-        '[SettingsSync] unsent local changes - pushing before pulling',
-      );
+      debugPrint('[SettingsSync] unsent local changes - pushing before pulling');
       await pushIfChanged();
     }
     final result = await pull();
@@ -551,7 +590,9 @@ class SettingsSyncService {
     if (!await getEnabled()) return;
     try {
       await _setLastHash(_hash(await buildPayload()));
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('[SettingsSync] fingerprint after restore failed: ${e.runtimeType}');
+    }
     start();
     final navigator = rootNavigatorKey.currentState;
     final context = navigator?.context;
@@ -620,7 +661,8 @@ class SettingsSyncService {
   Future<bool> _hasUnsentChanges() async {
     try {
       return _hash(await buildPayload()) != await _lastHash();
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[SettingsSync] unsent-changes check failed: ${e.runtimeType}');
       return false;
     }
   }
@@ -649,6 +691,9 @@ class SettingsSyncService {
   /// and rebuild the UI for no reason.
   Future<SyncResult> pushIfChanged({bool ignoreBackoff = false}) async {
     if (!await getEnabled()) return const SyncResult(SyncStatus.notConfigured);
+    if (!ignoreBackoff && await _authPaused()) {
+      return const SyncResult(SyncStatus.authFailed, 'paused');
+    }
     final retryAfter = _retryAfter;
     if (!ignoreBackoff &&
         retryAfter != null &&
@@ -672,12 +717,15 @@ class SettingsSyncService {
   Future<void> onAppBackgrounded() async {
     _debounce?.cancel();
     _debounce = null;
+    _changeCheck?.cancel();
+    _changeCheck = null;
     await pushIfChanged();
   }
 
   /// The backup payload, reduced to what may travel.
   Future<Map<String, dynamic>> buildPayload() async {
-    final full = await BackupService.exportSettings(includeAccounts: false);
+    final full = await BackupService.exportSettings(
+        includeAccounts: false, includeRmabSecrets: await getSyncRmab());
     final allowed = await _activeKeys();
     final out = <String, dynamic>{
       'version': full['version'],
@@ -783,11 +831,16 @@ class SettingsSyncService {
         );
         return const SyncResult(SyncStatus.tooLarge);
       }
-      final resp = await _put(uri, {
-        ...headers,
-        'content-type': 'application/json',
-      }, body).timeout(const Duration(seconds: 20));
+      final resp = await _put(
+        uri,
+        {...headers, 'content-type': 'application/json'},
+        body,
+      ).timeout(const Duration(seconds: 20));
       if (resp.statusCode == 401 || resp.statusCode == 403) {
+        debugPrint('[SettingsSync] push refused - HTTP ${resp.statusCode}; '
+            'automatic sync paused until the sign-in changes');
+        _noteNetworkFailure();
+        _authPausedFor = _credentialPrint(uri, headers);
         return SyncResult(SyncStatus.authFailed, null, _http(resp, uri, 'PUT'));
       }
       if (resp.statusCode >= 200 && resp.statusCode < 300) {
@@ -800,6 +853,7 @@ class SettingsSyncService {
         return const SyncResult(SyncStatus.ok);
       }
       debugPrint('[SettingsSync] push rejected - HTTP ${resp.statusCode}');
+      _noteNetworkFailure();
       return SyncResult(SyncStatus.network, null, _http(resp, uri, 'PUT'));
     } catch (e) {
       debugPrint('[SettingsSync] push failed: ${e.runtimeType} - $e');
@@ -834,13 +888,13 @@ class SettingsSyncService {
 
     _busy = true;
     try {
-      final resp = await _getUrl(
-        uri,
-        headers,
-      ).timeout(const Duration(seconds: 20));
+      final resp =
+          await _getUrl(uri, headers).timeout(const Duration(seconds: 20));
       if (resp.statusCode == 401 || resp.statusCode == 403) {
+        _authPausedFor = _credentialPrint(uri, headers);
         return SyncResult(SyncStatus.authFailed, null, _http(resp, uri, 'GET'));
       }
+      _authPausedFor = null; // the sign-in was accepted
       if (resp.statusCode == 404) {
         debugPrint('[SettingsSync] nothing on the server yet (404)');
         return SyncResult(SyncStatus.noRemote, null, _http(resp, uri, 'GET'));
@@ -894,7 +948,9 @@ class SettingsSyncService {
       // back up.
       try {
         await _setLastHash(_hash(await buildPayload()));
-      } catch (_) {}
+      } catch (e) {
+        debugPrint('[SettingsSync] fingerprint after pull failed: ${e.runtimeType}');
+      }
       // Anything queued while the import was writing is the import's own echo,
       // not a user edit.
       _debounce?.cancel();
@@ -933,13 +989,12 @@ class SettingsSyncService {
       return const SyncResult(SyncStatus.notConfigured);
     }
     try {
-      final resp = await _getUrl(
-        uri,
-        headers,
-      ).timeout(const Duration(seconds: 15));
+      final resp =
+          await _getUrl(uri, headers).timeout(const Duration(seconds: 15));
       if (resp.statusCode == 401 || resp.statusCode == 403) {
         return SyncResult(SyncStatus.authFailed, null, _http(resp, uri, 'GET'));
       }
+      _authPausedFor = null; // the sign-in was accepted
       // A 404 only means nothing has been pushed yet, which is a fine outcome
       // for first-time setup - the address and credentials still checked out.
       if (resp.statusCode == 404) {

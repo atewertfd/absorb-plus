@@ -9,6 +9,7 @@ import '../providers/library_provider.dart';
 import '../services/book_search_index.dart';
 import 'overlay_toast.dart';
 import 'stackable_sheet.dart';
+import '../utils/local_path.dart';
 
 /// A stay-open search picker for bulk-adding books to a target (collection or
 /// playlist). Type to search the library, tap a result to add it (or tap an
@@ -32,15 +33,16 @@ class AddBooksSearchSheet extends StatefulWidget {
     required this.onRemove,
   });
 
-  static void show(
+  /// Completes when the sheet is closed.
+  static Future<void> show(
     BuildContext context, {
     required String title,
     required String libraryId,
     required Set<String> initialMemberIds,
     required Future<bool> Function(String libraryItemId) onAdd,
     required Future<bool> Function(String libraryItemId) onRemove,
-  }) {
-    showStackableSheet(
+  }) async {
+    await showStackableSheet<void>(
       context: context,
       showHandle: true,
       useSafeArea: true,
@@ -295,7 +297,7 @@ class _AddBooksSearchSheetState extends State<AddBooksSearchSheet> {
                 child: SizedBox(
                   width: 44,
                   height: 44,
-                  child: coverUrl != null && !coverUrl.startsWith('/')
+                  child: coverUrl != null && !isLocalCoverPath(coverUrl)
                       ? CachedNetworkImage(
                           imageUrl: coverUrl,
                           fit: BoxFit.cover,

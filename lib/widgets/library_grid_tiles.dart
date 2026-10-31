@@ -4,10 +4,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import 'cover_badges.dart';
+import '../services/narrated_books.dart';
 import '../providers/auth_provider.dart';
 import '../providers/library_provider.dart';
 import '../services/audio_player_service.dart';
 import '../services/download_service.dart';
+import '../services/ebook_cache.dart';
 import 'absorbing_shared.dart';
 import 'book_detail_sheet.dart';
 import 'books_sheet_shared.dart' show coverGridTextScale, coverGridDecodeWidth;
@@ -16,6 +18,10 @@ import '../services/upcoming_releases_service.dart';
 import 'series_books_sheet.dart';
 import 'author_books_sheet.dart';
 import 'library_item_snapshot.dart';
+import '../utils/local_path.dart';
+import 'desktop_input.dart';
+import 'stable_cached_network_image.dart';
+import '../utils/cover_cache.dart';
 
 // ═══════════════════════════════════════════════════════════════
 // Grid book tile (cover + title + author)
@@ -76,6 +82,7 @@ class _GridBookTileState extends State<GridBookTile> {
         coverUrl: lib.getCoverUrl(itemId),
         progress: lib.getProgress(itemId),
         isFinished: lib.getProgressData(itemId)?['isFinished'] == true,
+        isSkimmed: lib.getProgressData(itemId)?['skimmed'] == true,
         isPodcastLibrary: isPodcastLibrary,
         isSubscribed: isPodcastLibrary && lib.isPodcastSubscribed(itemId),
         unfinishedCount: isPodcastLibrary
@@ -93,11 +100,14 @@ class _GridBookTileState extends State<GridBookTile> {
     final progress = snapshot.progress;
     final isExplicit = PlayerSettings.showExplicitBadge && metadata['explicit'] == true;
     final isDownloaded = _dl.isDownloaded(itemId);
+    final hasEbook = PlayerSettings.showEbookBadge && hasEbookFile(widget.item);
+    final readAlong = hasEbook && hasReadAlongEbook(widget.item);
     final isFinished = snapshot.isFinished;
+    final isSkimmed = snapshot.isSkimmed;
     final isSubscribed = snapshot.isSubscribed;
     final unfinishedCount = snapshot.unfinishedCount;
 
-    return GestureDetector(
+    return DesktopGestureDetector(
       // opaque so taps on the blank space below the title (the tile's tall
       // aspect ratio leaves a gap when the Column children stop short)
       // still trigger the onTap. Without this, taps in that blank strip
@@ -112,7 +122,7 @@ class _GridBookTileState extends State<GridBookTile> {
           if (lib.isPodcastItem(widget.item)) {
             EpisodeListSheet.show(context, widget.item);
           } else {
-            showBookDetailSheet(context, itemId);
+            showBookDetailSheet(context, itemId, initialItem: widget.item);
           }
         }
       },
@@ -207,6 +217,12 @@ class _GridBookTileState extends State<GridBookTile> {
                       ),
                     ),
 
+                  if (hasEbook && !widget.selectionMode)
+                    Positioned(
+                      top: widget.sequenceBadge != null ? 24 : 4, left: 4,
+                      child: EbookCoverBadge(readAlong: readAlong),
+                    ),
+
                   // Sequence badge
                   if (widget.sequenceBadge != null)
                     Positioned(
@@ -229,6 +245,7 @@ class _GridBookTileState extends State<GridBookTile> {
                       child: CoverStateBadges(
                         isDownloaded: isDownloaded,
                         isFinished: isFinished,
+                        isSkimmed: isSkimmed,
                       ),
                     ),
 
@@ -318,12 +335,12 @@ class _GridBookTileState extends State<GridBookTile> {
     final isSquare = (aspectRatio - 1.0).abs() < 0.01;
     final decodeWidth = coverGridDecodeWidth(context);
     if (!isSquare) {
-      if (coverUrl.startsWith('/')) {
+      if (isLocalCoverPath(coverUrl)) {
         return Image.file(File(coverUrl), fit: BoxFit.cover,
             cacheWidth: decodeWidth,
             errorBuilder: (_, __, ___) => placeholder);
       }
-      return CachedNetworkImage(imageUrl: coverUrl, fit: BoxFit.cover,
+      return CachedNetworkImage(imageUrl: coverUrl, cacheKey: stableCoverCacheKey(coverUrl), cacheManager: coverCacheManager, fit: BoxFit.cover,
           httpHeaders: headers, memCacheWidth: decodeWidth,
           placeholder: (_, __) => placeholder,
           errorWidget: (_, __, ___) => placeholder);
@@ -332,7 +349,7 @@ class _GridBookTileState extends State<GridBookTile> {
     // offscreen blur layer per tile, which piles up GPU memory on dense grids
     // and gets the app OOM-killed mid-scroll - a tiny decode stretched to size
     // looks the same under the scrim at tile sizes and costs nothing.
-    if (coverUrl.startsWith('/')) {
+    if (isLocalCoverPath(coverUrl)) {
       return Stack(fit: StackFit.expand, children: [
         Image.file(File(coverUrl), fit: BoxFit.cover, cacheWidth: 32,
             errorBuilder: (_, __, ___) => const SizedBox.shrink()),
@@ -343,11 +360,11 @@ class _GridBookTileState extends State<GridBookTile> {
       ]);
     }
     return Stack(fit: StackFit.expand, children: [
-      CachedNetworkImage(imageUrl: coverUrl, fit: BoxFit.cover,
+      CachedNetworkImage(imageUrl: coverUrl, cacheKey: stableCoverCacheKey(coverUrl), cacheManager: coverCacheManager, fit: BoxFit.cover,
           httpHeaders: headers, memCacheWidth: 32,
           errorWidget: (_, __, ___) => const SizedBox.shrink()),
       Container(color: Colors.black.withValues(alpha: 0.15)),
-      CachedNetworkImage(imageUrl: coverUrl, fit: BoxFit.contain,
+      CachedNetworkImage(imageUrl: coverUrl, cacheKey: stableCoverCacheKey(coverUrl), cacheManager: coverCacheManager, fit: BoxFit.contain,
           httpHeaders: headers, memCacheWidth: decodeWidth,
           placeholder: (_, __) => placeholder,
           errorWidget: (_, __, ___) => placeholder),
@@ -490,12 +507,12 @@ class _StackedCovers extends StatelessWidget {
     if (url == null) return _placeholder();
     final decodeWidth = coverGridDecodeWidth(context);
     // Series stacked covers are always cropped to fit - no blur padding needed
-    if (url.startsWith('/')) {
+    if (isLocalCoverPath(url)) {
       return Image.file(File(url), fit: BoxFit.cover,
           cacheWidth: decodeWidth,
           errorBuilder: (_, __, ___) => _placeholder());
     }
-    return CachedNetworkImage(imageUrl: url, fit: BoxFit.cover,
+    return CachedNetworkImage(imageUrl: url, cacheKey: stableCoverCacheKey(url), cacheManager: coverCacheManager, fit: BoxFit.cover,
         httpHeaders: mediaHeaders, memCacheWidth: decodeWidth,
         placeholder: (_, __) => _placeholder(),
         errorWidget: (_, __, ___) => _placeholder());
@@ -560,7 +577,7 @@ class GridSeriesTile extends StatelessWidget {
     }
     final seriesProgress = itemIds.isNotEmpty ? totalProgress / itemIds.length : 0.0;
 
-    return GestureDetector(
+    return DesktopGestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
         if (seriesId.isNotEmpty) {
@@ -748,6 +765,8 @@ class GridListTile extends StatelessWidget {
   final List<String> bookIds;
   final int count;
   final bool isPlaylist;
+  /// A BookOrbit Smart Scope: its books come from saved rules, not picks.
+  final bool isSmartScope;
   final double coverAspectRatio;
   final VoidCallback onTap;
 
@@ -758,6 +777,7 @@ class GridListTile extends StatelessWidget {
     required this.count,
     required this.isPlaylist,
     required this.onTap,
+    this.isSmartScope = false,
     this.coverAspectRatio = 1.0,
   });
 
@@ -789,22 +809,40 @@ class GridListTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _StackedCovers(
-            coverUrls: coverUrls.isEmpty ? const [null] : coverUrls,
-            numBooks: count,
-            mediaHeaders: lib.mediaHeaders,
-            cs: cs,
-            seriesProgress: progress,
-            booksFinished: finished,
-            coverAspectRatio: coverAspectRatio,
-          ),
+          Stack(children: [
+            _StackedCovers(
+              coverUrls: coverUrls.isEmpty ? const [null] : coverUrls,
+              numBooks: count,
+              mediaHeaders: lib.mediaHeaders,
+              cs: cs,
+              seriesProgress: progress,
+              booksFinished: finished,
+              coverAspectRatio: coverAspectRatio,
+            ),
+            if (isSmartScope)
+              Positioned(
+                top: 6,
+                left: 6,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: cs.primaryContainer,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(Icons.filter_alt_rounded,
+                      size: 14 * coverGridTextScale(context), color: cs.onPrimaryContainer),
+                ),
+              ),
+          ]),
           const SizedBox(height: 5),
           Row(
             children: [
               Icon(
                   isPlaylist
                       ? Icons.playlist_play_rounded
-                      : Icons.collections_bookmark_rounded,
+                      : isSmartScope
+                          ? Icons.filter_alt_rounded
+                          : Icons.collections_bookmark_rounded,
                   size: 12 * coverGridTextScale(context),
                   color: cs.onSurfaceVariant),
               const SizedBox(width: 3),
@@ -825,7 +863,9 @@ class GridListTile extends StatelessWidget {
           Text(
             isPlaylist
                 ? l.playlistDetailItemCount(count)
-                : l.collectionDetailBookCount(count),
+                : isSmartScope
+                    ? l.smartScopeBookCount(count)
+                    : l.collectionDetailBookCount(count),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: tt.labelSmall?.copyWith(
@@ -869,7 +909,11 @@ class GridAuthorTile extends StatelessWidget {
     final numBooks = author['numBooks'] as int? ?? 0;
 
     String? imageUrl;
-    if (authorId.isNotEmpty && auth.apiService != null) {
+    // Only authors with a photo get a request: the server answers 404 for
+    // the rest, and a burst of those reads as probing to fail2ban and
+    // CrowdSec in front of it (GH #418).
+    final hasPhoto = (author['imagePath'] as String?)?.isNotEmpty == true;
+    if (authorId.isNotEmpty && hasPhoto && auth.apiService != null) {
       final ts = (author['updatedAt'] as num?)?.toInt();
       imageUrl = auth.apiService!.getAuthorImageUrl(authorId, updatedAt: ts);
     }
@@ -890,6 +934,7 @@ class GridAuthorTile extends StatelessWidget {
         }
       },
       onLongPress: onSelectionToggle,
+      onSecondaryTap: desktopSecondaryTap(onSelectionToggle),
       child: Column(
         children: [
           // Circular avatar
@@ -914,7 +959,7 @@ class GridAuthorTile extends StatelessWidget {
                   child: imageUrl != null
                       ? ClipOval(
                           child: CachedNetworkImage(
-                            imageUrl: imageUrl,
+                            imageUrl: imageUrl, cacheKey: stableCoverCacheKey(imageUrl), cacheManager: coverCacheManager,
                             fit: BoxFit.cover,
                             httpHeaders: headers,
                             memCacheWidth: coverGridDecodeWidth(context),

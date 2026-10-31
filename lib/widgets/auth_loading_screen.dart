@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../utils/fork_branding.dart';
 import 'absorb_wave_icon.dart';
 
 class AuthLoadingScreen extends StatelessWidget {
@@ -19,7 +20,7 @@ class AuthLoadingScreen extends StatelessWidget {
             AbsorbWaveIcon(size: 48, color: primary),
             const SizedBox(height: 20),
             Text(
-              'A B S O R B',
+              ForkBranding.wordmark,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 color: primary,
                 letterSpacing: 6,

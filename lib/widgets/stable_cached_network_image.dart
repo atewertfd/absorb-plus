@@ -24,8 +24,10 @@ class StableCachedNetworkImage extends CachedNetworkImage {
     required super.cacheKey,
     super.fit,
     super.httpHeaders,
+    super.cacheManager,
     super.imageBuilder,
     super.placeholder,
     super.errorWidget,
+    super.memCacheWidth,
   }) : super(useOldImageOnUrlChange: true);
 }

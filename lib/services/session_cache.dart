@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'session_cache_prune.dart';
 import 'user_account_service.dart';
 
 /// Caches playback session metadata (track URLs, chapters, duration) per item
@@ -39,7 +40,12 @@ class SessionCache {
         'totalDuration': totalDuration,
         'savedAt': DateTime.now().millisecondsSinceEpoch,
       };
-      await prefs.setString(_key(itemId, episodeId), jsonEncode(data));
+      final key = _key(itemId, episodeId);
+      await prefs.setString(key, jsonEncode(data));
+      // Absorb Plus: keep the newest few, not every book ever played.
+      final scope = UserAccountService().activeScopeKey;
+      await pruneSessionCaches(prefs, scope.isEmpty ? '' : '$scope:',
+          justSaved: key);
     } catch (e) {
       debugPrint('[SessionCache] Failed to save: $e');
     }

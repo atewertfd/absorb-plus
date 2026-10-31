@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import 'player_settings.dart';
+import 'server_backend.dart';
 
 class SocketService {
   static const authorChangeEvents = <String>[
@@ -276,6 +277,21 @@ class SocketService {
     }
   }
 
+  /// An item change made by this app on a server with no socket (BookOrbit),
+  /// sent to the same listeners the socket's item_updated reaches.
+  void emitLocalItemUpdated(Map<String, dynamic> item) {
+    onItemUpdated?.call(item);
+    _emitItemUpdated(item);
+    _emitItemsChanged();
+  }
+
+  /// The item_removed counterpart of [emitLocalItemUpdated].
+  void emitLocalItemRemoved(Map<String, dynamic> item) {
+    onItemRemoved?.call(item);
+    _emitItemRemoved(item);
+    _emitItemsChanged();
+  }
+
   // Removal fan-out with payload ({id, ...}), alongside the single-slot
   // onItemRemoved owned by the library provider.
   final List<void Function(Map<String, dynamic>)> _itemRemovedListeners = [];
@@ -329,7 +345,14 @@ class SocketService {
   }
 
   void connect(String serverUrl, String token, {Map<String, String> customHeaders = const {}}) {
-    if (_socket != null) disconnect();
+    // Replace only the socket: callers set the callbacks before connecting,
+    // and disconnect() would wipe them (logout is what disconnect() is for).
+    _socket?.dispose();
+    _socket = null;
+
+    // BookOrbit has its own socket namespaces and no progress events, so
+    // its accounts run on the refresh timers instead.
+    if (ServerBackend.active.isBookOrbit) return;
 
     _token = token;
     _serverUrl = serverUrl;
@@ -360,8 +383,11 @@ class SocketService {
       });
 
       _socket!.on('auth_failed', (_) {
-        debugPrint('[Socket] Auth failed');
-        disconnect();
+        // Usually an access token that ran out while nothing refreshed it.
+        // Stay connected with the callbacks intact: the next refresh hands
+        // the socket its new token through updateToken, which re-sends auth.
+        // A full disconnect() here turned live sync off for the session.
+        debugPrint('[Socket] Auth failed - waiting for a refreshed token');
       });
 
       // Cross-device progress sync
@@ -369,7 +395,7 @@ class SocketService {
         if (data is Map<String, dynamic>) {
           final patch = data['data'] as Map<String, dynamic>?;
           if (patch != null) {
-            onProgressUpdated?.call(patch);
+            onProgressUpdated?.call(_withSession(patch, data));
           }
         }
       });
@@ -503,6 +529,14 @@ class SocketService {
   }
 
   /// Disconnect and tear down the socket, clearing all callbacks.
+  /// The progress row with the server session that sent it, when there was
+  /// one, so this phone can tell its own syncs echoed back from another
+  /// device's.
+  static Map<String, dynamic> _withSession(Map<String, dynamic> patch, Map<String, dynamic> event) {
+    final session = event['sessionId'];
+    return session is String ? {...patch, 'fromSession': session} : patch;
+  }
+
   void disconnect() {
     _socket?.dispose();
     _socket = null;
@@ -546,6 +580,7 @@ class SocketService {
   /// Reconnect after a soft disconnect, reusing saved credentials.
   void softReconnect() {
     if (_socket != null) return; // already connected
+    if (ServerBackend.active.isBookOrbit) return;
     if (PlayerSettings.einkMode) return;
     final url = _serverUrl;
     final token = _token;
@@ -568,14 +603,17 @@ class SocketService {
       });
 
       _socket!.on('auth_failed', (_) {
-        debugPrint('[Socket] Auth failed');
-        disconnect();
+        // Usually an access token that ran out while nothing refreshed it.
+        // Stay connected with the callbacks intact: the next refresh hands
+        // the socket its new token through updateToken, which re-sends auth.
+        // A full disconnect() here turned live sync off for the session.
+        debugPrint('[Socket] Auth failed - waiting for a refreshed token');
       });
 
       _socket!.on('user_item_progress_updated', (data) {
         if (data is Map<String, dynamic>) {
           final patch = data['data'] as Map<String, dynamic>?;
-          if (patch != null) onProgressUpdated?.call(patch);
+          if (patch != null) onProgressUpdated?.call(_withSession(patch, data));
         }
       });
 

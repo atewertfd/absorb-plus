@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'api_service.dart';
+import 'download_service.dart';
 import 'progress_sync_service.dart';
 import 'scoped_prefs.dart';
 
@@ -68,7 +69,8 @@ class LocalSessionService {
     if (raw != null) {
       try {
         _active = jsonDecode(raw) as Map<String, dynamic>;
-      } catch (_) {
+      } catch (e) {
+        debugPrint('[LocalSession] active session unreadable, dropped: ${e.runtimeType}');
         _active = null;
       }
     }
@@ -106,6 +108,8 @@ class LocalSessionService {
         'updatedAt': s['updatedAt'],
         'date': s['date'],
         'dayOfWeek': s['dayOfWeek'],
+        if (s['keepProgress'] == true) 'keepProgress': true,
+        if (s['playMethod'] != null) 'playMethod': s['playMethod'],
       };
 
   /// Swap the payload's duration for the item's server-side duration when it
@@ -162,15 +166,27 @@ class LocalSessionService {
     required double startTime,
     String? displayTitle,
     String? displayAuthor,
+    bool streamed = false,
   }) async {
     await _loadActive();
+    // Narration streamed from the EPUB on the server is still logged through
+    // a local session, but the server should show it as Direct Play.
+    final playMethod = streamed ? 0 : null;
+    // Listening to another account's download is that account's, not the
+    // one signed in now, so it isn't logged here.
+    if (DownloadService().isFromOtherAccount(progressKey)) {
+      if (_active != null) await finalizeActive();
+      debugPrint('[LocalSession] $progressKey is another account\'s download - not logged');
+      return;
+    }
     final now = clock();
     final nowMs = now.millisecondsSinceEpoch;
     final today = _dateKey(now);
     // Resume the existing session only if it's the same item on the same day.
     if (_active != null &&
         _active!['progressKey'] == progressKey &&
-        _active!['date'] == today) {
+        _active!['date'] == today &&
+        _active!['playMethod'] == playMethod) {
       return;
     }
     // Any other lingering session — a different item, or the same item from a
@@ -198,6 +214,7 @@ class LocalSessionService {
       // defaulting to the library item title (the show). Books send their title.
       'displayTitle': displayTitle,
       'displayAuthor': displayAuthor,
+      if (playMethod != null) 'playMethod': playMethod,
     };
     await _persistActive();
     debugPrint('[LocalSession] Began session ${_active!['id']} for $progressKey ($today)');
@@ -213,6 +230,7 @@ class LocalSessionService {
     ApiService? api,
   }) async {
     if (seconds <= 0) return;
+    if (DownloadService().isFromOtherAccount(progressKey)) return;
     await _loadActive();
     if (_active == null) {
       debugPrint('[LocalSession] accrue with no active session — skipping');
@@ -255,6 +273,7 @@ class LocalSessionService {
         'dayOfWeek': _dayOfWeek(effective),
         'displayTitle': old['displayTitle'],
         'displayAuthor': old['displayAuthor'],
+        if (old['playMethod'] != null) 'playMethod': old['playMethod'],
       };
       // Ship the just-closed day promptly when online.
       if (api != null) await flushPending(api: api);
@@ -300,6 +319,12 @@ class LocalSessionService {
 
   DateTime? _lastPushLogAt;
 
+  String newSessionId() => _uuid();
+
+  /// A finished session that couldn't be sent (reading time logged while
+  /// offline), queued to go with the next replay.
+  Future<void> queue(Map<String, dynamic> session) => _enqueue(session);
+
   /// Clear the active session (stop / finish / item change). When [pushed] is
   /// false (offline, or the push failed) it's queued for replay; when true it's
   /// already on the server so we just drop it.
@@ -320,21 +345,34 @@ class LocalSessionService {
       await _loadActive();
       final pendingRaw = await ScopedPrefs.getStringList(_kPending);
       final sessions = <Map<String, dynamic>>[];
+      // Raw entries that are done with: sent, or unreadable. Only these leave
+      // the queue - sessions queued while a flush awaits must stay.
+      final done = <String>[];
+      final sessionRaw = <String>[];
       for (final raw in pendingRaw) {
         try {
           sessions.add(jsonDecode(raw) as Map<String, dynamic>);
-        } catch (_) {}
+          sessionRaw.add(raw);
+        } catch (e) {
+          debugPrint('[LocalSession] queued session unreadable, skipped: ${e.runtimeType}');
+          done.add(raw);
+        }
       }
       // Include the active session so its accrued time isn't stranded until the
       // next finalize (e.g. reconnect while paused).
       final combined = [...sessions, if (_active != null) _active!];
       if (combined.isEmpty) return;
 
-      if (_localUnsupported) {
-        for (final s in combined) {
-          await _legacyFlush(api, s);
+      Future<void> legacyAll() async {
+        for (var i = 0; i < combined.length; i++) {
+          final sent = await _legacyFlush(api, combined[i]);
+          if (sent && i < sessionRaw.length) done.add(sessionRaw[i]);
         }
-        await ScopedPrefs.setStringList(_kPending, []);
+        await _dropPending(done);
+      }
+
+      if (_localUnsupported) {
+        await legacyAll();
         return;
       }
 
@@ -345,15 +383,12 @@ class LocalSessionService {
       final result = await api.syncLocalSessionsAll(payloads);
       if (result.ok) {
         // Keep the active session live; only clear the finalized queue.
-        await ScopedPrefs.setStringList(_kPending, []);
+        await _dropPending(pendingRaw);
         debugPrint('[LocalSession] Flushed ${combined.length} local session(s)');
       } else if (result.serverTooOld) {
         debugPrint('[LocalSession] Server lacks /api/session/local-all — falling back to /play');
         _localUnsupported = true;
-        for (final s in combined) {
-          await _legacyFlush(api, s);
-        }
-        await ScopedPrefs.setStringList(_kPending, []);
+        await legacyAll();
       }
       // Network failure: leave the queue intact for the next trigger.
     } finally {
@@ -363,26 +398,38 @@ class LocalSessionService {
 
   /// Fallback for servers without /api/session/local: record the listening time
   /// via the legacy open `/play` session. Loses per-day attribution and logs as
-  /// Direct Play (the old behavior), but doesn't lose the time.
-  Future<void> _legacyFlush(ApiService api, Map<String, dynamic> s) async {
+  /// Direct Play (the old behavior), but doesn't lose the time. True once the
+  /// server took the time (or there was none to send).
+  Future<bool> _legacyFlush(ApiService api, Map<String, dynamic> s) async {
     try {
       final libId = s['libraryItemId'] as String;
       final epId = s['episodeId'] as String?;
       final currentTime = (s['currentTime'] as num?)?.toDouble() ?? 0;
       final duration = (s['duration'] as num?)?.toDouble() ?? 0;
       final secs = (s['timeListening'] as num?)?.toInt() ?? 0;
-      if (secs <= 0) return;
+      if (secs <= 0) return true;
       final data = epId != null
           ? await api.startEpisodePlaybackSession(libId, epId)
           : await api.startPlaybackSession(libId);
       final sid = data?['id'] as String?;
-      if (sid != null) {
-        await api.syncPlaybackSession(sid,
-            currentTime: currentTime, duration: duration, timeListened: secs);
-        await api.closePlaybackSession(sid);
-      }
+      if (sid == null) return false;
+      final ok = await api.syncPlaybackSession(sid,
+          currentTime: currentTime, duration: duration, timeListened: secs);
+      await api.closePlaybackSession(sid);
+      return ok;
     } catch (e) {
       debugPrint('[LocalSession] legacy flush failed: $e');
+      return false;
     }
+  }
+
+  /// Remove [sent] from the replay queue, leaving anything queued since.
+  Future<void> _dropPending(List<String> sent) async {
+    if (sent.isEmpty) return;
+    final pending = await ScopedPrefs.getStringList(_kPending);
+    for (final raw in sent) {
+      pending.remove(raw);
+    }
+    await ScopedPrefs.setStringList(_kPending, pending);
   }
 }

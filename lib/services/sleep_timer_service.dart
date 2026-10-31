@@ -122,6 +122,9 @@ class SleepTimerService extends ChangeNotifier {
   int _chaptersRemaining = 0;
   int _targetChapterIndex = -1;
   double _targetEndSeconds = -1;
+  // The item the chapter target belongs to: its end position means nothing
+  // in another book or episode.
+  String? _chapterItemKey;
   StreamSubscription? _positionSub;
 
   // Where a sleep rewind put us, so hitting play again shortly after can undo
@@ -200,6 +203,33 @@ class SleepTimerService extends ChangeNotifier {
     _timer?.cancel();
     _wasPlaying = _isPlaybackActive;
     _scheduleNextTick();
+    _player.removeListener(_onPlayerChanged);
+    _player.addListener(_onPlayerChanged);
+  }
+
+  // The tick only samples playback every second, or every five in the
+  // background, so a quick pause and play between two ticks never showed up
+  // as a resume and the timer did not reset (GH #415). The player's own
+  // change events catch every one.
+  bool _resumeResetInFlight = false;
+
+  void _onPlayerChanged() {
+    if (_mode != SleepTimerMode.time) return;
+    final playing = _isPlaybackActive;
+    if (!playing) {
+      _wasPlaying = false;
+      return;
+    }
+    if (_wasPlaying || _resumeResetInFlight) return;
+    _wasPlaying = true;
+    _resumeResetInFlight = true;
+    PlayerSettings.getResetSleepOnPause().then((reset) {
+      _resumeResetInFlight = false;
+      if (!reset || _mode != SleepTimerMode.time) return;
+      _resetToFull();
+      debugPrint('[SleepTimer] Reset to ${_initialDuration.inMinutes}m on resume');
+      onToast?.call('Sleep timer reset: ${_initialDuration.inMinutes}m');
+    });
   }
 
   void _scheduleNextTick() {
@@ -364,6 +394,7 @@ class SleepTimerService extends ChangeNotifier {
     _mode = SleepTimerMode.chapters;
     _targetChapterIndex = target;
     _targetEndSeconds = _chapterEnd(target);
+    _chapterItemKey = _playingItemKey();
     _chaptersRemaining = (target - currentIdx + 1).clamp(0, 999);
     debugPrint('[SleepTimer] Set chapter sleep: current=$currentIdx '
         'target=$target end=${_targetEndSeconds.toStringAsFixed(0)}s');
@@ -385,6 +416,12 @@ class SleepTimerService extends ChangeNotifier {
     _positionSub = stream.listen((pos) {
       if (!_isPlaybackActive) return;
       if (_targetEndSeconds <= 0) return;
+      final key = _playingItemKey();
+      if (key != null && _chapterItemKey != null && key != _chapterItemKey) {
+        debugPrint('[SleepTimer] Another item is playing - chapter sleep off');
+        cancel();
+        return;
+      }
 
       // Trigger off the position, not the chapter index: a position that lands
       // in a gap between chapters resolves to no index at all.
@@ -456,6 +493,15 @@ class SleepTimerService extends ChangeNotifier {
 
   List<dynamic> _chapterList() =>
       _cast.isCasting ? _cast.castingChapters : _player.chapters;
+
+  /// The playing book or episode (`item-episode`), cast or local.
+  String? _playingItemKey() {
+    final item = _cast.isCasting ? _cast.castingItemId : _player.currentItemId;
+    if (item == null) return null;
+    final ep =
+        _cast.isCasting ? _cast.castingEpisodeId : _player.currentEpisodeId;
+    return ep == null ? item : '$item-$ep';
+  }
 
   double _currentPositionSeconds() => _cast.isCasting
       ? _cast.castPosition.inMilliseconds / 1000.0
@@ -607,6 +653,7 @@ class SleepTimerService extends ChangeNotifier {
     _isFadingOut = false;
     _timer?.cancel();
     _timer = null;
+    _player.removeListener(_onPlayerChanged);
     _positionSub?.cancel();
     _positionSub = null;
     if (_accelSub != null) debugPrint('[SleepTimer] Accelerometer stream stopped');
@@ -657,8 +704,15 @@ class SleepTimerService extends ChangeNotifier {
       debugPrint('[SleepTimer] Chime: playing (vol=$vol, ducked main ${prevVol.toStringAsFixed(2)} -> ${ducked.toStringAsFixed(2)})');
 
       chime.play();
-      chime.playerStateStream.where((s) => s.processingState == ja.ProcessingState.completed).first.then((_) {
-        // Restore main player volume after chime finishes
+      // Restore the main volume when the chime ends - or fails, never ends,
+      // or is replaced - so the book can't stay at 15%.
+      chime.playerStateStream
+          .where((s) => s.processingState == ja.ProcessingState.completed)
+          .first
+          .timeout(const Duration(seconds: 10))
+          .then<void>((_) {}, onError: (Object e) {
+        debugPrint('[SleepTimer] Chime did not finish (${e.runtimeType}) - restoring volume');
+      }).whenComplete(() {
         player.setVolume(prevVol);
         chime.dispose();
         if (_chimePlayer == chime) _chimePlayer = null;

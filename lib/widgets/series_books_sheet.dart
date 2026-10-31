@@ -28,6 +28,12 @@ import 'action_pill.dart';
 import 'books_sheet_shared.dart';
 import '../services/api_service.dart';
 import '../utils/duration_format.dart';
+import '../utils/series_number_match.dart';
+import '../utils/local_path.dart';
+import 'desktop_input.dart';
+import 'stable_cached_network_image.dart';
+import '../utils/cover_cache.dart';
+import '../utils/cover_palette.dart';
 
 /// Show a bottom sheet with all books in a series, sorted by sequence.
 /// Can be called from any screen.
@@ -122,10 +128,10 @@ class _SeriesBooksSheetState extends State<SeriesBooksSheet> {
     if (url.isEmpty || _coverSchemeUrl == url || PlayerSettings.einkMode) return;
     _coverSchemeUrl = url;
     final brightness = Theme.of(context).brightness;
-    final ImageProvider provider = url.startsWith('/')
+    final ImageProvider provider = isLocalCoverPath(url)
         ? FileImage(File(url))
-        : CachedNetworkImageProvider(url, headers: context.read<LibraryProvider>().mediaHeaders);
-    PaletteGenerator.fromImageProvider(provider, maximumColorCount: 16).then((palette) {
+        : CachedNetworkImageProvider(url, cacheKey: stableCoverCacheKey(url), cacheManager: coverCacheManager, headers: context.read<LibraryProvider>().mediaHeaders);
+    PaletteGenerator.fromImageProvider(paletteSource(provider), maximumColorCount: 16).then((palette) {
       final seed = accentFromCoverPalette(palette);
       if (seed == null || !mounted) return;
       setState(() => _coverScheme = ColorScheme.fromSeed(seedColor: seed, brightness: brightness));
@@ -680,7 +686,7 @@ class _SeriesBooksSheetState extends State<SeriesBooksSheet> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
+                  DesktopGestureDetector(
                     onTap: () => setState(() {
                       if (isExpanded) _expandedSubSeries.remove(seriesId);
                       else _expandedSubSeries.add(seriesId);
@@ -894,9 +900,10 @@ class _SeriesBooksSheetState extends State<SeriesBooksSheet> {
     );
     if (proceed != true || !mounted) return;
 
-    // Collect owned titles and ASINs for cross-referencing
+    // Collect owned titles, ASINs and series numbers for cross-referencing
     final ownedTitles = <String>{};
     final ownedAsins = <String>{};
+    final ownedNumbers = SeriesNumberOwnership();
     for (final book in _books) {
       final media = book['media'] as Map<String, dynamic>? ?? {};
       final metadata = media['metadata'] as Map<String, dynamic>? ?? {};
@@ -904,6 +911,7 @@ class _SeriesBooksSheetState extends State<SeriesBooksSheet> {
       final asin = metadata['asin'] as String? ?? '';
       if (title.isNotEmpty) ownedTitles.add(title);
       if (asin.isNotEmpty) ownedAsins.add(asin);
+      ownedNumbers.add(_getRawSequence(book), title, asin);
     }
 
     // Try to get a series ASIN from one of the books via Audnexus
@@ -970,6 +978,7 @@ class _SeriesBooksSheetState extends State<SeriesBooksSheet> {
       seriesAsin: seriesAsin,
       ownedTitles: ownedTitles,
       ownedAsins: ownedAsins,
+      ownedNumbers: ownedNumbers,
     );
   }
 
@@ -1037,9 +1046,9 @@ class _SeriesBooksSheetState extends State<SeriesBooksSheet> {
   Widget _coverImage(LibraryProvider lib, String bookId) {
     final url = lib.getCoverUrl(bookId);
     if (url == null || url.isEmpty) return const ColoredBox(color: Colors.black26);
-    if (url.startsWith('/')) return Image.file(File(url), fit: BoxFit.cover);
+    if (isLocalCoverPath(url)) return Image.file(File(url), fit: BoxFit.cover);
     return CachedNetworkImage(
-      imageUrl: url,
+      imageUrl: url, cacheKey: stableCoverCacheKey(url), cacheManager: coverCacheManager,
       httpHeaders: lib.mediaHeaders,
       fit: BoxFit.cover,
       errorWidget: (_, __, ___) => const ColoredBox(color: Colors.black26),
@@ -1301,10 +1310,12 @@ class _SeriesBooksSheetState extends State<SeriesBooksSheet> {
         final lib = context.read<LibraryProvider>();
         await lib.enableRollingDownload(seriesId,
             name: widget.seriesName, kind: 'series');
+        if (!mounted) return;
         setState(() => _autoDownloadEnabled = true);
       }
     }
 
+    if (!mounted) return;
     setState(() => _isDownloadingAll = true);
 
     final l2 = mounted ? AppLocalizations.of(context)! : null;
@@ -1555,6 +1566,7 @@ class _SeriesBooksSheetState extends State<SeriesBooksSheet> {
     final isExplicit = PlayerSettings.showExplicitBadge && metadata['explicit'] == true;
     final progress = lib.getProgress(bookId);
     final isFinished = lib.getProgressData(bookId)?['isFinished'] == true;
+    final isSkimmed = lib.getProgressData(bookId)?['skimmed'] == true;
     final isDownloaded = DownloadService().isDownloaded(bookId);
     final isDownloading = DownloadService().isDownloading(bookId);
     final downloadPct = (DownloadService().downloadProgress(bookId) * 100).clamp(0, 100).round();
@@ -1600,11 +1612,11 @@ class _SeriesBooksSheetState extends State<SeriesBooksSheet> {
                   child: Stack(children: [
                     Positioned.fill(
                       child: coverUrl != null
-                          ? (coverUrl.startsWith('/')
+                          ? (isLocalCoverPath(coverUrl)
                               ? Image.file(File(coverUrl), fit: BoxFit.cover,
                                   errorBuilder: (_, __, ___) => _placeholder(cs))
                               : CachedNetworkImage(
-                                  imageUrl: coverUrl, fit: BoxFit.cover,
+                                  imageUrl: coverUrl, cacheKey: stableCoverCacheKey(coverUrl), cacheManager: coverCacheManager, fit: BoxFit.cover,
                                   httpHeaders: lib.mediaHeaders,
                                   placeholder: (_, __) => _placeholder(cs),
                                   errorWidget: (_, __, ___) => _placeholder(cs)))
@@ -1642,7 +1654,7 @@ class _SeriesBooksSheetState extends State<SeriesBooksSheet> {
                       ),
                     if (isFinished || isDownloaded)
                       Positioned(left: 0, right: 0, bottom: 0,
-                        child: CoverStateBadges(isDownloaded: isDownloaded, isFinished: isFinished),
+                        child: CoverStateBadges(isDownloaded: isDownloaded, isFinished: isFinished, isSkimmed: isSkimmed),
                       ),
                   ]),
                 ),

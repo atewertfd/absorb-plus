@@ -1,0 +1,27 @@
+/// Absorb Plus switches for upstream screens, kept here so the upstream files
+/// only gain a one-line check.
+abstract final class ForkBranding {
+  /// The upstream author's "Support the Dev" (Buy Me a Coffee) card. Absorb
+  /// Plus is a separate build, so it doesn't ask for donations on their
+  /// behalf; the original project is still credited in the README.
+  static const bool showUpstreamSupportCard = false;
+
+  /// Where "Bugs & feature requests" and "Contact" go (owner decision,
+  /// 2026-10-30): Absorb Plus reports must not reach the upstream developer,
+  /// who doesn't ship this build.
+  static const String issuesUrl =
+      'https://github.com/atewertfd/absorb-plus/issues';
+
+  /// The project page, linked from Settings > Issues & Support in place of
+  /// upstream's Contact email (owner, 2026-10-30).
+  static const String repoUrl = 'https://github.com/atewertfd/absorb-plus';
+
+  /// Upstream's Discord is for the original Absorb, so it's hidden.
+  static const bool showUpstreamDiscord = false;
+
+  /// The spaced-out wordmark on the sign-in and signing-in screens.
+  static const String wordmark = 'A B S O R B   P L U S';
+
+  /// The app name used in log reports.
+  static const String appName = 'Absorb Plus';
+}

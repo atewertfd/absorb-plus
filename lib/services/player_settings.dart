@@ -3,9 +3,12 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'book_settings_service.dart';
+import 'narrated_books.dart';
 import 'scoped_prefs.dart';
 import 'update_check_policy.dart';
 import '../widgets/card_button_config.dart';
+import '../utils/fork_platform.dart';
 
 typedef QueueModeSnapshot = ({
   String bookMode,
@@ -211,7 +214,19 @@ class PlayerSettings {
   // (raw SharedPreferences, not per-account) because the downloaded Whisper
   // model is shared across every profile on the device.
 
+  /// Moves the ebook to where listening stopped, and the audiobook to where
+  /// reading stopped, for books with both (transcription does the finding).
+  static Future<bool> getSyncReadingListening() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('syncReadingListening') ?? false;
+  }
+  static Future<void> setSyncReadingListening(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('syncReadingListening', value);
+  }
+
   static Future<bool> getTranscriptionEnabled() async {
+    if (!ForkPlatform.supportsTranscription) return false; // Absorb Plus: Android-only
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool('transcriptionEnabled') ?? false;
   }
@@ -816,6 +831,13 @@ class PlayerSettings {
     await _set('showExplicitBadge', value);
   }
 
+  static bool showEbookBadge = true;
+  static Future<bool> getShowEbookBadge() => _get('showEbookBadge', true);
+  static Future<void> setShowEbookBadge(bool value) async {
+    showEbookBadge = value;
+    await _set('showEbookBadge', value, notify: true);
+  }
+
   /// Cached value for synchronous access when building audio sources.
   static bool mp3IndexSeeking = false;
   static Future<bool> getMp3IndexSeeking() => _get('mp3IndexSeeking', false);
@@ -826,6 +848,11 @@ class PlayerSettings {
 
   static Future<bool> getNotificationChapterProgress() => _get('notificationChapterProgress', false);
   static Future<void> setNotificationChapterProgress(bool value) => _set('notificationChapterProgress', value, notify: true);
+
+  // Which pieces the media controls show on each line, as
+  // NowPlayingLayout JSON. Empty = the standard layout.
+  static Future<String> getNowPlayingLayout() => _get('nowPlayingLayout', '');
+  static Future<void> setNowPlayingLayout(String json) => _set('nowPlayingLayout', json, notify: true);
 
   // Android only: when true, the phone media controls show speed + bookmark in
   // the two extra slots instead of chapter skip. Android Auto shows all of them
@@ -844,6 +871,12 @@ class PlayerSettings {
   // alive but paused) belongs to the car system's own resume behavior; this
   // covers the cold start where no session exists for it to resume.
   static Future<bool> getAutoplayOnCarConnect() => _get('autoplayOnCarConnect', false);
+  static Future<bool> getKeepScreenOnInPlayer() => _get('keepScreenOnPlayer', false);
+  static Future<void> setKeepScreenOnInPlayer(bool value) =>
+      _set('keepScreenOnPlayer', value, notify: true);
+  static Future<bool> getKeepScreenOnInCarMode() => _get('keepScreenOnCarMode', false);
+  static Future<void> setKeepScreenOnInCarMode(bool value) =>
+      _set('keepScreenOnCarMode', value, notify: true);
 
   // Android Auto / CarPlay library browsing. Book sort is 'title', 'author' or
   // 'added' (newest first); reverse flips whichever is picked. Podcast shows
@@ -934,6 +967,11 @@ class PlayerSettings {
 
   static Future<bool> getHideEbookOnly() => _get('hideEbookOnly', false);
   static Future<void> setHideEbookOnly(bool value) => _set('hideEbookOnly', value, notify: true);
+
+  /// Tapping a Continue Listening or Continue Reading card on Home opens its
+  /// details instead of picking up where it left off.
+  static Future<bool> getHomeCardsOpenDetails() => _get('homeCardsOpenDetails', false);
+  static Future<void> setHomeCardsOpenDetails(bool value) => _set('homeCardsOpenDetails', value, notify: true);
 
   static Future<bool> getCollapseSeries() => _get('collapseSeries', false);
   static Future<void> setCollapseSeries(bool value) => _set('collapseSeries', value, notify: true);
@@ -1058,6 +1096,9 @@ class PlayerSettings {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('loggingEnabled', value);
   }
+  /// Whether the logging switch was ever set, by hand or from a backup.
+  static Future<bool> loggingChosen() async =>
+      (await SharedPreferences.getInstance()).containsKey('loggingEnabled');
 
   static Future<bool> getFullScreenPlayer() => _get('fullScreenPlayer', false);
   static Future<void> setFullScreenPlayer(bool value) => _set('fullScreenPlayer', value);
@@ -1070,6 +1111,11 @@ class PlayerSettings {
   // (off = playing audio gives the keys back to system volume).
   static Future<bool> getEreaderVolumeNavWhilePlaying() => _get('ereaderVolumeNavWhilePlaying', false);
   static Future<void> setEreaderVolumeNavWhilePlaying(bool value) => _set('ereaderVolumeNavWhilePlaying', value, notify: true);
+
+  // Ebook reader: where the Translate button sends a selection. Empty means
+  // the first translator this device has (see TranslateService).
+  static Future<String> getEreaderTranslateWith() => _get('ereaderTranslateWith', '');
+  static Future<void> setEreaderTranslateWith(String value) => _set('ereaderTranslateWith', value);
 
   static Future<double> getEreaderAutoScrollSpeed() => _get('ereaderAutoScrollSpeed', 40.0);
   static Future<void> setEreaderAutoScrollSpeed(double value) => _set('ereaderAutoScrollSpeed', value);
@@ -1089,6 +1135,15 @@ class PlayerSettings {
 
   static Future<bool> getRectangleCovers() => _get('rectangleCovers', false);
   static Future<void> setRectangleCovers(bool value) => _set('rectangleCovers', value, notify: true);
+
+  /// How the player card's buttons are filled: 'clear' (no fill or edge),
+  /// 'subtle' (the long-standing look) or 'solid'. Cached for builders.
+  static String cardButtonFill = 'subtle';
+  static Future<String> getCardButtonFill() => _get('cardButtonFill', 'subtle');
+  static Future<void> setCardButtonFill(String value) async {
+    cardButtonFill = value;
+    await _set('cardButtonFill', value, notify: true);
+  }
 
   /// Cached value for synchronous access in grid builders.
   /// 'small' | 'medium' | 'large'; medium keeps the long-standing layout.
@@ -1189,8 +1244,7 @@ class PlayerSettings {
     final prefs = await SharedPreferences.getInstance();
     return defaultIncludePreReleases(
       isGithubBuild: const bool.fromEnvironment('GITHUB_BUILD'),
-      savedPreference: prefs.getBool('includePreReleases'),
-    );
+      savedPreference: prefs.getBool('includePreReleases'),);
   }
   static Future<void> setIncludePreReleases(bool value) async {
     final prefs = await SharedPreferences.getInstance();
@@ -1227,7 +1281,7 @@ class PlayerSettings {
 
   // ── Card button order ──
 
-  static const defaultButtonOrder = ['chapters', 'speed', 'sleep', 'bookmarks', 'details', 'ebook', 'findinebook', 'lyrics', 'equalizer', 'cast', 'airplay', 'history', 'remove', 'car', 'notes', 'download'];
+  static const defaultButtonOrder = ['chapters', 'speed', 'sleep', 'bookmarks', 'details', 'ebook', 'findinebook', 'lyrics', 'equalizer', 'cast', 'airplay', 'history', 'remove', 'car', 'notes', 'wake', 'download'];
 
   static Future<List<String>> getCardButtonOrder() async {
     final stored = await ScopedPrefs.getStringList('card_button_order');
@@ -1356,9 +1410,14 @@ class PlayerSettings {
   /// Check if an item has no audio content.
   /// For minified responses (library list), duration == 0 means no audio files.
   /// For full responses (detail sheet), we also check ebookFile + audioFiles.
-  static bool isEbookOnly(Map<String, dynamic> item) {
+  /// [countNarration] off asks about the server's own audio only, leaving
+  /// out an EPUB found to read itself aloud.
+  static bool isEbookOnly(Map<String, dynamic> item, {bool countNarration = true}) {
     // Podcasts are never eBook-only (minified podcasts lack duration/audioFiles)
     if ((item['mediaType'] as String?) == 'podcast') return false;
+    // BookOrbit Book Dock files have no tracks until they are filed.
+    if (item['bookDock'] != null) return false;
+    if (countNarration && NarratedBooks.contains(item['id'])) return false;
     final media = item['media'] as Map<String, dynamic>? ?? {};
     final duration = (media['duration'] as num?)?.toDouble() ?? 0;
     if (duration > 0) return false; // Has audio content
@@ -1374,11 +1433,13 @@ class PlayerSettings {
 
   // ── Per-book speed persistence ──
 
+  // Absorb Plus: a book with no speed of its own falls back to its series'
+  // last speed; saving also remembers it for the series.
   static Future<double?> getBookSpeed(String itemId) =>
-      ScopedPrefs.getDouble('bookSpeed_$itemId');
+      BookSettingsService.bookSpeedOrSeries(itemId);
 
   static Future<void> setBookSpeed(String itemId, double speed) =>
-      _set('bookSpeed_$itemId', speed);
+      BookSettingsService.saveBookSpeed(itemId, speed);
 
   // ── Per-book sleep-rewind override (falls back to the global default) ──
 

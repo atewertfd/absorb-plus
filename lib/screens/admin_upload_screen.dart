@@ -1,23 +1,17 @@
-import 'dart:io';
+import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/app_localizations.dart';
 import '../services/api_service.dart';
-import '../services/libation_import_helper.dart';
+import '../services/book_search_index.dart';
 import '../widgets/absorb_page_header.dart';
 import '../widgets/overlay_toast.dart';
+import '../widgets/stackable_sheet.dart';
 
 typedef UploadFilePicker = Future<List<MediaUploadFile>?> Function();
-typedef UploadDirectoryPicker = Future<String?> Function();
-typedef UploadExecutablePicker = Future<String?> Function();
-typedef LibationDirectoryScanner =
-    Future<List<LibationBookCandidate>> Function(String directoryPath);
-typedef LibationExecutableLauncher =
-    Future<bool> Function(String executablePath);
 typedef UploadPathChecker =
     Future<UploadPathCheckResult> Function(String directory, String folderPath);
 typedef MediaUploader =
@@ -44,31 +38,13 @@ class AdminUploadScreen extends StatefulWidget {
   static const chooseFilesKey = Key('adminUploadChooseFiles');
   static const submitKey = Key('adminUploadSubmit');
   static const permissionBannerKey = Key('adminUploadPermissionBanner');
-  static const libationGuideKey = Key('libationImportGuide');
-  static const libationFilesKey = Key('libationImportFiles');
-  static const libationFolderKey = Key('libationImportFolder');
-  static const libationLaunchKey = Key('libationImportLaunch');
-  static const libationSetAppKey = Key('libationImportSetApp');
-  static const libationSetOutputFolderKey = Key(
-    'libationImportSetOutputFolder',
-  );
-  static const libationScanProgressKey = Key('libationImportScanProgress');
-  static const libationScanOutputFolderKey = Key(
-    'libationImportScanOutputFolder',
-  );
 
   final List<dynamic> libraries;
   final String? initialLibraryId;
   final ApiService? apiService;
   final bool canUpload;
-  final bool initialLibationExpanded;
   final VoidCallback? onUploadComplete;
   final UploadFilePicker? filePicker;
-  final UploadDirectoryPicker? directoryPicker;
-  final UploadExecutablePicker? executablePicker;
-  final LibationDirectoryScanner? directoryScanner;
-  final LibationExecutableLauncher? executableLauncher;
-  final bool? showDesktopLibationControls;
   final UploadPathChecker? pathChecker;
   final MediaUploader? uploader;
   final BookMetadataSearcher? metadataSearcher;
@@ -80,14 +56,8 @@ class AdminUploadScreen extends StatefulWidget {
     this.initialLibraryId,
     this.apiService,
     this.canUpload = true,
-    this.initialLibationExpanded = false,
     this.onUploadComplete,
     this.filePicker,
-    this.directoryPicker,
-    this.executablePicker,
-    this.directoryScanner,
-    this.executableLauncher,
-    this.showDesktopLibationControls,
     this.pathChecker,
     this.uploader,
     this.metadataSearcher,
@@ -99,7 +69,28 @@ class AdminUploadScreen extends StatefulWidget {
 }
 
 class _AdminUploadScreenState extends State<AdminUploadScreen> {
-  static const _audioExtensions = kLibationAudioExtensions;
+  static const _audioExtensions = <String>{
+    'm4b',
+    'mp3',
+    'm4a',
+    'flac',
+    'opus',
+    'ogg',
+    'oga',
+    'mp4',
+    'aac',
+    'wma',
+    'aiff',
+    'aif',
+    'wav',
+    'webm',
+    'webma',
+    'mka',
+    'awb',
+    'caf',
+    'mpeg',
+    'mpg',
+  };
   static const _ebookExtensions = <String>{
     'epub',
     'pdf',
@@ -125,15 +116,13 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
     ..._ebookExtensions,
     ..._otherExtensions,
   };
-  // Export handoff only: never select Libation account/configuration files.
-  static const _libationExportExtensions = kLibationExportExtensions;
 
   final _formKey = GlobalKey<FormState>();
   final _title = TextEditingController();
   final _author = TextEditingController();
   final _series = TextEditingController();
 
-  List<Map<String, dynamic>> _libraries = [];
+   List<Map<String, dynamic>> _libraries = [];
   bool _loadingLibraries = false;
   String? _selectedLibraryId;
   String? _selectedFolderId;
@@ -148,18 +137,71 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
   int _metadataRequestId = 0;
   double? _progress;
   DateTime _lastProgressUpdate = DateTime.fromMillisecondsSinceEpoch(0);
-  String? _libationExecutablePath;
-  String? _libationOutputFolderPath;
-  bool _scanning = false;
-  // Author filled in from the last chosen export folder, so choosing another
-  // book replaces it instead of keeping the previous book's author.
-  String _candidateAuthor = '';
+  // A book already on the server whose folder the files should join. The
+  // server only takes author, series and title, so they are filled from the
+  // book's real folder path and the fields lock until it is cleared.
+  _ExistingBook? _existingTarget;
 
-  bool get _busy => _uploading || _scanning;
+  Future<void> _pickExistingBook() async {
+    final api = widget.apiService;
+    final libraryId = _selectedLibraryId;
+    if (api == null || libraryId == null) return;
+    final l = AppLocalizations.of(context)!;
+    final picked = await showStackableSheet<Map<String, dynamic>>(
+      context: context,
+      showHandle: true,
+      useSafeArea: true,
+      initialChildSize: 0.92,
+      maxChildSize: 0.95,
+      builder: (_, __) => _ExistingBookPicker(api: api, libraryId: libraryId),
+    );
+    if (picked == null || !mounted) return;
+    final id = picked['id'] as String? ?? '';
+    final full = await api.getLibraryItem(id) ?? picked;
+    if (!mounted) return;
+    final relPath = (full['relPath'] as String? ?? picked['relPath'] as String? ?? '')
+        .replaceAll('\\', '/')
+        .replaceAll(RegExp(r'^/+|/+$'), '');
+    if (relPath.isEmpty) {
+      _showError(l.adminUploadTargetNoFolder);
+      return;
+    }
+    final metadata =
+        (full['media'] as Map<String, dynamic>?)?['metadata'] as Map<String, dynamic>? ?? {};
+    final title = metadata['title'] as String? ?? l.unknown;
+    final folderId = full['folderId'] as String? ?? picked['folderId'] as String?;
+    final parts = relPath.split('/');
+    // The server joins author, series and title; a shallower folder means
+    // the missing levels were empty, counted from the top.
+    String author = '', series = '', bookFolder = parts.last;
+    if (!_isPodcast) {
+      if (parts.length >= 3) {
+        author = parts[parts.length - 3];
+        series = parts[parts.length - 2];
+      } else if (parts.length == 2) {
+        author = parts[0];
+      }
+    }
+    setState(() {
+      _existingTarget = _ExistingBook(id: id, title: title, relPath: relPath);
+      _title.text = bookFolder;
+      _author.text = author;
+      _series.text = series;
+      if (folderId != null && _folders.any((f) => f['id']?.toString() == folderId)) {
+        _selectedFolderId = folderId;
+      }
+      _autoFetchMetadata = false;
+      _lastMetadataQuery = null;
+      if (_metadataSearching) {
+        _metadataRequestId++;
+        _metadataSearching = false;
+      }
+    });
+  }
 
-  bool get _desktopLibationEnabled =>
-      widget.showDesktopLibationControls ??
-      (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS));
+  void _clearExistingTarget() {
+    setState(() => _existingTarget = null);
+  }
 
   @override
   void initState() {
@@ -169,9 +211,6 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
       _loadLibrariesFromApi();
     }
     _loadMetadataProviders();
-    if (_desktopLibationEnabled) {
-      _loadLibationPrefs();
-    }
   }
 
   void _applyInitialLibraries(List<dynamic> rawLibraries) {
@@ -195,7 +234,7 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
       initialLibrary,
     ).firstOrNull?['id']?.toString();
     _metadataProvider = _providerFor(initialLibrary);
-    _metadataProviders = {_metadataProvider, ..._metadataProviders}.toList();
+    _metadataProviders = {_metadataProvider,..._metadataProviders}.toList();
   }
 
   Future<void> _loadLibrariesFromApi() async {
@@ -215,23 +254,6 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
       if (!mounted) return;
       setState(() => _loadingLibraries = false);
     }
-  }
-
-  Future<void> _loadLibationPrefs() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final exe = prefs.getString(kLibationExecutablePathPref);
-      final out = prefs.getString(kLibationOutputFolderPref);
-      if (!mounted) return;
-      setState(() {
-        _libationExecutablePath = (exe != null && exe.trim().isNotEmpty)
-            ? exe.trim()
-            : null;
-        _libationOutputFolderPath = (out != null && out.trim().isNotEmpty)
-            ? out.trim()
-            : null;
-      });
-    } catch (_) {}
   }
 
   @override
@@ -313,7 +335,11 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
     });
   }
 
-  String _extension(String filename) => libationFileExtension(filename);
+  String _extension(String filename) {
+    final dot = filename.lastIndexOf('.');
+    if (dot < 0 || dot == filename.length - 1) return '';
+    return filename.substring(dot + 1).toLowerCase();
+  }
 
   bool _isSupported(MediaUploadFile file) =>
       _supportedExtensions.contains(_extension(file.name));
@@ -447,16 +473,11 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
     });
   }
 
-  Future<List<MediaUploadFile>?> _pickWithFilePicker({
-    bool exportedOnly = false,
-  }) async {
+  Future<List<MediaUploadFile>?> _pickWithFilePicker() async {
     final result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
       type: FileType.custom,
-      allowedExtensions:
-          (exportedOnly ? _libationExportExtensions : _supportedExtensions)
-              .toList()
-            ..sort(),
+      allowedExtensions: _supportedExtensions.toList()..sort(),
       withReadStream: true,
     );
     if (result == null) return null;
@@ -473,27 +494,16 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
         .toList();
   }
 
-  Future<void> _pickFiles({bool exportedOnly = false}) async {
-    if (_busy) return;
+  Future<void> _pickFiles() async {
     final l = AppLocalizations.of(context)!;
     try {
-      final picked =
-          await (widget.filePicker ??
-              () => _pickWithFilePicker(exportedOnly: exportedOnly))();
+      final picked = await (widget.filePicker ?? _pickWithFilePicker)();
       if (picked == null || picked.isEmpty || !mounted) return;
-      final supported = picked
-          .where(
-            (file) => exportedOnly
-                ? _libationExportExtensions.contains(_extension(file.name))
-                : _isSupported(file),
-          )
-          .toList();
+      final supported = picked.where(_isSupported).toList();
       if (supported.length != picked.length) {
         showOverlayToast(
           context,
-          exportedOnly
-              ? l.libationImportUnsupported
-              : l.adminUploadUnsupportedFiles,
+          l.adminUploadUnsupportedFiles,
           icon: Icons.warning_amber_rounded,
         );
       }
@@ -509,12 +519,10 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
 
       setState(() {
         _files = [..._files, ...newFiles];
-        final primaryFiles = _files.where(_isPrimaryFile).toList();
-        if (_title.text.trim().isEmpty) {
-          final inferred = inferTitleFromSelectedFiles(primaryFiles);
-          if (inferred != null && inferred.isNotEmpty) {
-            _title.text = inferred;
-          }
+        if (_title.text.trim().isEmpty && _files.length == 1) {
+          final filename = _files.single.name;
+          final dot = filename.lastIndexOf('.');
+          _title.text = dot > 0 ? filename.substring(0, dot) : filename;
         }
       });
       if (_autoFetchMetadata) await _fetchMetadata();
@@ -526,275 +534,6 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
         icon: Icons.error_outline_rounded,
       );
     }
-  }
-
-  Future<void> _pickExportFolder() async {
-    if (_busy) return;
-    final l = AppLocalizations.of(context)!;
-    try {
-      final dirPath =
-          await (widget.directoryPicker ??
-              () => FilePicker.platform.getDirectoryPath())();
-      if (dirPath == null || dirPath.trim().isEmpty || !mounted) return;
-      await _scanAndSelectFromDirectory(dirPath.trim());
-    } catch (_) {
-      if (!mounted) return;
-      showOverlayToast(
-        context,
-        l.adminUploadFilePickerFailed,
-        icon: Icons.error_outline_rounded,
-      );
-    }
-  }
-
-  Future<void> _scanAndSelectFromDirectory(String directoryPath) async {
-    if (_busy) return;
-    final l = AppLocalizations.of(context)!;
-    final scanner = widget.directoryScanner ?? scanLibationExportDirectory;
-    setState(() => _scanning = true);
-    List<LibationBookCandidate> candidates;
-    try {
-      candidates = await scanner(directoryPath);
-    } catch (_) {
-      if (!mounted) return;
-      setState(() => _scanning = false);
-      _showError(l.adminUploadFilePickerFailed);
-      return;
-    }
-    if (!mounted) return;
-    setState(() => _scanning = false);
-    if (candidates.isEmpty) {
-      showOverlayToast(
-        context,
-        l.libationImportNoExportedBooks,
-        icon: Icons.folder_off_outlined,
-      );
-      return;
-    }
-
-    LibationBookCandidate? chosen;
-    if (candidates.length == 1) {
-      chosen = candidates.single;
-    } else {
-      chosen = await _showBookCandidatePicker(candidates);
-    }
-    if (chosen == null || !mounted) return;
-    await _applyBookCandidate(chosen);
-  }
-
-  Future<LibationBookCandidate?> _showBookCandidatePicker(
-    List<LibationBookCandidate> candidates,
-  ) {
-    final cs = Theme.of(context).colorScheme;
-    final tt = Theme.of(context).textTheme;
-    final l = AppLocalizations.of(context)!;
-    return showModalBottomSheet<LibationBookCandidate>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: cs.surfaceContainerHigh,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (sheetContext) {
-        return SafeArea(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.sizeOf(sheetContext).height * 0.75,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 16, 12, 8),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l.libationImportSelectBookTitle,
-                              style: tt.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              l.libationImportSelectBookSubtitle,
-                              style: tt.bodySmall?.copyWith(
-                                color: cs.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      IconButton(
-                        tooltip: MaterialLocalizations.of(
-                          sheetContext,
-                        ).closeButtonTooltip,
-                        onPressed: () => Navigator.pop(sheetContext),
-                        icon: const Icon(Icons.close_rounded),
-                      ),
-                    ],
-                  ),
-                ),
-                const Divider(height: 1),
-                Flexible(
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: candidates.length,
-                    separatorBuilder: (_, _) =>
-                        const Divider(height: 1, indent: 16, endIndent: 16),
-                    itemBuilder: (itemContext, index) {
-                      final candidate = candidates[index];
-                      final modified = candidate.modified;
-                      final details = <String>[
-                        if (candidate.author != null &&
-                            candidate.author!.isNotEmpty)
-                          candidate.author!,
-                        if (modified != null)
-                          MaterialLocalizations.of(
-                            itemContext,
-                          ).formatShortDate(modified.toLocal()),
-                        l.adminUploadSelectedFiles(candidate.files.length),
-                        _formatBytes(candidate.totalBytes),
-                      ].join(' · ');
-                      return ListTile(
-                        leading: Icon(
-                          Icons.audio_file_rounded,
-                          color: cs.primary,
-                        ),
-                        title: Text(
-                          candidate.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        subtitle: Text(
-                          details,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: tt.bodySmall?.copyWith(
-                            color: cs.onSurfaceVariant,
-                          ),
-                        ),
-                        onTap: () => Navigator.pop(sheetContext, candidate),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _applyBookCandidate(LibationBookCandidate candidate) async {
-    final l = AppLocalizations.of(context)!;
-    if (candidate.skippedFilesCount > 0) {
-      showOverlayToast(
-        context,
-        l.libationImportUnsupported,
-        icon: Icons.warning_amber_rounded,
-      );
-    }
-    setState(() {
-      _files = List<MediaUploadFile>.from(candidate.files);
-      if (candidate.title.trim().isNotEmpty) {
-        _title.text = candidate.title.trim();
-      }
-      final currentAuthor = _author.text.trim();
-      final nextAuthor = candidate.author?.trim() ?? '';
-      // Keep an author the user typed; replace one a previous folder filled.
-      if (currentAuthor.isEmpty || currentAuthor == _candidateAuthor) {
-        _author.text = nextAuthor;
-      }
-      _candidateAuthor = nextAuthor;
-      _lastMetadataQuery = null;
-    });
-    if (_autoFetchMetadata) await _fetchMetadata();
-  }
-
-  Future<String?> _pickExecutablePath() async {
-    if (widget.executablePicker != null) {
-      return widget.executablePicker!();
-    }
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: false,
-      type: Platform.isWindows ? FileType.custom : FileType.any,
-      allowedExtensions: Platform.isWindows ? const <String>['exe'] : null,
-    );
-    return result?.files.firstOrNull?.path;
-  }
-
-  Future<void> _configureLibationExecutable() async {
-    if (_busy) return;
-    final l = AppLocalizations.of(context)!;
-    try {
-      final picked = await _pickExecutablePath();
-      if (picked == null || picked.trim().isEmpty || !mounted) return;
-      final clean = picked.trim();
-      setState(() => _libationExecutablePath = clean);
-      try {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(kLibationExecutablePathPref, clean);
-      } catch (_) {}
-    } catch (_) {
-      if (!mounted) return;
-      _showError(l.adminUploadFilePickerFailed);
-    }
-  }
-
-  Future<void> _launchLibation() async {
-    if (_busy) return;
-    final l = AppLocalizations.of(context)!;
-    var exePath = _libationExecutablePath;
-    if (exePath == null || exePath.isEmpty) {
-      await _configureLibationExecutable();
-      if (!mounted) return;
-      exePath = _libationExecutablePath;
-      if (exePath == null || exePath.isEmpty) return;
-    }
-    final launcher = widget.executableLauncher ?? launchLibationExecutable;
-    final launched = await launcher(exePath);
-    if (!mounted) return;
-    if (!launched) {
-      _showError(l.libationImportLaunchFailed);
-    }
-  }
-
-  Future<void> _configureLibationOutputFolder() async {
-    if (_busy) return;
-    final l = AppLocalizations.of(context)!;
-    try {
-      final picked =
-          await (widget.directoryPicker ??
-              () => FilePicker.platform.getDirectoryPath())();
-      if (picked == null || picked.trim().isEmpty || !mounted) return;
-      final clean = picked.trim();
-      setState(() => _libationOutputFolderPath = clean);
-      try {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(kLibationOutputFolderPref, clean);
-      } catch (_) {}
-    } catch (_) {
-      if (!mounted) return;
-      _showError(l.adminUploadFilePickerFailed);
-    }
-  }
-
-  Future<void> _scanConfiguredOutputFolder() async {
-    if (_busy) return;
-    var outPath = _libationOutputFolderPath;
-    if (outPath == null || outPath.isEmpty) {
-      await _configureLibationOutputFolder();
-      if (!mounted) return;
-      outPath = _libationOutputFolderPath;
-      if (outPath == null || outPath.isEmpty) return;
-    }
-    await _scanAndSelectFromDirectory(outPath);
   }
 
   void _removeFile(int index) {
@@ -821,7 +560,7 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
   }
 
   Future<void> _submit() async {
-    if (_busy) return;
+    if (_uploading) return;
     final l = AppLocalizations.of(context)!;
     if (!widget.canUpload) {
       _showError(l.adminUploadPermissionDenied);
@@ -857,61 +596,94 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
     var uploadAttempted = false;
     try {
       if (_autoFetchMetadata &&
-          !_isPodcast &&
-          _lastMetadataQuery != _metadataQuery) {
-        await _fetchMetadata();
-        if (!mounted) return;
-      }
-
-      final request = MediaUploadRequest(
-        libraryId: _selectedLibraryId!,
-        folderId: _selectedFolderId!,
-        mediaType: _mediaType,
-        title: _title.text.trim(),
-        author: _author.text.trim(),
-        series: _series.text.trim(),
-        files: _files,
-      );
-
-      ApiService? api;
-      if (widget.pathChecker == null || widget.uploader == null) {
-        api = widget.apiService;
-        if (api == null) {
-          _showError(l.adminUploadFailed);
-          return;
-        }
-      }
-
-      final pathResult = widget.pathChecker != null
-          ? await widget.pathChecker!(request.directory, _folderPath)
-          : await api!.checkUploadPathExists(
-              directory: request.directory,
-              folderPath: _folderPath,
-            );
+        !_isPodcast &&
+        _lastMetadataQuery != _metadataQuery) {
+      // A search still running was for older text; drop it and search now,
+      // so a late result can't change the details mid-upload.
+      _metadataRequestId++;
+      _metadataSearching = false;
+      await _fetchMetadata();
       if (!mounted) return;
-      if (!pathResult.success) {
-        _showError(
-          pathResult.isPermissionDenied
-              ? l.adminUploadPermissionDenied
-              : l.adminUploadPathCheckFailed,
-        );
+    }
+
+    final request = MediaUploadRequest(
+      libraryId: _selectedLibraryId!,
+      folderId: _selectedFolderId!,
+      mediaType: _mediaType,
+      title: _title.text.trim(),
+      author: _author.text.trim(),
+      series: _series.text.trim(),
+      files: _files,
+    );
+
+    ApiService? api;
+    if (widget.pathChecker == null || widget.uploader == null) {
+      api = widget.apiService;
+      if (api == null) {
+        _showError(l.adminUploadFailed);
         return;
       }
-      if (pathResult.exists) {
-        final existingTitle = pathResult.libraryItemTitle;
-        _showError(
-          existingTitle == null || existingTitle.isEmpty
-              ? l.adminUploadDestinationExists
-              : l.adminUploadDestinationUsedBy(existingTitle),
-        );
+    }
+
+
+    final pathResult = widget.pathChecker != null
+        ? await widget.pathChecker!(request.directory, _folderPath)
+        : await api!.checkUploadPathExists(
+            directory: request.directory,
+            folderPath: _folderPath,
+          );
+    if (!mounted) return;
+    if (!pathResult.success) {
+      _showError(
+          pathResult.isPermissionDenied
+              ? l.adminUploadPermissionDenied
+              : l.adminUploadPathCheckFailed);
+      return;
+    }
+    final target = _existingTarget;
+    if (target != null && !pathResult.exists) {
+      // The folder the server would build does not match the book's real
+      // one, usually a character it strips from names. Better a clear stop
+      // than a second copy of the book.
+      _showError(l.adminUploadTargetFolderMismatch(request.directory, target.relPath));
+      return;
+    }
+    if (pathResult.exists && target == null) {
+      // The server happily writes into an existing folder, which is how an
+      // ebook joins an audiobook that is already there. Ask instead of
+      // refusing, since a slip here would merge two different books.
+      final existingTitle = pathResult.libraryItemTitle;
+      final addAnyway = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(l.adminUploadAddToExistingTitle),
+          content: Text(
+            existingTitle == null || existingTitle.isEmpty
+                ? l.adminUploadAddToExistingNoItem
+                : l.adminUploadAddToExisting(existingTitle),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(l.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(l.adminUploadAddFiles),
+            ),
+          ],
+        ),
+      );
+      if (!mounted || addAnyway != true)
         return;
       }
 
       uploadAttempted = true;
-      final result = widget.uploader != null
-          ? await widget.uploader!(request, onProgress: _updateProgress)
-          : await api!.uploadMedia(request, onProgress: _updateProgress);
-      if (!mounted) return;
+
+    final result = widget.uploader != null
+        ? await widget.uploader!(request, onProgress: _updateProgress)
+        : await api!.uploadMedia(request, onProgress: _updateProgress);
+    if (!mounted) return;
 
       var indexed = true;
       // The upload endpoint can return before the library scanner exposes the
@@ -930,52 +702,52 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
         if (!mounted) return;
       }
 
-      final uploadedTitle = request.title;
-      final mustReselectFiles =
-          !result.success &&
-          _files.any(
-            (file) =>
-                file.path == null &&
-                file.bytes == null &&
-                file.readStream != null,
-          );
+      final uploadedTitle = target?.title ?? request.title;
+    final mustReselectFiles =
+        !result.success &&
+        _files.any(
+          (file) =>
+              file.path == null &&
+              file.bytes == null &&
+              file.readStream != null,
+        );
       setState(() {
-        if (result.success) {
-          _title.clear();
-          _author.clear();
-          _series.clear();
-          _files = [];
-          _candidateAuthor = '';
-          _lastMetadataQuery = null;
-        } else if (mustReselectFiles) {
-          _files = [];
-        }
-      });
+      if (result.success) {
+        _title.clear();
+        _author.clear();
+        _series.clear();
+        _files = [];
+        _lastMetadataQuery = null;
+        _existingTarget = null;
+      } else if (mustReselectFiles) {
+        _files = [];
+      }
+    });
       if (result.success) {
         widget.onUploadComplete?.call();
         showOverlayToast(
-          context,
-          indexed
+        context,
+        target != null
+            ? l.adminUploadAddedTo(uploadedTitle)
+            : indexed
               ? l.adminUploadComplete(uploadedTitle)
               : l.adminUploadCompletePendingIndex(uploadedTitle),
-          icon: Icons.check_circle_outline_rounded,
-        );
+        icon: Icons.check_circle_outline_rounded,
+      );
       } else {
         final String message;
         if (result.isPermissionDenied) {
           message = l.adminUploadPermissionDenied;
-        } else {
-          final error = result.error?.trim();
-          message = error == null || error.isEmpty
-              ? l.adminUploadFailed
-              : l.adminUploadFailedReason(error);
+    } else {
+      final error = result.error?.trim();
+       message = error == null || error.isEmpty
+          ? l.adminUploadFailed
+          : l.adminUploadFailedReason(error);
         }
         _showError(
-          mustReselectFiles
-              ? '$message ${l.adminUploadReselectFiles}'
-              : message,
-        );
-      }
+        mustReselectFiles ? '$message ${l.adminUploadReselectFiles}' : message,
+      );
+    }
     } catch (_) {
       if (!mounted) return;
       final mustReselect =
@@ -1066,129 +838,117 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 12, 8, 0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: AbsorbPageHeader(
-                        title: l.adminUploadTitle,
-                        padding: EdgeInsets.zero,
-                      ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 12, 8, 0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: AbsorbPageHeader(
+                      title: l.adminUploadTitle,
+                      padding: EdgeInsets.zero,
                     ),
-                    IconButton(
+                  ),
+                  IconButton(
                       tooltip: MaterialLocalizations.of(
                         context,
                       ).closeButtonTooltip,
-                      icon: Icon(
-                        Icons.close_rounded,
-                        color: cs.onSurfaceVariant,
-                      ),
-                      onPressed: _uploading
-                          ? null
-                          : () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
+                      icon: Icon(Icons.close_rounded, color: cs.onSurfaceVariant),
+                    onPressed: _uploading ? null : () => Navigator.pop(context),
+                  ),
+                ],
               ),
-              const SizedBox(height: 8),
-              Expanded(
-                child: _loadingLibraries
+            ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: _loadingLibraries
                     ? const Center(child: CircularProgressIndicator())
                     : _libraries.isEmpty
-                    ? Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(32),
-                          child: Text(
-                            l.adminUploadNoLibraries,
-                            textAlign: TextAlign.center,
-                            style: tt.bodyMedium?.copyWith(
-                              color: cs.onSurfaceVariant,
-                            ),
+                  ? Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(32),
+                        child: Text(
+                          l.adminUploadNoLibraries,
+                          textAlign: TextAlign.center,
+                          style: tt.bodyMedium?.copyWith(
+                            color: cs.onSurfaceVariant,
                           ),
                         ),
-                      )
-                    : Form(
-                        key: _formKey,
-                        child: ListView(
-                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
-                          children: [
-                            Center(
-                              child: ConstrainedBox(
-                                constraints: const BoxConstraints(
-                                  maxWidth: 760,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    if (!widget.canUpload) ...[
+                      ),
+                    )
+                  : Form(
+                      key: _formKey,
+                      child: ListView(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+                        children: [
+                          Center(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 760),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                    if (!widget.canUpload)...[
                                       _permissionBanner(cs, tt, l),
                                       const SizedBox(height: 12),
                                     ],
                                     _destinationCard(cs, tt, l),
-                                    const SizedBox(height: 12),
-                                    _detailsCard(cs, tt, l),
-                                    const SizedBox(height: 12),
-                                    if (!_isPodcast) ...[
-                                      _libationCard(cs, tt, l),
-                                      const SizedBox(height: 12),
-                                    ],
-                                    _filesCard(cs, tt, l),
-                                    const SizedBox(height: 16),
-                                    if (_uploading) ...[
-                                      LinearProgressIndicator(value: _progress),
-                                      const SizedBox(height: 8),
-                                      Text(
+                                  const SizedBox(height: 12),
+                                  _detailsCard(cs, tt, l),
+                                  const SizedBox(height: 12),
+                                  _filesCard(cs, tt, l),
+                                  const SizedBox(height: 16),
+                                  if (_uploading) ...[
+                                    LinearProgressIndicator(value: _progress),
+                                    const SizedBox(height: 8),
+                                    Text(
                                         _indexing
                                             ? l.adminUploadIndexing
                                             : _progress == null
-                                            ? l.adminUploadUploading
-                                            : l.adminUploadProgress(
-                                                (_progress! * 100).round(),
-                                              ),
-                                        textAlign: TextAlign.center,
-                                        style: tt.bodySmall?.copyWith(
-                                          color: cs.onSurfaceVariant,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 12),
-                                    ],
-                                    FilledButton.icon(
-                                      key: AdminUploadScreen.submitKey,
-                                      onPressed: _busy || _metadataSearching
-                                          ? null
-                                          : _submit,
-                                      icon: _uploading
-                                          ? SizedBox(
-                                              width: 18,
-                                              height: 18,
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2,
-                                                color: cs.onPrimary,
-                                              ),
-                                            )
-                                          : const Icon(
-                                              Icons.cloud_upload_rounded,
+                                          ? l.adminUploadUploading
+                                          : l.adminUploadProgress(
+                                              (_progress! * 100).round(),
                                             ),
-                                      label: Text(
-                                        _uploading
-                                            ? l.adminUploadUploading
-                                            : l.adminUploadButton,
+                                      textAlign: TextAlign.center,
+                                      style: tt.bodySmall?.copyWith(
+                                        color: cs.onSurfaceVariant,
                                       ),
                                     ),
+                                    const SizedBox(height: 12),
                                   ],
-                                ),
+                                  FilledButton.icon(
+                                    key: AdminUploadScreen.submitKey,
+                                    onPressed: _uploading || _metadataSearching
+                                        ? null
+                                        : _submit,
+                                    icon: _uploading
+                                        ? SizedBox(
+                                            width: 18,
+                                            height: 18,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: cs.onPrimary,
+                                            ),
+                                          )
+                                        : const Icon(
+                                            Icons.cloud_upload_rounded,
+                                          ),
+                                    label: Text(
+                                      _uploading
+                                          ? l.adminUploadUploading
+                                          : l.adminUploadButton,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-              ),
-            ],
-          ),
+                    ),
+            ),
+          ],
+        ),
         ),
       ),
     );
@@ -1318,10 +1078,57 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
             style: tt.titleSmall?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 14),
+          // BookOrbit items carry file names, not a folder path, so the
+          // picker cannot aim an upload there.
+          if (_existingTarget == null && widget.apiService?.isBookOrbit != true)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: OutlinedButton.icon(
+                onPressed: _uploading || _selectedLibraryId == null
+                    ? null
+                    : _pickExistingBook,
+                icon: const Icon(Icons.library_add_rounded, size: 18),
+                label: Text(l.adminUploadAddToBook),
+              ),
+            )
+          else
+            Container(
+              padding: const EdgeInsets.fromLTRB(12, 8, 4, 8),
+              decoration: BoxDecoration(
+                color: cs.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.library_add_rounded, size: 18, color: cs.primary),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l.adminUploadAddingTo(_existingTarget!.title),
+                          style: tt.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          _existingTarget!.relPath,
+                          style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: _uploading ? null : _clearExistingTarget,
+                    icon: const Icon(Icons.close_rounded, size: 18),
+                  ),
+                ],
+              ),
+            ),
+          const SizedBox(height: 12),
           TextFormField(
             key: AdminUploadScreen.titleFieldKey,
             controller: _title,
-            enabled: !_uploading,
+            enabled: !_uploading && _existingTarget == null,
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(labelText: l.title),
             validator: (value) => value == null || value.trim().isEmpty
@@ -1336,7 +1143,7 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
                 final author = TextFormField(
                   key: AdminUploadScreen.authorFieldKey,
                   controller: _author,
-                  enabled: !_uploading,
+                  enabled: !_uploading && _existingTarget == null,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     labelText: l.author,
@@ -1347,7 +1154,7 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
                 final series = TextFormField(
                   key: AdminUploadScreen.seriesFieldKey,
                   controller: _series,
-                  enabled: !_uploading,
+                  enabled: !_uploading && _existingTarget == null,
                   decoration: InputDecoration(
                     labelText: l.seriesLabel,
                     hintText: l.adminUploadOptional,
@@ -1368,8 +1175,10 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
                 );
               },
             ),
-            const SizedBox(height: 16),
-            _metadataControls(cs, tt, l),
+            if (_existingTarget == null) ...[
+              const SizedBox(height: 16),
+              _metadataControls(cs, tt, l),
+            ],
           ],
           if (destination != null) ...[
             const SizedBox(height: 14),
@@ -1471,115 +1280,6 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
     );
   }
 
-  Widget _libationCard(ColorScheme cs, TextTheme tt, AppLocalizations l) {
-    final showDesktopControls = _desktopLibationEnabled;
-    return _card(
-      cs,
-      child: ExpansionTile(
-        key: AdminUploadScreen.libationGuideKey,
-        initiallyExpanded: widget.initialLibationExpanded,
-        tilePadding: EdgeInsets.zero,
-        childrenPadding: const EdgeInsets.only(top: 8),
-        shape: const Border(),
-        collapsedShape: const Border(),
-        leading: Icon(Icons.drive_folder_upload_outlined, color: cs.primary),
-        title: Text(
-          l.libationImportTitle,
-          style: tt.titleSmall?.copyWith(fontWeight: FontWeight.w700),
-        ),
-        subtitle: Text(
-          l.libationImportSubtitle,
-          style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
-        ),
-        children: [
-          Text(l.libationImportSteps, style: tt.bodyMedium),
-          const SizedBox(height: 12),
-          Text(
-            l.libationImportPrivacy,
-            style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
-          ),
-          const SizedBox(height: 12),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                OutlinedButton.icon(
-                  key: AdminUploadScreen.libationFilesKey,
-                  onPressed: _busy
-                      ? null
-                      : () => _pickFiles(exportedOnly: true),
-                  icon: const Icon(Icons.audio_file_outlined, size: 18),
-                  label: Text(l.libationImportChooseFiles),
-                ),
-                OutlinedButton.icon(
-                  key: AdminUploadScreen.libationFolderKey,
-                  onPressed: _busy ? null : _pickExportFolder,
-                  icon: const Icon(Icons.folder_open_rounded, size: 18),
-                  label: Text(l.libationImportChooseFolder),
-                ),
-              ],
-            ),
-          ),
-          if (_scanning) ...[
-            const SizedBox(height: 12),
-            const LinearProgressIndicator(
-              key: AdminUploadScreen.libationScanProgressKey,
-            ),
-          ],
-          if (showDesktopControls) ...[
-            const SizedBox(height: 12),
-            Text(
-              l.libationImportDesktopHint,
-              style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
-            ),
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  OutlinedButton.icon(
-                    key: AdminUploadScreen.libationLaunchKey,
-                    onPressed: _busy ? null : _launchLibation,
-                    icon: const Icon(Icons.open_in_new_rounded, size: 18),
-                    label: Text(l.libationImportLaunchApp),
-                  ),
-                  OutlinedButton.icon(
-                    key: AdminUploadScreen.libationSetAppKey,
-                    onPressed: _busy ? null : _configureLibationExecutable,
-                    icon: const Icon(
-                      Icons.settings_applications_outlined,
-                      size: 18,
-                    ),
-                    label: Text(l.libationImportSetApp),
-                  ),
-                  OutlinedButton.icon(
-                    key: AdminUploadScreen.libationScanOutputFolderKey,
-                    onPressed: _busy ? null : _scanConfiguredOutputFolder,
-                    icon: const Icon(Icons.library_music_outlined, size: 18),
-                    label: Text(l.libationImportScanOutputFolder),
-                  ),
-                  OutlinedButton.icon(
-                    key: AdminUploadScreen.libationSetOutputFolderKey,
-                    onPressed: _busy ? null : _configureLibationOutputFolder,
-                    icon: const Icon(
-                      Icons.create_new_folder_outlined,
-                      size: 18,
-                    ),
-                    label: Text(l.libationImportSetOutputFolder),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
   Widget _filesCard(ColorScheme cs, TextTheme tt, AppLocalizations l) {
     final totalBytes = _files.fold<int>(0, (total, file) => total + file.size);
     return _card(
@@ -1588,24 +1288,31 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           LayoutBuilder(
-            builder: (context, constraints) {
+            builder: (
+                context, constraints) {
               final heading = Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l.adminUploadFiles,
-                    style: tt.titleSmall?.copyWith(fontWeight: FontWeight.w700),
-                  ),
-                  if (_files.isNotEmpty)
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      '${l.adminUploadSelectedFiles(_files.length)} · ${_formatBytes(totalBytes)}',
-                      style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+                      l.adminUploadFiles,
+                      style: tt.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                ],
-              );
-              final chooseButton = OutlinedButton.icon(
+                    if (_files.isNotEmpty)
+                      Text(
+                        '${l.adminUploadSelectedFiles(_files.length)} · ${_formatBytes(totalBytes)}',
+                        style: tt.bodySmall?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
+                      ),
+                  ],
+                )
+              ;
+              final chooseButton =
+              OutlinedButton.icon(
                 key: AdminUploadScreen.chooseFilesKey,
-                onPressed: _busy ? null : _pickFiles,
+                onPressed: _uploading ? null : _pickFiles,
                 icon: Icon(
                   _files.isEmpty
                       ? Icons.attach_file_rounded
@@ -1617,7 +1324,8 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
                       ? l.adminUploadChooseFiles
                       : l.adminUploadAddFiles,
                 ),
-              );
+              )
+            ;
               final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
               if (constraints.maxWidth < 480 * scale) {
                 return Column(
@@ -1744,6 +1452,199 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
           icon: Icon(Icons.expand_more_rounded, color: cs.onSurfaceVariant),
           items: items,
           onChanged: enabled ? onChanged : null,
+        ),
+      ),
+    );
+  }
+}
+
+class _ExistingBook {
+  final String id;
+  final String title;
+  final String relPath;
+  const _ExistingBook({required this.id, required this.title, required this.relPath});
+}
+
+/// Search sheet that hands back the one book tapped.
+class _ExistingBookPicker extends StatefulWidget {
+  final ApiService api;
+  final String libraryId;
+  const _ExistingBookPicker({required this.api, required this.libraryId});
+
+  @override
+  State<_ExistingBookPicker> createState() => _ExistingBookPickerState();
+}
+
+class _ExistingBookPickerState extends State<_ExistingBookPicker> {
+  final _controller = TextEditingController();
+  Timer? _debounce;
+  List<Map<String, dynamic>> _results = [];
+  bool _searching = false;
+  bool _searched = false;
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onChanged(String value) {
+    _debounce?.cancel();
+    final query = value.trim();
+    if (query.isEmpty) {
+      setState(() {
+        _results = [];
+        _searched = false;
+        _searching = false;
+      });
+      return;
+    }
+    setState(() => _searching = true);
+    _debounce = Timer(const Duration(milliseconds: 400), () => _search(query));
+  }
+
+  Future<void> _search(String query) async {
+    final api = widget.api;
+    final index = BookSearchIndex();
+    List<Map<String, dynamic>> results = [];
+    try {
+      await index.ensureIndex(api, widget.libraryId);
+      if (!mounted || _controller.text.trim() != query) return;
+      if (index.isReady(widget.libraryId)) {
+        results = index.search(widget.libraryId, query).map((h) => h.item).toList();
+      }
+      if (results.isEmpty || index.isTruncated(widget.libraryId)) {
+        final server = await api.searchLibrary(widget.libraryId, query);
+        if (!mounted || _controller.text.trim() != query) return;
+        final seen = results.map((i) => i['id']).toSet();
+        for (final r in (server?['book'] as List<dynamic>? ?? const [])) {
+          final m = r as Map<String, dynamic>;
+          final item = (m['libraryItem'] as Map<String, dynamic>?) ?? m;
+          if (!seen.contains(item['id'])) results.add(item);
+        }
+      }
+    } catch (_) {}
+    if (!mounted) return;
+    setState(() {
+      _results = results;
+      _searching = false;
+      _searched = true;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final tt = Theme.of(context).textTheme;
+    final l = AppLocalizations.of(context)!;
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l.adminUploadAddToBook,
+                  style: tt.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+              const SizedBox(height: 10),
+              TextField(
+                controller: _controller,
+                autofocus: true,
+                onChanged: _onChanged,
+                decoration: InputDecoration(
+                  hintText: l.adminUploadAddToBookHint,
+                  prefixIcon: const Icon(Icons.search_rounded),
+                  suffixIcon: _searching
+                      ? const Padding(
+                          padding: EdgeInsets.all(12),
+                          child: SizedBox(
+                              width: 18, height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2)),
+                        )
+                      : null,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: _searched && _results.isEmpty && !_searching
+              ? Center(
+                  child: Text(l.adminUploadNoBooksFound,
+                      style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant)))
+              : ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                  itemCount: _results.length,
+                  itemBuilder: (context, i) => _row(cs, tt, l, _results[i]),
+                ),
+        ),
+      ],
+    );
+  }
+
+  Widget _row(ColorScheme cs, TextTheme tt, AppLocalizations l, Map<String, dynamic> item) {
+    final itemId = item['id'] as String? ?? '';
+    final metadata =
+        (item['media'] as Map<String, dynamic>?)?['metadata'] as Map<String, dynamic>? ?? {};
+    final title = metadata['title'] as String? ?? l.unknown;
+    final author = metadata['authorName'] as String? ?? '';
+    final relPath = item['relPath'] as String? ?? '';
+    final coverUrl = widget.api.getCoverUrl(itemId);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Material(
+        color: cs.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => Navigator.of(context).pop(item),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: SizedBox(
+                  width: 44,
+                  height: 44,
+                  child: CachedNetworkImage(
+                    imageUrl: coverUrl,
+                    fit: BoxFit.cover,
+                    httpHeaders: widget.api.mediaHeaders,
+                    placeholder: (_, __) => ColoredBox(color: cs.surfaceContainerHighest),
+                    errorWidget: (_, __, ___) => ColoredBox(
+                      color: cs.surfaceContainerHighest,
+                      child: Icon(Icons.menu_book_rounded, color: cs.onSurfaceVariant),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: tt.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+                    if (author.isNotEmpty)
+                      Text(author,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
+                    if (relPath.isNotEmpty)
+                      Text(relPath,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: tt.labelSmall?.copyWith(
+                              color: cs.onSurfaceVariant.withValues(alpha: 0.7))),
+                  ],
+                ),
+              ),
+            ]),
+          ),
         ),
       ),
     );

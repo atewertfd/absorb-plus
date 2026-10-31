@@ -1,0 +1,17 @@
+# A deliberately dead relay region on loopback: nothing listens on port 9
+# (relay) or 3478 (STUN). The STUN port still matters: netcheck marks UDP as
+# usable once it can *send* a STUN probe, and without that magicsock never
+# tries the direct loopback path between the two nodes.
+regions:
+  900:
+    regionid: 900
+    regioncode: none
+    regionname: Unused
+    nodes:
+      - name: 900a
+        regionid: 900
+        hostname: derp.invalid
+        ipv4: 127.0.0.1
+        stunport: 3478
+        stunonly: false
+        derpport: 9

@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../ui_themes/ui_theme_hooks.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/cover_accent.dart';
 import '../providers/auth_provider.dart';
@@ -26,6 +27,11 @@ import '../services/chromecast_service.dart';
 import 'expanded_card.dart';
 import '../main.dart' show colorSourceNotifier, useColorEverywhereNotifier, manualSeedNotifier, manualColorScheme;
 import 'stable_cached_network_image.dart';
+import 'text_scale_room.dart';
+import '../utils/local_path.dart';
+import 'item_download_watch.dart';
+import '../utils/cover_cache.dart';
+import '../utils/cover_decode_size.dart';
 
 class AbsorbingCard extends StatefulWidget {
   final Map<String, dynamic> item;
@@ -78,6 +84,11 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
   double _savedSpeed = 1.0; // per-book or default speed for inactive display
   final ValueNotifier<bool> _edgeBarExpanded = ValueNotifier(false);
   String? _lastRenderLogSig;
+  // Absorb Plus: the stats row's position stream, kept across builds (a new
+  // stream each build resubscribed it) and cut to whole seconds, which is
+  // all its texts show.
+  Stream<int>? _statsStream;
+  Object? _statsStreamKey;
 
   @override
   bool get wantKeepAlive => true;
@@ -181,7 +192,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
 
   String? _coverIdentity(String? coverUrl, LibraryProvider lib) {
     if (coverUrl == null) return null;
-    if (coverUrl.startsWith('/')) return coverUrl;
+    if (isLocalCoverPath(coverUrl)) return coverUrl;
     return stableCoverCacheKey(
       coverUrl,
       updatedAt: _coverUpdatedAt(lib),
@@ -278,7 +289,8 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
     _loadSavedSpeed();
   }
 
-  void _onDownloadChanged() { if (mounted) setState(() {}); }
+  late final _dlWatch = ItemDownloadWatch(() => _episodeId != null ? '$_itemId-$_episodeId' : _itemId); // Absorb Plus
+  void _onDownloadChanged() { if (mounted && _dlWatch.changed()) setState(() {}); }
 
   void _onCastChanged() {
     _startChapterTracking();
@@ -497,13 +509,13 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
     }
     final headers = lib.mediaHeaders;
     final ImageProvider provider;
-    if (coverUrl.startsWith('/')) {
+    if (isLocalCoverPath(coverUrl)) {
       provider = FileImage(File(coverUrl));
     } else {
       provider = CachedNetworkImageProvider(
         coverUrl,
         headers: headers,
-        cacheKey: coverIdentity,
+        cacheKey: coverIdentity, cacheManager: coverCacheManager,
       );
     }
     _onCoverLoaded(provider, coverIdentity);
@@ -543,7 +555,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
       final stream = provider.resolve(ImageConfiguration.empty);
       late ImageStreamListener listener;
       listener = ImageStreamListener((info, _) {
-        completer.complete(info.image);
+        if (!completer.isCompleted) completer.complete(info.image);
         stream.removeListener(listener);
       }, onError: (e, _) {
         if (!completer.isCompleted) completer.completeError(e);
@@ -570,6 +582,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
       final picture = recorder.endRecording();
       final blurred = await picture.toImage(targetWidth, targetHeight);
       picture.dispose();
+      srcImage.dispose(); // our clone of the full-size cover
 
       final topLuminance = await topStripLuminance(blurred);
 
@@ -598,6 +611,20 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
   String get _lyricsKey =>
       _episodeId != null ? '$_itemId-$_episodeId' : _itemId;
 
+  Stream<int>? _statsPositionStream(ChromecastService cast) {
+    final casting = _isCastingThis;
+    final active = _isActive;
+    final castStream = casting ? cast.castPositionStream : null;
+    final key = (casting, active, widget.player, castStream);
+    if (key != _statsStreamKey) {
+      _statsStreamKey = key;
+      final Stream<Duration>? source =
+          casting ? castStream : (active ? widget.player.absolutePositionStream : null);
+      _statsStream = source?.map((d) => d.inSeconds).distinct();
+    }
+    return _statsStream;
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context); // required for AutomaticKeepAliveClientMixin
@@ -612,7 +639,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
     final lib = context.watch<LibraryProvider>();
     final coverUrl = lib.getCoverUrl(_itemId, width: 1200);
     final coverIdentity = _coverIdentity(coverUrl, lib);
-    final isLocalCover = coverUrl?.startsWith('/') ?? false;
+    final isLocalCover = isLocalCoverPath(coverUrl);
     _maybeRefetchOnServerChange(lib);
     // For podcast episodes, look up progress by compound key (itemId-episodeId)
     final progress = (_episodeId != null)
@@ -668,7 +695,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
       child: Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: accent.withValues(alpha: 0.15), width: 1),
+        border: Border.all(color: lookPlayerCardEdge(context, accent.withValues(alpha: 0.15)), width: 1),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(23),
@@ -714,7 +741,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                     })
                   : StableCachedNetworkImage(
                       imageUrl: coverUrl,
-                      cacheKey: coverIdentity,
+                      cacheKey: coverIdentity, cacheManager: coverCacheManager,
                       fit: BoxFit.cover,
                       httpHeaders: mediaHeaders,
                       imageBuilder: (_, provider) {
@@ -782,10 +809,10 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                 ),
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(24, compact ? 6 : 10, 24, 0),
-                  child: StreamBuilder<Duration>(
-                    stream: _isCastingThis
-                        ? cast.castPositionStream
-                        : widget.player.absolutePositionStream,
+                  child: StreamBuilder<int>(
+                    // Only the playing card needs live positions; other
+                    // cards show saved progress and ignore the stream.
+                    stream: _statsPositionStream(cast),
                     builder: (_, snap) {
                       final double pos;
                       final double dur;
@@ -793,7 +820,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                         pos = cast.castPosition.inMilliseconds / 1000.0;
                         dur = cast.castingDuration;
                       } else if (_isActive) {
-                        pos = (snap.data?.inMilliseconds ?? 0) / 1000.0;
+                        pos = (snap.data ?? 0).toDouble();
                         dur = _effectiveDuration;
                       } else {
                         // Use exact currentTime from server progress if available,
@@ -860,7 +887,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                     builder: (context, constraints) {
                       final maxW = constraints.maxWidth * 0.85;
                       final rawH = constraints.maxHeight.isFinite ? constraints.maxHeight : maxW;
-                      final maxH = rawH - 24;
+                      final maxH = rawH - 24 - textScaleRoom(context, 14);
                       double coverW, coverH;
                       if (_rectangleCovers) {
                         coverW = maxW;
@@ -871,6 +898,9 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                         coverW = s;
                         coverH = s;
                       }
+                      // Absorb Plus: decode at the drawn size, not 1200 px.
+                      final decodeW = coverDecodeWidth(
+                          coverW, coverH, MediaQuery.devicePixelRatioOf(context));
                       final dlKey = _episodeId != null ? '$_itemId-$_episodeId' : _itemId;
                       final isDownloaded = DownloadService().isDownloaded(dlKey);
                       final castService = ChromecastService();
@@ -942,20 +972,22 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                                   child: EinkCoverTone(child: coverUrl != null && coverIdentity != null
                                     ? isLocalCover
                                         ? BlurPaddedCover(blurChild: Image.file(File(coverUrl), fit: BoxFit.cover,
-                                            gaplessPlayback: true,
+                                            gaplessPlayback: true, cacheWidth: decodeW,
                                             errorBuilder: (_, __, ___) => const SizedBox.shrink()),
                                             enabled: !_rectangleCovers, child: Image.file(File(coverUrl), fit: _rectangleCovers ? BoxFit.cover : BoxFit.contain,
-                                            gaplessPlayback: true,
+                                            gaplessPlayback: true, cacheWidth: decodeW,
                                             errorBuilder: (_, __, ___) => CoverPlaceholder(title: _title, author: _author)))
-                                        : BlurPaddedCover(blurChild: StableCachedNetworkImage(imageUrl: coverUrl, cacheKey: coverIdentity, fit: BoxFit.cover,
-                                              httpHeaders: mediaHeaders,
+                                        : BlurPaddedCover(blurChild: StableCachedNetworkImage(imageUrl: coverUrl, cacheKey: coverIdentity, cacheManager: coverCacheManager, fit: BoxFit.cover,
+                                              httpHeaders: mediaHeaders, memCacheWidth: decodeW,
                                               errorWidget: (_, __, ___) => const SizedBox.shrink()),
-                                            enabled: !_rectangleCovers, child: StableCachedNetworkImage(imageUrl: coverUrl, cacheKey: coverIdentity,
+                                            enabled: !_rectangleCovers, child: StableCachedNetworkImage(imageUrl: coverUrl, cacheKey: coverIdentity, cacheManager: coverCacheManager,
                                               fit: _rectangleCovers ? BoxFit.cover : BoxFit.contain,
-                                              httpHeaders: mediaHeaders,
+                                              httpHeaders: mediaHeaders, memCacheWidth: decodeW,
                                               imageBuilder: (_, provider) {
                                                 _onCoverLoaded(provider, coverIdentity);
-                                                return Image(image: provider, fit: _rectangleCovers ? BoxFit.cover : BoxFit.contain);
+                                                // imageBuilder hands over the full-size provider.
+                                                return Image(image: ResizeImage.resizeIfNeeded(decodeW, null, provider),
+                                                    fit: _rectangleCovers ? BoxFit.cover : BoxFit.contain, gaplessPlayback: true);
                                               },
                                               placeholder: (_, __) => CoverPlaceholder(title: _title, author: _author),
                                               errorWidget: (_, __, ___) => CoverPlaceholder(title: _title, author: _author)))

@@ -11,6 +11,7 @@ import '../services/queue_download_policy.dart';
 import '../services/scoped_prefs.dart';
 import '../widgets/absorb_page_header.dart';
 import '../main.dart' show flatNotifier, gradientIntensityNotifier, rootNavigatorKey;
+import '../ui_themes/ui_theme_hooks.dart';
 import '../widgets/absorbing_card.dart';
 import '../widgets/offline_status_icon.dart';
 import '../widgets/accessible_header_action.dart';
@@ -21,6 +22,7 @@ import '../widgets/collection_detail_sheet.dart';
 import '../widgets/episode_list_sheet.dart';
 import '../l10n/app_localizations.dart';
 import '../services/wording.dart';
+import '../widgets/desktop_input.dart';
 
 class AbsorbingScreen extends StatefulWidget {
   const AbsorbingScreen({super.key});
@@ -52,6 +54,19 @@ class AbsorbingScreen extends StatefulWidget {
           duration: const Duration(milliseconds: 350),
           curve: Curves.easeOutCubic);
     }
+  }
+
+  /// Absorb Plus: move the carousel one card left (-1) or right (1), for
+  /// the desktop keyboard shortcuts. False when there's nowhere to go.
+  static bool stepCard(int delta) {
+    final c = globalKey.currentState?._pageController;
+    if (c == null || !c.hasClients || c.positions.length != 1) return false;
+    final page = (c.page ?? c.initialPage.toDouble()).round();
+    final p = c.position;
+    if (delta < 0 ? page <= 0 : p.pixels >= p.maxScrollExtent) return false;
+    c.animateToPage(page + delta.sign,
+        duration: const Duration(milliseconds: 350), curve: Curves.easeOutCubic);
+    return true;
   }
 
   @override
@@ -150,6 +165,11 @@ class _AbsorbingScreenState extends State<AbsorbingScreen> {
     final qcName = await PlayerSettings.getQueueCollectionName();
     final showUpNext = await PlayerSettings.getShowUpNextLabel();
     if (mounted) {
+      // build() calls this on every frame, so an unconditional setState here
+      // kept the screen rebuilding (and redrawing) forever, even when idle.
+      if (mode != _queueMode || bm != _bookQueueMode ||
+          pm != _podcastQueueMode || qpId != _queuePlaylistId ||
+          qcName != _queueCollectionName || showUpNext != _showUpNextLabel) {
       setState(() {
         _queueMode = mode;
         _bookQueueMode = bm;
@@ -158,6 +178,7 @@ class _AbsorbingScreenState extends State<AbsorbingScreen> {
         _queueCollectionName = qcName;
         _showUpNextLabel = showUpNext;
       });
+      }
       _refreshUpNext();
     }
   }
@@ -655,12 +676,12 @@ class _AbsorbingScreenState extends State<AbsorbingScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             stops: const [0.0, 0.22, 0.72, 1.0],
-            colors: [
-              cs.primary.withValues(alpha: gradientIntensityNotifier.value),
+            colors: lookBackdrop(context, [
+              cs.primary.withValues(alpha: lookGlow(context, gradientIntensityNotifier.value)),
               cs.surface,
               lowerFade,
               scaffoldBg,
-            ],
+            ]),
           ),
         ),
         child: SafeArea(
@@ -863,6 +884,7 @@ class _AbsorbingScreenState extends State<AbsorbingScreen> {
                             )
                           : PageView.builder(
                           controller: _pageController,
+                          scrollBehavior: desktopMouseDragBehavior(context, scrollbars: false),
                           scrollDirection: Axis.horizontal,
                           clipBehavior: Clip.none,
                           physics: const PageScrollPhysics(parent: ClampingScrollPhysics()),
@@ -1177,6 +1199,7 @@ class _ReorderAbsorbingSheetState extends State<_ReorderAbsorbingSheet> {
   bool _queueDownloadSettingsLoaded = false;
   int _rollingDownloadCount = 3;
   String _podcastAdvanceDir = 'oldest_first';
+
 
   void _onPlayerChanged() {
     final itemId = _player.currentItemId;
@@ -1562,7 +1585,9 @@ class _ReorderAbsorbingSheetState extends State<_ReorderAbsorbingSheet> {
               ButtonSegment(value: 'manual', icon: const Icon(Icons.queue_music_rounded, size: 16), label: FittedBox(fit: BoxFit.scaleDown, child: Text(l.queueModeManual, maxLines: 1))),
               ButtonSegment(value: 'auto_next', icon: const Icon(Icons.skip_next_rounded, size: 16),
                 label: FittedBox(fit: BoxFit.scaleDown, child: Text(widget.isMerged ? l.queueModeAuto : _currentIsPodcast ? l.queueModeShowLabel : l.queueModeSeriesLabel, maxLines: 1))),
-              ButtonSegment(value: 'playlist', icon: const Icon(Icons.playlist_play_rounded, size: 16), label: FittedBox(fit: BoxFit.scaleDown, child: Text(l.queueModePlaylist, maxLines: 1))),
+              // BookOrbit has no playlists.
+              if (!context.read<AuthProvider>().isBookOrbit || _queueMode == 'playlist')
+                ButtonSegment(value: 'playlist', icon: const Icon(Icons.playlist_play_rounded, size: 16), label: FittedBox(fit: BoxFit.scaleDown, child: Text(l.queueModePlaylist, maxLines: 1))),
               // Collection mode is entered via a collection's Play button, not
               // picked here - shown only while active so the selection is valid.
               if (_queueMode == 'collection')

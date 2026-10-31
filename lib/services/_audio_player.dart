@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'dart:io';
+import '../utils/web_safe_platform.dart'; // web-safe Platform
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:just_audio/just_audio.dart' as ja;
 import 'native_ios_audio_player.dart';
+import 'position_tick_throttle.dart';
 
 // Re-export just_audio's data types so consumers don't need a second import.
 export 'package:just_audio/just_audio.dart'
@@ -67,8 +68,16 @@ class AudioPlayer {
 
   // ─── Streams ───
 
-  Stream<Duration> get positionStream =>
-      _isNative ? _native!.positionStream : _ja!.positionStream;
+  Stream<Duration> get positionStream {
+    if (_isNative) return _native!.positionStream;
+    // Absorb Plus: libmpv ticks tens of times a second; see PositionTickThrottle.
+    if (_isDesktop) {
+      final player = _ja!;
+      return throttlePositionTicks(player.positionStream,
+          state: () => (player.playing, player.processingState));
+    }
+    return _ja!.positionStream;
+  }
   Stream<Duration?> get durationStream =>
       _isNative ? _native!.durationStream : _ja!.durationStream;
   Stream<Duration> get bufferedPositionStream =>
@@ -185,5 +194,10 @@ class AudioPlayer {
     // Forward to just_audio's static. Native iOS engine ignores this and
     // uses default AVPlayer caching; acceptable for the experimental flag.
     await ja.AudioPlayer.configureStreamingCache(sizeInMB);
+  }
+
+  static Future<void> clearStreamingCache() async {
+    if (Platform.isIOS) return;
+    await ja.AudioPlayer.clearStreamingCache();
   }
 }

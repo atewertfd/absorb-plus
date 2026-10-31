@@ -2,7 +2,10 @@ class UpdateReleaseAsset {
   final String name;
   final String downloadUrl;
 
-  const UpdateReleaseAsset({required this.name, required this.downloadUrl});
+  const UpdateReleaseAsset({
+    required this.name,
+    required this.downloadUrl,
+  });
 }
 
 const supportedAndroidUpdateAbis = <String>{
@@ -86,12 +89,14 @@ int compareUpdateVersions(String a, String b) {
 
 /// Picks the release to offer from GitHub's release list (newest created
 /// first). GitHub orders by creation date rather than version, and a
-/// tag-triggered release exists for several minutes before CI attaches the
-/// Windows installer, so choose the highest-version published release and,
-/// when [preferWindowsInstaller], one that already carries the installer.
+/// tag-triggered release exists for several minutes before CI attaches its
+/// files, so choose the highest-version published release and, when
+/// [hasPlatformAsset] is given, only one that already carries this platform's
+/// file. Returns null when no release has it yet, so nothing asset-less is
+/// offered (and then dismissed for good with "Later").
 Map<String, dynamic>? pickUpdateRelease(
   List<Map<String, dynamic>> releases, {
-  bool preferWindowsInstaller = false,
+  bool Function(List<UpdateReleaseAsset> assets)? hasPlatformAsset,
 }) {
   final published = releases
       .where(
@@ -120,16 +125,84 @@ Map<String, dynamic>? pickUpdateRelease(
     return best;
   }
 
-  if (preferWindowsInstaller) {
-    final withInstaller = newest(
-      published.where(
-        (release) =>
-            selectWindowsUpdateAsset(assets: releaseAssetsOf(release)) != null,
-      ),
-    );
-    if (withInstaller != null) return withInstaller;
+  if (hasPlatformAsset == null) return newest(published);
+  return newest(
+    published.where((release) => hasPlatformAsset(releaseAssetsOf(release))),
+  );
+}
+
+/// The kind of build asking for an update, which decides the file it needs.
+enum UpdateTarget {
+  /// Android: installs a per-ABI or universal APK in-app.
+  android,
+
+  /// Windows installed with Inno Setup: runs the Setup.exe in-app.
+  windowsInstalled,
+
+  /// A portable Windows copy: the user downloads the ZIP from the release
+  /// page, since the installer would install a second copy elsewhere.
+  windowsPortable,
+
+  /// Linux and anything else: the release page.
+  other,
+}
+
+/// The file to download in-app for [target], or null when the update opens
+/// the release page instead. Only Android ever gets an APK.
+UpdateReleaseAsset? selectUpdateAsset({
+  required UpdateTarget target,
+  required List<UpdateReleaseAsset> assets,
+  List<String> supportedAbis = const [],
+}) {
+  switch (target) {
+    case UpdateTarget.android:
+      return selectAndroidUpdateAsset(
+        assets: assets,
+        supportedAbis: supportedAbis,
+      );
+    case UpdateTarget.windowsInstalled:
+      return selectWindowsUpdateAsset(assets: assets);
+    case UpdateTarget.windowsPortable:
+    case UpdateTarget.other:
+      return null;
   }
-  return newest(published);
+}
+
+/// Whether a release already carries the file [target] updates from. Release
+/// CI creates the release first and uploads files afterwards.
+bool releaseHasUpdateAsset({
+  required UpdateTarget target,
+  required List<UpdateReleaseAsset> assets,
+  List<String> supportedAbis = const [],
+}) {
+  switch (target) {
+    case UpdateTarget.android:
+    case UpdateTarget.windowsInstalled:
+      return selectUpdateAsset(
+            target: target,
+            assets: assets,
+            supportedAbis: supportedAbis,
+          ) !=
+          null;
+    case UpdateTarget.windowsPortable:
+      return assets.any(
+        (asset) => asset.name.toLowerCase().endsWith('-windows-portable.zip'),
+      );
+    case UpdateTarget.other:
+      return true;
+  }
+}
+
+/// True when [executablePath] belongs to an Inno Setup install, which puts
+/// `unins000.exe` next to the app. A portable copy has no uninstaller.
+bool isInnoSetupInstall(
+  String executablePath,
+  bool Function(String path) fileExists,
+) {
+  final slash = executablePath.lastIndexOf(RegExp(r'[\\/]'));
+  if (slash < 0) return false;
+  final dir = executablePath.substring(0, slash + 1);
+  return fileExists('${dir}unins000.exe');
 }
 
 List<UpdateReleaseAsset> releaseAssetsOf(Map<String, dynamic> release) {
@@ -155,10 +228,12 @@ String androidUpdatePackageLabel(UpdateReleaseAsset asset) {
   }
 
   final build = RegExp(
-    r'-(\d+)-(?:universal|armeabi-v7a|arm64-v8a|x86_64)(?:-pre)?\.apk$',
+    r'-(\d+)-(?:android-)?(?:all-)?(?:universal|armeabi-v7a|arm64-v8a|x86_64)(?:-pre)?\.apk$',
     caseSensitive: false,
   ).firstMatch(asset.name)?.group(1);
-  return build == null ? '$packageKind APK' : '$packageKind APK • build $build';
+  return build == null
+      ? '$packageKind APK'
+      : '$packageKind APK • build $build';
 }
 
 bool _hasFilenameToken(String filename, String token) {
@@ -171,7 +246,9 @@ bool _hasFilenameToken(String filename, String token) {
 
 (List<int>, int?) _parseVersion(String version) {
   final sem = RegExp(r'(\d+)\.(\d+)\.(\d+)').firstMatch(version);
-  final parts = [for (var i = 1; i <= 3; i++) int.parse(sem?.group(i) ?? '0')];
+  final parts = [
+    for (var i = 1; i <= 3; i++) int.parse(sem?.group(i) ?? '0'),
+  ];
   final build = RegExp(r'[-+](\d+)$').firstMatch(version);
   return (parts, build == null ? null : int.parse(build.group(1)!));
 }

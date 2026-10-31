@@ -12,9 +12,9 @@ AppId={{B7E20A8A-2D5B-4B63-9B6D-AB8C4E5C2F91}
 AppName=Absorb Plus
 AppVersion={#AppVersion}
 AppPublisher=Absorb Plus contributors
-AppPublisherURL=https://github.com/atewertfd/absorb-platform
-AppSupportURL=https://github.com/atewertfd/absorb-platform/issues
-AppUpdatesURL=https://github.com/atewertfd/absorb-platform/releases
+AppPublisherURL=https://github.com/atewertfd/absorb-plus
+AppSupportURL=https://github.com/atewertfd/absorb-plus/issues
+AppUpdatesURL=https://github.com/atewertfd/absorb-plus/releases
 DefaultDirName={autopf}\Absorb Plus
 DefaultGroupName=Absorb Plus
 UsePreviousAppDir=yes
@@ -37,6 +37,12 @@ ChangesAssociations=no
 
 [Files]
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs ignoreversion
+
+[Registry]
+; "Start with Windows" (Settings -> Windows Settings) writes this value itself.
+; Nothing is created at install; uninstalling removes the entry so Windows
+; does not try to start a removed copy.
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: none; ValueName: "Absorb Plus"; Flags: uninsdeletevalue dontcreatekey
 
 [Icons]
 Name: "{autodesktop}\Absorb"; Filename: "{app}\absorb.exe"; WorkingDir: "{app}"; IconFilename: "{app}\absorb.exe"

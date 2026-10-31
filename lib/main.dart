@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' hide Platform; // web-safe Platform below
+import 'utils/web_safe_platform.dart';
 import 'dart:ui';
 // Flutter 3.44 moved CupertinoPageTransitionsBuilder from material.dart to
 // cupertino.dart. Older SDKs (incl. local) still re-export it from material,
@@ -21,6 +22,7 @@ import 'providers/auth_provider.dart';
 import 'providers/library_provider.dart';
 import 'services/audio_player_service.dart';
 import 'services/api_service.dart';
+import 'services/narration_service.dart';
 import 'services/download_service.dart';
 import 'services/progress_sync_service.dart';
 import 'services/local_session_service.dart';
@@ -34,17 +36,30 @@ import 'services/carplay_service.dart';
 import 'services/chromecast_service.dart';
 import 'services/episode_notification_service.dart';
 import 'services/home_widget_service.dart';
+import 'services/siri_service.dart';
+import 'services/narrated_books.dart';
+import 'services/read_listen_sync.dart';
 import 'services/log_service.dart';
 import 'services/quick_actions_service.dart';
 import 'services/startup_task_coordinator.dart';
 import 'services/setup_link_service.dart';
 import 'services/wording.dart';
+import 'services/startup_timing.dart';
 import 'screens/login_screen.dart';
 import 'screens/app_shell.dart';
 import 'widgets/auth_loading_screen.dart';
+import 'widgets/beta_logging_notice.dart';
 import 'widgets/setup_link_login.dart';
+import 'widgets/book_detail_sheet.dart';
 import 'utils/app_motion.dart';
+import 'utils/scroll_diagnostics.dart';
+import 'utils/smooth_wheel_scroll.dart';
 import 'utils/memory_policy.dart';
+import 'ui_themes/ui_theme.dart';
+import 'ui_themes/frosted.dart';
+import 'services/tailscale_service.dart';
+import 'services/precache_service.dart';
+import 'services/pending_writes.dart';
 
 /// Global notifier so any widget (e.g. settings) can change the theme instantly.
 final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.dark);
@@ -105,24 +120,27 @@ class _InstantPageTransitionsBuilder extends PageTransitionsBuilder {
       child;
 }
 
-/// Builds the app-wide route transition policy. Mobile keeps its existing
-/// Cupertino transition; desktop and web use a restrained Material fade/slide
-/// so pushed pages do not appear to snap in from nowhere.
+/// Builds the app-wide route transition policy. Normal motion matches
+/// upstream Absorb: Cupertino on mobile, Flutter's default page transition on
+/// desktop. Instant motion (e-ink, "Disable page fade", OS reduce-motion)
+/// skips transitions everywhere.
 PageTransitionsTheme buildAppPageTransitionsTheme({required bool instant}) {
-  final mobile = instant
-      ? const _InstantPageTransitionsBuilder()
-      : const CupertinoPageTransitionsBuilder();
-  final desktop = instant
-      ? const _InstantPageTransitionsBuilder()
-      : const FadeUpwardsPageTransitionsBuilder();
-  return PageTransitionsTheme(
+  if (!instant) {
+    return const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+      },
+    );
+  }
+  return const PageTransitionsTheme(
     builders: {
-      TargetPlatform.android: mobile,
-      TargetPlatform.iOS: mobile,
-      TargetPlatform.windows: desktop,
-      TargetPlatform.linux: desktop,
-      TargetPlatform.macOS: desktop,
-      TargetPlatform.fuchsia: desktop,
+      TargetPlatform.android: _InstantPageTransitionsBuilder(),
+      TargetPlatform.iOS: _InstantPageTransitionsBuilder(),
+      TargetPlatform.windows: _InstantPageTransitionsBuilder(),
+      TargetPlatform.linux: _InstantPageTransitionsBuilder(),
+      TargetPlatform.macOS: _InstantPageTransitionsBuilder(),
+      TargetPlatform.fuchsia: _InstantPageTransitionsBuilder(),
     },
   );
 }
@@ -156,6 +174,9 @@ class _CertOverrides extends HttpOverrides {
     // flutter_cache_manager (CachedNetworkImage) caches its HttpClient, so
     // checking the flag at validation time (not creation time) is essential.
     client.badCertificateCallback = (_, __, ___) => trustAllCerts;
+    // Built-in Tailscale (fork, off by default): tailnet hosts go through the
+    // embedded node's proxy; everything else stays DIRECT, as before.
+    client.findProxy = (uri) => TailscaleService.instance.findProxy(uri);
     return client;
   }
 }
@@ -214,6 +235,8 @@ Future<void> applyAppearanceFromPrefs() async {
   applyManualSeed(await PlayerSettings.getManualSeedColor());
   applyGradientIntensity(await PlayerSettings.getGradientIntensity());
   applyUseColorEverywhere(await PlayerSettings.getUseColorEverywhere());
+  snappyTransitionsNotifier.value = await PlayerSettings.getSnappyTransitions();
+  classicWordingNotifier.value = await PlayerSettings.getClassicWording();
   await applyOrientationLock();
 }
 
@@ -233,9 +256,24 @@ Future<void> applyOrientationLock() async {
 }
 
 void main() async {
+  StartupTiming.markMain();
+  PrecacheService.itemSink = primeBookDetailItem;
   HttpOverrides.global = _CertOverrides();
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  bool smoothWheel() =>
+      !einkModeNotifier.value && !snappyTransitionsNotifier.value;
+  installSmoothWheelScroll(enabled: smoothWheel);
+  installScrollDiagnostics(smoothingEnabled: smoothWheel); // ABSORB_SCROLL_DIAG=1
   configureImageCache(PaintingBinding.instance.imageCache);
+  PendingWrites.installLifecycleFlush(); // fork: flush held-back writes on background
+  ReadListenSync.instance.start();
+  unawaited(TailscaleService.instance.init()); // fork; no-op unless turned on
+  BookOrbitApiService.placeReadingSpot = NarrationService.readingSpotSeconds;
+  BookOrbitApiService.keptNarration = NarrationService.instance.localOverlay;
+  ApiService.pageReadElsewhere = NarrationService.pageReadElsewhere;
+  try {
+    await NarratedBooks.load().timeout(const Duration(seconds: 2));
+  } catch (_) {}
   final appLinks = AppLinks();
 
   // These calls use platform channels that require an Activity. When Android
@@ -271,8 +309,11 @@ void main() async {
     snappyTransitionsNotifier.value = await PlayerSettings.getSnappyTransitions();
     classicWordingNotifier.value = await PlayerSettings.getClassicWording();
     PlayerSettings.showExplicitBadge = await PlayerSettings.getShowExplicitBadge();
+    PlayerSettings.showEbookBadge = await PlayerSettings.getShowEbookBadge();
     PlayerSettings.mp3IndexSeeking = await PlayerSettings.getMp3IndexSeeking();
     PlayerSettings.coverSize = await PlayerSettings.getCoverSize();
+    PlayerSettings.cardButtonFill = await PlayerSettings.getCardButtonFill();
+    await UiThemeStore.load(); // device-wide look (Absorb Plus / Classic)
     // Restore last cover seed color so the theme doesn't flash on startup
     {
       final seedInt = await PlayerSettings.getCoverSeedColor();
@@ -309,6 +350,8 @@ void main() async {
     FlutterNativeSplash.remove();
   } catch (_) {}
 
+  WidgetsBinding.instance
+      .addPostFrameCallback((_) => StartupTiming.markFirstFrame());
   runApp(
     MultiProvider(
       providers: [
@@ -318,7 +361,7 @@ void main() async {
           update: (_, auth, lib) => lib!..updateAuth(auth),
         ),
       ],
-      child: AbsorbApp(setupLinkStream: appLinks.uriLinkStream),
+      child: UiThemeScope(child: AbsorbApp(setupLinkStream: appLinks.uriLinkStream)),
     ),
   );
 }
@@ -343,6 +386,8 @@ class AbsorbApp extends StatelessWidget {
         useColorEverywhereNotifier,
         einkModeNotifier,
         snappyTransitionsNotifier,
+        uiThemeNotifier,
+        uiThemePreviewNotifier, // "Try it" live look (fork UI themes)
       ]),
       builder: (context, _) {
         final isEink = einkModeNotifier.value;
@@ -472,14 +517,12 @@ class AbsorbApp extends StatelessWidget {
             final pageTransition = buildAppPageTransitionsTheme(
               instant: motionMode != AppMotionMode.normal,
             );
-            final interactionDuration = AppMotion.duration(
-              AppMotion.state,
-              motionMode,
-            );
-            // Keep Material button families on the same short, desktop-sized
-            // timing token without editing every individual button callsite.
+            // Normal motion keeps Material's own button timing (null = default);
+            // reduced or instant motion turns button animations off.
             final buttonMotion = ButtonStyle(
-              animationDuration: interactionDuration,
+              animationDuration: motionMode == AppMotionMode.normal
+                  ? null
+                  : Duration.zero,
             );
 
             return MaterialApp(
@@ -587,6 +630,7 @@ class AbsorbApp extends StatelessWidget {
                   ),
                 ),
                 pageTransitionsTheme: pageTransition,
+                extensions: [absorbLookFor(Brightness.light, eink: isEink)],
               ),
               darkTheme: ThemeData(
                 useMaterial3: true,
@@ -654,7 +698,9 @@ class AbsorbApp extends StatelessWidget {
                   ),
                 ),
                 pageTransitionsTheme: pageTransition,
+                extensions: [absorbLookFor(Brightness.dark, eink: isEink)],
               ),
+              builder: absorbLookBuilder, // Frosted surfaces (fork UI themes)
               home: AppMotionScope(
                 mode: motionMode,
                 child: AuthGate(setupLinkStream: setupLinkStream),
@@ -730,6 +776,22 @@ class _AuthGateState extends State<AuthGate> {
     await handleSetupLinkLogin(context, link);
   }
 
+  /// The account whose saved look is on screen. Theme, e-ink, colors, snappy
+  /// and wording are stored per account, so a switch or sign-in re-applies
+  /// them; null until startup has applied the first account's.
+  String? _appearanceScope;
+
+  void _syncAppearanceScope() {
+    final scope = UserAccountService().activeScopeKey;
+    if (_appearanceScope == null || scope == _appearanceScope) return;
+    _appearanceScope = scope;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      applyAppearanceFromPrefs().catchError((Object e) {
+        debugPrint('[Init] Applying the account appearance failed: $e');
+      });
+    });
+  }
+
   Future<void> _initServices() async {
     // Load device info before log service so the log header has the real
     // app version and device model instead of fallback values.
@@ -750,6 +812,9 @@ class _AuthGateState extends State<AuthGate> {
     // Initialize log service early so all debugPrint calls are captured in the
     // log file. This is critical for diagnosing startup freezes in production.
     try {
+      await BetaLoggingNotice.applyDefault(ApiService.appVersionFull);
+    } catch (_) {}
+    try {
       final loggingEnabled = await PlayerSettings.getLoggingEnabled();
       await LogService().init(loggingEnabled);
     } catch (_) {}
@@ -757,6 +822,9 @@ class _AuthGateState extends State<AuthGate> {
     final sw = Stopwatch()..start();
     debugPrint('[Init] _initServices started');
 
+    // A throw in here (a corrupt prefs file, a bad saved account) used to
+    // skip tryRestoreSession and leave the loading screen up for good.
+    try {
     // Initialize user account scope FIRST so all ScopedPrefs reads use the
     // correct scoped keys. Without this, settings read before init() would
     // fall back to un-scoped keys and appear as defaults.
@@ -783,8 +851,10 @@ class _AuthGateState extends State<AuthGate> {
     snappyTransitionsNotifier.value = await PlayerSettings.getSnappyTransitions();
     classicWordingNotifier.value = await PlayerSettings.getClassicWording();
     PlayerSettings.showExplicitBadge = await PlayerSettings.getShowExplicitBadge();
+    PlayerSettings.showEbookBadge = await PlayerSettings.getShowEbookBadge();
     PlayerSettings.mp3IndexSeeking = await PlayerSettings.getMp3IndexSeeking();
     PlayerSettings.coverSize = await PlayerSettings.getCoverSize();
+    PlayerSettings.cardButtonFill = await PlayerSettings.getCardButtonFill();
     // Rotation lock: main() applied it before scope was active, so that pass
     // read the never-written unscoped key and always came up unlocked. The
     // timeout matters: on a headless boot (Android Auto bind) there is no
@@ -808,6 +878,10 @@ class _AuthGateState extends State<AuthGate> {
         );
       }
     }
+    } catch (e, st) {
+      debugPrint('[Init] Early startup step failed: $e\n$st');
+    }
+    _appearanceScope = UserAccountService().activeScopeKey;
 
     // Start auth restoration immediately — it doesn't depend on audio/cast/
     // download services and must not be blocked by a hanging service init.
@@ -866,40 +940,44 @@ class _AuthGateState extends State<AuthGate> {
     // account/audio/download path is ready.
     StartupTaskCoordinator.startBackground(
       [
-        if (Platform.isAndroid)
+    if (Platform.isAndroid)
           () async {
-            await ChromecastService().init();
-          },
+        await ChromecastService().init();
+      },
         () async {
-          debugPrint('[Init] remaining services... (${sw.elapsedMilliseconds}ms)');
-          await ProgressSyncService().init();
+    debugPrint('[Init] remaining services... (${sw.elapsedMilliseconds}ms)');
+      await ProgressSyncService().init();
           // A killed stream can leave unsynced listening in the streaming
           // buffer; fold it into the offline ledger so the normal flush ships
           // it.
-          await ProgressSyncService().migrateOrphanStreamingTime();
-          await LocalSessionService().init();
-          await EqualizerService().init();
-          await SleepTimerService().loadAutoSleepSettings();
-          // Watch for settings changes and pull the synced copy on the way in.
-          await SettingsSyncService().startIfEnabled();
-          unawaited(SettingsSyncService().onAppForegrounded());
-          if (Platform.isAndroid) {
-            Future.microtask(() => AndroidAutoService().refresh());
-          }
-          if (Platform.isIOS) {
-            CarPlayService().init();
-          }
-          if (Platform.isAndroid || Platform.isIOS) {
-            await HomeWidgetService().init();
-          }
-          // Depends on AudioPlayerService + HomeWidgetService so they're ready
-          // when the shortcut handler fires.
-          await QuickActionsService().init();
-        },
+      await ProgressSyncService().migrateOrphanStreamingTime();
+      await LocalSessionService().init();
+      await EqualizerService().init();
+      await SleepTimerService().loadAutoSleepSettings();
+      // Watch for settings changes and pull the synced copy on the way in.
+      await SettingsSyncService().startIfEnabled();
+      unawaited(SettingsSyncService().onAppForegrounded());
+      if (Platform.isAndroid) {
+        Future.microtask(() => AndroidAutoService().refresh());
+      }
+      if (Platform.isIOS) {
+        CarPlayService().init();
+      }
+      if (Platform.isAndroid || Platform.isIOS) {
+        await HomeWidgetService().init();
+      }
+      if (Platform.isIOS) {
+        // Siri requests wait on this; a Siri launch reaches it headless.
+        await SiriService().init();
+      }
+      // Depends on AudioPlayerService + HomeWidgetService so they're ready
+      // when the shortcut handler fires.
+      await QuickActionsService().init();
+    },
       ],
       onError: (error, stackTrace) {
-        debugPrint('[Init] Optional service failed: $error\n$stackTrace');
-      },
+      debugPrint('[Init] Optional service failed: $error\n$stackTrace');
+    },
     );
     debugPrint('[Init] _initServices complete (${sw.elapsedMilliseconds}ms)');
     _servicesReady = true;
@@ -909,6 +987,7 @@ class _AuthGateState extends State<AuthGate> {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
+    _syncAppearanceScope();
     if (!auth.isLoading && _pendingSetupLink != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _tryHandleSetupLink());
     }
@@ -917,7 +996,7 @@ class _AuthGateState extends State<AuthGate> {
       return const AuthLoadingScreen();
     }
 
-    if (auth.isAuthenticated) {
+    if (auth.isAuthenticated || auth.isSignedOut) {
       return AppShell(
         key: ValueKey(UserAccountService().activeScopeKey),
         startOnAbsorbing: auth.startOnAbsorbingAfterAccountChange,

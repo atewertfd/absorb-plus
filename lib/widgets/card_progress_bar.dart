@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../services/audio_player_service.dart';
 import '../services/chapter_lookup.dart';
 import '../services/chromecast_service.dart';
 import 'absorb_slider.dart';
+import 'text_scale_room.dart';
 
 // ─── DUAL PROGRESS BAR (card version) ───────────────────────
 
@@ -41,7 +43,12 @@ class _CardDualProgressBarState extends State<CardDualProgressBar> with WidgetsB
   CardScrubberMode _scrubberMode = CardScrubberMode.chapter;
   bool _speedAdjustedTime = true;
   Timer? _smoothTicker;
-  final _tickNotifier = ChangeNotifier(); // drives ListenableBuilder rebuilds
+  final _tickNotifier = ChangeNotifier(); // repaints the bars (100 ms)
+  // Absorb Plus: rebuilds the texts, only when what they show changes
+  // (about once a second); the bars repaint from _tickNotifier.
+  final _textNotifier = ChangeNotifier();
+  Object? _builtTextSig;
+  double _builtChapterStart = 0, _builtChapterEnd = 0;
 
   // Smooth position tracking
   double _lastKnownPos = 0;
@@ -99,7 +106,8 @@ class _CardDualProgressBarState extends State<CardDualProgressBar> with WidgetsB
       _backgrounded = false;
       _loadSettings();
       _syncTicker();
-    } else if (state == AppLifecycleState.paused) {
+    } else if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden) {
       _backgrounded = true;
       _smoothTicker?.cancel();
       _smoothTicker = null;
@@ -113,17 +121,90 @@ class _CardDualProgressBarState extends State<CardDualProgressBar> with WidgetsB
     if (old.itemId != widget.itemId) _loadSavedSpeed();
   }
 
+  // Hidden tabs and covered routes turn TickerMode off; stop the 100 ms
+  // repaint timer there too. The bar re-anchors to the position when shown.
+  ValueListenable<bool>? _tickerMode;
+  bool get _tickerEnabled => _tickerMode?.value ?? true;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final notifier = TickerMode.getNotifier(context);
+    if (!identical(notifier, _tickerMode)) {
+      _tickerMode?.removeListener(_syncTicker);
+      _tickerMode = notifier;
+      notifier.addListener(_syncTicker);
+      _syncTicker();
+    }
+  }
+
   void _syncTicker() {
-    final shouldRun = _isPlaying && (widget.isActive || _isCastMode) && !_backgrounded;
+    final shouldRun = _isPlaying && (widget.isActive || _isCastMode) && !_backgrounded && _tickerEnabled;
     if (shouldRun && _smoothTicker == null) {
-      _smoothTicker = Timer.periodic(const Duration(milliseconds: 100), (_) {
-        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-        _tickNotifier.notifyListeners();
-      });
+      _smoothTicker = Timer.periodic(const Duration(milliseconds: 100), (_) => _onTick());
     } else if (!shouldRun && _smoothTicker != null) {
       _smoothTicker!.cancel();
       _smoothTicker = null;
     }
+  }
+
+  /// Repaints the bars, and rebuilds the texts when what they show changed.
+  void _onTick() {
+    if (!mounted) return;
+    if (_textSig(_displayPos) != _builtTextSig) {
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      _textNotifier.notifyListeners();
+    }
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    _tickNotifier.notifyListeners();
+  }
+
+  bool get _active => widget.isActive || _isCastMode;
+
+  double get _displayPos =>
+      _active ? _smoothPos : widget.staticProgress * widget.staticDuration;
+
+  double get _totalDur => _isCastMode
+      ? ChromecastService().castingDuration
+      : (widget.isActive ? widget.player.totalDuration : widget.staticDuration);
+
+  double get _speedDiv {
+    final div = _speedAdjustedTime ? (_active ? _currentSpeed : _savedSpeed) : 1.0;
+    return div.isFinite && div > 0 ? div : 1.0;
+  }
+
+  static int _whole(double v) => v.isFinite ? v.floor() : 0;
+
+  double _bookProgressAt(double posS) {
+    final totalDur = _totalDur;
+    return totalDur > 0 ? (posS / totalDur).clamp(0.0, 1.0) : 0.0;
+  }
+
+  double _chapterProgressAt(double posS) {
+    final chapterDur = _builtChapterEnd - _builtChapterStart;
+    if (chapterDur <= 0) return 0.0;
+    return (posS - _builtChapterStart).clamp(0.0, chapterDur) / chapterDur;
+  }
+
+  /// Everything the texts show at [posS], in whole displayed seconds; a
+  /// position outside the built chapter forces a rebuild (new chapter).
+  Object _textSig(double posS) {
+    final totalDur = _totalDur;
+    final speedDiv = _speedDiv;
+    final chapterDur = _builtChapterEnd - _builtChapterStart;
+    final chapterPos =
+        chapterDur > 0 ? (posS - _builtChapterStart).clamp(0.0, chapterDur) : 0.0;
+    final inChapter = posS >= _builtChapterStart && posS < _builtChapterEnd;
+    final progress = _bookProgressAt(posS);
+    return (
+      _whole(posS / speedDiv),
+      _whole((totalDur - posS) / speedDiv),
+      _whole(chapterPos / speedDiv),
+      _whole((chapterDur - chapterPos) / speedDiv),
+      inChapter || chapterDur <= 0,
+      widget.showCenterPercent && progress.isFinite ? (progress * 1000).round() : 0,
+      _isPlaying,
+    );
   }
 
   void _subscribePosition() {
@@ -170,6 +251,7 @@ class _CardDualProgressBarState extends State<CardDualProgressBar> with WidgetsB
             _currentSpeed = widget.player.speed;
             _isPlaying = widget.player.isPlaying;
             _syncTicker();
+            if (_smoothTicker == null && _tickerEnabled && !_backgrounded) _onTick();
             // Stream has caught up — clear the seek target so subsequent
             // position updates flow through normally without filtering.
             widget.player.clearSeekTarget();
@@ -189,6 +271,7 @@ class _CardDualProgressBarState extends State<CardDualProgressBar> with WidgetsB
         _currentSpeed = widget.player.speed;
         _isPlaying = widget.player.isPlaying;
         _syncTicker();
+        if (_smoothTicker == null && _tickerEnabled && !_backgrounded) _onTick();
       });
       _currentSpeed = widget.player.speed;
       _isPlaying = widget.player.isPlaying;
@@ -232,11 +315,13 @@ class _CardDualProgressBarState extends State<CardDualProgressBar> with WidgetsB
 
   @override void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _tickerMode?.removeListener(_syncTicker);
     PlayerSettings.settingsChanged.removeListener(_loadSettings);
     ChromecastService().removeListener(_onCastChanged);
     _posSub?.cancel();
     _smoothTicker?.cancel();
     _tickNotifier.dispose();
+    _textNotifier.dispose();
     super.dispose();
   }
 
@@ -262,7 +347,11 @@ class _CardDualProgressBarState extends State<CardDualProgressBar> with WidgetsB
   }
 
   @override
-  Widget build(BuildContext context) {
+  // Absorb Plus: the 100 ms position ticker repaints only the bar, not the card;
+  // the texts rebuild when they change (_onTick).
+  Widget build(BuildContext context) => RepaintBoundary(child: _buildBar(context));
+
+  Widget _buildBar(BuildContext context) {
     final tt = Theme.of(context).textTheme;
     final cs = Theme.of(context).colorScheme;
     final l = AppLocalizations.of(context)!;
@@ -271,7 +360,7 @@ class _CardDualProgressBarState extends State<CardDualProgressBar> with WidgetsB
     final active = widget.isActive || _isCastMode;
 
     return ListenableBuilder(
-      listenable: _tickNotifier,
+      listenable: _textNotifier,
       builder: (context, _) {
         final staticPos = widget.staticProgress * widget.staticDuration;
         final posS = active ? _smoothPos : staticPos;
@@ -326,6 +415,9 @@ class _CardDualProgressBarState extends State<CardDualProgressBar> with WidgetsB
         }
         final chapterUnresolved =
             chapterSource.isNotEmpty && resolvedChapterIdx < 0 && posS > 0;
+        _builtChapterStart = chapterStart;
+        _builtChapterEnd = chapterEnd;
+        _builtTextSig = _textSig(posS);
         final chapterDur = chapterEnd - chapterStart;
         final chapterPos = (posS - chapterStart).clamp(0.0, chapterDur);
         final chapterProgress = chapterDur > 0 ? chapterPos / chapterDur : 0.0;
@@ -354,7 +446,8 @@ class _CardDualProgressBarState extends State<CardDualProgressBar> with WidgetsB
                   onHorizontalDragUpdate: active ? (d) { _bookScrubSpeed = _scrubScale((d.localPosition.dy - _bookDragStartDy).abs()); setState(() => _bookDragValue = ((_bookDragValue ?? bookProgress) + d.delta.dx / w * _bookScrubSpeed).clamp(0.0, 1.0)); } : null,
                   onHorizontalDragEnd: active ? (_) { if (_bookDragValue != null) { final seekMs = (_bookDragValue! * totalDur * 1000).round(); _doSeek(seekMs); } setState(() => _bookDragValue = null); } : null,
                   onTapUp: active ? (d) { final v = (d.localPosition.dx / w).clamp(0.0, 1.0); final seekMs = (v * totalDur * 1000).round(); _doSeek(seekMs); } : null,
-                  child: CustomPaint(size: Size(w, 32), painter: AbsorbProgressPainter(progress: p, accent: widget.accent.withValues(alpha: 0.5), isDragging: _bookDragValue != null)),
+                  child: CustomPaint(size: Size(w, 32), painter: AbsorbProgressPainter(progress: p, accent: widget.accent.withValues(alpha: 0.5), isDragging: _bookDragValue != null,
+                      repaint: _tickNotifier, progressOf: () => _bookDragValue ?? _bookProgressAt(_displayPos))),
                 );
               })),
               Padding(padding: const EdgeInsets.only(top: 2, bottom: 6), child: Stack(
@@ -395,7 +488,7 @@ class _CardDualProgressBarState extends State<CardDualProgressBar> with WidgetsB
             // Chapter bar
             if (widget.showChapterBar) ...[
             // ── Chapter pill-scrubber ──
-            SizedBox(height: widget.compact ? 22 : 30, child: LayoutBuilder(builder: (_, cons) {
+            SizedBox(height: (widget.compact ? 22 : 30) + textScaleRoom(context, 14), child: LayoutBuilder(builder: (_, cons) {
               final w = cons.maxWidth;
               final p = _chapterDragValue ?? chapterProgress;
               final isDragging = _chapterDragValue != null;
@@ -426,6 +519,8 @@ class _CardDualProgressBarState extends State<CardDualProgressBar> with WidgetsB
                     isPlaying: isPlaying,
                     isDragging: isDragging,
                     backgroundColor: cs.surfaceContainerHighest,
+                    repaint: _tickNotifier,
+                    progressOf: () => _chapterDragValue ?? _chapterProgressAt(_displayPos),
                   ),
                   child: Center(
                     child: Padding(
@@ -433,6 +528,7 @@ class _CardDualProgressBarState extends State<CardDualProgressBar> with WidgetsB
                       child: chName != null
                           ? MarqueeText(
                               text: chName,
+                              animate: isPlaying,
                               style: TextStyle(
                                 color: cs.onSurface.withValues(alpha: 0.9),
                                 fontWeight: FontWeight.w600,
@@ -503,6 +599,9 @@ class ChapterPillPainter extends CustomPainter {
   final bool isPlaying;
   final bool isDragging;
   final Color backgroundColor;
+  /// Absorb Plus: the live progress, read at paint time so [repaint] can
+  /// move the fill without rebuilding the bar.
+  final double Function()? progressOf;
 
   ChapterPillPainter({
     required this.progress,
@@ -511,6 +610,8 @@ class ChapterPillPainter extends CustomPainter {
     required this.isPlaying,
     required this.isDragging,
     required this.backgroundColor,
+    this.progressOf,
+    super.repaint,
   });
 
   @override
@@ -518,7 +619,7 @@ class ChapterPillPainter extends CustomPainter {
     final h = size.height;
     final w = size.width;
     final radius = h / 2;
-    final p = progress.clamp(0.0, 1.0);
+    final p = (progressOf?.call() ?? progress).clamp(0.0, 1.0);
 
     // Pill shape
     final pillRect = RRect.fromRectAndRadius(
@@ -627,6 +728,8 @@ class ChapterPillPainter extends CustomPainter {
   bool shouldRepaint(covariant ChapterPillPainter old) =>
       old.progress != progress ||
       old.isDragging != isDragging ||
+      old.isPlaying != isPlaying ||
+      old.accent != accent ||
       old.backgroundColor != backgroundColor;
 }
 
@@ -635,7 +738,15 @@ class ChapterPillPainter extends CustomPainter {
 class MarqueeText extends StatefulWidget {
   final String text;
   final TextStyle style;
-  const MarqueeText({super.key, required this.text, required this.style});
+  /// Scroll only while true (the book is playing); paused text stays still
+  /// at its start instead of animating forever.
+  /// Absorb Plus: even then it scrolls one loop when the text changes (or
+  /// playback starts) and once every [MarqueeText.restInterval] after,
+  /// resting in between, instead of without a break.
+  final bool animate;
+
+  static const restInterval = Duration(seconds: 30);
+  const MarqueeText({super.key, required this.text, required this.style, this.animate = true});
   @override State<MarqueeText> createState() => _MarqueeTextState();
 }
 
@@ -644,6 +755,7 @@ class _MarqueeTextState extends State<MarqueeText> with SingleTickerProviderStat
   late AnimationController _animController;
   bool _duplicated = false;
   double _loopWidth = 0; // distance to scroll for one seamless loop
+  Timer? _restTimer; // next loop after the rest
 
   static const double _gap = 48.0;   // space between the two text copies
   static const double _speed = 38.0; // pixels per second
@@ -654,6 +766,7 @@ class _MarqueeTextState extends State<MarqueeText> with SingleTickerProviderStat
     _scrollController = ScrollController();
     _animController = AnimationController(vsync: this, duration: const Duration(seconds: 8));
     _animController.addListener(_onTick);
+    _animController.addStatusListener(_onStatus);
     WidgetsBinding.instance.addPostFrameCallback((_) => _measure());
   }
 
@@ -661,12 +774,24 @@ class _MarqueeTextState extends State<MarqueeText> with SingleTickerProviderStat
   void didUpdateWidget(covariant MarqueeText old) {
     super.didUpdateWidget(old);
     if (old.text != widget.text) {
+      _restTimer?.cancel();
+      _restTimer = null;
       _animController.stop();
       _animController.reset();
       _duplicated = false;
       _loopWidth = 0;
       if (_scrollController.hasClients) _scrollController.jumpTo(0);
       WidgetsBinding.instance.addPostFrameCallback((_) => _measure());
+    } else if (old.animate != widget.animate && _loopWidth > 0) {
+      if (widget.animate) {
+        if (!_animController.isAnimating) _scrollOnce();
+      } else {
+        _restTimer?.cancel();
+        _restTimer = null;
+        _animController.stop();
+        _animController.value = 0;
+        if (_scrollController.hasClients) _scrollController.jumpTo(0);
+      }
     }
   }
 
@@ -687,9 +812,26 @@ class _MarqueeTextState extends State<MarqueeText> with SingleTickerProviderStat
       final durationMs = (_loopWidth / _speed * 1000).round();
       _animController.duration = Duration(milliseconds: durationMs);
       Future.delayed(const Duration(seconds: 2), () {
-        if (mounted) _animController.repeat();
+        if (mounted && widget.animate && !_animController.isAnimating) _scrollOnce();
       });
     });
+  }
+
+  /// One seamless loop; the text ends where it started, then rests.
+  void _scrollOnce() {
+    _restTimer?.cancel();
+    _restTimer = null;
+    if (!mounted || !widget.animate || _loopWidth <= 0) return;
+    _animController.forward(from: 0);
+  }
+
+  void _onStatus(AnimationStatus status) {
+    if (status != AnimationStatus.completed || !mounted) return;
+    // Back to the start (the duplicated copy looks the same), then rest.
+    _animController.value = 0;
+    if (widget.animate) {
+      _restTimer = Timer(MarqueeText.restInterval, _scrollOnce);
+    }
   }
 
   void _onTick() {
@@ -701,7 +843,9 @@ class _MarqueeTextState extends State<MarqueeText> with SingleTickerProviderStat
 
   @override
   void dispose() {
+    _restTimer?.cancel();
     _animController.removeListener(_onTick);
+    _animController.removeStatusListener(_onStatus);
     _animController.dispose();
     _scrollController.dispose();
     super.dispose();

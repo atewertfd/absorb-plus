@@ -14,6 +14,7 @@ import 'episode_detail_sheet.dart';
 import 'absorb_placement.dart';
 import 'swipe_action.dart';
 import 'stackable_sheet.dart';
+import '../utils/local_path.dart';
 
 /// Open the right detail sheet for a section entity: episode detail for
 /// podcast entries (which carry a `recentEpisode`), book detail otherwise.
@@ -158,6 +159,8 @@ class _SectionDetailSheetState extends State<SectionDetailSheet> {
         final isFinished = episodeId != null
             ? (lib.getEpisodeProgressData(itemId, episodeId)?['isFinished'] == true)
             : (lib.getProgressData(itemId)?['isFinished'] == true);
+        final isSkimmed =
+            episodeId == null && lib.getProgressData(itemId)?['skimmed'] == true;
         final isDownloaded = DownloadService()
             .isDownloaded(episodeId != null ? '$itemId-$episodeId' : itemId);
         final isOnAbsorbing = lib.isOnAbsorbingList(itemId);
@@ -185,7 +188,7 @@ class _SectionDetailSheetState extends State<SectionDetailSheet> {
                       if (isFinished || isDownloaded)
                         Positioned(
                           left: 0, right: 0, bottom: 0,
-                          child: CoverStateBadges(isDownloaded: isDownloaded, isFinished: isFinished),
+                          child: CoverStateBadges(isDownloaded: isDownloaded, isFinished: isFinished, isSkimmed: isSkimmed),
                         ),
                     ]),
                   ),
@@ -275,6 +278,8 @@ class _SectionDetailSheetState extends State<SectionDetailSheet> {
         final isFinished = episodeId != null
             ? (lib.getEpisodeProgressData(itemId, episodeId)?['isFinished'] == true)
             : (lib.getProgressData(itemId)?['isFinished'] == true);
+        final isSkimmed =
+            episodeId == null && lib.getProgressData(itemId)?['skimmed'] == true;
         final isDownloaded = DownloadService()
             .isDownloaded(episodeId != null ? '$itemId-$episodeId' : itemId);
 
@@ -295,7 +300,7 @@ class _SectionDetailSheetState extends State<SectionDetailSheet> {
                     if (isFinished || isDownloaded)
                       Positioned(
                         left: 0, right: 0, bottom: 0,
-                        child: CoverStateBadges(isDownloaded: isDownloaded, isFinished: isFinished),
+                        child: CoverStateBadges(isDownloaded: isDownloaded, isFinished: isFinished, isSkimmed: isSkimmed),
                       ),
                   ]),
                 ),
@@ -323,7 +328,7 @@ class _SectionDetailSheetState extends State<SectionDetailSheet> {
 
   Widget _cover(String? coverUrl, LibraryProvider lib, ColorScheme cs) {
     if (coverUrl == null) return _placeholder(cs);
-    if (coverUrl.startsWith('/')) {
+    if (isLocalCoverPath(coverUrl)) {
       return Image.file(File(coverUrl), fit: BoxFit.cover,
           errorBuilder: (_, __, ___) => _placeholder(cs));
     }

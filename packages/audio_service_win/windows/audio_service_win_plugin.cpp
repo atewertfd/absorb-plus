@@ -27,6 +27,15 @@
 #include <mutex>
 #include <queue>
 #include <algorithm>
+#include <atomic>
+#include <chrono>
+
+// A call for Dart raised on an SMTC worker thread, delivered later on the
+// platform thread (method name + argument).
+struct PendingSmtcEvent {
+  std::string method;
+  flutter::EncodableValue argument;
+};
 
 static winrt::Windows::Media::Playback::MediaPlayer mediaPlayer{nullptr};
 static winrt::Windows::Media::SystemMediaTransportControls smtc{nullptr};
@@ -34,9 +43,17 @@ static winrt::Windows::Media::SystemMediaTransportControlsDisplayUpdater updater
 static std::unique_ptr<flutter::MethodChannel<>> channel;
 static std::string appId;
 static winrt::event_token buttonToken{};
+static winrt::event_token positionToken{};
 static std::vector<std::future<void>> artworkTasks;
 static std::mutex buttonMutex;
-static std::queue<std::string> pendingButtons;
+static std::queue<PendingSmtcEvent> pendingButtons;
+// Artwork: the source showing now and its stream reference, so a re-push of
+// the same item keeps its cover instead of clearing and reloading it. The
+// generation drops artwork loads that finish after a newer item arrived.
+static std::mutex artworkMutex;
+static std::string currentArtUri;
+static winrt::Windows::Storage::Streams::RandomAccessStreamReference currentThumb{nullptr};
+static std::atomic<uint64_t> artworkGeneration{0};
 static HWND callbackWindow = nullptr;
 static flutter::PluginRegistrarWindows* pluginRegistrar = nullptr;
 static int windowProcId = -1;
@@ -64,15 +81,15 @@ namespace audio_service_win
     windowProcId = registrar->RegisterTopLevelWindowProcDelegate(
         [](HWND, UINT message, WPARAM, LPARAM) -> std::optional<LRESULT> {
           if (message != kMediaButtonMessage) return std::nullopt;
-          std::queue<std::string> buttons;
+          std::queue<PendingSmtcEvent> events;
           {
             std::lock_guard<std::mutex> lock(buttonMutex);
-            buttons.swap(pendingButtons);
+            events.swap(pendingButtons);
           }
-          while (!buttons.empty()) {
-            if (channel) channel->InvokeMethod("onSMTCButtonPressed",
-                std::make_unique<flutter::EncodableValue>(buttons.front()));
-            buttons.pop();
+          while (!events.empty()) {
+            if (channel) channel->InvokeMethod(events.front().method,
+                std::make_unique<flutter::EncodableValue>(events.front().argument));
+            events.pop();
           }
           return 0;
         });
@@ -101,13 +118,19 @@ namespace audio_service_win
       pendingButtons = {};
     }
     if (smtc) {
-      smtc.ButtonPressed(buttonToken);
-      smtc.IsEnabled(false);
+      try {
+        smtc.ButtonPressed(buttonToken);
+        smtc.PlaybackPositionChangeRequested(positionToken);
+        smtc.IsEnabled(false);
+      } catch (...) {}
     }
     // Finish owned artwork work before releasing COM objects. Do not leave
     // static WinRT objects to destruct after the host's COM apartment exits.
+    artworkGeneration++;
     for (auto& task : artworkTasks) task.wait();
     artworkTasks.clear();
+    currentThumb = nullptr;
+    currentArtUri.clear();
     updater = nullptr;
     smtc = nullptr;
     if (mediaPlayer) mediaPlayer.Close();
@@ -124,6 +147,15 @@ namespace audio_service_win
     if (mediaPlayer == nullptr)
     {
       mediaPlayer = winrt::Windows::Media::Playback::MediaPlayer();
+      // The MediaPlayer never plays anything; it only hosts SMTC. Turn off its
+      // automatic integration so its own empty state (status, a 0:00
+      // timeline) never overrides what Absorb reports by hand.
+      try {
+        mediaPlayer.CommandManager().IsEnabled(false);
+      } catch (const winrt::hresult_error& e) {
+        std::cerr << "SMTC: could not disable the command manager: "
+                  << winrt::to_string(e.message()) << std::endl;
+      }
       smtc = mediaPlayer.SystemMediaTransportControls();
       updater = smtc.DisplayUpdater();
       updater.AppMediaId(winrt::to_hstring(appId));
@@ -180,12 +212,66 @@ namespace audio_service_win
                            {
                              std::lock_guard<std::mutex> lock(buttonMutex);
                              if (callbackWindow) {
-                               pendingButtons.push(*method);
+                               pendingButtons.push({"onSMTCButtonPressed",
+                                                    flutter::EncodableValue(*method)});
                                PostMessage(callbackWindow, kMediaButtonMessage, 0, 0);
                              }
                            }
                            delete method; // Clean up the dynamically allocated string
                          });
+
+      // Dragging the timeline in the media flyout. Forwarded like the
+      // buttons, as milliseconds on the timeline Absorb last reported.
+      positionToken = smtc.PlaybackPositionChangeRequested(
+          [](auto const &, winrt::Windows::Media::PlaybackPositionChangeRequestedEventArgs const &args)
+          {
+            const int64_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+                                   args.RequestedPlaybackPosition())
+                                   .count();
+            std::lock_guard<std::mutex> lock(buttonMutex);
+            if (callbackWindow) {
+              pendingButtons.push({"onSMTCSeek", flutter::EncodableValue(ms)});
+              PostMessage(callbackWindow, kMediaButtonMessage, 0, 0);
+            }
+          });
+    }
+  }
+
+  // Reads an integer argument; the codec sends small Dart ints as int32.
+  static int64_t IntArg(const flutter::EncodableMap &args, const char *key, int64_t fallback)
+  {
+    auto it = args.find(flutter::EncodableValue(key));
+    if (it == args.end()) return fallback;
+    if (const auto *v = std::get_if<int32_t>(&it->second)) return *v;
+    if (const auto *v = std::get_if<int64_t>(&it->second)) return *v;
+    return fallback;
+  }
+
+  static winrt::Windows::Foundation::TimeSpan Millis(int64_t ms)
+  {
+    return std::chrono::duration_cast<winrt::Windows::Foundation::TimeSpan>(
+        std::chrono::milliseconds(ms < 0 ? 0 : ms));
+  }
+
+  // Sets the flyout's timeline. A failure is logged and never reaches Dart
+  // or playback.
+  static void UpdateTimeline(int64_t positionMs, int64_t durationMs, double rate, bool seekable)
+  {
+    if (!smtc) return;
+    try {
+      if (positionMs > durationMs) positionMs = durationMs;
+      winrt::Windows::Media::SystemMediaTransportControlsTimelineProperties timeline;
+      timeline.StartTime(Millis(0));
+      timeline.EndTime(Millis(durationMs));
+      timeline.MinSeekTime(Millis(0));
+      timeline.MaxSeekTime(Millis(seekable ? durationMs : 0));
+      timeline.Position(Millis(positionMs));
+      smtc.UpdateTimelineProperties(timeline);
+      if (rate > 0) smtc.PlaybackRate(rate);
+    } catch (const winrt::hresult_error &e) {
+      std::cerr << "SMTC timeline update failed: " << winrt::to_string(e.message()) << std::endl;
+    } catch (...) {
+      std::cerr << "SMTC timeline update failed" << std::endl;
     }
   }
 
@@ -284,7 +370,14 @@ namespace audio_service_win
         // Ensure SMTC is initialized
         if (!smtc)
         {
-          SetupSMTC();
+          try
+          {
+            SetupSMTC();
+          }
+          catch (const winrt::hresult_error& e)
+          {
+            std::cerr << "SMTC setup failed: " << winrt::to_string(e.message()) << std::endl;
+          }
         }
 
         std::string artUri;
@@ -299,54 +392,81 @@ namespace audio_service_win
 
         if (updater)
         {
-          smtc.IsEnabled(true);
-          updater.ClearAll();
-          updater.Type(winrt::Windows::Media::MediaPlaybackType::Music);
-          updater.MusicProperties().Title(winrt::to_hstring(title));
-          updater.MusicProperties().Artist(winrt::to_hstring(artist));
-          updater.MusicProperties().AlbumTitle(winrt::to_hstring(album));
-
-          if (!artUri.empty())
+          try
           {
-            try
-            {
+            std::lock_guard<std::mutex> artworkLock(artworkMutex);
+            smtc.IsEnabled(true);
+            updater.ClearAll();
+            updater.Type(winrt::Windows::Media::MediaPlaybackType::Music);
+            updater.MusicProperties().Title(winrt::to_hstring(title));
+            updater.MusicProperties().Artist(winrt::to_hstring(artist));
+            updater.MusicProperties().AlbumTitle(winrt::to_hstring(album));
 
-              artworkTasks.erase(std::remove_if(artworkTasks.begin(), artworkTasks.end(),
-                  [](auto& task) { return task.wait_for(std::chrono::seconds(0)) == std::future_status::ready; }),
-                  artworkTasks.end());
-              artworkTasks.push_back(std::async(std::launch::async, [artUri, artworkUpdater = updater]() mutable
-                          {
-              winrt::init_apartment(winrt::apartment_type::multi_threaded);
-              try {
-                  if (artUri.rfind("http://", 0) == 0 || artUri.rfind("https://", 0) == 0) {
-                      winrt::Windows::Foundation::Uri uri(winrt::to_hstring(artUri));
-                      auto thumbRef = winrt::Windows::Storage::Streams::RandomAccessStreamReference::CreateFromUri(uri);
-                      artworkUpdater.Thumbnail(thumbRef);
-                  } else {
-                      std::string localPath = artUri;
-                      if (localPath.rfind("file://", 0) == 0) {
-                          localPath = localPath.substr(8);
-                          std::replace(localPath.begin(), localPath.end(), '/', '\\');
-                      }
-                      auto storageFile = winrt::Windows::Storage::StorageFile::GetFileFromPathAsync(winrt::to_hstring(UrlDecode(localPath))).get();
-                      auto thumbRef = winrt::Windows::Storage::Streams::RandomAccessStreamReference::CreateFromFile(storageFile);
-                      artworkUpdater.Thumbnail(thumbRef);
-                  }
-                  artworkUpdater.Update();
-              } catch (const winrt::hresult_error& e) {
-                  std::cerr << "Failed to set thumbnail: " << e.message().c_str() << std::endl;
-              }
-              artworkUpdater = nullptr;
-              winrt::uninit_apartment();
-              }));
-            }
-            catch (...)
+            if (!artUri.empty() && artUri == currentArtUri)
             {
-              // If thumbnail fails, continue without it
-              std::cerr << "Failed to set thumbnail in Notification: " << artUri << std::endl;
+              // Same cover as before (a chapter or text re-push): keep it.
+              if (currentThumb) updater.Thumbnail(currentThumb);
             }
+            else
+            {
+              // A new item or cover: the old one is gone with ClearAll above,
+              // and any load still running for it is dropped.
+              const uint64_t generation = ++artworkGeneration;
+              currentArtUri = artUri;
+              currentThumb = nullptr;
+              if (!artUri.empty())
+              {
+                artworkTasks.erase(std::remove_if(artworkTasks.begin(), artworkTasks.end(),
+                    [](auto& task) { return task.wait_for(std::chrono::seconds(0)) == std::future_status::ready; }),
+                    artworkTasks.end());
+                artworkTasks.push_back(std::async(std::launch::async, [artUri, generation, artworkUpdater = updater]() mutable
+                {
+                  winrt::init_apartment(winrt::apartment_type::multi_threaded);
+                  try {
+                    winrt::Windows::Storage::Streams::RandomAccessStreamReference thumbRef{nullptr};
+                    if (artUri.rfind("http://", 0) == 0 || artUri.rfind("https://", 0) == 0) {
+                      // Windows fetches the cover itself.
+                      winrt::Windows::Foundation::Uri uri(winrt::to_hstring(artUri));
+                      thumbRef = winrt::Windows::Storage::Streams::RandomAccessStreamReference::CreateFromUri(uri);
+                    } else {
+                      // A plain path (audio_service's cache file, a downloaded
+                      // book's cover) is used as is; only file:// URIs are
+                      // percent-decoded, so names with % or + stay intact.
+                      std::string localPath = artUri;
+                      if (localPath.rfind("file:///", 0) == 0) {
+                        localPath = UrlDecode(localPath.substr(8));
+                        std::replace(localPath.begin(), localPath.end(), '/', '\\');
+                      }
+                      auto storageFile = winrt::Windows::Storage::StorageFile::GetFileFromPathAsync(winrt::to_hstring(localPath)).get();
+                      thumbRef = winrt::Windows::Storage::Streams::RandomAccessStreamReference::CreateFromFile(storageFile);
+                    }
+                    std::lock_guard<std::mutex> lock(artworkMutex);
+                    if (generation == artworkGeneration.load()) {
+                      currentThumb = thumbRef;
+                      artworkUpdater.Thumbnail(thumbRef);
+                      artworkUpdater.Update();
+                    }
+                  } catch (const winrt::hresult_error& e) {
+                    // Never log the source: a server cover URL carries the token.
+                    std::cerr << "Failed to set thumbnail: " << winrt::to_string(e.message()) << std::endl;
+                  } catch (...) {
+                    std::cerr << "Failed to set thumbnail" << std::endl;
+                  }
+                  artworkUpdater = nullptr;
+                  winrt::uninit_apartment();
+                }));
+              }
+            }
+            updater.Update();
           }
-          updater.Update();
+          catch (const winrt::hresult_error& e)
+          {
+            std::cerr << "SMTC metadata update failed: " << winrt::to_string(e.message()) << std::endl;
+          }
+          catch (...)
+          {
+            std::cerr << "SMTC metadata update failed" << std::endl;
+          }
         }
         result->Success();
       }
@@ -363,26 +483,43 @@ namespace audio_service_win
       if (arguments && arguments->find(flutter::EncodableValue("state")) != arguments->end())
       {
         int32_t state = std::get<int32_t>(arguments->at(flutter::EncodableValue("state")));
+        if (state < 0 || state > 2)
+        {
+          result->Error("InvalidArguments", "Invalid playback state");
+          return;
+        }
         if (smtc)
         {
-          smtc.IsEnabled(true);
-          switch (state)
+          try
           {
-          case 0: // Playing
-            smtc.PlaybackStatus(winrt::Windows::Media::MediaPlaybackStatus::Playing);
-            break;
-          case 1: // Paused
-            smtc.PlaybackStatus(winrt::Windows::Media::MediaPlaybackStatus::Paused);
-            break;
-          case 2: // Stopped
-            smtc.PlaybackStatus(winrt::Windows::Media::MediaPlaybackStatus::Stopped);
-            smtc.IsEnabled(false);
-            updater.ClearAll();
-            updater.Update();
-            break;
-          default:
-            result->Error("InvalidArguments", "Invalid playback state");
-            return;
+            smtc.IsEnabled(true);
+            switch (state)
+            {
+            case 0: // Playing
+              smtc.PlaybackStatus(winrt::Windows::Media::MediaPlaybackStatus::Playing);
+              break;
+            case 1: // Paused
+              smtc.PlaybackStatus(winrt::Windows::Media::MediaPlaybackStatus::Paused);
+              break;
+            case 2: // Stopped
+            {
+              smtc.PlaybackStatus(winrt::Windows::Media::MediaPlaybackStatus::Stopped);
+              smtc.IsEnabled(false);
+              std::lock_guard<std::mutex> artworkLock(artworkMutex);
+              artworkGeneration++;
+              currentArtUri.clear();
+              currentThumb = nullptr;
+              updater.ClearAll();
+              updater.Update();
+              smtc.UpdateTimelineProperties(
+                  winrt::Windows::Media::SystemMediaTransportControlsTimelineProperties());
+              break;
+            }
+            }
+          }
+          catch (const winrt::hresult_error& e)
+          {
+            std::cerr << "SMTC state update failed: " << winrt::to_string(e.message()) << std::endl;
           }
         }
         result->Success();
@@ -391,6 +528,34 @@ namespace audio_service_win
       {
         result->Error("InvalidArguments", "state is required");
       }
+    }
+
+    // Timeline (position and length) for the flyout's seek bar. Dart sends
+    // this only on changes and at most every ~5 s while playing; Windows
+    // moves the bar on its own in between.
+    else if (method_call.method_name().compare("updateTimeline") == 0)
+    {
+      const auto *arguments = std::get_if<flutter::EncodableMap>(method_call.arguments());
+      if (!arguments)
+      {
+        result->Error("InvalidArguments", "positionMs and durationMs are required");
+        return;
+      }
+      double rate = 1.0;
+      auto rateIt = arguments->find(flutter::EncodableValue("rate"));
+      if (rateIt != arguments->end())
+      {
+        if (const auto *v = std::get_if<double>(&rateIt->second)) rate = *v;
+      }
+      bool seekable = true;
+      auto seekIt = arguments->find(flutter::EncodableValue("seekable"));
+      if (seekIt != arguments->end())
+      {
+        if (const auto *v = std::get_if<bool>(&seekIt->second)) seekable = *v;
+      }
+      UpdateTimeline(IntArg(*arguments, "positionMs", 0),
+                     IntArg(*arguments, "durationMs", 0), rate, seekable);
+      result->Success();
     }
 
     else

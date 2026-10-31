@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../l10n/app_localizations.dart';
 import 'cover_badges.dart';
+import '../services/narrated_books.dart';
+import '../services/ebook_cache.dart';
 import '../providers/library_provider.dart';
 import '../services/audio_player_service.dart';
 import '../services/download_service.dart';
@@ -12,6 +14,11 @@ import 'book_detail_sheet.dart';
 import 'episode_list_sheet.dart';
 import 'cover_decode.dart';
 import 'library_item_snapshot.dart';
+import '../ui_themes/ui_theme_hooks.dart';
+import '../utils/local_path.dart';
+import 'desktop_input.dart';
+import 'stable_cached_network_image.dart';
+import '../utils/cover_cache.dart';
 
 class BookCard extends StatelessWidget {
   final Map<String, dynamic> item;
@@ -55,6 +62,7 @@ class BookCard extends StatelessWidget {
         coverUrl: lib.getCoverUrl(itemId),
         progress: lib.getProgress(itemId),
         isFinished: lib.getProgressData(itemId)?['isFinished'] == true,
+        isSkimmed: lib.getProgressData(itemId)?['skimmed'] == true,
         isPodcastLibrary: isPodcastLibrary,
         isSubscribed: isPodcastLibrary &&
             itemId != null &&
@@ -76,8 +84,11 @@ class BookCard extends StatelessWidget {
     // Progress from LibraryProvider (fetched via /api/me, same source as book detail)
     final progress = snapshot.progress;
     final isFinished = snapshot.isFinished;
+    final isSkimmed = snapshot.isSkimmed;
     final isExplicit = PlayerSettings.showExplicitBadge && metadata['explicit'] == true;
     final isDownloaded = DownloadService().isDownloaded(itemId ?? '');
+    final hasEbook = PlayerSettings.showEbookBadge && hasEbookFile(item);
+    final readAlong = hasEbook && hasReadAlongEbook(item);
     // Only compute for podcast shows that aren't being rendered as an episode
     // (an episode card shows the recentEpisode payload, not show-level info).
     final unfinishedCount = snapshot.unfinishedCount;
@@ -85,8 +96,8 @@ class BookCard extends StatelessWidget {
     final headers = snapshot.mediaHeaders;
 
     final card = isWide
-        ? _buildWideCard(context, cs, tt, l, title, authorName, coverUrl, progress, headers, isExplicit: isExplicit)
-        : _buildCompactCard(context, cs, tt, l, title, subtitle, authorName, coverUrl, progress, headers, isFinished: isFinished, isDownloaded: isDownloaded, isExplicit: isExplicit, unfinishedCount: unfinishedCount);
+        ? _buildWideCard(context, cs, tt, l, title, authorName, coverUrl, progress, headers, isExplicit: isExplicit, hasEbook: hasEbook, readAlong: readAlong)
+        : _buildCompactCard(context, cs, tt, l, title, subtitle, authorName, coverUrl, progress, headers, isFinished: isFinished, isSkimmed: isSkimmed, isDownloaded: isDownloaded, isExplicit: isExplicit, unfinishedCount: unfinishedCount, hasEbook: hasEbook, readAlong: readAlong);
     if (!selectionMode) return card;
     // Selection sits on top of the finished card rather than inside both
     // layouts: the overlay swallows the tap, so nothing below it can open a
@@ -164,6 +175,7 @@ class BookCard extends StatelessWidget {
       showBookDetailSheet(
         context,
         itemId,
+        initialItem: item,
         sourcePlaylistId: sourcePlaylistId,
         sourceCollectionId: sourceCollectionId,
         sourceCollectionName: sourceCollectionName,
@@ -214,6 +226,8 @@ class BookCard extends StatelessWidget {
     double progress,
     Map<String, String> headers, {
     bool isExplicit = false,
+    bool hasEbook = false,
+    bool readAlong = false,
   }) {
     return Card(
       elevation: 0,
@@ -223,6 +237,7 @@ class BookCard extends StatelessWidget {
       child: InkWell(
         onTap: () => _navigateToDetail(context),
         onLongPress: () => _onLongPress(context),
+        onSecondaryTap: desktopSecondaryTap(() => _onLongPress(context)),
         borderRadius: BorderRadius.circular(16),
         child: Row(
           children: [
@@ -233,6 +248,8 @@ class BookCard extends StatelessWidget {
               child: Stack(
                 children: [
                   _CoverImage(coverUrl: coverUrl, cs: cs, fit: BoxFit.contain, httpHeaders: headers, title: title, author: authorName),
+                  if (hasEbook && !selectionMode)
+                    Positioned(top: 4, left: 4, child: EbookCoverBadge(readAlong: readAlong)),
                   if (isExplicit)
                     Positioned(
                       top: 4, right: DownloadService().isDownloaded(item['id'] as String? ?? '') ? 30 : 4,
@@ -330,9 +347,12 @@ class BookCard extends StatelessWidget {
     double progress,
     Map<String, String> headers, {
     bool isFinished = false,
+    bool isSkimmed = false,
     bool isDownloaded = false,
     bool isExplicit = false,
     int unfinishedCount = 0,
+    bool hasEbook = false,
+    bool readAlong = false,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -408,12 +428,15 @@ class BookCard extends StatelessWidget {
                         ),
                       ),
                     ),
+                  if (hasEbook && !selectionMode)
+                    Positioned(top: 4, left: 4, child: EbookCoverBadge(readAlong: readAlong)),
                   if (isFinished || isDownloaded)
                     Positioned(
                       left: 0, right: 0, bottom: 0,
                       child: CoverStateBadges(
                         isDownloaded: isDownloaded,
                         isFinished: isFinished,
+                        isSkimmed: isSkimmed,
                         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
                       ),
                     ),
@@ -490,52 +513,41 @@ class _CoverImage extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final decodeWidth = coverDecodeWidth(
+        final decodeWidth = themedCoverDecodeWidth(context, coverDecodeWidth(
           width: constraints.maxWidth,
           height: constraints.maxHeight,
           devicePixelRatio: MediaQuery.devicePixelRatioOf(context),
-        );
-        if (coverUrl!.startsWith('/')) {
-          final file = File(coverUrl!);
-          if (!file.existsSync()) return _placeholder();
-          return EinkCoverTone(
-            child: BlurPaddedCover(
-              enabled: isSquare,
-              blurChild: Image.file(
-                file,
-                fit: BoxFit.cover,
-                cacheWidth: 32,
-                errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-              ),
-              child: Image.file(
-                file,
-                fit: effectiveFit,
-                cacheWidth: decodeWidth,
-                errorBuilder: (_, __, ___) => _placeholder(),
-              ),
-            ),
-          );
-        }
-        return EinkCoverTone(
-          child: BlurPaddedCover(
-            enabled: isSquare,
-            blurChild: CachedNetworkImage(
-              imageUrl: coverUrl!,
-              fit: BoxFit.cover,
-              httpHeaders: httpHeaders,
-              memCacheWidth: 32,
+        ));
+    if (isLocalCoverPath(coverUrl!)) {
+      final file = File(coverUrl!);
+      if (! file.existsSync()) return _placeholder();
+        return EinkCoverTone(child: BlurPaddedCover(
+          enabled: isSquare,
+          blurChild: Image.file(file, fit: BoxFit.cover, cacheWidth: themedCoverDecodeWidth(context, 32),
+                errorBuilder: (_, __, ___) => const SizedBox.shrink()),
+          child: Image.file(file, fit: effectiveFit, cacheWidth: decodeWidth,
+                errorBuilder: (_, __, ___) => _placeholder()),
+        ));
+    }
+
+    return EinkCoverTone(child: BlurPaddedCover(
+      enabled: isSquare,
+      blurChild: CachedNetworkImage(
+        imageUrl: coverUrl!, cacheKey: stableCoverCacheKey(coverUrl!), cacheManager: coverCacheManager,
+        fit: BoxFit.cover,
+        httpHeaders: httpHeaders,
+        memCacheWidth: themedCoverDecodeWidth(context, 32),
               errorWidget: (_, __, ___) => const SizedBox.shrink(),
-            ),
-            child: CachedNetworkImage(
-              imageUrl: coverUrl!,
-              fit: effectiveFit,
-              httpHeaders: httpHeaders,
-              memCacheWidth: decodeWidth,
+      ),
+      child: CachedNetworkImage(
+        imageUrl: coverUrl!, cacheKey: stableCoverCacheKey(coverUrl!), cacheManager: coverCacheManager,
+        fit: effectiveFit,
+        httpHeaders: httpHeaders,
+        memCacheWidth: decodeWidth,
               placeholder: (_, __) => _placeholder(),
-              errorWidget: (_, __, ___) => _placeholder(),
-            ),
-          ),
-        );
+        errorWidget: (_, __, ___) => _placeholder(),
+      ),
+    ),);
       },
     );
   }
@@ -597,6 +609,7 @@ class _PressableCardState extends State<_PressableCard>
         widget.onTap();
       },
       onTapCancel: () => _controller.reverse(),
+      onSecondaryTap: desktopSecondaryTap(widget.onLongPress),
       onLongPress: widget.onLongPress == null
           ? null
           : () {
