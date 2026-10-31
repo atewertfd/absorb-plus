@@ -13291,6 +13291,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get tailscaleChip => 'Tailscale';
 
   @override
+  String get tailscaleConnect => 'Connect with Tailscale';
+
+  @override
+  String get tailscaleConnectHint =>
+      'Opens the Tailscale login in your browser';
+
+  @override
+  String get tailscaleTurnOff => 'Turn off';
+
+  @override
   String get tailscaleCardPitch =>
       'Reach your server on your tailnet without turning on the Tailscale VPN';
 

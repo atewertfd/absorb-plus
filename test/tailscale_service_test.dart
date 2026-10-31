@@ -386,7 +386,7 @@ void main() {
     await tester.pump();
   });
 
-  testWidgets('sign-in panel: off shows the pitch and a switch; Advanced opens the full screen',
+  testWidgets('sign-in panel: off shows the pitch and one Connect button; Advanced opens the full screen',
       (tester) async {
     SharedPreferences.setMockInitialValues({});
     final ts = make();
@@ -398,7 +398,7 @@ void main() {
     ));
     expect(find.text('Tailscale (built-in)'), findsOneWidget);
     expect(find.textContaining('without turning on the Tailscale VPN'), findsOneWidget);
-    expect(find.byType(Switch), findsOneWidget);
+    expect(find.text('Connect with Tailscale'), findsOneWidget);
     expect(find.text('Sign in with Tailscale'), findsNothing);
     await tester.tap(find.text('Advanced'));
     await tester.pumpAndSettle();
@@ -418,5 +418,25 @@ void main() {
     await tester.tap(find.byKey(const Key('tailscale-login-chip')));
     await tester.pumpAndSettle();
     expect(find.byType(TailscaleLoginPanel), findsOneWidget);
+  });
+
+  testWidgets('Connect turns Tailscale on and opens the login page', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    native.statusJson = '{"state":"NeedsLogin","authUrl":"https://login.example/a/9"}';
+    final ts = make();
+    await tester.runAsync(ts.init);
+    await tester.pumpWidget(MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: Scaffold(body: TailscaleLoginPanel(service: ts)),
+    ));
+    await tester.tap(find.text('Connect with Tailscale'));
+    for (var i = 0; i < 10 && opened.isEmpty; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+      await tester.pump(const Duration(milliseconds: 400));
+    }
+    expect(ts.enabled, isTrue);
+    expect(opened.single.toString(), 'https://login.example/a/9');
+    await tester.runAsync(() => ts.setEnabled(false));
   });
 }

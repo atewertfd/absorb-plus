@@ -6,9 +6,11 @@ import '../services/tailscale_service.dart';
 import 'overlay_toast.dart';
 
 /// Built-in Tailscale on the sign-in screen, styled like the form's fields
-/// (same rounded box, fill and border): a switch to turn it on, its status,
-/// "Sign in with Tailscale" while the device still needs adding, and an
-/// Advanced link to the full Tailscale screen (sign out, extra host names).
+/// (same rounded box, fill and border). One obvious action per state:
+/// "Connect with Tailscale" (turns it on and opens the Tailscale login in
+/// the browser), "Sign in with Tailscale" while the device still needs
+/// adding, "Turn off" once on; plus an Advanced link to the full screen
+/// (sign out, extra host names).
 class TailscaleLoginPanel extends StatefulWidget {
   const TailscaleLoginPanel({super.key, this.service});
 
@@ -23,13 +25,13 @@ class _TailscaleLoginPanelState extends State<TailscaleLoginPanel> {
       widget.service ?? TailscaleService.instance;
   bool _busy = false;
 
-  Future<void> _toggle(bool value) async {
+  Future<void> _run(Future<void> Function() action) async {
     final l = AppLocalizations.of(context)!;
     setState(() => _busy = true);
     try {
-      await _svc.setEnabled(value);
+      await action();
     } catch (e) {
-      debugPrint('[Tailscale] toggle failed: $e');
+      debugPrint('[Tailscale] action failed: $e');
       if (mounted) {
         showOverlayToast(context, l.tailscaleToggleFailed,
             icon: Icons.error_outline_rounded);
@@ -39,17 +41,29 @@ class _TailscaleLoginPanelState extends State<TailscaleLoginPanel> {
     }
   }
 
-  Future<void> _signIn() async {
-    final l = AppLocalizations.of(context)!;
-    setState(() => _busy = true);
-    final opened = await _svc.signIn();
-    if (!mounted) return;
-    setState(() => _busy = false);
-    if (!opened) {
-      showOverlayToast(context, l.tailscaleSignInNoLink,
-          icon: Icons.info_outline_rounded);
-    }
-  }
+  /// One step for the user: turn it on, then open the Tailscale login in
+  /// the browser as soon as the node offers one (signIn waits for it).
+  Future<void> _connect() => _run(() async {
+        await _svc.setEnabled(true);
+        if (_svc.status.isRunning) return; // already signed in before
+        final opened = await _svc.signIn();
+        if (!opened && mounted && !_svc.status.isRunning) {
+          showOverlayToast(
+              context, AppLocalizations.of(context)!.tailscaleSignInNoLink,
+              icon: Icons.info_outline_rounded);
+        }
+      });
+
+  Future<void> _signIn() => _run(() async {
+        final opened = await _svc.signIn();
+        if (!opened && mounted) {
+          showOverlayToast(
+              context, AppLocalizations.of(context)!.tailscaleSignInNoLink,
+              icon: Icons.info_outline_rounded);
+        }
+      });
+
+  Future<void> _turnOff() => _run(() => _svc.setEnabled(false));
 
   void _openAdvanced() {
     Navigator.of(context).push(MaterialPageRoute<void>(
@@ -68,7 +82,35 @@ class _TailscaleLoginPanelState extends State<TailscaleLoginPanel> {
         final on = _svc.enabled;
         final connected = on && status.isRunning;
         final needsLogin = on && status.needsLogin && status.authUrl.isNotEmpty;
+        final unavailable = on && !_svc.libraryAvailable;
         final accent = connected ? Colors.green.shade400 : cs.primary;
+
+        Widget action;
+        if (!on) {
+          action = FilledButton.icon(
+            onPressed: _busy ? null : _connect,
+            icon: _busy
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.vpn_lock_rounded, size: 18),
+            label: Text(l.tailscaleConnect),
+          );
+        } else if (needsLogin) {
+          action = FilledButton.icon(
+            onPressed: _busy ? null : _signIn,
+            icon: const Icon(Icons.open_in_new_rounded, size: 18),
+            label: Text(l.tailscaleSignIn),
+          );
+        } else {
+          action = OutlinedButton(
+            onPressed: _busy ? null : _turnOff,
+            child: Text(l.tailscaleTurnOff),
+          );
+        }
+
         return Container(
           decoration: BoxDecoration(
             color: cs.surface.withValues(alpha: 0.4),
@@ -79,9 +121,10 @@ class _TailscaleLoginPanelState extends State<TailscaleLoginPanel> {
                   : cs.outlineVariant.withValues(alpha: 0.15),
             ),
           ),
-          padding: const EdgeInsets.fromLTRB(14, 8, 6, 4),
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 children: [
@@ -89,7 +132,7 @@ class _TailscaleLoginPanelState extends State<TailscaleLoginPanel> {
                     connected
                         ? Icons.check_circle_rounded
                         : Icons.vpn_lock_rounded,
-                    size: 22,
+                    size: 24,
                     color: on ? accent : cs.onSurfaceVariant,
                   ),
                   const SizedBox(width: 12),
@@ -100,7 +143,7 @@ class _TailscaleLoginPanelState extends State<TailscaleLoginPanel> {
                         Text(
                           l.tailscaleBuiltInTitle,
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 15,
                             fontWeight: FontWeight.w600,
                             color: cs.onSurface,
                           ),
@@ -112,26 +155,26 @@ class _TailscaleLoginPanelState extends State<TailscaleLoginPanel> {
                               : l.tailscaleCardPitch,
                           style: TextStyle(
                             fontSize: 12,
-                            color: cs.onSurfaceVariant.withValues(alpha: 0.75),
+                            color: connected
+                                ? Colors.green.shade400
+                                : cs.onSurfaceVariant.withValues(alpha: 0.75),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Switch(
-                    value: on,
-                    onChanged: _busy ? null : _toggle,
-                  ),
                 ],
               ),
-              if (needsLogin) ...[
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: FilledButton.tonalIcon(
-                    onPressed: _busy ? null : _signIn,
-                    icon: const Icon(Icons.login_rounded, size: 18),
-                    label: Text(l.tailscaleSignIn),
+              const SizedBox(height: 14),
+              if (!unavailable) action,
+              if (!on) ...[
+                const SizedBox(height: 6),
+                Text(
+                  l.tailscaleConnectHint,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: cs.onSurfaceVariant.withValues(alpha: 0.6),
                   ),
                 ),
               ],

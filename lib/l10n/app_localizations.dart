@@ -22569,6 +22569,24 @@ abstract class AppLocalizations {
   /// **'Tailscale'**
   String get tailscaleChip;
 
+  /// No description provided for @tailscaleConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect with Tailscale'**
+  String get tailscaleConnect;
+
+  /// No description provided for @tailscaleConnectHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens the Tailscale login in your browser'**
+  String get tailscaleConnectHint;
+
+  /// No description provided for @tailscaleTurnOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off'**
+  String get tailscaleTurnOff;
+
   /// No description provided for @tailscaleCardPitch.
   ///
   /// In en, this message translates to:
