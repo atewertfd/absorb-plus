@@ -39,6 +39,21 @@ Releases marked **pre-release** are betas. The app checks for updates and tells 
 - **Lighter when idle.** The app no longer redraws non-stop while nothing is happening.
 - **Updates from this project.** Settings › *Check for update*, with an optional beta channel.
 
+## Coming in the next beta
+
+Finished and being tested now; these ship together in the next beta.
+
+- **Faster.** Home shows your shelves the moment the app opens, book pages open instantly, covers are downloaded once and kept, and the app keeps its connection to your server open instead of reconnecting for every request.
+- **Book settings.** A *Book settings* button on every book: speed, skip intro and skip outro, for that book or its whole series. A new book in a series starts at the speed you used for the series.
+- **Admin dashboard.** For server admins, one page shows who's listening right now, lets you scan libraries and run a backup, and lists the server's recent warnings.
+- **More at home on Windows.**
+  - Mouse and keys: right-click does what a long press does, and you can drag shelves and cards with the mouse. <kbd>Esc</kbd> closes the player, <kbd>Alt</kbd>+<kbd>←</kbd> goes back, and <kbd>F5</kbd> refreshes.
+  - The Windows media popup shows the book cover and a seek bar.
+  - Choose your own download folder.
+  - Wired (Ethernet) connections count as Wi-Fi.
+  - Phone-only settings are hidden.
+- **Simpler.** The Libation import is removed, and the support links point to this project.
+
 ## Everything from Absorb
 
 The card-based **Absorbing** player, downloads for offline listening, podcasts, multiple accounts and servers, sleep timer with auto-sleep, per-book speed, auto-rewind, bookmarks and notes, chapter navigation, search and filters, playlists and collections, listening stats, an ebook reader with read-along, custom headers for reverse proxies, OpenID sign-in, server admin tools, backup and restore, and community translations.
