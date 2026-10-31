@@ -3232,6 +3232,9 @@ class DownloadService extends ChangeNotifier {
   void debugPutDownload(DownloadInfo info) => _downloads[info.itemId] = info;
 
   @visibleForTesting
+  void debugRemoveDownload(String itemId) => _downloads.remove(itemId);
+
+  @visibleForTesting
   Future<void> debugReset() async {
     _reconcileTimer?.cancel();
     _reconcileTimer = null;

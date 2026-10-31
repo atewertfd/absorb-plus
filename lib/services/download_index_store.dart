@@ -183,17 +183,16 @@ class FileDownloadIndexStore implements DownloadIndexStore {
   final Future<SharedPreferences> Function() _prefs;
   bool _legacyPending = false;
 
-  static const _legacyKeys = [
-    DownloadIndexStore.legacyDownloadsKey,
-    DownloadIndexStore.legacyKeptEbooksKey,
-    DownloadIndexStore.legacyOriginsKey,
-  ];
+  /// Set once the move is confirmed. The preferences copy itself is kept
+  /// (frozen) while this is a test build: an older build sharing the same
+  /// data folder (the installed release) still finds the downloads it knew,
+  /// and it's the last-resort copy if the file and its backup are lost.
+  /// Removing it is a later, owner-approved step.
+  static const migratedKey = 'fork_downloads_in_file';
 
   Future<void> _removeLegacy(SharedPreferences prefs) async {
     _legacyPending = false;
-    for (final key in _legacyKeys) {
-      await prefs.remove(key);
-    }
+    await prefs.setBool(migratedKey, true);
   }
 
   // Everything loaded (legacy entries included) is in memory and so in what
@@ -211,9 +210,14 @@ class FileDownloadIndexStore implements DownloadIndexStore {
   @override
   Future<DownloadIndex> load() async {
     final prefs = await _prefs();
-    final legacy = readLegacyDownloadIndex(prefs);
+    final migrated = prefs.getBool(migratedKey) ?? false;
     final read = await file.read();
     final fromFile = DownloadIndex.fromJson(read.value);
+    // After the move the frozen preferences copy is ignored (merging it back
+    // would revive downloads deleted since), except as a last resort.
+    final legacy = !migrated || fromFile == null
+        ? readLegacyDownloadIndex(prefs)
+        : null;
     if (read.value != null && fromFile == null) {
       debugPrint(
         '[DownloadIndex] ${file.fileName} has an unexpected shape - ignored',

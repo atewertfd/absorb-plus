@@ -89,7 +89,7 @@ void main() {
   });
 
   test(
-    'moves the preferences list into the file, then removes the keys',
+    'moves the preferences list into the file and marks it moved',
     () async {
       final downloads = {
         for (final id in ['a', 'b', 'c']) id: entry(id),
@@ -115,9 +115,9 @@ void main() {
       expect((onDisk['keptEbooks'] as Map).keys, ['k']);
       expect(onDisk['origins'], {'a': 'scope-1'});
       final prefs = await SharedPreferences.getInstance();
-      expect(prefs.containsKey('downloads'), isFalse);
-      expect(prefs.containsKey('kept_ebooks'), isFalse);
-      expect(prefs.containsKey('download_origins'), isFalse);
+      // The frozen copy stays for older builds; the flag says it's moved.
+      expect(prefs.containsKey('downloads'), isTrue);
+      expect(prefs.getBool(FileDownloadIndexStore.migratedKey), isTrue);
       expect(prefs.getString('unrelated'), 'stays');
     },
   );
@@ -155,7 +155,7 @@ void main() {
       expect(service.downloadedItems.single.itemId, 'a');
       expect(fileDownloads().keys, ['a']);
       final prefs = await SharedPreferences.getInstance();
-      expect(prefs.containsKey('downloads'), isFalse);
+      expect(prefs.getBool(FileDownloadIndexStore.migratedKey), isTrue);
     },
   );
 
@@ -190,7 +190,7 @@ void main() {
       expect(service.downloadedItems, hasLength(2));
       expect(fileDownloads(), downloads);
       final prefs = await SharedPreferences.getInstance();
-      expect(prefs.containsKey('downloads'), isFalse);
+      expect(prefs.getBool(FileDownloadIndexStore.migratedKey), isTrue);
     },
   );
 
@@ -253,7 +253,7 @@ void main() {
   );
 
   test(
-    'an unconfirmed move drops the preferences after a later write lands',
+    'an unconfirmed move is marked done after a later write lands',
     () async {
       var diskOk = false;
       SharedPreferences.setMockInitialValues(legacyPrefs({'a': entry('a')}));
@@ -275,8 +275,8 @@ void main() {
 
       expect(fileDownloads().keys.toSet(), {'a', 'b'});
       expect(
-        prefs.containsKey('downloads'),
-        isFalse,
+        prefs.getBool(FileDownloadIndexStore.migratedKey),
+        isTrue,
         reason: 'a later launch must not merge back what was deleted since',
       );
     },
@@ -345,5 +345,20 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
     expect((jsonDecode(prefs.getString('downloads')!) as Map).keys, ['a']);
     expect((await store.load()).downloads.keys, ['a']);
+  });
+
+  test('after the move, entries deleted since are not revived from the frozen copy',
+      () async {
+    SharedPreferences.setMockInitialValues(
+        legacyPrefs({'a': entry('a'), 'b': entry('b')}));
+    final first = newService(newFile());
+    await first.debugLoadIndex();
+    first.debugRemoveDownload('b');
+    await first.debugSaveIndex();
+    await first.flushIndex();
+
+    final second = newService(newFile());
+    await second.debugLoadIndex();
+    expect(second.downloadedItems.map((d) => d.itemId), ['a']);
   });
 }
