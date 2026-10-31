@@ -7259,7 +7259,7 @@
   "adminDashNoProblems": "No warnings or errors in today's log",
   "adminDashAllLogs": "All server logs",
   "tailscaleBuiltInTitle": "Tailscale (built-in)",
-  "tailscaleLoginHint": "Using Tailscale? Connect without the VPN",
+  "tailscaleChip": "Tailscale",
   "tailscaleCardPitch": "Reach your server on your tailnet without turning on the Tailscale VPN",
   "tailscaleIntro": "Reach a server on your tailnet without turning on the Tailscale app's VPN. Absorb joins your tailnet as its own device, for its own connections only. Test feature, off by default.",
   "tailscaleUseSwitch": "Use built-in Tailscale",

@@ -22563,11 +22563,11 @@ abstract class AppLocalizations {
   /// **'Tailscale (built-in)'**
   String get tailscaleBuiltInTitle;
 
-  /// No description provided for @tailscaleLoginHint.
+  /// No description provided for @tailscaleChip.
   ///
   /// In en, this message translates to:
-  /// **'Using Tailscale? Connect without the VPN'**
-  String get tailscaleLoginHint;
+  /// **'Tailscale'**
+  String get tailscaleChip;
 
   /// No description provided for @tailscaleCardPitch.
   ///

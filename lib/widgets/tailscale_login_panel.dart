@@ -154,3 +154,59 @@ class _TailscaleLoginPanelState extends State<TailscaleLoginPanel> {
     );
   }
 }
+
+/// Sign-in screen: a "Tailscale" chip beside Import and Paste login link.
+/// It opens [TailscaleLoginPanel] in a sheet, and its icon turns green
+/// while built-in Tailscale is connected.
+class TailscaleLoginChip extends StatelessWidget {
+  const TailscaleLoginChip({super.key, this.service});
+
+  final TailscaleService? service;
+
+  static Future<void> showSheet(BuildContext context, TailscaleService svc) {
+    return showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+              16, 0, 16, 16 + MediaQuery.viewInsetsOf(context).bottom),
+          child: TailscaleLoginPanel(service: svc),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final svc = service ?? TailscaleService.instance;
+    final cs = Theme.of(context).colorScheme;
+    final tt = Theme.of(context).textTheme;
+    final muted = cs.onSurfaceVariant.withValues(alpha: 0.6);
+    return ListenableBuilder(
+      listenable: svc,
+      builder: (context, _) {
+        final connected = svc.enabled && svc.status.isRunning;
+        return ActionChip(
+          key: const Key('tailscale-login-chip'),
+          avatar: Icon(
+            connected ? Icons.check_circle_rounded : Icons.vpn_lock_rounded,
+            size: 16,
+            color: connected ? Colors.green.shade400 : muted,
+          ),
+          label: Text(l.tailscaleChip,
+              style: tt.labelSmall?.copyWith(color: muted)),
+          backgroundColor: cs.surfaceContainerHighest.withValues(alpha: 0.3),
+          side: BorderSide(color: cs.outlineVariant.withValues(alpha: 0.15)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          tooltip: l.tailscaleCardPitch,
+          onPressed: () => showSheet(context, svc),
+        );
+      },
+    );
+  }
+}

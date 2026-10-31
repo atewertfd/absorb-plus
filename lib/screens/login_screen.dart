@@ -26,6 +26,7 @@ import '../l10n/app_localizations.dart';
 import '../services/wording.dart';
 import '../services/tailscale_service.dart'; // fork
 import 'tailscale_settings_screen.dart'; // fork
+import '../widgets/tailscale_login_panel.dart'; // fork
 
 class LoginScreen extends StatefulWidget {
   final SavedAccount? prefillAccount;
@@ -729,9 +730,6 @@ class _LoginScreenState extends State<LoginScreen>
                                     ),
                                   ],
 
-                                  if (TailscaleService.platformSupported) // fork
-                                    TailscaleLoginShortcut(server: _serverController),
-
                                   // Advanced: Custom Headers — must be before server validation
                                   const SizedBox(height: 8),
                                   GestureDetector(
@@ -970,6 +968,8 @@ class _LoginScreenState extends State<LoginScreen>
                               ),
                               onPressed: _pasteLoginLink,
                             ),
+                            if (TailscaleService.platformSupported) // fork
+                              const TailscaleLoginChip(),
                           ],
                         )
                       ],

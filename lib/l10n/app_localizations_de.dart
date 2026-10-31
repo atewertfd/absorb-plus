@@ -13404,7 +13404,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tailscaleBuiltInTitle => 'Tailscale (built-in)';
 
   @override
-  String get tailscaleLoginHint => 'Using Tailscale? Connect without the VPN';
+  String get tailscaleChip => 'Tailscale';
 
   @override
   String get tailscaleCardPitch =>
