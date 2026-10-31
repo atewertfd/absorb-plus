@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -55,6 +56,13 @@ class DesktopShortcutScope extends StatelessWidget {
 
   final Widget child;
 
+  /// In a browser, Ctrl+L (address bar) and Ctrl+N (new window) belong to
+  /// the browser, so the web build leaves them alone.
+  static bool _browserOwns(DesktopShortcutAction action) =>
+      kIsWeb &&
+      (action == DesktopShortcutAction.library ||
+          action == DesktopShortcutAction.nowPlaying);
+
   /// Set by the app shell while it is mounted; null before sign-in.
   static DesktopShortcutHandlers? handlers;
 
@@ -64,7 +72,8 @@ class DesktopShortcutScope extends StatelessWidget {
     Widget result = Shortcuts(
       shortcuts: <ShortcutActivator, Intent>{
         for (final shortcut in desktopShortcutDefinitions)
-          shortcut.activator: DesktopShortcutIntent(shortcut.action),
+          if (!_browserOwns(shortcut.action))
+            shortcut.activator: DesktopShortcutIntent(shortcut.action),
         for (final shortcut in navigation)
           shortcut.activator: DesktopNavigationIntent(shortcut.action),
       },
