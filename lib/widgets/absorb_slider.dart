@@ -197,6 +197,9 @@ class AbsorbProgressPainter extends CustomPainter {
   final bool squiggly;
   final bool isPlaying;
   final double wavePhase;
+  /// Absorb Plus: the live progress, read at paint time so [repaint] can
+  /// move the bar without rebuilding it.
+  final double Function()? progressOf;
 
   AbsorbProgressPainter({
     required this.progress,
@@ -206,10 +209,13 @@ class AbsorbProgressPainter extends CustomPainter {
     this.squiggly = false,
     this.isPlaying = false,
     this.wavePhase = 0,
+    this.progressOf,
+    super.repaint,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
+    final progress = progressOf?.call() ?? this.progress;
     final centerY = size.height / 2;
     const trackHeight = 8.0;
     final trackTop = centerY - trackHeight / 2;

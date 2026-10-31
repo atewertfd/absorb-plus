@@ -42,7 +42,11 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
 
   // ── Smooth position tracking (same pattern as CardDualProgressBar) ──
   Timer? _smoothTicker;
-  final _tickNotifier = ChangeNotifier(); // drives ListenableBuilder rebuilds
+  final _tickNotifier = ChangeNotifier(); // repaints the bar (100 ms)
+  // Absorb Plus: rebuilds the time labels, only when what they show changes
+  // (about once a second, and only while expanded).
+  final _textNotifier = ChangeNotifier();
+  Object? _builtTextSig;
   double _lastKnownPos = 0;
   DateTime _lastPosTime = DateTime.now();
   double _currentSpeed = 1.0;
@@ -148,14 +152,48 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
   void _syncTicker() {
     final shouldRun = _isPlaying && (widget.isActive || _isCastMode) && !_backgrounded && _tickerEnabled;
     if (shouldRun && _smoothTicker == null) {
-      _smoothTicker = Timer.periodic(const Duration(milliseconds: 100), (_) {
-        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-        _tickNotifier.notifyListeners();
-      });
+      _smoothTicker = Timer.periodic(const Duration(milliseconds: 100), (_) => _onTick());
     } else if (!shouldRun && _smoothTicker != null) {
       _smoothTicker!.cancel();
       _smoothTicker = null;
     }
+  }
+
+  /// Repaints the bar, and rebuilds the labels when what they show changed.
+  void _onTick() {
+    if (!mounted) return;
+    if (_textSig(_displayPos) != _builtTextSig) {
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      _textNotifier.notifyListeners();
+    }
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    _tickNotifier.notifyListeners();
+  }
+
+  double get _displayPos => (widget.isActive || _isCastMode)
+      ? _smoothPos
+      : widget.staticProgress * widget.staticDuration;
+
+  double get _totalDur => _isCastMode
+      ? ChromecastService().castingDuration
+      : (widget.isActive ? widget.player.totalDuration : widget.staticDuration);
+
+  double _bookProgressAt(double posS) {
+    final totalDur = _totalDur;
+    return totalDur > 0 ? (posS / totalDur).clamp(0.0, 1.0) : 0.0;
+  }
+
+  /// What the labels show at [posS]; nothing while they are hidden.
+  Object? _textSig(double posS) {
+    if (_expandCurve.value <= 0.2) return null;
+    final speed = (widget.isActive || _isCastMode) ? _currentSpeed : 1.0;
+    var speedDiv = _speedAdjustedTime ? speed : 1.0;
+    if (!speedDiv.isFinite || speedDiv <= 0) speedDiv = 1.0;
+    int whole(double v) => v.isFinite ? v.floor() : 0;
+    return (
+      whole(posS / speedDiv),
+      whole((_totalDur - posS) / speedDiv),
+    );
   }
 
   void _subscribePosition() {
@@ -194,6 +232,7 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
             _currentSpeed = widget.player.speed;
             _isPlaying = widget.player.isPlaying;
             _syncTicker();
+            if (_smoothTicker == null && _tickerEnabled && !_backgrounded) _onTick();
             widget.player.clearSeekTarget();
             return;
           }
@@ -207,6 +246,7 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
         _currentSpeed = widget.player.speed;
         _isPlaying = widget.player.isPlaying;
         _syncTicker();
+        if (_smoothTicker == null && _tickerEnabled && !_backgrounded) _onTick();
       });
       _currentSpeed = widget.player.speed;
       _isPlaying = widget.player.isPlaying;
@@ -266,6 +306,7 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
     _posSub?.cancel();
     _smoothTicker?.cancel();
     _tickNotifier.dispose();
+    _textNotifier.dispose();
     _expandCurve.dispose();
     _expandController.dispose();
     super.dispose();
@@ -281,7 +322,8 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
   }
 
   @override
-  // Absorb Plus: the 100 ms position ticker repaints only the bar, not the card.
+  // Absorb Plus: the 100 ms position ticker repaints only the bar, not the card;
+  // the labels rebuild when they change (_onTick).
   Widget build(BuildContext context) => RepaintBoundary(child: _buildBar(context));
 
   Widget _buildBar(BuildContext context) {
@@ -293,7 +335,7 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
     final active = widget.isActive || _isCastMode;
 
     return ListenableBuilder(
-      listenable: Listenable.merge([_tickNotifier, _expandController]),
+      listenable: Listenable.merge([_textNotifier, _expandController]),
       builder: (context, _) {
         final staticPos = widget.staticProgress * widget.staticDuration;
         final posS = active ? _smoothPos : staticPos;
@@ -305,6 +347,7 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
         final speedDiv = _speedAdjustedTime ? speed : 1.0;
         final bookElapsed = posS / speedDiv;
         final bookRemaining = (totalDur - posS) / speedDiv;
+        _builtTextSig = _textSig(posS);
 
         final expandT = _expandCurve.value;
 
@@ -377,6 +420,8 @@ class _CardEdgeProgressBarState extends State<CardEdgeProgressBar>
                       expandProgress: expandT,
                       isDragging: _dragValue != null,
                       trackBackground: cs.onSurface.withValues(alpha: 0.08),
+                      repaint: _tickNotifier,
+                      progressOf: () => _dragValue ?? _bookProgressAt(_displayPos),
                     ),
                   ),
                 ),
@@ -447,6 +492,9 @@ class EdgeProgressPainter extends CustomPainter {
   final double expandProgress;
   final bool isDragging;
   final Color trackBackground;
+  /// Absorb Plus: the live progress, read at paint time so [repaint] can
+  /// move the bar without rebuilding it.
+  final double Function()? progressOf;
 
   EdgeProgressPainter({
     required this.progress,
@@ -454,10 +502,13 @@ class EdgeProgressPainter extends CustomPainter {
     required this.expandProgress,
     required this.isDragging,
     required this.trackBackground,
+    this.progressOf,
+    super.repaint,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
+    final progress = progressOf?.call() ?? this.progress;
     final h = size.height;
     final w = size.width;
     final r = h / 2;
