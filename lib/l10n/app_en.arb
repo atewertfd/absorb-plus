@@ -7214,5 +7214,50 @@
   "desktopDownloadFolderOpenFailed": "Couldn't open the folder",
   "desktopDownloadFolderNotWritable": "Absorb can't save files in that folder. Choose another one.",
   "desktopDownloadFolderPickFailed": "Couldn't show the folder picker",
-  "desktopDownloadFolderDefault": "Default folder"
+  "desktopDownloadFolderDefault": "Default folder",
+  "tailscaleBuiltInTitle": "Tailscale (built-in)",
+  "tailscaleIntro": "Reach a server on your tailnet without turning on the Tailscale app's VPN. Absorb joins your tailnet as its own device, for its own connections only. Test feature, off by default.",
+  "tailscaleUseSwitch": "Use built-in Tailscale",
+  "tailscaleStatusOff": "Off",
+  "tailscaleStatusStarting": "Connecting…",
+  "tailscaleStatusNeedsLogin": "Sign in to add this device to your tailnet",
+  "tailscaleStatusNeedsApproval": "Waiting for an admin to approve this device",
+  "tailscaleStatusConnected": "Connected as {user}",
+  "@tailscaleStatusConnected": {
+    "placeholders": {
+      "user": {"type": "String"}
+    }
+  },
+  "tailscaleStatusConnectedNoUser": "Connected",
+  "tailscaleStatusError": "Problem: {error}",
+  "@tailscaleStatusError": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "tailscaleNotIncluded": "Not included in this build",
+  "tailscaleSignIn": "Sign in with Tailscale",
+  "tailscaleSignInNoLink": "No sign-in link yet. Try again in a moment.",
+  "tailscaleSignOut": "Sign out of Tailscale",
+  "tailscaleDeviceAddress": "This device: {address}",
+  "@tailscaleDeviceAddress": {
+    "placeholders": {
+      "address": {"type": "String"}
+    }
+  },
+  "tailscaleServerRouted": "Your server ({server}) is reached through Tailscale.",
+  "@tailscaleServerRouted": {
+    "placeholders": {
+      "server": {"type": "String"}
+    }
+  },
+  "tailscaleServerNotRouted": "Your server ({server}) isn't a tailnet address, so it's reached as usual. If it is on your tailnet, add its host name below.",
+  "@tailscaleServerNotRouted": {
+    "placeholders": {
+      "server": {"type": "String"}
+    }
+  },
+  "tailscaleExtraHostsLabel": "Other tailnet host names",
+  "tailscaleExtraHostsHint": "nas, abs.example.com",
+  "tailscaleExtraHostsHelp": "Addresses in 100.64.0.0/10 and names ending in .ts.net or your tailnet's MagicDNS name always go through Tailscale. Separate names with commas."
 }

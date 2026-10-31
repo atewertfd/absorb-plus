@@ -56,6 +56,7 @@ import 'utils/smooth_wheel_scroll.dart';
 import 'utils/memory_policy.dart';
 import 'ui_themes/ui_theme.dart';
 import 'ui_themes/frosted.dart';
+import 'services/tailscale_service.dart';
 
 /// Global notifier so any widget (e.g. settings) can change the theme instantly.
 final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.dark);
@@ -170,6 +171,9 @@ class _CertOverrides extends HttpOverrides {
     // flutter_cache_manager (CachedNetworkImage) caches its HttpClient, so
     // checking the flag at validation time (not creation time) is essential.
     client.badCertificateCallback = (_, __, ___) => trustAllCerts;
+    // Built-in Tailscale (fork, off by default): tailnet hosts go through the
+    // embedded node's proxy; everything else stays DIRECT, as before.
+    client.findProxy = (uri) => TailscaleService.instance.findProxy(uri);
     return client;
   }
 }
@@ -258,6 +262,7 @@ void main() async {
   installScrollDiagnostics(smoothingEnabled: smoothWheel); // ABSORB_SCROLL_DIAG=1
   configureImageCache(PaintingBinding.instance.imageCache);
   ReadListenSync.instance.start();
+  unawaited(TailscaleService.instance.init()); // fork; no-op unless turned on
   BookOrbitApiService.placeReadingSpot = NarrationService.readingSpotSeconds;
   BookOrbitApiService.keptNarration = NarrationService.instance.localOverlay;
   ApiService.pageReadElsewhere = NarrationService.pageReadElsewhere;

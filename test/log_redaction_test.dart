@@ -51,6 +51,12 @@ void main() {
           'cover http://127.0.0.1:41234/AbCdEf0123456789_-xyzQ/cover/42'),
       'cover http://127.0.0.1:41234/***/cover/42',
     );
+    // The built-in Tailscale media proxy keeps its secret after /_ts/.
+    expect(
+      redactLogSecrets('track http://127.0.0.1:41234/_ts/'
+          '0123456789abcdef0123456789abcdef/http/100.64.0.1:80/api/items/1'),
+      'track http://127.0.0.1:41234/_ts/***/http/100.64.0.1:80/api/items/1',
+    );
     // Short readable first segments are not secrets.
     expect(redactLogSecrets('http://127.0.0.1:8080/book/a.mobi'),
         'http://127.0.0.1:8080/book/a.mobi');

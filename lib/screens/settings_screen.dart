@@ -78,6 +78,8 @@ import '../widgets/server_connection_editor.dart';
 import '../widgets/server_admin_status_badges.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/sign_in_again.dart';
+import '../services/tailscale_service.dart'; // fork
+import 'tailscale_settings_screen.dart'; // fork
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -4718,6 +4720,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
                         ),
                       ],
+                    ],
+                    if (TailscaleService.platformSupported) ...[ // fork
+                      const Divider(height: 1, indent: 16, endIndent: 16),
+                      const TailscaleSettingsTile(),
                     ],
                     const Divider(height: 1, indent: 16, endIndent: 16),
                     SwitchListTile(

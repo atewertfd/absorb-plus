@@ -24,6 +24,8 @@ import '../services/audio_player_service.dart';
 import '../main.dart' show applyTrustAllCerts, flatNotifier;
 import '../l10n/app_localizations.dart';
 import '../services/wording.dart';
+import '../services/tailscale_service.dart'; // fork
+import 'tailscale_settings_screen.dart'; // fork
 
 class LoginScreen extends StatefulWidget {
   final SavedAccount? prefillAccount;
@@ -741,6 +743,8 @@ class _LoginScreenState extends State<LoginScreen>
                                     ),
                                   ),
                                   if (_showAdvanced) ...[
+                                    if (TailscaleService.platformSupported) // fork
+                                      const TailscaleSettingsTile(),
                                     const SizedBox(height: 8),
                                     Text(l.loginCustomHttpHeaders, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: cs.onSurfaceVariant.withValues(alpha: 0.7))),
                                     const SizedBox(height: 4),
