@@ -104,3 +104,18 @@ Already present, so not proposed:
 ## Process note
 
 Two reviewers read the owner's live `shared_preferences.json` to size it. That file also holds the sign-in token. They reported only sizes, but future briefs must forbid opening the owner's app data files (prefs, logs beyond `[Startup]` timing).
+
+## Status (build 1.12.1+332)
+
+**Done:**
+- A1, A2, A3, A5, A6, A7, A8 and A9.
+- From A10: dashboard polling and per-card failures, web Ctrl+L/N.
+- B1: download index and stats cache moved to files. The old `downloads` prefs keys stay frozen until the owner OKs removing them, so prefs stays large for now, but writes per minute roughly halve.
+- B2: the WebView registers after the first frame. Skia replaces Impeller on Windows in the test build: launch → `main()` went from 1205 to 678 ms in the owner's log.
+- B3, B4, B5, B6 and B11.
+
+**Open:**
+- The rest of A10.
+- B7–B10, B12 and B13.
+- All of C.
+- Tailscale on Android covers (`CoverContentProvider.kt`) and Chromecast.
