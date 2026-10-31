@@ -22454,6 +22454,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Default folder'**
   String get desktopDownloadFolderDefault;
+
+  /// No description provided for @adminDashTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get adminDashTitle;
+
+  /// No description provided for @adminDashSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Who\'s listening, libraries, users and server warnings at a glance'**
+  String get adminDashSubtitle;
+
+  /// No description provided for @adminDashNobodyListening.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody is listening right now'**
+  String get adminDashNobodyListening;
+
+  /// No description provided for @adminDashOnlineNames.
+  ///
+  /// In en, this message translates to:
+  /// **'Online: {names}'**
+  String adminDashOnlineNames(String names);
+
+  /// No description provided for @adminDashListeningHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening history'**
+  String get adminDashListeningHistory;
+
+  /// No description provided for @adminDashCouldNotLoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load this from the server'**
+  String get adminDashCouldNotLoad;
+
+  /// No description provided for @adminDashItemCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 item} other{{count} items}}'**
+  String adminDashItemCount(int count);
+
+  /// No description provided for @adminDashScanAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan all'**
+  String get adminDashScanAll;
+
+  /// No description provided for @adminDashScanAllTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan all libraries?'**
+  String get adminDashScanAllTitle;
+
+  /// No description provided for @adminDashScanAllContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Audiobookshelf will look for new, changed and missing files in every library. This can take a while on big libraries.'**
+  String get adminDashScanAllContent;
+
+  /// No description provided for @adminDashScanAllStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Scan started for 1 library} other{Scan started for {count} libraries}}'**
+  String adminDashScanAllStarted(int count);
+
+  /// No description provided for @adminDashScanAllPartial.
+  ///
+  /// In en, this message translates to:
+  /// **'{failed} of {total} scans couldn\'t start'**
+  String adminDashScanAllPartial(int failed, int total);
+
+  /// No description provided for @adminDashNoLibraries.
+  ///
+  /// In en, this message translates to:
+  /// **'No libraries yet'**
+  String get adminDashNoLibraries;
+
+  /// No description provided for @adminDashBackUpNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Back up now'**
+  String get adminDashBackUpNow;
+
+  /// No description provided for @adminDashLastBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Last backup {time}'**
+  String adminDashLastBackup(String time);
+
+  /// No description provided for @adminDashNoBackups.
+  ///
+  /// In en, this message translates to:
+  /// **'No backups yet'**
+  String get adminDashNoBackups;
+
+  /// No description provided for @adminDashManageUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage users'**
+  String get adminDashManageUsers;
+
+  /// No description provided for @adminDashNeverSeen.
+  ///
+  /// In en, this message translates to:
+  /// **'Never signed in'**
+  String get adminDashNeverSeen;
+
+  /// No description provided for @adminDashDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get adminDashDisabled;
+
+  /// No description provided for @adminDashLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get adminDashLocked;
+
+  /// No description provided for @adminDashServerWarnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Server warnings'**
+  String get adminDashServerWarnings;
+
+  /// No description provided for @adminDashNoProblems.
+  ///
+  /// In en, this message translates to:
+  /// **'No warnings or errors in today\'s log'**
+  String get adminDashNoProblems;
+
+  /// No description provided for @adminDashAllLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'All server logs'**
+  String get adminDashAllLogs;
 }
 
 class _AppLocalizationsDelegate

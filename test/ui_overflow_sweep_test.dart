@@ -16,6 +16,7 @@ import 'package:absorb/providers/auth_provider.dart';
 import 'package:absorb/providers/library_provider.dart';
 import 'package:absorb/screens/absorbing_screen.dart';
 import 'package:absorb/screens/achievements_screen.dart';
+import 'package:absorb/screens/admin_dashboard_screen.dart';
 import 'package:absorb/screens/bookmarks_screen.dart';
 import 'package:absorb/screens/downloads_screen.dart';
 import 'package:absorb/screens/app_shell.dart';
@@ -23,6 +24,7 @@ import 'package:absorb/screens/home_screen.dart';
 import 'package:absorb/screens/library_screen.dart';
 import 'package:absorb/screens/settings_screen.dart';
 import 'package:absorb/screens/stats_screen.dart';
+import 'package:absorb/services/admin_dashboard_data.dart';
 import 'package:absorb/services/api_service.dart';
 import 'package:absorb/services/wording.dart';
 import 'package:absorb/services/whats_new_notes.dart';
@@ -1142,4 +1144,93 @@ void main() {
     });
     sweep.expectClean();
   });
+  testWidgets('Admin dashboard, long names', (tester) async {
+    await sweep.run(tester, 'Admin dashboard', _fullMatrix(), (c) async {
+      await pumpScreen(
+        tester,
+        c,
+        const AdminDashboardScreen(source: _SweepAdminSource()),
+      );
+      expect(find.textContaining('Cartographer'), findsWidgets);
+      await _scrollAll(tester);
+    });
+    sweep.expectClean();
+  });
+}
+
+/// Admin dashboard data with every string as long as it gets.
+class _SweepAdminSource implements AdminDashboardSource {
+  const _SweepAdminSource();
+
+  static Map<String, dynamic> _user(int i, {String type = 'user'}) => {
+    'id': 'user-$i',
+    'username': i.isEven ? _noSpaces : 'maximilian.alexander.von.hohenzollern.$i',
+    'type': type,
+    'isActive': i != 3,
+    'lastSeen': DateTime(2026, 10, 1).millisecondsSinceEpoch,
+    'permissions': {'download': true, 'update': i.isOdd, 'upload': true},
+  };
+
+  @override
+  Future<List<Map<String, dynamic>>?> openSessions() async => [
+    for (var i = 0; i < 6; i++)
+      {
+        'id': 'session-$i',
+        'userId': 'user-$i',
+        'displayTitle': i.isEven ? _withSpaces : _noSpaces,
+        'currentTime': 1200,
+        'duration': 36000,
+        'user': {'id': 'user-$i', 'username': _user(i)['username']},
+        'deviceInfo': {
+          'clientName': 'Absorb Plus for Windows Desktop',
+          'deviceName': _noSpaces,
+        },
+      },
+  ];
+
+  @override
+  Future<List<dynamic>> onlineUsers() async => [
+    for (var i = 0; i < 8; i++) _user(i),
+  ];
+
+  @override
+  Future<List<dynamic>> users() async => [
+    _user(0, type: 'root'),
+    _user(1, type: 'admin'),
+    for (var i = 2; i < 8; i++) _user(i),
+  ];
+
+  @override
+  Future<List<dynamic>> libraries() async => [
+    {'id': 'lib-a', 'name': _withSpaces, 'mediaType': 'book'},
+    {'id': 'lib-b', 'name': _noSpaces, 'mediaType': 'podcast'},
+    {'id': 'lib-c', 'name': _seriesName, 'mediaType': 'book'},
+  ];
+
+  @override
+  Future<Map<String, dynamic>?> libraryStats(String id) async => {
+    'totalItems': 123456,
+  };
+
+  @override
+  Future<List<dynamic>> backups() async => [
+    {'createdAt': DateTime(2026, 9, 1).millisecondsSinceEpoch},
+  ];
+
+  @override
+  Future<List<Map<String, dynamic>>?> serverLogs() async => [
+    for (var i = 0; i < 8; i++)
+      {
+        'timestamp': '2026-10-30 12:0$i:00.000',
+        'level': i.isEven ? 4 : 3,
+        'levelName': i.isEven ? 'ERROR' : 'WARN',
+        'message': '[LibraryScanner] $_noSpaces $_withSpaces',
+      },
+  ];
+
+  @override
+  Future<bool> scanLibrary(String libraryId) async => false;
+
+  @override
+  Future<bool> createBackup() async => false;
 }

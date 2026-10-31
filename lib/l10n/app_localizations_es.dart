@@ -13214,4 +13214,97 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get desktopDownloadFolderDefault => 'Default folder';
+
+  @override
+  String get adminDashTitle => 'Dashboard';
+
+  @override
+  String get adminDashSubtitle =>
+      'Who\'s listening, libraries, users and server warnings at a glance';
+
+  @override
+  String get adminDashNobodyListening => 'Nobody is listening right now';
+
+  @override
+  String adminDashOnlineNames(String names) {
+    return 'Online: $names';
+  }
+
+  @override
+  String get adminDashListeningHistory => 'Listening history';
+
+  @override
+  String get adminDashCouldNotLoad => 'Couldn\'t load this from the server';
+
+  @override
+  String adminDashItemCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminDashScanAll => 'Scan all';
+
+  @override
+  String get adminDashScanAllTitle => 'Scan all libraries?';
+
+  @override
+  String get adminDashScanAllContent =>
+      'Audiobookshelf will look for new, changed and missing files in every library. This can take a while on big libraries.';
+
+  @override
+  String adminDashScanAllStarted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Scan started for $count libraries',
+      one: 'Scan started for 1 library',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String adminDashScanAllPartial(int failed, int total) {
+    return '$failed of $total scans couldn\'t start';
+  }
+
+  @override
+  String get adminDashNoLibraries => 'No libraries yet';
+
+  @override
+  String get adminDashBackUpNow => 'Back up now';
+
+  @override
+  String adminDashLastBackup(String time) {
+    return 'Last backup $time';
+  }
+
+  @override
+  String get adminDashNoBackups => 'No backups yet';
+
+  @override
+  String get adminDashManageUsers => 'Manage users';
+
+  @override
+  String get adminDashNeverSeen => 'Never signed in';
+
+  @override
+  String get adminDashDisabled => 'Disabled';
+
+  @override
+  String get adminDashLocked => 'Locked';
+
+  @override
+  String get adminDashServerWarnings => 'Server warnings';
+
+  @override
+  String get adminDashNoProblems => 'No warnings or errors in today\'s log';
+
+  @override
+  String get adminDashAllLogs => 'All server logs';
 }
