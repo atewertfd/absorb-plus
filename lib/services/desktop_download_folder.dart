@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/fork_platform.dart';
 import 'download_track_names.dart' show folderIdSuffix;
@@ -18,6 +19,31 @@ import 'download_track_names.dart' show folderIdSuffix;
 abstract final class DesktopDownloadFolder {
   /// SharedPreferences key for the picked folder (absent = default folder).
   static const prefKey = 'desktop_download_dir';
+
+  /// Every folder ever picked (from this build on). Downloads stay where they
+  /// were made, so deleting one may only remove folders inside one of these
+  /// or the default folder (`DownloadFolderGuard`).
+  static const usedRootsKey = 'desktop_download_dirs_used';
+
+  static List<String> usedRoots(SharedPreferences prefs) {
+    try {
+      return prefs.getStringList(usedRootsKey) ?? const [];
+    } catch (_) {
+      return const [];
+    }
+  }
+
+  /// Adds [root] to [usedRoots] (once) and returns the new list.
+  static Future<List<String>> recordUsedRoot(
+    SharedPreferences prefs,
+    String root,
+  ) async {
+    final roots = usedRoots(prefs);
+    if (roots.any((r) => isRoot(r, root))) return roots;
+    final next = [...roots, root];
+    await prefs.setStringList(usedRootsKey, next);
+    return next;
+  }
 
   /// Shows the system folder picker. Tests replace it.
   @visibleForTesting
