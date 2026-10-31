@@ -2,6 +2,12 @@
 
 The biggest Absorb Plus update so far: pick how the app looks, smoother and lighter on Windows, a long list of crash and reliability fixes, and everything new from upstream Absorb.
 
+### New: built-in Tailscale
+- **Reach your server on your tailnet without the Tailscale VPN.** Absorb joins your tailnet as its own device, for its own connections only, so the rest of your phone or PC stays on its normal network.
+- **Easy to find:** right under the server address when you sign in ("Using Tailscale?"), and as a card at the top of **Settings**.
+- Sign in to Tailscale once in your browser; your 100.x or `.ts.net` server address is then routed automatically, including streaming and downloads.
+- Off by default; nothing changes unless you turn it on.
+
 ### New: choose your look
 - **Three looks:** Absorb Plus (today's look), Classic (the look of the first Windows version) and Frosted (soft frosted-glass panels with your cover colors glowing through).
 - **Glass strength** for Frosted: Light, Medium or Strong.

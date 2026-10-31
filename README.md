@@ -43,6 +43,7 @@ Releases marked **pre-release** are betas. The app checks for updates and tells 
 
 Finished and being tested now; these ship together in the next beta.
 
+- **Built-in Tailscale.** Reach a server on your tailnet without turning on the Tailscale VPN. Absorb joins your tailnet by itself, for its own connections only: sign in to Tailscale once from the sign-in screen or *Settings*, and your phone or PC keeps its normal network. Nothing changes when it's off.
 - **Faster.** Home shows your shelves the moment the app opens, book pages open instantly, covers are downloaded once and kept, and the app keeps its connection to your server open instead of reconnecting for every request.
 - **Book settings.** A *Book settings* button on every book: speed, skip intro and skip outro, for that book or its whole series. A new book in a series starts at the speed you used for the series.
 - **Admin dashboard.** For server admins, one page shows who's listening right now, lets you scan libraries and run a backup, and lists the server's recent warnings.

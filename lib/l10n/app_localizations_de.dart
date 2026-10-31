@@ -13404,6 +13404,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tailscaleBuiltInTitle => 'Tailscale (built-in)';
 
   @override
+  String get tailscaleLoginHint => 'Using Tailscale? Connect without the VPN';
+
+  @override
+  String get tailscaleCardPitch =>
+      'Reach your server on your tailnet without turning on the Tailscale VPN';
+
+  @override
   String get tailscaleIntro =>
       'Reach a server on your tailnet without turning on the Tailscale app\'s VPN. Absorb joins your tailnet as its own device, for its own connections only. Test feature, off by default.';
 

@@ -384,4 +384,20 @@ void main() {
     await tester.runAsync(() => ts.setEnabled(false));
     await tester.pump();
   });
+
+  test('sign-in screen shows the Tailscale row only for tailnet addresses or when on',
+      () async {
+    SharedPreferences.setMockInitialValues({});
+    final ts = make();
+    await ts.init();
+    expect(TailscaleLoginShortcut.showsFor(ts, '100.71.225.67:13378'), isTrue);
+    expect(TailscaleLoginShortcut.showsFor(ts, 'http://100.64.0.1'), isTrue);
+    expect(TailscaleLoginShortcut.showsFor(ts, 'nas.tail1234.ts.net'), isTrue);
+    expect(TailscaleLoginShortcut.showsFor(ts, '192.168.1.5:13378'), isFalse);
+    expect(TailscaleLoginShortcut.showsFor(ts, 'abs.example.com'), isFalse);
+    expect(TailscaleLoginShortcut.showsFor(ts, ''), isFalse);
+    await ts.setEnabled(true);
+    expect(TailscaleLoginShortcut.showsFor(ts, 'abs.example.com'), isTrue);
+    await ts.setEnabled(false);
+  });
 }

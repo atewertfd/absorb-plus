@@ -729,6 +729,9 @@ class _LoginScreenState extends State<LoginScreen>
                                     ),
                                   ],
 
+                                  if (TailscaleService.platformSupported) // fork
+                                    TailscaleLoginShortcut(server: _serverController),
+
                                   // Advanced: Custom Headers — must be before server validation
                                   const SizedBox(height: 8),
                                   GestureDetector(

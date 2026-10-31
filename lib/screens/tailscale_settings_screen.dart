@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,6 +8,7 @@ import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../services/tailscale_routing.dart';
 import '../services/tailscale_service.dart';
+import '../ui_themes/ui_theme_hooks.dart';
 import '../widgets/overlay_toast.dart';
 
 /// One-line status for the built-in Tailscale node, shared by the settings
@@ -49,6 +51,127 @@ class TailscaleSettingsTile extends StatelessWidget {
         onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
           builder: (_) => TailscaleSettingsScreen(service: svc),
         )),
+      ),
+    );
+  }
+}
+
+/// The Tailscale row straight under the sign-in screen's server address,
+/// shown only when it matters: the address is a tailnet one (100.x,
+/// `*.ts.net`, an extra host) or built-in Tailscale is already on. Everyone
+/// else sees no extra row; it stays under Advanced for them too.
+class TailscaleLoginShortcut extends StatelessWidget {
+  const TailscaleLoginShortcut({super.key, required this.server, this.service});
+
+  /// The server address field (with or without `http://`).
+  final ValueListenable<TextEditingValue> server;
+  final TailscaleService? service;
+
+  static bool showsFor(TailscaleService svc, String text) {
+    if (svc.enabled) return true;
+    final address = text.trim();
+    if (address.isEmpty) return false;
+    final url = address.contains('://') ? address : 'http://$address';
+    try {
+      return svc.routesServer(url);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final svc = service ?? TailscaleService.instance;
+    final l = AppLocalizations.of(context)!;
+    final cs = Theme.of(context).colorScheme;
+    return ListenableBuilder(
+      listenable: Listenable.merge([server, svc]),
+      builder: (context, _) => showsFor(svc, server.value.text)
+          ? Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: TailscaleSettingsTile(service: svc),
+            )
+          // Everyone else: one quiet line, so the feature is easy to find.
+          : Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                style: TextButton.styleFrom(
+                  visualDensity: VisualDensity.compact,
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  foregroundColor: cs.primary,
+                ),
+                icon: const Icon(Icons.vpn_lock_rounded, size: 16),
+                label: Text(l.tailscaleLoginHint,
+                    style: const TextStyle(fontSize: 12)),
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => TailscaleSettingsScreen(service: svc),
+                  ),
+                ),
+              ),
+            ),
+    );
+  }
+}
+
+/// Settings: a card at the top (next to the Admin card) instead of a row
+/// under Advanced, so built-in Tailscale is easy to find.
+class TailscaleSettingsCard extends StatelessWidget {
+  const TailscaleSettingsCard({super.key, this.service});
+
+  final TailscaleService? service;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final svc = service ?? TailscaleService.instance;
+    final tt = Theme.of(context).textTheme;
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      child: Material(
+        color: lookPanelColor(context, cs.surfaceContainerHigh),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: lookPanelSide(context, BorderSide.none),
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => TailscaleSettingsScreen(service: svc),
+          )),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: ListenableBuilder(
+              listenable: svc,
+              builder: (context, _) => Row(
+                children: [
+                  Icon(Icons.vpn_lock_rounded, color: cs.primary, size: 22),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(l.tailscaleBuiltInTitle,
+                            style: tt.titleSmall
+                                ?.copyWith(fontWeight: FontWeight.w600)),
+                        Text(
+                          svc.enabled
+                              ? tailscaleStatusText(l, svc, svc.status)
+                              : l.tailscaleCardPitch,
+                          style: tt.bodySmall
+                              ?.copyWith(color: cs.onSurfaceVariant),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(Icons.chevron_right_rounded,
+                      color: cs.onSurfaceVariant.withValues(alpha: 0.5)),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

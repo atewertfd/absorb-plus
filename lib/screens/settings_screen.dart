@@ -2118,6 +2118,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
 
+                if (TailscaleService.platformSupported) const TailscaleSettingsCard(), // fork
+
                 const SizedBox(height: 20),
 
                 // ── Appearance ──
@@ -4710,10 +4712,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
                         ),
                       ],
-                    ],
-                    if (TailscaleService.platformSupported) ...[ // fork
-                      const Divider(height: 1, indent: 16, endIndent: 16),
-                      const TailscaleSettingsTile(),
                     ],
                     const Divider(height: 1, indent: 16, endIndent: 16),
                     SwitchListTile(

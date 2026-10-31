@@ -22563,6 +22563,18 @@ abstract class AppLocalizations {
   /// **'Tailscale (built-in)'**
   String get tailscaleBuiltInTitle;
 
+  /// No description provided for @tailscaleLoginHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Using Tailscale? Connect without the VPN'**
+  String get tailscaleLoginHint;
+
+  /// No description provided for @tailscaleCardPitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach your server on your tailnet without turning on the Tailscale VPN'**
+  String get tailscaleCardPitch;
+
   /// No description provided for @tailscaleIntro.
   ///
   /// In en, this message translates to:
