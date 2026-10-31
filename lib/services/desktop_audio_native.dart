@@ -14,6 +14,10 @@ void initializeDesktopAudio() {
   // and clips speech. Off, speed uses mpv's own pitch correction
   // (scaletempo2) and 1x plays untouched.
   JustAudioMediaKit.pitch = false;
+  // Crackling and pops on Windows: mpv's audio output buffer (0.2 s by
+  // default) ran dry for a moment. A second of buffer rides out short
+  // stalls; pause and seek stay instant (mpv drops the buffer for those).
+  JustAudioMediaKit.mpvProperties = const {'audio-buffer': '1.0'};
   JustAudioMediaKit.ensureInitialized(windows: true, linux: true);
   _initialized = true;
 }
