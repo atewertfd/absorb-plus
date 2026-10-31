@@ -2056,7 +2056,6 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   /// answers (see HomeShelfSnapshot). Skipped if the answer came first.
   Future<void> _showHomeSnapshot() async {
     final libraryId = _selectedLibraryId;
-    final api = _api;
     final scope = UserAccountService().activeScopeKey;
     if (libraryId == null || scope.isEmpty) return;
     final snapshot = await HomeShelfSnapshot.instance.load(scope, libraryId);
@@ -2064,7 +2063,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         snapshot.isEmpty ||
         _personalizedSections.isNotEmpty ||
         _selectedLibraryId != libraryId ||
-        !identical(_api, api) ||
+        UserAccountService().activeScopeKey != scope ||
         isOffline) {
       return;
     }
@@ -2107,11 +2106,12 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       } finally {
         await progress;
       }
-      // Signed out or switched account meanwhile: the answer isn't theirs.
-      if (!identical(_api, api)) return;
       _personalizedSections = _withoutJustHidden(view);
       _registerSectionEntities(_personalizedSections);
-      if (scope.isNotEmpty) {
+      // Saved only under the account the request was made for. (Not compared
+      // by ApiService: startup replaces it once while this request runs, and
+      // returning early here left Home spinning.)
+      if (scope.isNotEmpty && scope == UserAccountService().activeScopeKey) {
         unawaited(HomeShelfSnapshot.instance.save(scope, libraryId, view));
       }
       // Playlists and collections load straight away: they came last, and a
