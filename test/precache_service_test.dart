@@ -93,4 +93,30 @@ void main() {
         await service().run(source(home: const [], detail: many, library: const []));
     expect(result.items, PrecacheService.maxDetailItems);
   });
+
+  test('turning the setting off stops a run in progress', () async {
+    final s = PrecacheService(
+      isUnmetered: () async => true,
+      isCoverCached: (key) async => false,
+      downloadCover: (url, key, headers) async {
+        downloaded.add(url);
+        if (downloaded.length == 2) await PrecacheService.setEnabled(false);
+      },
+      onItem: (id, item) {},
+      inForeground: () => true,
+      gap: Duration.zero,
+    );
+    await s.run(source(home: const ['a', 'b', 'c', 'd', 'e', 'f'], detail: const [], library: const []));
+    expect(downloaded.length, 2);
+  });
+
+  test('a run cut short can run again; a finished one waits', () async {
+    var valid = false;
+    final s = service();
+    await s.run(source(stillValid: () => valid));
+    expect(downloaded, isEmpty);
+    valid = true;
+    await s.run(source(stillValid: () => valid));
+    expect(downloaded, isNotEmpty);
+  });
 }

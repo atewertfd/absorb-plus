@@ -142,8 +142,6 @@ class PrecacheService {
       if (!await isEnabled() || !await _isUnmetered()) {
         return (covers: covers, items: items);
       }
-      _lastRun['${source.scope}|${source.libraryId}'] = DateTime.now();
-
       // 1. The book pages most likely to be opened next.
       for (final id in source.detailItemIds.take(maxDetailItems)) {
         if (!await _canGoOn(source)) return (covers: covers, items: items);
@@ -175,20 +173,23 @@ class PrecacheService {
         return (covers: covers, items: items);
       }
       for (var page = 0; page * _pageSize < maxLibraryItems; page++) {
-        if (!await _canGoOn(source)) break;
+        if (!await _canGoOn(source)) return (covers: covers, items: items);
         final List<Map<String, dynamic>> results;
         try {
           results = await source.libraryPage(page, _pageSize);
         } catch (_) {
-          break;
+          return (covers: covers, items: items);
         }
         final ids = [
           for (final r in results)
             if (r['id'] is String) r['id'] as String,
         ];
-        if (!await coversFor(ids)) break;
+        if (!await coversFor(ids)) return (covers: covers, items: items);
         if (results.length < _pageSize) break;
       }
+      // Only a run that got to the end counts: one cut short (setting off,
+      // background, offline, account switch) may run again next time.
+      _lastRun['${source.scope}|${source.libraryId}'] = DateTime.now();
       return (covers: covers, items: items);
     } finally {
       _running = false;
@@ -206,7 +207,8 @@ class PrecacheService {
       if (waited >= 60) return false;
       await Future<void>.delayed(const Duration(seconds: 5));
     }
-    return source.stillValid();
+    // Turning the setting off stops a run that's already going.
+    return source.stillValid() && await isEnabled();
   }
 
   /// Downloads one cover into the disk cache unless it's already there.
