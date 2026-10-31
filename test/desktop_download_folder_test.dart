@@ -72,6 +72,49 @@ void main() {
     });
   });
 
+  group('network folders', () {
+    test('isUncPath spots \\\\server\\share in every spelling', () {
+      expect(DesktopDownloadFolder.isUncPath(r'\\nas\books'), isTrue);
+      expect(DesktopDownloadFolder.isUncPath('//nas/books'), isTrue);
+      expect(DesktopDownloadFolder.isUncPath(r'  \\nas\books\ '), isTrue);
+      expect(DesktopDownloadFolder.isUncPath(r'\\?\UNC\nas\books'), isTrue);
+      expect(DesktopDownloadFolder.isUncPath(r'\\?\unc\nas\books'), isTrue);
+      expect(DesktopDownloadFolder.isUncPath(r'\\?\C:\Books'), isFalse);
+      expect(DesktopDownloadFolder.isUncPath(r'\\.\C:\Books'), isFalse);
+      expect(DesktopDownloadFolder.isUncPath(r'Z:\Books'), isFalse);
+      expect(DesktopDownloadFolder.isUncPath('/home/a/Books'), isFalse);
+    });
+
+    test('a saved network folder falls back to the default on Windows', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+      expect(DesktopDownloadFolder.activeRoot(r'\\nas\books'), isNull);
+      expect(DesktopDownloadFolder.activeRoot('//nas/books'), isNull);
+      expect(DesktopDownloadFolder.activeRoot(tmp.path), tmp.path);
+    });
+
+    test('isWritable refuses a network folder on Windows', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+      expect(await DesktopDownloadFolder.isWritable(r'\\nas\books'), isFalse);
+    });
+
+    test('pick refuses a network folder on Windows only', () async {
+      DesktopDownloadFolder.picker =
+          ({String? title, String? initialDirectory}) async => r'\\nas\books';
+      debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+      await expectLater(
+        DesktopDownloadFolder.pick(),
+        throwsA(isA<NetworkDownloadFolderException>()),
+      );
+      DesktopDownloadFolder.picker =
+          ({String? title, String? initialDirectory}) async => r'Z:\books';
+      expect(await DesktopDownloadFolder.pick(), r'Z:\books');
+      DesktopDownloadFolder.picker =
+          ({String? title, String? initialDirectory}) async => '//nas/books';
+      debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+      expect(await DesktopDownloadFolder.pick(), '//nas/books');
+    });
+  });
+
   group('bookDirPath', () {
     test('puts a book under Author/Title in the picked folder', () {
       expect(
@@ -205,6 +248,16 @@ void main() {
       },
     );
 
+    test('a network folder saved earlier shows (and uses) the default', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+      final s = newService();
+      await s.setDesktopDownloadDir(r'\\nas\books');
+      expect(
+        await s.downloadLocationLabel,
+        DesktopDownloadFolder.displayPath('${docs.path}/downloads'),
+      );
+    });
+
     test('Android keeps its label', () async {
       final s = newService();
       expect(await s.downloadLocationLabel, 'App Internal Storage (Default)');
@@ -288,6 +341,23 @@ void main() {
         await pumpSheet(tester, s, labels);
         await tapAndWait(tester, l.chooseFolder);
         expect(find.text(l.desktopDownloadFolderNotWritable), findsOneWidget);
+        await tester.pump(const Duration(seconds: 5));
+        expect(s.desktopDownloadDir, isNull);
+        expect(labels, isEmpty);
+      },
+    );
+
+    testWidgets(
+      'a network folder is refused with a mapped-drive hint',
+      variant: TargetPlatformVariant.only(TargetPlatform.windows),
+      (tester) async {
+        final s = newService();
+        final labels = <String>[];
+        DesktopDownloadFolder.picker =
+            ({String? title, String? initialDirectory}) async => r'\\nas\books';
+        await pumpSheet(tester, s, labels);
+        await tapAndWait(tester, l.chooseFolder);
+        expect(find.text(l.desktopDownloadFolderNetworkPath), findsOneWidget);
         await tester.pump(const Duration(seconds: 5));
         expect(s.desktopDownloadDir, isNull);
         expect(labels, isEmpty);
