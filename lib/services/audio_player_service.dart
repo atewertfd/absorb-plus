@@ -40,6 +40,7 @@ import '../utils/duration_format.dart';
 import '../l10n/app_localizations.dart';
 import '../main.dart' show rootNavigatorKey;
 import '../widgets/overlay_toast.dart' show showNavigatorOverlayToast;
+import 'windows_media_cover.dart';
 export 'player_settings.dart';
 
 String playbackDownloadKey(String itemId, String? episodeId) =>
@@ -5662,6 +5663,12 @@ class AudioPlayerService extends ChangeNotifier {
       } else {
         effectiveCoverUrl = coverUrl;
       }
+    } else if (Platform.isWindows) {
+      // Absorb Plus: the Windows media flyout can't read content:// covers.
+      effectiveCoverUrl = windowsMediaCoverUri(
+        localCoverPath: DownloadService().getInfo(itemId).localCoverPath,
+        coverUrl: coverUrl,
+      );
     } else {
       final localCover = DownloadService().getInfo(itemId).localCoverPath;
       final streamed = localCover == null || localCover.isEmpty;

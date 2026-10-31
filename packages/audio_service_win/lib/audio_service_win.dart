@@ -3,10 +3,18 @@ import 'dart:developer';
 import 'package:audio_service_platform_interface/audio_service_platform_interface.dart';
 import 'package:flutter/services.dart';
 
+import 'smtc_timeline.dart';
+
 class AudioServiceWin extends AudioServicePlatform {
   AudioHandlerCallbacks? _handlerCallbacks;
   final methodChannel = const MethodChannel('audio_service_win');
   bool _methodCallHandlerSet = false;
+
+  /// Throttles the flyout's timeline (position and length).
+  final SmtcTimeline timeline;
+
+  AudioServiceWin({SmtcTimeline? timeline})
+      : timeline = timeline ?? SmtcTimeline();
 
   static void registerWith() {
     final instance = AudioServiceWin();
@@ -40,6 +48,7 @@ class AudioServiceWin extends AudioServicePlatform {
       'artUri': request.mediaItem.extras?['artCacheFile'] ??
           request.mediaItem.artUri?.toString() ?? '',
     });
+    await _sendTimeline(timeline.onMediaItem(request.mediaItem));
   }
 
   @override
@@ -59,6 +68,18 @@ class AudioServiceWin extends AudioServicePlatform {
         break;
     }
     await methodChannel.invokeMethod('updateState', {'state': state});
+    await _sendTimeline(timeline.onState(request.state));
+  }
+
+  /// Sends a timeline update. A failure is logged and swallowed: the flyout's
+  /// seek bar must never get in the way of playback.
+  Future<void> _sendTimeline(SmtcTimelineUpdate? update) async {
+    if (update == null) return;
+    try {
+      await methodChannel.invokeMethod('updateTimeline', update.toArguments());
+    } catch (e) {
+      log('SMTC timeline update failed: $e', name: 'audio_service_win');
+    }
   }
 
   @override
@@ -69,11 +90,16 @@ class AudioServiceWin extends AudioServicePlatform {
 
   @override
   Future<void> stopService(StopServiceRequest request) async {
+    timeline.reset();
     await methodChannel.invokeMethod('updateState', {'state': 2});
   }
 
   Future<void> _setupMethodCallHandler() async {
     methodChannel.setMethodCallHandler((call) async {
+      if (call.method == 'onSMTCSeek') {
+        await handleSeekRequest(call.arguments);
+        return;
+      }
       if (call.method == 'onSMTCButtonPressed') {
         final button = call.arguments;
         log('SMTC Button Pressed: $button', name: 'audio_service_win');
@@ -109,6 +135,20 @@ class AudioServiceWin extends AudioServicePlatform {
         }
       }
     });
+  }
+
+  /// The flyout's timeline was dragged to [positionMs] (milliseconds on the
+  /// timeline last sent). Ignored while the app has the seek bar locked.
+  Future<void> handleSeekRequest(Object? positionMs) async {
+    final callbacks = _handlerCallbacks;
+    if (callbacks == null || positionMs is! int || !timeline.seekable) return;
+    timeline.forceNext();
+    final ms = positionMs < 0 ? 0 : positionMs;
+    try {
+      await callbacks.seek(SeekRequest(position: Duration(milliseconds: ms)));
+    } catch (e) {
+      log('SMTC seek failed: $e', name: 'audio_service_win');
+    }
   }
 
   @override
