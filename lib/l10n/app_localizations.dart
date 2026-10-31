@@ -8575,7 +8575,7 @@ abstract class AppLocalizations {
   /// No description provided for @welcomeToAbsorb.
   ///
   /// In en, this message translates to:
-  /// **'Welcome to Absorb'**
+  /// **'Welcome to Absorb Plus'**
   String get welcomeToAbsorb;
 
   /// No description provided for @welcomeTagline.
@@ -22568,6 +22568,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tailscale'**
   String get tailscaleChip;
+
+  /// No description provided for @desktopShortcutsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard shortcuts'**
+  String get desktopShortcutsTitle;
+
+  /// No description provided for @desktopShortcutsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Playback, speed, search, and navigation controls'**
+  String get desktopShortcutsSubtitle;
+
+  /// No description provided for @desktopShortcutsClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get desktopShortcutsClose;
 
   /// No description provided for @tailscaleConnect.
   ///

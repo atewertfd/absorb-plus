@@ -27,6 +27,7 @@ import '../services/wording.dart';
 import '../services/tailscale_service.dart'; // fork
 import 'tailscale_settings_screen.dart'; // fork
 import '../widgets/tailscale_login_panel.dart'; // fork
+import '../utils/fork_branding.dart'; // fork
 
 class LoginScreen extends StatefulWidget {
   final SavedAccount? prefillAccount;
@@ -572,12 +573,15 @@ class _LoginScreenState extends State<LoginScreen>
                           ),
                         ),
                         const SizedBox(height: 28),
-                        Text(
-                          l.appTitle,
-                          style: tt.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.w200,
-                            color: cs.onSurface,
-                            letterSpacing: 10,
+                        FittedBox( // fork: Absorb Plus wordmark, shrinks on narrow phones
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            ForkBranding.wordmark,
+                            style: tt.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.w200,
+                              color: cs.onSurface,
+                              letterSpacing: 10,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 10),

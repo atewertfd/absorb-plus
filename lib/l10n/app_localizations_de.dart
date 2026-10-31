@@ -13407,6 +13407,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tailscaleChip => 'Tailscale';
 
   @override
+  String get desktopShortcutsTitle => 'Keyboard shortcuts';
+
+  @override
+  String get desktopShortcutsSubtitle =>
+      'Playback, speed, search, and navigation controls';
+
+  @override
+  String get desktopShortcutsClose => 'Close';
+
+  @override
   String get tailscaleConnect => 'Connect with Tailscale';
 
   @override

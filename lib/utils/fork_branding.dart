@@ -19,6 +19,9 @@ abstract final class ForkBranding {
   /// Upstream's Discord is for the original Absorb, so it's hidden.
   static const bool showUpstreamDiscord = false;
 
+  /// The spaced-out wordmark on the sign-in and signing-in screens.
+  static const String wordmark = 'A B S O R B   P L U S';
+
   /// The app name used in log reports.
   static const String appName = 'Absorb Plus';
 }

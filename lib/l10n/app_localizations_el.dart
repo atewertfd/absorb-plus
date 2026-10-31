@@ -4817,7 +4817,7 @@ class AppLocalizationsEl extends AppLocalizations {
   String get noOutputDevicesFound => 'No output devices found';
 
   @override
-  String get welcomeToAbsorb => 'Welcome to Absorb';
+  String get welcomeToAbsorb => 'Welcome to Absorb Plus';
 
   @override
   String get welcomeTagline => 'An Audiobookshelf client.';
@@ -13284,6 +13284,16 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get tailscaleChip => 'Tailscale';
+
+  @override
+  String get desktopShortcutsTitle => 'Keyboard shortcuts';
+
+  @override
+  String get desktopShortcutsSubtitle =>
+      'Playback, speed, search, and navigation controls';
+
+  @override
+  String get desktopShortcutsClose => 'Close';
 
   @override
   String get tailscaleConnect => 'Connect with Tailscale';
