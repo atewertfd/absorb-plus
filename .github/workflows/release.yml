@@ -95,6 +95,11 @@ jobs:
       - uses: actions/checkout@v5
         with:
           ref: ${{ needs.prepare.outputs.tag }}
+      # Built-in Tailscale DLL (native/tailscale; the image's MinGW gcc does cgo).
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: native/tailscale/go.mod
+          cache-dependency-path: native/tailscale/go.sum
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -152,6 +157,11 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libsoup-3.0-dev libmpv-dev dpkg-dev
+      # Built-in Tailscale library (native/tailscale, Go + cgo).
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: native/tailscale/go.mod
+          cache-dependency-path: native/tailscale/go.sum
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -241,6 +251,11 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: gradle
+      # Built-in Tailscale library (native/tailscale/android.gradle, Go + NDK).
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: native/tailscale/go.mod
+          cache-dependency-path: native/tailscale/go.sum
       # Same cache as ci.yml (NDKs, CMake, SDK platform; about 5 minutes saved).
       - name: Cache Android NDK, CMake and SDK platform
         uses: actions/cache@v4

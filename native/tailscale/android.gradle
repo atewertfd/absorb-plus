@@ -1,0 +1,86 @@
+// Built-in Tailscale (fork prototype): builds libabsorb_tailscale.so from the
+// Go module in this folder with the NDK's clang and adds it to the APK's
+// native libraries. Applied from android/app/build.gradle.kts.
+//
+// ABIs follow Flutter's -Ptarget-platform (dev.ps1 apk builds android-arm64);
+// without it, arm64-v8a and x86_64 (emulators). When Go isn't installed the
+// build goes on without the library and Settings says it isn't included.
+// -PabsorbTailscale=false skips it on purpose. The fdroid flavor never gets it.
+
+def tsDir = file("${rootDir}/../native/tailscale")
+def tsOut = file("${rootDir}/../build/native/tailscale/android")
+def tsEnabled = (findProperty('absorbTailscale') ?: 'true').toString() != 'false'
+
+def findGo = {
+    def names = System.getProperty('os.name').toLowerCase().contains('windows') ? ['go.exe'] : ['go']
+    def dirs = (System.getenv('PATH') ?: '').split(File.pathSeparator).toList()
+    if (System.getenv('GOROOT')) dirs.add(0, "${System.getenv('GOROOT')}/bin")
+    dirs += ['C:/Program Files/Go/bin', '/usr/local/go/bin']
+    for (d in dirs) for (n in names) {
+        def f = new File(d, n)
+        if (f.canExecute()) return f.absolutePath
+    }
+    return null
+}
+
+def abiMap = [
+    'android-arm64': [abi: 'arm64-v8a', goarch: 'arm64', clang: 'aarch64-linux-android'],
+    'android-x64'  : [abi: 'x86_64', goarch: 'amd64', clang: 'x86_64-linux-android'],
+    'android-arm'  : [abi: 'armeabi-v7a', goarch: 'arm', clang: 'armv7a-linux-androideabi'],
+]
+def platforms = (findProperty('target-platform') ?: 'android-arm64,android-x64').toString().split(',')*.trim()
+def targets = platforms.collect { abiMap[it] }.findAll { it != null }
+
+android.sourceSets.matching { it.name in ['github', 'playstore', 'dev'] }.configureEach {
+    jniLibs.srcDirs += tsOut
+}
+
+def buildTask = tasks.register('buildAbsorbTailscale') {
+    group = 'build'
+    description = 'Builds the built-in Tailscale library (Go, c-shared) for Android'
+    inputs.files(fileTree(tsDir) { include '*.go', 'go.mod', 'go.sum', 'build-tags.txt' })
+    inputs.property('targets', targets*.abi.join(','))
+    outputs.dir(tsOut)
+    onlyIf { tsEnabled }
+    doLast {
+        def go = findGo()
+        if (go == null) {
+            logger.warn('Built-in Tailscale skipped: Go not found (install Go or pass -PabsorbTailscale=false).')
+            return
+        }
+        def ndk = android.ndkDirectory
+        def os = System.getProperty('os.name').toLowerCase()
+        def host = os.contains('windows') ? 'windows-x86_64' : (os.contains('mac') ? 'darwin-x86_64' : 'linux-x86_64')
+        def clang = new File(ndk, "toolchains/llvm/prebuilt/${host}/bin/clang${os.contains('windows') ? '.exe' : ''}")
+        if (!clang.exists()) throw new GradleException("NDK clang not found at ${clang}")
+        def minSdk = android.defaultConfig.minSdkVersion.apiLevel
+        def tags = new File(tsDir, 'build-tags.txt').text.trim().split(/\s+/).join(',')
+        targets.each { t ->
+            def outFile = new File(tsOut, "${t.abi}/libabsorb_tailscale.so")
+            outFile.parentFile.mkdirs()
+            def env = [
+                CGO_ENABLED: '1', GOOS: 'android', GOARCH: t.goarch,
+                CC: "${clang.absolutePath} --target=${t.clang}${minSdk}",
+            ]
+            if (t.goarch == 'arm') env.GOARM = '7'
+            def run = providers.exec {
+                workingDir tsDir
+                environment env
+                ignoreExitValue = true
+                commandLine go, 'build', '-buildmode=c-shared', '-trimpath', '-mod=readonly',
+                    '-tags', tags,
+                    // 16 KB pages (Android 15+ devices) and stripped symbols.
+                    '-ldflags', '-s -w -extldflags=-Wl,-z,max-page-size=16384',
+                    '-o', outFile.absolutePath, '.'
+            }
+            if (run.result.get().exitValue != 0) {
+                throw new GradleException("go build for ${t.abi} failed:\n${run.standardError.asText.get()}")
+            }
+            new File(tsOut, "${t.abi}/libabsorb_tailscale.h").delete()
+        }
+    }
+}
+
+tasks.matching { it.name ==~ /pre(Github|Playstore|Dev)\w*Build/ }.configureEach {
+    dependsOn buildTask
+}

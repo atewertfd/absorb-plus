@@ -41,6 +41,13 @@ jobs:
         run: flutter test --no-pub
       - name: Tooling tests (hooks, merge tool)
         run: python3 -m unittest discover -s tool/tests
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: native/tailscale/go.mod
+          cache-dependency-path: native/tailscale/go.sum
+      - name: Built-in Tailscale library (vet, unit tests)
+        working-directory: native/tailscale
+        run: go vet ./... && go test ./...
       - name: Removed paths stay removed
         run: python3 tool/check_fork_removed.py
       - name: Fork-only lints (use_build_context_synchronously in fork-added files)
