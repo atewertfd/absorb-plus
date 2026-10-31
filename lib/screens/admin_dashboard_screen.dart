@@ -131,9 +131,30 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
     _liveTimer?.cancel();
     _liveTimer = Timer.periodic(widget.liveInterval, (_) {
       // Covered by another page: skip, the next tick catches up.
-      if (!mounted || ModalRoute.of(context)?.isCurrent == false) return;
+      if (!mounted || !_onTop()) return;
       unawaited(_refreshLive());
     });
+  }
+
+  /// Whether this page is what the user sees: the top page of its own
+  /// navigator and, on wide windows where Admin has an inner navigator, of
+  /// the app's navigator too (the full-screen player covers it there).
+  bool _onTop() {
+    if (ModalRoute.of(context)?.isCurrent == false) return false;
+    final inner = Navigator.maybeOf(context);
+    final outer = inner == null ? null : ModalRoute.of(inner.context);
+    return outer?.isCurrent != false;
+  }
+
+  /// [call]'s answer, or null if it failed: one failing card mustn't empty
+  /// the others.
+  Future<Object?> _orNull(String what, Future<Object?> call) async {
+    try {
+      return await call;
+    } catch (e) {
+      debugPrint('[AdminDashboard] $what failed: ${e.runtimeType}');
+      return null;
+    }
   }
 
   // ─── Data ───────────────────────────────────────────────────
@@ -144,30 +165,22 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
       if (mounted) setState(() => _loading = false);
       return;
     }
-    final List<Object?> results;
-    try {
-      results = await Future.wait<Object?>([
-        source.openSessions(),
-        source.onlineUsers(),
-        source.users(),
-        source.libraries(),
-        source.backups(),
-        source.serverLogs(),
-        _refreshTasks(),
-      ]);
-    } catch (e) {
-      // Never leave the page stuck on the spinner.
-      debugPrint('[AdminDashboard] load failed: $e');
-      if (mounted) setState(() => _loading = false);
-      return;
-    }
+    final results = await Future.wait<Object?>([
+      _orNull('sessions', source.openSessions()),
+      _orNull('online users', source.onlineUsers()),
+      _orNull('users', source.users()),
+      _orNull('libraries', source.libraries()),
+      _orNull('backups', source.backups()),
+      _orNull('server logs', source.serverLogs()),
+      _orNull('tasks', _refreshTasks()),
+    ]);
     if (!mounted) return;
     setState(() {
       _sessions = results[0] as List<Map<String, dynamic>>?;
-      _online = results[1] as List<dynamic>;
-      _users = results[2] as List<dynamic>;
-      _libraries = results[3] as List<dynamic>;
-      _backups = results[4] as List<dynamic>;
+      _online = results[1] as List<dynamic>? ?? _online;
+      _users = results[2] as List<dynamic>? ?? _users;
+      _libraries = results[3] as List<dynamic>? ?? _libraries;
+      _backups = results[4] as List<dynamic>? ?? _backups;
       _logs = results[5] as List<Map<String, dynamic>>?;
       _loading = false;
       _runningScans = _currentRunningScans();
@@ -190,6 +203,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
         _sessions = results[0] as List<Map<String, dynamic>>?;
         _online = results[1] as List<dynamic>;
       });
+    } catch (e) {
+      // A failed refresh keeps what's shown; the next tick tries again.
+      debugPrint('[AdminDashboard] live refresh failed: ${e.runtimeType}');
     } finally {
       _liveRefreshing = false;
     }
