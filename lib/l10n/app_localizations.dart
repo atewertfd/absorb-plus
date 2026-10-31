@@ -22323,6 +22323,12 @@ abstract class AppLocalizations {
   /// **'Couldn\'t show the folder picker'**
   String get desktopDownloadFolderPickFailed;
 
+  /// No description provided for @desktopDownloadFolderNetworkPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Network folders (\\\\server\\share) can\'t hold downloads. Map the share to a drive letter in File Explorer, such as Z:, and choose that instead.'**
+  String get desktopDownloadFolderNetworkPath;
+
   /// No description provided for @desktopDownloadFolderDefault.
   ///
   /// In en, this message translates to:
@@ -22628,6 +22634,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No sign-in link yet. Try again in a moment.'**
   String get tailscaleSignInNoLink;
+
+  /// No description provided for @tailscaleToggleFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t turn built-in Tailscale on or off. Try again.'**
+  String get tailscaleToggleFailed;
 
   /// No description provided for @tailscaleSignOut.
   ///

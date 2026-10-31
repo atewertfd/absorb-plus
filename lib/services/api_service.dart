@@ -394,7 +394,8 @@ class ApiService {
 
   /// URL for downloading an ebook file for the reader.
   String buildEbookUrl(String itemId, String ino) =>
-      '$_cleanBaseUrl/api/items/$itemId/file/$ino?token=$token';
+      TailscaleService.instance.mediaUrl( // fork: built-in Tailscale
+          '$_cleanBaseUrl/api/items/$itemId/file/$ino?token=$token');
 
   /// The ebook the reader caches, which may leave out what reading doesn't
   /// need (BookOrbit's narrated EPUBs come without their audio).
@@ -2410,7 +2411,9 @@ class ApiService {
   /// dropped across reverse-proxy redirects); custom proxy headers still ride
   /// along via [mediaHeaders] when the downloader sets them.
   String buildFileUrl(String itemId, String ino) {
-    return '$_cleanBaseUrl/api/items/$itemId/file/$ino?token=$token';
+    // Fork: native downloaders and players can't use the Tailscale proxy.
+    return TailscaleService.instance.mediaUrl(
+        '$_cleanBaseUrl/api/items/$itemId/file/$ino?token=$token');
   }
 
   /// Sync playback progress. Returns true if sync succeeded.

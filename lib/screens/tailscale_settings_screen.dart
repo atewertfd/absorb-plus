@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -62,6 +64,9 @@ class TailscaleSettingsScreen extends StatefulWidget {
   /// The server to describe; defaults to the signed-in account's.
   final String? serverUrl;
 
+  /// How long typing pauses before the extra host list is saved.
+  static const hostsSaveDelay = Duration(milliseconds: 800);
+
   @override
   State<TailscaleSettingsScreen> createState() =>
       _TailscaleSettingsScreenState();
@@ -71,12 +76,37 @@ class _TailscaleSettingsScreenState extends State<TailscaleSettingsScreen> {
   late final TailscaleService _svc = widget.service ?? TailscaleService.instance;
   late final TextEditingController _hosts =
       TextEditingController(text: _svc.extraHosts.join(', '));
+  late String _savedHosts; // the text last saved, set before any typing
+  Timer? _hostsSave;
   bool _busy = false;
 
   @override
+  void initState() {
+    super.initState();
+    _savedHosts = _hosts.text;
+  }
+
+  @override
   void dispose() {
+    _saveHosts(); // typed but not yet saved (back button, tab switch)
     _hosts.dispose();
     super.dispose();
+  }
+
+  void _hostsChanged(String _) {
+    _hostsSave?.cancel();
+    _hostsSave = Timer(TailscaleSettingsScreen.hostsSaveDelay, _saveHosts);
+  }
+
+  void _saveHosts() {
+    _hostsSave?.cancel();
+    _hostsSave = null;
+    final text = _hosts.text;
+    if (text == _savedHosts) return;
+    _savedHosts = text;
+    unawaited(_svc.setExtraHosts(text).catchError((Object e) {
+      debugPrint('[Tailscale] saving extra hosts failed: $e');
+    }));
   }
 
   String? _serverUrl(BuildContext context) {
@@ -89,9 +119,16 @@ class _TailscaleSettingsScreenState extends State<TailscaleSettingsScreen> {
   }
 
   Future<void> _toggle(bool value) async {
+    final l = AppLocalizations.of(context)!;
     setState(() => _busy = true);
     try {
       await _svc.setEnabled(value);
+    } catch (e) {
+      debugPrint('[Tailscale] toggle failed: $e');
+      if (mounted) {
+        showOverlayToast(context, l.tailscaleToggleFailed,
+            icon: Icons.error_outline_rounded);
+      }
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -185,8 +222,12 @@ class _TailscaleSettingsScreenState extends State<TailscaleSettingsScreen> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
-                  onSubmitted: _svc.setExtraHosts,
-                  onTapOutside: (_) => _svc.setExtraHosts(_hosts.text),
+                  onChanged: _hostsChanged,
+                  onSubmitted: (_) => _saveHosts(),
+                  onTapOutside: (_) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    _saveHosts();
+                  },
                 ),
               ),
             ],
