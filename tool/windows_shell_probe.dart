@@ -4,7 +4,9 @@
 // be closed so tool/verify-windows-shell.ps1 can time the process exit.
 //
 // Build: flutter build windows --release --no-pub -t tool/windows_shell_probe.dart
-// Run:   absorb.exe --probe [audio] [play] [webview] [shell] [flush=<file>]
+// Run:   absorb.exe --probe [audio] [play] [webview] [shell] [timing]
+//        [flush=<file>]
+// `timing` prints the time before main() and from main() to the first frame.
 // The harness rebuilds lib/main.dart afterwards.
 import 'dart:async';
 import 'dart:io';
@@ -21,10 +23,20 @@ import 'package:absorb/services/desktop_audio.dart';
 import 'package:absorb/services/windows_shell.dart';
 
 void main(List<String> args) {
+  final sinceMain = Stopwatch()..start();
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       final options = args.toSet();
+      if (options.contains('timing')) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          final frame = sinceMain.elapsedMilliseconds;
+          final age = await _shellChannel.invokeMethod<int>('processAgeMs');
+          stdout.writeln('PROBE TIMING launch->main '
+              '${age == null ? '?' : age - sinceMain.elapsedMilliseconds}ms '
+              'main->frame ${frame}ms');
+        });
+      }
       final flushArg = args.firstWhere(
         (a) => a.startsWith('flush='),
         orElse: () => '',
@@ -224,16 +236,38 @@ class _ProbeObserver with WidgetsBindingObserver {
   }
 }
 
-class _ProbeApp extends StatelessWidget {
+class _ProbeApp extends StatefulWidget {
   const _ProbeApp({required this.webview});
 
   final bool webview;
 
   @override
+  State<_ProbeApp> createState() => _ProbeAppState();
+}
+
+class _ProbeAppState extends State<_ProbeApp> {
+  // The runner registers the WebView plugin after the first frame
+  // (windows/runner/deferred_plugins.h), so the view opens a moment later,
+  // the way the ebook reader only opens once the app is up.
+  bool _showWebView = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.webview) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Future.delayed(const Duration(seconds: 1), () {
+          if (mounted) setState(() => _showWebView = true);
+        });
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: webview
+        body: _showWebView
             ? InAppWebView(
                 initialData: InAppWebViewInitialData(
                   data: '<html><body>Absorb probe</body></html>',
