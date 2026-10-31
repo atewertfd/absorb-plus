@@ -7193,5 +7193,66 @@
   "bookSettingsWholeSeries": "Use for the whole series",
   "bookSettingsWholeSeriesHint": "Intro and outro apply to every book in this series",
   "bookSettingsReset": "Reset",
-  "bookSettingsResetDone": "Book settings reset"
+  "bookSettingsResetDone": "Book settings reset",
+  "adminDashTitle": "Dashboard",
+  "adminDashSubtitle": "Who's listening, libraries, users and server warnings at a glance",
+  "adminDashNobodyListening": "Nobody is listening right now",
+  "adminDashOnlineNames": "Online: {names}",
+  "@adminDashOnlineNames": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "adminDashListeningHistory": "Listening history",
+  "adminDashCouldNotLoad": "Couldn't load this from the server",
+  "adminDashItemCount": "{count, plural, =1{1 item} other{{count} items}}",
+  "@adminDashItemCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "adminDashScanAll": "Scan all",
+  "adminDashScanAllTitle": "Scan all libraries?",
+  "adminDashScanAllContent": "Audiobookshelf will look for new, changed and missing files in every library. This can take a while on big libraries.",
+  "adminDashScanAllStarted": "{count, plural, =1{Scan started for 1 library} other{Scan started for {count} libraries}}",
+  "@adminDashScanAllStarted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "adminDashScanAllPartial": "{failed} of {total} scans couldn't start",
+  "@adminDashScanAllPartial": {
+    "placeholders": {
+      "failed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "adminDashNoLibraries": "No libraries yet",
+  "adminDashBackUpNow": "Back up now",
+  "adminDashLastBackup": "Last backup {time}",
+  "@adminDashLastBackup": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "adminDashNoBackups": "No backups yet",
+  "adminDashManageUsers": "Manage users",
+  "adminDashNeverSeen": "Never signed in",
+  "adminDashDisabled": "Disabled",
+  "adminDashLocked": "Locked",
+  "adminDashServerWarnings": "Server warnings",
+  "adminDashNoProblems": "No warnings or errors in today's log",
+  "adminDashAllLogs": "All server logs"
 }

@@ -24,6 +24,7 @@ import 'admin_server_settings_screen.dart';
 import 'admin_server_logs_screen.dart';
 import 'admin_stats_screen.dart';
 import 'admin_sessions_screen.dart';
+import 'admin_dashboard_screen.dart';
 
 class _AdminNavigatorObserver extends NavigatorObserver {
   final VoidCallback onStackChanged;
@@ -331,6 +332,17 @@ class _AdminScreenState extends State<AdminScreen> with WidgetsBindingObserver {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(children: [
                         _navButton(cs, tt,
+                          icon: Icons.space_dashboard_rounded,
+                          label: l.adminDashTitle,
+                          subtitle: l.adminDashSubtitle,
+                          onTap: () async {
+                            await Navigator.push(context, MaterialPageRoute(
+                              builder: (_) => AdminDashboardScreen(taskTracker: _taskTracker)));
+                            _loadAll();
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        _navButton(cs, tt,
                           icon: Icons.people_rounded,
                           label: l.adminUsers,
                           subtitle: l.adminUsersSubtitle(_users.length, _onlineUsers.length),
@@ -487,6 +499,7 @@ class _AdminScreenState extends State<AdminScreen> with WidgetsBindingObserver {
     final outerNavigator = Navigator.of(context);
     final destinations = <AdminSectionDestination>[
       AdminSectionDestination(_overviewSection, Icons.dashboard_rounded, l.adminServer),
+      AdminSectionDestination('dashboard', Icons.space_dashboard_rounded, l.adminDashTitle),
       AdminSectionDestination('users', Icons.people_rounded, l.adminUsers),
       AdminSectionDestination('upload', Icons.cloud_upload_rounded, l.adminUploadTitle),
       if (_hasPodcastLibrary || _desktopSection == 'podcasts')
@@ -880,6 +893,8 @@ class _AdminScreenState extends State<AdminScreen> with WidgetsBindingObserver {
 
   Widget _buildDesktopSectionPage(BuildContext routeContext, String section) {
     switch (section) {
+      case 'dashboard':
+        return AdminDashboardScreen(taskTracker: _taskTracker);
       case 'users':
         return AdminUsersScreen(users: _users, onlineUsers: _onlineUsers, libraries: _libraries);
       case 'upload':

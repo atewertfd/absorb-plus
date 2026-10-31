@@ -29,6 +29,7 @@ import '../utils/keep_alive_client.dart';
 
 part 'bookorbit_api_service.dart';
 part 'bookorbit_admin_api.dart';
+part 'abs_admin_api.dart';
 
 /// Outcome of a local-session upsert. [serverTooOld] flags a 404/501 (the
 /// server predates /api/session/local) so the caller can fall back to the
