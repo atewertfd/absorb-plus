@@ -1,0 +1,67 @@
+# Throwaway tailnet for testing Absorb's built-in Tailscale node end to end.
+# Never a real tailnet: headscale runs locally, nothing uses Tailscale's
+# servers or relays, and every port is bound to 127.0.0.1.
+#
+#   pwsh tool/test-server/tailnet/tailnet.ps1 up     (needs `dev.ps1 server up`)
+#   pwsh tool/test-server/tailnet/tailnet.ps1 down
+#
+# Layout: "abs-node" is a tailscale/tailscale container in the network
+# namespace of "holder", where socat forwards port 80 to the test
+# Audiobookshelf (absorb-test-abs). So http://<abs-node tailnet IP>/ reaches
+# the test server only through the tailnet.
+name: absorb-test-tailnet
+
+services:
+  headscale:
+    image: headscale/headscale:v0.29.7
+    container_name: absorb-test-headscale
+    restart: "no"
+    command: serve
+    ports:
+      - "127.0.0.1:18080:8080"
+    volumes:
+      - ./headscale.yaml:/etc/headscale/config.yaml:ro
+      - ./derp.yaml:/etc/headscale/derp.yaml:ro
+      - headscale-data:/var/lib/headscale
+    networks: [tailnet]
+
+  holder:
+    image: alpine/socat:1.8.0.3
+    container_name: absorb-test-tailnet-holder
+    restart: "no"
+    command: TCP-LISTEN:80,fork,reuseaddr TCP:absorb-test-abs:80
+    ports:
+      # The tailnet node's WireGuard/disco port, loopback only (41641 itself is
+      # taken when Tailscale is also installed on the PC).
+      - "127.0.0.1:41699:41641/udp"
+    networks: [tailnet, abs]
+
+  abs-node:
+    image: tailscale/tailscale:v1.104.4
+    container_name: absorb-test-tailnet-abs-node
+    restart: "no"
+    network_mode: service:holder
+    depends_on: [headscale, holder]
+    environment:
+      TS_AUTHKEY: ${TS_SERVER_AUTHKEY:?run tailnet.ps1 up}
+      TS_HOSTNAME: abs
+      TS_USERSPACE: "true"
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_EXTRA_ARGS: --login-server=http://headscale:8080
+      TS_TAILSCALED_EXTRA_ARGS: --port=41641
+      # Advertise the loopback-published port so the embedded node on the
+      # host finds a direct path without any relay. Test only.
+      TS_DEBUG_PRETENDPOINT: 127.0.0.1:41699
+      TS_NO_LOGS_NO_SUPPORT: "true"
+    volumes:
+      - abs-node-state:/var/lib/tailscale
+
+networks:
+  tailnet: {}
+  abs:
+    external: true
+    name: absorb-test-server_default
+
+volumes:
+  headscale-data: {}
+  abs-node-state: {}

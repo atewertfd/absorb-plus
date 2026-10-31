@@ -22,6 +22,7 @@ import 'scoped_prefs.dart';
 import 'server_notifications.dart';
 import 'server_backend.dart';
 import 'socket_service.dart';
+import 'tailscale_service.dart';
 import '../models/auth_session.dart';
 import '../utils/server_url.dart';
 import '../utils/percent_escapes.dart';
@@ -2336,6 +2337,16 @@ class ApiService {
   /// credential, so token rotation can't 401 a stream mid-book. Everything
   /// else keeps the contentUrl-based forms.
   String buildTrackUrl(
+    String contentUrl, {
+    String? sessionId,
+    int? trackIndex,
+    int? playMethod,
+  }) =>
+      // Fork: built-in Tailscale (off by default) points players at its proxy.
+      TailscaleService.instance.mediaUrl(_buildTrackUrl(contentUrl,
+          sessionId: sessionId, trackIndex: trackIndex, playMethod: playMethod));
+
+  String _buildTrackUrl(
     String contentUrl, {
     String? sessionId,
     int? trackIndex,

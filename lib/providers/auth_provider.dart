@@ -14,6 +14,7 @@ import '../services/audio_player_service.dart';
 import '../services/equalizer_service.dart';
 import '../services/session_cache.dart';
 import '../services/socket_service.dart';
+import '../services/tailscale_service.dart';
 import '../services/server_backend.dart';
 import '../services/signed_out_playback.dart';
 import '../services/user_account_service.dart';
@@ -1251,6 +1252,7 @@ class AuthProvider extends ChangeNotifier {
   /// hold up a launch or an account switch; the health check re-probes every
   /// minute, so a false offline corrects itself.
   Future<bool> _pingServers(String remoteUrl, Stopwatch sw) async {
+    await TailscaleService.instance.waitUntilReady(remoteUrl); // fork
     if (_localServerEnabled && _localServerUrl.isNotEmpty) {
       final connectivity = await Connectivity().checkConnectivity();
       debugPrint(

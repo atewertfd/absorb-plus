@@ -65,6 +65,11 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libsoup-3.0-dev libmpv-dev
+      # Built-in Tailscale library (native/tailscale, Go + cgo).
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: native/tailscale/go.mod
+          cache-dependency-path: native/tailscale/go.sum
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -94,6 +99,11 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+      # Built-in Tailscale library (native/tailscale/android.gradle, Go + NDK).
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: native/tailscale/go.mod
+          cache-dependency-path: native/tailscale/go.sum
       # Keeps Gradle's dependency and build caches between runs, saved from
       # this branch too (the default saves only on main), so unchanged plugin
       # code isn't recompiled for every phone-test APK.

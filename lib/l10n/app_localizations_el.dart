@@ -13267,4 +13267,79 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get adminDashAllLogs => 'All server logs';
+
+  @override
+  String get tailscaleBuiltInTitle => 'Tailscale (built-in)';
+
+  @override
+  String get tailscaleIntro =>
+      'Reach a server on your tailnet without turning on the Tailscale app\'s VPN. Absorb joins your tailnet as its own device, for its own connections only. Test feature, off by default.';
+
+  @override
+  String get tailscaleUseSwitch => 'Use built-in Tailscale';
+
+  @override
+  String get tailscaleStatusOff => 'Off';
+
+  @override
+  String get tailscaleStatusStarting => 'Connecting…';
+
+  @override
+  String get tailscaleStatusNeedsLogin =>
+      'Sign in to add this device to your tailnet';
+
+  @override
+  String get tailscaleStatusNeedsApproval =>
+      'Waiting for an admin to approve this device';
+
+  @override
+  String tailscaleStatusConnected(String user) {
+    return 'Connected as $user';
+  }
+
+  @override
+  String get tailscaleStatusConnectedNoUser => 'Connected';
+
+  @override
+  String tailscaleStatusError(String error) {
+    return 'Problem: $error';
+  }
+
+  @override
+  String get tailscaleNotIncluded => 'Not included in this build';
+
+  @override
+  String get tailscaleSignIn => 'Sign in with Tailscale';
+
+  @override
+  String get tailscaleSignInNoLink =>
+      'No sign-in link yet. Try again in a moment.';
+
+  @override
+  String get tailscaleSignOut => 'Sign out of Tailscale';
+
+  @override
+  String tailscaleDeviceAddress(String address) {
+    return 'This device: $address';
+  }
+
+  @override
+  String tailscaleServerRouted(String server) {
+    return 'Your server ($server) is reached through Tailscale.';
+  }
+
+  @override
+  String tailscaleServerNotRouted(String server) {
+    return 'Your server ($server) isn\'t a tailnet address, so it\'s reached as usual. If it is on your tailnet, add its host name below.';
+  }
+
+  @override
+  String get tailscaleExtraHostsLabel => 'Other tailnet host names';
+
+  @override
+  String get tailscaleExtraHostsHint => 'nas, abs.example.com';
+
+  @override
+  String get tailscaleExtraHostsHelp =>
+      'Addresses in 100.64.0.0/10 and names ending in .ts.net or your tailnet\'s MagicDNS name always go through Tailscale. Separate names with commas.';
 }

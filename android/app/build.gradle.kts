@@ -153,6 +153,9 @@ flutter {
     source = "../.."
 }
 
+// Fork: built-in Tailscale library (Go), see native/tailscale/android.gradle.
+apply(from = "../../native/tailscale/android.gradle")
+
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
     testImplementation("junit:junit:4.13.2")

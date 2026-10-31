@@ -8,3 +8,8 @@
 tags:
   abs-server:
     skip: "Needs the throwaway test server: .\\tool\\dev.ps1 server up; server seed; itest"
+  # Built-in Tailscale end to end (throwaway headscale tailnet in front of the
+  # test server): tool/test-server/tailnet/tailnet.ps1 up, then
+  # flutter test --tags tailnet --run-skipped test/integration/tailscale_tailnet_test.dart
+  tailnet:
+    skip: "Needs the throwaway tailnet: tool/test-server/tailnet/tailnet.ps1 up"

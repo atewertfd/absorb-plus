@@ -22538,6 +22538,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All server logs'**
   String get adminDashAllLogs;
+
+  /// No description provided for @tailscaleBuiltInTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tailscale (built-in)'**
+  String get tailscaleBuiltInTitle;
+
+  /// No description provided for @tailscaleIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach a server on your tailnet without turning on the Tailscale app\'s VPN. Absorb joins your tailnet as its own device, for its own connections only. Test feature, off by default.'**
+  String get tailscaleIntro;
+
+  /// No description provided for @tailscaleUseSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Use built-in Tailscale'**
+  String get tailscaleUseSwitch;
+
+  /// No description provided for @tailscaleStatusOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get tailscaleStatusOff;
+
+  /// No description provided for @tailscaleStatusStarting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting…'**
+  String get tailscaleStatusStarting;
+
+  /// No description provided for @tailscaleStatusNeedsLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to add this device to your tailnet'**
+  String get tailscaleStatusNeedsLogin;
+
+  /// No description provided for @tailscaleStatusNeedsApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for an admin to approve this device'**
+  String get tailscaleStatusNeedsApproval;
+
+  /// No description provided for @tailscaleStatusConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected as {user}'**
+  String tailscaleStatusConnected(String user);
+
+  /// No description provided for @tailscaleStatusConnectedNoUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get tailscaleStatusConnectedNoUser;
+
+  /// No description provided for @tailscaleStatusError.
+  ///
+  /// In en, this message translates to:
+  /// **'Problem: {error}'**
+  String tailscaleStatusError(String error);
+
+  /// No description provided for @tailscaleNotIncluded.
+  ///
+  /// In en, this message translates to:
+  /// **'Not included in this build'**
+  String get tailscaleNotIncluded;
+
+  /// No description provided for @tailscaleSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Tailscale'**
+  String get tailscaleSignIn;
+
+  /// No description provided for @tailscaleSignInNoLink.
+  ///
+  /// In en, this message translates to:
+  /// **'No sign-in link yet. Try again in a moment.'**
+  String get tailscaleSignInNoLink;
+
+  /// No description provided for @tailscaleSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out of Tailscale'**
+  String get tailscaleSignOut;
+
+  /// No description provided for @tailscaleDeviceAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'This device: {address}'**
+  String tailscaleDeviceAddress(String address);
+
+  /// No description provided for @tailscaleServerRouted.
+  ///
+  /// In en, this message translates to:
+  /// **'Your server ({server}) is reached through Tailscale.'**
+  String tailscaleServerRouted(String server);
+
+  /// No description provided for @tailscaleServerNotRouted.
+  ///
+  /// In en, this message translates to:
+  /// **'Your server ({server}) isn\'t a tailnet address, so it\'s reached as usual. If it is on your tailnet, add its host name below.'**
+  String tailscaleServerNotRouted(String server);
+
+  /// No description provided for @tailscaleExtraHostsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Other tailnet host names'**
+  String get tailscaleExtraHostsLabel;
+
+  /// No description provided for @tailscaleExtraHostsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'nas, abs.example.com'**
+  String get tailscaleExtraHostsHint;
+
+  /// No description provided for @tailscaleExtraHostsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Addresses in 100.64.0.0/10 and names ending in .ts.net or your tailnet\'s MagicDNS name always go through Tailscale. Separate names with commas.'**
+  String get tailscaleExtraHostsHelp;
 }
 
 class _AppLocalizationsDelegate

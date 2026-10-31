@@ -6,7 +6,8 @@
 // URL and key=value masking.
 
 final _loopbackSecret = RegExp(
-  r'(https?://(?:127\.0\.0\.1|localhost|\[::1\])(?::\d+)?/)[A-Za-z0-9_-]{16,}',
+  // `_ts/` is the built-in Tailscale media proxy (tailscale_routing.dart).
+  r'(https?://(?:127\.0\.0\.1|localhost|\[::1\])(?::\d+)?/(?:_ts/)?)[A-Za-z0-9_-]{16,}',
   caseSensitive: false,
 );
 final _schemeUrl = RegExp(
