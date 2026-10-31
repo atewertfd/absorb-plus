@@ -129,7 +129,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Keyboard shortcuts'),
+        title: Text(AppLocalizations.of(context)!.desktopShortcutsTitle),
         content: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420),
           child: const SingleChildScrollView(
@@ -139,7 +139,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+            child: Text(AppLocalizations.of(context)!.desktopShortcutsClose),
           ),
         ],
       ),
@@ -4837,10 +4837,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     children: [
                       ListTile(
                         leading: Icon(Icons.keyboard_rounded, color: cs.primary),
-                        title: const Text('Keyboard shortcuts'),
-                        subtitle: const Text(
-                          'Playback, speed, search, and navigation controls',
-                        ),
+                        title: Text(AppLocalizations.of(context)!.desktopShortcutsTitle),
+                        subtitle: Text(l.desktopShortcutsSubtitle),
                         trailing: Icon(
                           Icons.chevron_right_rounded,
                           color: cs.onSurfaceVariant,
