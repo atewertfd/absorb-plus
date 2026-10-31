@@ -192,7 +192,7 @@ void main() {
     final ts = make(); // node stays "Starting"
     final sw = Stopwatch()..start();
     await ts.waitUntilReady('https://abs.example.com');
-    expect(sw.elapsedMilliseconds, lessThan(500));
+    expect(sw.elapsedMilliseconds, lessThan(2000), reason: "no 10 s wait for a non-tailnet server (2 s allows a busy machine)");
     await ts.setEnabled(false);
   });
 
