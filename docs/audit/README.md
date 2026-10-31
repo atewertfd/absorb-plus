@@ -111,3 +111,7 @@ Ranked by value for the effort and merge cost. Items marked **(engine)** touch p
 - Deleting iOS or Siri engine code inside upstream files.
 
 All of these add merge conflicts for little user value. The rule from CLAUDE.md stands: change upstream files only when the gain beats the merge cost.
+
+## 2026-10-31 follow-up
+
+[perf-and-fixes-2026-10-31.md](perf-and-fixes-2026-10-31.md): seven reviews merged into one plan: bugs in this week's features (A), performance ranked by felt impact (B), easy feature ideas (C).
