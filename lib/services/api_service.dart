@@ -2416,6 +2416,13 @@ class ApiService {
         '$_cleanBaseUrl/api/items/$itemId/file/$ino?token=$token');
   }
 
+  /// Absorb Plus: the whole item as the server hands it out (a zip of its
+  /// folder, or the file itself for a single-file item). Needs the user's
+  /// download permission. GET /api/items/:id/download
+  String buildItemDownloadUrl(String itemId) =>
+      TailscaleService.instance.mediaUrl(
+          '$_cleanBaseUrl/api/items/$itemId/download?token=$token');
+
   /// Sync playback progress. Returns true if sync succeeded.
   /// POST /api/session/:id/sync
   Future<bool> syncPlaybackSession(

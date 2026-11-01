@@ -13401,4 +13401,21 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get opmlExportFailed => 'Couldn\'t export the OPML file';
+
+  @override
+  String get bookCopySaveAction => 'Save a copy…';
+
+  @override
+  String get bookCopyDialogTitle => 'Save a copy of this book';
+
+  @override
+  String get bookCopySaving => 'Saving a copy…';
+
+  @override
+  String bookCopySaved(String path) {
+    return 'Copy saved to $path';
+  }
+
+  @override
+  String get bookCopyFailed => 'Couldn\'t save a copy of this book';
 }

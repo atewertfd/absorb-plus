@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'overlay_toast.dart';
+import 'save_book_copy.dart';
+import '../services/book_copy_download.dart';
 import 'narration_download_dialog.dart';
 import '../services/media_overlay.dart';
 import '../services/narration_service.dart';
@@ -2070,6 +2072,11 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         final item = _item;
         if (item != null) {
           add(Icons.info_outline_rounded, l.fileInfoTitle, () => showBookFilesSheet(context, item));
+        }
+        if (!includeOpenDetails && auth.apiService != null && BookCopyDownload.available( // Absorb Plus
+            userJson: auth.userJson, isBookOrbit: auth.isBookOrbit, offline: lib.isOffline)) {
+          add(Icons.save_alt_rounded, l.bookCopySaveAction, () => SaveBookCopy.run(context,
+            api: auth.apiService!, itemId: widget.itemId, title: title, item: _item));
         }
         if (auth.canDelete && !lib.isOffline) {
           add(Icons.delete_outline_rounded, l.deleteFromServerAction,

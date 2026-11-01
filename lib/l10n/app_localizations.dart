@@ -22760,6 +22760,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t export the OPML file'**
   String get opmlExportFailed;
+
+  /// No description provided for @bookCopySaveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Save a copy…'**
+  String get bookCopySaveAction;
+
+  /// No description provided for @bookCopyDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Save a copy of this book'**
+  String get bookCopyDialogTitle;
+
+  /// No description provided for @bookCopySaving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving a copy…'**
+  String get bookCopySaving;
+
+  /// No description provided for @bookCopySaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy saved to {path}'**
+  String bookCopySaved(String path);
+
+  /// No description provided for @bookCopyFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save a copy of this book'**
+  String get bookCopyFailed;
 }
 
 class _AppLocalizationsDelegate
