@@ -2836,6 +2836,7 @@ class DownloadService extends ChangeNotifier {
     notifyListeners();
     debugPrint('[Download] Complete: ${p.title} (narration, kept '
         '${DateTime.now().difference(started).inMilliseconds}ms after the EPUB landed)');
+    await _deleteIfAskedWhileFinishing(itemId); // Absorb Plus (D7)
     unawaited(_processQueue());
   }
 
@@ -3345,6 +3346,7 @@ class DownloadService extends ChangeNotifier {
     _queue.clear();
     _persistedPendingKeys = {};
     _adoptChecked.clear();
+    _deleteAfterFinalize.clear();
     _resumeDirs.clear();
     _claimedFolders.clear();
     _lastReconcileAt = null;
@@ -3473,6 +3475,7 @@ class DownloadService extends ChangeNotifier {
     }
 
     debugPrint('[Download] Complete: ${p.title} (${localPaths.length} files)');
+    await _deleteIfAskedWhileFinishing(itemId); // Absorb Plus (D7)
     unawaited(_processQueue());
   }
 
@@ -3528,6 +3531,7 @@ class DownloadService extends ChangeNotifier {
     );
     _activeDownloadIds.remove(itemId);
     _pending.remove(itemId);
+    _deleteAfterFinalize.remove(itemId); // Absorb Plus (D7): nothing to delete
     await _save();
     await _persistPending();
     await _deleteDbRecords(itemId, p?.trackCount ?? 0);
@@ -3601,6 +3605,7 @@ class DownloadService extends ChangeNotifier {
     _downloads.remove(itemId);
     _activeDownloadIds.remove(itemId);
     _pending.remove(itemId);
+    _deleteAfterFinalize.remove(itemId); // Absorb Plus (D7)
     await _persistPending();
     await _deleteDbRecords(itemId, p?.trackCount ?? 0);
     _cancelledIds.remove(itemId);
@@ -3775,6 +3780,15 @@ class DownloadService extends ChangeNotifier {
       }
     }
     return false;
+  }
+
+  /// Absorb Plus: books cancelled or deleted while finishing (audit D7).
+  final Set<String> _deleteAfterFinalize = {};
+
+  Future<void> _deleteIfAskedWhileFinishing(String itemId) async {
+    if (!_deleteAfterFinalize.remove(itemId)) return;
+    debugPrint('[Download] Deleting $itemId as asked while it was finishing');
+    await deleteDownload(itemId);
   }
 
   /// Absorb Plus: the folder each starting download picked. Starting a
@@ -4150,6 +4164,16 @@ class DownloadService extends ChangeNotifier {
   void cancelDownload(String itemId) {
     // Drop it from the waiting queue if it never started.
     _queue.removeWhere((q) => q.itemId == itemId);
+
+    // Absorb Plus: a book already finishing (files being moved into the
+    // custom folder, narration taken out) would be written "downloaded"
+    // anyway. Note the wish; the book is deleted once it has finished
+    // (audit D7).
+    if (_pending[itemId]?.finalizing == true) {
+      _deleteAfterFinalize.add(itemId);
+      debugPrint('[Download] $itemId is finishing - it is deleted once it has');
+      return;
+    }
 
     // Flag so an in-flight _executeDownload bails before enqueueing, and so a
     // book mid-resolution doesn't leak an active slot.

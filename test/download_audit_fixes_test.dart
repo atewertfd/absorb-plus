@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -157,6 +158,52 @@ void main() {
       expect(s.getInfo('saf-move-book').status, DownloadStatus.downloaded);
       expect(s.getInfo('saf-move-book').localDirPath,
           'content://tree/doc/Author%2FTitle');
+    });
+
+    test('D7 delete while the book is moving in waits, then deletes',
+        () async {
+      final moving = Completer<void>();
+      messenger.setMockMethodCallHandler(storage, (call) async {
+        calls.add(call);
+        if (call.method == 'moveBookToSaf') {
+          await moving.future;
+          return {
+            'dirUri': 'content://tree/doc/Author%2FTitle',
+            'fileUris': ['content://tree/doc/0.mp3'],
+          };
+        }
+        return true;
+      });
+      final s = newService();
+      await s.debugSeedPendingDownload(
+        itemId: 'finishing-book',
+        trackCount: 1,
+        safTreeUri: 'content://tree',
+        safSubfolder: 'Author/Title',
+      );
+      final file = File('${Directory.systemTemp.path}/'
+          'absorb_download_service_test/finishing-book/0.mp3')
+        ..createSync(recursive: true)
+        ..writeAsBytesSync([1]);
+      addTearDown(() {
+        try {
+          file.parent.deleteSync(recursive: true);
+        } catch (_) {}
+      });
+
+      final finishing = s.debugHandleTaskStatus(
+          itemId: 'finishing-book', trackIndex: 0, status: TaskStatus.complete);
+      await Future<void>.delayed(Duration.zero);
+      await s.deleteDownload('finishing-book', byUser: true);
+      // Still finishing: nothing is dropped early.
+      expect(s.activeDownloads.single.itemId, 'finishing-book');
+
+      moving.complete();
+      await finishing;
+
+      expect(s.isDownloaded('finishing-book'), isFalse);
+      expect(s.activeDownloads, isEmpty);
+      expect(calls.map((c) => c.method), contains('deleteSafDirIfEmpty'));
     });
   });
 
