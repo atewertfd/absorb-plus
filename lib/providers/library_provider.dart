@@ -330,7 +330,10 @@ class LibraryProvider extends ChangeNotifier
             // it's a no-op on an already-filtered list.
             auth.setEreaderDevices(auth.filterDevicesForCurrentUser(devices));
           };
-          socket.connect(auth.serverUrl!, auth.token!, customHeaders: auth.customHeaders);
+          // Fork: manual offline keeps the details but opens no connection.
+          if (_manualOffline) _socketSoftDisconnected = true;
+          socket.connect(auth.serverUrl!, auth.token!,
+              customHeaders: auth.customHeaders, open: !_manualOffline);
           _startBookOrbitPoll();
         }
         debugPrint('[Library] Calling loadLibraries()');

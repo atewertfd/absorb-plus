@@ -329,6 +329,8 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         return;
       }
       _networkOffline = false;
+      if (!_isBackgrounded && !_readerQuiet) _softReconnectSocket(); // fork
+      _startBookOrbitPoll();
       if (_api != null) {
         debugPrint('[Library] Manual offline off — flushing pending syncs');
         ProgressSyncService().flushPendingSync(api: _api!);
@@ -341,6 +343,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         (this as LibraryProvider).refresh();
       }
     } else {
+      // Fork: offline means no live connection either.
+      _softDisconnectSocket();
+      _stopBookOrbitPoll();
+      _stopHealthCheckTimer();
       _buildOfflineSections();
     }
     notifyListeners();
@@ -1509,7 +1515,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     _bookOrbitPollTimer?.cancel();
     _bookOrbitPollTimer = null;
     final api = _api;
-    if (_auth?.isBookOrbit != true || api == null ||
+    if (_auth?.isBookOrbit != true || api == null || _manualOffline ||
         _isBackgrounded || _readerQuiet || PlayerSettings.einkMode) {
       BookOrbitNotificationSocket.instance.stop();
       return;
@@ -1702,7 +1708,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   void _softDisconnectSocket() {
-    if (_socketSoftDisconnected || _manualOffline) return;
+    if (_socketSoftDisconnected) return;
     _socketSoftDisconnected = true;
     SocketService().softDisconnect();
   }
