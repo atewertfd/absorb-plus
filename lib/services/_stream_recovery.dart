@@ -155,16 +155,29 @@ class _StreamRecovery {
   /// file of the book at 0:00. The service reports where the stream failed
   /// instead, so progress saves, syncs and the UI never see that jump. A
   /// user action that ends the wait keeps the hold until a seek, a new load
-  /// or a ready player replaces it.
+  /// or a ready player replaces it. A reload that is loading holds the
+  /// target too, so a seek made meanwhile doesn't flash the old spot.
   Duration? get heldPosition {
-    final sec = policy.isWaiting ? policy.failedAtSec : _heldSec;
+    final sec = policy.isRecovering ? policy.failedAtSec : _heldSec;
     if (sec == null || sec <= 0) return null;
     return Duration(milliseconds: (sec * 1000).round());
   }
 
   double? _heldSec;
 
+  // A seek, skip or chapter skip arrived while recovering: its target is
+  // taken over by the next _seekAbsolute (see takeUserSeek) until this time.
+  DateTime? _userSeekUntil;
+  // A target the user picked while a reload was already loading, to move the
+  // reloaded source to once it is ready.
+  double? _seekAfterReload;
+
   void userAction(_RecoveryUserAction action) {
+    if (action.movesPosition && policy.isRecovering) {
+      // Keep the reconnect: the seek moves where it resumes instead.
+      _userSeekUntil = DateTime.now().add(const Duration(seconds: 3));
+      return;
+    }
     if (policy.isWaiting) {
       final at = policy.failedAtSec;
       if (at > 0) {
@@ -201,6 +214,48 @@ class _StreamRecovery {
   }
 
   void networkBack() => policy.retryNow();
+
+  /// First thing in _seekAbsolute. A user seek while recovering doesn't go
+  /// to the raw player (paused on the wrong file, idle after an error, or
+  /// halfway through loading a new source): it moves the recovery's target,
+  /// the held position and the saved spot, and the reload starts there. A
+  /// reload already loading is moved there once it is ready. True when the
+  /// seek was taken here.
+  bool takeUserSeek(double sec) {
+    final until = _userSeekUntil;
+    if (until == null) return false;
+    _userSeekUntil = null;
+    if (DateTime.now().isAfter(until) || !policy.isRecovering) return false;
+    var target = sec < 0 ? 0.0 : sec;
+    final total = _s._totalDuration;
+    if (total > 0 && target > total) target = total;
+    policy.retarget(target);
+    _heldSec = null;
+    if (policy.isReloading) _seekAfterReload = target;
+    // Not a seek "while paused": the user still wants to hear it.
+    _s._seekedWhilePaused = false;
+    unawaited(_s._saveProgressLocal(
+      Duration(milliseconds: (target * 1000).round()),
+    ));
+    _refresh();
+    // A stall kept its own source at its own position, and seeking it may
+    // unstick it: let the seek through as well.
+    return !(policy.isWaiting && policy.isStallOnly);
+  }
+
+  /// A user target that arrived while the reload was loading: the reload
+  /// went to the old target, so move it on now.
+  Future<void> _applySeekAfterReload(bool Function() stillOurs) async {
+    // Loops for a seek that lands while this one runs.
+    for (var i = 0; i < 3; i++) {
+      final target = _seekAfterReload;
+      _seekAfterReload = null;
+      if (target == null || !stillOurs()) return;
+      debugPrint('[Recovery] Moving the reloaded source to the chosen '
+          '${target.toStringAsFixed(1)}s');
+      await _s._seekAbsolute(target);
+    }
+  }
 
   /// The account changed, or the user signed out: a reconnect must not
   /// carry on with the old account's item and sign-in. Ends like a stop (the
@@ -298,6 +353,8 @@ class _StreamRecovery {
   }
 
   Future<bool> _reload(double at, Object? lastError) async {
+    // A target picked during an earlier attempt is already in [at].
+    _seekAfterReload = null;
     final item = _item;
     if (item == null) return false;
     final gen = policy.generation;
@@ -363,6 +420,7 @@ class _StreamRecovery {
       debugPrint('[Recovery] Reload failed: $result');
       return false;
     }
+    await _applySeekAfterReload(stillOurs);
     // Paused while the reload was loading: playItem started it anyway, so
     // honour the pause now.
     if (_s._pauseRequested && (_s._player?.playing ?? false)) {
@@ -450,6 +508,8 @@ class _StreamRecovery {
       debugPrint('[Recovery] Reload finished after the user moved on - not starting it');
       return false;
     }
+    await _applySeekAfterReload(stillOurs);
+    if (!stillOurs() || s._pauseRequested) return false;
     unawaited(s._player?.play());
     AudioPlayerService._handler?.refreshPlaybackState();
     debugPrint('[Recovery] Source rebuilt at ${at.toStringAsFixed(1)}s on '

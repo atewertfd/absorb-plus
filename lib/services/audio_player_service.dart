@@ -2897,6 +2897,7 @@ class AudioPlayerService extends ChangeNotifier {
   void _seekTimedOut() => debugPrint('[Player] Seek got no answer in ${_seekCap.inSeconds}s - carrying on');
 
   Future<void> _seekAbsolute(double absoluteSeconds) async {
+    if (_recovery.takeUserSeek(absoluteSeconds)) return; // fork: reconnecting
     if (_player == null) return;
     _recovery.onSeek();
     final swap = _pauseSwap;

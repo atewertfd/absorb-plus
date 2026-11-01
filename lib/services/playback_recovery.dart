@@ -55,8 +55,10 @@ class PlaybackStallError implements Exception {
 ///   minus [rewind]. Positions seen while waiting are ignored; only a failure
 ///   after a reload had worked moves the target, and only forward. Retries
 ///   never step further back than that.
+/// - [retarget] (the user sought or skipped while it waits) moves the target
+///   to exactly where the user asked, and the recovery carries on.
 /// - [retryNow] (the network came back) skips the rest of the current wait.
-/// - [cancel] (pause, seek, stop, another book) ends everything at once, and
+/// - [cancel] (pause, stop, another book) ends everything at once, and
 ///   a reload that was in flight is ignored when it returns.
 /// - After a reload works the attempt count is kept for [healthyAfter], so a
 ///   connection that keeps flapping keeps backing off instead of reloading
@@ -121,6 +123,8 @@ class PlaybackRecovery {
   _Phase _phase = _Phase.idle;
   int _attempt = 0;
   double _resumeAtSec = 0;
+  // The target is one the user picked (see [retarget]): reload exactly there.
+  bool _exactTarget = false;
   bool _healable = false;
   Object? _lastError;
   // Bumped by cancel/give-up/reset: an attempt that comes back under an old
@@ -154,7 +158,9 @@ class PlaybackRecovery {
   int get attempt => _attempt;
 
   /// Where the next reload goes, in seconds.
-  double get resumeAtSec => math.max(0, _resumeAtSec - _seconds(rewind));
+  double get resumeAtSec => _exactTarget
+      ? _resumeAtSec
+      : math.max(0, _resumeAtSec - _seconds(rewind));
 
   /// Where the stream was when it failed, in seconds: what the player should
   /// report as its position while it waits for a retry.
@@ -226,7 +232,10 @@ class PlaybackRecovery {
       case _Phase.verifying:
         _healthyTimer?.cancel();
         _healthyTimer = null;
-        if (pos > _resumeAtSec) _resumeAtSec = pos;
+        if (pos > _resumeAtSec) {
+          _resumeAtSec = pos;
+          _exactTarget = false;
+        }
         _healable = error is PlaybackStallError;
         _log('stream failed again after a reload ($error)');
         _armDeadline();
@@ -236,6 +245,7 @@ class PlaybackRecovery {
       case _Phase.idle:
         _attempt = 0;
         _resumeAtSec = pos;
+        _exactTarget = false;
         _healable = error is PlaybackStallError;
         _log('stream failed at ${pos.toStringAsFixed(1)}s: $error');
         onStart?.call();
@@ -268,6 +278,18 @@ class PlaybackRecovery {
     _retryTimer = null;
     _log('stream recovered by itself');
     _enterVerifying();
+  }
+
+  /// The user sought or skipped to [sec] while a recovery waits or reloads.
+  /// The next reload goes exactly there (no rewind: the user chose the spot),
+  /// and the waiting, the attempt count and the deadline carry on as they
+  /// were. A reload already in flight still lands where it was going; the
+  /// caller moves it on afterwards.
+  void retarget(double sec) {
+    if (!isRecovering) return;
+    _resumeAtSec = math.max(0, sec);
+    _exactTarget = true;
+    _log('target moved to ${_resumeAtSec.toStringAsFixed(1)}s by the user');
   }
 
   /// The network came back: skip the rest of the current wait.

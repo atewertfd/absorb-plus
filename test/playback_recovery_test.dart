@@ -394,6 +394,68 @@ void main() {
     });
   });
 
+  group('PlaybackRecovery follows seeks made while it runs', () {
+    test('a seek while waiting moves the reload there, exactly', () {
+      fakeAsync((async) {
+        final h = _Harness(async)..reachable = false;
+        h.position = 100;
+        h.recovery.onFailure(Exception('Source error'));
+        async.elapse(const Duration(seconds: 2)); // probe 1 fails
+        h.recovery.retarget(400);
+        expect(h.recovery.isRecovering, isTrue, reason: 'not cancelled');
+        expect(h.recovery.failedAtSec, 400, reason: 'the player shows it');
+        expect(h.recovery.resumeAtSec, 400, reason: 'no rewind on a chosen spot');
+        h.reachable = true;
+        async.elapse(const Duration(seconds: 5)); // attempt 2 at 7 s
+        expect(h.reloads.single.at, 400);
+        expect(h.reloads.single.when.inSeconds, 7, reason: 'backoff unchanged');
+        expect(h.starts, 1);
+      });
+    });
+
+    test('a seek during a failing reload sends the next attempt there', () {
+      fakeAsync((async) {
+        final h = _Harness(async)
+          ..reloadSucceeds = false
+          ..reloadTakes = const Duration(seconds: 3);
+        h.position = 100;
+        h.recovery.onFailure(Exception('Source error'));
+        async.elapse(const Duration(seconds: 3)); // reload 1 loading
+        expect(h.recovery.isReloading, isTrue);
+        h.recovery.retarget(50);
+        async.elapse(const Duration(seconds: 2)); // reload 1 fails at 5 s
+        async.elapse(const Duration(seconds: 5));
+        expect(h.reloads.map((r) => r.at), [98, 50]);
+      });
+    });
+
+    test('after a retargeted reload worked, a later failure ahead rewinds again', () {
+      fakeAsync((async) {
+        final h = _Harness(async)..reachable = false;
+        h.position = 100;
+        h.recovery.onFailure(Exception('Source error'));
+        h.recovery.retarget(300);
+        h.reachable = true;
+        async.elapse(const Duration(seconds: 2)); // reload at 300 works
+        expect(h.reloads.single.at, 300);
+        h.position = 340;
+        h.recovery.onFailure(Exception('Source error'));
+        async.elapse(const Duration(seconds: 5));
+        expect(h.reloads.last.at, 338);
+      });
+    });
+
+    test('a seek with nothing to recover does nothing', () {
+      fakeAsync((async) {
+        final h = _Harness(async);
+        h.recovery.retarget(500);
+        async.elapse(const Duration(minutes: 1));
+        expect(h.reloads, isEmpty);
+        expect(h.recovery.isActive, isFalse);
+      });
+    });
+  });
+
   group('PlaybackRecovery stall detection', () {
     test('buffering for 15 s asks, and a failed verdict starts a recovery', () {
       fakeAsync((async) {
