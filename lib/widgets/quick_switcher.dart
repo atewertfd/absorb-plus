@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../l10n/app_localizations.dart';
+import 'text_scale_room.dart';
 
 /// What a quick-switcher row stands for.
 enum QuickSwitcherKind { action, book, podcast, series, author }
@@ -105,7 +106,11 @@ class QuickSwitcherDialog extends StatefulWidget {
 }
 
 class _QuickSwitcherDialogState extends State<QuickSwitcherDialog> {
-  static const _rowHeight = 56.0;
+  static const _listPadding = 8.0;
+
+  // 56 px at the normal text size, growing with the two lines of text in
+  // each row when the system text size is larger.
+  double _rowHeight(BuildContext context) => 56 + textScaleRoom(context, 36);
 
   final _controller = TextEditingController();
   final _scroll = ScrollController();
@@ -175,10 +180,12 @@ class _QuickSwitcherDialogState extends State<QuickSwitcherDialog> {
   void _keepSelectedVisible() {
     if (!_scroll.hasClients) return;
     final position = _scroll.position;
-    final top = _selected * _rowHeight;
-    final bottom = top + _rowHeight;
+    final rowHeight = _rowHeight(context);
+    final top = _listPadding + _selected * rowHeight;
+    final last = _selected == _entries.length - 1;
+    final bottom = top + rowHeight + (last ? _listPadding : 0);
     if (top < position.pixels) {
-      _scroll.jumpTo(top);
+      _scroll.jumpTo(_selected == 0 ? 0 : top);
     } else if (bottom > position.pixels + position.viewportDimension) {
       _scroll.jumpTo(bottom - position.viewportDimension);
     }
@@ -267,8 +274,8 @@ class _QuickSwitcherDialogState extends State<QuickSwitcherDialog> {
                   : ListView.builder(
                       controller: _scroll,
                       shrinkWrap: true,
-                      padding: const EdgeInsets.all(8),
-                      itemExtent: _rowHeight,
+                      padding: const EdgeInsets.all(_listPadding),
+                      itemExtent: _rowHeight(context),
                       itemCount: entries.length,
                       itemBuilder: (context, index) => _QuickSwitcherRow(
                         entry: entries[index],

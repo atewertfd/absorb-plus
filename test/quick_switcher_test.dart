@@ -135,13 +135,22 @@ void main() {
           onSelected: () => ran.add(title),
         );
 
-    Future<void> open(WidgetTester tester) async {
+    Future<void> open(
+      WidgetTester tester, {
+      double textScale = 1,
+      int extraActions = 0,
+    }) async {
       ran = [];
       searched = [];
       pending = {};
       await tester.pumpWidget(MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context)
+              .copyWith(textScaler: TextScaler.linear(textScale)),
+          child: child!,
+        ),
         home: Builder(
           builder: (context) => Scaffold(
             body: TextButton(
@@ -151,6 +160,8 @@ void main() {
                   action('Go to Home', ran),
                   action('Go to Stats', ran),
                   action('Sleep timer', ran),
+                  for (var i = 0; i < extraActions; i++)
+                    action('Action $i', ran),
                 ],
                 search: (query) {
                   searched.add(query);
@@ -230,6 +241,50 @@ void main() {
       await tester.sendKeyEvent(LogicalKeyboardKey.enter);
       await tester.pumpAndSettle();
       expect(ran, ['Sleep timer']);
+    });
+
+    testWidgets('rows grow with a large system text size', (tester) async {
+      await open(tester, textScale: 2);
+      await tester.enterText(find.byType(TextField), 'dune');
+      await tester.pump(quickSwitcherDebounce);
+      pending['dune']!.complete([book('Dune'), book('Dune Messiah')]);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'no overflow');
+      final title = tester.getRect(find.text('Dune Messiah'));
+      final author = tester.getRect(find.text('Some Author').last);
+      expect(author.top, greaterThanOrEqualTo(title.bottom - 0.5));
+    });
+
+    testWidgets('a highlighted row past the fold is shown in full',
+        (tester) async {
+      await open(tester, extraActions: 20);
+      final list = tester.getRect(find.byType(ListView));
+      // Wrap from the first row to the last.
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
+      await tester.pump();
+      final last = tester.getRect(find.ancestor(
+        of: find.text('Action 19'),
+        matching: find.byType(InkWell),
+      ));
+      expect(last.bottom, lessThanOrEqualTo(list.bottom - 8 + 0.5));
+      // And back to the first, with the list's top padding showing.
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      await tester.pump();
+      final first = tester.getRect(find.ancestor(
+        of: find.text('Go to Home'),
+        matching: find.byType(InkWell),
+      ));
+      expect(first.top, greaterThanOrEqualTo(list.top + 8 - 0.5));
+      // Down past the fold: the new row's bottom is on screen.
+      for (var i = 0; i < 9; i++) {
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      }
+      await tester.pump();
+      final ninth = tester.getRect(find.ancestor(
+        of: find.text('Action 6'),
+        matching: find.byType(InkWell),
+      ));
+      expect(ninth.bottom, lessThanOrEqualTo(list.bottom + 0.5));
     });
 
     testWidgets('clicking a row opens it', (tester) async {
