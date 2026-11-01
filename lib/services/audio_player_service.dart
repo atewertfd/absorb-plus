@@ -7617,7 +7617,7 @@ class AudioPlayerService extends ChangeNotifier {
           _currentItemId, Duration(milliseconds: (resumeAt * 1000).round()));
       if (undoTo != null && !adoptedServerPos) {
         await moveTo(undoTo.inMilliseconds / 1000.0,
-            () => seekTo(undoTo, logDetail: 'sleep rewind undone'));
+            () => seekTo(undoTo, logDetail: 'sleep rewind undone', offerUndo: false));
         // seekTo flags a paused seek; this one is ours, not the user's, and
         // the server check has already run, so don't carry it to next resume.
         _seekedWhilePaused = false;

@@ -4647,7 +4647,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     debugPrint('[ReadAlong] read ahead of the narration '
         '(${heard.toStringAsFixed(0)}s -> ${t.toStringAsFixed(0)}s) - moving it to the page');
     if (inPlayer) {
-      await player.seekTo(Duration(milliseconds: (t * 1000).round()));
+      await player.seekTo(Duration(milliseconds: (t * 1000).round()), offerUndo: false);
       return;
     }
     final duration = n.duration;
