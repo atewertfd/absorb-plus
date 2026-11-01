@@ -4214,6 +4214,22 @@ class AppLocalizationsDe extends AppLocalizations {
       'Konnte nicht aktualisieren werden, versuche es erneut';
 
   @override
+  String get recentSearchesTitle => 'Recent searches';
+
+  @override
+  String get recentSearchesClear => 'Clear';
+
+  @override
+  String get recentSearchesRemove => 'Remove';
+
+  @override
+  String get removedSeriesTapToUndo =>
+      'Removed from Continue Series. Tap to undo.';
+
+  @override
+  String get seriesBackOnContinueSeries => 'Back on Continue Series';
+
+  @override
   String get addToPlaylist => 'Zur Playlist hinzufügen';
 
   @override

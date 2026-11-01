@@ -803,6 +803,11 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     notifyListeners();
   }
 
+  /// Undoes [hideFromContinueShelves] for a series the server put back.
+  void unhideSeriesFromContinueShelves(String seriesId) {
+    if (_hiddenShelfSeries.remove(seriesId) != null) notifyListeners();
+  }
+
   List<dynamic> _withoutJustHidden(List<dynamic> sections) {
     final now = DateTime.now();
     bool stale(String _, DateTime at) => now.difference(at) > const Duration(minutes: 2);

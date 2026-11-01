@@ -1128,6 +1128,12 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
           await _hideFromContinue(_hiddenSeriesKey, at(3));
           return _json(const <String, dynamic>{});
         }
+        if (n == 5 && at(4) == 'readd-to-continue-listening' && method == 'GET') {
+          final ids = await ScopedPrefs.getStringList(_hiddenSeriesKey);
+          if (ids.remove(at(3))) await ScopedPrefs.setStringList(_hiddenSeriesKey, ids);
+          _recent.removeWhere((k, _) => k.startsWith('personalized:'));
+          return _json(const <String, dynamic>{});
+        }
         return null;
       case 'bookmarks':
         if (method != 'GET') return null;

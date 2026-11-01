@@ -3033,6 +3033,20 @@ class ApiService {
     }
   }
 
+  /// Undo [removeSeriesFromContinueListening].
+  /// GET /api/me/series/:seriesId/readd-to-continue-listening
+  Future<bool> readdSeriesToContinueListening(String seriesId) async {
+    try {
+      final resp = await _authGet(
+        Uri.parse('$_cleanBaseUrl/api/me/series/$seriesId/readd-to-continue-listening'),
+        timeout: const Duration(seconds: 10));
+      return resp.statusCode == 200;
+    } catch (e) {
+      debugPrint('[API] readdSeriesToContinueListening error: $e');
+      return false;
+    }
+  }
+
   /// Hide a single item from the "Continue Listening" home shelf.
   /// GET /api/me/progress/:mediaProgressId/remove-from-continue-listening
   /// The path id is the media-progress record id (not the libraryItemId).
