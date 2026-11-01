@@ -4172,6 +4172,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get couldNotUpdate => 'Could not update, try again';
 
   @override
+  String get recentSearchesTitle => 'Recent searches';
+
+  @override
+  String get recentSearchesClear => 'Clear';
+
+  @override
+  String get recentSearchesRemove => 'Remove';
+
+  @override
   String get addToPlaylist => 'Add to Playlist';
 
   @override

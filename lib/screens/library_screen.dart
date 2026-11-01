@@ -49,6 +49,8 @@ import '../l10n/app_localizations.dart';
 import 'smart_scope_editor_screen.dart';
 import '../widgets/new_list_flow.dart';
 import '../widgets/text_scale_room.dart';
+import '../widgets/recent_searches_panel.dart';
+import '../services/recent_searches.dart';
 
 /// Responsive grid column count based on available width and the cover size
 /// setting; scales up on tablets/iPads.
@@ -3194,7 +3196,16 @@ class LibraryScreenState extends State<LibraryScreen>
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                  child: SearchBar(
+                  child: RecentSearchesAnchor(
+                    controller: _searchController,
+                    focusNode: useSharedFocus ? _focusNode : null,
+                    onSelected: (t) {
+                      _searchController.text = t;
+                      _onSearchChanged(t);
+                      RecentSearches().add(t);
+                    },
+                    child: SearchBar(
+                    onSubmitted: (q) => RecentSearches().add(q),
                     // Same GlobalKey on whichever SearchBar gets the shared
                     // focus, so when _isInSearchMode toggles and the tree
                     // swaps from tabbed -> search results, Flutter re-parents
@@ -3234,6 +3245,7 @@ class LibraryScreenState extends State<LibraryScreen>
                     side: WidgetStatePropertyAll(
                       BorderSide(color: cs.onSurface.withValues(alpha: 0.08)),
                     ),
+                  ),
                   ),
                 ),
                 // Item count + filter badge row
@@ -4386,7 +4398,10 @@ class LibraryScreenState extends State<LibraryScreen>
         injector,
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-          sliver: SliverList(delegate: SliverChildListDelegate(children)),
+          sliver: SliverList(delegate: SliverChildListDelegate([
+            for (final c in children)
+              RecentSearchTapSaver(onTap: () => RecentSearches().add(_searchController.text), child: c),
+          ])),
         ),
       ],
     );

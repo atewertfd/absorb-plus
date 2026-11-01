@@ -7384,6 +7384,24 @@ abstract class AppLocalizations {
   /// **'Could not update, try again'**
   String get couldNotUpdate;
 
+  /// No description provided for @recentSearchesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent searches'**
+  String get recentSearchesTitle;
+
+  /// No description provided for @recentSearchesClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get recentSearchesClear;
+
+  /// No description provided for @recentSearchesRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get recentSearchesRemove;
+
   /// No description provided for @addToPlaylist.
   ///
   /// In en, this message translates to:
