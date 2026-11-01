@@ -29,6 +29,12 @@ class ProgressSyncService {
   final StreamingPendingLedger _streaming = StreamingPendingLedger();
   int _consecutiveFailures = 0;
   static const _maxConsecutiveFailures = 10;
+  /// Absorb Plus: the session the last flush ran with, and for which account,
+  /// so a connectivity change can flush (it has no session of its own), and
+  /// the one scheduled retry, so repeated flushes don't stack retry chains.
+  ApiService? _lastApi;
+  String? _lastApiScope;
+  Timer? _retryTimer;
 
   /// Initialize — start listening for connectivity changes.
   Future<void> init() async {
@@ -40,7 +46,9 @@ class ProgressSyncService {
       _isOnline = !result.contains(ConnectivityResult.none);
       if (_isOnline && wasOffline) {
         _consecutiveFailures = 0; // reset backoff on connectivity change
-        flushPendingSync();
+        // Called with no session this returned at once, so nothing retried.
+        // Only reuse the last one while the same account is active.
+        flushPendingSync(api: _lastApiScope == _scope ? _lastApi : null);
       }
     });
   }
@@ -298,6 +306,8 @@ class ProgressSyncService {
   /// Compares local vs server timestamps — last-write-wins.
   Future<void> flushPendingSync({ApiService? api, int maxItems = 5}) async {
     if (!_isOnline || api == null) return;
+    _lastApi = api;
+    _lastApiScope = _scope;
 
     if (_isFlushing) {
       _flushAgain = true;
@@ -507,22 +517,25 @@ class ProgressSyncService {
         debugPrint('[Sync] Flush made no progress (${remaining.length} still pending) - backing off');
       }
       // Exponential backoff: 5s, 10s, 20s, 40s, ... capped at 5 minutes
+      // Absorb Plus: past the limit keep retrying at the cap instead of
+      // stopping. Nothing else retries on a desktop that never changes
+      // connectivity, so a server back from a long outage waited for a
+      // manual refresh.
       if (_consecutiveFailures >= _maxConsecutiveFailures) {
-        debugPrint('[Sync] Too many consecutive failures ($_consecutiveFailures) - waiting for next connectivity change');
-        return;
+        debugPrint('[Sync] Too many consecutive failures ($_consecutiveFailures) - retrying every ${SyncLogic.maxRetryDelay.inMinutes} min');
       }
       final clampedDelay = SyncLogic.backoffDelay(_consecutiveFailures);
       debugPrint('[Sync] Scheduling retry in ${clampedDelay.inSeconds}s (failures=$_consecutiveFailures)');
 
-      unawaited(
-        Future<void>.delayed(clampedDelay, () {
-          if (_scope != scope) {
-            debugPrint('[Sync] Account changed - dropping the retry scheduled with the old session');
-            return null;
-          }
-          return flushPendingSync(api: api, maxItems: maxItems);
-        }),
-      );
+      _retryTimer?.cancel();
+      _retryTimer = Timer(clampedDelay, () {
+        _retryTimer = null;
+        if (_scope != scope) {
+          debugPrint('[Sync] Account changed - dropping the retry scheduled with the old session');
+          return;
+        }
+        unawaited(flushPendingSync(api: api, maxItems: maxItems));
+      });
     } else {
       _flushAgain = false;
     }
@@ -819,5 +832,7 @@ class ProgressSyncService {
 
   void dispose() {
     _connectivitySub?.cancel();
+    _retryTimer?.cancel();
+    _retryTimer = null;
   }
 }
