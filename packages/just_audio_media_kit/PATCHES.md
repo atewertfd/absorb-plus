@@ -6,7 +6,8 @@ that the plugin doesn't expose.
 - `JustAudioMediaKit.mpvProperties` (`lib/just_audio_media_kit.dart`): extra
   mpv properties applied to every player after creation
   (`lib/mediakit_player.dart`). Absorb Plus sets `audio-buffer=1.0` on
-  Windows/Linux against crackling and pops
+  Windows/Linux against crackling and pops, and ffmpeg's HTTP `reconnect`
+  through `stream-lavf-o` so short network drops heal in place
   (`lib/services/desktop_audio_native.dart`).
 
 - mpv log lines go through `debugPrint` (was `print`), so they reach the
