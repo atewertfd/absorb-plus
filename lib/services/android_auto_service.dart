@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api_service.dart';
+import 'tailscale_cover_route.dart';
 import 'server_backend.dart';
 import 'audio_player_service.dart';
 import 'book_search_index.dart';
@@ -485,6 +486,7 @@ class AndroidAutoService {
   static String localCoverUri(String itemId) {
     final ts = _itemUpdatedAt[itemId];
     final base = 'content://$_coverAuthority/cover/$itemId';
+    unawaited(TailscaleCoverRoute.sync()); // fork: provider covers via Tailscale
     return ts != null ? '$base?ts=$ts' : base;
   }
 

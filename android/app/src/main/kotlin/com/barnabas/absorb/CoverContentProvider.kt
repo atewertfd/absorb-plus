@@ -115,7 +115,7 @@ class CoverContentProvider : ContentProvider() {
                 return null
             }
 
-            val cleanUrl = serverUrl.trimEnd('/')
+            val cleanUrl = tailscaleBase(prefs, serverUrl) ?: serverUrl.trimEnd('/')
             val customHeaders = readCustomHeaders(prefs)
             val cacheDir = File(context.cacheDir, "aa_covers")
             if (!cacheDir.exists()) cacheDir.mkdirs()
@@ -268,6 +268,20 @@ class CoverContentProvider : ContentProvider() {
             Log.e(TAG, "Token refresh error", e)
         }
         null
+    }
+
+    // Absorb Plus: with built-in Tailscale on, Dart (tailscale_cover_route.dart)
+    // stores the node's loopback proxy base for the server it belongs to. Used
+    // only while that is still the current server; otherwise go direct.
+    private fun tailscaleBase(
+        prefs: android.content.SharedPreferences,
+        serverUrl: String,
+    ): String? {
+        val from = prefs.getString("flutter.fork_tailscale_cover_from", null)
+        val to = prefs.getString("flutter.fork_tailscale_cover_to", null)
+        if (from.isNullOrEmpty() || to.isNullOrEmpty()) return null
+        if (from.trimEnd('/') != serverUrl.trim().trimEnd('/')) return null
+        return to.trimEnd('/')
     }
 
     private fun readCustomHeaders(
