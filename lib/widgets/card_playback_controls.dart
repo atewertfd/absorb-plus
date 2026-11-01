@@ -172,7 +172,7 @@ class _CardPlaybackControlsState extends State<CardPlaybackControls> {
   /// Original local player controls
   Widget _buildLocalControls() {
     final cs = Theme.of(context).colorScheme;
-    final loading = widget.isStarting || (widget.isActive && widget.player.isLoadingOrBuffering && !widget.player.isPlaying);
+    final loading = widget.isStarting || (widget.isActive && widget.player.isLoadingOrBuffering && (!widget.player.isPlaying || widget.player.isReconnecting));
     final chIcon = _sevenControls ? 30.0 : 34.0;
     final chBox = _sevenControls ? 46.0 : 52.0;
     final skIcon = _sevenControls ? 38.0 : 42.0;

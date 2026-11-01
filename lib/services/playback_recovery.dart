@@ -36,6 +36,28 @@ class PlaybackStallError implements Exception {
   String toString() => 'Stream stalled for ${stalledFor.inSeconds}s';
 }
 
+/// Recorded as the failure when a desktop stream reported its end well
+/// before the end of the book: libmpv can take a dropped connection for the
+/// end of the file and report no error at all.
+class PlaybackEndedEarlyError implements Exception {
+  final double atSec;
+  final double totalSec;
+  const PlaybackEndedEarlyError(this.atSec, this.totalSec);
+
+  /// How far before the end a reported end counts as early. Generous, so a
+  /// book whose listed length is a little off still finishes normally.
+  static const slackSec = 10.0;
+
+  /// True when an end reported at [atSec] of a [totalSec] book can't be the
+  /// real end. An unknown position or length never counts.
+  static bool isEarly(double atSec, double totalSec) =>
+      totalSec > 0 && atSec > 0 && atSec < totalSec - slackSec;
+
+  @override
+  String toString() => 'Stream ended early at ${atSec.toStringAsFixed(1)}s '
+      'of ${totalSec.toStringAsFixed(1)}s';
+}
+
 /// Brings a streamed book back after the connection drops (Wi-Fi blip,
 /// Tailscale reconnect, server restart) instead of leaving it stopped.
 ///
@@ -55,12 +77,20 @@ class PlaybackStallError implements Exception {
 ///   minus [rewind]. Positions seen while waiting are ignored; only a failure
 ///   after a reload had worked moves the target, and only forward. Retries
 ///   never step further back than that.
+/// - [retarget] (the user sought or skipped while it waits) moves the target
+///   to exactly where the user asked, and the recovery carries on.
 /// - [retryNow] (the network came back) skips the rest of the current wait.
-/// - [cancel] (pause, seek, stop, another book) ends everything at once, and
+/// - [cancel] (pause, stop, another book) ends everything at once, and
 ///   a reload that was in flight is ignored when it returns.
 /// - After a reload works the attempt count is kept for [healthyAfter], so a
 ///   connection that keeps flapping keeps backing off instead of reloading
-///   every 2 s.
+///   every 2 s. The give-up clock keeps running through that window too: only
+///   a stream that stays healthy for [healthyAfter] starts a fresh budget.
+/// - A stream that fails again at the spot a reload just went to, before it
+///   played on, is the file and not the network (Android reports a damaged
+///   frame as the same "source error" as a dropped connection). After
+///   [sameSpotLimit] such failures it gives up instead of replaying the same
+///   seconds forever.
 class PlaybackRecovery {
   PlaybackRecovery({
     required this.reload,
@@ -69,6 +99,7 @@ class PlaybackRecovery {
     this.checkStall,
     this.onStart,
     this.onStatus,
+    this.onReloadTimedOut,
     this.log,
     this.schedule = defaultSchedule,
     this.repeatDelay = const Duration(seconds: 30),
@@ -77,6 +108,7 @@ class PlaybackRecovery {
     this.healthyAfter = const Duration(seconds: 30),
     this.rewind = const Duration(seconds: 2),
     this.reloadTimeout = const Duration(minutes: 2),
+    this.sameSpotLimit = 2,
   });
 
   static const defaultSchedule = <Duration>[
@@ -105,6 +137,10 @@ class PlaybackRecovery {
 
   final void Function(PlaybackRecoveryStatus status, Object? lastError)?
       onStatus;
+
+  /// A reload outlived [reloadTimeout] and counts as failed. The service
+  /// must make sure it can't start audio if it finishes later anyway.
+  final void Function()? onReloadTimedOut;
   final void Function(String message)? log;
 
   final List<Duration> schedule;
@@ -118,9 +154,22 @@ class PlaybackRecovery {
   /// stuck load can't hold the recovery forever.
   final Duration reloadTimeout;
 
+  /// Failures right where a reload went (see the class rules) before it
+  /// gives up.
+  final int sameSpotLimit;
+
+  /// How far past the reload target a failure still counts as the same spot.
+  static const sameSpotSlackSec = 5.0;
+
   _Phase _phase = _Phase.idle;
+  // Where the last reload went, and how many reloads in a row failed again
+  // right there.
+  double _lastReloadAt = 0;
+  int _sameSpotFailures = 0;
   int _attempt = 0;
   double _resumeAtSec = 0;
+  // The target is one the user picked (see [retarget]): reload exactly there.
+  bool _exactTarget = false;
   bool _healable = false;
   Object? _lastError;
   // Bumped by cancel/give-up/reset: an attempt that comes back under an old
@@ -154,7 +203,12 @@ class PlaybackRecovery {
   int get attempt => _attempt;
 
   /// Where the next reload goes, in seconds.
-  double get resumeAtSec => math.max(0, _resumeAtSec - _seconds(rewind));
+  double get resumeAtSec => _exactTarget
+      ? _resumeAtSec
+      : math.max(0, _resumeAtSec - _seconds(rewind));
+
+  /// The target is one the user picked while it ran (see [retarget]).
+  bool get hasUserTarget => _exactTarget;
 
   /// Where the stream was when it failed, in seconds: what the player should
   /// report as its position while it waits for a retry.
@@ -173,6 +227,7 @@ class PlaybackRecovery {
   /// the wording other engines use for the same thing.
   static bool isNetworkError(Object error) {
     if (error is PlaybackStallError) return true;
+    if (error is PlaybackEndedEarlyError) return true;
     if (error is TimeoutException) return true;
     var text = error.toString().toLowerCase();
     if (error is PlatformException) {
@@ -206,6 +261,54 @@ class PlaybackRecovery {
     return signs.any(text.contains);
   }
 
+  /// Listening-time clocks (stats accrual, the session's timeListened) are
+  /// wall clocks stamped at the last tick. A reconnect wait is wall time with
+  /// nothing playing, so a clock stamped at [clock] skips the span from
+  /// [stoppedAt] to [resumedAt]: the time listened before the drop still
+  /// counts, the wait doesn't. A clock stamped after [stoppedAt] (a reload
+  /// restarted it) is already past the wait and stays as it is.
+  static DateTime skipSilentSpan(
+    DateTime clock,
+    DateTime stoppedAt,
+    DateTime resumedAt,
+  ) {
+    if (!clock.isBefore(stoppedAt) || !resumedAt.isAfter(stoppedAt)) {
+      return clock;
+    }
+    return clock.add(resumedAt.difference(stoppedAt));
+  }
+
+  /// The error says outright that the connection failed (just_audio passes
+  /// ExoPlayer's cause along), or is one of our own stall or timeout
+  /// verdicts. Those never count toward [sameSpotLimit]: a flapping Wi-Fi
+  /// can fail right after a reload too. A bare "source error", or one whose
+  /// cause is a parser or format problem, can.
+  static bool _namesAConnectionFault(Object error) {
+    if (error is PlaybackStallError ||
+        error is PlaybackEndedEarlyError ||
+        error is TimeoutException) {
+      return true;
+    }
+    var text = error.toString().toLowerCase();
+    if (error is PlatformException) {
+      text = '$text ${error.message?.toLowerCase() ?? ''}';
+    }
+    const signs = [
+      'httpdatasource',
+      'http_data_source',
+      'response code',
+      'unable to connect',
+      'connection',
+      'socket',
+      'timed out',
+      'timeout',
+      'host lookup',
+      'unreachable',
+      'network',
+    ];
+    return signs.any(text.contains);
+  }
+
   /// The stream failed with a network error while the user meant it to play.
   void onFailure(Object error) {
     _lastError = error;
@@ -226,20 +329,38 @@ class PlaybackRecovery {
       case _Phase.verifying:
         _healthyTimer?.cancel();
         _healthyTimer = null;
-        if (pos > _resumeAtSec) _resumeAtSec = pos;
+        final sameSpot = !_namesAConnectionFault(error) &&
+            pos <= _lastReloadAt + sameSpotSlackSec;
+        _sameSpotFailures = sameSpot ? _sameSpotFailures + 1 : 0;
+        if (_sameSpotFailures >= sameSpotLimit) {
+          _log('failed again at ${pos.toStringAsFixed(1)}s, where the last '
+              '$_sameSpotFailures reloads went - the file, not the network');
+          _giveUp();
+          return;
+        }
+        if (pos > _resumeAtSec) {
+          _resumeAtSec = pos;
+          _exactTarget = false;
+        }
         _healable = error is PlaybackStallError;
         _log('stream failed again after a reload ($error)');
         _armDeadline();
+        // Waiting from here on, so whoever reacts to the status already
+        // sees a recovery in progress.
+        _phase = _Phase.waiting;
         onStatus?.call(PlaybackRecoveryStatus.reconnecting, error);
         _scheduleNext();
         return;
       case _Phase.idle:
         _attempt = 0;
+        _sameSpotFailures = 0;
         _resumeAtSec = pos;
+        _exactTarget = false;
         _healable = error is PlaybackStallError;
         _log('stream failed at ${pos.toStringAsFixed(1)}s: $error');
         onStart?.call();
         _armDeadline();
+        _phase = _Phase.waiting; // see the verifying case
         onStatus?.call(PlaybackRecoveryStatus.reconnecting, error);
         _scheduleNext();
         return;
@@ -268,6 +389,18 @@ class PlaybackRecovery {
     _retryTimer = null;
     _log('stream recovered by itself');
     _enterVerifying();
+  }
+
+  /// The user sought or skipped to [sec] while a recovery waits or reloads.
+  /// The next reload goes exactly there (no rewind: the user chose the spot),
+  /// and the waiting, the attempt count and the deadline carry on as they
+  /// were. A reload already in flight still lands where it was going; the
+  /// caller moves it on afterwards.
+  void retarget(double sec) {
+    if (!isRecovering) return;
+    _resumeAtSec = math.max(0, sec);
+    _exactTarget = true;
+    _log('target moved to ${_resumeAtSec.toStringAsFixed(1)}s by the user');
   }
 
   /// The network came back: skip the rest of the current wait.
@@ -339,6 +472,7 @@ class PlaybackRecovery {
     if (gen != _generation || _phase != _Phase.probing) return;
     _phase = _Phase.reloading;
     final at = resumeAtSec;
+    _lastReloadAt = at;
     _log('attempt $_attempt: reloading at ${at.toStringAsFixed(1)}s');
     bool ok;
     try {
@@ -349,6 +483,7 @@ class PlaybackRecovery {
           '${reloadTimeout.inSeconds}s - counting it as failed');
       _lastError = e;
       ok = false;
+      if (gen == _generation) onReloadTimedOut?.call();
     } catch (e) {
       _lastError = e;
       ok = false;
@@ -372,9 +507,8 @@ class PlaybackRecovery {
 
   void _enterVerifying() {
     _phase = _Phase.verifying;
-    _deadlineTimer?.cancel();
-    _deadlineTimer = null;
-    _deadlinePassed = false;
+    // The give-up clock keeps running until the stream has stayed healthy:
+    // a reload that fails again right away mustn't buy another 5 minutes.
     _healthyTimer?.cancel();
     _healthyTimer = Timer(healthyAfter, () {
       _healthyTimer = null;

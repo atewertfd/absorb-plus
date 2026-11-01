@@ -503,6 +503,7 @@ class AuthProvider extends ChangeNotifier {
     _isLegacyToken = false;
     _userJson = null;
     _signedOut = true;
+    AudioPlayerService().cancelRecovery('signed out'); // fork: no reconnect without the sign-in
     AudioPlayerService().useApi(SignedOutPlayback.api());
     SignedOutPlayback.started();
     AndroidAutoService().clearCache();
@@ -1452,6 +1453,7 @@ class AuthProvider extends ChangeNotifier {
     // Stop any active playback
     try {
       final player = AudioPlayerService();
+      player.cancelRecovery('account change'); // fork: even with no item loaded
       if (player.hasBook) {
         await player.pause();
         await player.stop();
@@ -1550,6 +1552,7 @@ class AuthProvider extends ChangeNotifier {
     // Stop current playback
     try {
       final player = AudioPlayerService();
+      player.cancelRecovery('account change'); // fork: even with no item loaded
       if (player.hasBook) {
         await player.pause();
         await player.stop();

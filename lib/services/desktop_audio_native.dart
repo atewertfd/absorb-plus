@@ -48,9 +48,20 @@ Future<void> setDesktopExclusiveAudio(bool on) async {
   _applyMpvProperties(exclusive: on);
 }
 
+/// ffmpeg options for streamed books. `reconnect` lets ffmpeg reopen an
+/// HTTP stream that broke off before its Content-Length (a Wi-Fi blip, a
+/// reset connection) at the same byte offset, a few times over about four
+/// seconds (`reconnect_delay_max`), while mpv plays from its buffer. Without
+/// it libmpv reports such a drop as the end of the file. Longer outages
+/// still fail and reach the app's reconnect. `reconnect_streamed` is left
+/// off on purpose: for a server that doesn't allow ranges it would restart
+/// the file from byte 0.
+const desktopStreamReconnectOptions = 'reconnect=1,reconnect_delay_max=5';
+
 void _applyMpvProperties({required bool exclusive}) {
   JustAudioMediaKit.mpvProperties = {
     'audio-buffer': '1.0',
+    'stream-lavf-o': desktopStreamReconnectOptions,
     if (exclusive && Platform.isWindows) 'audio-exclusive': 'yes',
   };
 }

@@ -17,6 +17,11 @@ void main() {
     await setDesktopExclusiveAudio(true);
     expect(await desktopExclusiveAudio(), Platform.isWindows);
     expect(JustAudioMediaKit.mpvProperties['audio-buffer'], '1.0');
+    // Short network drops heal inside ffmpeg; never from byte 0.
+    expect(JustAudioMediaKit.mpvProperties['stream-lavf-o'],
+        'reconnect=1,reconnect_delay_max=5');
+    expect(JustAudioMediaKit.mpvProperties['stream-lavf-o'],
+        isNot(contains('reconnect_streamed')));
     expect(JustAudioMediaKit.mpvProperties['audio-exclusive'],
         Platform.isWindows ? 'yes' : isNull);
 

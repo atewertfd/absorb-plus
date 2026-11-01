@@ -149,6 +149,26 @@ void main() {
       });
     });
 
+    test('the reconnecting status arrives with the recovery already running', () {
+      fakeAsync((async) {
+        final seen = <bool>[];
+        late final PlaybackRecovery r;
+        r = PlaybackRecovery(
+          lastPosition: () => 60,
+          reload: (_, _) async => true,
+          onStatus: (s, _) {
+            if (s == PlaybackRecoveryStatus.reconnecting) seen.add(r.isRecovering);
+          },
+        );
+        r.onFailure(Exception('Source error'));
+        async.elapse(const Duration(seconds: 2)); // reload works
+        r.onFailure(Exception('Source error')); // fails again while watched
+        expect(seen, [true, true],
+            reason: 'the player reads "playing" off isRecovering when told');
+        r.cancel('test over');
+      });
+    });
+
     test('a working reload ends the recovery quietly', () {
       fakeAsync((async) {
         final h = _Harness(async);
@@ -218,6 +238,32 @@ void main() {
       });
     });
 
+    test('a reload that times out is reported, so it can be abandoned', () {
+      fakeAsync((async) {
+        final never = Completer<bool>();
+        var timedOut = 0;
+        var calls = 0;
+        final r = PlaybackRecovery(
+          lastPosition: () => 10,
+          reload: (_, _) {
+            calls++;
+            return calls == 1 ? never.future : Future.value(false);
+          },
+          onReloadTimedOut: () => timedOut++,
+        );
+        r.onFailure(Exception('Source error'));
+        async.elapse(const Duration(seconds: 2));
+        async.elapse(const Duration(minutes: 1));
+        expect(timedOut, 0);
+        async.elapse(const Duration(minutes: 1));
+        expect(timedOut, 1);
+        async.elapse(const Duration(seconds: 5)); // attempt 2 fails normally
+        expect(calls, 2);
+        expect(timedOut, 1, reason: 'an ordinary failure is not a timeout');
+        r.cancel('test over');
+      });
+    });
+
     test('while the server is being checked the player counts as waiting', () {
       fakeAsync((async) {
         final answer = Completer<bool>();
@@ -282,6 +328,76 @@ void main() {
         async.elapse(const Duration(seconds: 5));
         expect(calls, 2);
         expect(statuses, [PlaybackRecoveryStatus.reconnecting]);
+      });
+    });
+  });
+
+  group('PlaybackRecovery gives up on what a reload cannot fix', () {
+    test('failing again where each reload went is the file: it gives up', () {
+      fakeAsync((async) {
+        final h = _Harness(async);
+        h.position = 100;
+        h.recovery.onFailure(Exception('Source error: ParserException'));
+        async.elapse(const Duration(seconds: 2)); // reload at 98 works
+        h.recovery.onFailure(Exception('Source error: ParserException'));
+        expect(h.recovery.isRecovering, isTrue, reason: 'once may be chance');
+        async.elapse(const Duration(seconds: 5)); // reload at 98 works again
+        expect(h.reloads, hasLength(2));
+        h.recovery.onFailure(Exception('Source error: ParserException'));
+        expect(h.statuses.last, PlaybackRecoveryStatus.gaveUp);
+        expect(h.recovery.isActive, isFalse);
+        async.elapse(const Duration(minutes: 10));
+        expect(h.reloads, hasLength(2), reason: 'no endless replay of 2 s');
+      });
+    });
+
+    test('a connection that drops right after each reload is not the file', () {
+      fakeAsync((async) {
+        final h = _Harness(async);
+        h.position = 100;
+        const drop = 'Source error: HttpDataSource\$HttpDataSourceException: '
+            'java.net.SocketTimeoutException';
+        h.recovery.onFailure(Exception(drop));
+        for (var i = 1; i <= 4; i++) {
+          async.elapse(const Duration(seconds: 25)); // reload worked
+          h.recovery.onFailure(Exception(drop)); // same spot, network again
+          expect(h.recovery.isRecovering, isTrue, reason: 'drop $i');
+        }
+        expect(h.statuses, isNot(contains(PlaybackRecoveryStatus.gaveUp)));
+      });
+    });
+
+    test('a reload that played on before failing is not the same spot', () {
+      fakeAsync((async) {
+        final h = _Harness(async);
+        h.position = 100;
+        h.recovery.onFailure(Exception('Source error'));
+        for (var i = 1; i <= 4; i++) {
+          async.elapse(const Duration(seconds: 20)); // reload worked
+          h.position = 100.0 + 10 * i; // played on, then dropped again
+          h.recovery.onFailure(Exception('Source error'));
+          expect(h.recovery.isRecovering, isTrue, reason: 'failure $i');
+        }
+        expect(h.statuses, isNot(contains(PlaybackRecoveryStatus.gaveUp)));
+      });
+    });
+
+    test('reloads that keep failing soon after do not reset the 5 minutes', () {
+      fakeAsync((async) {
+        final h = _Harness(async);
+        h.position = 100;
+        h.recovery.onFailure(Exception('Source error'));
+        var gaveUpAt = Duration.zero;
+        for (var i = 1; i <= 40 && h.recovery.isActive; i++) {
+          async.elapse(const Duration(seconds: 25)); // reload worked
+          if (!h.recovery.isActive) break;
+          h.position += 20; // plays on a little, then drops again
+          h.recovery.onFailure(Exception('Source error'));
+          if (!h.recovery.isActive) gaveUpAt = async.elapsed;
+        }
+        expect(h.statuses.last, PlaybackRecoveryStatus.gaveUp);
+        expect(gaveUpAt, greaterThanOrEqualTo(const Duration(minutes: 5)));
+        expect(gaveUpAt, lessThan(const Duration(minutes: 6)));
       });
     });
   });
@@ -394,6 +510,69 @@ void main() {
     });
   });
 
+  group('PlaybackRecovery follows seeks made while it runs', () {
+    test('a seek while waiting moves the reload there, exactly', () {
+      fakeAsync((async) {
+        final h = _Harness(async)..reachable = false;
+        h.position = 100;
+        h.recovery.onFailure(Exception('Source error'));
+        async.elapse(const Duration(seconds: 2)); // probe 1 fails
+        h.recovery.retarget(400);
+        expect(h.recovery.isRecovering, isTrue, reason: 'not cancelled');
+        expect(h.recovery.failedAtSec, 400, reason: 'the player shows it');
+        expect(h.recovery.resumeAtSec, 400, reason: 'no rewind on a chosen spot');
+        expect(h.recovery.hasUserTarget, isTrue);
+        h.reachable = true;
+        async.elapse(const Duration(seconds: 5)); // attempt 2 at 7 s
+        expect(h.reloads.single.at, 400);
+        expect(h.reloads.single.when.inSeconds, 7, reason: 'backoff unchanged');
+        expect(h.starts, 1);
+      });
+    });
+
+    test('a seek during a failing reload sends the next attempt there', () {
+      fakeAsync((async) {
+        final h = _Harness(async)
+          ..reloadSucceeds = false
+          ..reloadTakes = const Duration(seconds: 3);
+        h.position = 100;
+        h.recovery.onFailure(Exception('Source error'));
+        async.elapse(const Duration(seconds: 3)); // reload 1 loading
+        expect(h.recovery.isReloading, isTrue);
+        h.recovery.retarget(50);
+        async.elapse(const Duration(seconds: 2)); // reload 1 fails at 5 s
+        async.elapse(const Duration(seconds: 5));
+        expect(h.reloads.map((r) => r.at), [98, 50]);
+      });
+    });
+
+    test('after a retargeted reload worked, a later failure ahead rewinds again', () {
+      fakeAsync((async) {
+        final h = _Harness(async)..reachable = false;
+        h.position = 100;
+        h.recovery.onFailure(Exception('Source error'));
+        h.recovery.retarget(300);
+        h.reachable = true;
+        async.elapse(const Duration(seconds: 2)); // reload at 300 works
+        expect(h.reloads.single.at, 300);
+        h.position = 340;
+        h.recovery.onFailure(Exception('Source error'));
+        async.elapse(const Duration(seconds: 5));
+        expect(h.reloads.last.at, 338);
+      });
+    });
+
+    test('a seek with nothing to recover does nothing', () {
+      fakeAsync((async) {
+        final h = _Harness(async);
+        h.recovery.retarget(500);
+        async.elapse(const Duration(minutes: 1));
+        expect(h.reloads, isEmpty);
+        expect(h.recovery.isActive, isFalse);
+      });
+    });
+  });
+
   group('PlaybackRecovery stall detection', () {
     test('buffering for 15 s asks, and a failed verdict starts a recovery', () {
       fakeAsync((async) {
@@ -478,6 +657,57 @@ void main() {
     });
   });
 
+  group('PlaybackEndedEarlyError.isEarly', () {
+    test('an end well before the length is early', () {
+      expect(PlaybackEndedEarlyError.isEarly(33000, 36000), isTrue);
+      expect(PlaybackEndedEarlyError.isEarly(35980, 36000), isTrue);
+      expect(PlaybackEndedEarlyError.isEarly(5, 36000), isTrue);
+    });
+
+    test('an end within 10 s of the length is the real end', () {
+      expect(PlaybackEndedEarlyError.isEarly(35990, 36000), isFalse);
+      expect(PlaybackEndedEarlyError.isEarly(35999.5, 36000), isFalse);
+      expect(PlaybackEndedEarlyError.isEarly(36004, 36000), isFalse);
+    });
+
+    test('an unknown position or length is never early', () {
+      expect(PlaybackEndedEarlyError.isEarly(0, 36000), isFalse);
+      expect(PlaybackEndedEarlyError.isEarly(1200, 0), isFalse);
+    });
+
+    test('an early end is reloaded like any dropped connection', () {
+      fakeAsync((async) {
+        final h = _Harness(async);
+        h.position = 33000;
+        h.recovery.onFailure(const PlaybackEndedEarlyError(33000, 36000));
+        expect(h.recovery.isStallOnly, isFalse, reason: 'needs a reload');
+        async.elapse(const Duration(seconds: 2));
+        expect(h.reloads.single.at, 32998);
+      });
+    });
+  });
+
+  group('PlaybackRecovery.skipSilentSpan', () {
+    final t0 = DateTime(2026, 11, 1, 12);
+    DateTime at(int s) => t0.add(Duration(seconds: s));
+
+    test('a clock from before the drop skips the whole wait', () {
+      // Last tick at 0 s, dropped at 4 s, back at 304 s: 4 s listened.
+      final clock = PlaybackRecovery.skipSilentSpan(at(0), at(4), at(304));
+      expect(clock, at(300));
+      expect(at(304).difference(clock), const Duration(seconds: 4));
+    });
+
+    test('a clock restarted during the wait is left alone', () {
+      expect(PlaybackRecovery.skipSilentSpan(at(30), at(4), at(304)), at(30));
+    });
+
+    test('no span to skip leaves the clock alone', () {
+      expect(PlaybackRecovery.skipSilentSpan(at(0), at(4), at(4)), at(0));
+      expect(PlaybackRecovery.skipSilentSpan(at(0), at(4), at(2)), at(0));
+    });
+  });
+
   group('PlaybackRecovery.isNetworkError', () {
     test('network failures', () {
       for (final e in <Object>[
@@ -488,6 +718,7 @@ void main() {
         Exception('SocketException: Network is unreachable'),
         TimeoutException('load'),
         const PlaybackStallError(Duration(seconds: 15)),
+        const PlaybackEndedEarlyError(3600, 36000),
         Exception('Failed to open https://abs.example/api/items/x/file/1.'),
       ]) {
         expect(PlaybackRecovery.isNetworkError(e), isTrue, reason: '$e');

@@ -48,6 +48,7 @@ import 'seek_undo.dart';
 export 'player_settings.dart';
 
 part '_stream_recovery.dart';
+part '_playback_guards.dart';
 
 String playbackDownloadKey(String itemId, String? episodeId) =>
     episodeKeyFor(itemId, episodeId);
@@ -374,7 +375,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   }
 
   PlaybackState _transformEvent(PlaybackEvent event) {
-    final playPause = _player.playing ? MediaControl.pause : MediaControl.play;
+    final playPause = _playingOrReconnecting ? MediaControl.pause : MediaControl.play;
 
     final rewindControl = MediaControl(
       androidIcon: 'drawable/ic_skip_back',
@@ -462,10 +463,10 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
           ProcessingState.ready: AudioProcessingState.ready,
           ProcessingState.completed: AudioProcessingState.completed,
         }[_player.processingState]!;
-        if (_advanceBuffering) return AudioProcessingState.buffering;
+        if (_advanceBuffering || _reconnecting) return AudioProcessingState.buffering;
         return mapped;
       }(),
-      playing: _player.playing,
+      playing: _playingOrReconnecting,
       updatePosition: _speedAdjustedPosition(),
       bufferedPosition: _player.bufferedPosition,
       // Report speed as 1.0 because duration and position are already
@@ -977,7 +978,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
               return _otherAudioActive();
             }
             if (kc == keycodeMediaPause) {
-              if (_player.playing) {
+              if (_playingOrReconnecting) {
                 debugPrint('[Handler] → single press (MEDIA_PAUSE) → PAUSE');
                 await pause();
               } else if (_isCarPackage(pkg) ||
@@ -1012,7 +1013,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
                   '[Handler] → single press (MEDIA_PLAY while playing) → no-op',
                 );
               }
-            } else if (_player.playing) {
+            } else if (_playingOrReconnecting) {
               debugPrint('[Handler] → single press → PAUSE');
               await pause();
             } else if (await meantForOtherAudio()) {
@@ -1950,13 +1951,13 @@ class AudioPlayerService extends ChangeNotifier {
       _currentItemId != null &&
       (_player?.processingState ?? ProcessingState.idle) !=
           ProcessingState.idle;
-  bool get isPlaying => _player?.playing ?? false;
+  bool get isPlaying => (_player?.playing ?? false) || _recovery.wantsToPlay;
 
   /// True while [playItem] is setting up a new audio source.
   bool _isLoadingNewItem = false;
   bool get isLoadingNewItem => _isLoadingNewItem;
   bool get isLoadingOrBuffering {
-    if (_isLoadingNewItem) return true;
+    if (_isLoadingNewItem || _recovery.wantsToPlay) return true;
     final s = _player?.processingState;
     return s == ProcessingState.loading || s == ProcessingState.buffering;
   }
@@ -2896,6 +2897,7 @@ class AudioPlayerService extends ChangeNotifier {
   void _seekTimedOut() => debugPrint('[Player] Seek got no answer in ${_seekCap.inSeconds}s - carrying on');
 
   Future<void> _seekAbsolute(double absoluteSeconds) async {
+    if (_recovery.takeUserSeek(absoluteSeconds)) return; // fork: reconnecting
     if (_player == null) return;
     _recovery.onSeek();
     final swap = _pauseSwap;
@@ -6352,7 +6354,7 @@ class AudioPlayerService extends ChangeNotifier {
         _recovery.onProcessingState(state);
         if (state == ProcessingState.completed &&
             _currentItemId != null &&
-            !_recovery.holdsCompletion) {
+            !_recovery.holdCompletion()) {
           if (_preloadedNextBook != null) {
             debugPrint(
               '[PreBuffer] processingState=completed with pre-buffer loaded — firing auto-queue advance',
@@ -6882,7 +6884,7 @@ class AudioPlayerService extends ChangeNotifier {
     return p.position >= d - const Duration(seconds: 2);
   }
 
-  Future<void> _onPlaybackComplete({bool userRequested = false}) async {
+  Future<void> _completePlayback({bool userRequested = false}) async { // fork: via _onPlaybackComplete
     // Alpha: captures completion path choice for GH #186 (book restart bug).
     // Re-entry attempts are logged too so we can see if completion fires
     // multiple times from different signals (processingState, position-jump,
@@ -7261,6 +7263,7 @@ class AudioPlayerService extends ChangeNotifier {
   Future<void> _syncToServer(Duration pos, {int? timeListenedOverride}) async {
     if (_api == null || _playbackSessionId == null) return;
     if (_isCachedStartReconcilePending) return;
+    if (_recovery.policy.isRecovering) return; // fork: no listening while reconnecting
     final ct = pos.inMilliseconds / 1000.0;
     // Incomplete download: stuck at the truncated file's end. Don't push that
     // clamped position to the server (it would move real progress backward) or
@@ -7440,8 +7443,8 @@ class AudioPlayerService extends ChangeNotifier {
   /// away - if you switched devices you'll open the app, and a jump a few
   /// seconds into playback is worse than starting where you paused.
   Future<void> play({String? logDetail, bool fromUi = false}) async {
-    _recovery.userAction(_RecoveryUserAction.play);
     _pauseRequested = false;
+    if (_recovery.retryOnPlay()) return; // fork: reconnecting - retry now
     // A second Play while the first is still moving the source onto a live
     // session raced it: it pressed play on a half-loaded player and ExoPlayer
     // failed with "Unexpected runtime error" (GH #344). The first one plays
@@ -7614,7 +7617,7 @@ class AudioPlayerService extends ChangeNotifier {
           _currentItemId, Duration(milliseconds: (resumeAt * 1000).round()));
       if (undoTo != null && !adoptedServerPos) {
         await moveTo(undoTo.inMilliseconds / 1000.0,
-            () => seekTo(undoTo, logDetail: 'sleep rewind undone'));
+            () => seekTo(undoTo, logDetail: 'sleep rewind undone', offerUndo: false));
         // seekTo flags a paused seek; this one is ours, not the user's, and
         // the server check has already run, so don't carry it to next resume.
         _seekedWhilePaused = false;
@@ -8370,6 +8373,7 @@ class AudioPlayerService extends ChangeNotifier {
 
   Future<void> stop({bool keepSleepTimer = false}) async {
     _recovery.userAction(_RecoveryUserAction.stop);
+    _abandonLoadingStart(); // fork: a start still loading must not play after this
     _pauseStopTimer?.cancel();
     _pauseStopTimer = null;
     _endAdvanceBuffering();
@@ -8448,6 +8452,7 @@ class AudioPlayerService extends ChangeNotifier {
   /// Stop playback without saving progress — used by reset progress.
   Future<void> stopWithoutSaving() async {
     _recovery.userAction(_RecoveryUserAction.stopWithoutSaving);
+    _abandonLoadingStart(); // fork: see stop()
     _endAdvanceBuffering();
     // Close server session without syncing position
     if (_playbackSessionId != null && _api != null) {
