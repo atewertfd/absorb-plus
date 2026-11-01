@@ -102,6 +102,11 @@ void main() {
           if (path.contains('book-gone')) {
             return http.Response('not found', 404);
           }
+          // Audiobookshelf answers a local session for a missing item 500.
+          if (path == '/api/session/local' &&
+              request.body.contains('book-gone')) {
+            return http.Response('Media item not found', 500);
+          }
           if (request.method == 'GET') {
             return http.Response(jsonEncode({'currentTime': 0}), 200);
           }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'api_service.dart';
 import 'download_service.dart';
+import 'offline_listening_upload.dart';
 import 'scoped_prefs.dart';
 import 'streaming_pending_ledger.dart';
 import 'sync_logic.dart';
@@ -683,8 +684,8 @@ class ProgressSyncService {
     }
   }
 
-  /// Flush accumulated offline listening time to the server by creating
-  /// a session, syncing the accumulated time, and closing it.
+  /// Flush accumulated offline listening time to the server as a local
+  /// session (see OfflineListeningUpload).
   /// Called externally (e.g. from library_provider) and also internally
   /// from flushPendingSync's retry loop.
   Future<void> flushOfflineListeningTime({required ApiService api}) async {
@@ -754,28 +755,11 @@ class ProgressSyncService {
         }
 
         try {
-          final isCompound = itemId.length > 36;
-          final apiItemId = isCompound ? itemId.substring(0, 36) : itemId;
-          final episodeId = isCompound ? itemId.substring(37) : null;
-
-          final sessionData = episodeId != null
-              ? await api.startEpisodePlaybackSession(apiItemId, episodeId)
-              : await api.startPlaybackSession(apiItemId);
-
-          var synced = false;
-          if (sessionData != null) {
-            final sid = sessionData['id'] as String?;
-            if (sid != null) {
-              synced = await api.syncPlaybackSession(
-                sid,
-                currentTime: currentTime,
-                duration: duration,
-                timeListened: reported,
-              );
-              await api.closePlaybackSession(sid);
-              if (synced) debugPrint('[Sync] Flushed ${reported}s offline listening for $itemId');
-            }
-          }
+          // Absorb Plus: an idempotent local session, not a fresh /play one
+          // (offline_listening_upload.dart says why).
+          final synced = await OfflineListeningUpload.send(api, itemId,
+              seconds: reported, currentTime: currentTime, duration: duration);
+          if (synced) debugPrint('[Sync] Flushed ${reported}s offline listening for $itemId');
           // Not sent: keep the time for the next run instead of losing it.
           // One item the server refuses (e.g. deleted) must not hold back the
           // rest; several in a row means the server is down, so stop.
@@ -800,6 +784,7 @@ class ProgressSyncService {
             await ScopedPrefs.remove(key);
             flushed.add(itemId);
           }
+          await OfflineListeningUpload.settled(itemId);
         } catch (e) {
           debugPrint('[Sync] Failed to flush offline listening for $itemId: $e');
           final msg = e.toString();
