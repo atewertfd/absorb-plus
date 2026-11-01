@@ -40,7 +40,17 @@ part 'abs_admin_api.dart';
 class LocalSessionResult {
   final bool ok;
   final bool serverTooOld;
-  const LocalSessionResult({required this.ok, required this.serverTooOld});
+  /// Absorb Plus: a reading session held back because the server has no
+  /// progress row for the book (a known 404, not a failed read).
+  final bool noProgressRow;
+  /// Absorb Plus, batch replays: indexes into the list sent that are done
+  /// with (taken, or turned away by a batch the server answered), and reading
+  /// sessions held back for want of a progress row. One unsendable session
+  /// no longer keeps every other one queued.
+  final Set<int> settled;
+  final Set<int> withoutRow;
+  const LocalSessionResult({required this.ok, required this.serverTooOld,
+      this.noProgressRow = false, this.settled = const {}, this.withoutRow = const {}});
 }
 
 class MediaUploadFile {
@@ -2490,8 +2500,9 @@ class ApiService {
   /// are stamped here so they can't be omitted.
   Future<LocalSessionResult> syncLocalSession(Map<String, dynamic> session) async {
     final reading = session['keepProgress'] == true;
-    final kept = await _besideProgress(session);
-    if (kept == null) return const LocalSessionResult(ok: false, serverTooOld: false);
+    final beside = await _besideProgressRead(session);
+    final kept = beside.out;
+    if (kept == null) return LocalSessionResult(ok: false, serverTooOld: false, noProgressRow: beside.noRow);
     session = kept;
     try {
       final body = {
@@ -2520,16 +2531,32 @@ class ApiService {
       List<Map<String, dynamic>> sessions) async {
     // Reading time goes one at a time: the batch carries a single device.
     var readingOk = true;
-    for (final s in sessions.where((s) => s['keepProgress'] == true)) {
-      if (!(await syncLocalSession(s)).ok) readingOk = false;
+    final settled = <int>{};
+    final withoutRow = <int>{};
+    final audio = <int>[];
+    for (var i = 0; i < sessions.length; i++) {
+      if (sessions[i]['keepProgress'] != true) {
+        audio.add(i);
+        continue;
+      }
+      final r = await syncLocalSession(sessions[i]);
+      if (r.ok) {
+        settled.add(i);
+      } else {
+        readingOk = false;
+        if (r.noProgressRow) withoutRow.add(i);
+      }
     }
     final kept = <Map<String, dynamic>>[];
-    for (final s in sessions.where((s) => s['keepProgress'] != true)) {
-      final k = await _besideProgress(s);
+    for (final i in audio) {
+      final k = await _besideProgress(sessions[i]);
       if (k != null) kept.add(k);
     }
     sessions = kept;
-    if (sessions.isEmpty) return LocalSessionResult(ok: readingOk, serverTooOld: false);
+    if (sessions.isEmpty) {
+      return LocalSessionResult(ok: readingOk, serverTooOld: false,
+          settled: {...settled, ...audio}, withoutRow: withoutRow);
+    }
     try {
       final body = {
         'sessions': sessions
@@ -2544,10 +2571,12 @@ class ApiService {
       return LocalSessionResult(
         ok: resp.statusCode == 200 && readingOk,
         serverTooOld: resp.statusCode == 404 || resp.statusCode == 501,
+        settled: {...settled, if (resp.statusCode == 200) ...audio},
+        withoutRow: withoutRow,
       );
     } catch (e) {
       debugPrint('[API] syncLocalSessionsAll (${sessions.length}) error: ${e.runtimeType}: $e');
-      return const LocalSessionResult(ok: false, serverTooOld: false);
+      return LocalSessionResult(ok: false, serverTooOld: false, settled: settled, withoutRow: withoutRow);
     }
   }
 
@@ -2558,13 +2587,20 @@ class ApiService {
   /// row is newer, so the session is dated just before the row's last save:
   /// the time is logged and the progress is left as it is. Null when there
   /// is no row to keep yet for a reading session.
-  Future<Map<String, dynamic>?> _besideProgress(Map<String, dynamic> session) async {
+  Future<Map<String, dynamic>?> _besideProgress(Map<String, dynamic> session) async =>
+      (await _besideProgressRead(session)).out;
+
+  /// [_besideProgress], plus whether a held-back reading session waited on a
+  /// known missing row (rather than a failed read).
+  Future<({Map<String, dynamic>? out, bool noRow})> _besideProgressRead(
+      Map<String, dynamic> session) async {
     final reading = session['keepProgress'] == true;
     final out = Map<String, dynamic>.from(session)..remove('keepProgress');
     final id = session['libraryItemId'];
     final narration = id is String ? NarratedBooks.duration(id) : null;
-    if (isBookOrbit || id is! String || (!reading && narration == null)) return out;
-    var row = await getItemProgress(id);
+    if (isBookOrbit || id is! String || (!reading && narration == null)) return (out: out, noRow: false);
+    final read = await readItemProgress(id);
+    var row = read.row;
     if (row == null && reading) debugPrint('[Session] $id: no progress row yet - reading time waits');
     if (row == null && narration != null) {
       try {
@@ -2574,7 +2610,7 @@ class ApiService {
       row = await getItemProgress(id);
     }
     final rowAt = (row?['lastUpdate'] as num?)?.toInt();
-    if (rowAt == null) return reading ? null : out;
+    if (rowAt == null) return (out: reading ? null : out, noRow: reading && read.known);
     if (narration != null) out['duration'] = narration;
     final at = (session['updatedAt'] as num?)?.toInt() ?? DateTime.now().millisecondsSinceEpoch;
     if (at >= rowAt) out['updatedAt'] = rowAt - 1000;
@@ -2582,7 +2618,7 @@ class ApiService {
       debugPrint('[Session] $id: ${reading ? 'reading time' : 'narration'} session ${session['id']} '
           'logged beside the progress row (${at >= rowAt ? 'dated before it' : 'already older'})');
     }
-    return out;
+    return (out: out, noRow: false);
   }
 
   static final Set<String> _besideLogged = {};

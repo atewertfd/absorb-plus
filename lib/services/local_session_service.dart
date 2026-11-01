@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'api_service.dart';
 import 'download_service.dart';
+import 'local_session_queue.dart';
 import 'progress_sync_service.dart';
 import 'scoped_prefs.dart';
 
@@ -323,7 +324,13 @@ class LocalSessionService {
 
   /// A finished session that couldn't be sent (reading time logged while
   /// offline), queued to go with the next replay.
-  Future<void> queue(Map<String, dynamic> session) => _enqueue(session);
+  Future<void> queue(Map<String, dynamic> session) async {
+    // Absorb Plus: another account's download is not this server's to log,
+    // and its queued session could never be placed.
+    final itemId = session['libraryItemId'];
+    if (itemId is String && DownloadService().isFromOtherAccount(itemId)) return;
+    await _enqueue(session);
+  }
 
   /// Clear the active session (stop / finish / item change). When [pushed] is
   /// false (offline, or the push failed) it's queued for replay; when true it's
@@ -389,8 +396,12 @@ class LocalSessionService {
         debugPrint('[LocalSession] Server lacks /api/session/local-all — falling back to /play');
         _localUnsupported = true;
         await legacyAll();
+      } else {
+        // Absorb Plus: settle each session on its own (local_session_queue.dart).
+        await applyReplayOutcome(_kPending,
+            settleReplay(sessionRaw, sessions, result, alsoDrop: done));
       }
-      // Network failure: leave the queue intact for the next trigger.
+      // Network failure: leave the rest of the queue for the next trigger.
     } finally {
       _flushing = false;
     }
