@@ -468,14 +468,20 @@ class _AppShellState extends State<AppShell>
     final enabled = await PlayerSettings.getPodcastTabEnabled();
     final libId = await PlayerSettings.getPodcastTabLibraryId();
     if (!mounted) return;
-    if (enabled != _podcastTabEnabled || libId != _podcastTabLibraryId) {
+    final changed = enabled != _podcastTabEnabled || libId != _podcastTabLibraryId;
+    if (changed) {
       setState(() {
         _podcastTabEnabled = enabled;
         _podcastTabLibraryId = libId;
       });
     }
-    _restoreBookLibraryForCurrentTab(restoreLibraryPage: true);
+    final firstLoad = !_podcastTabPrefsLoaded; // fork
+    _podcastTabPrefsLoaded = true;
+    if (shouldRecheckLibraryAfterSettings(firstLoad: firstLoad, podcastTabChanged: changed)) {
+      _restoreBookLibraryForCurrentTab(restoreLibraryPage: true);
+    }
   }
+  bool _podcastTabPrefsLoaded = false;
 
   bool _podcastsShown(LibraryProvider lib) =>
       _podcastTabEnabled &&
