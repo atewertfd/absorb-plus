@@ -35,7 +35,14 @@ class ScopedPrefs {
     'widget_item_id', 'widget_episode_id',
     'cached_stats', 'cached_sessions',
     'update_last_check', 'update_dismissed_version',
+    // Absorb Plus: the refresh token is global; a scoped copy was never
+    // read, rotated or deleted, so it outlived sign-out in plain prefs.
+    'refresh_token', 'token_saved_at', 'wear_token_pair_pending',
   };
+
+  /// Absorb Plus: the scope-suffixed copies earlier migrations made of the
+  /// global keys holding a credential. Nothing reads them.
+  static const _strayCredentialCopies = <String>['refresh_token'];
 
   /// One-time migration: copy unscoped settings to the active scope.
   /// This handles the case where settings were written before scope was
@@ -46,6 +53,12 @@ class ScopedPrefs {
     if (scope.isEmpty) return;
 
     final prefs = await SharedPreferences.getInstance();
+    // Scope keys can hold a colon themselves (host:port), so match the tail.
+    for (final key in prefs.getKeys().toList()) {
+      if (_strayCredentialCopies.any((k) => key.endsWith(':$k'))) {
+        await prefs.remove(key);
+      }
+    }
     final flag = '$scope:_scope_migrated';
     if (prefs.getBool(flag) == true) return;
 
