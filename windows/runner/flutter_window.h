@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "win32_window.h"
+#include "jump_list.h"
 #include "windows_shell.h"
 
 // A window that does nothing but host a Flutter view.
@@ -40,6 +41,9 @@ class FlutterWindow : public Win32Window {
 
   // Absorb Plus desktop integration (tray, taskbar, quit flow).
   std::unique_ptr<WindowsShell> shell_;
+
+  // Taskbar jump list (Resume, Continue listening).
+  std::unique_ptr<JumpList> jump_list_;
 };
 
 #endif  // RUNNER_FLUTTER_WINDOW_H_

@@ -48,6 +48,7 @@ import '../services/ebook_cache.dart';
 import '../widgets/action_pill.dart';
 import '../widgets/absorbing_nav_icon.dart';
 import '../widgets/book_detail_sheet.dart' show showBookDetailSheet;
+import '../widgets/windows_jump_list_opener.dart'; // Absorb Plus
 import '../widgets/ebook_router.dart';
 import '../widgets/nav_hold_options.dart';
 import '../widgets/sleep_timer_sheet.dart';
@@ -405,6 +406,7 @@ class _AppShellState extends State<AppShell>
     EreaderVolumeNav.ensureHandler();
     PlayerScreenWake.start();
     unawaited(WindowsShell.instance.start());
+    _jumpListLaunch = attachWindowsJumpList(context); // Absorb Plus
     if (!widget.startOnAbsorbing) _loadStartScreen();
     _ensurePageBuilt(_currentIndex);
     _syncPlayerOnScreen();
@@ -540,11 +542,13 @@ class _AppShellState extends State<AppShell>
   }
 
   StreamSubscription<ServerNotification>? _incomingNotifications;
+  void Function(JumpListLaunch)? _jumpListLaunch; // Absorb Plus
 
   @override
   void dispose() {
     _updateTimer?.cancel();
     _incomingNotifications?.cancel();
+    detachWindowsJumpList(_jumpListLaunch); // Absorb Plus
     _fadeController.dispose();
     _detachNavBarListener();
     _navBarAnimController.dispose();

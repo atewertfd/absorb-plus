@@ -8,9 +8,11 @@
 #include <windows.h>
 #include <wrl/client.h>
 
+#include <functional>
 #include <memory>
 #include <optional>
 #include <string>
+#include <vector>
 
 #include "win32_window.h"
 
@@ -20,6 +22,8 @@ struct LaunchOptions {
   bool minimized = false;
   // --probe: test target; separate registry key, Run value and instance.
   bool probe = false;
+  // The command line, for the jump list (--open-item=..., --resume).
+  std::vector<std::string> arguments;
 };
 
 // Windows desktop integration for Absorb Plus (fork-owned): clean quit that
@@ -46,6 +50,13 @@ class WindowsShell {
   // Ends the process without running native plugin teardown. See
   // FinishExit in windows_shell.cpp for why.
   [[noreturn]] void ExitNow(UINT exit_code);
+
+  // Gets the command line of a second launch that this copy took over
+  // (jump list entries), after the window came forward.
+  void SetForwardedLaunchHandler(
+      std::function<void(const std::wstring&)> handler) {
+    forwarded_launch_handler_ = std::move(handler);
+  }
 
  private:
   using Channel = flutter::MethodChannel<flutter::EncodableValue>;
@@ -88,6 +99,7 @@ class WindowsShell {
   LaunchOptions launch_;
   std::unique_ptr<Channel> shell_channel_;
   std::unique_ptr<Channel> screen_wake_channel_;
+  std::function<void(const std::wstring&)> forwarded_launch_handler_;
 
   UINT taskbar_created_message_ = 0;
   UINT taskbar_button_created_message_ = 0;
