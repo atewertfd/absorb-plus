@@ -21,6 +21,7 @@ import '../services/signed_out_playback.dart';
 import '../services/user_account_service.dart';
 import '../services/home_widget_service.dart';
 import '../services/wear_auth_service.dart';
+import '../services/library_item_request_cache.dart';
 import '../l10n/app_localizations.dart';
 import '../main.dart' show rootNavigatorKey;
 import '../widgets/overlay_toast.dart';
@@ -1446,6 +1447,7 @@ class AuthProvider extends ChangeNotifier {
     if (revokeServerSession) await adoptCompanionTokens();
     _accountGen++;
     _signedOut = false;
+    LibraryItemRequestCache.instance.clear();
 
     // Stop any active playback
     try {
@@ -1542,6 +1544,7 @@ class AuthProvider extends ChangeNotifier {
   Future<bool> switchToAccount(SavedAccount account) async {
     if (account.token.isEmpty) return false;
     final gen = ++_accountGen;
+    LibraryItemRequestCache.instance.clear();
     await adoptCompanionTokens();
 
     // Stop current playback

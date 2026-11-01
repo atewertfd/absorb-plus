@@ -1816,6 +1816,11 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   void _onRemoteProgressUpdated(Map<String, dynamic> mp) {
+    // Absorb Plus: cached item answers carry progress.
+    final progressItemId = mp['libraryItemId'];
+    if (progressItemId is String) {
+      LibraryItemRequestCache.instance.forgetItem(progressItemId);
+    }
     final itemId = mp['libraryItemId'] as String?;
     final episodeId = mp['episodeId'] as String?;
     if (itemId == null) return;
@@ -1933,28 +1938,54 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     }
     // Invalidate cached session metadata - track URLs may have changed
     if (id != null) SessionCache.clear(itemId: id);
-    loadPersonalizedView(force: true);
+    if (id != null) LibraryItemRequestCache.instance.forgetItem(id);
+    _requestHomeReloadFor(data);
     _checkSubscribedPodcastUpdate(data);
   }
 
   void _onRemoteItemRemoved(Map<String, dynamic> data) {
     final id = data['id'] as String?;
     if (id != null) SessionCache.clear(itemId: id);
-    loadPersonalizedView(force: true);
+    if (id != null) LibraryItemRequestCache.instance.forgetItem(id);
+    _requestHomeReloadFor(data);
   }
 
   void _onRemoteSeriesUpdated() {
-    loadPersonalizedView(force: true);
-    (this as LibraryProvider).loadSeries();
+    _socketRefresh.request(home: true, series: true);
   }
 
   void _onRemoteCollectionUpdated() {
-    loadPersonalizedView(force: true);
-    loadCollections();
+    _socketRefresh.request(home: true, collections: true);
   }
 
   void _onRemotePlaylistUpdated() {
-    loadPlaylists();
+    loadPlaylists(force: true);
+  }
+
+  // Absorb Plus: a scan's burst of item events becomes one Home reload, and
+  // only for the library on screen (another library's cached Home is just
+  // marked stale).
+  late final SocketRefreshCoalescer _socketRefresh =
+      SocketRefreshCoalescer(onFlush: (pending) {
+    if (pending.home) loadPersonalizedView(force: true);
+    if (pending.series) (this as LibraryProvider).loadSeries();
+    if (pending.collections) loadCollections(force: true);
+  });
+
+  /// Sign-out, account switch or dispose: nothing pending carries over, and
+  /// the next account's lists are fetched, not reused.
+  void _resetSocketRefresh() {
+    _socketRefresh.cancel();
+    _playlistsCooldown.clear();
+    _collectionsCooldown.clear();
+  }
+
+  void _requestHomeReloadFor(Map<String, dynamic> data) {
+    if (itemEventIsForLibrary(data, _selectedLibraryId)) {
+      _socketRefresh.request(home: true);
+    } else {
+      _sectionsFetchedAt.remove(data['libraryId']);
+    }
   }
 
   void _onRemoteUserUpdated(Map<String, dynamic> data) {
@@ -2456,6 +2487,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       await existing;
       return;
     }
+    if (!force && _playlistsCooldown.isFresh(libId, _playlists)) return;
 
     final inFlight = _doLoadPlaylists(libId);
     _playlistsInFlight = inFlight;
@@ -2478,7 +2510,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       // Keep whatever we already had when the request fails, rather than
       // blanking the shelves over one bad response.
       final loaded = await _api!.getLibraryPlaylists(libId);
-      if (loaded != null && _selectedLibraryId == libId) _playlists = loaded;
+      if (loaded != null && _selectedLibraryId == libId) {
+        _playlists = loaded;
+        _playlistsCooldown.markFetched(libId, loaded);
+      }
       debugPrint('[Library] playlists for $libId: ${loaded?.length ?? 'failed'}');
     } catch (e) {
       debugPrint('[Library] playlists for $libId failed: $e');
@@ -2577,6 +2612,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       await existing;
       return;
     }
+    if (!force && _collectionsCooldown.isFresh(libId, _collections)) return;
 
     final inFlight = _doLoadCollections(libId);
     _collectionsInFlight = inFlight;
@@ -2597,7 +2633,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     _isLoadingCollections = true;
     try {
       final loaded = await _api!.getLibraryCollections(libId);
-      if (loaded != null && _selectedLibraryId == libId) _collections = loaded;
+      if (loaded != null && _selectedLibraryId == libId) {
+        _collections = loaded;
+        _collectionsCooldown.markFetched(libId, loaded);
+      }
     } catch (_) {}
     _isLoadingCollections = false;
     notifyListeners();

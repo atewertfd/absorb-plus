@@ -15,6 +15,8 @@ import '../services/api_service.dart';
 import '../services/bookorbit_notification_socket.dart';
 import '../services/progress_sync_service.dart';
 import '../services/own_progress_echo.dart';
+import '../services/socket_refresh_policy.dart';
+import '../services/library_item_request_cache.dart';
 import '../services/local_session_service.dart';
 import '../services/download_service.dart';
 import '../services/episode_notification_service.dart';
@@ -143,6 +145,7 @@ class LibraryProvider extends ChangeNotifier
     _stopHealthCheckTimer();
     _stopBookOrbitPoll();
     _stopLocalProbeTimer();
+    _resetSocketRefresh();
     super.dispose();
   }
 
@@ -226,6 +229,7 @@ class LibraryProvider extends ChangeNotifier
         _stopBookOrbitPoll();
         _stopLocalProbeTimer();
         SocketService().disconnect();
+        _resetSocketRefresh();
         _sectionsByLibrary.clear();
         _sectionsFetchedAt.clear();
         _locallyFinishedItems.clear();
@@ -337,6 +341,7 @@ class LibraryProvider extends ChangeNotifier
       _stopBookOrbitPoll();
       _stopLocalProbeTimer();
       SocketService().disconnect();
+      _resetSocketRefresh();
       _personalizedInFlight = null;
       _networkOffline = false;
       debugPrint('[Library] Signed out - showing what is on the phone');
@@ -380,6 +385,7 @@ class LibraryProvider extends ChangeNotifier
       _stopBookOrbitPoll();
       _stopLocalProbeTimer();
       SocketService().disconnect();
+      _resetSocketRefresh();
       _sectionsByLibrary.clear();
       _sectionsFetchedAt.clear();
       _locallyFinishedItems.clear();
@@ -626,6 +632,9 @@ class LibraryProvider extends ChangeNotifier
     await Future.wait([
       loadPersonalizedView(force: true),
       _refreshProgress(),
+      // Pull to refresh skips the playlists/collections cooldown.
+      loadPlaylists(force: true),
+      loadCollections(force: true),
     ]);
     _localProgressOverrides
         .removeWhere((itemId, _) => !pendingSyncs.contains(itemId));
