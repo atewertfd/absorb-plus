@@ -13648,4 +13648,13 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get autoDownloadNextInSeriesSubtitle =>
       'When the book you\'re playing is 80% done or has less than an hour left. Follows the Wi-Fi only setting.';
+
+  @override
+  String get emptyStateBrowseLibrary => 'Browse library';
+
+  @override
+  String get emptyStateClearSearch => 'Clear search';
+
+  @override
+  String get statsNoListeningYet => 'No listening yet';
 }

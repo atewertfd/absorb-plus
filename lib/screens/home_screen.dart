@@ -22,7 +22,7 @@ import '../widgets/desktop_batch_actions.dart';
 import '../widgets/home_section.dart';
 import '../widgets/absorb_page_header.dart';
 import '../widgets/library_picker_sheet.dart';
-import '../widgets/shimmer.dart';
+import '../widgets/loading_placeholders.dart'; // Absorb Plus (replaces shimmer.dart)
 import '../widgets/book_detail_sheet.dart';
 import '../widgets/card_buttons.dart';
 import '../widgets/episode_list_sheet.dart';
@@ -675,14 +675,14 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
                 // (Continue Listening is now rendered in the generic sections loop below)
 
                 // ── Loading shimmer ──
-                if (lib.isLoading) ...[
-                  const SliverToBoxAdapter(child: SizedBox(height: 16)),
-                  const SliverToBoxAdapter(child: ShimmerHeroCard()),
-                  const SliverToBoxAdapter(child: SizedBox(height: 20)),
-                  const SliverToBoxAdapter(child: ShimmerBookRow()),
-                  const SliverToBoxAdapter(child: SizedBox(height: 8)),
-                  const SliverToBoxAdapter(child: ShimmerBookRow()),
-                ],
+                if (lib.isLoading)
+                  // Absorb Plus: placeholders shaped like the real shelves.
+                  SliverToBoxAdapter(
+                    child: HomeShelvesPlaceholder(
+                      rectangleCovers: _rectangleCovers,
+                      showSubtitles: _showSubtitles,
+                    ),
+                  ),
 
                 // ── Error ──
                 if (!lib.isLoading &&

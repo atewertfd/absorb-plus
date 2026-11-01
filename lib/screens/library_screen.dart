@@ -4106,6 +4106,14 @@ class LibraryScreenState extends State<LibraryScreen>
                         showRmabSearchResultsSheet(context, initialQuery: q);
                       },
                     ),
+                  ] else ...[
+                    // Absorb Plus: nothing to request, so offer a way back.
+                    const SizedBox(height: 20),
+                    OutlinedButton.icon(
+                      icon: const Icon(Icons.close_rounded, size: 18),
+                      label: Text(l.emptyStateClearSearch),
+                      onPressed: clearSearch,
+                    ),
                   ],
                 ],
               ),

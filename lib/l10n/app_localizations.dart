@@ -23132,6 +23132,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'When the book you\'re playing is 80% done or has less than an hour left. Follows the Wi-Fi only setting.'**
   String get autoDownloadNextInSeriesSubtitle;
+
+  /// No description provided for @emptyStateBrowseLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse library'**
+  String get emptyStateBrowseLibrary;
+
+  /// No description provided for @emptyStateClearSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get emptyStateClearSearch;
+
+  /// No description provided for @statsNoListeningYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No listening yet'**
+  String get statsNoListeningYet;
 }
 
 class _AppLocalizationsDelegate

@@ -52,6 +52,7 @@ import '../services/wording.dart';
 import '../utils/share_origin.dart';
 import '../widgets/settings_search.dart';
 import 'settings_search_index.dart';
+import 'settings_search_extras.dart'; // fork
 import 'server_health_screen.dart';
 import '../widgets/absorb_page_header.dart';
 import '../widgets/theme_presets.dart';
@@ -487,7 +488,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() {
       _settingsSearchController.clear();
       _settingsQuery = '';
-      _expandedSection = entry.sectionId;
+      if (entry.sectionId != kSettingsTopLevelSection) _expandedSection = entry.sectionId; // fork: top-level rows
     });
     // The section list re-appears and the target section expands; once the
     // expansion animation and the section-level auto-scroll have settled,
@@ -1891,6 +1892,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           if (_settingsQuery.trim().isEmpty)
           SliverToBoxAdapter(
             child: Column(
+              key: _keyFor(kSettingsTopLevelSection), // fork: search scrolls to top-level rows
               children: [
                 const SizedBox(height: 8),
 
@@ -5063,9 +5065,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
           else
             SliverToBoxAdapter(
               child: SettingsSearchResults(
-                results: filterSettingEntries(
-                    settingsSearchEntries(context), _settingsQuery),
+                results: filterSettingEntries([
+                  ...settingsSearchEntries(context),
+                  ...settingsSearchExtras(context, // fork
+                      bookRequests: _bookRequestsOn,
+                      serverAdmin: auth.isAdmin,
+                      bookOrbitAdmin: auth.bookOrbitAdmin?.any == true,
+                      updates: _updatesEnabled),
+                ], _settingsQuery),
                 onOpen: _openSearchResult,
+                onClear: () => setState(() { // fork: empty-state button
+                  _settingsSearchController.clear();
+                  _settingsQuery = '';
+                }),
               ),
             ),
         ],

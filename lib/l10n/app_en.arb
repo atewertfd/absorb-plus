@@ -7429,5 +7429,8 @@
   "seekUndoBackTo": "Back to {time}",
   "@seekUndoBackTo": {"description": "Toast after a long jump in the book; tapping it returns to the earlier position", "placeholders": {"time": {"type": "String"}}},
   "autoDownloadNextInSeries": "Download the next book in the series automatically",
-  "autoDownloadNextInSeriesSubtitle": "When the book you're playing is 80% done or has less than an hour left. Follows the Wi-Fi only setting."
+  "autoDownloadNextInSeriesSubtitle": "When the book you're playing is 80% done or has less than an hour left. Follows the Wi-Fi only setting.",
+  "emptyStateBrowseLibrary": "Browse library",
+  "emptyStateClearSearch": "Clear search",
+  "statsNoListeningYet": "No listening yet"
 }
