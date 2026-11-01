@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:absorb/services/api_service.dart';
+import 'package:absorb/services/download_resume.dart';
 import 'package:absorb/services/download_service.dart';
 import 'package:absorb/services/download_track_names.dart';
 import 'package:background_downloader/background_downloader.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/testing.dart';
@@ -154,6 +156,88 @@ void main() {
       expect(s.getInfo('saf-move-book').status, DownloadStatus.downloaded);
       expect(s.getInfo('saf-move-book').localDirPath,
           'content://tree/doc/Author%2FTitle');
+    });
+  });
+
+  group('D2 interrupted desktop download', () {
+    final seedDir = '${Directory.systemTemp.path}/absorb_download_service_test';
+
+    DownloadService recordsService() {
+      final s = DownloadService.forTesting(
+        initialize: () async {},
+        cancelTasks: (_) async {},
+        deleteTaskRecord: (_) async {},
+        taskRecords: () async => const [],
+      );
+      addTearDown(s.dispose);
+      addTearDown(() => debugDefaultTargetPlatformOverride = null);
+      return s;
+    }
+
+    test('fails at once on restart and keeps the finished tracks', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+      final s = recordsService();
+      await s.debugSeedPendingDownload(itemId: 'resume-book', trackCount: 2);
+      final done = File('$seedDir/resume-book/0.mp3')
+        ..createSync(recursive: true)
+        ..writeAsBytesSync([1, 2, 3]);
+      addTearDown(() {
+        try {
+          done.parent.deleteSync(recursive: true);
+        } catch (_) {}
+      });
+
+      await s.debugRehydratePending();
+
+      expect(s.activeDownloads, isEmpty);
+      final failed = s.failedDownloads.single;
+      expect(failed.localDirPath, '$seedDir/resume-book');
+      expect(done.existsSync(), isTrue);
+
+      s.debugKnownDesktopRoots = [seedDir];
+      await s.dismissFailedDownload('resume-book');
+      expect(done.existsSync(), isFalse);
+    });
+
+    test('the reconciler does not take a sleep for a stall', () async {
+      final s = recordsService();
+      await s.debugSeedPendingDownload(itemId: 'sleepy-book', trackCount: 1);
+      final start = DateTime.now();
+
+      // Woke after 20 minutes asleep: not failed, the clock starts again.
+      await s.debugReconcile(
+          now: start.add(const Duration(minutes: 20)), lastTick: start);
+      expect(s.activeDownloads, isNotEmpty);
+
+      // Awake and silent for 5 more minutes with no progress: failed.
+      await s.debugReconcile(
+          now: start.add(const Duration(minutes: 25)),
+          lastTick: start.add(const Duration(minutes: 23)));
+      expect(s.activeDownloads, isEmpty);
+      expect(s.failedDownloads.single.itemId, 'sleepy-book');
+    });
+
+    test('a retry counts only tracks of the right size as finished', () {
+      final dir = Directory('${tmp.path}/book')..createSync();
+      File('${dir.path}/0.mp3').writeAsBytesSync([1, 2, 3]);
+      File('${dir.path}/1.mp3').writeAsBytesSync([1]); // cut short
+      File('${dir.path}/2.mp3').writeAsBytesSync([1, 2]); // size unknown
+      final sizes = expectedTrackSizes([
+        {'metadata': {'size': 3}},
+        {'metadata': {'size': 3}},
+        {'metadata': <String, dynamic>{}},
+        {'metadata': {'size': 3}},
+      ]);
+      expect(sizes, [3, 3, null, 3]);
+      final paths = [for (var i = 0; i < 4; i++) '${dir.path}/$i.mp3'];
+      expect(finishedTracks(paths, sizes), {0});
+    });
+
+    test('sleep is a gap well past the timer period', () {
+      final t = DateTime(2026, 11, 1, 12);
+      expect(sleptBetweenTicks(null, t), isFalse);
+      expect(sleptBetweenTicks(t, t.add(const Duration(minutes: 2))), isFalse);
+      expect(sleptBetweenTicks(t, t.add(const Duration(minutes: 15))), isTrue);
     });
   });
 }

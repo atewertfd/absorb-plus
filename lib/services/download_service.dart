@@ -19,6 +19,7 @@ import 'audio_player_service.dart';
 import 'desktop_download_folder.dart';
 import 'download_folder_guard.dart';
 import 'download_index_store.dart';
+import 'download_resume.dart';
 import 'download_track_names.dart';
 import 'ebook_cache.dart';
 import 'narrated_books.dart';
@@ -434,6 +435,7 @@ class DownloadService extends ChangeNotifier {
       : _initializeOverride = null,
         _cancelTasksOverride = null,
         _deleteTaskRecordOverride = null,
+        _taskRecordsOverride = null,
         _indexStore = DownloadIndexStore.platformDefault() {
     UserAccountService.onScopeMoved = _moveOrigins;
   }
@@ -444,9 +446,11 @@ class DownloadService extends ChangeNotifier {
     Future<void> Function(List<String>)? cancelTasks,
     Future<void> Function(String)? deleteTaskRecord,
     DownloadIndexStore? indexStore,
+    Future<List<TaskRecord>> Function()? taskRecords,
   })  : _initializeOverride = initialize,
         _cancelTasksOverride = cancelTasks,
         _deleteTaskRecordOverride = deleteTaskRecord,
+        _taskRecordsOverride = taskRecords,
         _indexStore = indexStore ?? PrefsDownloadIndexStore();
 
   /// Where the download list is kept: its own file on native builds,
@@ -456,6 +460,9 @@ class DownloadService extends ChangeNotifier {
   final Future<void> Function()? _initializeOverride;
   final Future<void> Function(List<String>)? _cancelTasksOverride;
   final Future<void> Function(String)? _deleteTaskRecordOverride;
+  final Future<List<TaskRecord>> Function()? _taskRecordsOverride;
+  Future<List<TaskRecord>> _taskRecords() =>
+      (_taskRecordsOverride ?? FileDownloader().database.allRecords)();
   Future<void>? _initFuture;
   Future<void>? _iosAudioMigrationFuture;
   bool _initialized = false;
@@ -613,6 +620,14 @@ class DownloadService extends ChangeNotifier {
   /// Periodically reconverges in-flight books with the package task DB so a
   /// missed terminal update can't leave a slot leaked and wedge the queue.
   Timer? _reconcileTimer;
+
+  /// Absorb Plus: when the reconciler last ran, so a tick after the computer
+  /// slept doesn't take the sleep for a stalled download (audit D2).
+  DateTime? _lastReconcileAt;
+
+  /// Absorb Plus: the folder holding the finished tracks of an interrupted
+  /// download, picked up again when it is retried (audit D2).
+  final Map<String, String> _resumeDirs = {};
 
   /// Queue of pending download requests.
   final List<_QueuedDownload> _queue = [];
@@ -1323,11 +1338,21 @@ class DownloadService extends ChangeNotifier {
   ///    or zombie record (e.g. left over after an app update) holding a slot -
   ///    fail it so the queue can move on. Healthy or wifi-waiting downloads keep
   ///    emitting updates, so their lastUpdate stays fresh and they're left be.
-  Future<void> _reconcilePending() async {
+  Future<void> _reconcilePending({DateTime? now}) async {
+    now ??= DateTime.now();
+    final slept = sleptBetweenTicks(_lastReconcileAt, now);
+    _lastReconcileAt = now;
+    if (slept) {
+      // Absorb Plus: the computer slept. Silence across the gap isn't a stall;
+      // the clock starts again now (audit D2).
+      for (final p in _pending.values) {
+        p.lastUpdate = now;
+      }
+    }
     if (_pending.isEmpty) return;
     List<TaskRecord> records;
     try {
-      records = await FileDownloader().database.allRecords();
+      records = await _taskRecords();
     } catch (e) {
       debugPrint('[Download] reconcile: reading the task database failed: $e');
       return;
@@ -1380,12 +1405,13 @@ class DownloadService extends ChangeNotifier {
       for (final other in _pending.values) {
         if (other.lastUpdate.isAfter(heardAt)) heardAt = other.lastUpdate;
       }
-      final silence = DateTime.now().difference(heardAt);
+      final silence = now.difference(heardAt);
       if ((p.overallProgress == 0 && silence > const Duration(minutes: 3)) ||
           silence > const Duration(minutes: 10)) {
         debugPrint('[Download] Reconciler failing stale $itemId '
             '(progress=${p.overallProgress}, silent ${silence.inMinutes}m)');
-        await _failBook(itemId, cause: 'Interrupted download');
+        await _failBook(itemId, cause: 'Interrupted download',
+            keepFinishedTracks: ForkPlatform.supportsDesktopDownloadFolder);
       }
     }
   }
@@ -2024,6 +2050,11 @@ class DownloadService extends ChangeNotifier {
       itemId = '$itemId-$episodeId';
     }
     _noteOrigin(itemId);
+    // Absorb Plus: a retry picks up the tracks an interrupted download kept.
+    final kept = _downloads[itemId];
+    if (kept?.status == DownloadStatus.error && kept?.localDirPath != null) {
+      _resumeDirs[itemId] = kept!.localDirPath!;
+    }
     try {
       await init().timeout(const Duration(seconds: 8));
     } on TimeoutException catch (e) {
@@ -2404,11 +2435,14 @@ class DownloadService extends ChangeNotifier {
       }
       String? relDir; // Android: relative to applicationDocuments
       final desktopRoot = DesktopDownloadFolder.activeRoot(_desktopDownloadDir);
+      final resume = _resumeDirs.remove(itemId); // Absorb Plus (D2)
       if (Platform.isIOS) {
         final basePath = await downloadBasePath;
         bookDir = Directory('$basePath/$nestedName');
       } else if (desktopRoot != null) {
-        bookDir = Directory(DesktopDownloadFolder.bookDirPath(desktopRoot, nestedName, itemId));
+        bookDir = Directory(resume != null && Directory(resume).existsSync()
+            ? resume
+            : DesktopDownloadFolder.bookDirPath(desktopRoot, nestedName, itemId));
       } else {
         final appDir = await getApplicationDocumentsDirectory();
         relDir = 'downloads/$nestedName';
@@ -2480,6 +2514,19 @@ class DownloadService extends ChangeNotifier {
       _pending[itemId] = pending;
       await _persistPending();
 
+      // Absorb Plus: on Windows/Linux, tracks an interrupted download already
+      // finished (right size on disk) aren't fetched again (audit D2).
+      final finished = ForkPlatform.supportsDesktopDownloadFolder
+          ? finishedTracks(expectedPaths, expectedTrackSizes(audioTracks))
+          : const <int>{};
+      for (final i in finished) {
+        pending.trackStatus[i] = TaskStatus.complete;
+        pending.trackProgress[i] = 1.0;
+      }
+      if (finished.isNotEmpty) {
+        debugPrint('[Download] "$title": ${finished.length}/${files.length} tracks already on disk');
+      }
+
       // One notification per book instead of one per file task. Multi-file
       // books group their tasks under a per-book group notification (the
       // package's group progress is finished-files / total, so the bar steps
@@ -2503,6 +2550,7 @@ class DownloadService extends ChangeNotifier {
       );
 
       for (int i = 0; i < files.length; i++) {
+        if (finished.contains(i)) continue; // Absorb Plus (D2)
         final meta = jsonEncode({'itemId': itemId, 'i': i, 'n': files.length});
         final Task task;
         if (Platform.isIOS || desktopRoot != null) {
@@ -2551,6 +2599,8 @@ class DownloadService extends ChangeNotifier {
         if (!ok) throw Exception('Failed to enqueue track ${i + 1}');
       }
       debugPrint('[Download] Enqueued ${files.length} task(s) for "$title"');
+      // Every track was already there: finish the book now (Absorb Plus, D2).
+      if (finished.length == files.length) await _checkBookTerminal(itemId, pending);
     } catch (e) {
       await _failBook(itemId,
           cause: e, bookDirRef: bookDirRef, title: title, author: author, coverUrl: coverUrl);
@@ -2607,10 +2657,13 @@ class DownloadService extends ChangeNotifier {
       final Directory bookDir;
       String? relDir;
       final desktopRoot = DesktopDownloadFolder.activeRoot(_desktopDownloadDir);
+      final resume = _resumeDirs.remove(itemId); // Absorb Plus (D2)
       if (Platform.isIOS) {
         bookDir = Directory('${await downloadBasePath}/$nestedName');
       } else if (desktopRoot != null) {
-        bookDir = Directory(DesktopDownloadFolder.bookDirPath(desktopRoot, nestedName, itemId));
+        bookDir = Directory(resume != null && Directory(resume).existsSync()
+            ? resume
+            : DesktopDownloadFolder.bookDirPath(desktopRoot, nestedName, itemId));
       } else {
         final appDir = await getApplicationDocumentsDirectory();
         relDir = 'downloads/$nestedName';
@@ -3242,6 +3295,15 @@ class DownloadService extends ChangeNotifier {
   void debugPutDownload(DownloadInfo info) => _downloads[info.itemId] = info;
 
   @visibleForTesting
+  Future<void> debugRehydratePending() => _rehydratePending();
+
+  @visibleForTesting
+  Future<void> debugReconcile({required DateTime now, DateTime? lastTick}) {
+    _lastReconcileAt = lastTick;
+    return _reconcilePending(now: now);
+  }
+
+  @visibleForTesting
   void debugRemoveDownload(String itemId) => _downloads.remove(itemId);
 
   @visibleForTesting
@@ -3392,6 +3454,7 @@ class DownloadService extends ChangeNotifier {
     String? author,
     String? coverUrl,
     String? bookDirRef,
+    bool keepFinishedTracks = false,
   }) async {
     final p = _pending[itemId];
     if (p != null) {
@@ -3412,7 +3475,14 @@ class DownloadService extends ChangeNotifier {
     if (p != null && !p.failing && p.trackCount > 1) {
       _dismissGroupNotification(itemId);
     }
-    await _cleanupBookDir(dir, itemId);
+    // Absorb Plus: an interrupted desktop download keeps its finished tracks
+    // (the folder is remembered on the failed record) so a retry only
+    // fetches the rest (audit D2).
+    final keptDir = keepFinishedTracks && dir != null && !isContentUri(dir) &&
+            folderHasFiles(dir)
+        ? dir
+        : null;
+    if (keptDir == null) await _cleanupBookDir(dir, itemId);
 
     final msg = _mapError(cause, taskException, responseCode);
     _downloads[itemId] = DownloadInfo(
@@ -3422,6 +3492,7 @@ class DownloadService extends ChangeNotifier {
       title: t,
       author: a,
       coverUrl: c,
+      localDirPath: keptDir,
       libraryId: libraryId,
     );
     _activeDownloadIds.remove(itemId);
@@ -3462,7 +3533,11 @@ class DownloadService extends ChangeNotifier {
 
   /// Dismiss a failed record without touching any completed downloads.
   Future<void> dismissFailedDownload(String itemId) async {
-    if (_downloads[itemId]?.status != DownloadStatus.error) return;
+    final failed = _downloads[itemId];
+    if (failed?.status != DownloadStatus.error) return;
+    // Absorb Plus: the finished tracks an interrupted download kept (D2).
+    await _cleanupBookDir(failed!.localDirPath, itemId);
+    _resumeDirs.remove(itemId);
     _downloads.remove(itemId);
     await _save();
     notifyListeners();
@@ -3770,7 +3845,7 @@ class DownloadService extends ChangeNotifier {
     if (_pending.isEmpty) return;
     List<TaskRecord> records;
     try {
-      records = await FileDownloader().database.allRecords();
+      records = await _taskRecords();
     } catch (e) {
       debugPrint('[Download] rehydrate: reading the task database failed: $e');
       records = const [];
@@ -3800,13 +3875,17 @@ class DownloadService extends ChangeNotifier {
         if (s == null || !_terminal.contains(s)) allTerminal = false;
       }
 
+      // Absorb Plus: on Windows/Linux the transfers ran inside the app and
+      // ended with it; nothing resumes them. Fail now instead of after ten
+      // silent minutes, keeping the finished tracks for the retry (audit D2).
+      final desktop = ForkPlatform.supportsDesktopDownloadFolder;
       if (allComplete) {
         p.finalizing = true;
         await _finalizeSuccess(itemId);
-      } else if (allTerminal) {
+      } else if (allTerminal || desktop) {
         // No p.finalizing pre-set here or below: _failBook refuses to run
         // when it's already true (see the reconciler note).
-        await _failBook(itemId, cause: 'Interrupted download');
+        await _failBook(itemId, cause: 'Interrupted download', keepFinishedTracks: desktop);
       } else if ((tracked[itemId]?.isEmpty ?? true)) {
         // The package has no record of these tasks (DB wiped) and we can't
         // rebuild durable URLs here, so surface as failed for a manual retry.
