@@ -43,6 +43,7 @@ import '../main.dart' show rootNavigatorKey;
 import '../widgets/overlay_toast.dart' show showNavigatorOverlayToast;
 import 'windows_media_cover.dart';
 import 'tailscale_cover_route.dart';
+import 'seek_undo.dart';
 export 'player_settings.dart';
 
 String playbackDownloadKey(String itemId, String? episodeId) =>
@@ -8146,6 +8147,10 @@ class AudioPlayerService extends ChangeNotifier {
       overridePosition: from.inMilliseconds / 1000.0,
     );
     notifyListeners();
+    // Absorb Plus: offer "Back to ..." after a long jump (seek_undo.dart).
+    if (logAs == PlaybackEventType.seek && _currentItemId != null) {
+      SeekUndo.instance.onSeek(key: episodeKeyFor(_currentItemId!, _currentEpisodeId), from: from, to: pos);
+    }
   }
 
   /// Rewind triggered by the sleep timer firing. Same mechanics as a manual

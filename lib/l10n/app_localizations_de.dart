@@ -13592,4 +13592,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String homeRecentlyAddedNewBadge(int count) {
     return '$count new';
   }
+
+  @override
+  String seekUndoBackTo(String time) {
+    return 'Back to $time';
+  }
 }

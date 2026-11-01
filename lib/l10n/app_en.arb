@@ -7378,5 +7378,7 @@
   "exclusiveAudioTitle": "Exclusive audio",
   "exclusiveAudioSubtitle": "Fixes crackling or jumpy volume by skipping Windows sound effects. Other apps are muted while Absorb plays. Restart Absorb to apply.",
   "homeRecentlyAddedNewBadge": "{count} new",
-  "@homeRecentlyAddedNewBadge": {"placeholders": {"count": {"type": "int"}}}
+  "@homeRecentlyAddedNewBadge": {"placeholders": {"count": {"type": "int"}}},
+  "seekUndoBackTo": "Back to {time}",
+  "@seekUndoBackTo": {"description": "Toast after a long jump in the book; tapping it returns to the earlier position", "placeholders": {"time": {"type": "String"}}}
 }

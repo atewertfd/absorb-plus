@@ -22868,6 +22868,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} new'**
   String homeRecentlyAddedNewBadge(int count);
+
+  /// Toast after a long jump in the book; tapping it returns to the earlier position
+  ///
+  /// In en, this message translates to:
+  /// **'Back to {time}'**
+  String seekUndoBackTo(String time);
 }
 
 class _AppLocalizationsDelegate
