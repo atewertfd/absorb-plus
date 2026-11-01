@@ -36,6 +36,28 @@ class PlaybackStallError implements Exception {
   String toString() => 'Stream stalled for ${stalledFor.inSeconds}s';
 }
 
+/// Recorded as the failure when a desktop stream reported its end well
+/// before the end of the book: libmpv can take a dropped connection for the
+/// end of the file and report no error at all.
+class PlaybackEndedEarlyError implements Exception {
+  final double atSec;
+  final double totalSec;
+  const PlaybackEndedEarlyError(this.atSec, this.totalSec);
+
+  /// How far before the end a reported end counts as early. Generous, so a
+  /// book whose listed length is a little off still finishes normally.
+  static const slackSec = 10.0;
+
+  /// True when an end reported at [atSec] of a [totalSec] book can't be the
+  /// real end. An unknown position or length never counts.
+  static bool isEarly(double atSec, double totalSec) =>
+      totalSec > 0 && atSec > 0 && atSec < totalSec - slackSec;
+
+  @override
+  String toString() => 'Stream ended early at ${atSec.toStringAsFixed(1)}s '
+      'of ${totalSec.toStringAsFixed(1)}s';
+}
+
 /// Brings a streamed book back after the connection drops (Wi-Fi blip,
 /// Tailscale reconnect, server restart) instead of leaving it stopped.
 ///
@@ -197,6 +219,7 @@ class PlaybackRecovery {
   /// the wording other engines use for the same thing.
   static bool isNetworkError(Object error) {
     if (error is PlaybackStallError) return true;
+    if (error is PlaybackEndedEarlyError) return true;
     if (error is TimeoutException) return true;
     var text = error.toString().toLowerCase();
     if (error is PlatformException) {

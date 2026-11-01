@@ -6354,7 +6354,7 @@ class AudioPlayerService extends ChangeNotifier {
         _recovery.onProcessingState(state);
         if (state == ProcessingState.completed &&
             _currentItemId != null &&
-            !_recovery.holdsCompletion) {
+            !_recovery.holdCompletion()) {
           if (_preloadedNextBook != null) {
             debugPrint(
               '[PreBuffer] processingState=completed with pre-buffer loaded — firing auto-queue advance',

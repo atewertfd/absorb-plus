@@ -594,6 +594,36 @@ void main() {
     });
   });
 
+  group('PlaybackEndedEarlyError.isEarly', () {
+    test('an end well before the length is early', () {
+      expect(PlaybackEndedEarlyError.isEarly(33000, 36000), isTrue);
+      expect(PlaybackEndedEarlyError.isEarly(35980, 36000), isTrue);
+      expect(PlaybackEndedEarlyError.isEarly(5, 36000), isTrue);
+    });
+
+    test('an end within 10 s of the length is the real end', () {
+      expect(PlaybackEndedEarlyError.isEarly(35990, 36000), isFalse);
+      expect(PlaybackEndedEarlyError.isEarly(35999.5, 36000), isFalse);
+      expect(PlaybackEndedEarlyError.isEarly(36004, 36000), isFalse);
+    });
+
+    test('an unknown position or length is never early', () {
+      expect(PlaybackEndedEarlyError.isEarly(0, 36000), isFalse);
+      expect(PlaybackEndedEarlyError.isEarly(1200, 0), isFalse);
+    });
+
+    test('an early end is reloaded like any dropped connection', () {
+      fakeAsync((async) {
+        final h = _Harness(async);
+        h.position = 33000;
+        h.recovery.onFailure(const PlaybackEndedEarlyError(33000, 36000));
+        expect(h.recovery.isStallOnly, isFalse, reason: 'needs a reload');
+        async.elapse(const Duration(seconds: 2));
+        expect(h.reloads.single.at, 32998);
+      });
+    });
+  });
+
   group('PlaybackRecovery.skipSilentSpan', () {
     final t0 = DateTime(2026, 11, 1, 12);
     DateTime at(int s) => t0.add(Duration(seconds: s));
@@ -625,6 +655,7 @@ void main() {
         Exception('SocketException: Network is unreachable'),
         TimeoutException('load'),
         const PlaybackStallError(Duration(seconds: 15)),
+        const PlaybackEndedEarlyError(3600, 36000),
         Exception('Failed to open https://abs.example/api/items/x/file/1.'),
       ]) {
         expect(PlaybackRecovery.isNetworkError(e), isTrue, reason: '$e');

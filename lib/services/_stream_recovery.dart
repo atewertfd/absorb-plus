@@ -137,13 +137,55 @@ class _StreamRecovery {
 
   /// A "completed" while a recovery waits or reloads is the dead source
   /// ending (libmpv reports a failed stream as the end of the file), not
-  /// the book: it must not mark the book finished.
-  bool get holdsCompletion => policy.isRecovering;
+  /// the book: it must not mark the book finished. True when the service
+  /// must ignore this completion.
+  ///
+  /// On desktop a dropped connection can also arrive as a plain end of file
+  /// with no error at all. A streamed book that "ends" more than
+  /// [PlaybackEndedEarlyError.slackSec] before its length reconnects at that
+  /// spot instead of being marked finished. If it ends at the same spot
+  /// again, the listed length was wrong and that is the real end.
+  bool holdCompletion() {
+    if (policy.isRecovering) return true;
+    if (!(Platform.isWindows || Platform.isLinux) || !_streaming) return false;
+    final pos = _s._lastKnownPositionSec;
+    final total = _s._totalDuration;
+    if (!PlaybackEndedEarlyError.isEarly(pos, total) || _atTrackStart(pos)) {
+      _earlyEndAt = null;
+      return false;
+    }
+    final previous = _earlyEndAt;
+    if (previous != null && (pos - previous).abs() <= 15) {
+      debugPrint('[Recovery] Stream ended at ${pos.toStringAsFixed(1)}s again '
+          '- taking that as the real end');
+      _earlyEndAt = null;
+      return false;
+    }
+    _earlyEndAt = pos;
+    debugPrint('[Recovery] Stream ended at ${pos.toStringAsFixed(1)}s of '
+        '${total.toStringAsFixed(1)}s - treating it as a dropped connection');
+    return handleError(PlaybackEndedEarlyError(pos, total), resume: true);
+  }
+
+  // Where a desktop stream last ended too early (see holdCompletion).
+  double? _earlyEndAt;
+
+  // A position right at the start of a later file is what the position
+  // listener can record as a multi-file book completes (file offset plus a
+  // reset position), not where playback really was: don't trust it.
+  bool _atTrackStart(double pos) {
+    final offsets = _s._trackStartOffsets;
+    for (var i = 1; i < offsets.length; i++) {
+      if ((pos - offsets[i]).abs() < 1.0) return true;
+    }
+    return false;
+  }
 
   /// playItem was entered. Anything but a reload of ours is a new play.
   void onPlayItem() {
     _heldSec = null;
     if (_reloadStarting) return;
+    _earlyEndAt = null;
     policy.cancel('new play');
   }
 
