@@ -361,4 +361,38 @@ void main() {
     await second.debugLoadIndex();
     expect(second.downloadedItems.map((d) => d.itemId), ['a']);
   });
+  test('downloads an older build made after the move are picked up (D8)',
+      () async {
+    SharedPreferences.setMockInitialValues(legacyPrefs({'a': entry('a')}));
+    final first = newService(newFile());
+    await first.debugLoadIndex();
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString(FileDownloadIndexStore.legacyStampKey), isNotNull);
+
+    // Unchanged preferences copy: nothing is merged back.
+    first.debugRemoveDownload('a');
+    first.debugPutDownload(DownloadInfo.fromJson(entry('b')));
+    await first.debugSaveIndex();
+    await first.flushIndex();
+    final same = newService(newFile());
+    await same.debugLoadIndex();
+    expect(same.downloadedItems.map((d) => d.itemId), ['b']);
+
+    // The installed release downloaded "r" into the preferences copy.
+    await prefs.setString(
+        'downloads', jsonEncode({'a': entry('a'), 'r': entry('r')}));
+    final next = newService(newFile());
+    await next.debugLoadIndex();
+    expect(next.downloadedItems.map((d) => d.itemId).toSet(),
+        containsAll(['b', 'r']));
+    expect(fileDownloads().keys, contains('r'));
+
+    // Once taken in, the same copy isn't merged again.
+    next.debugRemoveDownload('r');
+    await next.debugSaveIndex();
+    await next.flushIndex();
+    final later = newService(newFile());
+    await later.debugLoadIndex();
+    expect(later.downloadedItems.map((d) => d.itemId), isNot(contains('r')));
+  });
 }
