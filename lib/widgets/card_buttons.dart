@@ -508,6 +508,13 @@ class _CardBookmarkButtonInlineState extends State<CardBookmarkButtonInline> {
   int _count = 0;
   @override void initState() { super.initState(); _syncThenLoadCount(); }
 
+  // Absorb Plus: the card can switch books in place (auto-advance to the
+  // next episode or series book); count the new one's bookmarks.
+  @override void didUpdateWidget(CardBookmarkButtonInline oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget._key != widget._key) _syncThenLoadCount();
+  }
+
   Future<void> _syncThenLoadCount() async {
     // Show local count immediately
     _loadCount();
@@ -525,8 +532,9 @@ class _CardBookmarkButtonInlineState extends State<CardBookmarkButtonInline> {
   }
 
   Future<void> _loadCount() async {
-    final c = await BookmarkService().getCount(widget._key);
-    if (mounted) setState(() => _count = c);
+    final key = widget._key;
+    final c = await BookmarkService().getCount(key);
+    if (mounted && key == widget._key) setState(() => _count = c);
   }
 
   @override Widget build(BuildContext context) {
