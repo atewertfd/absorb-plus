@@ -114,7 +114,9 @@ Two reviewers read the owner's live `shared_preferences.json` to size it. That f
 - B2: the WebView registers after the first frame. Skia replaces Impeller on Windows in the test build: launch → `main()` went from 1205 to 678 ms in the owner's log.
 - B3, B4, B5, B6 and B11.
 
+**Done after Beta 11 (build 1.12.1+343):** B7, B8, B9, B10; B12 series-cache caps; B13 LogService regexes, no Android Auto signature off Android, podcasts load Home once; C1, C3, C4, C5, C6, C7, C8, C12 (jump list); Windows "Exclusive audio" switch; Tailscale for Android covers.
+
 **Open:**
-- B7–B10, B12 and B13.
-- All of C.
-- Tailscale on Android covers (`CoverContentProvider.kt`) and Chromecast.
+- B12: Absorbing reads prefs in build (no change notice for "merge libraries"); reader page-curl images (shared with the curl widget). Settings-sync 45 s check (catches unnotified saves). Remaining B13 items.
+- C2 (shortcut overlay key), C9 (share link, needs a confirm/expire design), C10 (mini player: owner wants a design first), C11 (global hotkeys).
+- Chromecast through Tailscale.
