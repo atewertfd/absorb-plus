@@ -1,6 +1,7 @@
 import 'package:absorb/l10n/app_localizations.dart';
 import 'package:absorb/screens/library_screen.dart' show LibrarySort;
 import 'package:absorb/widgets/alphabet_scroller.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -312,6 +313,44 @@ void main() {
       await mouse.moveTo(const Offset(100, 300));
       await tester.pump(const Duration(seconds: 2));
       expect(state(tester).railVisible, isFalse);
+    });
+
+    testWidgets('on desktop the rail leaves the scrollbar its edge',
+        (tester) async {
+      final controller = ScrollController();
+      addTearDown(controller.dispose);
+      debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+      addTearDown(() => debugDefaultTargetPlatformOverride = null);
+      await tester.pumpWidget(harness(controller: controller, titles: titles));
+      await tester.pump();
+      final width = tester.getSize(find.byType(Scaffold)).width;
+      final rail = tester.getRect(find.byKey(const ValueKey('alphabet-rail')));
+      expect(find.byType(Scrollbar), findsOneWidget);
+      expect(rail.right, lessThanOrEqualTo(width - 16));
+
+      // Dragging the scrollbar thumb scrolls; it doesn't pick a letter, even
+      // with the rail showing after a scroll.
+      controller.jumpTo(1);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(state(tester).railVisible, isTrue);
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(mouse.removePointer);
+      await mouse.addPointer(location: Offset(width - 4, 10));
+      await tester.pump();
+      await mouse.moveTo(Offset(width - 4, 12));
+      await tester.pump(const Duration(milliseconds: 400));
+      await mouse.down(Offset(width - 4, 12));
+      await tester.pump();
+      for (var i = 0; i < 6; i++) {
+        await mouse.moveBy(const Offset(0, 10));
+        await tester.pump();
+      }
+      await mouse.up();
+      await tester.pump();
+      expect(controller.offset, greaterThan(100));
+      expect(find.byKey(const ValueKey('alphabet-bubble')), findsNothing);
+      debugDefaultTargetPlatformOverride = null;
     });
 
     testWidgets('a hidden rail lets clicks through to the grid',

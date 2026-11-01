@@ -358,6 +358,10 @@ class AlphabetScroller extends StatefulWidget {
 @visibleForTesting
 class AlphabetScrollerState extends State<AlphabetScroller> {
   static const _railWidth = 24.0;
+
+  /// Room left at the right edge for the scrollbar Flutter adds on desktop,
+  /// so the rail never takes the presses meant for its thumb or track.
+  static const _desktopScrollbarRoom = 16.0;
   static const _hideAfter = Duration(milliseconds: 1500);
 
   final _layout = AlphabetGridLayout();
@@ -509,6 +513,12 @@ class AlphabetScrollerState extends State<AlphabetScroller> {
     final letters = _railLetters;
     // Clear of the bottom navigation bar and mini player on phones.
     final bottom = 112 + MediaQuery.paddingOf(context).bottom;
+    final right = switch (ScrollConfiguration.of(context).getPlatform(context)) {
+      TargetPlatform.windows ||
+      TargetPlatform.linux ||
+      TargetPlatform.macOS => 2 + _desktopScrollbarRoom,
+      _ => 2.0,
+    };
 
     return Stack(
       fit: StackFit.passthrough,
@@ -517,7 +527,7 @@ class AlphabetScrollerState extends State<AlphabetScroller> {
         Positioned(
           top: _topInset + 8,
           bottom: bottom,
-          right: 2,
+          right: right,
           width: _railWidth,
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -597,7 +607,7 @@ class AlphabetScrollerState extends State<AlphabetScroller> {
         ),
         if (_dragging && _current != null)
           Positioned(
-            right: _railWidth + 12,
+            right: right + _railWidth + 10,
             top: _topInset + 8 + math.max(0, _bubbleY - 24),
             child: IgnorePointer(
               child: Container(
