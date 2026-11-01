@@ -330,4 +330,62 @@ void main() {
       expect(await stored(), isEmpty);
     });
   });
+
+  group('D6 startup file check', () {
+    test('a drive that does not answer keeps the download', () async {
+      final s = newService();
+      s.debugPutDownload(DownloadInfo(
+        itemId: 'nas-book',
+        status: DownloadStatus.downloaded,
+        // On a drive that is there (not the unplugged-drive case).
+        localPaths: ['${tmp.path}/nas/Author/Title/01.mp3'],
+        title: 'Title',
+      ));
+
+      await IOOverrides.runZoned(
+        () => s.debugValidateDownloads(),
+        createFile: (path) => _UnansweringFile(path),
+      );
+
+      expect(s.isDownloaded('nas-book'), isTrue);
+    });
+
+    test('a file that is really gone drops the record and its folder',
+        () async {
+      final s = newService();
+      final root = Directory('${tmp.path}/Books')..createSync();
+      final dir = Directory('${root.path}/Author/Title')
+        ..createSync(recursive: true);
+      File('${dir.path}/02.mp3').writeAsBytesSync([1]);
+      s.debugKnownDesktopRoots = [root.path];
+      s.debugPutDownload(DownloadInfo(
+        itemId: 'gone-book',
+        status: DownloadStatus.downloaded,
+        localPaths: ['${dir.path}/01.mp3', '${dir.path}/02.mp3'],
+        localDirPath: dir.path,
+        title: 'Title',
+      ));
+
+      await s.debugValidateDownloads();
+
+      expect(s.isDownloaded('gone-book'), isFalse);
+      expect(dir.existsSync(), isFalse);
+      expect(root.existsSync(), isTrue);
+    });
+  });
+}
+
+/// A file on a network drive that is still waking up: every check fails.
+class _UnansweringFile implements File {
+  _UnansweringFile(this.path);
+
+  @override
+  final String path;
+
+  @override
+  Future<bool> exists() async =>
+      throw FileSystemException('The device is not ready', path);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

@@ -1740,6 +1740,7 @@ class DownloadService extends ChangeNotifier {
   Future<void> _validateDownloads() async {
     try {
       final orphanIds = <String>[];
+      final orphanDirs = <String, String>{}; // Absorb Plus (D6)
       final entries = Map<String, DownloadInfo>.from(_downloads);
       for (final entry in entries.entries) {
         if (entry.value.status != DownloadStatus.downloaded) continue;
@@ -1748,6 +1749,7 @@ class DownloadService extends ChangeNotifier {
         // Desktop: a book on an unplugged drive is kept, not forgotten.
         if (entry.value.localPaths.any(DesktopDownloadFolder.isOnMissingDrive)) continue;
         bool allExist = true;
+        bool unsure = false; // Absorb Plus (D6)
         for (final path in entry.value.localPaths) {
           // No cheap existence check for a SAF content URI; assume present and
           // let a real playback failure surface a re-download instead.
@@ -1760,16 +1762,20 @@ class DownloadService extends ChangeNotifier {
               break;
             }
           } catch (e) {
-            // Timeout or permission error — treat as missing
-            debugPrint('[Download] ${entry.key}: file check failed, treating as missing: $e');
-            allExist = false;
+            // Absorb Plus: a timeout or error (a network drive still waking
+            // up) doesn't mean the file is gone. Keep the download and check
+            // again next start (audit D6).
+            debugPrint('[Download] ${entry.key}: file check failed, keeping it: $e');
+            unsure = true;
             break;
           }
         }
-        if (!allExist) {
+        if (!allExist && !unsure) {
           debugPrint('[Download] Files missing for ${entry.key}, removing');
           _downloads.remove(entry.key);
           orphanIds.add(entry.key);
+          final dir = entry.value.localDirPath;
+          if (dir != null) orphanDirs[entry.key] = dir;
         }
       }
       if (orphanIds.isNotEmpty) {
@@ -1780,6 +1786,9 @@ class DownloadService extends ChangeNotifier {
         final internalBase = await _internalBasePath;
         for (final id in orphanIds) {
           debugPrint('[Download] Cleaning up orphaned entry: $id');
+          // Absorb Plus: its own Author/Title folder too, inside the known
+          // download folders and only when no other book uses it (D6).
+          await _cleanupBookDir(orphanDirs[id], id);
           try {
             final dir = Directory('$basePath/$id');
             if (DownloadFolderGuard.mayDeleteTree(dir.path, [basePath],
@@ -3303,6 +3312,9 @@ class DownloadService extends ChangeNotifier {
 
   @visibleForTesting
   Future<void> debugLoadPending() => _loadPending();
+
+  @visibleForTesting
+  Future<void> debugValidateDownloads() => _validateDownloads();
 
   @visibleForTesting
   Future<void> debugPersistPending() => _persistPending();
