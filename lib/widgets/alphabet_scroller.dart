@@ -154,6 +154,30 @@ class LibraryAlphabetRail extends StatelessWidget {
   final ScrollController controller;
   final Widget child;
 
+  // The grid rebuilds on every provider change; the letters only change
+  // when a page arrives (the list grows in place) or the sort does.
+  static ({Object items, int length, Object key, List<String> letters})?
+      _cache;
+
+  List<String> _letters() {
+    final key = (sort, podcast, descending);
+    final cached = _cache;
+    if (cached != null &&
+        identical(cached.items, items) &&
+        cached.length == items.length &&
+        cached.key == key) {
+      return cached.letters;
+    }
+    final letters = libraryAlphabetLetters(
+      items,
+      sort: sort,
+      podcast: podcast,
+      descending: descending,
+    );
+    _cache = (items: items, length: items.length, key: key, letters: letters);
+    return letters;
+  }
+
   @override
   Widget build(BuildContext context) {
     final enabled = librarySortHasAlphabet(sort) &&
@@ -161,14 +185,7 @@ class LibraryAlphabetRail extends StatelessWidget {
     return AlphabetScroller(
       controller: controller,
       enabled: enabled,
-      letters: enabled
-          ? libraryAlphabetLetters(
-              items,
-              sort: sort,
-              podcast: podcast,
-              descending: descending,
-            )
-          : const [],
+      letters: enabled ? _letters() : const [],
       descending: descending,
       hasMore: hasMore,
       onLoadMore: onLoadMore,
@@ -410,7 +427,8 @@ class AlphabetScrollerState extends State<AlphabetScroller> {
     final tt = Theme.of(context).textTheme;
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
     final letters = _railLetters;
-    final bottom = 16 + MediaQuery.paddingOf(context).bottom + 88;
+    // Clear of the bottom navigation bar and mini player on phones.
+    final bottom = 112 + MediaQuery.paddingOf(context).bottom;
 
     return Stack(
       children: [
