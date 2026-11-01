@@ -52,6 +52,7 @@ import '../services/metadata_override_service.dart';
 import '../services/socket_service.dart';
 import '../services/scoped_prefs.dart';
 import '../services/user_account_service.dart';
+import '../services/continue_series_undo.dart';
 import '../main.dart' show rootNavigatorKey, colorSourceNotifier, useColorEverywhereNotifier, manualSeedNotifier, manualColorScheme;
 import '../screens/app_shell.dart';
 import '../screens/book_edit_screen.dart';
@@ -2332,6 +2333,12 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     }
     if (!context.mounted) return;
     HapticFeedback.mediumImpact();
+    if (ok) {
+      return showHiddenSeriesUndoToast(context, seriesId: seriesId,
+          readd: api.readdSeriesToContinueListening,
+          unhide: lib.unhideSeriesFromContinueShelves,
+          refresh: () => lib.refreshProgressShelves(force: true, reason: 'readd-continue-series'));
+    }
     showOverlayToast(context,
         ok ? l.removedSeriesFromContinueSeries : l.couldNotUpdate,
         icon: ok ? Icons.bookmark_remove_rounded : Icons.error_outline_rounded);

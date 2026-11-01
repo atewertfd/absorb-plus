@@ -4228,6 +4228,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get recentSearchesRemove => 'Remove';
 
   @override
+  String get removedSeriesTapToUndo =>
+      'Removed from Continue Series. Tap to undo.';
+
+  @override
+  String get seriesBackOnContinueSeries => 'Back on Continue Series';
+
+  @override
   String get addToPlaylist => 'Ajouter à la liste de lecture';
 
   @override

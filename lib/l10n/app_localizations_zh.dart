@@ -4116,6 +4116,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get recentSearchesRemove => 'Remove';
 
   @override
+  String get removedSeriesTapToUndo =>
+      'Removed from Continue Series. Tap to undo.';
+
+  @override
+  String get seriesBackOnContinueSeries => 'Back on Continue Series';
+
+  @override
   String get addToPlaylist => '添加到播放列表';
 
   @override

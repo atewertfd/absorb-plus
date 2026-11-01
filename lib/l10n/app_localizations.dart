@@ -7402,6 +7402,18 @@ abstract class AppLocalizations {
   /// **'Remove'**
   String get recentSearchesRemove;
 
+  /// No description provided for @removedSeriesTapToUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from Continue Series. Tap to undo.'**
+  String get removedSeriesTapToUndo;
+
+  /// No description provided for @seriesBackOnContinueSeries.
+  ///
+  /// In en, this message translates to:
+  /// **'Back on Continue Series'**
+  String get seriesBackOnContinueSeries;
+
   /// No description provided for @addToPlaylist.
   ///
   /// In en, this message translates to:
