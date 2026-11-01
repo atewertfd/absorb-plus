@@ -513,7 +513,7 @@ class BackupService {
         await UserAccountService().saveAccount(SavedAccount.fromJson(
           map,
           legacyCustomHeaders: restoredCustomHeaders,
-        ));
+        ), restoring: true);
       }
     }
 

@@ -75,6 +75,15 @@ void main() {
     expect(hookCalls, 1, reason: 'the signed-out playback hook still runs');
   });
 
+  test('a backup restore rewriting the account list keeps the epoch',
+      () async {
+    final start = AccountEpoch.current;
+    await UserAccountService().saveAccount(
+        SavedAccount(serverUrl: server, username: 'bob', token: 'b-token'),
+        restoring: true);
+    expect(AccountEpoch.isCurrent(start), isTrue);
+  });
+
   test('a failing handler does not stop the account change', () async {
     AccountEpoch.addHandler(() async => throw StateError('boom'));
     await UserAccountService().saveAccount(
