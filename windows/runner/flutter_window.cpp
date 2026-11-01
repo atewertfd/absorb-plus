@@ -36,6 +36,8 @@ bool FlutterWindow::OnCreate() {
   jump_list_ = std::make_unique<JumpList>(
       flutter_controller_->engine()->messenger(), launch_.arguments,
       !launch_.probe);
+  hotkeys_ = std::make_unique<GlobalHotkeys>(
+      GetHandle(), flutter_controller_->engine()->messenger());
   shell_->SetForwardedLaunchHandler([this](const std::wstring& args) {
     if (jump_list_) jump_list_->HandleForwardedLaunch(args);
   });
@@ -59,11 +61,13 @@ bool FlutterWindow::OnCreate() {
 }
 
 void FlutterWindow::ExitAfterMessageLoop(UINT exit_code) {
+  if (hotkeys_) hotkeys_->UnregisterAll();
   if (shell_) shell_->ExitNow(exit_code);
 }
 
 void FlutterWindow::OnDestroy() {
   // The shell's channels use the engine's messenger: release them first.
+  hotkeys_ = nullptr;
   shell_ = nullptr;
   jump_list_ = nullptr;
   if (flutter_controller_) {
@@ -77,8 +81,15 @@ LRESULT
 FlutterWindow::MessageHandler(HWND hwnd, UINT const message,
                               WPARAM const wparam,
                               LPARAM const lparam) noexcept {
-  // Absorb Plus shell first: it owns WM_CLOSE (tray, saving before quit),
-  // the tray icon, taskbar buttons and second-launch activation.
+  // Absorb Plus global hotkeys (WM_HOTKEY only), then the shell: it owns
+  // WM_CLOSE (tray, saving before quit), the tray icon, taskbar buttons and
+  // second-launch activation.
+  if (hotkeys_) {
+    if (std::optional<LRESULT> handled =
+            hotkeys_->HandleMessage(hwnd, message, wparam, lparam)) {
+      return *handled;
+    }
+  }
   if (shell_) {
     if (std::optional<LRESULT> handled =
             shell_->HandleMessage(hwnd, message, wparam, lparam)) {

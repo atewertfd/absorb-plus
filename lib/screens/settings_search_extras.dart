@@ -57,6 +57,8 @@ List<SettingSearchEntry> settingsSearchExtras(
           l.windowsAlwaysOnTop, [l.windowsAlwaysOnTopSubtitle]),
       SettingSearchEntry('Windows Settings', l.windowsSettingsTitle,
           l.windowsKeepAwake, [l.windowsKeepAwakeSubtitle]),
+      SettingSearchEntry('Windows Settings', l.windowsSettingsTitle,
+          l.windowsGlobalHotkeys, [l.windowsGlobalHotkeysSubtitle, 'keyboard']),
     ],
 
     // Cards on the page itself.

@@ -13291,6 +13291,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get windowsSettingFailed => 'Windows didn\'t accept that change';
 
   @override
+  String get windowsGlobalHotkeys => 'Global hotkeys';
+
+  @override
+  String get windowsGlobalHotkeysSubtitle =>
+      'Work while Absorb Plus is in the background: Ctrl+Alt+Space play/pause, Ctrl+Alt+Left/Right skip back/forward, Ctrl+Alt+Up/Down volume, Ctrl+Alt+B add bookmark';
+
+  @override
+  String windowsGlobalHotkeysUnavailable(String keys) {
+    return 'Taken by another app, not available: $keys';
+  }
+
+  @override
   String get windowsTrayShow => 'Show Absorb Plus';
 
   @override

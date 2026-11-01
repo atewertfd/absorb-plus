@@ -6,6 +6,7 @@
 
 #include <memory>
 
+#include "global_hotkeys.h"
 #include "win32_window.h"
 #include "jump_list.h"
 #include "windows_shell.h"
@@ -44,6 +45,9 @@ class FlutterWindow : public Win32Window {
 
   // Taskbar jump list (Resume, Continue listening).
   std::unique_ptr<JumpList> jump_list_;
+
+  // Opt-in global hotkeys (play/pause, skip, volume, bookmark).
+  std::unique_ptr<GlobalHotkeys> hotkeys_;
 };
 
 #endif  // RUNNER_FLUTTER_WINDOW_H_
