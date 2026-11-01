@@ -17745,6 +17745,18 @@ abstract class AppLocalizations {
   /// **'This download couldn\'t be played, so it\'s streaming from the server. Downloading it again may fix it.'**
   String get playerDownloadStreamingInstead;
 
+  /// No description provided for @playerReconnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection lost, reconnecting…'**
+  String get playerReconnecting;
+
+  /// No description provided for @playerReconnectFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reconnect to the server, so playback stopped.'**
+  String get playerReconnectFailed;
+
   /// No description provided for @readerPageTurn.
   ///
   /// In en, this message translates to:

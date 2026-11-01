@@ -10308,6 +10308,13 @@ class AppLocalizationsIt extends AppLocalizations {
       'This download couldn\'t be played, so it\'s streaming from the server. Downloading it again may fix it.';
 
   @override
+  String get playerReconnecting => 'Connection lost, reconnecting…';
+
+  @override
+  String get playerReconnectFailed =>
+      'Couldn\'t reconnect to the server, so playback stopped.';
+
+  @override
   String get readerPageTurn => 'Page turn';
 
   @override

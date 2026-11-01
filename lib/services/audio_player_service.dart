@@ -30,6 +30,7 @@ import 'chapter_lookup.dart';
 import 'now_playing_layout.dart';
 import 'cold_start_play_policy.dart';
 import 'playback_error_policy.dart';
+import 'playback_recovery.dart';
 import 'player_settings.dart';
 import 'book_settings_service.dart';
 import 'session_cache.dart';
@@ -45,6 +46,8 @@ import 'windows_media_cover.dart';
 import 'tailscale_cover_route.dart';
 import 'seek_undo.dart';
 export 'player_settings.dart';
+
+part '_stream_recovery.dart';
 
 String playbackDownloadKey(String itemId, String? episodeId) =>
     episodeKeyFor(itemId, episodeId);
@@ -300,7 +303,8 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
         _resubscribeCount = 0;
       },
       onError: (Object e, StackTrace st) {
-        if (PlaybackErrorPolicy.isSourceError(e)) {
+        if (PlaybackErrorPolicy.isSourceError(e) ||
+            AudioPlayerService()._recovery.claimsError(e)) {
           debugPrint(
             '[Player] playbackEvent source error - restarting stream: $e',
           );
@@ -1549,7 +1553,9 @@ class AudioPlayerService extends ChangeNotifier {
   bool _knownOffline = false;
   bool get knownOffline => _knownOffline;
   void setKnownOffline(bool offline) {
+    final cameBack = _knownOffline && !offline;
     _knownOffline = offline;
+    if (cameBack) _recovery.networkBack();
   }
 
   bool _isBackgrounded = false;
@@ -1614,6 +1620,9 @@ class AudioPlayerService extends ChangeNotifier {
   /// newer than where you are.
   DateTime? get lastSeekAt => _lastSeekAt;
   // ── Stream error retry tracking ──
+  // Fork: streamed playback recovers through this (see _stream_recovery.dart);
+  // the counter below is the old retry, still used for downloaded files.
+  late final _StreamRecovery _recovery = _StreamRecovery(this);
   int _streamRetryCount = 0;
   static const _maxStreamRetries = 3;
   bool _retryInProgress = false;
@@ -2729,6 +2738,8 @@ class AudioPlayerService extends ChangeNotifier {
   /// Absolute book position (accounts for multi-file track offsets).
   Duration get position {
     if (_player == null) return Duration.zero;
+    final held = _recovery.heldPosition; // fork: a stream waiting to reconnect
+    if (held != null) return held;
     // While swapping to a new item, return the target seek position so the UI
     // doesn't flash stale progress from the previous book.
     final seekTarget = _lastSeekTargetSeconds;
@@ -2750,6 +2761,8 @@ class AudioPlayerService extends ChangeNotifier {
   Stream<Duration> get absolutePositionStream {
     if (_player == null) return const Stream.empty();
     return _player!.positionStream.map((trackRelative) {
+      final held = _recovery.heldPosition; // fork: see the position getter
+      if (held != null) return held;
       if (_trackStartOffsets.length <= 1)
         return trackRelative; // single file, no offset
       final trackIdx = _currentTrackIndex;
@@ -2884,6 +2897,7 @@ class AudioPlayerService extends ChangeNotifier {
 
   Future<void> _seekAbsolute(double absoluteSeconds) async {
     if (_player == null) return;
+    _recovery.onSeek();
     final swap = _pauseSwap;
     if (swap != null) {
       _pauseSwap = null;
@@ -3686,6 +3700,7 @@ class AudioPlayerService extends ChangeNotifier {
     // a streamed item plays normally.
     bool loadOnly = false,
   }) async {
+    _recovery.onPlayItem();
     _pauseRequested = false;
     // A decoder failure on the previous item must not force a rebuild of this one.
     _playerBroken = false;
@@ -4272,7 +4287,7 @@ class AudioPlayerService extends ChangeNotifier {
       // back to the server if the files really are unreadable. Paused, the
       // next play re-initialises the idle player.
       _lastKnownPositionSec = target;
-      if (resumeAfter) unawaited(_attemptStreamRetry(e));
+      if (resumeAfter) unawaited(_attemptStreamRetry(e, resume: true));
       return true;
     }
   }
@@ -6147,7 +6162,7 @@ class AudioPlayerService extends ChangeNotifier {
       try {
         await _player?.stop();
       } catch (_) {}
-      if (resumeAfter) unawaited(_attemptStreamRetry(e));
+      if (resumeAfter) unawaited(_attemptStreamRetry(e, resume: true));
       return false;
     }
   }
@@ -6158,7 +6173,8 @@ class AudioPlayerService extends ChangeNotifier {
   /// last known position.  Tries up to [_maxStreamRetries] times with
   /// exponential back-off (1s, 2s, 4s).  If the item has been downloaded in
   /// the meantime, falls back to local files automatically.
-  Future<void> _attemptStreamRetry(Object error) async {
+  Future<void> _attemptStreamRetry(Object error, {bool? resume}) async {
+    if (_recovery.handleError(error, resume: resume)) return;
     if (_retryInProgress) return;
     if (_currentItemId == null || _api == null) return;
     if (_streamRetryCount >= _maxStreamRetries) {
@@ -6333,7 +6349,10 @@ class AudioPlayerService extends ChangeNotifier {
     // position-reset can confuse the position-based detection.
     _completionSub = _player?.processingStateStream.listen(
       (state) {
-        if (state == ProcessingState.completed && _currentItemId != null) {
+        _recovery.onProcessingState(state);
+        if (state == ProcessingState.completed &&
+            _currentItemId != null &&
+            !_recovery.holdsCompletion) {
           if (_preloadedNextBook != null) {
             debugPrint(
               '[PreBuffer] processingState=completed with pre-buffer loaded — firing auto-queue advance',
@@ -7139,11 +7158,13 @@ class AudioPlayerService extends ChangeNotifier {
     if (current.cleanBaseUrl == api.cleanBaseUrl) return;
     debugPrint('[Player] Sync now goes to ${api.cleanBaseUrl}');
     _api = api;
+    _recovery.networkBack();
   }
 
   /// Forget any sync backoff so the next tick pushes progress right away.
   /// Called when the network comes back or the active server changes.
   void resetServerSyncBackoff() {
+    _recovery.networkBack();
     if (_positionSyncFailures == 0 && _noSessionSyncRetryAt == null) return;
     debugPrint('[Player] Sync backoff cleared (failures=$_positionSyncFailures)');
     _positionSyncFailures = 0;
@@ -7419,6 +7440,7 @@ class AudioPlayerService extends ChangeNotifier {
   /// away - if you switched devices you'll open the app, and a jump a few
   /// seconds into playback is worse than starting where you paused.
   Future<void> play({String? logDetail, bool fromUi = false}) async {
+    _recovery.userAction(_RecoveryUserAction.play);
     _pauseRequested = false;
     // A second Play while the first is still moving the source onto a live
     // session raced it: it pressed play on a half-loaded player and ExoPlayer
@@ -8010,6 +8032,7 @@ class AudioPlayerService extends ChangeNotifier {
 
   Future<void> pause() async {
     _markPauseRequested();
+    _recovery.userAction(_RecoveryUserAction.pause);
     debugPrint('[Service] pause() called');
     _playVerifyTimer?.cancel();
     _wasPlayingBeforeInterrupt = false;
@@ -8128,6 +8151,7 @@ class AudioPlayerService extends ChangeNotifier {
     String? logDetail,
     bool offerUndo = true,
   }) async {
+    _recovery.userAction(_RecoveryUserAction.seek);
     // While this item is casting, the Chromecast is the real player - route
     // the seek there too or bookmark/chapter jumps only move the stopped
     // local player (GH #273).
@@ -8184,6 +8208,7 @@ class AudioPlayerService extends ChangeNotifier {
 
   Future<void> skipForward([int seconds = 30]) async {
     if (_player == null) return;
+    _recovery.userAction(_RecoveryUserAction.skip);
     _resetStuckDetection();
     if (!_player!.playing) _seekedWhilePaused = true;
     // Multiply by speed so the skip feels like the configured amount of real time
@@ -8204,6 +8229,7 @@ class AudioPlayerService extends ChangeNotifier {
 
   Future<void> skipBackward([int seconds = 10]) async {
     if (_player == null) return;
+    _recovery.userAction(_RecoveryUserAction.skip);
     _resetStuckDetection();
     if (!_player!.playing) _seekedWhilePaused = true;
     // Multiply by speed so the skip feels like the configured amount of real time
@@ -8255,6 +8281,7 @@ class AudioPlayerService extends ChangeNotifier {
 
   Future<void> skipToNextChapter() async {
     if (_player == null || _chapters.isEmpty) return;
+    _recovery.userAction(_RecoveryUserAction.chapterSkip);
     _resetStuckDetection();
     if (!_player!.playing) _seekedWhilePaused = true;
     final posS = position.inMilliseconds / 1000.0;
@@ -8279,6 +8306,7 @@ class AudioPlayerService extends ChangeNotifier {
 
   Future<void> skipToPreviousChapter() async {
     if (_player == null || _chapters.isEmpty) return;
+    _recovery.userAction(_RecoveryUserAction.chapterSkip);
     _resetStuckDetection();
     if (!_player!.playing) _seekedWhilePaused = true;
     final posS = position.inMilliseconds / 1000.0;
@@ -8341,6 +8369,7 @@ class AudioPlayerService extends ChangeNotifier {
   }
 
   Future<void> stop({bool keepSleepTimer = false}) async {
+    _recovery.userAction(_RecoveryUserAction.stop);
     _pauseStopTimer?.cancel();
     _pauseStopTimer = null;
     _endAdvanceBuffering();
@@ -8418,6 +8447,7 @@ class AudioPlayerService extends ChangeNotifier {
 
   /// Stop playback without saving progress — used by reset progress.
   Future<void> stopWithoutSaving() async {
+    _recovery.userAction(_RecoveryUserAction.stopWithoutSaving);
     _endAdvanceBuffering();
     // Close server session without syncing position
     if (_playbackSessionId != null && _api != null) {
