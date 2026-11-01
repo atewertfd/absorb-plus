@@ -1123,7 +1123,8 @@ class DownloadService extends ChangeNotifier {
       if (_folderTakenByOther(nested, itemId)) {
         nested = '$nested (${folderIdSuffix(itemId)})';
       }
-      final moved = await _moveBookToSaf(tree, nested, [for (final p in paths) p.split('/').last], paths);
+      final moved = await _moveBookToSaf(tree, nested, [for (final p in paths) p.split('/').last], paths,
+          itemId: itemId);
       if (moved != null) {
         finalPaths = moved.fileUris;
         finalDir = moved.dirUri;
@@ -3164,6 +3165,8 @@ class DownloadService extends ChangeNotifier {
     required String itemId,
     required int trackCount,
     String? libraryId,
+    String? safTreeUri,
+    String? safSubfolder,
   }) async {
     final bookDir = '${Directory.systemTemp.path}/absorb_download_service_test/$itemId';
     _pending[itemId] = _PendingBook(
@@ -3177,6 +3180,8 @@ class DownloadService extends ChangeNotifier {
         trackCount,
         (index) => '$bookDir/$index.mp3',
       ),
+      safTreeUri: safTreeUri,
+      safSubfolder: safSubfolder,
     );
     _activeDownloadIds.add(itemId);
     _downloads[itemId] = DownloadInfo(
@@ -3264,13 +3269,16 @@ class DownloadService extends ChangeNotifier {
   /// Returns the created folder URI and the per-file content URIs, or null if
   /// the move failed.
   Future<({String dirUri, List<String> fileUris})?> _moveBookToSaf(
-      String treeUri, String subfolder, List<String> filenames, List<String> tempPaths) async {
+      String treeUri, String subfolder, List<String> filenames, List<String> tempPaths,
+      {String? itemId}) async {
     try {
       final res = await _storageChannel.invokeMethod<Map>('moveBookToSaf', {
         'treeUri': treeUri,
         'subfolder': subfolder,
         'filenames': filenames,
         'tempPaths': tempPaths,
+        // Absorb Plus: a non-empty folder of the user's gets "Title (id)" (D1).
+        if (itemId != null) 'idSuffix': folderIdSuffix(itemId),
       });
       final dirUri = res?['dirUri'] as String?;
       final fileUris = (res?['fileUris'] as List?)?.map((e) => e as String).toList();
@@ -3326,7 +3334,8 @@ class DownloadService extends ChangeNotifier {
     if (p.isSaf) {
       final filenames = [for (final path in localPaths) path.split('/').last];
       final moved = await _moveBookToSaf(
-          p.safTreeUri!, p.safSubfolder ?? '', filenames, localPaths);
+          p.safTreeUri!, p.safSubfolder ?? '', filenames, localPaths,
+          itemId: itemId);
       if (moved != null) {
         finalPaths = moved.fileUris;
         finalDirPath = moved.dirUri;
@@ -3873,9 +3882,10 @@ class DownloadService extends ChangeNotifier {
       if (dirPath != null && _dirSharedWithOther(dirPath, itemId)) {
         // Other books still have files here: only this book's files go.
       } else if (dirPath != null && isContentUri(dirPath)) {
-        // SAF book folder: best-effort delete (harmless if already emptied).
+        // SAF book folder: only once it is empty. Deleting a SAF folder is
+        // recursive, and it may be the user's own (Absorb Plus, audit D1).
         try {
-          await FileDownloader().uri.deleteFile(Uri.parse(dirPath));
+          await _storageChannel.invokeMethod('deleteSafDirIfEmpty', {'dirUri': dirPath});
         } catch (_) {}
       } else if (dirPath != null && Directory(dirPath).existsSync()) {
         // Absorb Plus: only inside a known download folder, and the emptied

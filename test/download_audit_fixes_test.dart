@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:absorb/services/api_service.dart';
 import 'package:absorb/services/download_service.dart';
+import 'package:absorb/services/download_track_names.dart';
+import 'package:background_downloader/background_downloader.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/testing.dart';
@@ -81,6 +83,77 @@ void main() {
       expect(info.trackCount, 1);
       expect(info.bytesTotal, 2);
       expect(info.progress, 1);
+    });
+  });
+
+  group('D1 custom (SAF) folder on Android', () {
+    const storage = MethodChannel('com.absorb.storage');
+    late List<MethodCall> calls;
+
+    setUp(() {
+      calls = [];
+      messenger.setMockMethodCallHandler(storage, (call) async {
+        calls.add(call);
+        if (call.method == 'moveBookToSaf') {
+          final names = (call.arguments['filenames'] as List).cast<String>();
+          return {
+            'dirUri': 'content://tree/doc/Author%2FTitle',
+            'fileUris': [for (final n in names) 'content://tree/doc/$n'],
+          };
+        }
+        return true;
+      });
+    });
+    tearDown(() => messenger.setMockMethodCallHandler(storage, null));
+
+    test('delete asks for the folder to go only when it is empty', () async {
+      final s = newService();
+      s.debugPutDownload(DownloadInfo(
+        itemId: 'saf-book',
+        status: DownloadStatus.downloaded,
+        title: 'Title',
+        localDirPath: 'content://tree/doc/Author%2FTitle',
+      ));
+
+      await s.deleteDownload('saf-book', skipStopCheck: true);
+
+      expect(calls.map((c) => c.method), ['deleteSafDirIfEmpty']);
+      expect(calls.single.arguments['dirUri'],
+          'content://tree/doc/Author%2FTitle');
+      expect(s.downloadedItems, isEmpty);
+    });
+
+    test('the move passes the book id so a used folder is never reused',
+        () async {
+      final s = newService();
+      await s.debugSeedPendingDownload(
+        itemId: 'saf-move-book',
+        trackCount: 1,
+        safTreeUri: 'content://tree',
+        safSubfolder: 'Author/Title',
+      );
+      final file = File('${Directory.systemTemp.path}/'
+          'absorb_download_service_test/saf-move-book/0.mp3')
+        ..createSync(recursive: true)
+        ..writeAsBytesSync([1]);
+      addTearDown(() {
+        try {
+          file.parent.deleteSync(recursive: true);
+        } catch (_) {}
+      });
+
+      await s.debugHandleTaskStatus(
+        itemId: 'saf-move-book',
+        trackIndex: 0,
+        status: TaskStatus.complete,
+      );
+
+      final move = calls.firstWhere((c) => c.method == 'moveBookToSaf');
+      expect(move.arguments['subfolder'], 'Author/Title');
+      expect(move.arguments['idSuffix'], folderIdSuffix('saf-move-book'));
+      expect(s.getInfo('saf-move-book').status, DownloadStatus.downloaded);
+      expect(s.getInfo('saf-move-book').localDirPath,
+          'content://tree/doc/Author%2FTitle');
     });
   });
 }

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import android.net.Uri
+import android.provider.DocumentsContract
 import android.provider.MediaStore
 import androidx.documentfile.provider.DocumentFile
 import java.io.File
@@ -185,6 +186,7 @@ class MainActivity : AudioServiceActivity() {
                         }
                     }
                     "moveBookToSaf" -> handleMoveBookToSaf(call, result)
+                    "deleteSafDirIfEmpty" -> handleDeleteSafDirIfEmpty(call, result)
                     else -> result.notImplemented()
                 }
             }
@@ -319,6 +321,10 @@ class MainActivity : AudioServiceActivity() {
         val subfolder = call.argument<String>("subfolder") ?: ""
         val filenames = call.argument<List<String>>("filenames")
         val tempPaths = call.argument<List<String>>("tempPaths")
+        // Absorb Plus: the book's id suffix. When the user's own folder already
+        // has a non-empty "Author/Title", the book gets "Title (id)" instead, so
+        // none of their files are replaced or later deleted (audit D1).
+        val idSuffix = call.argument<String>("idSuffix")
         if (treeUri == null || filenames == null || tempPaths == null || filenames.size != tempPaths.size) {
             result.error("SAF_ARGS", "Invalid arguments", null)
             return
@@ -328,7 +334,16 @@ class MainActivity : AudioServiceActivity() {
                 val tree = DocumentFile.fromTreeUri(applicationContext, Uri.parse(treeUri))
                     ?: throw IllegalStateException("Download folder not accessible")
                 var dir: DocumentFile = tree
-                for (segment in subfolder.split('/').filter { it.isNotBlank() }) {
+                val segments = subfolder.split('/').filter { it.isNotBlank() }
+                for ((index, name) in segments.withIndex()) {
+                    var segment = name
+                    if (index == segments.size - 1 && idSuffix != null &&
+                        !segment.endsWith(" ($idSuffix)")) {
+                        val taken = dir.findFile(segment)
+                        if (taken != null && (!taken.isDirectory || taken.listFiles().isNotEmpty())) {
+                            segment = "$segment ($idSuffix)"
+                        }
+                    }
                     val existing = dir.findFile(segment)
                     dir = if (existing != null && existing.isDirectory) existing
                         else (dir.createDirectory(segment)
@@ -362,6 +377,32 @@ class MainActivity : AudioServiceActivity() {
                 Log.e(TAG, "moveBookToSaf failed: ${e.message}", e)
                 runOnUiThread { result.error("SAF_MOVE_ERROR", e.message, null) }
             }
+        }.start()
+    }
+
+    // Absorb Plus: remove a book's SAF folder only when nothing is left in it.
+    // DocumentFile.delete() on a folder deletes it recursively, which would
+    // take any of the user's own files with it (audit D1).
+    private fun handleDeleteSafDirIfEmpty(call: MethodCall, result: MethodChannel.Result) {
+        val dirUri = call.argument<String>("dirUri")
+        if (dirUri == null) {
+            result.error("SAF_ARGS", "Invalid arguments", null)
+            return
+        }
+        Thread {
+            val deleted = try {
+                val uri = Uri.parse(dirUri)
+                val children = DocumentsContract.buildChildDocumentsUriUsingTree(
+                    uri, DocumentsContract.getDocumentId(uri))
+                val empty = contentResolver.query(children,
+                    arrayOf(DocumentsContract.Document.COLUMN_DOCUMENT_ID), null, null, null)
+                    ?.use { it.count == 0 } ?: false
+                empty && DocumentsContract.deleteDocument(contentResolver, uri)
+            } catch (e: Exception) {
+                Log.e(TAG, "deleteSafDirIfEmpty failed: ${e.message}", e)
+                false
+            }
+            runOnUiThread { result.success(deleted) }
         }.start()
     }
 
