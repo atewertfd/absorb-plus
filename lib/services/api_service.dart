@@ -2718,7 +2718,15 @@ class ApiService {
 
   /// Get server progress for a single item.
   /// GET /api/me/progress/:id
-  Future<Map<String, dynamic>?> getItemProgress(String itemId) async {
+  Future<Map<String, dynamic>?> getItemProgress(String itemId) async =>
+      (await readItemProgress(itemId)).row;
+
+  /// Absorb Plus: [getItemProgress] that tells "no progress row" (a 404,
+  /// [known] true, [row] null) apart from "couldn't read" (5xx, proxy error,
+  /// timeout, bad body: [known] false), so last-write-wins never treats a
+  /// failed read as an empty server.
+  Future<({Map<String, dynamic>? row, bool known})> readItemProgress(
+      String itemId) async {
     try {
       // Podcast episodes use compound key "showId-episodeId" →
       // ABS endpoint: /api/me/progress/{showId}/{episodeId}
@@ -2729,12 +2737,13 @@ class ApiService {
         Uri.parse('$_cleanBaseUrl/api/me/progress/$progressPath'),
         timeout: const Duration(seconds: 10));
       if (resp.statusCode == 200) {
-        return await _withPageReadElsewhere(itemId, jsonDecode(resp.body) as Map<String, dynamic>);
+        return (row: await _withPageReadElsewhere(itemId, jsonDecode(resp.body) as Map<String, dynamic>), known: true);
       }
+      if (resp.statusCode == 404) return (row: null, known: true);
     } catch (e) {
       debugPrint('[API] getItemProgress $itemId error: ${e.runtimeType}: $e');
     }
-    return null;
+    return (row: null, known: false);
   }
 
   /// The narration time of the page a narrated book was read to on another

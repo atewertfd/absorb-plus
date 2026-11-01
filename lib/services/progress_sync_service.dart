@@ -338,7 +338,15 @@ class ProgressSyncService {
         }
 
         try {
-          final serverProgress = await api.getItemProgress(itemId);
+          final read = await api.readItemProgress(itemId);
+          if (!read.known) {
+            // A failed read is not "the server has nothing": pushing now
+            // would skip last-write-wins and could overwrite a newer place.
+            debugPrint('[Sync] Could not read server progress for $itemId - keeping it pending');
+            _consecutiveFailures++;
+            break;
+          }
+          final serverProgress = read.row;
           if (serverProgress != null) {
             final serverTimestamp = (serverProgress['lastUpdate'] as num?)?.toInt() ?? 0;
             final serverTime = (serverProgress['currentTime'] as num?)?.toDouble() ?? 0;
@@ -718,17 +726,20 @@ class ProgressSyncService {
         // than the server's own position (another device, or this one, carried
         // on listening since), so report the time at whichever position is
         // further in. Crediting listening must never drag progress backwards.
-        try {
-          final serverProgress = await api.getItemProgress(itemId);
-          final serverTime =
-              (serverProgress?['currentTime'] as num?)?.toDouble() ?? 0;
-          if (serverTime > currentTime) {
-            debugPrint(
-                '[Sync] Server is ahead for $itemId (${serverTime}s vs ${currentTime}s) - reporting listening at the server position');
-            currentTime = serverTime;
-          }
-        } catch (e) {
-          debugPrint('[Sync] Could not read server progress for $itemId: $e');
+        final read = await api.readItemProgress(itemId);
+        if (!read.known) {
+          // Without the server's position the guard above can't run; keep
+          // the time for the next flush rather than report at a stale spot.
+          debugPrint('[Sync] Could not read server progress for $itemId - keeping its offline listening');
+          _consecutiveFailures++;
+          break;
+        }
+        final serverTime =
+            (read.row?['currentTime'] as num?)?.toDouble() ?? 0;
+        if (serverTime > currentTime) {
+          debugPrint(
+              '[Sync] Server is ahead for $itemId (${serverTime}s vs ${currentTime}s) - reporting listening at the server position');
+          currentTime = serverTime;
         }
 
         // A ledger holding more listening than the item is long is not a real
