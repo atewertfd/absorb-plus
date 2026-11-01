@@ -22,6 +22,10 @@ extension ForkPlaybackTestHooks on AudioPlayerService {
   @visibleForTesting
   int get debugPlaybackGeneration => _playbackGeneration;
 
+  /// The stream recovery's policy, to put the service into a reconnect.
+  @visibleForTesting
+  PlaybackRecovery get debugRecoveryPolicy => _recovery.policy;
+
   /// Pretends a start is loading, the way playItem marks one.
   @visibleForTesting
   void debugMarkStartLoading() {

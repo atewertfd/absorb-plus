@@ -375,7 +375,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   }
 
   PlaybackState _transformEvent(PlaybackEvent event) {
-    final playPause = _player.playing ? MediaControl.pause : MediaControl.play;
+    final playPause = _playingOrReconnecting ? MediaControl.pause : MediaControl.play;
 
     final rewindControl = MediaControl(
       androidIcon: 'drawable/ic_skip_back',
@@ -463,10 +463,10 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
           ProcessingState.ready: AudioProcessingState.ready,
           ProcessingState.completed: AudioProcessingState.completed,
         }[_player.processingState]!;
-        if (_advanceBuffering) return AudioProcessingState.buffering;
+        if (_advanceBuffering || _reconnecting) return AudioProcessingState.buffering;
         return mapped;
       }(),
-      playing: _player.playing,
+      playing: _playingOrReconnecting,
       updatePosition: _speedAdjustedPosition(),
       bufferedPosition: _player.bufferedPosition,
       // Report speed as 1.0 because duration and position are already
@@ -978,7 +978,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
               return _otherAudioActive();
             }
             if (kc == keycodeMediaPause) {
-              if (_player.playing) {
+              if (_playingOrReconnecting) {
                 debugPrint('[Handler] → single press (MEDIA_PAUSE) → PAUSE');
                 await pause();
               } else if (_isCarPackage(pkg) ||
@@ -1013,7 +1013,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
                   '[Handler] → single press (MEDIA_PLAY while playing) → no-op',
                 );
               }
-            } else if (_player.playing) {
+            } else if (_playingOrReconnecting) {
               debugPrint('[Handler] → single press → PAUSE');
               await pause();
             } else if (await meantForOtherAudio()) {
@@ -1951,13 +1951,13 @@ class AudioPlayerService extends ChangeNotifier {
       _currentItemId != null &&
       (_player?.processingState ?? ProcessingState.idle) !=
           ProcessingState.idle;
-  bool get isPlaying => _player?.playing ?? false;
+  bool get isPlaying => (_player?.playing ?? false) || _recovery.wantsToPlay;
 
   /// True while [playItem] is setting up a new audio source.
   bool _isLoadingNewItem = false;
   bool get isLoadingNewItem => _isLoadingNewItem;
   bool get isLoadingOrBuffering {
-    if (_isLoadingNewItem) return true;
+    if (_isLoadingNewItem || _recovery.wantsToPlay) return true;
     final s = _player?.processingState;
     return s == ProcessingState.loading || s == ProcessingState.buffering;
   }
@@ -7262,6 +7262,7 @@ class AudioPlayerService extends ChangeNotifier {
   Future<void> _syncToServer(Duration pos, {int? timeListenedOverride}) async {
     if (_api == null || _playbackSessionId == null) return;
     if (_isCachedStartReconcilePending) return;
+    if (_recovery.policy.isRecovering) return; // fork: no listening while reconnecting
     final ct = pos.inMilliseconds / 1000.0;
     // Incomplete download: stuck at the truncated file's end. Don't push that
     // clamped position to the server (it would move real progress backward) or
@@ -7441,8 +7442,8 @@ class AudioPlayerService extends ChangeNotifier {
   /// away - if you switched devices you'll open the app, and a jump a few
   /// seconds into playback is worse than starting where you paused.
   Future<void> play({String? logDetail, bool fromUi = false}) async {
-    _recovery.userAction(_RecoveryUserAction.play);
     _pauseRequested = false;
+    if (_recovery.retryOnPlay()) return; // fork: reconnecting - retry now
     // A second Play while the first is still moving the source onto a live
     // session raced it: it pressed play on a half-loaded player and ExoPlayer
     // failed with "Unexpected runtime error" (GH #344). The first one plays

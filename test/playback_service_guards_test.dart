@@ -33,4 +33,65 @@ void main() {
       expect(player.isLoadingNewItem, isFalse);
     });
   });
+
+  group('reconnecting counts as playing', () {
+    // The service is a singleton: start each test unpaused, with nothing
+    // loaded (Play with no item and no history does nothing else).
+    setUp(() => AudioPlayerService().play());
+
+    test('the service reports playing and loading while a reconnect waits', () async {
+      final player = AudioPlayerService();
+      final policy = player.debugRecoveryPolicy;
+      expect(player.isPlaying, isFalse);
+
+      policy.onFailure(Exception('Source error'));
+      addTearDown(() => policy.cancel('test over'));
+
+      expect(policy.isWaiting, isTrue);
+      expect(player.isPlaying, isTrue, reason: 'not shown as paused');
+      expect(player.isReconnecting, isTrue);
+      expect(player.isLoadingOrBuffering, isTrue);
+    });
+
+    test('Play while reconnecting retries now instead of cancelling', () async {
+      final player = AudioPlayerService();
+      final policy = player.debugRecoveryPolicy;
+      policy.onFailure(Exception('Source error'));
+      addTearDown(() => policy.cancel('test over'));
+      expect(policy.attempt, 0);
+
+      await player.play();
+      // The attempt ran at once (no server here, so it failed and waits
+      // again), and the recovery is still going.
+      await Future<void>.delayed(Duration.zero);
+      expect(policy.attempt, 1);
+      expect(policy.isRecovering, isTrue);
+      expect(player.isPlaying, isTrue);
+    });
+
+    test('Pause while reconnecting cancels and shows paused', () async {
+      final player = AudioPlayerService();
+      final policy = player.debugRecoveryPolicy;
+      policy.onFailure(Exception('Source error'));
+      addTearDown(() => policy.cancel('test over'));
+
+      await player.pause();
+
+      expect(policy.isActive, isFalse);
+      expect(player.isPlaying, isFalse);
+      expect(player.isReconnecting, isFalse);
+    });
+
+    test('togglePlayPause while reconnecting pauses', () async {
+      final player = AudioPlayerService();
+      final policy = player.debugRecoveryPolicy;
+      policy.onFailure(Exception('Source error'));
+      addTearDown(() => policy.cancel('test over'));
+
+      await player.togglePlayPause();
+
+      expect(policy.isActive, isFalse);
+      expect(player.isPlaying, isFalse);
+    });
+  });
 }

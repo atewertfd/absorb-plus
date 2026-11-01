@@ -201,6 +201,34 @@ class _StreamRecovery {
 
   void networkBack() => policy.retryNow();
 
+  /// The stream dropped while the user meant it to play, and a reconnect is
+  /// waiting or running: the service reports "playing" (buffering) instead
+  /// of the paused raw player, so the app, notification, car and headset
+  /// all keep treating it as playing.
+  bool get wantsToPlay => policy.isRecovering && !_s._pauseRequested;
+
+  /// A Play (app, headset, car, notification, SMTC). While reconnecting it
+  /// means "try now", not "start over": the recovery keeps its item and
+  /// target, and the next attempt runs at once when one is waiting. True
+  /// when the press was handled here.
+  bool retryOnPlay() {
+    if (!policy.isRecovering) {
+      userAction(_RecoveryUserAction.play);
+      return false;
+    }
+    debugPrint('[Recovery] Play while reconnecting - retrying now');
+    policy.retryNow();
+    _refresh();
+    return true;
+  }
+
+  void _refresh() {
+    // Same library as the service: this is its own notify, from a part file.
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    _s.notifyListeners();
+    AudioPlayerService._handler?.refreshPlaybackState();
+  }
+
   double _lastPosition() {
     if (_s._lastKnownPositionSec > 0) return _s._lastKnownPositionSec;
     final seek = _s._lastSeekTargetSec;
@@ -326,6 +354,9 @@ class _StreamRecovery {
   }
 
   void _onStatus(PlaybackRecoveryStatus status, Object? error) {
+    // "Playing" follows the recovery (see wantsToPlay): tell the app and the
+    // media session whenever that changes.
+    _refresh();
     switch (status) {
       case PlaybackRecoveryStatus.idle:
         break;
@@ -375,4 +406,19 @@ class _StreamRecovery {
       await _s._player?.pause();
     }
   }
+}
+
+/// What the media session (notification, lock screen, car, SMTC) and the
+/// media-button resolver read as "playing": the raw player, or a reconnect
+/// the user is waiting through (see [_StreamRecovery.wantsToPlay]).
+extension _RecoveryAwareHandler on AudioPlayerHandler {
+  bool get _reconnecting => _service?._recovery.wantsToPlay ?? false;
+
+  bool get _playingOrReconnecting => _player.playing || _reconnecting;
+}
+
+/// For the player UI: a stream is reconnecting while the user means it to
+/// play, so the play button shows the loading state rather than "paused".
+extension ForkRecoveryState on AudioPlayerService {
+  bool get isReconnecting => _recovery.wantsToPlay;
 }
