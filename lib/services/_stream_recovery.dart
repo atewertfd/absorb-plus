@@ -155,8 +155,10 @@ class _StreamRecovery {
       _earlyEndAt = null;
       return false;
     }
+    // The reload goes back 2 s, so a true end lands within a few seconds of
+    // the first one; a second drop further on still reconnects.
     final previous = _earlyEndAt;
-    if (previous != null && (pos - previous).abs() <= 15) {
+    if (previous != null && (pos - previous).abs() <= 5) {
       debugPrint('[Recovery] Stream ended at ${pos.toStringAsFixed(1)}s again '
           '- taking that as the real end');
       _earlyEndAt = null;
@@ -210,7 +212,9 @@ class _StreamRecovery {
   /// target too, so a seek made meanwhile doesn't flash the old spot.
   Duration? get heldPosition {
     final sec = policy.isRecovering ? policy.failedAtSec : _heldSec;
-    if (sec == null || sec <= 0) return null;
+    // 0 means "unknown", except when the user sought to the start.
+    final chosen = policy.isRecovering && policy.hasUserTarget;
+    if (sec == null || (sec <= 0 && !chosen)) return null;
     return Duration(milliseconds: (sec * 1000).round());
   }
 
@@ -226,10 +230,13 @@ class _StreamRecovery {
   void userAction(_RecoveryUserAction action) {
     if (action.movesPosition && policy.isRecovering) {
       // Keep the reconnect: the seek moves where it resumes instead.
-      _userSeekUntil = DateTime.now().add(const Duration(seconds: 3));
+      _userSeekUntil = DateTime.now().add(const Duration(seconds: 2));
       return;
     }
-    if (policy.isWaiting) {
+    // While waiting, and while a reload loads, the raw player's position is
+    // the wrong file or a half-loaded source: keep reporting and saving the
+    // recovery's spot after it ends.
+    if (policy.isRecovering) {
       final at = policy.failedAtSec;
       if (at > 0) {
         _heldSec = at;
@@ -240,6 +247,8 @@ class _StreamRecovery {
           ));
         }
       }
+    }
+    if (policy.isWaiting) {
       // After an error the player may have moved itself onto the next file
       // and be ready there. Leave it idle, so the next play starts over at
       // the saved spot instead of resuming in the wrong file. A stall kept
@@ -283,6 +292,11 @@ class _StreamRecovery {
     policy.retarget(target);
     _heldSec = null;
     if (policy.isReloading) _seekAfterReload = target;
+    // What an ordinary seek records, for the guards that read it (a seek
+    // to the start isn't a completion, the position to retry from).
+    _s._lastSeekTargetSec = target;
+    _s._lastSeekAt = DateTime.now();
+    _s._lastKnownPositionSec = target;
     // Not a seek "while paused": the user still wants to hear it.
     _s._seekedWhilePaused = false;
     unawaited(_s._saveProgressLocal(
@@ -421,12 +435,20 @@ class _StreamRecovery {
   }
 
   Future<bool> _reload(double at, Object? lastError) async {
-    // A target picked during an earlier attempt is already in [at].
+    // A target picked during an earlier attempt is already in [at], and a
+    // seek flag left by a skip that never sought must not take this
+    // reload's own start seek.
     _seekAfterReload = null;
+    _userSeekUntil = null;
     final item = _item;
     if (item == null) return false;
     final gen = policy.generation;
-    bool stillOurs() => policy.generation == gen && policy.isReloading;
+    // The attempt too: one that timed out must not pass for the next.
+    final attempt = policy.attempt;
+    bool stillOurs() =>
+        policy.generation == gen &&
+        policy.isReloading &&
+        policy.attempt == attempt;
     final current = _s._currentItemId;
     if (current != null &&
         (current != item.itemId || _s._currentEpisodeId != item.episodeId)) {
@@ -559,11 +581,15 @@ class _StreamRecovery {
     }
     s._playbackSessionId = sid;
     s._logEvent(PlaybackEventType.sessionStart, detail: 'reconnect');
-    s._stashSessionUpgrade(session);
     try {
       final active = await (await AudioSession.instance).setActive(true);
       if (!active) debugPrint('[Recovery] Audio focus refused before the reload');
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('[Recovery] Audio session activation failed: $e');
+    }
+    // Stashed only now, with nothing awaited before the swap takes it: a
+    // pause in between would otherwise swap it in at the raw position.
+    s._stashSessionUpgrade(session);
     final ok = await s._applyPendingSessionUpgrade(seekToSeconds: at);
     if (!ok) {
       // The swap replaces the source only after it has captured the new

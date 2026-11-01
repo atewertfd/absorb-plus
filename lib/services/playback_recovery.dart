@@ -207,6 +207,9 @@ class PlaybackRecovery {
       ? _resumeAtSec
       : math.max(0, _resumeAtSec - _seconds(rewind));
 
+  /// The target is one the user picked while it ran (see [retarget]).
+  bool get hasUserTarget => _exactTarget;
+
   /// Where the stream was when it failed, in seconds: what the player should
   /// report as its position while it waits for a retry.
   double get failedAtSec => _resumeAtSec;

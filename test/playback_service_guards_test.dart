@@ -146,6 +146,20 @@ void main() {
       expect(player.isPlaying, isFalse);
     });
 
+    test('a seek to the start while reconnecting is held at 0:00', () async {
+      final player = AudioPlayerService();
+      final policy = player.debugRecoveryPolicy;
+      policy.onFailure(Exception('Source error'));
+      addTearDown(() => policy.cancel('test over'));
+
+      await player.seekTo(Duration.zero);
+
+      expect(policy.isRecovering, isTrue);
+      expect(policy.failedAtSec, 0);
+      expect(policy.hasUserTarget, isTrue);
+      expect(policy.resumeAtSec, 0);
+    });
+
     test('togglePlayPause while reconnecting pauses', () async {
       final player = AudioPlayerService();
       final policy = player.debugRecoveryPolicy;

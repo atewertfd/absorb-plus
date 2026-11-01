@@ -521,6 +521,7 @@ void main() {
         expect(h.recovery.isRecovering, isTrue, reason: 'not cancelled');
         expect(h.recovery.failedAtSec, 400, reason: 'the player shows it');
         expect(h.recovery.resumeAtSec, 400, reason: 'no rewind on a chosen spot');
+        expect(h.recovery.hasUserTarget, isTrue);
         h.reachable = true;
         async.elapse(const Duration(seconds: 5)); // attempt 2 at 7 s
         expect(h.reloads.single.at, 400);
