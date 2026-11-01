@@ -62,7 +62,13 @@ class PlaybackStallError implements Exception {
 ///   a reload that was in flight is ignored when it returns.
 /// - After a reload works the attempt count is kept for [healthyAfter], so a
 ///   connection that keeps flapping keeps backing off instead of reloading
-///   every 2 s.
+///   every 2 s. The give-up clock keeps running through that window too: only
+///   a stream that stays healthy for [healthyAfter] starts a fresh budget.
+/// - A stream that fails again at the spot a reload just went to, before it
+///   played on, is the file and not the network (Android reports a damaged
+///   frame as the same "source error" as a dropped connection). After
+///   [sameSpotLimit] such failures it gives up instead of replaying the same
+///   seconds forever.
 class PlaybackRecovery {
   PlaybackRecovery({
     required this.reload,
@@ -79,6 +85,7 @@ class PlaybackRecovery {
     this.healthyAfter = const Duration(seconds: 30),
     this.rewind = const Duration(seconds: 2),
     this.reloadTimeout = const Duration(minutes: 2),
+    this.sameSpotLimit = 2,
   });
 
   static const defaultSchedule = <Duration>[
@@ -120,7 +127,18 @@ class PlaybackRecovery {
   /// stuck load can't hold the recovery forever.
   final Duration reloadTimeout;
 
+  /// Failures right where a reload went (see the class rules) before it
+  /// gives up.
+  final int sameSpotLimit;
+
+  /// How far past the reload target a failure still counts as the same spot.
+  static const sameSpotSlackSec = 5.0;
+
   _Phase _phase = _Phase.idle;
+  // Where the last reload went, and how many reloads in a row failed again
+  // right there.
+  double _lastReloadAt = 0;
+  int _sameSpotFailures = 0;
   int _attempt = 0;
   double _resumeAtSec = 0;
   // The target is one the user picked (see [retarget]): reload exactly there.
@@ -249,6 +267,15 @@ class PlaybackRecovery {
       case _Phase.verifying:
         _healthyTimer?.cancel();
         _healthyTimer = null;
+        final sameSpot = error is! PlaybackStallError &&
+            pos <= _lastReloadAt + sameSpotSlackSec;
+        _sameSpotFailures = sameSpot ? _sameSpotFailures + 1 : 0;
+        if (_sameSpotFailures >= sameSpotLimit) {
+          _log('failed again at ${pos.toStringAsFixed(1)}s, where the last '
+              '$_sameSpotFailures reloads went - the file, not the network');
+          _giveUp();
+          return;
+        }
         if (pos > _resumeAtSec) {
           _resumeAtSec = pos;
           _exactTarget = false;
@@ -261,6 +288,7 @@ class PlaybackRecovery {
         return;
       case _Phase.idle:
         _attempt = 0;
+        _sameSpotFailures = 0;
         _resumeAtSec = pos;
         _exactTarget = false;
         _healable = error is PlaybackStallError;
@@ -378,6 +406,7 @@ class PlaybackRecovery {
     if (gen != _generation || _phase != _Phase.probing) return;
     _phase = _Phase.reloading;
     final at = resumeAtSec;
+    _lastReloadAt = at;
     _log('attempt $_attempt: reloading at ${at.toStringAsFixed(1)}s');
     bool ok;
     try {
@@ -411,9 +440,8 @@ class PlaybackRecovery {
 
   void _enterVerifying() {
     _phase = _Phase.verifying;
-    _deadlineTimer?.cancel();
-    _deadlineTimer = null;
-    _deadlinePassed = false;
+    // The give-up clock keeps running until the stream has stayed healthy:
+    // a reload that fails again right away mustn't buy another 5 minutes.
     _healthyTimer?.cancel();
     _healthyTimer = Timer(healthyAfter, () {
       _healthyTimer = null;

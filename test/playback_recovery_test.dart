@@ -286,6 +286,60 @@ void main() {
     });
   });
 
+  group('PlaybackRecovery gives up on what a reload cannot fix', () {
+    test('failing again where each reload went is the file: it gives up', () {
+      fakeAsync((async) {
+        final h = _Harness(async);
+        h.position = 100;
+        h.recovery.onFailure(Exception('Source error: ParserException'));
+        async.elapse(const Duration(seconds: 2)); // reload at 98 works
+        h.recovery.onFailure(Exception('Source error: ParserException'));
+        expect(h.recovery.isRecovering, isTrue, reason: 'once may be chance');
+        async.elapse(const Duration(seconds: 5)); // reload at 98 works again
+        expect(h.reloads, hasLength(2));
+        h.recovery.onFailure(Exception('Source error: ParserException'));
+        expect(h.statuses.last, PlaybackRecoveryStatus.gaveUp);
+        expect(h.recovery.isActive, isFalse);
+        async.elapse(const Duration(minutes: 10));
+        expect(h.reloads, hasLength(2), reason: 'no endless replay of 2 s');
+      });
+    });
+
+    test('a reload that played on before failing is not the same spot', () {
+      fakeAsync((async) {
+        final h = _Harness(async);
+        h.position = 100;
+        h.recovery.onFailure(Exception('Source error'));
+        for (var i = 1; i <= 4; i++) {
+          async.elapse(const Duration(seconds: 20)); // reload worked
+          h.position = 100.0 + 10 * i; // played on, then dropped again
+          h.recovery.onFailure(Exception('Source error'));
+          expect(h.recovery.isRecovering, isTrue, reason: 'failure $i');
+        }
+        expect(h.statuses, isNot(contains(PlaybackRecoveryStatus.gaveUp)));
+      });
+    });
+
+    test('reloads that keep failing soon after do not reset the 5 minutes', () {
+      fakeAsync((async) {
+        final h = _Harness(async);
+        h.position = 100;
+        h.recovery.onFailure(Exception('Source error'));
+        var gaveUpAt = Duration.zero;
+        for (var i = 1; i <= 40 && h.recovery.isActive; i++) {
+          async.elapse(const Duration(seconds: 25)); // reload worked
+          if (!h.recovery.isActive) break;
+          h.position += 20; // plays on a little, then drops again
+          h.recovery.onFailure(Exception('Source error'));
+          if (!h.recovery.isActive) gaveUpAt = async.elapsed;
+        }
+        expect(h.statuses.last, PlaybackRecoveryStatus.gaveUp);
+        expect(gaveUpAt, greaterThanOrEqualTo(const Duration(minutes: 5)));
+        expect(gaveUpAt, lessThan(const Duration(minutes: 6)));
+      });
+    });
+  });
+
   group('PlaybackRecovery never fights the user', () {
     test('cancel while waiting stops every retry', () {
       fakeAsync((async) {
