@@ -182,6 +182,14 @@ class _StreamRecovery {
     return false;
   }
 
+  /// The book finished (or was skipped to its end). Ends any recovery and
+  /// forgets its item, so no later attempt reloads the finished book.
+  void onFinished() {
+    _earlyEndAt = null;
+    _item = null;
+    policy.cancel('finished');
+  }
+
   /// playItem was entered. Anything but a reload of ours is a new play.
   void onPlayItem() {
     _heldSec = null;

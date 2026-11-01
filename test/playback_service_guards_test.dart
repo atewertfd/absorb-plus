@@ -133,6 +133,19 @@ void main() {
       expect(clocks.serverSync, clocks.accrual);
     });
 
+    test('skipping past the last chapter ends a reconnect', () async {
+      final player = AudioPlayerService();
+      final policy = player.debugRecoveryPolicy;
+      policy.onFailure(Exception('Source error'));
+      addTearDown(() => policy.cancel('test over'));
+
+      await player.debugCompletePlayback(userRequested: true);
+
+      expect(policy.isActive, isFalse,
+          reason: 'no attempt may reload the finished book');
+      expect(player.isPlaying, isFalse);
+    });
+
     test('togglePlayPause while reconnecting pauses', () async {
       final player = AudioPlayerService();
       final policy = player.debugRecoveryPolicy;

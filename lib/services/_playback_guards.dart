@@ -21,6 +21,10 @@ extension _ForkPlaybackGuards on AudioPlayerService {
   /// local save) used to leave [_isCompletingBook] set, and every later
   /// completion was then ignored as a re-entry until another book started.
   Future<void> _onPlaybackComplete({bool userRequested = false}) async {
+    // A completion that gets this far is the book's (a reconnect holds the
+    // dead source's), or a chapter skip past the end: no reconnect may
+    // bring the finished book back afterwards.
+    _recovery.onFinished();
     try {
       await _completePlayback(userRequested: userRequested);
     } catch (e, st) {
@@ -49,6 +53,11 @@ extension ForkPlaybackTestHooks on AudioPlayerService {
     _lastAccrual = c.accrual;
     _lastServerSync = c.serverSync;
   }
+
+  /// Runs the completion path, as the end of the book or a skip past it.
+  @visibleForTesting
+  Future<void> debugCompletePlayback({bool userRequested = false}) =>
+      _onPlaybackComplete(userRequested: userRequested);
 
   /// Pretends a start is loading, the way playItem marks one.
   @visibleForTesting
