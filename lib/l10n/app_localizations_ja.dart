@@ -13461,4 +13461,9 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get exclusiveAudioSubtitle =>
       'Fixes crackling or jumpy volume by skipping Windows sound effects. Other apps are muted while Absorb plays. Restart Absorb to apply.';
+
+  @override
+  String homeRecentlyAddedNewBadge(int count) {
+    return '$count new';
+  }
 }

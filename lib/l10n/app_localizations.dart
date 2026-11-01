@@ -22856,6 +22856,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fixes crackling or jumpy volume by skipping Windows sound effects. Other apps are muted while Absorb plays. Restart Absorb to apply.'**
   String get exclusiveAudioSubtitle;
+
+  /// No description provided for @homeRecentlyAddedNewBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} new'**
+  String homeRecentlyAddedNewBadge(int count);
 }
 
 class _AppLocalizationsDelegate

@@ -13,6 +13,7 @@ import 'books_sheet_shared.dart' show coverSizeScale;
 import '../ui_themes/ui_theme_hooks.dart';
 import '../utils/local_path.dart';
 import 'desktop_input.dart';
+import 'recently_added_badge.dart';
 
 class HomeSection extends StatelessWidget {
   final String title;
@@ -105,7 +106,8 @@ class HomeSection extends StatelessWidget {
                 ? 170
                 : classicShelfCardHeight(context, isRectCover, cardWidth, coverAspectRatio, subtitleLine) ?? cardWidth / coverAspectRatio + textBlock;
 
-    return Padding(
+    return RecentlyAddedScope(sectionId: sectionId, entities: entities, // fork
+      child: Padding(
       padding: const EdgeInsets.only(top: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,6 +130,7 @@ class HomeSection extends StatelessWidget {
                       letterSpacing: 0.3,
                     ),
                   ),
+                  const RecentlyAddedBadge(), // fork: "N new"
                   if (onTitleTap != null) ...[
                     const SizedBox(width: 4),
                     Icon(Icons.chevron_right_rounded, size: 16,
@@ -236,7 +239,7 @@ class HomeSection extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 
   String? _sourceIdFromSectionId(String type) {
