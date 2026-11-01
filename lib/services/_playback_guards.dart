@@ -15,6 +15,19 @@ extension _ForkPlaybackGuards on AudioPlayerService {
     _playbackGeneration++;
     _isLoadingNewItem = false;
   }
+
+  /// Every completion goes through here (the upstream body is
+  /// [_completePlayback]). A throw part-way through it (a server call, a
+  /// local save) used to leave [_isCompletingBook] set, and every later
+  /// completion was then ignored as a re-entry until another book started.
+  Future<void> _onPlaybackComplete({bool userRequested = false}) async {
+    try {
+      await _completePlayback(userRequested: userRequested);
+    } catch (e, st) {
+      _isCompletingBook = false;
+      debugPrint('[Complete] Failed part-way: $e\n$st');
+    }
+  }
 }
 
 /// Read-only views of the service's start bookkeeping, for tests.

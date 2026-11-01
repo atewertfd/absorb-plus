@@ -6884,7 +6884,7 @@ class AudioPlayerService extends ChangeNotifier {
     return p.position >= d - const Duration(seconds: 2);
   }
 
-  Future<void> _onPlaybackComplete({bool userRequested = false}) async {
+  Future<void> _completePlayback({bool userRequested = false}) async { // fork: via _onPlaybackComplete
     // Alpha: captures completion path choice for GH #186 (book restart bug).
     // Re-entry attempts are logged too so we can see if completion fires
     // multiple times from different signals (processingState, position-jump,
