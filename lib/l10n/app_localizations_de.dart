@@ -13206,6 +13206,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get windowsTaskbarForward => 'Fast-forward';
 
   @override
+  String windowsJumpListResume(String title) {
+    return 'Resume $title';
+  }
+
+  @override
   String get supportContactSubtitle =>
       'Ask a question on the Absorb Plus GitHub';
 

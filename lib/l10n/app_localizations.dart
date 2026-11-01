@@ -22251,6 +22251,12 @@ abstract class AppLocalizations {
   /// **'Fast-forward'**
   String get windowsTaskbarForward;
 
+  /// No description provided for @windowsJumpListResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume {title}'**
+  String windowsJumpListResume(String title);
+
   /// No description provided for @supportContactSubtitle.
   ///
   /// In en, this message translates to:
