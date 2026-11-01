@@ -351,6 +351,22 @@ void main() {
       });
     });
 
+    test('a connection that drops right after each reload is not the file', () {
+      fakeAsync((async) {
+        final h = _Harness(async);
+        h.position = 100;
+        const drop = 'Source error: HttpDataSource\$HttpDataSourceException: '
+            'java.net.SocketTimeoutException';
+        h.recovery.onFailure(Exception(drop));
+        for (var i = 1; i <= 4; i++) {
+          async.elapse(const Duration(seconds: 25)); // reload worked
+          h.recovery.onFailure(Exception(drop)); // same spot, network again
+          expect(h.recovery.isRecovering, isTrue, reason: 'drop $i');
+        }
+        expect(h.statuses, isNot(contains(PlaybackRecoveryStatus.gaveUp)));
+      });
+    });
+
     test('a reload that played on before failing is not the same spot', () {
       fakeAsync((async) {
         final h = _Harness(async);

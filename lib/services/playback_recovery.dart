@@ -275,6 +275,37 @@ class PlaybackRecovery {
     return clock.add(resumedAt.difference(stoppedAt));
   }
 
+  /// The error says outright that the connection failed (just_audio passes
+  /// ExoPlayer's cause along), or is one of our own stall or timeout
+  /// verdicts. Those never count toward [sameSpotLimit]: a flapping Wi-Fi
+  /// can fail right after a reload too. A bare "source error", or one whose
+  /// cause is a parser or format problem, can.
+  static bool _namesAConnectionFault(Object error) {
+    if (error is PlaybackStallError ||
+        error is PlaybackEndedEarlyError ||
+        error is TimeoutException) {
+      return true;
+    }
+    var text = error.toString().toLowerCase();
+    if (error is PlatformException) {
+      text = '$text ${error.message?.toLowerCase() ?? ''}';
+    }
+    const signs = [
+      'httpdatasource',
+      'http_data_source',
+      'response code',
+      'unable to connect',
+      'connection',
+      'socket',
+      'timed out',
+      'timeout',
+      'host lookup',
+      'unreachable',
+      'network',
+    ];
+    return signs.any(text.contains);
+  }
+
   /// The stream failed with a network error while the user meant it to play.
   void onFailure(Object error) {
     _lastError = error;
@@ -295,7 +326,7 @@ class PlaybackRecovery {
       case _Phase.verifying:
         _healthyTimer?.cancel();
         _healthyTimer = null;
-        final sameSpot = error is! PlaybackStallError &&
+        final sameSpot = !_namesAConnectionFault(error) &&
             pos <= _lastReloadAt + sameSpotSlackSec;
         _sameSpotFailures = sameSpot ? _sameSpotFailures + 1 : 0;
         if (_sameSpotFailures >= sameSpotLimit) {
