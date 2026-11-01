@@ -23150,6 +23150,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No listening yet'**
   String get statsNoListeningYet;
+
+  /// No description provided for @desktopShortcutQuickSwitcher.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick switcher: find books or go anywhere'**
+  String get desktopShortcutQuickSwitcher;
+
+  /// No description provided for @desktopShortcutHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Show keyboard shortcuts'**
+  String get desktopShortcutHelp;
+
+  /// No description provided for @quickSwitcherTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick switcher (Ctrl+K)'**
+  String get quickSwitcherTooltip;
+
+  /// No description provided for @quickSwitcherHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search this library or type a command'**
+  String get quickSwitcherHint;
+
+  /// No description provided for @quickSwitcherNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No matches'**
+  String get quickSwitcherNoResults;
+
+  /// No description provided for @quickSwitcherGoHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Home'**
+  String get quickSwitcherGoHome;
+
+  /// No description provided for @quickSwitcherGoLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Library'**
+  String get quickSwitcherGoLibrary;
+
+  /// No description provided for @quickSwitcherGoAbsorbing.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Absorbing'**
+  String get quickSwitcherGoAbsorbing;
+
+  /// No description provided for @quickSwitcherGoStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Stats'**
+  String get quickSwitcherGoStats;
+
+  /// No description provided for @quickSwitcherGoSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Settings'**
+  String get quickSwitcherGoSettings;
+
+  /// No description provided for @quickSwitcherGoDownloads.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Downloads'**
+  String get quickSwitcherGoDownloads;
+
+  /// No description provided for @quickSwitcherPlayPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Play / pause'**
+  String get quickSwitcherPlayPause;
+
+  /// No description provided for @quickSwitcherSleepTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep timer'**
+  String get quickSwitcherSleepTimer;
+
+  /// No description provided for @quickSwitcherKindAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Action'**
+  String get quickSwitcherKindAction;
+
+  /// No description provided for @quickSwitcherKindBook.
+  ///
+  /// In en, this message translates to:
+  /// **'Book'**
+  String get quickSwitcherKindBook;
+
+  /// No description provided for @quickSwitcherKindPodcast.
+  ///
+  /// In en, this message translates to:
+  /// **'Podcast'**
+  String get quickSwitcherKindPodcast;
+
+  /// No description provided for @quickSwitcherKindSeries.
+  ///
+  /// In en, this message translates to:
+  /// **'Series'**
+  String get quickSwitcherKindSeries;
+
+  /// No description provided for @quickSwitcherKindAuthor.
+  ///
+  /// In en, this message translates to:
+  /// **'Author'**
+  String get quickSwitcherKindAuthor;
+
+  /// No description provided for @alphabetScrollerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Jump to a letter'**
+  String get alphabetScrollerLabel;
 }
 
 class _AppLocalizationsDelegate

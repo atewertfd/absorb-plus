@@ -17,6 +17,8 @@ enum DesktopShortcutAction {
   library,
   nowPlaying,
   fullScreen,
+  quickSwitcher,
+  shortcutHelp,
 }
 
 class DesktopShortcutDefinition {
@@ -30,6 +32,14 @@ class DesktopShortcutDefinition {
   /// Works wherever focus is (function keys never type text).
   final bool global;
 
+  /// Matches the typed character instead of [key] ("?" is Shift+/ on some
+  /// keyboards and another key on others).
+  final String? character;
+
+  /// Opens a dialog of its own, so it never fires from inside a dialog
+  /// (the same "no dialog open" rule as [nothingMoreSpecificHasFocus]).
+  final bool notInDialog;
+
   const DesktopShortcutDefinition({
     required this.action,
     required this.key,
@@ -38,17 +48,21 @@ class DesktopShortcutDefinition {
     this.shift = false,
     this.alt = false,
     this.global = false,
+    this.notInDialog = false,
+    this.character,
   });
 
   /// No modifier: a key that also types text (Space, arrows, brackets).
   bool get isPlainKey => !global && !control && !shift && !alt;
 
-  SingleActivator get activator => SingleActivator(
-        key,
-        control: control,
-        shift: shift,
-        alt: alt,
-      );
+  ShortcutActivator get activator => character != null
+      ? CharacterActivator(character!)
+      : SingleActivator(
+          key,
+          control: control,
+          shift: shift,
+          alt: alt,
+        );
 }
 
 /// The shortcuts for this platform; F11 full screen is Windows-only.
@@ -114,8 +128,30 @@ const _sharedShortcutDefinitions = <DesktopShortcutDefinition>[
     label: 'Ctrl+N',
     control: true,
   ),
+  DesktopShortcutDefinition(
+    action: DesktopShortcutAction.quickSwitcher,
+    key: LogicalKeyboardKey.keyK,
+    label: 'Ctrl+K',
+    control: true,
+    notInDialog: true,
+  ),
+  DesktopShortcutDefinition(
+    action: DesktopShortcutAction.shortcutHelp,
+    key: LogicalKeyboardKey.slash,
+    character: '?',
+    label: '?',
+    notInDialog: true,
+  ),
+  DesktopShortcutDefinition(
+    action: DesktopShortcutAction.shortcutHelp,
+    key: LogicalKeyboardKey.f1,
+    label: 'F1',
+    global: true,
+    notInDialog: true,
+  ),
 ];
 
+/// The first binding of [action] (Help has two: ? and F1).
 DesktopShortcutDefinition desktopShortcutFor(DesktopShortcutAction action) {
   if (action == DesktopShortcutAction.fullScreen) return _fullScreenShortcut;
   return _sharedShortcutDefinitions
@@ -246,6 +282,13 @@ bool nothingMoreSpecificHasFocus() {
   return ModalRoute.of(context) is! RawDialogRoute;
 }
 
+/// True while keyboard focus is inside an open dialog.
+bool focusIsInDialog() {
+  final context = FocusManager.instance.primaryFocus?.context;
+  if (context == null) return false;
+  return ModalRoute.of(context) is RawDialogRoute;
+}
+
 /// Runs desktop shortcuts. Plain-key ones (Space, arrows, brackets) only run
 /// on desktop while nothing more specific has focus (the shell, or an open
 /// page or player with nothing in it focused): a focused button keeps Space,
@@ -255,15 +298,21 @@ class DesktopShortcutCallbackAction extends CallbackAction<Intent> {
   DesktopShortcutCallbackAction({
     required this.actionOf,
     required super.onInvoke,
+    this.definitionOf,
   });
 
   final DesktopShortcutAction? Function(Intent intent) actionOf;
+
+  /// The binding that fired, for actions with more than one (? and F1).
+  final DesktopShortcutDefinition? Function(Intent intent)? definitionOf;
 
   @override
   bool isEnabled(Intent intent) {
     final action = actionOf(intent);
     if (action == null) return true;
-    if (!desktopShortcutFor(action).isPlainKey) return true;
+    final shortcut = definitionOf?.call(intent) ?? desktopShortcutFor(action);
+    if (shortcut.notInDialog && focusIsInDialog()) return false;
+    if (!shortcut.isPlainKey) return true;
     final desktop = defaultTargetPlatform == TargetPlatform.windows ||
         defaultTargetPlatform == TargetPlatform.linux ||
         defaultTargetPlatform == TargetPlatform.macOS;
