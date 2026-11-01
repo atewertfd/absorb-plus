@@ -2270,6 +2270,13 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       loadCollections();
       _narratedToContinueListening();
       await (this as _AbsorbingMixin)._updateAbsorbingCache();
+      // Fork: a library flip during that await swapped in the other library's
+      // shelves; filing them (and the cooldown) under it left it stale.
+      if (_selectedLibraryId != libraryId) {
+        _isLoading = false;
+        notifyListeners();
+        return;
+      }
 
       _injectDownloadedSection();
 
