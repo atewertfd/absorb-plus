@@ -1050,7 +1050,19 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
         return null;
       case 'session':
         if (method != 'POST') return null;
-        if (at(2) == 'local') return _json(await _localSession(body));
+        if (at(2) == 'local') {
+          try {
+            return _json(await _localSession(body));
+          } on _BoHttpError catch (e) {
+            // A book BookOrbit turns away (deleted, bad data) came back as
+            // 404, which the app reads as "server has no local sessions" and
+            // sent every later session down the legacy path. Refuse it with
+            // a status that means just that session.
+            if (e.status != 400 && e.status != 404) rethrow;
+            debugPrint('[BookOrbit] Refused a session for ${body['libraryItemId']}: ${e.status} ${e.serverMessage ?? ''}');
+            return _status(422, e.message);
+          }
+        }
         if (at(2) == 'local-all') {
           final sessions = (body['sessions'] as List<dynamic>? ?? const [])
               .whereType<Map<String, dynamic>>()

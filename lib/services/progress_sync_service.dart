@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'api_service.dart';
 import 'download_service.dart';
+import 'offline_listening_upload.dart';
 import 'scoped_prefs.dart';
 import 'streaming_pending_ledger.dart';
 import 'sync_logic.dart';
@@ -28,6 +29,12 @@ class ProgressSyncService {
   final StreamingPendingLedger _streaming = StreamingPendingLedger();
   int _consecutiveFailures = 0;
   static const _maxConsecutiveFailures = 10;
+  /// Absorb Plus: the session the last flush ran with, and for which account,
+  /// so a connectivity change can flush (it has no session of its own), and
+  /// the one scheduled retry, so repeated flushes don't stack retry chains.
+  ApiService? _lastApi;
+  String? _lastApiScope;
+  Timer? _retryTimer;
 
   /// Initialize — start listening for connectivity changes.
   Future<void> init() async {
@@ -39,7 +46,9 @@ class ProgressSyncService {
       _isOnline = !result.contains(ConnectivityResult.none);
       if (_isOnline && wasOffline) {
         _consecutiveFailures = 0; // reset backoff on connectivity change
-        flushPendingSync();
+        // Called with no session this returned at once, so nothing retried.
+        // Only reuse the last one while the same account is active.
+        flushPendingSync(api: _lastApiScope == _scope ? _lastApi : null);
       }
     });
   }
@@ -259,11 +268,17 @@ class ProgressSyncService {
     final scope = _scope;
     try {
       if (sessionId != null) {
-        await api.syncPlaybackSession(
+        // syncPlaybackSession reports failure by returning false, never by
+        // throwing; ignoring it dropped the queued position as synced.
+        final ok = await api.syncPlaybackSession(
           sessionId,
           currentTime: currentTime,
           duration: duration,
         );
+        if (!ok) {
+          debugPrint('[Sync] Session sync for $itemId failed - keeping it pending');
+          return false;
+        }
       } else {
         final ok = await api.updateProgress(
           itemId,
@@ -291,6 +306,8 @@ class ProgressSyncService {
   /// Compares local vs server timestamps — last-write-wins.
   Future<void> flushPendingSync({ApiService? api, int maxItems = 5}) async {
     if (!_isOnline || api == null) return;
+    _lastApi = api;
+    _lastApiScope = _scope;
 
     if (_isFlushing) {
       _flushAgain = true;
@@ -338,7 +355,15 @@ class ProgressSyncService {
         }
 
         try {
-          final serverProgress = await api.getItemProgress(itemId);
+          final read = await api.readItemProgress(itemId);
+          if (!read.known) {
+            // A failed read is not "the server has nothing": pushing now
+            // would skip last-write-wins and could overwrite a newer place.
+            debugPrint('[Sync] Could not read server progress for $itemId - keeping it pending');
+            _consecutiveFailures++;
+            break;
+          }
+          final serverProgress = read.row;
           if (serverProgress != null) {
             final serverTimestamp = (serverProgress['lastUpdate'] as num?)?.toInt() ?? 0;
             final serverTime = (serverProgress['currentTime'] as num?)?.toDouble() ?? 0;
@@ -492,22 +517,25 @@ class ProgressSyncService {
         debugPrint('[Sync] Flush made no progress (${remaining.length} still pending) - backing off');
       }
       // Exponential backoff: 5s, 10s, 20s, 40s, ... capped at 5 minutes
+      // Absorb Plus: past the limit keep retrying at the cap instead of
+      // stopping. Nothing else retries on a desktop that never changes
+      // connectivity, so a server back from a long outage waited for a
+      // manual refresh.
       if (_consecutiveFailures >= _maxConsecutiveFailures) {
-        debugPrint('[Sync] Too many consecutive failures ($_consecutiveFailures) - waiting for next connectivity change');
-        return;
+        debugPrint('[Sync] Too many consecutive failures ($_consecutiveFailures) - retrying every ${SyncLogic.maxRetryDelay.inMinutes} min');
       }
       final clampedDelay = SyncLogic.backoffDelay(_consecutiveFailures);
       debugPrint('[Sync] Scheduling retry in ${clampedDelay.inSeconds}s (failures=$_consecutiveFailures)');
 
-      unawaited(
-        Future<void>.delayed(clampedDelay, () {
-          if (_scope != scope) {
-            debugPrint('[Sync] Account changed - dropping the retry scheduled with the old session');
-            return null;
-          }
-          return flushPendingSync(api: api, maxItems: maxItems);
-        }),
-      );
+      _retryTimer?.cancel();
+      _retryTimer = Timer(clampedDelay, () {
+        _retryTimer = null;
+        if (_scope != scope) {
+          debugPrint('[Sync] Account changed - dropping the retry scheduled with the old session');
+          return;
+        }
+        unawaited(flushPendingSync(api: api, maxItems: maxItems));
+      });
     } else {
       _flushAgain = false;
     }
@@ -524,11 +552,13 @@ class ProgressSyncService {
     required String location,
     required double progress,
   }) async {
+    final startedAt = DateTime.now().millisecondsSinceEpoch;
     final ok = _isOnline &&
         await api.updateEbookProgress(itemId,
             ebookLocation: location, ebookProgress: progress);
     if (ok) {
-      await _removePendingEbook(itemId);
+      // A newer page queued while this PATCH was in flight stays queued.
+      await _removePendingEbook(itemId, queuedBefore: startedAt);
       return;
     }
     if (_isOnline && api.lastEbookProgressStatus == 404) {
@@ -536,14 +566,28 @@ class ProgressSyncService {
       await _removePendingEbook(itemId);
       return;
     }
-    final pending = await getPendingEbookProgress();
-    pending[itemId] = {
-      'loc': location,
-      'prog': progress,
-      'ts': DateTime.now().millisecondsSinceEpoch,
-    };
-    await ScopedPrefs.setString('pending_ebook_progress', jsonEncode(pending));
+    await _serial(() async {
+      final pending = await getPendingEbookProgress();
+      pending[itemId] = {
+        'loc': location,
+        'prog': progress,
+        'ts': DateTime.now().millisecondsSinceEpoch,
+      };
+      await ScopedPrefs.setString('pending_ebook_progress', jsonEncode(pending));
+    });
     debugPrint('[Sync] Queued ebook progress for $itemId (offline or PATCH failed)');
+  }
+
+  /// Absorb Plus: the ebook queue and the offline listening ledger are
+  /// read-modify-written across awaits by both the player/reader and the
+  /// flush; this chain runs those changes one at a time so neither side
+  /// writes over the other's.
+  Future<void> _queueChain = Future<void>.value();
+
+  Future<T> _serial<T>(Future<T> Function() change) {
+    final run = _queueChain.then((_) => change());
+    _queueChain = run.then<void>((_) {}, onError: (Object _) {});
+    return run;
   }
 
   /// Queued ebook positions whose PATCH hasn't landed yet
@@ -564,11 +608,21 @@ class ProgressSyncService {
   /// can't put the older place back.
   Future<void> dropPendingEbookProgress(String itemId) => _removePendingEbook(itemId);
 
-  Future<void> _removePendingEbook(String itemId) async {
-    final pending = await getPendingEbookProgress();
-    if (pending.remove(itemId) == null) return;
-    await ScopedPrefs.setString('pending_ebook_progress', jsonEncode(pending));
-  }
+  /// [sentTs]: remove only the entry that was sent (a newer page queued
+  /// since keeps its place). [queuedBefore]: remove only an entry queued
+  /// before that time.
+  Future<void> _removePendingEbook(String itemId,
+          {int? sentTs, int? queuedBefore}) =>
+      _serial(() async {
+        final pending = await getPendingEbookProgress();
+        final entry = pending[itemId];
+        if (entry == null) return;
+        final ts = (entry['ts'] as num?)?.toInt();
+        if (sentTs != null && ts != sentTs) return;
+        if (queuedBefore != null && ts != null && ts >= queuedBefore) return;
+        pending.remove(itemId);
+        await ScopedPrefs.setString('pending_ebook_progress', jsonEncode(pending));
+      });
 
   Future<void> _flushPendingEbookProgress(ApiService api) async {
     final pending = await getPendingEbookProgress();
@@ -584,7 +638,8 @@ class ProgressSyncService {
       final ok = await api.updateEbookProgress(entry.key,
           ebookLocation: loc, ebookProgress: prog);
       if (ok) {
-        await _removePendingEbook(entry.key);
+        await _removePendingEbook(entry.key,
+            sentTs: (entry.value['ts'] as num?)?.toInt());
         _consecutiveFailures = 0;
       } else if (api.lastEbookProgressStatus == 404) {
         // Another server's download read here, or a book since deleted: this
@@ -605,6 +660,7 @@ class ProgressSyncService {
   Future<void> addOfflineListeningTime(String itemId, int seconds) async {
     if (seconds <= 0) return;
     final key = 'offline_listening_$itemId';
+    await _serial(() async {
     final existing = await ScopedPrefs.getInt(key) ?? 0;
     await ScopedPrefs.setInt(key, existing + seconds);
     debugPrint('[Sync] Offline listening +${seconds}s for $itemId (total=${existing + seconds}s)');
@@ -615,6 +671,7 @@ class ProgressSyncService {
       pending.add(itemId);
       await ScopedPrefs.setStringList('pending_offline_listening', pending);
     }
+    });
   }
 
   /// Buffer listening time for an item that is streaming with a live server
@@ -675,8 +732,8 @@ class ProgressSyncService {
     }
   }
 
-  /// Flush accumulated offline listening time to the server by creating
-  /// a session, syncing the accumulated time, and closing it.
+  /// Flush accumulated offline listening time to the server as a local
+  /// session (see OfflineListeningUpload).
   /// Called externally (e.g. from library_provider) and also internally
   /// from flushPendingSync's retry loop.
   Future<void> flushOfflineListeningTime({required ApiService api}) async {
@@ -704,7 +761,9 @@ class ProgressSyncService {
         final key = 'offline_listening_$itemId';
         final seconds = await ScopedPrefs.getInt(key) ?? 0;
         if (seconds <= 0) {
-          await ScopedPrefs.remove(key);
+          await _serial(() async {
+            if ((await ScopedPrefs.getInt(key) ?? 0) <= 0) await ScopedPrefs.remove(key);
+          });
           flushed.add(itemId);
           continue;
         }
@@ -718,17 +777,20 @@ class ProgressSyncService {
         // than the server's own position (another device, or this one, carried
         // on listening since), so report the time at whichever position is
         // further in. Crediting listening must never drag progress backwards.
-        try {
-          final serverProgress = await api.getItemProgress(itemId);
-          final serverTime =
-              (serverProgress?['currentTime'] as num?)?.toDouble() ?? 0;
-          if (serverTime > currentTime) {
-            debugPrint(
-                '[Sync] Server is ahead for $itemId (${serverTime}s vs ${currentTime}s) - reporting listening at the server position');
-            currentTime = serverTime;
-          }
-        } catch (e) {
-          debugPrint('[Sync] Could not read server progress for $itemId: $e');
+        final read = await api.readItemProgress(itemId);
+        if (!read.known) {
+          // Without the server's position the guard above can't run; keep
+          // the time for the next flush rather than report at a stale spot.
+          debugPrint('[Sync] Could not read server progress for $itemId - keeping its offline listening');
+          _consecutiveFailures++;
+          break;
+        }
+        final serverTime =
+            (read.row?['currentTime'] as num?)?.toDouble() ?? 0;
+        if (serverTime > currentTime) {
+          debugPrint(
+              '[Sync] Server is ahead for $itemId (${serverTime}s vs ${currentTime}s) - reporting listening at the server position');
+          currentTime = serverTime;
         }
 
         // A ledger holding more listening than the item is long is not a real
@@ -743,28 +805,11 @@ class ProgressSyncService {
         }
 
         try {
-          final isCompound = itemId.length > 36;
-          final apiItemId = isCompound ? itemId.substring(0, 36) : itemId;
-          final episodeId = isCompound ? itemId.substring(37) : null;
-
-          final sessionData = episodeId != null
-              ? await api.startEpisodePlaybackSession(apiItemId, episodeId)
-              : await api.startPlaybackSession(apiItemId);
-
-          var synced = false;
-          if (sessionData != null) {
-            final sid = sessionData['id'] as String?;
-            if (sid != null) {
-              synced = await api.syncPlaybackSession(
-                sid,
-                currentTime: currentTime,
-                duration: duration,
-                timeListened: reported,
-              );
-              await api.closePlaybackSession(sid);
-              if (synced) debugPrint('[Sync] Flushed ${reported}s offline listening for $itemId');
-            }
-          }
+          // Absorb Plus: an idempotent local session, not a fresh /play one
+          // (offline_listening_upload.dart says why).
+          final synced = await OfflineListeningUpload.send(api, itemId,
+              seconds: reported, currentTime: currentTime, duration: duration);
+          if (synced) debugPrint('[Sync] Flushed ${reported}s offline listening for $itemId');
           // Not sent: keep the time for the next run instead of losing it.
           // One item the server refuses (e.g. deleted) must not hold back the
           // rest; several in a row means the server is down, so stop.
@@ -781,14 +826,21 @@ class ProgressSyncService {
           // key during the flush (e.g. a +60s tick that fired while the
           // server session was in flight) are preserved for the next run
           // instead of being wiped by an outright remove.
+          // Serialized with addOfflineListeningTime, so a tick landing here
+          // can't write back the pre-subtraction total.
+          final cleared = await _serial(() async {
           final current = await ScopedPrefs.getInt(key) ?? 0;
           final remaining = current - seconds;
           if (remaining > 0) {
             await ScopedPrefs.setInt(key, remaining);
+            return false;
           } else {
             await ScopedPrefs.remove(key);
-            flushed.add(itemId);
+            return true;
           }
+          });
+          if (cleared) flushed.add(itemId);
+          await OfflineListeningUpload.settled(itemId);
         } catch (e) {
           debugPrint('[Sync] Failed to flush offline listening for $itemId: $e');
           final msg = e.toString();
@@ -804,11 +856,19 @@ class ProgressSyncService {
       }
 
       // Only remove successfully flushed items from pending list
+      // (Absorb Plus: and only while nothing was added for them since, or
+      // the new seconds would sit in their key with the item off the list.)
       if (flushed.isNotEmpty) {
+        await _serial(() async {
+        final still = <String>{};
+        for (final id in flushed) {
+          if ((await ScopedPrefs.getInt('offline_listening_$id') ?? 0) > 0) still.add(id);
+        }
         final remaining = List<String>.from(
             await ScopedPrefs.getStringList('pending_offline_listening'));
-        remaining.removeWhere((id) => flushed.contains(id));
+        remaining.removeWhere((id) => flushed.contains(id) && !still.contains(id));
         await ScopedPrefs.setStringList('pending_offline_listening', remaining);
+        });
       }
     } finally {
       _isFlushingOfflineListening = false;
@@ -817,5 +877,7 @@ class ProgressSyncService {
 
   void dispose() {
     _connectivitySub?.cancel();
+    _retryTimer?.cancel();
+    _retryTimer = null;
   }
 }

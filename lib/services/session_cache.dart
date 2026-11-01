@@ -74,11 +74,16 @@ class SessionCache {
   }) async {
     try {
       final prefs = await SharedPreferences.getInstance();
+      // Absorb Plus: a remove rewrites the whole prefs file on Windows even
+      // for a missing key, and every socket item_updated lands here.
+      Future<void> drop(String k) async {
+        if (prefs.containsKey(k)) await prefs.remove(k);
+      }
       if (episodeId != null) {
-        await prefs.remove(_key(itemId, episodeId));
+        await drop(_key(itemId, episodeId));
       } else {
         // Clear the item key and any episode keys under it
-        await prefs.remove(_key(itemId, null));
+        await drop(_key(itemId, null));
         final scope = UserAccountService().activeScopeKey;
         final prefix = scope.isEmpty ? '' : '$scope:';
         final itemPrefix = '${prefix}session_cache_${itemId}_';

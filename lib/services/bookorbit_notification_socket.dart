@@ -5,6 +5,7 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import 'api_service.dart';
 import 'server_notifications.dart';
+import 'user_account_service.dart';
 
 /// BookOrbit's live notification feed, its `/notifications` socket. It runs
 /// on the same terms as the Audiobookshelf socket: only while the app is in
@@ -14,11 +15,16 @@ import 'server_notifications.dart';
 /// BookOrbit only creates the notifications a user's category settings let
 /// through, so whatever arrives here is already one they asked for.
 class BookOrbitNotificationSocket {
-  BookOrbitNotificationSocket._();
+  BookOrbitNotificationSocket._() {
+    unread.addListener(() => _countScope = UserAccountService().activeScopeKey);
+  }
   static final instance = BookOrbitNotificationSocket._();
 
   /// The unread count BookOrbit last gave, and for which account.
   final unread = ValueNotifier<({ApiService api, int count})?>(null);
+
+  /// The account that was active when [unread] last changed.
+  String? _countScope;
 
   final _incoming = StreamController<ServerNotification>.broadcast();
   final _updated = StreamController<ServerNotification>.broadcast();
@@ -38,9 +44,19 @@ class BookOrbitNotificationSocket {
   bool get isConnected => _socket?.connected ?? false;
 
   /// The live count for [api], or null when the feed isn't for that account.
+  ///
+  /// Matched by account, not by instance: `auth.apiService` builds a new
+  /// [ApiService] on every read, so an instance check never matched in
+  /// Settings, and once Settings stored its own instance the next
+  /// notification counted from zero.
   int? unreadFor(ApiService? api) {
     final u = unread.value;
-    return u != null && identical(u.api, api) ? u.count : null;
+    if (u == null || api == null) return null;
+    if (identical(u.api, api)) return u.count;
+    final sameAccount = u.api.baseUrl == api.baseUrl &&
+        u.api.isBookOrbit == api.isBookOrbit &&
+        _countScope == UserAccountService().activeScopeKey;
+    return sameAccount ? u.count : null;
   }
 
   static ({String origin, String path}) target(String serverUrl) {
