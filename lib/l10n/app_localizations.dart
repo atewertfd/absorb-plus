@@ -23420,6 +23420,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t export the bookmarks'**
   String get bookmarksExportFailed;
+
+  /// No description provided for @chapterSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search chapters or type a time (1:23:00)'**
+  String get chapterSearchHint;
+
+  /// No description provided for @chapterSearchNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No chapters match'**
+  String get chapterSearchNoResults;
 }
 
 class _AppLocalizationsDelegate

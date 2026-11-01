@@ -7481,5 +7481,7 @@
   "bookmarksExportSaved": "Bookmarks saved to {path}",
   "@bookmarksExportSaved": {"placeholders": {"path": {"type": "String"}}},
   "bookmarksExportDownloaded": "Bookmarks downloaded",
-  "bookmarksExportFailed": "Couldn't export the bookmarks"
+  "bookmarksExportFailed": "Couldn't export the bookmarks",
+  "chapterSearchHint": "Search chapters or type a time (1:23:00)",
+  "chapterSearchNoResults": "No chapters match"
 }

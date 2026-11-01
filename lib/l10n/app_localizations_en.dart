@@ -13809,4 +13809,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bookmarksExportFailed => 'Couldn\'t export the bookmarks';
+
+  @override
+  String get chapterSearchHint => 'Search chapters or type a time (1:23:00)';
+
+  @override
+  String get chapterSearchNoResults => 'No chapters match';
 }
