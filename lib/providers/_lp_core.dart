@@ -615,8 +615,17 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       );
 
   void _onDownloadsChanged() {
-    if (isOffline || _personalizedSections.isEmpty) return;
     final signature = _currentDownloadedShelfSignature();
+    // Fork: offline Home is built from the downloads, so rebuild it when they
+    // change (a deleted download, or the index loading after a cold start).
+    if (isOffline) {
+      if (signature == _downloadedShelfSignature) return;
+      _downloadedShelfSignature = signature;
+      _buildOfflineSections();
+      notifyListeners();
+      return;
+    }
+    if (_personalizedSections.isEmpty) return;
     if (signature == _downloadedShelfSignature &&
         identical(_personalizedSections, _downloadedShelfSections)) {
       return;
