@@ -7376,5 +7376,7 @@
   "@bookCopySaved": {"placeholders": {"path": {"type": "String"}}},
   "bookCopyFailed": "Couldn't save a copy of this book",
   "exclusiveAudioTitle": "Exclusive audio",
-  "exclusiveAudioSubtitle": "Fixes crackling or jumpy volume by skipping Windows sound effects. Other apps are muted while Absorb plays. Restart Absorb to apply."
+  "exclusiveAudioSubtitle": "Fixes crackling or jumpy volume by skipping Windows sound effects. Other apps are muted while Absorb plays. Restart Absorb to apply.",
+  "homeRecentlyAddedNewBadge": "{count} new",
+  "@homeRecentlyAddedNewBadge": {"placeholders": {"count": {"type": "int"}}}
 }

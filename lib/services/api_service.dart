@@ -1816,7 +1816,7 @@ class ApiService {
         Uri.parse('$_cleanBaseUrl/api/users/$userId/listening-sessions?itemsPerPage=$itemsPerPage&page=$page'),
         timeout: const Duration(seconds: 10));
       if (response.statusCode == 200) {
-        return jsonDecode(response.body) as Map<String, dynamic>;
+        return await decodeJsonBody(response.body) as Map<String, dynamic>;
       }
     } catch (_) {}
     return null;

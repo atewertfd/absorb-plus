@@ -42,6 +42,7 @@ import '../l10n/app_localizations.dart';
 import '../main.dart' show rootNavigatorKey;
 import '../widgets/overlay_toast.dart' show showNavigatorOverlayToast;
 import 'windows_media_cover.dart';
+import 'tailscale_cover_route.dart';
 export 'player_settings.dart';
 
 String playbackDownloadKey(String itemId, String? episodeId) =>
@@ -5701,6 +5702,7 @@ class AudioPlayerService extends ChangeNotifier {
           ? _currentItemId!
           : itemId;
       effectiveCoverUrl = 'content://$_coverAuthority/cover/$coverId';
+      unawaited(TailscaleCoverRoute.sync()); // fork: provider covers via Tailscale
       if (coverCacheBust != null) effectiveCoverUrl += '?cb=$coverCacheBust';
       // Streamed cover (no local file) won't be cached on first play - schedule
       // one cache-busted re-push so the art shows up the first time too.
