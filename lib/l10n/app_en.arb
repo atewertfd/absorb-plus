@@ -5655,6 +5655,8 @@
     }
   },
   "playerDownloadStreamingInstead": "This download couldn't be played, so it's streaming from the server. Downloading it again may fix it.",
+  "playerReconnecting": "Connection lost, reconnecting…",
+  "playerReconnectFailed": "Couldn't reconnect to the server, so playback stopped.",
   "readerPageTurn": "Page turn",
   "readerPageTurnNone": "None",
   "readerPageTurnSlide": "Slide",

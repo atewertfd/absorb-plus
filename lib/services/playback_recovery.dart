@@ -1,0 +1,464 @@
+import 'dart:async';
+import 'dart:math' as math;
+
+import 'package:flutter/services.dart' show PlatformException;
+
+/// What a recovery is doing, for the quiet status the player shows.
+enum PlaybackRecoveryStatus {
+  /// Nothing to recover, or the stream came back.
+  idle,
+
+  /// The stream dropped and a reload is waiting or running.
+  reconnecting,
+
+  /// Every retry failed; playback stops as it did before recovery existed.
+  gaveUp,
+}
+
+/// The answer to "is this stream still stuck?" after a long buffering spell.
+enum StallVerdict {
+  /// Not buffering any more, paused, not a stream: stop watching.
+  notStalled,
+
+  /// Still buffering, but not (yet) a network failure: look again later.
+  keepWaiting,
+
+  /// Treat it as a dropped connection and start a recovery.
+  failed,
+}
+
+/// Recorded as the failure when a stream stalled instead of erroring.
+class PlaybackStallError implements Exception {
+  final Duration stalledFor;
+  const PlaybackStallError(this.stalledFor);
+
+  @override
+  String toString() => 'Stream stalled for ${stalledFor.inSeconds}s';
+}
+
+/// Brings a streamed book back after the connection drops (Wi-Fi blip,
+/// Tailscale reconnect, server restart) instead of leaving it stopped.
+///
+/// The policy only: when to reload, where, and when to give up. The player
+/// service supplies the actual reload, the reachability probe and the stall
+/// check, and tells it about failures, buffering, user actions and the
+/// network coming back. Nothing here touches the player directly, so the
+/// rules can be tested with a fake clock.
+///
+/// Rules:
+/// - Retries wait [schedule] (2 s, 5 s, 10 s, 20 s), then [repeatDelay]
+///   (30 s) each, and give up once [giveUpAfter] (5 min) has passed without
+///   a successful reload.
+/// - Each attempt asks [isReachable] first, so a phone that is still offline
+///   doesn't tear down the player for a reload that can't work.
+/// - Every reload goes to the position recorded when the stream first failed,
+///   minus [rewind]. Positions seen while waiting are ignored; only a failure
+///   after a reload had worked moves the target, and only forward. Retries
+///   never step further back than that.
+/// - [retryNow] (the network came back) skips the rest of the current wait.
+/// - [cancel] (pause, seek, stop, another book) ends everything at once, and
+///   a reload that was in flight is ignored when it returns.
+/// - After a reload works the attempt count is kept for [healthyAfter], so a
+///   connection that keeps flapping keeps backing off instead of reloading
+///   every 2 s.
+class PlaybackRecovery {
+  PlaybackRecovery({
+    required this.reload,
+    required this.lastPosition,
+    this.isReachable,
+    this.checkStall,
+    this.onStart,
+    this.onStatus,
+    this.log,
+    this.schedule = defaultSchedule,
+    this.repeatDelay = const Duration(seconds: 30),
+    this.giveUpAfter = const Duration(minutes: 5),
+    this.stallThreshold = const Duration(seconds: 15),
+    this.healthyAfter = const Duration(seconds: 30),
+    this.rewind = const Duration(seconds: 2),
+    this.reloadTimeout = const Duration(minutes: 2),
+  });
+
+  static const defaultSchedule = <Duration>[
+    Duration(seconds: 2),
+    Duration(seconds: 5),
+    Duration(seconds: 10),
+    Duration(seconds: 20),
+  ];
+
+  /// Reloads the current item at [resumeAtSec] and starts it playing.
+  /// True when the source loaded. [lastError] is the newest failure.
+  final Future<bool> Function(double resumeAtSec, Object? lastError) reload;
+
+  /// The newest trustworthy book position in seconds (0 when unknown).
+  final double Function() lastPosition;
+
+  /// Whether the server answers right now. Null skips the probe.
+  final Future<bool> Function()? isReachable;
+
+  /// Asked after every [stallThreshold] of uninterrupted buffering.
+  /// Null treats any such stall as a failure.
+  final Future<StallVerdict> Function(Duration stalledFor)? checkStall;
+
+  /// Called once when a recovery begins, before anything is scheduled.
+  final void Function()? onStart;
+
+  final void Function(PlaybackRecoveryStatus status, Object? lastError)?
+      onStatus;
+  final void Function(String message)? log;
+
+  final List<Duration> schedule;
+  final Duration repeatDelay;
+  final Duration giveUpAfter;
+  final Duration stallThreshold;
+  final Duration healthyAfter;
+  final Duration rewind;
+
+  /// A reload still loading after this counts as a failed attempt, so one
+  /// stuck load can't hold the recovery forever.
+  final Duration reloadTimeout;
+
+  _Phase _phase = _Phase.idle;
+  int _attempt = 0;
+  double _resumeAtSec = 0;
+  bool _healable = false;
+  Object? _lastError;
+  // Bumped by cancel/give-up/reset: an attempt that comes back under an old
+  // value belongs to a recovery that no longer exists.
+  int _generation = 0;
+  Timer? _retryTimer;
+  Timer? _deadlineTimer;
+  bool _deadlinePassed = false;
+  Timer? _healthyTimer;
+
+  Timer? _stallTimer;
+  int _stallGeneration = 0;
+  Duration _stalledFor = Duration.zero;
+
+  /// A recovery is running or has just reloaded and is being watched.
+  bool get isActive => _phase != _Phase.idle;
+
+  /// Waiting for a retry, checking the server or reloading right now.
+  bool get isRecovering =>
+      _phase == _Phase.waiting ||
+      _phase == _Phase.probing ||
+      _phase == _Phase.reloading;
+
+  bool get isReloading => _phase == _Phase.reloading;
+
+  /// Changes whenever a recovery ends or is cancelled, so a reload can tell
+  /// whether it still belongs to the recovery that started it.
+  int get generation => _generation;
+
+  /// Attempts made in the current recovery.
+  int get attempt => _attempt;
+
+  /// Where the next reload goes, in seconds.
+  double get resumeAtSec => math.max(0, _resumeAtSec - _seconds(rewind));
+
+  /// Where the stream was when it failed, in seconds: what the player should
+  /// report as its position while it waits for a retry.
+  double get failedAtSec => _resumeAtSec;
+
+  /// Recovering with no reload of ours loading: waiting for the next
+  /// attempt or checking the server. The player's own state is stale then.
+  bool get isWaiting => _phase == _Phase.waiting || _phase == _Phase.probing;
+
+  /// The recovery began with (and so far only saw) a stall: the player kept
+  /// its own position, and it may come back without a reload.
+  bool get isStallOnly => _healable;
+
+  /// Errors that mean the network (not the file or the decoder) failed.
+  /// The source errors ExoPlayer raises for dropped HTTP connections, plus
+  /// the wording other engines use for the same thing.
+  static bool isNetworkError(Object error) {
+    if (error is PlaybackStallError) return true;
+    if (error is TimeoutException) return true;
+    var text = error.toString().toLowerCase();
+    if (error is PlatformException) {
+      text = '$text ${error.message?.toLowerCase() ?? ''}';
+    }
+    // An HTTP status that retrying can't fix (bad request, unsupported
+    // media) is not a dropped connection. Expired sign-ins (401/403), a
+    // session the server forgot (404), a stale cached range (416), rate
+    // limits and server errors are: a reload opens a fresh session.
+    final status = RegExp(r'response code: (\d{3})').firstMatch(text);
+    if (status != null) {
+      final code = int.parse(status.group(1)!);
+      const retryable4xx = {401, 403, 404, 408, 416, 429};
+      return code >= 500 || code < 400 || retryable4xx.contains(code);
+    }
+    const signs = [
+      'source error',
+      'type_source',
+      'httpdatasource',
+      'http_data_source',
+      'unable to connect',
+      'connection',
+      'network',
+      'socket',
+      'timed out',
+      'timeout',
+      'failed to open',
+      'host lookup',
+      'unreachable',
+    ];
+    return signs.any(text.contains);
+  }
+
+  /// The stream failed with a network error while the user meant it to play.
+  void onFailure(Object error) {
+    _lastError = error;
+    final pos = lastPosition();
+    switch (_phase) {
+      case _Phase.reloading:
+        // The reload in flight reports for itself; a late error from the
+        // source it is replacing must not schedule a second one.
+        _log('failure during reload ignored: $error');
+        return;
+      case _Phase.waiting:
+      case _Phase.probing:
+        // Positions read now aren't trusted: on Android just_audio answers a
+        // source error by jumping to the next file of the book, so the spot
+        // recorded at the first failure stays the target.
+        if (error is! PlaybackStallError) _healable = false;
+        return;
+      case _Phase.verifying:
+        _healthyTimer?.cancel();
+        _healthyTimer = null;
+        if (pos > _resumeAtSec) _resumeAtSec = pos;
+        _healable = error is PlaybackStallError;
+        _log('stream failed again after a reload ($error)');
+        _armDeadline();
+        onStatus?.call(PlaybackRecoveryStatus.reconnecting, error);
+        _scheduleNext();
+        return;
+      case _Phase.idle:
+        _attempt = 0;
+        _resumeAtSec = pos;
+        _healable = error is PlaybackStallError;
+        _log('stream failed at ${pos.toStringAsFixed(1)}s: $error');
+        onStart?.call();
+        _armDeadline();
+        onStatus?.call(PlaybackRecoveryStatus.reconnecting, error);
+        _scheduleNext();
+        return;
+    }
+  }
+
+  /// Processing state changed: [buffering] is true while the player wants
+  /// to play but is waiting for data.
+  void onBuffering(bool buffering) {
+    if (!buffering) {
+      _stopStallWatch();
+      return;
+    }
+    if (_stallTimer != null) return;
+    _stalledFor = Duration.zero;
+    _armStallTimer();
+  }
+
+  /// The player is ready again. While waiting on a stall, the stream healed
+  /// by itself. After an error it doesn't count: the player may be ready on
+  /// the wrong file (see [onFailure]), so the reload still runs.
+  void onReady() {
+    _stopStallWatch();
+    if (!isWaiting || !_healable) return;
+    _retryTimer?.cancel();
+    _retryTimer = null;
+    _log('stream recovered by itself');
+    _enterVerifying();
+  }
+
+  /// The network came back: skip the rest of the current wait.
+  void retryNow() {
+    if (_phase != _Phase.waiting) return;
+    _log('network is back - retrying now');
+    _retryTimer?.cancel();
+    _retryTimer = null;
+    unawaited(_runAttempt());
+  }
+
+  /// The user did something (pause, seek, stop, another book): drop the
+  /// recovery. A stall being watched starts its window over, since the
+  /// action restarted whatever the player was waiting for.
+  void cancel(String reason) {
+    if (_stallTimer != null) {
+      _stopStallWatch();
+      _armStallTimer();
+    }
+    if (_phase == _Phase.idle) return;
+    final wasRecovering = isRecovering;
+    _log('cancelled ($reason)');
+    _reset();
+    if (wasRecovering) onStatus?.call(PlaybackRecoveryStatus.idle, null);
+  }
+
+  void dispose() {
+    _stopStallWatch();
+    _reset();
+  }
+
+  void _scheduleNext() {
+    if (_deadlinePassed) {
+      _giveUp();
+      return;
+    }
+    final delay =
+        _attempt < schedule.length ? schedule[_attempt] : repeatDelay;
+    _phase = _Phase.waiting;
+    _retryTimer?.cancel();
+    _log('retry ${_attempt + 1} in ${delay.inSeconds}s');
+    _retryTimer = Timer(delay, () {
+      _retryTimer = null;
+      unawaited(_runAttempt());
+    });
+  }
+
+  Future<void> _runAttempt() async {
+    final gen = _generation;
+    _attempt++;
+    _phase = _Phase.probing;
+    final probe = isReachable;
+    if (probe != null) {
+      bool reachable;
+      try {
+        reachable = await probe();
+      } catch (e) {
+        _log('attempt $_attempt: reachability check failed: $e');
+        reachable = false;
+      }
+      // Cancelled, or the stream came back by itself, while asking.
+      if (gen != _generation || _phase != _Phase.probing) return;
+      if (!reachable) {
+        _log('attempt $_attempt: server not reachable yet');
+        _afterFailedAttempt();
+        return;
+      }
+    }
+    if (gen != _generation || _phase != _Phase.probing) return;
+    _phase = _Phase.reloading;
+    final at = resumeAtSec;
+    _log('attempt $_attempt: reloading at ${at.toStringAsFixed(1)}s');
+    bool ok;
+    try {
+      ok = await reload(at, _lastError).timeout(reloadTimeout);
+    } on TimeoutException catch (e) {
+      // A newer attempt's load supersedes this one if it ever finishes.
+      _log('attempt $_attempt: reload still loading after '
+          '${reloadTimeout.inSeconds}s - counting it as failed');
+      _lastError = e;
+      ok = false;
+    } catch (e) {
+      _lastError = e;
+      ok = false;
+    }
+    if (gen != _generation) return;
+    if (ok) {
+      _log('attempt $_attempt: reloaded');
+      _enterVerifying();
+    } else {
+      _afterFailedAttempt();
+    }
+  }
+
+  void _afterFailedAttempt() {
+    if (_deadlinePassed) {
+      _giveUp();
+    } else {
+      _scheduleNext();
+    }
+  }
+
+  void _enterVerifying() {
+    _phase = _Phase.verifying;
+    _deadlineTimer?.cancel();
+    _deadlineTimer = null;
+    _deadlinePassed = false;
+    _healthyTimer?.cancel();
+    _healthyTimer = Timer(healthyAfter, () {
+      _healthyTimer = null;
+      if (_phase != _Phase.verifying) return;
+      _log('stream healthy again');
+      _reset();
+    });
+    onStatus?.call(PlaybackRecoveryStatus.idle, null);
+  }
+
+  void _giveUp() {
+    final error = _lastError;
+    _log('giving up after $_attempt attempts');
+    _reset();
+    onStatus?.call(PlaybackRecoveryStatus.gaveUp, error);
+  }
+
+  void _armDeadline() {
+    if (_deadlineTimer != null || _deadlinePassed) return;
+    _deadlineTimer = Timer(giveUpAfter, () {
+      _deadlineTimer = null;
+      _deadlinePassed = true;
+    });
+  }
+
+  void _reset() {
+    _generation++;
+    _phase = _Phase.idle;
+    _attempt = 0;
+    // _healable and _resumeAtSec stay: they describe the recovery that just
+    // ended until the next one starts, for whoever acts on its end.
+    _lastError = null;
+    _retryTimer?.cancel();
+    _retryTimer = null;
+    _deadlineTimer?.cancel();
+    _deadlineTimer = null;
+    _deadlinePassed = false;
+    _healthyTimer?.cancel();
+    _healthyTimer = null;
+  }
+
+  void _armStallTimer() {
+    final gen = ++_stallGeneration;
+    _stallTimer = Timer(stallThreshold, () async {
+      if (gen != _stallGeneration) return;
+      _stalledFor += stallThreshold;
+      if (_phase == _Phase.reloading || _phase == _Phase.probing) {
+        // A reload is loading its own source and has its own timeouts.
+        _armStallTimer();
+        return;
+      }
+      final check = checkStall;
+      StallVerdict verdict;
+      try {
+        verdict = check == null ? StallVerdict.failed : await check(_stalledFor);
+      } catch (e) {
+        _log('stall check failed: $e');
+        verdict = StallVerdict.keepWaiting;
+      }
+      if (gen != _stallGeneration) return;
+      switch (verdict) {
+        case StallVerdict.notStalled:
+          _stopStallWatch();
+        case StallVerdict.keepWaiting:
+          _armStallTimer();
+        case StallVerdict.failed:
+          final stalledFor = _stalledFor;
+          _stopStallWatch();
+          _log('buffering for ${stalledFor.inSeconds}s');
+          onFailure(PlaybackStallError(stalledFor));
+      }
+    });
+  }
+
+  void _stopStallWatch() {
+    _stallGeneration++;
+    _stallTimer?.cancel();
+    _stallTimer = null;
+    _stalledFor = Duration.zero;
+  }
+
+  void _log(String message) => log?.call(message);
+
+  static double _seconds(Duration d) => d.inMilliseconds / 1000.0;
+}
+
+enum _Phase { idle, waiting, probing, reloading, verifying }
