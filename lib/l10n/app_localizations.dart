@@ -23342,6 +23342,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Top book'**
   String get statsMonthTopBook;
+
+  /// No description provided for @bookmarksSearchResults.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No results} =1{1 result} other{{count} results}}'**
+  String bookmarksSearchResults(int count);
+
+  /// No description provided for @bookmarksViewMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort and group'**
+  String get bookmarksViewMenu;
+
+  /// No description provided for @bookmarksViewByBook.
+  ///
+  /// In en, this message translates to:
+  /// **'By book'**
+  String get bookmarksViewByBook;
+
+  /// No description provided for @bookmarksViewNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest first'**
+  String get bookmarksViewNewest;
+
+  /// No description provided for @bookmarksViewPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'By position'**
+  String get bookmarksViewPosition;
+
+  /// No description provided for @bookmarksExportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Export bookmarks'**
+  String get bookmarksExportAction;
+
+  /// No description provided for @bookmarksExportDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Save bookmarks as Markdown'**
+  String get bookmarksExportDialogTitle;
+
+  /// No description provided for @bookmarksExportSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmarks saved to {path}'**
+  String bookmarksExportSaved(String path);
+
+  /// No description provided for @bookmarksExportDownloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmarks downloaded'**
+  String get bookmarksExportDownloaded;
+
+  /// No description provided for @bookmarksExportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t export the bookmarks'**
+  String get bookmarksExportFailed;
 }
 
 class _AppLocalizationsDelegate

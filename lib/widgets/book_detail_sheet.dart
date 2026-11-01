@@ -79,6 +79,7 @@ import '../utils/fork_platform.dart';
 import 'stable_cached_network_image.dart';
 import '../utils/cover_cache.dart';
 import '../utils/cover_palette.dart';
+import 'bookmark_list_controls.dart';
 
 // ─── BOOK DETAIL BOTTOM SHEET ───────────────────────────────
 
@@ -1576,7 +1577,9 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         GestureDetector(onTap: () => setState(() => _bookmarksExpanded = !_bookmarksExpanded),
           child: Row(children: [
             Text(l.bookmarksWithCount(_bookmarks.length), style: tt.titleSmall?.copyWith(color: cs.onSurfaceVariant, fontWeight: FontWeight.w600)),
-            const Spacer(), Icon(_bookmarksExpanded ? Icons.expand_less : Icons.expand_more, color: cs.onSurface.withValues(alpha: 0.3), size: 20)])),
+            const Spacer(),
+            if (_bookmarksExpanded) BookmarkExportButton(dense: true, bookTitle: title, groups: () => {'book': _bookmarks}, bookInfo: (_) => (title: title, author: authorName, subtitle: null)),
+            Icon(_bookmarksExpanded ? Icons.expand_less : Icons.expand_more, color: cs.onSurface.withValues(alpha: 0.3), size: 20)])),
         if (_bookmarksExpanded) ...[const SizedBox(height: 8),
           ..._bookmarks.map((bm) {
             final hasNote = bm.note != null && bm.note!.isNotEmpty;
