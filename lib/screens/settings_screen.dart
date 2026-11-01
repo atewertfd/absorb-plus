@@ -63,6 +63,7 @@ import '../widgets/windows_settings_tiles.dart';
 import '../widgets/desktop_download_folder_sheet.dart';
 import '../widgets/desktop_shortcut_help.dart';
 import '../widgets/precache_setting_tile.dart';
+import '../widgets/exclusive_audio_tile.dart';
 import '../widgets/overlay_toast.dart';
 import '../widgets/tips_sheet.dart';
 import '../widgets/feature_hint.dart';
@@ -2971,6 +2972,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   isExpanded: _expandedSection == 'Playback',
                   onExpansionChanged: (v) => _onSectionExpanded('Playback', v),
                   children: [
+                    if (ExclusiveAudioTile.supported) ...[
+                      const ExclusiveAudioTile(),
+                      const Divider(height: 1, indent: 16, endIndent: 16),
+                    ],
                     // Default speed
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),

@@ -22844,6 +22844,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t save a copy of this book'**
   String get bookCopyFailed;
+
+  /// No description provided for @exclusiveAudioTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Exclusive audio'**
+  String get exclusiveAudioTitle;
+
+  /// No description provided for @exclusiveAudioSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixes crackling or jumpy volume by skipping Windows sound effects. Other apps are muted while Absorb plays. Restart Absorb to apply.'**
+  String get exclusiveAudioSubtitle;
 }
 
 class _AppLocalizationsDelegate

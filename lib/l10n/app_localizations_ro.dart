@@ -13454,4 +13454,11 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get bookCopyFailed => 'Couldn\'t save a copy of this book';
+
+  @override
+  String get exclusiveAudioTitle => 'Exclusive audio';
+
+  @override
+  String get exclusiveAudioSubtitle =>
+      'Fixes crackling or jumpy volume by skipping Windows sound effects. Other apps are muted while Absorb plays. Restart Absorb to apply.';
 }
