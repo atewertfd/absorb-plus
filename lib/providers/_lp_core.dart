@@ -1901,7 +1901,8 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
               debugPrint('[Sync] Adopting newer remote position for paused player: '
                   '${posS.toStringAsFixed(1)}s -> ${serverTime.toStringAsFixed(1)}s');
               await player.seekTo(
-                  Duration(milliseconds: (serverTime * 1000).round()));
+                  Duration(milliseconds: (serverTime * 1000).round()),
+                  offerUndo: false);
             }
           }());
         }

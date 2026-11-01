@@ -8126,6 +8126,7 @@ class AudioPlayerService extends ChangeNotifier {
     Duration pos, {
     PlaybackEventType logAs = PlaybackEventType.seek,
     String? logDetail,
+    bool offerUndo = true,
   }) async {
     // While this item is casting, the Chromecast is the real player - route
     // the seek there too or bookmark/chapter jumps only move the stopped
@@ -8148,7 +8149,7 @@ class AudioPlayerService extends ChangeNotifier {
     );
     notifyListeners();
     // Absorb Plus: offer "Back to ..." after a long jump (seek_undo.dart).
-    if (logAs == PlaybackEventType.seek && _currentItemId != null) {
+    if (offerUndo && logAs == PlaybackEventType.seek && _currentItemId != null) {
       SeekUndo.instance.onSeek(key: episodeKeyFor(_currentItemId!, _currentEpisodeId), from: from, to: pos);
     }
   }

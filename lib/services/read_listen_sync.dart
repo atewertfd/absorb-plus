@@ -489,7 +489,7 @@ class ReadListenSync {
           return null;
         }
         if (inPlayer) {
-          await now.seekTo(Duration(milliseconds: (t * 1000).round()));
+          await now.seekTo(Duration(milliseconds: (t * 1000).round()), offerUndo: false);
         } else {
           final local = await ProgressSyncService().getLocal(itemId);
           await ProgressSyncService().saveLocal(
