@@ -82,9 +82,10 @@ mixin _StateMixin on ChangeNotifier {
   /// Persisted set of genre names the user has added as home sections.
   Set<String> _addedGenres = {};
 
-  final Map<String, Map<String, dynamic>> _seriesBooksCache = {};
-  final Map<String, Map<String, dynamic>> _seriesTabCache = {};
-  final Map<String, Map<String, dynamic>> _subSeriesCache = {};
+  // Absorb Plus: bounded (LRU) so browsing many series doesn't grow memory.
+  final _seriesBooksCache = LruCache<String, Map<String, dynamic>>(32);
+  final _seriesTabCache = LruCache<String, Map<String, dynamic>>(8);
+  final _subSeriesCache = LruCache<String, Map<String, dynamic>>(32);
 
   Set<String> _rollingDownloadSeries = {};
   // id -> {name, kind} for the settings list; the set above is bare ids.
