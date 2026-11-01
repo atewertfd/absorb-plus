@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../l10n/app_localizations.dart';
+import '../main.dart' show localeNotifier;
 import 'audio_player_service.dart';
 import 'download_service.dart';
 import 'pending_writes.dart';
@@ -173,6 +174,8 @@ class WindowsShell {
     _downloads.addListener(_scheduleBusyCheck);
     if (_playbackOverride == null) {
       PlayerSettings.settingsChanged.addListener(_onSettingsChanged);
+      // Changing the language doesn't notify settings, only the locale.
+      localeNotifier.addListener(_onSettingsChanged);
     }
     _syncPlayback();
     _checkBusy();
@@ -187,6 +190,7 @@ class WindowsShell {
     _downloads.removeListener(_scheduleBusyCheck);
     if (_playbackOverride == null) {
       PlayerSettings.settingsChanged.removeListener(_onSettingsChanged);
+      localeNotifier.removeListener(_onSettingsChanged);
     }
     _channel.setMethodCallHandler(null);
     _started = false;
