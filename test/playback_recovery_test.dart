@@ -540,6 +540,27 @@ void main() {
     });
   });
 
+  group('PlaybackRecovery.skipSilentSpan', () {
+    final t0 = DateTime(2026, 11, 1, 12);
+    DateTime at(int s) => t0.add(Duration(seconds: s));
+
+    test('a clock from before the drop skips the whole wait', () {
+      // Last tick at 0 s, dropped at 4 s, back at 304 s: 4 s listened.
+      final clock = PlaybackRecovery.skipSilentSpan(at(0), at(4), at(304));
+      expect(clock, at(300));
+      expect(at(304).difference(clock), const Duration(seconds: 4));
+    });
+
+    test('a clock restarted during the wait is left alone', () {
+      expect(PlaybackRecovery.skipSilentSpan(at(30), at(4), at(304)), at(30));
+    });
+
+    test('no span to skip leaves the clock alone', () {
+      expect(PlaybackRecovery.skipSilentSpan(at(0), at(4), at(4)), at(0));
+      expect(PlaybackRecovery.skipSilentSpan(at(0), at(4), at(2)), at(0));
+    });
+  });
+
   group('PlaybackRecovery.isNetworkError', () {
     test('network failures', () {
       for (final e in <Object>[

@@ -212,6 +212,23 @@ class PlaybackRecovery {
     return signs.any(text.contains);
   }
 
+  /// Listening-time clocks (stats accrual, the session's timeListened) are
+  /// wall clocks stamped at the last tick. A reconnect wait is wall time with
+  /// nothing playing, so a clock stamped at [clock] skips the span from
+  /// [stoppedAt] to [resumedAt]: the time listened before the drop still
+  /// counts, the wait doesn't. A clock stamped after [stoppedAt] (a reload
+  /// restarted it) is already past the wait and stays as it is.
+  static DateTime skipSilentSpan(
+    DateTime clock,
+    DateTime stoppedAt,
+    DateTime resumedAt,
+  ) {
+    if (!clock.isBefore(stoppedAt) || !resumedAt.isAfter(stoppedAt)) {
+      return clock;
+    }
+    return clock.add(resumedAt.difference(stoppedAt));
+  }
+
   /// The stream failed with a network error while the user meant it to play.
   void onFailure(Object error) {
     _lastError = error;

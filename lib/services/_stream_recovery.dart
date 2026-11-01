@@ -289,6 +289,23 @@ class _StreamRecovery {
     return true;
   }
 
+  // When audio stopped because the stream dropped. Until it plays again the
+  // listening clocks must not run: a pause or the give-up at the end of a
+  // wait banked the whole wait (up to 5 minutes) as listening.
+  DateTime? _listeningStoppedAt;
+
+  void _stopListeningClocks() => _listeningStoppedAt ??= DateTime.now();
+
+  void _resumeListeningClocks() {
+    final at = _listeningStoppedAt;
+    if (at == null) return;
+    _listeningStoppedAt = null;
+    final now = DateTime.now();
+    _s._lastAccrual = PlaybackRecovery.skipSilentSpan(_s._lastAccrual, at, now);
+    _s._lastServerSync =
+        PlaybackRecovery.skipSilentSpan(_s._lastServerSync, at, now);
+  }
+
   void _refresh() {
     // Same library as the service: this is its own notify, from a part file.
     // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
@@ -510,6 +527,7 @@ class _StreamRecovery {
     }
     await _applySeekAfterReload(stillOurs);
     if (!stillOurs() || s._pauseRequested) return false;
+    _resumeListeningClocks();
     unawaited(s._player?.play());
     AudioPlayerService._handler?.refreshPlaybackState();
     debugPrint('[Recovery] Source rebuilt at ${at.toStringAsFixed(1)}s on '
@@ -521,6 +539,11 @@ class _StreamRecovery {
     // "Playing" follows the recovery (see wantsToPlay): tell the app and the
     // media session whenever that changes.
     _refresh();
+    if (status == PlaybackRecoveryStatus.reconnecting) {
+      _stopListeningClocks();
+    } else {
+      _resumeListeningClocks();
+    }
     switch (status) {
       case PlaybackRecoveryStatus.idle:
         break;

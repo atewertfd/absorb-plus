@@ -26,6 +26,17 @@ extension ForkPlaybackTestHooks on AudioPlayerService {
   @visibleForTesting
   PlaybackRecovery get debugRecoveryPolicy => _recovery.policy;
 
+  /// The listening clocks (stats accrual, session timeListened).
+  @visibleForTesting
+  ({DateTime accrual, DateTime serverSync}) get debugListeningClocks =>
+      (accrual: _lastAccrual, serverSync: _lastServerSync);
+
+  @visibleForTesting
+  set debugListeningClocks(({DateTime accrual, DateTime serverSync}) c) {
+    _lastAccrual = c.accrual;
+    _lastServerSync = c.serverSync;
+  }
+
   /// Pretends a start is loading, the way playItem marks one.
   @visibleForTesting
   void debugMarkStartLoading() {

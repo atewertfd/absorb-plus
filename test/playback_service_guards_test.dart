@@ -112,6 +112,27 @@ void main() {
       expect(player.isPlaying, isTrue);
     });
 
+    test('the wait is not counted as listening time', () async {
+      final player = AudioPlayerService();
+      final policy = player.debugRecoveryPolicy;
+      // Last tick 10 s before the stream dropped.
+      final lastTick = DateTime.now().subtract(const Duration(seconds: 10));
+      player.debugListeningClocks = (accrual: lastTick, serverSync: lastTick);
+      policy.onFailure(Exception('Source error'));
+      addTearDown(() => policy.cancel('test over'));
+
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+      player.cancelRecovery('account change'); // ends the wait
+
+      final clocks = player.debugListeningClocks;
+      final skipped = clocks.accrual.difference(lastTick);
+      expect(skipped, greaterThanOrEqualTo(const Duration(milliseconds: 300)),
+          reason: 'the wait moved the clock on, so it is not banked');
+      expect(skipped, lessThan(const Duration(seconds: 5)),
+          reason: 'the 10 s listened before the drop still count');
+      expect(clocks.serverSync, clocks.accrual);
+    });
+
     test('togglePlayPause while reconnecting pauses', () async {
       final player = AudioPlayerService();
       final policy = player.debugRecoveryPolicy;
