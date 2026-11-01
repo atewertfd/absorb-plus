@@ -48,6 +48,7 @@ import 'seek_undo.dart';
 export 'player_settings.dart';
 
 part '_stream_recovery.dart';
+part '_playback_guards.dart';
 
 String playbackDownloadKey(String itemId, String? episodeId) =>
     episodeKeyFor(itemId, episodeId);
@@ -8370,6 +8371,7 @@ class AudioPlayerService extends ChangeNotifier {
 
   Future<void> stop({bool keepSleepTimer = false}) async {
     _recovery.userAction(_RecoveryUserAction.stop);
+    _abandonLoadingStart(); // fork: a start still loading must not play after this
     _pauseStopTimer?.cancel();
     _pauseStopTimer = null;
     _endAdvanceBuffering();
@@ -8448,6 +8450,7 @@ class AudioPlayerService extends ChangeNotifier {
   /// Stop playback without saving progress — used by reset progress.
   Future<void> stopWithoutSaving() async {
     _recovery.userAction(_RecoveryUserAction.stopWithoutSaving);
+    _abandonLoadingStart(); // fork: see stop()
     _endAdvanceBuffering();
     // Close server session without syncing position
     if (_playbackSessionId != null && _api != null) {
