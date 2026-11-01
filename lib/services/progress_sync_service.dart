@@ -260,11 +260,17 @@ class ProgressSyncService {
     final scope = _scope;
     try {
       if (sessionId != null) {
-        await api.syncPlaybackSession(
+        // syncPlaybackSession reports failure by returning false, never by
+        // throwing; ignoring it dropped the queued position as synced.
+        final ok = await api.syncPlaybackSession(
           sessionId,
           currentTime: currentTime,
           duration: duration,
         );
+        if (!ok) {
+          debugPrint('[Sync] Session sync for $itemId failed - keeping it pending');
+          return false;
+        }
       } else {
         final ok = await api.updateProgress(
           itemId,
