@@ -5,6 +5,7 @@ import 'books_sheet_shared.dart';
 import 'library_grid_tiles.dart';
 import 'text_scale_room.dart';
 import 'empty_state.dart'; // Absorb Plus
+import 'loading_placeholders.dart'; // Absorb Plus
 
 class LibraryBooksTab extends StatelessWidget {
   final List<Map<String, dynamic>> items;
@@ -86,9 +87,12 @@ class LibraryBooksTab extends StatelessWidget {
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           ...headers,
-          const SliverFillRemaining(
-            hasScrollBody: false,
-            child: Center(child: CircularProgressIndicator()),
+          // Absorb Plus: placeholder tiles instead of a bare spinner.
+          LibraryGridPlaceholder(
+            columns: responsiveGridCount(context),
+            rectangleCovers: rectangleCovers,
+            showSubtitles: showSubtitles,
+            coverAspectRatio: coverAspectRatio,
           ),
         ],
       );
