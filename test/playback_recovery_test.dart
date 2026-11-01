@@ -149,6 +149,26 @@ void main() {
       });
     });
 
+    test('the reconnecting status arrives with the recovery already running', () {
+      fakeAsync((async) {
+        final seen = <bool>[];
+        late final PlaybackRecovery r;
+        r = PlaybackRecovery(
+          lastPosition: () => 60,
+          reload: (_, _) async => true,
+          onStatus: (s, _) {
+            if (s == PlaybackRecoveryStatus.reconnecting) seen.add(r.isRecovering);
+          },
+        );
+        r.onFailure(Exception('Source error'));
+        async.elapse(const Duration(seconds: 2)); // reload works
+        r.onFailure(Exception('Source error')); // fails again while watched
+        expect(seen, [true, true],
+            reason: 'the player reads "playing" off isRecovering when told');
+        r.cancel('test over');
+      });
+    });
+
     test('a working reload ends the recovery quietly', () {
       fakeAsync((async) {
         final h = _Harness(async);

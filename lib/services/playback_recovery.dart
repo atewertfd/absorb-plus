@@ -311,6 +311,9 @@ class PlaybackRecovery {
         _healable = error is PlaybackStallError;
         _log('stream failed again after a reload ($error)');
         _armDeadline();
+        // Waiting from here on, so whoever reacts to the status already
+        // sees a recovery in progress.
+        _phase = _Phase.waiting;
         onStatus?.call(PlaybackRecoveryStatus.reconnecting, error);
         _scheduleNext();
         return;
@@ -323,6 +326,7 @@ class PlaybackRecovery {
         _log('stream failed at ${pos.toStringAsFixed(1)}s: $error');
         onStart?.call();
         _armDeadline();
+        _phase = _Phase.waiting; // see the verifying case
         onStatus?.call(PlaybackRecoveryStatus.reconnecting, error);
         _scheduleNext();
         return;
