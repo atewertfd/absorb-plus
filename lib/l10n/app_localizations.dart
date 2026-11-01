@@ -10067,7 +10067,7 @@ abstract class AppLocalizations {
   /// No description provided for @fileHealthRedownloadInfo.
   ///
   /// In en, this message translates to:
-  /// **'The copy on this device is removed and downloaded again from the server. Nothing on the server changes.'**
+  /// **'The copy on this device is removed and downloaded again from the server. If the book is playing, it stops. Nothing on the server changes.'**
   String get fileHealthRedownloadInfo;
 
   /// No description provided for @fileHealthNotAvailableOffline.

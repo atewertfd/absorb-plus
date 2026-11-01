@@ -19,6 +19,7 @@ import 'audio_player_service.dart';
 import 'desktop_download_folder.dart';
 import 'download_folder_guard.dart';
 import 'download_index_store.dart';
+import 'download_resume.dart';
 import 'download_track_names.dart';
 import 'ebook_cache.dart';
 import 'narrated_books.dart';
@@ -230,6 +231,9 @@ class _PendingBook {
   /// The narration keeps the server's own timings (BookOrbit's), saved on
   /// this phone when the download started, rather than the file's.
   final bool serverTimings;
+  /// Absorb Plus: each track's size as the server reports it (null where
+  /// unknown), checked when the book finishes (audit D10).
+  final List<int?> expectedSizes;
 
   /// True once the user cancels, so terminal handling cleans up instead of
   /// surfacing an error.
@@ -282,6 +286,7 @@ class _PendingBook {
     this.safSubfolder,
     this.narration = false,
     this.serverTimings = false,
+    this.expectedSizes = const [],
   }) {
     // Start the no-progress watchdog clock at creation (fresh or restored).
     lastUpdate = DateTime.now();
@@ -350,6 +355,7 @@ class _PendingBook {
         if (safSubfolder != null) 'safSubfolder': safSubfolder,
         if (narration) 'narration': true,
         if (serverTimings) 'serverTimings': true,
+        if (expectedSizes.any((s) => s != null)) 'expectedSizes': expectedSizes,
       };
 
   factory _PendingBook.fromJson(Map<String, dynamic> j) => _PendingBook(
@@ -372,6 +378,10 @@ class _PendingBook {
         safSubfolder: j['safSubfolder'] as String?,
         narration: j['narration'] == true,
         serverTimings: j['serverTimings'] == true,
+        expectedSizes: [
+          for (final s in j['expectedSizes'] as List<dynamic>? ?? const [])
+            (s as num?)?.toInt(),
+        ],
       );
 }
 
@@ -434,6 +444,7 @@ class DownloadService extends ChangeNotifier {
       : _initializeOverride = null,
         _cancelTasksOverride = null,
         _deleteTaskRecordOverride = null,
+        _taskRecordsOverride = null,
         _indexStore = DownloadIndexStore.platformDefault() {
     UserAccountService.onScopeMoved = _moveOrigins;
   }
@@ -444,9 +455,11 @@ class DownloadService extends ChangeNotifier {
     Future<void> Function(List<String>)? cancelTasks,
     Future<void> Function(String)? deleteTaskRecord,
     DownloadIndexStore? indexStore,
+    Future<List<TaskRecord>> Function()? taskRecords,
   })  : _initializeOverride = initialize,
         _cancelTasksOverride = cancelTasks,
         _deleteTaskRecordOverride = deleteTaskRecord,
+        _taskRecordsOverride = taskRecords,
         _indexStore = indexStore ?? PrefsDownloadIndexStore();
 
   /// Where the download list is kept: its own file on native builds,
@@ -456,6 +469,9 @@ class DownloadService extends ChangeNotifier {
   final Future<void> Function()? _initializeOverride;
   final Future<void> Function(List<String>)? _cancelTasksOverride;
   final Future<void> Function(String)? _deleteTaskRecordOverride;
+  final Future<List<TaskRecord>> Function()? _taskRecordsOverride;
+  Future<List<TaskRecord>> _taskRecords() =>
+      (_taskRecordsOverride ?? FileDownloader().database.allRecords)();
   Future<void>? _initFuture;
   Future<void>? _iosAudioMigrationFuture;
   bool _initialized = false;
@@ -613,6 +629,14 @@ class DownloadService extends ChangeNotifier {
   /// Periodically reconverges in-flight books with the package task DB so a
   /// missed terminal update can't leave a slot leaked and wedge the queue.
   Timer? _reconcileTimer;
+
+  /// Absorb Plus: when the reconciler last ran, so a tick after the computer
+  /// slept doesn't take the sleep for a stalled download (audit D2).
+  DateTime? _lastReconcileAt;
+
+  /// Absorb Plus: the folder holding the finished tracks of an interrupted
+  /// download, picked up again when it is retried (audit D2).
+  final Map<String, String> _resumeDirs = {};
 
   /// Queue of pending download requests.
   final List<_QueuedDownload> _queue = [];
@@ -870,7 +894,8 @@ class DownloadService extends ChangeNotifier {
         coverPath = f.path;
       }
     } catch (_) {}
-    _noteOrigin(itemId);
+    // Absorb Plus: an audio download of this id keeps its own account (D9).
+    if (!_downloads.containsKey(itemId)) _noteOrigin(itemId);
     _keptEbooks[itemId] = DownloadInfo(
       itemId: itemId,
       status: DownloadStatus.downloaded,
@@ -1123,7 +1148,8 @@ class DownloadService extends ChangeNotifier {
       if (_folderTakenByOther(nested, itemId)) {
         nested = '$nested (${folderIdSuffix(itemId)})';
       }
-      final moved = await _moveBookToSaf(tree, nested, [for (final p in paths) p.split('/').last], paths);
+      final moved = await _moveBookToSaf(tree, nested, [for (final p in paths) p.split('/').last], paths,
+          itemId: itemId);
       if (moved != null) {
         finalPaths = moved.fileUris;
         finalDir = moved.dirUri;
@@ -1299,6 +1325,11 @@ class DownloadService extends ChangeNotifier {
     await FileDownloader().trackTasks();
     await _loadPending();
     await _loadAutoDownloadBlocks();
+    // Absorb Plus: a short-lived background engine (the new-episode job)
+    // shares this state with the app, which may be running. It only starts
+    // its own downloads; failing, finalizing or forgetting the app's books
+    // from a stale copy is the app's job (audit D5).
+    if (backgroundIsolateMode) return;
     await _rehydratePending();
     await FileDownloader().resumeFromBackground();
     _startReconciler();
@@ -1322,11 +1353,21 @@ class DownloadService extends ChangeNotifier {
   ///    or zombie record (e.g. left over after an app update) holding a slot -
   ///    fail it so the queue can move on. Healthy or wifi-waiting downloads keep
   ///    emitting updates, so their lastUpdate stays fresh and they're left be.
-  Future<void> _reconcilePending() async {
+  Future<void> _reconcilePending({DateTime? now}) async {
+    now ??= DateTime.now();
+    final slept = sleptBetweenTicks(_lastReconcileAt, now);
+    _lastReconcileAt = now;
+    if (slept) {
+      // Absorb Plus: the computer slept. Silence across the gap isn't a stall;
+      // the clock starts again now (audit D2).
+      for (final p in _pending.values) {
+        p.lastUpdate = now;
+      }
+    }
     if (_pending.isEmpty) return;
     List<TaskRecord> records;
     try {
-      records = await FileDownloader().database.allRecords();
+      records = await _taskRecords();
     } catch (e) {
       debugPrint('[Download] reconcile: reading the task database failed: $e');
       return;
@@ -1379,12 +1420,13 @@ class DownloadService extends ChangeNotifier {
       for (final other in _pending.values) {
         if (other.lastUpdate.isAfter(heardAt)) heardAt = other.lastUpdate;
       }
-      final silence = DateTime.now().difference(heardAt);
+      final silence = now.difference(heardAt);
       if ((p.overallProgress == 0 && silence > const Duration(minutes: 3)) ||
           silence > const Duration(minutes: 10)) {
         debugPrint('[Download] Reconciler failing stale $itemId '
             '(progress=${p.overallProgress}, silent ${silence.inMinutes}m)');
-        await _failBook(itemId, cause: 'Interrupted download');
+        await _failBook(itemId, cause: 'Interrupted download',
+            keepFinishedTracks: ForkPlatform.supportsDesktopDownloadFolder);
       }
     }
   }
@@ -1708,6 +1750,7 @@ class DownloadService extends ChangeNotifier {
   Future<void> _validateDownloads() async {
     try {
       final orphanIds = <String>[];
+      final orphanDirs = <String, String>{}; // Absorb Plus (D6)
       final entries = Map<String, DownloadInfo>.from(_downloads);
       for (final entry in entries.entries) {
         if (entry.value.status != DownloadStatus.downloaded) continue;
@@ -1716,6 +1759,7 @@ class DownloadService extends ChangeNotifier {
         // Desktop: a book on an unplugged drive is kept, not forgotten.
         if (entry.value.localPaths.any(DesktopDownloadFolder.isOnMissingDrive)) continue;
         bool allExist = true;
+        bool unsure = false; // Absorb Plus (D6)
         for (final path in entry.value.localPaths) {
           // No cheap existence check for a SAF content URI; assume present and
           // let a real playback failure surface a re-download instead.
@@ -1728,16 +1772,20 @@ class DownloadService extends ChangeNotifier {
               break;
             }
           } catch (e) {
-            // Timeout or permission error — treat as missing
-            debugPrint('[Download] ${entry.key}: file check failed, treating as missing: $e');
-            allExist = false;
+            // Absorb Plus: a timeout or error (a network drive still waking
+            // up) doesn't mean the file is gone. Keep the download and check
+            // again next start (audit D6).
+            debugPrint('[Download] ${entry.key}: file check failed, keeping it: $e');
+            unsure = true;
             break;
           }
         }
-        if (!allExist) {
+        if (!allExist && !unsure) {
           debugPrint('[Download] Files missing for ${entry.key}, removing');
           _downloads.remove(entry.key);
           orphanIds.add(entry.key);
+          final dir = entry.value.localDirPath;
+          if (dir != null) orphanDirs[entry.key] = dir;
         }
       }
       if (orphanIds.isNotEmpty) {
@@ -1748,6 +1796,9 @@ class DownloadService extends ChangeNotifier {
         final internalBase = await _internalBasePath;
         for (final id in orphanIds) {
           debugPrint('[Download] Cleaning up orphaned entry: $id');
+          // Absorb Plus: its own Author/Title folder too, inside the known
+          // download folders and only when no other book uses it (D6).
+          await _cleanupBookDir(orphanDirs[id], id);
           try {
             final dir = Directory('$basePath/$id');
             if (DownloadFolderGuard.mayDeleteTree(dir.path, [basePath],
@@ -1876,12 +1927,17 @@ class DownloadService extends ChangeNotifier {
         _downloads[entry.key] = DownloadInfo(
           itemId: info.itemId,
           status: info.status,
+          progress: info.progress,
+          trackCount: info.trackCount,
+          bytesDone: info.bytesDone,
+          bytesTotal: info.bytesTotal,
           localPaths: info.localPaths,
           sessionData: info.sessionData,
           title: title ?? info.title,
           author: author ?? info.author,
           coverUrl: coverUrl ?? info.coverUrl,
           localCoverPath: localCoverPath,
+          localDirPath: info.localDirPath,
           libraryId: info.libraryId,
         );
         changed = true;
@@ -2017,7 +2073,11 @@ class DownloadService extends ChangeNotifier {
           'podcast $itemId + episode $episodeId');
       itemId = '$itemId-$episodeId';
     }
-    _noteOrigin(itemId);
+    // Absorb Plus: a retry picks up the tracks an interrupted download kept.
+    final kept = _downloads[itemId];
+    if (kept?.status == DownloadStatus.error && kept?.localDirPath != null) {
+      _resumeDirs[itemId] = kept!.localDirPath!;
+    }
     try {
       await init().timeout(const Duration(seconds: 8));
     } on TimeoutException catch (e) {
@@ -2064,6 +2124,10 @@ class DownloadService extends ChangeNotifier {
         _queue.any((q) => q.itemId == itemId)) {
       return null;
     }
+    // Absorb Plus: only now that a download really starts. Noted before the
+    // checks above, a call from another account for an id already
+    // downloaded re-labelled that download as its own (audit D9).
+    _noteOrigin(itemId);
 
     // If at capacity, queue this one
     if (_activeDownloadIds.length >= maxConcurrent) {
@@ -2111,6 +2175,30 @@ class DownloadService extends ChangeNotifier {
   /// fire-and-forget mid-flight) and skips the in-memory concurrency queue
   /// (queued entries would die with the isolate; background_downloader
   /// schedules the handed-over tasks natively either way).
+  /// Absorb Plus: why a download asked for now would be refused before it
+  /// starts (the downloader not ready, Wi-Fi only off Wi-Fi), or null. Asked
+  /// before removing a copy to download again, so a refusal doesn't leave
+  /// the user with no copy at all (audit U4). Same checks and messages as
+  /// [downloadItem].
+  Future<String?> downloadStartProblem() async {
+    try {
+      await init().timeout(const Duration(seconds: 8));
+    } on TimeoutException catch (e) {
+      debugPrint('[Download] Downloader initialization still in progress: $e');
+      return 'Downloads are still starting. Please try again in a moment.';
+    } catch (e) {
+      debugPrint('[Download] Downloader initialization failed: $e');
+      return 'Downloads could not start. Please try again.';
+    }
+    if (await PlayerSettings.getWifiOnlyDownloads()) {
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!isWifiOrEthernet(connectivity)) {
+        return 'Downloads are set to Wi-Fi only. Connect to Wi-Fi or change this in Settings.';
+      }
+    }
+    return null;
+  }
+
   Future<void> enqueueBackgroundDownload({
     required ApiService api,
     required String itemId,
@@ -2392,17 +2480,18 @@ class DownloadService extends ChangeNotifier {
       var nestedName = (author != null && author.isNotEmpty)
           ? '${_sanitizePath(author)}/${_sanitizePath(title)}'
           : _sanitizePath(title);
-      nestedName = safeDownloadFolder(nestedName, windows: Platform.isWindows);
-      if (_folderTakenByOther(nestedName, itemId)) {
-        nestedName = '$nestedName (${folderIdSuffix(itemId)})';
-      }
+      nestedName = _claimFolderName(
+          safeDownloadFolder(nestedName, windows: Platform.isWindows), itemId);
       String? relDir; // Android: relative to applicationDocuments
       final desktopRoot = DesktopDownloadFolder.activeRoot(_desktopDownloadDir);
+      final resume = _resumeDirs.remove(itemId); // Absorb Plus (D2)
       if (Platform.isIOS) {
         final basePath = await downloadBasePath;
         bookDir = Directory('$basePath/$nestedName');
       } else if (desktopRoot != null) {
-        bookDir = Directory(DesktopDownloadFolder.bookDirPath(desktopRoot, nestedName, itemId));
+        bookDir = Directory(resume != null && Directory(resume).existsSync()
+            ? resume
+            : DesktopDownloadFolder.bookDirPath(desktopRoot, nestedName, itemId));
       } else {
         final appDir = await getApplicationDocumentsDirectory();
         relDir = 'downloads/$nestedName';
@@ -2470,9 +2559,25 @@ class DownloadService extends ChangeNotifier {
         slimSessionJson: jsonEncode(slimSession),
         safTreeUri: useSaf ? _customDownloadUri : null,
         safSubfolder: useSaf ? nestedName : null,
+        // Absorb Plus (D10): Audiobookshelf serves the files as they are, so
+        // their sizes must match. BookOrbit's may not, so it isn't checked.
+        expectedSizes: api.isBookOrbit ? const [] : expectedTrackSizes(audioTracks),
       );
       _pending[itemId] = pending;
       await _persistPending();
+
+      // Absorb Plus: on Windows/Linux, tracks an interrupted download already
+      // finished (right size on disk) aren't fetched again (audit D2).
+      final finished = ForkPlatform.supportsDesktopDownloadFolder
+          ? finishedTracks(expectedPaths, pending.expectedSizes)
+          : const <int>{};
+      for (final i in finished) {
+        pending.trackStatus[i] = TaskStatus.complete;
+        pending.trackProgress[i] = 1.0;
+      }
+      if (finished.isNotEmpty) {
+        debugPrint('[Download] "$title": ${finished.length}/${files.length} tracks already on disk');
+      }
 
       // One notification per book instead of one per file task. Multi-file
       // books group their tasks under a per-book group notification (the
@@ -2497,6 +2602,7 @@ class DownloadService extends ChangeNotifier {
       );
 
       for (int i = 0; i < files.length; i++) {
+        if (finished.contains(i)) continue; // Absorb Plus (D2)
         final meta = jsonEncode({'itemId': itemId, 'i': i, 'n': files.length});
         final Task task;
         if (Platform.isIOS || desktopRoot != null) {
@@ -2545,6 +2651,8 @@ class DownloadService extends ChangeNotifier {
         if (!ok) throw Exception('Failed to enqueue track ${i + 1}');
       }
       debugPrint('[Download] Enqueued ${files.length} task(s) for "$title"');
+      // Every track was already there: finish the book now (Absorb Plus, D2).
+      if (finished.length == files.length) await _checkBookTerminal(itemId, pending);
     } catch (e) {
       await _failBook(itemId,
           cause: e, bookDirRef: bookDirRef, title: title, author: author, coverUrl: coverUrl);
@@ -2594,17 +2702,18 @@ class DownloadService extends ChangeNotifier {
       var nestedName = (author != null && author.isNotEmpty)
           ? '${_sanitizePath(author)}/${_sanitizePath(title)}'
           : _sanitizePath(title);
-      nestedName = safeDownloadFolder(nestedName, windows: Platform.isWindows);
-      if (_folderTakenByOther(nestedName, itemId)) {
-        nestedName = '$nestedName (${folderIdSuffix(itemId)})';
-      }
+      nestedName = _claimFolderName(
+          safeDownloadFolder(nestedName, windows: Platform.isWindows), itemId);
       final Directory bookDir;
       String? relDir;
       final desktopRoot = DesktopDownloadFolder.activeRoot(_desktopDownloadDir);
+      final resume = _resumeDirs.remove(itemId); // Absorb Plus (D2)
       if (Platform.isIOS) {
         bookDir = Directory('${await downloadBasePath}/$nestedName');
       } else if (desktopRoot != null) {
-        bookDir = Directory(DesktopDownloadFolder.bookDirPath(desktopRoot, nestedName, itemId));
+        bookDir = Directory(resume != null && Directory(resume).existsSync()
+            ? resume
+            : DesktopDownloadFolder.bookDirPath(desktopRoot, nestedName, itemId));
       } else {
         final appDir = await getApplicationDocumentsDirectory();
         relDir = 'downloads/$nestedName';
@@ -2767,6 +2876,7 @@ class DownloadService extends ChangeNotifier {
     notifyListeners();
     debugPrint('[Download] Complete: ${p.title} (narration, kept '
         '${DateTime.now().difference(started).inMilliseconds}ms after the EPUB landed)');
+    await _deleteIfAskedWhileFinishing(itemId); // Absorb Plus (D7)
     unawaited(_processQueue());
   }
 
@@ -2989,7 +3099,10 @@ class DownloadService extends ChangeNotifier {
     final itemId = meta.$1;
     final i = meta.$2;
     final p = _pending[itemId];
-    if (p == null) return;
+    if (p == null) {
+      unawaited(_adoptForeignPending(itemId)); // Absorb Plus (D5)
+      return;
+    }
     if (i < 0 || i >= p.trackCount) return;
     p.lastUpdate = DateTime.now();
 
@@ -3159,6 +3272,9 @@ class DownloadService extends ChangeNotifier {
     required String itemId,
     required int trackCount,
     String? libraryId,
+    String? safTreeUri,
+    String? safSubfolder,
+    List<int?> expectedSizes = const [],
   }) async {
     final bookDir = '${Directory.systemTemp.path}/absorb_download_service_test/$itemId';
     _pending[itemId] = _PendingBook(
@@ -3172,6 +3288,9 @@ class DownloadService extends ChangeNotifier {
         trackCount,
         (index) => '$bookDir/$index.mp3',
       ),
+      safTreeUri: safTreeUri,
+      safSubfolder: safSubfolder,
+      expectedSizes: expectedSizes,
     );
     _activeDownloadIds.add(itemId);
     _downloads[itemId] = DownloadInfo(
@@ -3232,6 +3351,28 @@ class DownloadService extends ChangeNotifier {
   void debugPutDownload(DownloadInfo info) => _downloads[info.itemId] = info;
 
   @visibleForTesting
+  Future<void> debugRehydratePending() => _rehydratePending();
+
+  @visibleForTesting
+  Future<void> debugLoadPending() => _loadPending();
+
+  @visibleForTesting
+  Future<void> debugValidateDownloads() => _validateDownloads();
+
+  @visibleForTesting
+  Future<void> debugPersistPending() => _persistPending();
+
+  @visibleForTesting
+  Future<void> debugAdoptForeignPending(String itemId) =>
+      _adoptForeignPending(itemId);
+
+  @visibleForTesting
+  Future<void> debugReconcile({required DateTime now, DateTime? lastTick}) {
+    _lastReconcileAt = lastTick;
+    return _reconcilePending(now: now);
+  }
+
+  @visibleForTesting
   void debugRemoveDownload(String itemId) => _downloads.remove(itemId);
 
   @visibleForTesting
@@ -3245,6 +3386,12 @@ class DownloadService extends ChangeNotifier {
     _cancelledIds.clear();
     _pending.clear();
     _queue.clear();
+    _persistedPendingKeys = {};
+    _adoptChecked.clear();
+    _deleteAfterFinalize.clear();
+    _resumeDirs.clear();
+    _claimedFolders.clear();
+    _lastReconcileAt = null;
     _downloaderConfigured = false;
     _initFuture = null;
     _iosAudioMigrationFuture = null;
@@ -3259,13 +3406,16 @@ class DownloadService extends ChangeNotifier {
   /// Returns the created folder URI and the per-file content URIs, or null if
   /// the move failed.
   Future<({String dirUri, List<String> fileUris})?> _moveBookToSaf(
-      String treeUri, String subfolder, List<String> filenames, List<String> tempPaths) async {
+      String treeUri, String subfolder, List<String> filenames, List<String> tempPaths,
+      {String? itemId}) async {
     try {
       final res = await _storageChannel.invokeMethod<Map>('moveBookToSaf', {
         'treeUri': treeUri,
         'subfolder': subfolder,
         'filenames': filenames,
         'tempPaths': tempPaths,
+        // Absorb Plus: a non-empty folder of the user's gets "Title (id)" (D1).
+        if (itemId != null) 'idSuffix': folderIdSuffix(itemId),
       });
       final dirUri = res?['dirUri'] as String?;
       final fileUris = (res?['fileUris'] as List?)?.map((e) => e as String).toList();
@@ -3307,6 +3457,24 @@ class DownloadService extends ChangeNotifier {
       return;
     }
 
+    // Absorb Plus: a track whose size isn't the server's is not the audio
+    // (a proxy's sign-in page saved as "01.mp3"). Fail now instead of at
+    // playback, keeping the good tracks on desktop for the retry (audit D10).
+    final wrongSize = wrongSizeTracks(localPaths, p.expectedSizes);
+    if (wrongSize.isNotEmpty) {
+      debugPrint('[Download] Finalize "$itemId": ${wrongSize.length} track(s) '
+          'not the size the server reports, treating as failure');
+      for (final i in wrongSize) {
+        try {
+          File(localPaths[i]).deleteSync();
+        } catch (_) {}
+      }
+      p.finalizing = false; // let _failBook proceed
+      await _failBook(itemId, cause: 'Downloaded files have the wrong size',
+          keepFinishedTracks: ForkPlatform.supportsDesktopDownloadFolder);
+      return;
+    }
+
     if (p.narration) {
       unawaited(_finishNarration(itemId, p, localPaths.first));
       return;
@@ -3321,7 +3489,8 @@ class DownloadService extends ChangeNotifier {
     if (p.isSaf) {
       final filenames = [for (final path in localPaths) path.split('/').last];
       final moved = await _moveBookToSaf(
-          p.safTreeUri!, p.safSubfolder ?? '', filenames, localPaths);
+          p.safTreeUri!, p.safSubfolder ?? '', filenames, localPaths,
+          itemId: itemId);
       if (moved != null) {
         finalPaths = moved.fileUris;
         finalDirPath = moved.dirUri;
@@ -3366,6 +3535,7 @@ class DownloadService extends ChangeNotifier {
     }
 
     debugPrint('[Download] Complete: ${p.title} (${localPaths.length} files)');
+    await _deleteIfAskedWhileFinishing(itemId); // Absorb Plus (D7)
     unawaited(_processQueue());
   }
 
@@ -3378,6 +3548,7 @@ class DownloadService extends ChangeNotifier {
     String? author,
     String? coverUrl,
     String? bookDirRef,
+    bool keepFinishedTracks = false,
   }) async {
     final p = _pending[itemId];
     if (p != null) {
@@ -3398,7 +3569,14 @@ class DownloadService extends ChangeNotifier {
     if (p != null && !p.failing && p.trackCount > 1) {
       _dismissGroupNotification(itemId);
     }
-    await _cleanupBookDir(dir, itemId);
+    // Absorb Plus: an interrupted desktop download keeps its finished tracks
+    // (the folder is remembered on the failed record) so a retry only
+    // fetches the rest (audit D2).
+    final keptDir = keepFinishedTracks && dir != null && !isContentUri(dir) &&
+            folderHasFiles(dir)
+        ? dir
+        : null;
+    if (keptDir == null) await _cleanupBookDir(dir, itemId);
 
     final msg = _mapError(cause, taskException, responseCode);
     _downloads[itemId] = DownloadInfo(
@@ -3408,10 +3586,12 @@ class DownloadService extends ChangeNotifier {
       title: t,
       author: a,
       coverUrl: c,
+      localDirPath: keptDir,
       libraryId: libraryId,
     );
     _activeDownloadIds.remove(itemId);
     _pending.remove(itemId);
+    _deleteAfterFinalize.remove(itemId); // Absorb Plus (D7): nothing to delete
     await _save();
     await _persistPending();
     await _deleteDbRecords(itemId, p?.trackCount ?? 0);
@@ -3448,7 +3628,11 @@ class DownloadService extends ChangeNotifier {
 
   /// Dismiss a failed record without touching any completed downloads.
   Future<void> dismissFailedDownload(String itemId) async {
-    if (_downloads[itemId]?.status != DownloadStatus.error) return;
+    final failed = _downloads[itemId];
+    if (failed?.status != DownloadStatus.error) return;
+    // Absorb Plus: the finished tracks an interrupted download kept (D2).
+    await _cleanupBookDir(failed!.localDirPath, itemId);
+    _resumeDirs.remove(itemId);
     _downloads.remove(itemId);
     await _save();
     notifyListeners();
@@ -3481,6 +3665,7 @@ class DownloadService extends ChangeNotifier {
     _downloads.remove(itemId);
     _activeDownloadIds.remove(itemId);
     _pending.remove(itemId);
+    _deleteAfterFinalize.remove(itemId); // Absorb Plus (D7)
     await _persistPending();
     await _deleteDbRecords(itemId, p?.trackCount ?? 0);
     _cancelledIds.remove(itemId);
@@ -3627,6 +3812,16 @@ class DownloadService extends ChangeNotifier {
   /// Books sharing a title and author (a release split into parts) used to
   /// share one folder, so deleting or failing one wiped the others' files.
   bool _folderTakenByOther(String nestedName, String itemId) {
+    // Absorb Plus: a folder another download picked moments ago, before it
+    // got as far as registering (audit D4).
+    for (final r in _claimedFolders.entries) {
+      if (r.key != itemId &&
+          _activeDownloadIds.contains(r.key) &&
+          DownloadFolderGuard.endsWithFolder('/${r.value}', nestedName,
+              windows: Platform.isWindows)) {
+        return true;
+      }
+    }
     bool matches(String? dir) {
       if (dir == null) return false;
       // Windows folder names ignore case: "Title" and "title" are one folder.
@@ -3645,6 +3840,38 @@ class DownloadService extends ChangeNotifier {
       }
     }
     return false;
+  }
+
+  /// Absorb Plus: books cancelled or deleted while finishing (audit D7).
+  final Set<String> _deleteAfterFinalize = {};
+
+  Future<void> _deleteIfAskedWhileFinishing(String itemId) async {
+    if (!_deleteAfterFinalize.remove(itemId)) return;
+    debugPrint('[Download] Deleting $itemId as asked while it was finishing');
+    await deleteDownload(itemId);
+  }
+
+  /// Absorb Plus: the folder each starting download picked. Starting a
+  /// download awaits the network between choosing its folder and
+  /// registering it, so two same-named books started together both chose
+  /// "Author/Title" and overwrote each other's tracks (audit D4). A claim
+  /// counts only while its download is active.
+  final Map<String, String> _claimedFolders = {};
+
+  /// [nestedName], or "nestedName (id)" when another download has it, claimed
+  /// for [itemId] in the same synchronous step as the check.
+  String _claimFolderName(String nestedName, String itemId) {
+    final name = _folderTakenByOther(nestedName, itemId)
+        ? '$nestedName (${folderIdSuffix(itemId)})'
+        : nestedName;
+    _claimedFolders[itemId] = name;
+    return name;
+  }
+
+  @visibleForTesting
+  String debugClaimFolderName(String nestedName, String itemId) {
+    _activeDownloadIds.add(itemId);
+    return _claimFolderName(nestedName, itemId);
   }
 
   /// Whether any other download keeps files in [dirPath]. Downloads made
@@ -3698,12 +3925,81 @@ class DownloadService extends ChangeNotifier {
 
   Future<void> _persistPending() async {
     final prefs = await SharedPreferences.getInstance();
-    if (_pending.isEmpty) {
+    // Absorb Plus: entries the other engine (app or background job) wrote
+    // since this one last looked are kept, not overwritten. The app takes
+    // them over; the background job leaves them alone (audit D5).
+    final foreign = await _foreignPending(prefs);
+    if (!backgroundIsolateMode) {
+      foreign.forEach(_adoptPending);
+      foreign.clear();
+    }
+    _persistedPendingKeys = _pending.keys.toSet();
+    if (_pending.isEmpty && foreign.isEmpty) {
       await prefs.remove('pending_downloads');
       return;
     }
-    final map = {for (final e in _pending.entries) e.key: e.value.toJson()};
+    final map = {
+      ...foreign,
+      for (final e in _pending.entries) e.key: e.value.toJson(),
+    };
     await prefs.setString('pending_downloads', jsonEncode(map));
+  }
+
+  /// Absorb Plus: the pending entries this engine last wrote or read.
+  /// A stored entry outside this set (and not in [_pending]) was written by
+  /// the other engine; one inside it that is gone from [_pending] was
+  /// finished or dropped here.
+  Set<String> _persistedPendingKeys = {};
+
+  /// Item ids already checked for a pending entry the other engine wrote.
+  final Set<String> _adoptChecked = {};
+
+  Future<Map<String, dynamic>> _foreignPending(SharedPreferences prefs) async {
+    try {
+      await prefs.reload();
+    } catch (_) {}
+    try {
+      final json = prefs.getString('pending_downloads');
+      if (json == null) return {};
+      final stored = jsonDecode(json) as Map<String, dynamic>;
+      stored.removeWhere((k, _) =>
+          _pending.containsKey(k) || _persistedPendingKeys.contains(k));
+      return stored;
+    } catch (e) {
+      debugPrint('[Download] reading pending entries failed: $e');
+      return {};
+    }
+  }
+
+  void _adoptPending(String itemId, dynamic json) {
+    try {
+      final p = _PendingBook.fromJson(json as Map<String, dynamic>);
+      _pending[itemId] = p;
+      _activeDownloadIds.add(itemId);
+      _downloads[itemId] = DownloadInfo(
+        itemId: itemId,
+        status: DownloadStatus.downloading,
+        progress: 0,
+        title: p.title,
+        author: p.author,
+        coverUrl: p.coverUrl,
+        libraryId: p.libraryId,
+      );
+      debugPrint('[Download] took over "${p.title}" ($itemId) from the background job');
+    } catch (e) {
+      debugPrint('[Download] could not take over pending $itemId: $e');
+    }
+  }
+
+  /// Absorb Plus: an update for a book this engine doesn't know may be one
+  /// the background job started. Take it over so it finishes here (D5).
+  Future<void> _adoptForeignPending(String itemId) async {
+    if (backgroundIsolateMode || !_adoptChecked.add(itemId)) return;
+    final foreign = await _foreignPending(await SharedPreferences.getInstance());
+    if (foreign.isEmpty) return;
+    foreign.forEach(_adoptPending);
+    _persistedPendingKeys.addAll(foreign.keys);
+    notifyListeners();
   }
 
   Future<void> _loadPending() async {
@@ -3712,6 +4008,13 @@ class DownloadService extends ChangeNotifier {
     if (json == null) return;
     try {
       final map = jsonDecode(json) as Map<String, dynamic>;
+      // Absorb Plus: the background job only notes the app's books as busy,
+      // so it neither starts them twice nor writes them back later (D5).
+      if (backgroundIsolateMode) {
+        _activeDownloadIds.addAll(map.keys);
+        return;
+      }
+      _persistedPendingKeys = map.keys.toSet();
       for (final e in map.entries) {
         final p = _PendingBook.fromJson(e.value as Map<String, dynamic>);
         _pending[e.key] = p;
@@ -3756,7 +4059,7 @@ class DownloadService extends ChangeNotifier {
     if (_pending.isEmpty) return;
     List<TaskRecord> records;
     try {
-      records = await FileDownloader().database.allRecords();
+      records = await _taskRecords();
     } catch (e) {
       debugPrint('[Download] rehydrate: reading the task database failed: $e');
       records = const [];
@@ -3786,13 +4089,17 @@ class DownloadService extends ChangeNotifier {
         if (s == null || !_terminal.contains(s)) allTerminal = false;
       }
 
+      // Absorb Plus: on Windows/Linux the transfers ran inside the app and
+      // ended with it; nothing resumes them. Fail now instead of after ten
+      // silent minutes, keeping the finished tracks for the retry (audit D2).
+      final desktop = ForkPlatform.supportsDesktopDownloadFolder;
       if (allComplete) {
         p.finalizing = true;
         await _finalizeSuccess(itemId);
-      } else if (allTerminal) {
+      } else if (allTerminal || desktop) {
         // No p.finalizing pre-set here or below: _failBook refuses to run
         // when it's already true (see the reconciler note).
-        await _failBook(itemId, cause: 'Interrupted download');
+        await _failBook(itemId, cause: 'Interrupted download', keepFinishedTracks: desktop);
       } else if ((tracked[itemId]?.isEmpty ?? true)) {
         // The package has no record of these tasks (DB wiped) and we can't
         // rebuild durable URLs here, so surface as failed for a manual retry.
@@ -3868,9 +4175,10 @@ class DownloadService extends ChangeNotifier {
       if (dirPath != null && _dirSharedWithOther(dirPath, itemId)) {
         // Other books still have files here: only this book's files go.
       } else if (dirPath != null && isContentUri(dirPath)) {
-        // SAF book folder: best-effort delete (harmless if already emptied).
+        // SAF book folder: only once it is empty. Deleting a SAF folder is
+        // recursive, and it may be the user's own (Absorb Plus, audit D1).
         try {
-          await FileDownloader().uri.deleteFile(Uri.parse(dirPath));
+          await _storageChannel.invokeMethod('deleteSafDirIfEmpty', {'dirUri': dirPath});
         } catch (_) {}
       } else if (dirPath != null && Directory(dirPath).existsSync()) {
         // Absorb Plus: only inside a known download folder, and the emptied
@@ -3916,6 +4224,16 @@ class DownloadService extends ChangeNotifier {
   void cancelDownload(String itemId) {
     // Drop it from the waiting queue if it never started.
     _queue.removeWhere((q) => q.itemId == itemId);
+
+    // Absorb Plus: a book already finishing (files being moved into the
+    // custom folder, narration taken out) would be written "downloaded"
+    // anyway. Note the wish; the book is deleted once it has finished
+    // (audit D7).
+    if (_pending[itemId]?.finalizing == true) {
+      _deleteAfterFinalize.add(itemId);
+      debugPrint('[Download] $itemId is finishing - it is deleted once it has');
+      return;
+    }
 
     // Flag so an in-flight _executeDownload bails before enqueueing, and so a
     // book mid-resolution doesn't leak an active slot.
