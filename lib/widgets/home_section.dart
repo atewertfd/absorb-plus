@@ -153,6 +153,9 @@ class HomeSection extends StatelessWidget {
           SizedBox(
             height: cardHeight,
             child: _SnapScrollList(
+              // Absorb Plus: each shelf keeps its own scroll offset, even when
+              // a shelf above it appears or goes away.
+              key: PageStorageKey('home-shelf:$sectionId'),
               cardWidth: cardWidth,
               itemCount: entities.length,
               itemBuilder: (context, index) {
@@ -264,6 +267,7 @@ class _SnapScrollList extends StatefulWidget {
   final Widget Function(BuildContext, int) itemBuilder;
 
   const _SnapScrollList({
+    super.key,
     required this.cardWidth,
     required this.itemCount,
     required this.itemBuilder,
