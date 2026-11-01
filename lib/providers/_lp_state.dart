@@ -67,6 +67,12 @@ mixin _StateMixin on ChangeNotifier {
   Future<void>? _collectionsInFlight;
   String? _collectionsInFlightFor;
 
+  // Absorb Plus: Home loads reuse playlists and collections fetched within
+  // the cooldown; forced loads (pull to refresh, socket events) fetch.
+  static const _listFetchCooldown = Duration(minutes: 5);
+  final _playlistsCooldown = ListFetchCooldown(_listFetchCooldown);
+  final _collectionsCooldown = ListFetchCooldown(_listFetchCooldown);
+
   List<String> _sectionOrder = [];
   Set<String> _hiddenSectionIds = {};
   bool _applyDefaultPlaylistCollectionHiding = false;
