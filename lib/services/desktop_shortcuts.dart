@@ -17,6 +17,7 @@ enum DesktopShortcutAction {
   library,
   nowPlaying,
   fullScreen,
+  quickSwitcher,
 }
 
 class DesktopShortcutDefinition {
@@ -30,6 +31,10 @@ class DesktopShortcutDefinition {
   /// Works wherever focus is (function keys never type text).
   final bool global;
 
+  /// Opens a dialog of its own, so it never fires from inside a dialog
+  /// (the same "no dialog open" rule as [nothingMoreSpecificHasFocus]).
+  final bool notInDialog;
+
   const DesktopShortcutDefinition({
     required this.action,
     required this.key,
@@ -38,6 +43,7 @@ class DesktopShortcutDefinition {
     this.shift = false,
     this.alt = false,
     this.global = false,
+    this.notInDialog = false,
   });
 
   /// No modifier: a key that also types text (Space, arrows, brackets).
@@ -113,6 +119,13 @@ const _sharedShortcutDefinitions = <DesktopShortcutDefinition>[
     key: LogicalKeyboardKey.keyN,
     label: 'Ctrl+N',
     control: true,
+  ),
+  DesktopShortcutDefinition(
+    action: DesktopShortcutAction.quickSwitcher,
+    key: LogicalKeyboardKey.keyK,
+    label: 'Ctrl+K',
+    control: true,
+    notInDialog: true,
   ),
 ];
 
@@ -246,6 +259,13 @@ bool nothingMoreSpecificHasFocus() {
   return ModalRoute.of(context) is! RawDialogRoute;
 }
 
+/// True while keyboard focus is inside an open dialog.
+bool focusIsInDialog() {
+  final context = FocusManager.instance.primaryFocus?.context;
+  if (context == null) return false;
+  return ModalRoute.of(context) is RawDialogRoute;
+}
+
 /// Runs desktop shortcuts. Plain-key ones (Space, arrows, brackets) only run
 /// on desktop while nothing more specific has focus (the shell, or an open
 /// page or player with nothing in it focused): a focused button keeps Space,
@@ -263,7 +283,9 @@ class DesktopShortcutCallbackAction extends CallbackAction<Intent> {
   bool isEnabled(Intent intent) {
     final action = actionOf(intent);
     if (action == null) return true;
-    if (!desktopShortcutFor(action).isPlainKey) return true;
+    final shortcut = desktopShortcutFor(action);
+    if (shortcut.notInDialog && focusIsInDialog()) return false;
+    if (!shortcut.isPlainKey) return true;
     final desktop = defaultTargetPlatform == TargetPlatform.windows ||
         defaultTargetPlatform == TargetPlatform.linux ||
         defaultTargetPlatform == TargetPlatform.macOS;

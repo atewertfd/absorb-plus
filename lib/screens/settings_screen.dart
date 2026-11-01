@@ -126,26 +126,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  Future<void> _showDesktopShortcutsDialog() async {
-    await showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.desktopShortcutsTitle),
-        content: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 420),
-          child: const SingleChildScrollView(
-            child: DesktopShortcutHelpList(),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context)!.desktopShortcutsClose),
-          ),
-        ],
-      ),
-    );
-  }
+  Future<void> _showDesktopShortcutsDialog() =>
+      showDesktopShortcutsDialog(context);
   AutoRewindSettings _rewindSettings = const AutoRewindSettings();
   double _defaultSpeed = 1.0;
 

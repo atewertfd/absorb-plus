@@ -7378,5 +7378,22 @@
   "exclusiveAudioTitle": "Exclusive audio",
   "exclusiveAudioSubtitle": "Fixes crackling or jumpy volume by skipping Windows sound effects. Other apps are muted while Absorb plays. Restart Absorb to apply.",
   "homeRecentlyAddedNewBadge": "{count} new",
-  "@homeRecentlyAddedNewBadge": {"placeholders": {"count": {"type": "int"}}}
+    "@homeRecentlyAddedNewBadge": {"placeholders": {"count": {"type": "int"}}},
+  "desktopShortcutQuickSwitcher": "Quick switcher: find books or go anywhere",
+  "quickSwitcherTooltip": "Quick switcher (Ctrl+K)",
+  "quickSwitcherHint": "Search this library or type a command",
+  "quickSwitcherNoResults": "No matches",
+  "quickSwitcherGoHome": "Go to Home",
+  "quickSwitcherGoLibrary": "Go to Library",
+  "quickSwitcherGoAbsorbing": "Go to Absorbing",
+  "quickSwitcherGoStats": "Go to Stats",
+  "quickSwitcherGoSettings": "Go to Settings",
+  "quickSwitcherGoDownloads": "Go to Downloads",
+  "quickSwitcherPlayPause": "Play / pause",
+  "quickSwitcherSleepTimer": "Sleep timer",
+  "quickSwitcherKindAction": "Action",
+  "quickSwitcherKindBook": "Book",
+  "quickSwitcherKindPodcast": "Podcast",
+  "quickSwitcherKindSeries": "Series",
+  "quickSwitcherKindAuthor": "Author"
 }

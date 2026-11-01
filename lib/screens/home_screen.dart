@@ -45,6 +45,7 @@ import '../widgets/desktop_input.dart';
 import '../widgets/stable_cached_network_image.dart';
 import '../utils/cover_cache.dart';
 import '../utils/cover_palette.dart';
+import '../widgets/quick_switcher_sources.dart'; // Absorb Plus
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -588,6 +589,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
                       },
                     ),
                     actions: [
+                      if (QuickSwitcherButton.available) const QuickSwitcherButton(), // Absorb Plus
                       if (selectionAvailable)
                         Tooltip(
                           message: _selectionMode

@@ -26,6 +26,7 @@ String desktopShortcutDescription(
       DesktopShortcutAction.library => l.desktopShortcutLibrary,
       DesktopShortcutAction.nowPlaying => l.desktopShortcutNowPlaying,
       DesktopShortcutAction.fullScreen => l.desktopShortcutFullScreen,
+      DesktopShortcutAction.quickSwitcher => l.desktopShortcutQuickSwitcher,
     };
 
 String desktopNavigationDescription(
@@ -107,4 +108,26 @@ class DesktopShortcutHelpList extends StatelessWidget {
       ],
     );
   }
+}
+
+/// The keyboard-shortcuts dialog (Settings, the quick switcher, F1 and ?).
+Future<void> showDesktopShortcutsDialog(BuildContext context) {
+  return showDialog<void>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(AppLocalizations.of(context)!.desktopShortcutsTitle),
+      content: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 420),
+        child: const SingleChildScrollView(
+          child: DesktopShortcutHelpList(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(AppLocalizations.of(context)!.desktopShortcutsClose),
+        ),
+      ],
+    ),
+  );
 }

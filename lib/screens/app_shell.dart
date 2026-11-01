@@ -84,6 +84,7 @@ import '../utils/fork_platform.dart';
 import 'rebuild_snapshots.dart';
 import 'stats_tab_refresh.dart';
 import '../utils/cover_palette.dart';
+import '../widgets/quick_switcher_sources.dart'; // Absorb Plus
 
 class AppShell extends StatefulWidget {
   final bool startOnAbsorbing;
@@ -1401,6 +1402,14 @@ class _AppShellState extends State<AppShell>
         _switchToAbsorbing();
       case DesktopShortcutAction.fullScreen:
         unawaited(WindowsShell.instance.toggleFullScreen());
+      case DesktopShortcutAction.quickSwitcher: // Absorb Plus
+        unawaited(showAppQuickSwitcher(context, QuickSwitcherAppCallbacks(
+          goToTab: (tab) {
+            rootNavigatorKey.currentState?.popUntil((r) => r.isFirst);
+            tab == 2 ? _switchToAbsorbing() : _navigateTo(tab);
+          },
+          runNavAction: _runNavHoldAction,
+        )));
     }
   }
 

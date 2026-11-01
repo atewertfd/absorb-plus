@@ -13476,4 +13476,56 @@ class AppLocalizationsRu extends AppLocalizations {
   String homeRecentlyAddedNewBadge(int count) {
     return '$count new';
   }
+
+  @override
+  String get desktopShortcutQuickSwitcher =>
+      'Quick switcher: find books or go anywhere';
+
+  @override
+  String get quickSwitcherTooltip => 'Quick switcher (Ctrl+K)';
+
+  @override
+  String get quickSwitcherHint => 'Search this library or type a command';
+
+  @override
+  String get quickSwitcherNoResults => 'No matches';
+
+  @override
+  String get quickSwitcherGoHome => 'Go to Home';
+
+  @override
+  String get quickSwitcherGoLibrary => 'Go to Library';
+
+  @override
+  String get quickSwitcherGoAbsorbing => 'Go to Absorbing';
+
+  @override
+  String get quickSwitcherGoStats => 'Go to Stats';
+
+  @override
+  String get quickSwitcherGoSettings => 'Go to Settings';
+
+  @override
+  String get quickSwitcherGoDownloads => 'Go to Downloads';
+
+  @override
+  String get quickSwitcherPlayPause => 'Play / pause';
+
+  @override
+  String get quickSwitcherSleepTimer => 'Sleep timer';
+
+  @override
+  String get quickSwitcherKindAction => 'Action';
+
+  @override
+  String get quickSwitcherKindBook => 'Book';
+
+  @override
+  String get quickSwitcherKindPodcast => 'Podcast';
+
+  @override
+  String get quickSwitcherKindSeries => 'Series';
+
+  @override
+  String get quickSwitcherKindAuthor => 'Author';
 }
