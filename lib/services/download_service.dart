@@ -1876,12 +1876,17 @@ class DownloadService extends ChangeNotifier {
         _downloads[entry.key] = DownloadInfo(
           itemId: info.itemId,
           status: info.status,
+          progress: info.progress,
+          trackCount: info.trackCount,
+          bytesDone: info.bytesDone,
+          bytesTotal: info.bytesTotal,
           localPaths: info.localPaths,
           sessionData: info.sessionData,
           title: title ?? info.title,
           author: author ?? info.author,
           coverUrl: coverUrl ?? info.coverUrl,
           localCoverPath: localCoverPath,
+          localDirPath: info.localDirPath,
           libraryId: info.libraryId,
         );
         changed = true;
