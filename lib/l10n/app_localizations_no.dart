@@ -13728,4 +13728,32 @@ class AppLocalizationsNo extends AppLocalizations {
 
   @override
   String get stepperIncrease => 'Increase';
+
+  @override
+  String get statsStreakKeepGoing => 'Listen 5 minutes today to keep it going';
+
+  @override
+  String get statsStreakHowTo => 'Listen 5 minutes a day to build a streak';
+
+  @override
+  String get statsDailyGoalSheetTitle => 'Daily listening goal';
+
+  @override
+  String get statsDailyGoalSheetBody =>
+      'A ring on the streak card fills as you listen today.';
+
+  @override
+  String get statsDailyGoalSet => 'Set a daily goal';
+
+  @override
+  String get statsDailyGoalEdit => 'Change daily goal';
+
+  @override
+  String get statsMonthListened => 'Listened';
+
+  @override
+  String get statsMonthTime => 'Time';
+
+  @override
+  String get statsMonthTopBook => 'Top book';
 }

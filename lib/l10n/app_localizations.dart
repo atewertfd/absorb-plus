@@ -23288,6 +23288,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Increase'**
   String get stepperIncrease;
+
+  /// No description provided for @statsStreakKeepGoing.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen 5 minutes today to keep it going'**
+  String get statsStreakKeepGoing;
+
+  /// No description provided for @statsStreakHowTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen 5 minutes a day to build a streak'**
+  String get statsStreakHowTo;
+
+  /// No description provided for @statsDailyGoalSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily listening goal'**
+  String get statsDailyGoalSheetTitle;
+
+  /// No description provided for @statsDailyGoalSheetBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A ring on the streak card fills as you listen today.'**
+  String get statsDailyGoalSheetBody;
+
+  /// No description provided for @statsDailyGoalSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a daily goal'**
+  String get statsDailyGoalSet;
+
+  /// No description provided for @statsDailyGoalEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Change daily goal'**
+  String get statsDailyGoalEdit;
+
+  /// No description provided for @statsMonthListened.
+  ///
+  /// In en, this message translates to:
+  /// **'Listened'**
+  String get statsMonthListened;
+
+  /// No description provided for @statsMonthTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get statsMonthTime;
+
+  /// No description provided for @statsMonthTopBook.
+  ///
+  /// In en, this message translates to:
+  /// **'Top book'**
+  String get statsMonthTopBook;
 }
 
 class _AppLocalizationsDelegate

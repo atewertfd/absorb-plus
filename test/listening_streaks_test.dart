@@ -199,6 +199,25 @@ void main() {
     test('presets are 15, 30 and 60 minutes', () {
       expect(kDailyGoalPresets, [15, 30, 60]);
     });
+
+    test('typed goals accept minutes and h:mm', () {
+      expect(parseDailyGoalMinutes('45'), 45);
+      expect(parseDailyGoalMinutes(' 90 min '), 90);
+      expect(parseDailyGoalMinutes('20m'), 20);
+      expect(parseDailyGoalMinutes('1:30'), 90);
+      expect(parseDailyGoalMinutes('2.05'), 125);
+    });
+
+    test('typed goals reject nonsense and clamp to a day', () {
+      expect(parseDailyGoalMinutes(''), isNull);
+      expect(parseDailyGoalMinutes('0'), isNull);
+      expect(parseDailyGoalMinutes('0:00'), isNull);
+      expect(parseDailyGoalMinutes('-5'), isNull);
+      expect(parseDailyGoalMinutes('abc'), isNull);
+      expect(parseDailyGoalMinutes('1:75'), isNull);
+      expect(parseDailyGoalMinutes('5000'), kMaxDailyGoalMinutes);
+      expect(parseDailyGoalMinutes('30:00'), kMaxDailyGoalMinutes);
+    });
   });
 
   group('this month', () {

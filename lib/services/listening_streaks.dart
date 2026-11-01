@@ -143,6 +143,26 @@ double dailyGoalProgress(double todaySeconds, int goalMinutes) {
   return p > 1 ? 1 : p;
 }
 
+/// The most a daily goal can be: the whole day.
+const int kMaxDailyGoalMinutes = 24 * 60;
+
+/// A typed daily goal ("45", "1:30", "90 min") in minutes, clamped to a day,
+/// or null when it isn't a positive amount of time.
+int? parseDailyGoalMinutes(String input) {
+  final text = input.trim().toLowerCase().replaceAll(RegExp(r'\s*(min|m)$'), '');
+  int? minutes;
+  final hm = RegExp(r'^(\d{1,2})[:.](\d{1,2})$').firstMatch(text);
+  if (hm != null) {
+    final m = int.parse(hm.group(2)!);
+    if (m >= 60) return null;
+    minutes = int.parse(hm.group(1)!) * 60 + m;
+  } else if (RegExp(r'^\d{1,4}$').hasMatch(text)) {
+    minutes = int.parse(text);
+  }
+  if (minutes == null || minutes <= 0) return null;
+  return minutes > kMaxDailyGoalMinutes ? kMaxDailyGoalMinutes : minutes;
+}
+
 /// Seconds listened in the local calendar month [now] falls in, up to today.
 double monthSecondsFrom(Map<String, dynamic> dayMap, {required DateTime now}) {
   final today = _dayOf(now);
