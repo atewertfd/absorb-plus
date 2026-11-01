@@ -22,6 +22,7 @@ import '../utils/local_path.dart';
 import 'desktop_input.dart';
 import 'stable_cached_network_image.dart';
 import '../utils/cover_cache.dart';
+import 'item_download_watch.dart'; // Absorb Plus
 
 // ═══════════════════════════════════════════════════════════════
 // Grid book tile (cover + title + author)
@@ -52,6 +53,7 @@ class GridBookTile extends StatefulWidget {
 
 class _GridBookTileState extends State<GridBookTile> {
   final _dl = DownloadService();
+  late final _dlWatch = ItemDownloadWatch(() => widget.item['id'] as String? ?? ''); // Absorb Plus
 
   @override
   void initState() {
@@ -66,7 +68,7 @@ class _GridBookTileState extends State<GridBookTile> {
   }
 
   void _rebuild() {
-    if (mounted) setState(() {});
+    if (mounted && _dlWatch.changed()) setState(() {}); // Absorb Plus: only this item's download
   }
 
   @override
@@ -75,6 +77,7 @@ class _GridBookTileState extends State<GridBookTile> {
     final tt = Theme.of(context).textTheme;
     final l = AppLocalizations.of(context)!;
     final itemId = widget.item['id'] as String? ?? '';
+    _dlWatch.changed(); // Absorb Plus: remember what this build shows
     final lib = context.read<LibraryProvider>();
     final snapshot = context.select<LibraryProvider, LibraryItemSnapshot>((lib) {
       final isPodcastLibrary = lib.isPodcastLibrary;
