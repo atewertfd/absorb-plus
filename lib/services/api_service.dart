@@ -27,6 +27,7 @@ import '../models/auth_session.dart';
 import '../utils/server_url.dart';
 import '../utils/percent_escapes.dart';
 import '../utils/keep_alive_client.dart';
+import '../utils/json_off_thread.dart';
 import 'library_item_request_cache.dart';
 
 part 'bookorbit_api_service.dart';
@@ -1815,7 +1816,7 @@ class ApiService {
         Uri.parse('$_cleanBaseUrl/api/users/$userId/listening-sessions?itemsPerPage=$itemsPerPage&page=$page'),
         timeout: const Duration(seconds: 10));
       if (response.statusCode == 200) {
-        return jsonDecode(response.body) as Map<String, dynamic>;
+        return await decodeJsonOffThread(response.body) as Map<String, dynamic>;
       }
     } catch (_) {}
     return null;

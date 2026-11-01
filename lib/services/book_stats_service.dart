@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 
 import 'api_service.dart';
 import 'bookorbit_mapper.dart';
+import 'item_listening_scan.dart';
 import 'narrated_books.dart';
 import 'scoped_prefs.dart';
 
@@ -395,6 +396,7 @@ class BookStatsService {
       // reused when that person's progress hasn't moved since.
       final cached = {for (final u in s.users) u.username: u};
       final found = <String, BookUserStat>{};
+      final startedAt = <String, int>{};
       final ids = [
         for (final entry in userList)
           if (entry is Map && entry['id'] is String) entry['id'] as String,
@@ -424,6 +426,8 @@ class BookStatsService {
             (p['finishedAt'] as num?)?.toInt(),
             (p['lastUpdate'] as num?)?.toInt() ?? 0,
           );
+          final start = (p['startedAt'] as num?)?.toInt();
+          if (start != null && start > 0) startedAt[id] = start;
           break;
         }
       }
@@ -442,17 +446,16 @@ class BookStatsService {
       s.scanTotal = pending.length;
       s.bump();
       Future<void> scan(MapEntry<String, BookUserStat> entry) async {
-        final payload =
-            await api.getUserListeningSessions(entry.key, itemsPerPage: 1000);
-        final sessions = (payload?['sessions'] as List<dynamic>?) ?? const [];
-        var total = 0.0;
-        for (final sess in sessions) {
-          if (sess is! Map) continue;
-          if (sess['libraryItemId'] != s.itemId) continue;
-          if (s.episodeId != null && sess['episodeId'] != s.episodeId) continue;
-          total += (sess['timeListening'] as num?)?.toDouble() ?? 0;
-        }
-        entry.value.seconds = total;
+        // Pages of 100, stopping once they reach back past the day before
+        // this user started the item (slack for clock skew).
+        final start = startedAt[entry.key];
+        entry.value.seconds = await sumItemListeningSeconds(
+          fetchPage: (page, size) => api.getUserListeningSessions(entry.key,
+              page: page, itemsPerPage: size),
+          itemId: s.itemId,
+          episodeId: s.episodeId,
+          notBefore: start == null ? null : start - 86400000,
+        );
         s.scanDone++;
         s.bump();
       }
