@@ -255,6 +255,44 @@ void main() {
           inInclusiveRange(0, 1));
     });
 
+    testWidgets('one drag loads at most maxAutoLoads pages', (tester) async {
+      final controller = ScrollController();
+      addTearDown(controller.dispose);
+      var loads = 0;
+      Widget page() => MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: AlphabetScroller(
+                controller: controller,
+                letters: titles.take(40).map(alphabetLetterOf).toList(),
+                hasMore: true,
+                onLoadMore: () => loads++,
+                maxAutoLoads: 2,
+                child: ListView(
+                  controller: controller,
+                  children: const [SizedBox(height: 2000)],
+                ),
+              ),
+            ),
+          );
+      await tester.pumpWidget(page());
+      await tester.drag(find.byType(ListView), const Offset(0, -50));
+      await tester.pump();
+      final box = tester.getRect(find.byKey(const ValueKey('alphabet-rail')));
+      // Start at L (not loaded) and drag slowly down past every later letter.
+      final gesture = await tester.startGesture(
+          Offset(box.center.dx, box.top + box.height * 12.5 / 27));
+      await tester.pump();
+      for (var i = 0; i < 14; i++) {
+        await gesture.moveBy(Offset(0, box.height / 27));
+        await tester.pump();
+      }
+      await gesture.up();
+      await tester.pump();
+      expect(loads, 2);
+    });
+
     testWidgets('hidden until the list scrolls, then fades after a pause',
         (tester) async {
       final controller = ScrollController();

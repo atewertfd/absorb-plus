@@ -478,7 +478,10 @@ class AlphabetScrollerState extends State<AlphabetScroller> {
       _bubbleY = dy.clamp(0, height);
       _current = letter;
     });
-    if (changed) selectLetter(letter);
+    // One budget of page loads per tap or drag, not per letter crossed, or
+    // a slow drag down the rail would page in the whole library.
+    if (start) _autoLoads = 0;
+    if (changed) _jumpTo(letter);
   }
 
   List<String> get _railLetters => widget.descending
