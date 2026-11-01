@@ -13394,4 +13394,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String playerEndsAt(String time) {
     return 'Ends at $time';
   }
+
+  @override
+  String lastPlayedOnDevice(String device, String ago) {
+    return 'Last played on $device · $ago';
+  }
+
+  @override
+  String lastPlayedElsewhere(String ago) {
+    return 'Last played on another device · $ago';
+  }
 }

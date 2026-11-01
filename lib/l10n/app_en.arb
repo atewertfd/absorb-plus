@@ -7331,5 +7331,29 @@
         "example": "10:42 PM"
       }
     }
+  },
+  "lastPlayedOnDevice": "Last played on {device} · {ago}",
+  "@lastPlayedOnDevice": {
+    "description": "Book sheet line when the book was last played on another device.",
+    "placeholders": {
+      "device": {
+        "type": "String",
+        "example": "Pixel 8"
+      },
+      "ago": {
+        "type": "String",
+        "example": "2h ago"
+      }
+    }
+  },
+  "lastPlayedElsewhere": "Last played on another device · {ago}",
+  "@lastPlayedElsewhere": {
+    "description": "Book sheet line when the book was last played on another device whose name is unknown.",
+    "placeholders": {
+      "ago": {
+        "type": "String",
+        "example": "2h ago"
+      }
+    }
   }
 }

@@ -22742,6 +22742,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ends at {time}'**
   String playerEndsAt(String time);
+
+  /// Book sheet line when the book was last played on another device.
+  ///
+  /// In en, this message translates to:
+  /// **'Last played on {device} · {ago}'**
+  String lastPlayedOnDevice(String device, String ago);
+
+  /// Book sheet line when the book was last played on another device whose name is unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Last played on another device · {ago}'**
+  String lastPlayedElsewhere(String ago);
 }
 
 class _AppLocalizationsDelegate
