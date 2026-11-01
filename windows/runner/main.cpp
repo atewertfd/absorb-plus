@@ -35,6 +35,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
     return EXIT_SUCCESS;
   }
   Win32Window::SetInstanceTag(single_instance.tag());
+  if (!launch.probe) {
+    // Lets the installer's Restart Manager (RestartApplications=yes in
+    // installer/Absorb.iss) reopen Absorb after an update. Not after a crash,
+    // a hang or a Windows restart.
+    ::RegisterApplicationRestart(
+        L"", RESTART_NO_CRASH | RESTART_NO_HANG | RESTART_NO_REBOOT);
+  }
 
   // Initialize COM, so that it is available for use in the library and/or
   // plugins.

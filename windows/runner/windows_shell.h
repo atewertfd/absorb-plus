@@ -76,8 +76,10 @@ class WindowsShell {
   void HideToTray();
 
   void SetCloseToTray(bool enabled);
-  void AddTrayIcon();
+  // True when the tray icon is (now) shown.
+  bool AddTrayIcon();
   void RemoveTrayIcon();
+  void LoadTrayIcon();
   void ShowTrayMenu(POINT anchor);
 
   bool SetStartWithWindows(bool enabled);

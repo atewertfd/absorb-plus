@@ -399,6 +399,22 @@ std::optional<LRESULT> WindowsShell::HandleMessage(HWND hwnd, UINT message,
       }
       return 0;
 
+    case WM_DPICHANGED:
+      CreateThumbIcons();
+      if (thumb_buttons_added_) UpdateThumbButtons();
+      if (tray_icon_ != nullptr) {
+        LoadTrayIcon();
+        if (tray_added_) {
+          NOTIFYICONDATAW data = {sizeof(NOTIFYICONDATAW)};
+          data.hWnd = hwnd;
+          data.uID = kTrayIconId;
+          data.uFlags = NIF_ICON;
+          data.hIcon = tray_icon_;
+          Shell_NotifyIconW(NIM_MODIFY, &data);
+        }
+      }
+      break;
+
     case WM_SETTINGCHANGE:
       if (lparam != 0 &&
           wcscmp(reinterpret_cast<const wchar_t*>(lparam),
@@ -416,8 +432,8 @@ void WindowsShell::ShowAtStartup() {
   if (window_->HasBeenShown() || window_->GetHandle() == nullptr) return;
   if (!launch_.minimized) {
     window_->Show();
-  } else if (close_to_tray_) {
-    AddTrayIcon();  // Stay hidden; the tray icon brings the window back.
+  } else if (close_to_tray_ && AddTrayIcon()) {
+    // Stay hidden; the tray icon brings the window back.
   } else {
     window_->ShowMinimized();
   }
@@ -439,7 +455,12 @@ void WindowsShell::ShowFromBackground() {
 void WindowsShell::HideToTray() {
   HWND hwnd = window_->GetHandle();
   if (hwnd == nullptr) return;
-  AddTrayIcon();
+  if (!AddTrayIcon()) {
+    // No tray (Explorer restarting or not running): hiding would leave no
+    // way back to the window, so minimize instead.
+    ShowWindow(hwnd, SW_MINIMIZE);
+    return;
+  }
   ShowWindow(hwnd, SW_HIDE);
 }
 
@@ -527,16 +548,22 @@ void WindowsShell::SetCloseToTray(bool enabled) {
   RemoveTrayIcon();
 }
 
-void WindowsShell::AddTrayIcon() {
+void WindowsShell::LoadTrayIcon() {
   HWND hwnd = window_->GetHandle();
-  if (hwnd == nullptr || tray_added_) return;
-  if (tray_icon_ == nullptr) {
-    const UINT dpi = GetDpiForWindow(hwnd);
-    tray_icon_ = static_cast<HICON>(LoadImageW(
-        GetModuleHandleW(nullptr), MAKEINTRESOURCEW(IDI_APP_ICON), IMAGE_ICON,
-        GetSystemMetricsForDpi(SM_CXSMICON, dpi),
-        GetSystemMetricsForDpi(SM_CYSMICON, dpi), LR_DEFAULTCOLOR));
-  }
+  if (hwnd == nullptr) return;
+  if (tray_icon_ != nullptr) DestroyIcon(tray_icon_);
+  const UINT dpi = GetDpiForWindow(hwnd);
+  tray_icon_ = static_cast<HICON>(LoadImageW(
+      GetModuleHandleW(nullptr), MAKEINTRESOURCEW(IDI_APP_ICON), IMAGE_ICON,
+      GetSystemMetricsForDpi(SM_CXSMICON, dpi),
+      GetSystemMetricsForDpi(SM_CYSMICON, dpi), LR_DEFAULTCOLOR));
+}
+
+bool WindowsShell::AddTrayIcon() {
+  HWND hwnd = window_->GetHandle();
+  if (hwnd == nullptr) return false;
+  if (tray_added_) return true;
+  if (tray_icon_ == nullptr) LoadTrayIcon();
   NOTIFYICONDATAW data = {sizeof(NOTIFYICONDATAW)};
   data.hWnd = hwnd;
   data.uID = kTrayIconId;
@@ -544,10 +571,11 @@ void WindowsShell::AddTrayIcon() {
   data.uCallbackMessage = kTrayCallbackMessage;
   data.hIcon = tray_icon_;
   wcsncpy_s(data.szTip, label_tooltip_.c_str(), _TRUNCATE);
-  if (!Shell_NotifyIconW(NIM_ADD, &data)) return;
+  if (!Shell_NotifyIconW(NIM_ADD, &data)) return false;
   data.uVersion = NOTIFYICON_VERSION_4;
   Shell_NotifyIconW(NIM_SETVERSION, &data);
   tray_added_ = true;
+  return true;
 }
 
 void WindowsShell::RemoveTrayIcon() {
