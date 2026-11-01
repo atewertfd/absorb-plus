@@ -5762,7 +5762,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get fileHealthRedownloadInfo =>
-      'The copy on this device is removed and downloaded again from the server. Nothing on the server changes.';
+      'The copy on this device is removed and downloaded again from the server. If the book is playing, it stops. Nothing on the server changes.';
 
   @override
   String get fileHealthNotAvailableOffline =>

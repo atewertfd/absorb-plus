@@ -127,6 +127,15 @@ class _FileHealthSheetState extends State<FileHealthSheet> {
     if (ok != true || !mounted) return;
     setState(() => _redownloading = true);
     final dl = DownloadService();
+    // Only remove the copy once the new download would be let through:
+    // refused afterwards (Wi-Fi only on mobile data), the user had no copy.
+    final problem = await dl.downloadStartProblem();
+    if (!mounted) return;
+    if (problem != null) {
+      setState(() => _redownloading = false);
+      showOverlayToast(context, problem, icon: Icons.error_outline_rounded);
+      return;
+    }
     final info = dl.getInfo(widget.itemId);
     await dl.deleteDownload(widget.itemId);
     final error = await dl.downloadItem(

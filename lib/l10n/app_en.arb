@@ -2979,7 +2979,7 @@
   "fileHealthStereo": "Stereo",
   "fileHealthRedownload": "Re-download this book",
   "fileHealthRedownloadQuestion": "Re-download this book?",
-  "fileHealthRedownloadInfo": "The copy on this device is removed and downloaded again from the server. Nothing on the server changes.",
+  "fileHealthRedownloadInfo": "The copy on this device is removed and downloaded again from the server. If the book is playing, it stops. Nothing on the server changes.",
   "fileHealthNotAvailableOffline": "Connect to your server to re-download",
   "resetMayNotHaveSynced": "Reset may not have synced - check your server",
   "failedToDownloadEbook": "Failed to download ebook ({code})",

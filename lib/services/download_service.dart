@@ -2175,6 +2175,30 @@ class DownloadService extends ChangeNotifier {
   /// fire-and-forget mid-flight) and skips the in-memory concurrency queue
   /// (queued entries would die with the isolate; background_downloader
   /// schedules the handed-over tasks natively either way).
+  /// Absorb Plus: why a download asked for now would be refused before it
+  /// starts (the downloader not ready, Wi-Fi only off Wi-Fi), or null. Asked
+  /// before removing a copy to download again, so a refusal doesn't leave
+  /// the user with no copy at all (audit U4). Same checks and messages as
+  /// [downloadItem].
+  Future<String?> downloadStartProblem() async {
+    try {
+      await init().timeout(const Duration(seconds: 8));
+    } on TimeoutException catch (e) {
+      debugPrint('[Download] Downloader initialization still in progress: $e');
+      return 'Downloads are still starting. Please try again in a moment.';
+    } catch (e) {
+      debugPrint('[Download] Downloader initialization failed: $e');
+      return 'Downloads could not start. Please try again.';
+    }
+    if (await PlayerSettings.getWifiOnlyDownloads()) {
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!isWifiOrEthernet(connectivity)) {
+        return 'Downloads are set to Wi-Fi only. Connect to Wi-Fi or change this in Settings.';
+      }
+    }
+    return null;
+  }
+
   Future<void> enqueueBackgroundDownload({
     required ApiService api,
     required String itemId,

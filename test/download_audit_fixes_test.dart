@@ -450,6 +450,33 @@ void main() {
       expect(root.existsSync(), isTrue);
     });
   });
+  group('U4 re-download asks before removing the copy', () {
+    const connectivity =
+        MethodChannel('dev.fluttercommunity.plus/connectivity');
+    tearDown(() => messenger.setMockMethodCallHandler(connectivity, null));
+
+    test('Wi-Fi only on mobile data is refused up front', () async {
+      SharedPreferences.setMockInitialValues({'wifiOnlyDownloads': true});
+      messenger.setMockMethodCallHandler(
+          connectivity, (call) async => ['mobile']);
+      final s = newService();
+      expect(await s.downloadStartProblem(), contains('Wi-Fi only'));
+
+      messenger.setMockMethodCallHandler(connectivity, (call) async => ['wifi']);
+      expect(await s.downloadStartProblem(), isNull);
+    });
+
+    test('a downloader that cannot start is refused up front', () async {
+      final s = DownloadService.forTesting(
+        initialize: () async => throw StateError('Downloader unavailable'),
+        cancelTasks: (_) async {},
+        deleteTaskRecord: (_) async {},
+      );
+      addTearDown(s.dispose);
+      expect(await s.downloadStartProblem(), contains('could not start'));
+    });
+  });
+
   group('D9 downloads from another account', () {
     test('asking for an id already downloaded keeps its account', () async {
       SharedPreferences.setMockInitialValues({
