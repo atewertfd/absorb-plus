@@ -1104,10 +1104,13 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
 
   Future<void> _refreshProgress() async {
     if (_api == null) return;
+    final self = this as LibraryProvider; // fork: drop a switched account's answer
+    final gen = self._accountLoadGeneration;
     try {
       final pendingSyncs =
           (await ScopedPrefs.getStringList('pending_syncs')).toSet();
       final progressList = await _api!.getAllProgress();
+      if (gen != self._accountLoadGeneration) return;
       if (progressList != null) {
           final localFinished = <String, Map<String, dynamic>>{};
           if (_lastFinishedItemId != null &&
@@ -2520,11 +2523,13 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     final libId = forLibrary ?? _selectedLibraryId;
     if (_api == null || libId == null) return;
     _isLoadingPlaylists = true;
+    final self = this as LibraryProvider, gen = self._accountLoadGeneration; // fork
     try {
       // Keep whatever we already had when the request fails, rather than
       // blanking the shelves over one bad response.
       final loaded = await _api!.getLibraryPlaylists(libId);
-      if (loaded != null && _selectedLibraryId == libId) {
+      if (loaded != null && _selectedLibraryId == libId &&
+          gen == self._accountLoadGeneration) {
         _playlists = loaded;
         _playlistsCooldown.markFetched(libId, loaded);
       }
@@ -2645,9 +2650,11 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     final libId = forLibrary ?? _selectedLibraryId;
     if (_api == null || libId == null) return;
     _isLoadingCollections = true;
+    final self = this as LibraryProvider, gen = self._accountLoadGeneration; // fork
     try {
       final loaded = await _api!.getLibraryCollections(libId);
-      if (loaded != null && _selectedLibraryId == libId) {
+      if (loaded != null && _selectedLibraryId == libId &&
+          gen == self._accountLoadGeneration) {
         _collections = loaded;
         _collectionsCooldown.markFetched(libId, loaded);
       }

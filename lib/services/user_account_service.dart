@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/server_url.dart';
+import 'account_epoch.dart';
 import 'api_service.dart';
 import 'auth_tokens.dart';
 import 'server_backend.dart';
@@ -167,11 +168,7 @@ class UserAccountService {
     // Nothing in here may stop the account being saved: a sign-in that got
     // this far has already written the new session, and bailing out now
     // leaves the old account's scope active under it.
-    try {
-      await beforeAccountChange?.call(account);
-    } catch (e) {
-      debugPrint('[UserAccount] beforeAccountChange failed: $e');
-    }
+    await prepareAccountChange(account);
     // Remove existing entry for same server+username (update token)
     _accounts.removeWhere(
         (a) => a.serverUrl == account.serverUrl && a.username == account.username);
@@ -179,6 +176,19 @@ class UserAccountService {
     _activeScopeKey = account.scopeKey;
     await _persist();
     debugPrint('[UserAccount] Saved & activated: ${account.username}@${account.serverUrl}');
+  }
+
+  /// Fork: runs before the active scope moves to [next], while the old
+  /// account's scope is still active. Moving to another account advances the
+  /// [AccountEpoch], which stops the old account's socket and timers. Never
+  /// throws.
+  Future<void> prepareAccountChange(SavedAccount next) async {
+    if (next.scopeKey != _activeScopeKey) await AccountEpoch.advance();
+    try {
+      await beforeAccountChange?.call(next);
+    } catch (e) {
+      debugPrint('[UserAccount] beforeAccountChange failed: $e');
+    }
   }
 
   /// Switch to a different saved account. Returns the account or null if not found.

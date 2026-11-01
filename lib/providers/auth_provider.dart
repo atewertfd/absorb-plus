@@ -1563,6 +1563,11 @@ class AuthProvider extends ChangeNotifier {
 
     // Set the new account as active in the account service. It may have been
     // removed since the caller loaded its saved-account row.
+    final accounts = UserAccountService(); // fork: stop the old account first
+    if (accounts.accounts.any((a) => a.serverUrl == account.serverUrl &&
+        a.username == account.username && a.token.isNotEmpty)) {
+      await accounts.prepareAccountChange(account);
+    }
     final selected = UserAccountService().switchTo(
       account.serverUrl,
       account.username,
