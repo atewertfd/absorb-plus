@@ -42,7 +42,9 @@ class LocalSessionService {
   bool _flushing = false;
   // Set once a server returns 404/501 for /api/session/local: that server is
   // too old, so route everything through the legacy /play flush instead.
-  bool _localUnsupported = false;
+  // Absorb Plus: per server, so one old (or BookOrbit) server doesn't send
+  // every account after it down the legacy path for the rest of the run.
+  final Set<String> _localUnsupportedOn = {};
 
   // ── Date helpers (must match home_widget_service._dateKey so day buckets
   //    line up with the streak calculation). ──
@@ -104,7 +106,9 @@ class LocalSessionService {
         'duration': s['duration'],
         'startTime': s['startTime'],
         'currentTime': s['currentTime'],
-        'timeListening': s['timeListening'],
+        // Absorb Plus: minus anything a legacy /play send already credited.
+        'timeListening': (s['timeListening'] as num? ?? 0) -
+            (s['legacySent'] as num? ?? 0),
         'startedAt': s['startedAt'],
         'updatedAt': s['updatedAt'],
         'date': s['date'],
@@ -137,7 +141,7 @@ class LocalSessionService {
     _active = null;
     _loaded = false;
     _flushing = false;
-    _localUnsupported = false;
+    _localUnsupportedOn.clear();
     clock = DateTime.now;
   }
 
@@ -295,17 +299,15 @@ class LocalSessionService {
   Future<bool> pushActive({required ApiService api}) async {
     await _loadActive();
     if (_active == null) return true;
-    if (_localUnsupported) {
-      await _legacyFlush(api, _active!);
-      return true;
+    if (_localUnsupportedOn.contains(api.baseUrl)) {
+      return _legacyPushActive(api);
     }
     final result =
         await api.syncLocalSession(await _trustedPayload(api, _active!));
     if (result.serverTooOld) {
       debugPrint('[LocalSession] Server lacks /api/session/local — falling back to /play');
-      _localUnsupported = true;
-      await _legacyFlush(api, _active!);
-      return true;
+      _localUnsupportedOn.add(api.baseUrl);
+      return _legacyPushActive(api);
     }
     final ct = (_active!['currentTime'] as num?)?.toDouble() ?? 0;
     if (!result.ok) {
@@ -319,6 +321,17 @@ class LocalSessionService {
   }
 
   DateTime? _lastPushLogAt;
+
+  /// Absorb Plus: the legacy push sends only what the active session gained
+  /// since its last legacy send (the sent total is kept on the session), and
+  /// reports whether the server took it, so a failed push is queued, not
+  /// dropped as sent.
+  Future<bool> _legacyPushActive(ApiService api) async {
+    final s = _active!;
+    final ok = await _legacyFlush(api, s);
+    if (ok && identical(_active, s)) await _persistActive();
+    return ok;
+  }
 
   String newSessionId() => _uuid();
 
@@ -374,11 +387,13 @@ class LocalSessionService {
         for (var i = 0; i < combined.length; i++) {
           final sent = await _legacyFlush(api, combined[i]);
           if (sent && i < sessionRaw.length) done.add(sessionRaw[i]);
+          // The active session keeps going: remember what it has sent.
+          if (sent && identical(combined[i], _active)) await _persistActive();
         }
         await _dropPending(done);
       }
 
-      if (_localUnsupported) {
+      if (_localUnsupportedOn.contains(api.baseUrl)) {
         await legacyAll();
         return;
       }
@@ -394,7 +409,7 @@ class LocalSessionService {
         debugPrint('[LocalSession] Flushed ${combined.length} local session(s)');
       } else if (result.serverTooOld) {
         debugPrint('[LocalSession] Server lacks /api/session/local-all — falling back to /play');
-        _localUnsupported = true;
+        _localUnsupportedOn.add(api.baseUrl);
         await legacyAll();
       } else {
         // Absorb Plus: settle each session on its own (local_session_queue.dart).
@@ -417,7 +432,11 @@ class LocalSessionService {
       final epId = s['episodeId'] as String?;
       final currentTime = (s['currentTime'] as num?)?.toDouble() ?? 0;
       final duration = (s['duration'] as num?)?.toDouble() ?? 0;
-      final secs = (s['timeListening'] as num?)?.toInt() ?? 0;
+      // Absorb Plus: each /play session adds its time, so send only what
+      // this session gained since its last legacy send, not the running
+      // total (ten one-minute pushes credited 55 minutes).
+      final total = (s['timeListening'] as num?)?.toInt() ?? 0;
+      final secs = total - ((s['legacySent'] as num?)?.toInt() ?? 0);
       if (secs <= 0) return true;
       final data = epId != null
           ? await api.startEpisodePlaybackSession(libId, epId)
@@ -427,6 +446,7 @@ class LocalSessionService {
       final ok = await api.syncPlaybackSession(sid,
           currentTime: currentTime, duration: duration, timeListened: secs);
       await api.closePlaybackSession(sid);
+      if (ok) s['legacySent'] = total;
       return ok;
     } catch (e) {
       debugPrint('[LocalSession] legacy flush failed: $e');
