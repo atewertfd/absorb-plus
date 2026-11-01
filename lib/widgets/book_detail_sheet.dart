@@ -539,6 +539,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
           // Apply local metadata overrides
           final overrideService = MetadataOverrideService();
           final override = await overrideService.get(widget.itemId);
+          if (!mounted) return; // Absorb Plus: closed while it loaded
           Map<String, dynamic> finalItem = item;
           if (override != null) {
             finalItem = overrideService.applyOverrides(item, override);

@@ -3676,6 +3676,7 @@ class LibraryScreenState extends State<LibraryScreen>
   Future<void> _refreshAll() async {
     final lib = context.read<LibraryProvider>();
     await lib.refresh();
+    if (!mounted) return; // Absorb Plus: signed out during the refresh
     setState(() {
       _items.clear();
       _page = 0;

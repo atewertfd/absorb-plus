@@ -928,6 +928,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (input == null) return;
     final books = int.tryParse(input.trim());
     if (books == null || books < 0) return;
+    if (!mounted) return; // Absorb Plus
     setState(() => _statsBookGoal = books.clamp(0, 500));
     PlayerSettings.setStatsBookGoal(_statsBookGoal);
   }
