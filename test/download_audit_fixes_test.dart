@@ -6,6 +6,7 @@ import 'package:absorb/services/api_service.dart';
 import 'package:absorb/services/download_resume.dart';
 import 'package:absorb/services/download_service.dart';
 import 'package:absorb/services/download_track_names.dart';
+import 'package:absorb/services/user_account_service.dart';
 import 'package:background_downloader/background_downloader.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -418,6 +419,33 @@ void main() {
       expect(s.isDownloaded('gone-book'), isFalse);
       expect(dir.existsSync(), isFalse);
       expect(root.existsSync(), isTrue);
+    });
+  });
+  group('D9 downloads from another account', () {
+    test('asking for an id already downloaded keeps its account', () async {
+      SharedPreferences.setMockInitialValues({
+        'saved_accounts': jsonEncode([
+          {'serverUrl': 'https://one.example', 'username': 'alice', 'token': 'a'},
+          {'serverUrl': 'https://two.example', 'username': 'bob', 'token': 'b'},
+        ]),
+        'active_account_scope': 'two.example_bob',
+      });
+      await UserAccountService().init();
+      final s = newService();
+      s.debugSetOrigin('12', 'one.example_alice');
+      s.debugPutDownload(DownloadInfo(
+        itemId: '12',
+        status: DownloadStatus.downloaded,
+        localPaths: ['${tmp.path}/12/01.mp3'],
+        title: "Alice's book",
+      ));
+      expect(s.isFromOtherAccount('12'), isTrue);
+
+      final result = await s.downloadItem(
+          api: offlineApi(), itemId: '12', title: "Bob's book");
+
+      expect(result, isNull);
+      expect(s.isFromOtherAccount('12'), isTrue);
     });
   });
 }

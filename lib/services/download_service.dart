@@ -885,7 +885,8 @@ class DownloadService extends ChangeNotifier {
         coverPath = f.path;
       }
     } catch (_) {}
-    _noteOrigin(itemId);
+    // Absorb Plus: an audio download of this id keeps its own account (D9).
+    if (!_downloads.containsKey(itemId)) _noteOrigin(itemId);
     _keptEbooks[itemId] = DownloadInfo(
       itemId: itemId,
       status: DownloadStatus.downloaded,
@@ -2063,7 +2064,6 @@ class DownloadService extends ChangeNotifier {
           'podcast $itemId + episode $episodeId');
       itemId = '$itemId-$episodeId';
     }
-    _noteOrigin(itemId);
     // Absorb Plus: a retry picks up the tracks an interrupted download kept.
     final kept = _downloads[itemId];
     if (kept?.status == DownloadStatus.error && kept?.localDirPath != null) {
@@ -2115,6 +2115,10 @@ class DownloadService extends ChangeNotifier {
         _queue.any((q) => q.itemId == itemId)) {
       return null;
     }
+    // Absorb Plus: only now that a download really starts. Noted before the
+    // checks above, a call from another account for an id already
+    // downloaded re-labelled that download as its own (audit D9).
+    _noteOrigin(itemId);
 
     // If at capacity, queue this one
     if (_activeDownloadIds.length >= maxConcurrent) {
