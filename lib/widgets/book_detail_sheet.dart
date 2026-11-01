@@ -30,6 +30,7 @@ import '../l10n/app_localizations.dart';
 import '../utils/read_status.dart';
 import 'book_stats_sheet.dart';
 import 'book_activity_card.dart';
+import 'last_played_line.dart';
 import '../screens/reading_log_screen.dart';
 import '../services/book_stats_service.dart';
 import '../services/wording.dart';
@@ -1489,6 +1490,8 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
                   startedAt: (progressData['startedAt'] as num).toInt(),
                   finishedAt: (progressData['finishedAt'] as num).toInt())),
       ]),
+      // Absorb Plus (C4): "Last played on <device> · 2h ago".
+      LastPlayedLine(itemId: widget.itemId, progressLastUpdateMs: (progressData?['lastUpdate'] as num?)?.toInt()),
       if (descRaw.isNotEmpty) ...[const SizedBox(height: 16),
         Text(l.aboutSection, style: tt.titleSmall?.copyWith(color: cs.onSurfaceVariant, fontWeight: FontWeight.w600)),
         const SizedBox(height: 6),

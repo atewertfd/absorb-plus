@@ -13292,4 +13292,24 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get tailscaleExtraHostsHelp =>
       'Addresses in 100.64.0.0/10 and names ending in .ts.net or your tailnet\'s MagicDNS name always go through Tailscale. Separate names with commas.';
+
+  @override
+  String playerChapterEndsAt(String time) {
+    return 'Chapter ends at $time';
+  }
+
+  @override
+  String playerEndsAt(String time) {
+    return 'Ends at $time';
+  }
+
+  @override
+  String lastPlayedOnDevice(String device, String ago) {
+    return 'Last played on $device · $ago';
+  }
+
+  @override
+  String lastPlayedElsewhere(String ago) {
+    return 'Last played on another device · $ago';
+  }
 }

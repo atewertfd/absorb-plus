@@ -22730,6 +22730,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Addresses in 100.64.0.0/10 and names ending in .ts.net or your tailnet\'s MagicDNS name always go through Tailscale. Separate names with commas.'**
   String get tailscaleExtraHostsHelp;
+
+  /// Tooltip on the player's chapter time left: the time of day the current chapter ends at the current speed.
+  ///
+  /// In en, this message translates to:
+  /// **'Chapter ends at {time}'**
+  String playerChapterEndsAt(String time);
+
+  /// Tooltip on the player's time left for a book or episode without chapters: the time of day it ends at the current speed.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends at {time}'**
+  String playerEndsAt(String time);
+
+  /// Book sheet line when the book was last played on another device.
+  ///
+  /// In en, this message translates to:
+  /// **'Last played on {device} · {ago}'**
+  String lastPlayedOnDevice(String device, String ago);
+
+  /// Book sheet line when the book was last played on another device whose name is unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Last played on another device · {ago}'**
+  String lastPlayedElsewhere(String ago);
 }
 
 class _AppLocalizationsDelegate
