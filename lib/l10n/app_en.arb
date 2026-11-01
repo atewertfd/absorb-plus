@@ -7396,5 +7396,6 @@
   "quickSwitcherKindBook": "Book",
   "quickSwitcherKindPodcast": "Podcast",
   "quickSwitcherKindSeries": "Series",
-  "quickSwitcherKindAuthor": "Author"
+  "quickSwitcherKindAuthor": "Author",
+  "alphabetScrollerLabel": "Jump to a letter"
 }

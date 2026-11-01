@@ -17,6 +17,7 @@ import '../services/audio_player_service.dart';
 import '../widgets/absorb_page_header.dart';
 import '../widgets/library_picker_sheet.dart';
 import '../widgets/library_search_results.dart';
+import '../widgets/alphabet_scroller.dart'; // Absorb Plus
 import '../widgets/podcast_episode_feed.dart';
 import '../main.dart' show flatNotifier, gradientIntensityNotifier;
 import '../ui_themes/ui_theme_hooks.dart';
@@ -3705,7 +3706,7 @@ class LibraryScreenState extends State<LibraryScreen>
   // ═══════════════════════════════════════════════════════════════
   Widget _buildGrid(Widget headerSliver) {
     final lib = context.watch<LibraryProvider>();
-    return LibraryBooksTab(
+    final grid = LibraryBooksTab(
       items: _visibleLibraryItems(lib),
       isLoadingPage: _isLoadingPage,
       hasMore: _hasMore,
@@ -3725,6 +3726,16 @@ class LibraryScreenState extends State<LibraryScreen>
       selectionMode: _selectionMode && (_tabController == null || _currentTab == 0),
       selectedItemIds: _selectedItemIds,
       onSelectionToggle: _toggleSelection,
+    );
+    return LibraryAlphabetRail( // Absorb Plus: A-Z rail for title/author sorts
+      sort: _sort,
+      descending: !_sortAsc,
+      podcast: lib.isPodcastLibrary,
+      items: _visibleLibraryItems(lib),
+      hasMore: _hasMore && !_loadFailed,
+      onLoadMore: _loadPage,
+      controller: _scrollController,
+      child: grid,
     );
   }
 

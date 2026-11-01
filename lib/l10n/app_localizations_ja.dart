@@ -13526,4 +13526,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get quickSwitcherKindAuthor => 'Author';
+
+  @override
+  String get alphabetScrollerLabel => 'Jump to a letter';
 }

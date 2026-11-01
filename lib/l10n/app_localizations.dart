@@ -22976,6 +22976,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Author'**
   String get quickSwitcherKindAuthor;
+
+  /// No description provided for @alphabetScrollerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Jump to a letter'**
+  String get alphabetScrollerLabel;
 }
 
 class _AppLocalizationsDelegate
