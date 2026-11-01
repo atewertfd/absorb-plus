@@ -5,6 +5,7 @@ import '../utils/episode_key.dart';
 import '../widgets/nav_hold_options.dart'
     show navHoldTabs, navHoldPrefKey, navHoldMenuPrefKey;
 import 'audio_player_service.dart';
+import 'imported_settings_reload.dart';
 import 'reader_font_service.dart';
 import 'scoped_prefs.dart';
 import 'sleep_timer_service.dart';
@@ -163,6 +164,7 @@ class BackupService {
       'endHour': sleep.endHour,
       'endMinute': sleep.endMinute,
       'durationMinutes': sleep.durationMinutes,
+      'useEndOfChapter': sleep.useEndOfChapter,
     };
 
     // Equalizer (scoped)
@@ -496,6 +498,7 @@ class BackupService {
 
   static Future<void> importSettings(Map<String, dynamic> data) async {
     final prefs = await SharedPreferences.getInstance();
+    final reload = await ImportedSettingsReload.capture(); // fork
 
     final customHeaders = data['customHeaders'] as Map<String, dynamic>?;
     final restoredCustomHeaders = customHeaders == null
@@ -513,7 +516,7 @@ class BackupService {
         await UserAccountService().saveAccount(SavedAccount.fromJson(
           map,
           legacyCustomHeaders: restoredCustomHeaders,
-        ));
+        ), restoring: true);
       }
     }
 
@@ -710,6 +713,9 @@ class BackupService {
         endHour: sl['endHour'] as int? ?? 6,
         endMinute: sl['endMinute'] as int? ?? 0,
         durationMinutes: sl['durationMinutes'] as int? ?? 30,
+        // Older payloads don't carry it: keep this device's mode.
+        useEndOfChapter: sl['useEndOfChapter'] as bool? ??
+            (await AutoSleepSettings.load()).useEndOfChapter,
       ).save();
     }
 
@@ -1064,6 +1070,7 @@ class BackupService {
       await prefs.setString('custom_download_path', customDownloadPath);
     }
 
+    await reload.apply();
     PlayerSettings.notifySettingsChanged();
   }
 }

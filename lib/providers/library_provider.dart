@@ -43,6 +43,7 @@ import '../services/screen_wake.dart';
 import '../services/up_next_narration.dart';
 import '../services/narrated_books.dart';
 import '../services/startup_overlap.dart';
+import '../services/account_epoch.dart';
 
 part '_lp_state.dart';
 part '_lp_core.dart';
@@ -75,7 +76,24 @@ class LibraryProvider extends ChangeNotifier
     yield* BookSearchIndex().indexedItems;
   }
 
+  // Fork: the account is about to change. Stop the old account's live work
+  // (socket, timers, BookOrbit feed) while its scope is still the active one,
+  // and make loads still running for it drop their answers.
+  Future<void> _suspendForAccountChange() async {
+    _accountLoadGeneration++;
+    _connectivitySub?.cancel();
+    _connectivityDebounce?.cancel();
+    _progressRefreshDebounce?.cancel();
+    _stopServerPingTimer();
+    _stopHealthCheckTimer();
+    _stopBookOrbitPoll();
+    _stopLocalProbeTimer();
+    SocketService().disconnect();
+    _resetSocketRefresh();
+  }
+
   LibraryProvider() {
+    AccountEpoch.addHandler(_suspendForAccountChange);
     SiriService.libraryItems = _itemsForSiri;
     // Registered once at provider construction so the audio service can
     // notify this provider on completion/playback events even when the
@@ -136,6 +154,7 @@ class LibraryProvider extends ChangeNotifier
   // and the DownloadService listener (matters for tests and hot restart).
   @override
   void dispose() {
+    AccountEpoch.removeHandler(_suspendForAccountChange);
     if (_listeningToDownloads) {
       DownloadService().removeListener(_onDownloadsChanged);
     }
@@ -311,7 +330,10 @@ class LibraryProvider extends ChangeNotifier
             // it's a no-op on an already-filtered list.
             auth.setEreaderDevices(auth.filterDevicesForCurrentUser(devices));
           };
-          socket.connect(auth.serverUrl!, auth.token!, customHeaders: auth.customHeaders);
+          // Fork: manual offline keeps the details but opens no connection.
+          if (_manualOffline) _socketSoftDisconnected = true;
+          socket.connect(auth.serverUrl!, auth.token!,
+              customHeaders: auth.customHeaders, open: !_manualOffline);
           _startBookOrbitPoll();
         }
         debugPrint('[Library] Calling loadLibraries()');
@@ -414,6 +436,8 @@ class LibraryProvider extends ChangeNotifier
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
+    // Fork: an answer for an account that is no longer active is dropped.
+    final gen = _accountLoadGeneration;
 
     // Fork (B6): on a cold start the last library's shelves load alongside
     // the library list.
@@ -428,6 +452,7 @@ class LibraryProvider extends ChangeNotifier
     try {
       final fetched = await _api!.getLibraries();
       debugPrint('[Library] loadLibraries: got ${fetched.length} libraries');
+      if (gen != _accountLoadGeneration) return;
 
       if (fetched.isNotEmpty) {
         _libraries = fetched;
@@ -435,6 +460,7 @@ class LibraryProvider extends ChangeNotifier
         await LibraryCache.save(fetched);
         debugPrint('[Library] Saved ${fetched.length} libraries for offline starts');
         await _restoreSelectedLibrary();
+        if (gen != _accountLoadGeneration) return;
 
         if (early == null || !await early.covers(() => _selectedLibraryId)) {
           // The early load was for a library that is gone: drop its shelves.
@@ -449,18 +475,21 @@ class LibraryProvider extends ChangeNotifier
         }
       } else {
         await early?.settle();
+        if (gen != _accountLoadGeneration) return;
         // getLibraries swallows network/auth failures and returns an empty
         // list, so empty is indistinguishable from a failed fetch. Keep the
         // current list, cache, and selection instead of wiping them.
         await _restoreCachedLibraries();
       }
     } catch (e) {
+      if (gen != _accountLoadGeneration) return;
       if (_isLikelyNetworkError(e)) {
         _goOffline();
       } else {
         debugPrint('[Library] Non-network error (staying online): $e');
       }
     }
+    if (gen != _accountLoadGeneration) return;
 
     _isLoading = false;
     notifyListeners();
@@ -624,11 +653,13 @@ class LibraryProvider extends ChangeNotifier
       notifyListeners();
       return;
     }
+    final gen = _accountLoadGeneration; // fork: drop a switched account's answer
     if (_api != null) {
       await ProgressSyncService().flushPendingSync(api: _api!);
     }
     final pendingSyncs =
         (await ScopedPrefs.getStringList('pending_syncs')).toSet();
+    if (gen != _accountLoadGeneration) return;
     _lastFinishedItemId = null;
     await Future.wait([
       loadPersonalizedView(force: true),
@@ -637,6 +668,7 @@ class LibraryProvider extends ChangeNotifier
       loadPlaylists(force: true),
       loadCollections(force: true),
     ]);
+    if (gen != _accountLoadGeneration) return;
     _localProgressOverrides
         .removeWhere((itemId, _) => !pendingSyncs.contains(itemId));
     _locallyFinishedItems
@@ -648,6 +680,7 @@ class LibraryProvider extends ChangeNotifier
       final currentTime = (mp['currentTime'] as num?)?.toDouble() ?? 0;
       final duration = (mp['duration'] as num?)?.toDouble() ?? 0;
       if (duration > 0 && currentTime > 0) {
+        if (gen != _accountLoadGeneration) return;
         await sync.cacheServerProgress(
           itemId: itemId,
           currentTime: currentTime,
@@ -670,6 +703,7 @@ class LibraryProvider extends ChangeNotifier
 
     _isLoadingSeries = true;
     notifyListeners();
+    final gen = _accountLoadGeneration; // fork
 
     try {
       final result = await _api!.getLibrarySeries(
@@ -677,7 +711,7 @@ class LibraryProvider extends ChangeNotifier
         sort: sort,
         desc: desc,
       );
-      if (result != null) {
+      if (result != null && gen == _accountLoadGeneration) {
         _series = (result['results'] as List<dynamic>?) ?? [];
         // Register updatedAt for books in series for cover cache busting
         for (final s in _series) {

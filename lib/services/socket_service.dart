@@ -344,7 +344,7 @@ class SocketService {
     }
   }
 
-  void connect(String serverUrl, String token, {Map<String, String> customHeaders = const {}}) {
+  void connect(String serverUrl, String token, {Map<String, String> customHeaders = const {}, bool open = true}) {
     // Replace only the socket: callers set the callbacks before connecting,
     // and disconnect() would wipe them (logout is what disconnect() is for).
     _socket?.dispose();
@@ -361,8 +361,9 @@ class SocketService {
     // E-ink mode never holds a live socket (battery first) - keep the
     // credentials so turning the mode off can reconnect, but stop short of
     // opening the connection. Progress still syncs over plain HTTP.
-    if (PlayerSettings.einkMode) {
-      debugPrint('[Battery] Socket not opened (e-ink mode)');
+    // Fork: [open] false does the same for manual offline mode.
+    if (PlayerSettings.einkMode || !open) {
+      debugPrint('[Battery] Socket not opened (${open ? 'e-ink' : 'offline'} mode)');
       return;
     }
 

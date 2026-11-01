@@ -329,6 +329,8 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         return;
       }
       _networkOffline = false;
+      if (!_isBackgrounded && !_readerQuiet) _softReconnectSocket(); // fork
+      _startBookOrbitPoll();
       if (_api != null) {
         debugPrint('[Library] Manual offline off — flushing pending syncs');
         ProgressSyncService().flushPendingSync(api: _api!);
@@ -341,6 +343,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         (this as LibraryProvider).refresh();
       }
     } else {
+      // Fork: offline means no live connection either.
+      _softDisconnectSocket();
+      _stopBookOrbitPoll();
+      _stopHealthCheckTimer();
       _buildOfflineSections();
     }
     notifyListeners();
@@ -609,8 +615,17 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       );
 
   void _onDownloadsChanged() {
-    if (isOffline || _personalizedSections.isEmpty) return;
     final signature = _currentDownloadedShelfSignature();
+    // Fork: offline Home is built from the downloads, so rebuild it when they
+    // change (a deleted download, or the index loading after a cold start).
+    if (isOffline) {
+      if (signature == _downloadedShelfSignature) return;
+      _downloadedShelfSignature = signature;
+      _buildOfflineSections();
+      notifyListeners();
+      return;
+    }
+    if (_personalizedSections.isEmpty) return;
     if (signature == _downloadedShelfSignature &&
         identical(_personalizedSections, _downloadedShelfSections)) {
       return;
@@ -1104,10 +1119,13 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
 
   Future<void> _refreshProgress() async {
     if (_api == null) return;
+    final self = this as LibraryProvider; // fork: drop a switched account's answer
+    final gen = self._accountLoadGeneration;
     try {
       final pendingSyncs =
           (await ScopedPrefs.getStringList('pending_syncs')).toSet();
       final progressList = await _api!.getAllProgress();
+      if (gen != self._accountLoadGeneration) return;
       if (progressList != null) {
           final localFinished = <String, Map<String, dynamic>>{};
           if (_lastFinishedItemId != null &&
@@ -1506,7 +1524,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     _bookOrbitPollTimer?.cancel();
     _bookOrbitPollTimer = null;
     final api = _api;
-    if (_auth?.isBookOrbit != true || api == null ||
+    if (_auth?.isBookOrbit != true || api == null || _manualOffline ||
         _isBackgrounded || _readerQuiet || PlayerSettings.einkMode) {
       BookOrbitNotificationSocket.instance.stop();
       return;
@@ -1699,7 +1717,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   void _softDisconnectSocket() {
-    if (_socketSoftDisconnected || _manualOffline) return;
+    if (_socketSoftDisconnected) return;
     _socketSoftDisconnected = true;
     SocketService().softDisconnect();
   }
@@ -2252,6 +2270,13 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       loadCollections();
       _narratedToContinueListening();
       await (this as _AbsorbingMixin)._updateAbsorbingCache();
+      // Fork: a library flip during that await swapped in the other library's
+      // shelves; filing them (and the cooldown) under it left it stale.
+      if (_selectedLibraryId != libraryId) {
+        _isLoading = false;
+        notifyListeners();
+        return;
+      }
 
       _injectDownloadedSection();
 
@@ -2520,11 +2545,13 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     final libId = forLibrary ?? _selectedLibraryId;
     if (_api == null || libId == null) return;
     _isLoadingPlaylists = true;
+    final self = this as LibraryProvider, gen = self._accountLoadGeneration; // fork
     try {
       // Keep whatever we already had when the request fails, rather than
       // blanking the shelves over one bad response.
       final loaded = await _api!.getLibraryPlaylists(libId);
-      if (loaded != null && _selectedLibraryId == libId) {
+      if (loaded != null && _selectedLibraryId == libId &&
+          gen == self._accountLoadGeneration) {
         _playlists = loaded;
         _playlistsCooldown.markFetched(libId, loaded);
       }
@@ -2645,9 +2672,11 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     final libId = forLibrary ?? _selectedLibraryId;
     if (_api == null || libId == null) return;
     _isLoadingCollections = true;
+    final self = this as LibraryProvider, gen = self._accountLoadGeneration; // fork
     try {
       final loaded = await _api!.getLibraryCollections(libId);
-      if (loaded != null && _selectedLibraryId == libId) {
+      if (loaded != null && _selectedLibraryId == libId &&
+          gen == self._accountLoadGeneration) {
         _collections = loaded;
         _collectionsCooldown.markFetched(libId, loaded);
       }
