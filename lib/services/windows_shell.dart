@@ -368,6 +368,20 @@ class WindowsShell {
     });
   }
 
+  /// Quits through the runner's normal exit (save progress, flush held-back
+  /// writes, then end the process without plugin teardown). Returns false
+  /// when there is no runner shell to ask, so the caller can exit itself.
+  Future<bool> requestQuit() async {
+    if (!_enabled) return false;
+    try {
+      await _channel.invokeMethod<void>('quit');
+      return true;
+    } catch (e) {
+      debugPrint('[WindowsShell] quit failed: $e');
+      return false;
+    }
+  }
+
   Future<void> _invoke(String method, Object? arguments) async {
     try {
       await _channel.invokeMethod<void>(method, arguments);

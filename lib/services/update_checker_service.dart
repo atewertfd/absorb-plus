@@ -12,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'update_check_policy.dart';
 import 'update_policy.dart';
+import 'windows_shell.dart';
 
 class UpdateInfo {
   final String latestVersion;
@@ -484,6 +485,11 @@ class WindowsUpdater {
     // Give the detached installer time to open before the Flutter process
     // exits. The installer owns the rest of the update flow.
     await Future<void>.delayed(const Duration(milliseconds: 250));
+    // Quit the way closing the window does, so the playback position and
+    // held-back writes are saved first; exit directly only if that fails.
+    if (await WindowsShell.instance.requestQuit()) {
+      await Future<void>.delayed(const Duration(seconds: 6));
+    }
     exit(0);
   }
 

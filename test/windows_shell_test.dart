@@ -283,6 +283,12 @@ void main() {
       shell.stop();
     });
 
+    test('requestQuit asks the runner to quit through its save flow',
+        () async {
+      expect(await shell.requestQuit(), isTrue);
+      expect(sent.last.method, 'quit');
+    });
+
     test('settings setters return the runner state', () async {
       final result = await shell.setCloseToTray(true);
       expect(result?.closeToTray, isTrue);
