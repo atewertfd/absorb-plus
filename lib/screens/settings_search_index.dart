@@ -129,6 +129,7 @@ List<SettingSearchEntry> settingsSearchEntries(BuildContext context) {
     SettingSearchEntry('Downloads & Storage', l.sectionDownloadsAndStorage, l.downloadOverWifiOnly, [l.downloadOverWifiOnSubtitle, l.downloadOverWifiOffSubtitle]),
     SettingSearchEntry('Downloads & Storage', l.sectionDownloadsAndStorage, l.autoDownloadOnWifi, [l.autoDownloadOnWifiOnSubtitle, l.autoDownloadOnWifiOffSubtitle]),
     SettingSearchEntry('Downloads & Storage', l.sectionDownloadsAndStorage, 'Auto-download series', const ['Starting a book in a series keeps the next books downloaded', 'Turn on series downloads yourself from the series menu']),
+    SettingSearchEntry('Downloads & Storage', l.sectionDownloadsAndStorage, l.autoDownloadNextInSeries, [l.autoDownloadNextInSeriesSubtitle]), // fork
     SettingSearchEntry('Downloads & Storage', l.sectionDownloadsAndStorage, l.concurrentDownloads, const []),
     SettingSearchEntry('Downloads & Storage', l.sectionDownloadsAndStorage, l.autoDownload, [l.autoDownloadSubtitle]),
     SettingSearchEntry('Downloads & Storage', l.sectionDownloadsAndStorage, l.keepNext, const []),

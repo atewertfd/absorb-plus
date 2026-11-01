@@ -39,6 +39,7 @@ import 'services/home_widget_service.dart';
 import 'services/siri_service.dart';
 import 'services/narrated_books.dart';
 import 'services/read_listen_sync.dart';
+import 'services/next_in_series_download.dart'; // fork
 import 'services/log_service.dart';
 import 'services/quick_actions_service.dart';
 import 'services/startup_task_coordinator.dart';
@@ -267,6 +268,7 @@ void main() async {
   configureImageCache(PaintingBinding.instance.imageCache);
   PendingWrites.installLifecycleFlush(); // fork: flush held-back writes on background
   ReadListenSync.instance.start();
+  NextInSeriesDownloader.start(); // fork; does nothing until turned on
   unawaited(TailscaleService.instance.init()); // fork; no-op unless turned on
   BookOrbitApiService.placeReadingSpot = NarrationService.readingSpotSeconds;
   BookOrbitApiService.keptNarration = NarrationService.instance.localOverlay;

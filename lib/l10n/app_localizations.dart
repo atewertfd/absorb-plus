@@ -22874,6 +22874,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back to {time}'**
   String seekUndoBackTo(String time);
+
+  /// No description provided for @autoDownloadNextInSeries.
+  ///
+  /// In en, this message translates to:
+  /// **'Download the next book in the series automatically'**
+  String get autoDownloadNextInSeries;
+
+  /// No description provided for @autoDownloadNextInSeriesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'When the book you\'re playing is 80% done or has less than an hour left. Follows the Wi-Fi only setting.'**
+  String get autoDownloadNextInSeriesSubtitle;
 }
 
 class _AppLocalizationsDelegate
