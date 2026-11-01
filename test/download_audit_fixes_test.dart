@@ -240,4 +240,21 @@ void main() {
       expect(sleptBetweenTicks(t, t.add(const Duration(minutes: 15))), isTrue);
     });
   });
+
+  group('D4 same-named books started together', () {
+    test('the second one gets its own folder while the first is starting',
+        () async {
+      final s = newService();
+      expect(s.debugClaimFolderName('Author/Title', 'book-a'), 'Author/Title');
+      expect(s.debugClaimFolderName('Author/Title', 'book-b'),
+          'Author/Title (${folderIdSuffix('book-b')})');
+      // Its own claim never pushes a book aside.
+      expect(s.debugClaimFolderName('Author/Title', 'book-a'), 'Author/Title');
+
+      // A claim stops counting once its download is no longer active.
+      s.cancelDownload('book-a');
+      await Future<void>.delayed(Duration.zero);
+      expect(s.debugClaimFolderName('Author/Title', 'book-c'), 'Author/Title');
+    });
+  });
 }

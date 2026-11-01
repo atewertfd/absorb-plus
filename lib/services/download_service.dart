@@ -2429,10 +2429,8 @@ class DownloadService extends ChangeNotifier {
       var nestedName = (author != null && author.isNotEmpty)
           ? '${_sanitizePath(author)}/${_sanitizePath(title)}'
           : _sanitizePath(title);
-      nestedName = safeDownloadFolder(nestedName, windows: Platform.isWindows);
-      if (_folderTakenByOther(nestedName, itemId)) {
-        nestedName = '$nestedName (${folderIdSuffix(itemId)})';
-      }
+      nestedName = _claimFolderName(
+          safeDownloadFolder(nestedName, windows: Platform.isWindows), itemId);
       String? relDir; // Android: relative to applicationDocuments
       final desktopRoot = DesktopDownloadFolder.activeRoot(_desktopDownloadDir);
       final resume = _resumeDirs.remove(itemId); // Absorb Plus (D2)
@@ -2650,10 +2648,8 @@ class DownloadService extends ChangeNotifier {
       var nestedName = (author != null && author.isNotEmpty)
           ? '${_sanitizePath(author)}/${_sanitizePath(title)}'
           : _sanitizePath(title);
-      nestedName = safeDownloadFolder(nestedName, windows: Platform.isWindows);
-      if (_folderTakenByOther(nestedName, itemId)) {
-        nestedName = '$nestedName (${folderIdSuffix(itemId)})';
-      }
+      nestedName = _claimFolderName(
+          safeDownloadFolder(nestedName, windows: Platform.isWindows), itemId);
       final Directory bookDir;
       String? relDir;
       final desktopRoot = DesktopDownloadFolder.activeRoot(_desktopDownloadDir);
@@ -3716,6 +3712,16 @@ class DownloadService extends ChangeNotifier {
   /// Books sharing a title and author (a release split into parts) used to
   /// share one folder, so deleting or failing one wiped the others' files.
   bool _folderTakenByOther(String nestedName, String itemId) {
+    // Absorb Plus: a folder another download picked moments ago, before it
+    // got as far as registering (audit D4).
+    for (final r in _claimedFolders.entries) {
+      if (r.key != itemId &&
+          _activeDownloadIds.contains(r.key) &&
+          DownloadFolderGuard.endsWithFolder('/${r.value}', nestedName,
+              windows: Platform.isWindows)) {
+        return true;
+      }
+    }
     bool matches(String? dir) {
       if (dir == null) return false;
       // Windows folder names ignore case: "Title" and "title" are one folder.
@@ -3734,6 +3740,29 @@ class DownloadService extends ChangeNotifier {
       }
     }
     return false;
+  }
+
+  /// Absorb Plus: the folder each starting download picked. Starting a
+  /// download awaits the network between choosing its folder and
+  /// registering it, so two same-named books started together both chose
+  /// "Author/Title" and overwrote each other's tracks (audit D4). A claim
+  /// counts only while its download is active.
+  final Map<String, String> _claimedFolders = {};
+
+  /// [nestedName], or "nestedName (id)" when another download has it, claimed
+  /// for [itemId] in the same synchronous step as the check.
+  String _claimFolderName(String nestedName, String itemId) {
+    final name = _folderTakenByOther(nestedName, itemId)
+        ? '$nestedName (${folderIdSuffix(itemId)})'
+        : nestedName;
+    _claimedFolders[itemId] = name;
+    return name;
+  }
+
+  @visibleForTesting
+  String debugClaimFolderName(String nestedName, String itemId) {
+    _activeDownloadIds.add(itemId);
+    return _claimFolderName(nestedName, itemId);
   }
 
   /// Whether any other download keeps files in [dirPath]. Downloads made
