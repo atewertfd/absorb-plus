@@ -27,6 +27,7 @@ import '../models/auth_session.dart';
 import '../utils/server_url.dart';
 import '../utils/percent_escapes.dart';
 import '../utils/keep_alive_client.dart';
+import '../utils/json_body.dart';
 import 'library_item_request_cache.dart';
 
 part 'bookorbit_api_service.dart';
@@ -1406,7 +1407,7 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final data = await decodeJsonBody(response.body);
         if (data is List<dynamic>) return data;
         if (data is Map<String, dynamic>) {
           final shelvesData = data['shelves'];
@@ -1447,7 +1448,7 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body) as Map<String, dynamic>;
+        return await decodeJsonBody(response.body) as Map<String, dynamic>;
       }
       debugPrint('[API] getLibraryItems page=$page limit=$limit: '
           'HTTP ${response.statusCode}');
@@ -1752,7 +1753,7 @@ class ApiService {
         timeout: const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body) as Map<String, dynamic>;
+        return await decodeJsonBody(response.body) as Map<String, dynamic>;
       }
     } catch (_) {}
     return null;
@@ -1839,7 +1840,7 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body) as Map<String, dynamic>;
+        return await decodeJsonBody(response.body) as Map<String, dynamic>;
       }
       debugPrint('[API] getLibrarySeries page=$page: HTTP ${response.statusCode}');
     } catch (e) {
@@ -3226,7 +3227,7 @@ class ApiService {
         Uri.parse('$_cleanBaseUrl/api/libraries/$libraryId/recent-episodes?limit=$limit&page=$page'),
       );
       if (resp.statusCode == 200) {
-        final data = jsonDecode(resp.body);
+        final data = await decodeJsonBody(resp.body);
         if (data is Map && data['episodes'] is List) return data['episodes'] as List<dynamic>;
         if (data is List) return data;
       }
@@ -3252,7 +3253,7 @@ class ApiService {
         fresh: fresh,
       );
       if (body != null) {
-        return jsonDecode(body) as Map<String, dynamic>;
+        return await decodeJsonBody(body) as Map<String, dynamic>;
       }
     } catch (e) {
       // ignore
@@ -3475,7 +3476,7 @@ class ApiService {
           debugPrint('[API] getSeries $seriesId items page $page failed: ${itemsResp.statusCode}');
           break;
         }
-        final data = jsonDecode(itemsResp.body) as Map<String, dynamic>;
+        final data = await decodeJsonBody(itemsResp.body) as Map<String, dynamic>;
         final results = data['results'] as List<dynamic>? ?? [];
         total = (data['total'] as num?)?.toInt() ?? results.length;
         debugPrint('[API] getSeries $seriesId items page=$page results=${results.length} '
@@ -3523,7 +3524,7 @@ class ApiService {
           debugPrint('[API] getSeriesCollapsed page $page failed: ${resp.statusCode}');
           break;
         }
-        final data = jsonDecode(resp.body) as Map<String, dynamic>;
+        final data = await decodeJsonBody(resp.body) as Map<String, dynamic>;
         final results = data['results'] as List<dynamic>? ?? [];
         final total = (data['total'] as num?)?.toInt() ?? results.length;
         debugPrint('[API] getSeriesCollapsed page=$page results=${results.length} '
@@ -5114,7 +5115,7 @@ class ApiService {
           debugPrint('[API] $path failed: HTTP ${resp.statusCode} (page $page)');
           return null;
         }
-        final data = jsonDecode(resp.body);
+        final data = await decodeJsonBody(resp.body);
         final results = (data['results'] as List<dynamic>?) ?? [];
         out.addAll(results);
         // Servers that ignore limit/page return everything with total equal
@@ -5136,7 +5137,7 @@ class ApiService {
         Uri.parse('$_cleanBaseUrl/api/playlists/$playlistId'),
         timeout: const Duration(seconds: 10));
       if (resp.statusCode == 200) {
-        return jsonDecode(resp.body) as Map<String, dynamic>;
+        return await decodeJsonBody(resp.body) as Map<String, dynamic>;
       }
     } catch (_) {}
     return null;
