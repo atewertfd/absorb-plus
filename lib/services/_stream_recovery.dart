@@ -2,9 +2,10 @@ part of 'audio_player_service.dart';
 
 // Fork (Absorb Plus): connects [PlaybackRecovery] to the player service. The
 // policy decides when to retry; this part reads the service's state, reloads
-// through playItem (a fresh session, so an expired one is replaced the same
-// way the old stream retry did) and shows the quiet status. Kept out of the
-// upstream file so merges only see the one-line hooks.
+// on a fresh session (so an expired one is replaced the same way the old
+// stream retry did) by rebuilding just the audio source, falling back to a
+// full playItem only when that can't work, and shows the quiet status. Kept
+// out of the upstream file so merges only see the one-line hooks.
 
 /// What the user did that ends a recovery.
 enum _RecoveryUserAction {
@@ -55,8 +56,8 @@ class _StreamRecovery {
   // still answers a ping: the player's own connection is stuck.
   static const _hardStall = Duration(seconds: 45);
 
-  // What was playing when the stream failed. A failed reload clears the
-  // service's fields, so later attempts start from this.
+  // What was playing when the stream failed. A failed full-start reload
+  // clears the service's fields, so later attempts start from this.
   _RecoveryItem? _item;
   // True only while playItem is being entered from a reload, so its
   // "a new play cancels recovery" check can tell the two apart.
@@ -201,6 +202,17 @@ class _StreamRecovery {
 
   void networkBack() => policy.retryNow();
 
+  /// The account changed, or the user signed out: a reconnect must not
+  /// carry on with the old account's item and sign-in. Ends like a stop (the
+  /// held spot is saved, the player is left idle) and forgets the item.
+  void cancelForAccount(String reason) {
+    if (policy.isActive) {
+      debugPrint('[Recovery] $reason - dropping the reconnect');
+      userAction(_RecoveryUserAction.stop);
+    }
+    _item = null;
+  }
+
   /// The stream dropped while the user meant it to play, and a reconnect is
   /// waiting or running: the service reports "playing" (buffering) instead
   /// of the paused raw player, so the app, notification, car and headset
@@ -318,6 +330,12 @@ class _StreamRecovery {
       }
     }
     if (!stillOurs()) return false;
+    // The item is still loaded: rebuild only its audio source on a fresh
+    // session, so the player, its item and its state stay put through every
+    // attempt (a failed one included).
+    final swapped = await _swapSource(api, item, at, stillOurs);
+    if (swapped != null) return swapped;
+    if (!stillOurs()) return false;
     final Future<String?> start;
     _reloadStarting = true;
     try {
@@ -350,6 +368,92 @@ class _StreamRecovery {
     if (_s._pauseRequested && (_s._player?.playing ?? false)) {
       await _s.pause();
     }
+    return true;
+  }
+
+  /// Moves the loaded item onto a new server session and rebuilds just its
+  /// source at [at], through the same swap the player uses to adopt a fresh
+  /// session at a pause or seek. Nothing is cleared, so a failure leaves the
+  /// item, the UI and the controls in place for the next attempt.
+  ///
+  /// Null when this item can't be swapped that way (another item, a download,
+  /// casting, or a source that isn't on the server's tokenless session URLs:
+  /// old servers and transcodes), and the caller falls back to a full start.
+  /// Otherwise whether the source loaded and is playing again.
+  Future<bool?> _swapSource(
+    ApiService api,
+    _RecoveryItem item,
+    double at,
+    bool Function() stillOurs,
+  ) async {
+    final s = _s;
+    if (s._player == null ||
+        s._api == null ||
+        s._localSessionMode ||
+        s._currentItemId != item.itemId ||
+        s._currentEpisodeId != item.episodeId ||
+        s._sourceSessionId == null ||
+        ChromecastService().isCasting) {
+      return null;
+    }
+    final startGen = s._playbackGeneration;
+    Map<String, dynamic>? session;
+    try {
+      session = item.episodeId != null
+          ? await api.startEpisodePlaybackSession(item.itemId, item.episodeId!)
+          : await api.startPlaybackSession(item.itemId);
+    } catch (e) {
+      debugPrint('[Recovery] Session start failed: $e');
+      return false;
+    }
+    if (session == null) {
+      debugPrint('[Recovery] Server gave no session - keeping the item');
+      return false;
+    }
+    // Stopped, or another item started, while asking: close what we got.
+    if (s._dropStaleSession(api, startGen, item.itemId, item.episodeId, session)) {
+      return false;
+    }
+    final sid = session['id'] as String?;
+    if (!stillOurs()) {
+      if (sid != null) unawaited(api.closePlaybackSession(sid));
+      return false;
+    }
+    final tracks = session['audioTracks'] as List<dynamic>?;
+    if (sid == null || tracks == null || tracks.isEmpty) {
+      debugPrint('[Recovery] Session has no tracks - keeping the item');
+      if (sid != null) unawaited(api.closePlaybackSession(sid));
+      return false;
+    }
+    s._playbackSessionId = sid;
+    s._logEvent(PlaybackEventType.sessionStart, detail: 'reconnect');
+    s._stashSessionUpgrade(session);
+    try {
+      final active = await (await AudioSession.instance).setActive(true);
+      if (!active) debugPrint('[Recovery] Audio focus refused before the reload');
+    } catch (_) {}
+    final ok = await s._applyPendingSessionUpgrade(seekToSeconds: at);
+    if (!ok) {
+      // The swap replaces the source only after it has captured the new
+      // URLs. If it never got that far (the server handed out tokened or
+      // transcode URLs this time), the old source is untouched and a full
+      // start is still possible; otherwise this attempt failed.
+      if (s._sourceSessionId != sid) return null;
+      debugPrint('[Recovery] New source did not load');
+      return false;
+    }
+    // Paused, stopped or replaced while it loaded: don't start it.
+    if (!stillOurs() ||
+        s._pauseRequested ||
+        s._playbackGeneration != startGen ||
+        s._currentItemId != item.itemId) {
+      debugPrint('[Recovery] Reload finished after the user moved on - not starting it');
+      return false;
+    }
+    unawaited(s._player?.play());
+    AudioPlayerService._handler?.refreshPlaybackState();
+    debugPrint('[Recovery] Source rebuilt at ${at.toStringAsFixed(1)}s on '
+        'session ${sid.length > 8 ? sid.substring(0, 8) : sid}');
     return true;
   }
 
@@ -421,4 +525,8 @@ extension _RecoveryAwareHandler on AudioPlayerHandler {
 /// play, so the play button shows the loading state rather than "paused".
 extension ForkRecoveryState on AudioPlayerService {
   bool get isReconnecting => _recovery.wantsToPlay;
+
+  /// Drops a reconnect in progress. For account switches and sign-outs,
+  /// which must reach it even while no item is loaded.
+  void cancelRecovery(String reason) => _recovery.cancelForAccount(reason);
 }

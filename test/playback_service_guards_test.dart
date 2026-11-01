@@ -82,6 +82,22 @@ void main() {
       expect(player.isReconnecting, isFalse);
     });
 
+    test('an account change drops a reconnect, even with no item loaded', () async {
+      final player = AudioPlayerService();
+      final policy = player.debugRecoveryPolicy;
+      policy.onFailure(Exception('Source error'));
+      addTearDown(() => policy.cancel('test over'));
+      expect(player.hasBook, isFalse);
+
+      player.cancelRecovery('account change');
+
+      expect(policy.isActive, isFalse);
+      expect(player.isPlaying, isFalse);
+      // Nothing is left to retry later, on the old sign-in.
+      await player.play();
+      expect(policy.isActive, isFalse);
+    });
+
     test('togglePlayPause while reconnecting pauses', () async {
       final player = AudioPlayerService();
       final policy = player.debugRecoveryPolicy;
