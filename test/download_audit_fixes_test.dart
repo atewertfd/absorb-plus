@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:absorb/services/api_service.dart';
@@ -255,6 +256,78 @@ void main() {
       s.cancelDownload('book-a');
       await Future<void>.delayed(Duration.zero);
       expect(s.debugClaimFolderName('Author/Title', 'book-c'), 'Author/Title');
+    });
+  });
+
+  group('D5 app and background job share the pending list', () {
+    Map<String, dynamic> entry(String id) => {
+          'itemId': id,
+          'apiItemId': id,
+          'title': id,
+          'bookDir': '${tmp.path}/$id',
+          'trackCount': 1,
+          'expectedPaths': ['${tmp.path}/$id/0.mp3'],
+        };
+
+    Future<Map<String, dynamic>> stored() async {
+      final prefs = await SharedPreferences.getInstance();
+      final json = prefs.getString('pending_downloads');
+      return json == null ? {} : jsonDecode(json) as Map<String, dynamic>;
+    }
+
+    Future<void> store(List<String> ids) async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+          'pending_downloads', jsonEncode({for (final id in ids) id: entry(id)}));
+    }
+
+    tearDown(() => DownloadService.backgroundIsolateMode = false);
+
+    test('the app keeps and takes over what the job added', () async {
+      await store(['app-book']);
+      final s = newService();
+      await s.debugLoadPending();
+      await store(['app-book', 'job-episode']); // the job enqueued one
+
+      await s.debugSeedPendingDownload(itemId: 'app-book-2', trackCount: 1);
+
+      expect((await stored()).keys,
+          unorderedEquals(['app-book', 'job-episode', 'app-book-2']));
+      expect(s.activeDownloads.map((d) => d.itemId), contains('job-episode'));
+
+      // What the app finishes or drops itself still goes.
+      await s.debugHandleTaskStatus(
+          itemId: 'app-book', trackIndex: 0, status: TaskStatus.notFound);
+      expect((await stored()).keys,
+          unorderedEquals(['job-episode', 'app-book-2']));
+    });
+
+    test('an update for an unknown book takes over the job\'s entry', () async {
+      final s = newService();
+      await s.debugLoadPending();
+      await store(['job-episode']);
+
+      await s.debugAdoptForeignPending('job-episode');
+
+      expect(s.activeDownloads.single.itemId, 'job-episode');
+    });
+
+    test('the job leaves the app\'s books alone', () async {
+      await store(['app-book']);
+      DownloadService.backgroundIsolateMode = true;
+      final job = newService();
+      await job.debugLoadPending();
+      expect(job.activeDownloads, isEmpty);
+
+      await job.debugSeedPendingDownload(itemId: 'job-episode', trackCount: 1);
+      expect((await stored()).keys,
+          unorderedEquals(['app-book', 'job-episode']));
+
+      // The app finished its book meanwhile; the job doesn't write it back.
+      await store(['job-episode']);
+      await job.debugHandleTaskStatus(
+          itemId: 'job-episode', trackIndex: 0, status: TaskStatus.notFound);
+      expect(await stored(), isEmpty);
     });
   });
 }

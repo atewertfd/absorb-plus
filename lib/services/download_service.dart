@@ -1315,6 +1315,11 @@ class DownloadService extends ChangeNotifier {
     await FileDownloader().trackTasks();
     await _loadPending();
     await _loadAutoDownloadBlocks();
+    // Absorb Plus: a short-lived background engine (the new-episode job)
+    // shares this state with the app, which may be running. It only starts
+    // its own downloads; failing, finalizing or forgetting the app's books
+    // from a stale copy is the app's job (audit D5).
+    if (backgroundIsolateMode) return;
     await _rehydratePending();
     await FileDownloader().resumeFromBackground();
     _startReconciler();
@@ -3044,7 +3049,10 @@ class DownloadService extends ChangeNotifier {
     final itemId = meta.$1;
     final i = meta.$2;
     final p = _pending[itemId];
-    if (p == null) return;
+    if (p == null) {
+      unawaited(_adoptForeignPending(itemId)); // Absorb Plus (D5)
+      return;
+    }
     if (i < 0 || i >= p.trackCount) return;
     p.lastUpdate = DateTime.now();
 
@@ -3294,6 +3302,16 @@ class DownloadService extends ChangeNotifier {
   Future<void> debugRehydratePending() => _rehydratePending();
 
   @visibleForTesting
+  Future<void> debugLoadPending() => _loadPending();
+
+  @visibleForTesting
+  Future<void> debugPersistPending() => _persistPending();
+
+  @visibleForTesting
+  Future<void> debugAdoptForeignPending(String itemId) =>
+      _adoptForeignPending(itemId);
+
+  @visibleForTesting
   Future<void> debugReconcile({required DateTime now, DateTime? lastTick}) {
     _lastReconcileAt = lastTick;
     return _reconcilePending(now: now);
@@ -3313,6 +3331,11 @@ class DownloadService extends ChangeNotifier {
     _cancelledIds.clear();
     _pending.clear();
     _queue.clear();
+    _persistedPendingKeys = {};
+    _adoptChecked.clear();
+    _resumeDirs.clear();
+    _claimedFolders.clear();
+    _lastReconcileAt = null;
     _downloaderConfigured = false;
     _initFuture = null;
     _iosAudioMigrationFuture = null;
@@ -3816,12 +3839,81 @@ class DownloadService extends ChangeNotifier {
 
   Future<void> _persistPending() async {
     final prefs = await SharedPreferences.getInstance();
-    if (_pending.isEmpty) {
+    // Absorb Plus: entries the other engine (app or background job) wrote
+    // since this one last looked are kept, not overwritten. The app takes
+    // them over; the background job leaves them alone (audit D5).
+    final foreign = await _foreignPending(prefs);
+    if (!backgroundIsolateMode) {
+      foreign.forEach(_adoptPending);
+      foreign.clear();
+    }
+    _persistedPendingKeys = _pending.keys.toSet();
+    if (_pending.isEmpty && foreign.isEmpty) {
       await prefs.remove('pending_downloads');
       return;
     }
-    final map = {for (final e in _pending.entries) e.key: e.value.toJson()};
+    final map = {
+      ...foreign,
+      for (final e in _pending.entries) e.key: e.value.toJson(),
+    };
     await prefs.setString('pending_downloads', jsonEncode(map));
+  }
+
+  /// Absorb Plus: the pending entries this engine last wrote or read.
+  /// A stored entry outside this set (and not in [_pending]) was written by
+  /// the other engine; one inside it that is gone from [_pending] was
+  /// finished or dropped here.
+  Set<String> _persistedPendingKeys = {};
+
+  /// Item ids already checked for a pending entry the other engine wrote.
+  final Set<String> _adoptChecked = {};
+
+  Future<Map<String, dynamic>> _foreignPending(SharedPreferences prefs) async {
+    try {
+      await prefs.reload();
+    } catch (_) {}
+    try {
+      final json = prefs.getString('pending_downloads');
+      if (json == null) return {};
+      final stored = jsonDecode(json) as Map<String, dynamic>;
+      stored.removeWhere((k, _) =>
+          _pending.containsKey(k) || _persistedPendingKeys.contains(k));
+      return stored;
+    } catch (e) {
+      debugPrint('[Download] reading pending entries failed: $e');
+      return {};
+    }
+  }
+
+  void _adoptPending(String itemId, dynamic json) {
+    try {
+      final p = _PendingBook.fromJson(json as Map<String, dynamic>);
+      _pending[itemId] = p;
+      _activeDownloadIds.add(itemId);
+      _downloads[itemId] = DownloadInfo(
+        itemId: itemId,
+        status: DownloadStatus.downloading,
+        progress: 0,
+        title: p.title,
+        author: p.author,
+        coverUrl: p.coverUrl,
+        libraryId: p.libraryId,
+      );
+      debugPrint('[Download] took over "${p.title}" ($itemId) from the background job');
+    } catch (e) {
+      debugPrint('[Download] could not take over pending $itemId: $e');
+    }
+  }
+
+  /// Absorb Plus: an update for a book this engine doesn't know may be one
+  /// the background job started. Take it over so it finishes here (D5).
+  Future<void> _adoptForeignPending(String itemId) async {
+    if (backgroundIsolateMode || !_adoptChecked.add(itemId)) return;
+    final foreign = await _foreignPending(await SharedPreferences.getInstance());
+    if (foreign.isEmpty) return;
+    foreign.forEach(_adoptPending);
+    _persistedPendingKeys.addAll(foreign.keys);
+    notifyListeners();
   }
 
   Future<void> _loadPending() async {
@@ -3830,6 +3922,13 @@ class DownloadService extends ChangeNotifier {
     if (json == null) return;
     try {
       final map = jsonDecode(json) as Map<String, dynamic>;
+      // Absorb Plus: the background job only notes the app's books as busy,
+      // so it neither starts them twice nor writes them back later (D5).
+      if (backgroundIsolateMode) {
+        _activeDownloadIds.addAll(map.keys);
+        return;
+      }
+      _persistedPendingKeys = map.keys.toSet();
       for (final e in map.entries) {
         final p = _PendingBook.fromJson(e.value as Map<String, dynamic>);
         _pending[e.key] = p;
