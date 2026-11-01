@@ -5546,6 +5546,170 @@ class AppLocalizationsNo extends AppLocalizations {
   String get fileInfoPathCopied => 'Path copied';
 
   @override
+  String get fileHealthAction => 'Check files';
+
+  @override
+  String get fileHealthTitle => 'Check files';
+
+  @override
+  String fileHealthAllFine(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'All $count files look fine',
+      one: 'The file looks fine',
+      zero: 'Nothing looks wrong',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fileHealthProblems(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count problems found',
+      one: '1 problem found',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fileHealthReadOnlyNote =>
+      'This only reads what the server already reports. Nothing is changed.';
+
+  @override
+  String get fileHealthLocalChecked =>
+      'Downloaded files on this device were checked too.';
+
+  @override
+  String get fileHealthItemMissing => 'Book folder missing';
+
+  @override
+  String get fileHealthItemMissingInfo =>
+      'The server can\'t find this book\'s folder any more. It may have been moved, renamed or deleted, or its drive is offline. A library scan on the server can find it again.';
+
+  @override
+  String get fileHealthItemInvalid => 'Book marked invalid';
+
+  @override
+  String get fileHealthItemInvalidInfo =>
+      'The server found no usable audio or ebook files for this book.';
+
+  @override
+  String get fileHealthInvalidFiles => 'Unreadable files';
+
+  @override
+  String get fileHealthInvalidFilesInfo =>
+      'The server couldn\'t read these files. They may be damaged or in a format it doesn\'t support, and playback can stop or skip at them.';
+
+  @override
+  String get fileHealthEmptyFiles => 'Files with no length';
+
+  @override
+  String get fileHealthEmptyFilesInfo =>
+      'These files report a length of zero, so there\'s nothing to play in them. They\'re often empty or cut off.';
+
+  @override
+  String get fileHealthTrackGaps => 'Gaps between files';
+
+  @override
+  String get fileHealthTrackGapsInfo =>
+      'The book\'s timeline jumps ahead between these files, leaving a stretch where nothing plays.';
+
+  @override
+  String get fileHealthTrackOverlaps => 'Overlapping files';
+
+  @override
+  String get fileHealthTrackOverlapsInfo =>
+      'These files overlap in the book\'s timeline, so part of one can be skipped or the position can jump.';
+
+  @override
+  String get fileHealthDurationMismatch => 'Length doesn\'t add up';
+
+  @override
+  String fileHealthDurationMismatchInfo(String actual, String expected) {
+    return 'The files add up to $actual, but the book says it\'s $expected long. Progress and chapters can be off. A rescan on the server usually fixes this.';
+  }
+
+  @override
+  String get fileHealthLowBitrate => 'Low quality audio';
+
+  @override
+  String get fileHealthLowBitrateInfo =>
+      'These files are encoded below 32 kbps and may sound muffled.';
+
+  @override
+  String get fileHealthMixedSampleRates => 'Mixed sample rates';
+
+  @override
+  String get fileHealthMixedSampleRatesInfo =>
+      'The files were recorded at different sample rates. Most players cope, but some can click or change speed where one file ends and the next starts.';
+
+  @override
+  String get fileHealthMixedChannels => 'Mono and stereo mixed';
+
+  @override
+  String get fileHealthMixedChannelsInfo =>
+      'Some files have a different number of channels than others, so the sound can change between files.';
+
+  @override
+  String get fileHealthChaptersPastEnd => 'Chapters past the end';
+
+  @override
+  String get fileHealthChaptersPastEndInfo =>
+      'These chapters start or end after the audio finishes, so jumping to them can go nowhere.';
+
+  @override
+  String get fileHealthLocalMissing => 'Downloaded files missing';
+
+  @override
+  String get fileHealthLocalMissingInfo =>
+      'These downloaded files are gone from this device. Playing offline will fail where they should be.';
+
+  @override
+  String get fileHealthLocalSizeMismatch => 'Downloaded files differ';
+
+  @override
+  String get fileHealthLocalSizeMismatchInfo =>
+      'These downloaded files aren\'t the same size as the server\'s copies, so they may be incomplete or damaged.';
+
+  @override
+  String fileHealthStartsAt(String time) {
+    return 'starts at $time';
+  }
+
+  @override
+  String fileHealthSizeHere(String local, String server) {
+    return '$local here, $server on the server';
+  }
+
+  @override
+  String fileHealthSampleRate(String value) {
+    return '$value kHz';
+  }
+
+  @override
+  String get fileHealthMono => 'Mono';
+
+  @override
+  String get fileHealthStereo => 'Stereo';
+
+  @override
+  String get fileHealthRedownload => 'Re-download this book';
+
+  @override
+  String get fileHealthRedownloadQuestion => 'Re-download this book?';
+
+  @override
+  String get fileHealthRedownloadInfo =>
+      'The copy on this device is removed and downloaded again from the server. Nothing on the server changes.';
+
+  @override
+  String get fileHealthNotAvailableOffline =>
+      'Connect to your server to re-download';
+
+  @override
   String get resetMayNotHaveSynced =>
       'Reset may not have synced - check your server';
 

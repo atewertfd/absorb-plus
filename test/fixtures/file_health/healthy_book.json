@@ -1,0 +1,29 @@
+{
+  "id": "li_healthy",
+  "isMissing": false,
+  "isInvalid": false,
+  "media": {
+    "duration": 7200.5,
+    "audioFiles": [
+      {
+        "index": 1, "ino": "101", "duration": 3600.25, "bitRate": 64000, "codec": "mp3",
+        "channels": 2, "sampleRate": 44100, "invalid": false, "exclude": false,
+        "metadata": {"filename": "Part 01.mp3", "ext": ".mp3", "relPath": "Part 01.mp3", "size": 28802000}
+      },
+      {
+        "index": 2, "ino": "102", "duration": 3600.25, "bitRate": 64000, "codec": "mp3",
+        "channels": 2, "sampleRate": 44100, "invalid": false, "exclude": false,
+        "metadata": {"filename": "Part 02.mp3", "ext": ".mp3", "relPath": "Part 02.mp3", "size": 28802000}
+      }
+    ],
+    "tracks": [
+      {"index": 1, "startOffset": 0, "duration": 3600.25, "title": "Part 01.mp3", "metadata": {"filename": "Part 01.mp3"}},
+      {"index": 2, "startOffset": 3600.25, "duration": 3600.25, "title": "Part 02.mp3", "metadata": {"filename": "Part 02.mp3"}}
+    ],
+    "chapters": [
+      {"id": 0, "start": 0, "end": 3600.25, "title": "Chapter 1"},
+      {"id": 1, "start": 3600.25, "end": 7200.5, "title": "Chapter 2"}
+    ],
+    "ebookFile": {"ino": "200", "ebookFormat": "epub", "metadata": {"filename": "Book.epub", "size": 500000}}
+  }
+}
