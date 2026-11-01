@@ -40,9 +40,14 @@ class AbsTestServer {
 
   /// The server, or null after marking the current test skipped with the
   /// reason (missing credentials, non-loopback URL, server not answering).
+  /// With ABS_TEST_REQUIRED=1 (CI) a missing server fails the test instead,
+  /// so a broken setup can't pass as a run of skipped tests.
   static Future<AbsTestServer?> orSkip() async {
     final (server, reason) = await (_probe ??= _connect());
-    if (server == null) markTestSkipped(reason!);
+    if (server == null) {
+      if (Platform.environment['ABS_TEST_REQUIRED'] == '1') fail(reason!);
+      markTestSkipped(reason!);
+    }
     return server;
   }
 
