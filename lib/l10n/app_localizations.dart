@@ -22784,6 +22784,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Last played on another device · {ago}'**
   String lastPlayedElsewhere(String ago);
+
+  /// No description provided for @opmlExportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Export OPML'**
+  String get opmlExportAction;
+
+  /// No description provided for @opmlExportDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Save podcast feeds as OPML'**
+  String get opmlExportDialogTitle;
+
+  /// No description provided for @opmlExportSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'OPML saved to {path}'**
+  String opmlExportSaved(String path);
+
+  /// No description provided for @opmlExportDownloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'OPML downloaded'**
+  String get opmlExportDownloaded;
+
+  /// No description provided for @opmlExportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t export the OPML file'**
+  String get opmlExportFailed;
+
+  /// No description provided for @bookCopySaveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Save a copy…'**
+  String get bookCopySaveAction;
+
+  /// No description provided for @bookCopyDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Save a copy of this book'**
+  String get bookCopyDialogTitle;
+
+  /// No description provided for @bookCopySaving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving a copy…'**
+  String get bookCopySaving;
+
+  /// No description provided for @bookCopySaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy saved to {path}'**
+  String bookCopySaved(String path);
+
+  /// No description provided for @bookCopyFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save a copy of this book'**
+  String get bookCopyFailed;
 }
 
 class _AppLocalizationsDelegate

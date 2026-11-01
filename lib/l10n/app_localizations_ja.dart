@@ -13420,4 +13420,38 @@ class AppLocalizationsJa extends AppLocalizations {
   String lastPlayedElsewhere(String ago) {
     return 'Last played on another device · $ago';
   }
+
+  @override
+  String get opmlExportAction => 'Export OPML';
+
+  @override
+  String get opmlExportDialogTitle => 'Save podcast feeds as OPML';
+
+  @override
+  String opmlExportSaved(String path) {
+    return 'OPML saved to $path';
+  }
+
+  @override
+  String get opmlExportDownloaded => 'OPML downloaded';
+
+  @override
+  String get opmlExportFailed => 'Couldn\'t export the OPML file';
+
+  @override
+  String get bookCopySaveAction => 'Save a copy…';
+
+  @override
+  String get bookCopyDialogTitle => 'Save a copy of this book';
+
+  @override
+  String get bookCopySaving => 'Saving a copy…';
+
+  @override
+  String bookCopySaved(String path) {
+    return 'Copy saved to $path';
+  }
+
+  @override
+  String get bookCopyFailed => 'Couldn\'t save a copy of this book';
 }

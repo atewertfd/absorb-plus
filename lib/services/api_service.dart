@@ -2420,6 +2420,13 @@ class ApiService {
         '$_cleanBaseUrl/api/items/$itemId/file/$ino?token=$token');
   }
 
+  /// Absorb Plus: the whole item as the server hands it out (a zip of its
+  /// folder, or the file itself for a single-file item). Needs the user's
+  /// download permission. GET /api/items/:id/download
+  String buildItemDownloadUrl(String itemId) =>
+      TailscaleService.instance.mediaUrl(
+          '$_cleanBaseUrl/api/items/$itemId/download?token=$token');
+
   /// Sync playback progress. Returns true if sync succeeded.
   /// POST /api/session/:id/sync
   Future<bool> syncPlaybackSession(
@@ -4823,6 +4830,20 @@ class ApiService {
       return success > 0;
     } catch (e) { debugPrint('checkNewEpisodes error: $e'); }
     return false;
+  }
+
+  /// Absorb Plus: a podcast library's feeds as OPML text, or null on failure.
+  /// GET /api/libraries/:id/opml
+  Future<String?> getLibraryOpml(String libraryId) async {
+    try {
+      final r = await _authGet(
+          Uri.parse('$_cleanBaseUrl/api/libraries/$libraryId/opml'));
+      if (r.statusCode == 200) return utf8.decode(r.bodyBytes);
+      debugPrint('[API] OPML export failed: HTTP ${r.statusCode}');
+    } catch (e) {
+      debugPrint('[API] OPML export failed: ${e.runtimeType}');
+    }
+    return null;
   }
 
   /// Check a single podcast for new episodes from its RSS feed

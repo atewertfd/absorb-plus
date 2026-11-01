@@ -7360,5 +7360,17 @@
         "example": "2h ago"
       }
     }
-  }
+  },
+  "opmlExportAction": "Export OPML",
+  "opmlExportDialogTitle": "Save podcast feeds as OPML",
+  "opmlExportSaved": "OPML saved to {path}",
+  "@opmlExportSaved": {"placeholders": {"path": {"type": "String"}}},
+  "opmlExportDownloaded": "OPML downloaded",
+  "opmlExportFailed": "Couldn't export the OPML file",
+  "bookCopySaveAction": "Save a copy…",
+  "bookCopyDialogTitle": "Save a copy of this book",
+  "bookCopySaving": "Saving a copy…",
+  "bookCopySaved": "Copy saved to {path}",
+  "@bookCopySaved": {"placeholders": {"path": {"type": "String"}}},
+  "bookCopyFailed": "Couldn't save a copy of this book"
 }
