@@ -26,6 +26,9 @@ import '../widgets/overlay_toast.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/local_path.dart';
 import '../widgets/desktop_input.dart';
+import '../utils/bookmark_list_tools.dart';
+import '../widgets/bookmark_list_controls.dart';
+import '../widgets/empty_state.dart';
 
 class BookmarksScreen extends StatefulWidget {
   const BookmarksScreen({super.key});
@@ -42,6 +45,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
   int _tabIndex = 0;
   bool _selecting = false;
   String _sort = 'newest';
+  BookmarkView _view = BookmarkView.byBook;
   // Selected bookmarks as "itemId::bookmarkId" keys
   final Set<String> _selected = {};
   // Same idea on the highlights tab, keyed "itemId::annotationId". Separate
@@ -88,25 +92,14 @@ class _BookmarksScreenState extends State<BookmarksScreen>
 
   /// A book matching the search keeps all its bookmarks; otherwise only the
   /// bookmarks whose title or note match stay, and empty books drop out.
-  Map<String, List<Bookmark>> _filteredBookmarks() {
-    if (_query.isEmpty) return _allBookmarks;
-    final out = <String, List<Bookmark>>{};
-    for (final entry in _allBookmarks.entries) {
-      final book = '${_resolveTitle(entry.key) ?? ''} ${_resolveShowTitle(entry.key) ?? ''}'
-          .toLowerCase();
-      if (book.contains(_query)) {
-        out[entry.key] = entry.value;
-        continue;
-      }
-      final hits = entry.value
-          .where((b) =>
-              b.title.toLowerCase().contains(_query) ||
-              (b.note ?? '').toLowerCase().contains(_query))
-          .toList();
-      if (hits.isNotEmpty) out[entry.key] = hits;
-    }
-    return out;
-  }
+  Map<String, List<Bookmark>> _filteredBookmarks() =>
+      filterBookmarks(_allBookmarks, _query, _bookInfo);
+
+  BookmarkBookInfo _bookInfo(String key) => (
+        title: _resolveTitle(key),
+        author: _resolveAuthor(splitEpisodeKey(key).itemId),
+        subtitle: _resolveShowTitle(key),
+      );
 
   /// Same rule as bookmarks: a matching book keeps all its highlights,
   /// otherwise only highlights whose text or note match.
@@ -204,6 +197,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
 
   Future<void> _loadSort() async {
     _sort = await PlayerSettings.getBookmarkSort();
+    _view = await BookmarkViewPrefs.load(legacySort: _sort);
     // Read the persisted title cache before rendering so rows don't flash
     // raw item-ID fragments on the first paint while _syncAll fetches.
     await _loadTitleCache();
@@ -749,16 +743,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
   }
 
   Widget _emptyState(ColorScheme cs, TextTheme tt, IconData icon, String label) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 48, color: cs.onSurfaceVariant.withValues(alpha: 0.4)),
-          const SizedBox(height: 12),
-          Text(label, style: tt.bodyLarge?.copyWith(color: cs.onSurfaceVariant)),
-        ],
-      ),
-    );
+    return AbsorbEmptyState(icon: icon, message: label);
   }
 
   Widget _buildBookmarksTab(ColorScheme cs, TextTheme tt, AppLocalizations l) {
@@ -771,18 +756,19 @@ class _BookmarksScreenState extends State<BookmarksScreen>
       return _emptyState(
           cs, tt, Icons.search_off_rounded, l.bookmarksNoMatches);
     }
+    final runs = arrangeBookmarks(groups, _view);
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-      itemCount: groups.length,
+      itemCount: runs.length,
       itemBuilder: (ctx, i) {
         final lib = context.read<LibraryProvider>();
-        final itemId = groups.keys.elementAt(i);
-        final bookmarks = groups[itemId]!;
+        final itemId = runs[i].itemId;
+        final bookmarks = runs[i].bookmarks;
         final resolvedTitle = _resolveTitle(itemId);
         final coverUrl = lib.getCoverUrl(itemId, width: 400);
         return _BookGroup(
           // A search keeps every match in view, folded or not.
-          expanded: _query.isNotEmpty || _expanded.contains(itemId),
+          expanded: _query.isNotEmpty || _view == BookmarkView.newest || _expanded.contains(itemId),
           onToggleExpanded: () => setState(() {
             if (!_expanded.remove(itemId)) _expanded.add(itemId);
           }),
@@ -880,38 +866,12 @@ class _BookmarksScreenState extends State<BookmarksScreen>
                             onPressed: () => setState(() => _selecting = true),
                           ),
                         if (_tabIndex == 0 && _allBookmarks.isNotEmpty) ...[
-                          GestureDetector(
-                            onTap: () {
-                              final next = _sort == 'newest' ? 'position'
-                                  : _sort == 'position' ? 'position_desc'
-                                  : 'newest';
-                              setState(() => _sort = next);
-                              PlayerSettings.setBookmarkSort(next);
-                              _load();
-                            },
-                            child: Container(
-                              height: 32,
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
-                              decoration: BoxDecoration(
-                                color: cs.onSurface.withValues(alpha: 0.06),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                                Icon(
-                                  _sort == 'newest' ? Icons.schedule_rounded
-                                      : _sort == 'position' ? Icons.arrow_upward_rounded
-                                      : Icons.arrow_downward_rounded,
-                                  color: cs.onSurfaceVariant, size: 16,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  _sort == 'newest' ? l.bookmarksScreenSortNewest
-                                      : l.bookmarksScreenSortPosition,
-                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(color: cs.onSurfaceVariant),
-                                ),
-                              ]),
-                            ),
-                          ),
+                          // Absorb Plus: sort/group menu and Markdown export.
+                          BookmarkViewMenu(view: _view, onChanged: (v) {
+                            setState(() => _view = v);
+                            BookmarkViewPrefs.save(v);
+                          }),
+                          BookmarkExportButton(groups: _filteredBookmarks, bookInfo: _bookInfo),
                           IconButton(
                             icon: Icon(Icons.checklist_rounded, color: cs.onSurfaceVariant),
                             tooltip: l.bookmarksSelect,
@@ -954,6 +914,19 @@ class _BookmarksScreenState extends State<BookmarksScreen>
                             borderRadius: BorderRadius.circular(14),
                             borderSide: BorderSide.none,
                           ),
+                        ),
+                      ),
+                    ),
+                  if (_query.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Text(
+                          l.bookmarksSearchResults(_tabIndex == 0
+                              ? countBookmarks(_filteredBookmarks())
+                              : _filteredHighlights().values.fold(0, (n, h) => n + h.length)),
+                          style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant),
                         ),
                       ),
                     ),

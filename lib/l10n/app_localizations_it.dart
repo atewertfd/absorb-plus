@@ -13728,4 +13728,45 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get stepperIncrease => 'Increase';
+
+  @override
+  String bookmarksSearchResults(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count results',
+      one: '1 result',
+      zero: 'No results',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bookmarksViewMenu => 'Sort and group';
+
+  @override
+  String get bookmarksViewByBook => 'By book';
+
+  @override
+  String get bookmarksViewNewest => 'Newest first';
+
+  @override
+  String get bookmarksViewPosition => 'By position';
+
+  @override
+  String get bookmarksExportAction => 'Export bookmarks';
+
+  @override
+  String get bookmarksExportDialogTitle => 'Save bookmarks as Markdown';
+
+  @override
+  String bookmarksExportSaved(String path) {
+    return 'Bookmarks saved to $path';
+  }
+
+  @override
+  String get bookmarksExportDownloaded => 'Bookmarks downloaded';
+
+  @override
+  String get bookmarksExportFailed => 'Couldn\'t export the bookmarks';
 }
