@@ -11,6 +11,7 @@ import '../widgets/adaptive_modal.dart';
 import '../widgets/desktop_page_body.dart';
 import '../widgets/delete_confirm_dialog.dart';
 import '../widgets/html_description.dart';
+import '../widgets/opml_export_button.dart';
 import '../widgets/overlay_toast.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/desktop_workspace.dart';
@@ -161,6 +162,7 @@ class _AdminPodcastsScreenState extends State<AdminPodcastsScreen> {
                     icon: Icon(Icons.cloud_download_rounded, color: cs.onSurfaceVariant.withValues(alpha: 0.6), size: 22),
                     tooltip: l.adminPodcastsCheckFeedsTooltip,
                     onPressed: () => _confirmCheckNewEpisodes(cs, tt)),
+            OpmlExportButton(libraryId: _libraryId, libraryName: widget.library['name'] as String? ?? ''), // Absorb Plus
             IconButton(icon: Icon(Icons.close_rounded, color: cs.onSurfaceVariant.withValues(alpha: 0.6)), onPressed: () => Navigator.pop(context)),
           ]),
         ),

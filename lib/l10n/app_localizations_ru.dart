@@ -13389,4 +13389,21 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get tailscaleExtraHostsHelp =>
       'Addresses in 100.64.0.0/10 and names ending in .ts.net or your tailnet\'s MagicDNS name always go through Tailscale. Separate names with commas.';
+
+  @override
+  String get opmlExportAction => 'Export OPML';
+
+  @override
+  String get opmlExportDialogTitle => 'Save podcast feeds as OPML';
+
+  @override
+  String opmlExportSaved(String path) {
+    return 'OPML saved to $path';
+  }
+
+  @override
+  String get opmlExportDownloaded => 'OPML downloaded';
+
+  @override
+  String get opmlExportFailed => 'Couldn\'t export the OPML file';
 }

@@ -4799,6 +4799,20 @@ class ApiService {
     return false;
   }
 
+  /// Absorb Plus: a podcast library's feeds as OPML text, or null on failure.
+  /// GET /api/libraries/:id/opml
+  Future<String?> getLibraryOpml(String libraryId) async {
+    try {
+      final r = await _authGet(
+          Uri.parse('$_cleanBaseUrl/api/libraries/$libraryId/opml'));
+      if (r.statusCode == 200) return utf8.decode(r.bodyBytes);
+      debugPrint('[API] OPML export failed: HTTP ${r.statusCode}');
+    } catch (e) {
+      debugPrint('[API] OPML export failed: ${e.runtimeType}');
+    }
+    return null;
+  }
+
   /// Check a single podcast for new episodes from its RSS feed
   /// GET /api/podcasts/:id/checknew?limit=N
   /// Returns the list of new episodes found, or null on failure.

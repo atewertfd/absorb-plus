@@ -22730,6 +22730,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Addresses in 100.64.0.0/10 and names ending in .ts.net or your tailnet\'s MagicDNS name always go through Tailscale. Separate names with commas.'**
   String get tailscaleExtraHostsHelp;
+
+  /// No description provided for @opmlExportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Export OPML'**
+  String get opmlExportAction;
+
+  /// No description provided for @opmlExportDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Save podcast feeds as OPML'**
+  String get opmlExportDialogTitle;
+
+  /// No description provided for @opmlExportSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'OPML saved to {path}'**
+  String opmlExportSaved(String path);
+
+  /// No description provided for @opmlExportDownloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'OPML downloaded'**
+  String get opmlExportDownloaded;
+
+  /// No description provided for @opmlExportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t export the OPML file'**
+  String get opmlExportFailed;
 }
 
 class _AppLocalizationsDelegate
