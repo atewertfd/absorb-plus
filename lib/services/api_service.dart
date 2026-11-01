@@ -27,6 +27,7 @@ import '../models/auth_session.dart';
 import '../utils/server_url.dart';
 import '../utils/percent_escapes.dart';
 import '../utils/keep_alive_client.dart';
+import 'library_item_request_cache.dart';
 
 part 'bookorbit_api_service.dart';
 part 'bookorbit_admin_api.dart';
@@ -677,14 +678,17 @@ class ApiService {
   }
 
   Future<http.Response> _post(Uri url, {Map<String, String>? headers, Object? body}) {
+    LibraryItemRequestCache.instance.clear(); // a write may change an item
     return (_httpClient ?? _sharedClient).post(url, headers: headers, body: body);
   }
 
   Future<http.Response> _patch(Uri url, {Map<String, String>? headers, Object? body}) {
+    LibraryItemRequestCache.instance.clear();
     return (_httpClient ?? _sharedClient).patch(url, headers: headers, body: body);
   }
 
   Future<http.Response> _delete(Uri url, {Map<String, String>? headers}) {
+    LibraryItemRequestCache.instance.clear();
     return (_httpClient ?? _sharedClient).delete(url, headers: headers);
   }
 
@@ -3212,14 +3216,22 @@ class ApiService {
   }
 
   /// Get a single library item with full detail (expanded=1 gives chapters, tracks, etc.)
-  Future<Map<String, dynamic>?> getLibraryItem(String itemId) async {
+  ///
+  /// Absorb Plus: concurrent calls share one request and an answer is reused
+  /// for 30 s ([LibraryItemRequestCache]); [fresh] always asks the server.
+  Future<Map<String, dynamic>?> getLibraryItem(String itemId, {bool fresh = false}) async {
     try {
-      final response = await _authGet(
-        Uri.parse('$_cleanBaseUrl/api/items/$itemId?expanded=1&include=progress'),
+      final url = Uri.parse('$_cleanBaseUrl/api/items/$itemId?expanded=1&include=progress');
+      final body = await LibraryItemRequestCache.instance.fetch(
+        (server: _cleanBaseUrl, token: _accessToken, itemId: itemId, query: url.query),
+        () async {
+          final response = await _authGet(url);
+          return response.statusCode == 200 ? response.body : null;
+        },
+        fresh: fresh,
       );
-
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body) as Map<String, dynamic>;
+      if (body != null) {
+        return jsonDecode(body) as Map<String, dynamic>;
       }
     } catch (e) {
       // ignore

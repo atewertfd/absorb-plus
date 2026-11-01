@@ -16,6 +16,7 @@ import '../services/bookorbit_notification_socket.dart';
 import '../services/progress_sync_service.dart';
 import '../services/own_progress_echo.dart';
 import '../services/socket_refresh_policy.dart';
+import '../services/library_item_request_cache.dart';
 import '../services/local_session_service.dart';
 import '../services/download_service.dart';
 import '../services/episode_notification_service.dart';

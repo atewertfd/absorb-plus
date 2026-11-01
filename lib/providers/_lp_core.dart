@@ -1816,6 +1816,11 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   void _onRemoteProgressUpdated(Map<String, dynamic> mp) {
+    // Absorb Plus: cached item answers carry progress.
+    final progressItemId = mp['libraryItemId'];
+    if (progressItemId is String) {
+      LibraryItemRequestCache.instance.forgetItem(progressItemId);
+    }
     final itemId = mp['libraryItemId'] as String?;
     final episodeId = mp['episodeId'] as String?;
     if (itemId == null) return;
@@ -1933,6 +1938,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     }
     // Invalidate cached session metadata - track URLs may have changed
     if (id != null) SessionCache.clear(itemId: id);
+    if (id != null) LibraryItemRequestCache.instance.forgetItem(id);
     _requestHomeReloadFor(data);
     _checkSubscribedPodcastUpdate(data);
   }
@@ -1940,6 +1946,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   void _onRemoteItemRemoved(Map<String, dynamic> data) {
     final id = data['id'] as String?;
     if (id != null) SessionCache.clear(itemId: id);
+    if (id != null) LibraryItemRequestCache.instance.forgetItem(id);
     _requestHomeReloadFor(data);
   }
 
