@@ -23,6 +23,8 @@ import 'app_shell.dart';
 import '../l10n/app_localizations.dart';
 import 'stats_tab_refresh.dart';
 import '../widgets/empty_state.dart'; // Absorb Plus
+import '../services/listening_streaks.dart'; // Absorb Plus
+import '../widgets/listening_streak_card.dart'; // Absorb Plus
 
 class StatsScreen extends StatefulWidget {
   const StatsScreen({super.key});
@@ -39,6 +41,7 @@ class _StatsScreenState extends State<StatsScreen>
   int _episodesFinished = 0;
   int _booksFinishedThisYear = 0;
   int _episodesFinishedThisYear = 0;
+  int _booksFinishedThisMonth = 0; // Absorb Plus
   final Map<String, int> _goalMinutes = {
     for (final p in PlayerSettings.statsGoalPeriods) p: 0
   };
@@ -382,6 +385,7 @@ class _StatsScreenState extends State<StatsScreen>
             _episodesFinished = lib.finishedEpisodesCount;
             _booksFinishedThisYear = lib.finishedBooksThisYearCount;
             _episodesFinishedThisYear = lib.finishedEpisodesThisYearCount;
+            _booksFinishedThisMonth = _finishedThisMonth(lib); // Absorb Plus
             _isLoading = false;
           });
           _animController.reset();
@@ -423,6 +427,7 @@ class _StatsScreenState extends State<StatsScreen>
         _episodesFinished = finishedEpisodes;
         _booksFinishedThisYear = finishedBooksYear;
         _episodesFinishedThisYear = finishedEpisodesYear;
+        _booksFinishedThisMonth = _finishedThisMonth(lib); // Absorb Plus
         _isLoading = false;
       });
       if (_animController.status != AnimationStatus.forward &&
@@ -531,8 +536,7 @@ class _StatsScreenState extends State<StatsScreen>
     final today = _todaySeconds(dailyMap);
     final thisWeek = _weekSeconds(dailyMap);
     final thisMonth = _monthSeconds(dailyMap);
-    final streak = _currentStreak(dailyMap);
-    final longestStreak = _longestStreak(dailyMap);
+    final streaks = computeStreaks(dailyMap, now: DateTime.now()); // Absorb Plus
     final chartData = _lastNDays(dailyMap, _chartRange);
     final activeDays = _activeDayCount(dailyMap);
     final avgDaily = _averageDailySeconds(dailyMap);
@@ -552,12 +556,13 @@ class _StatsScreenState extends State<StatsScreen>
         const SizedBox(height: 16),
       ],
       'goals': [
-        if (_goalMinutes.values.any((m) => m > 0) || _bookGoalOrServer > 0) ...[
+        if (_goalCardPeriods.isNotEmpty || _bookGoalOrServer > 0) ...[ // Absorb Plus
           _goalCard(cs, tt, l, today, thisWeek, thisMonth),
           const SizedBox(height: 16),
         ],
       ],
       'periods': [
+        ..._streakCards(streaks), // Absorb Plus
         Row(children: [
           Expanded(child: _periodCard(tt, cs, l.statsToday, today)),
           const SizedBox(width: 8),
@@ -565,26 +570,12 @@ class _StatsScreenState extends State<StatsScreen>
           const SizedBox(width: 8),
           Expanded(child: _periodCard(tt, cs, l.statsThisMonth, thisMonth)),
         ]),
+        ..._monthSummary(dailyMap, bo), // Absorb Plus
         const SizedBox(height: 24),
       ],
       'activity': [
         _sectionTitle(tt, cs, l.statsActivity),
         const SizedBox(height: 10),
-        Row(children: [
-          Expanded(
-              child: _accentStatCard(
-                  tt,
-                  cs,
-                  Icons.local_fire_department_rounded,
-                  Colors.orange,
-                  l.statsScreenStreakDays(streak),
-                  l.statsCurrentStreak)),
-          const SizedBox(width: 8),
-          Expanded(
-              child: _accentStatCard(tt, cs, Icons.emoji_events_rounded,
-                  Colors.amber.shade600, l.statsScreenStreakDays(longestStreak), l.statsBestStreak)),
-        ]),
-        const SizedBox(height: 8),
         Row(children: [
           Expanded(
               child: _accentStatCard(tt, cs, Icons.menu_book_rounded,
@@ -1542,10 +1533,7 @@ class _StatsScreenState extends State<StatsScreen>
     final hasBookGoal = bookGoal > 0;
 
     final elapsed = {'daily': today, 'weekly': thisWeek, 'monthly': thisMonth};
-    final activeGoals = [
-      for (final p in PlayerSettings.statsGoalPeriods)
-        if (_goalMinutes[p]! > 0) p
-    ];
+    final activeGoals = _goalCardPeriods; // Absorb Plus
     // Shrink the ring once more than one goal is on, so three still sit
     // comfortably in the card.
     final ringSize = activeGoals.length > 1 ? 44.0 : 56.0;
@@ -2165,38 +2153,66 @@ class _StatsScreenState extends State<StatsScreen>
     return 0;
   }
 
-  int _currentStreak(Map<String, dynamic> dailyMap) {
-    int streak = 0;
-    final now = DateTime.now();
-    int startOffset = _daySeconds(dailyMap, _dateKey(now)) > 0 ? 0 : 1;
-    for (int i = startOffset; i < 365; i++) {
-      if (_daySeconds(dailyMap, _dateKey(now.subtract(Duration(days: i)))) >
-          0) {
-        streak++;
-      } else {
-        break;
-      }
-    }
-    return streak;
+  // Absorb Plus: streaks, the daily goal and the month summary
+  // (services/listening_streaks.dart, widgets/listening_streak_card.dart).
+
+  /// Time goals the goal card shows. The daily one sits on the streak card
+  /// instead whenever that card is on screen.
+  List<String> get _goalCardPeriods => [
+        for (final p in PlayerSettings.statsGoalPeriods)
+          if (_goalMinutes[p]! > 0 && !(p == 'daily' && !_statsHidden.contains('periods'))) p
+      ];
+
+  int _finishedThisMonth(LibraryProvider lib) => countFinishedInMonth([
+        for (final id in lib.finishedBooksThisYearIds)
+          if (lib.getProgressData(id)?['finishedAt'] case final num at) at
+      ], now: DateTime.now());
+
+  List<Widget> _streakCards(StreakSummary streaks) {
+    return [
+      ListeningStreakCard(
+        streak: streaks,
+        goalMinutes: _goalMinutes['daily'] ?? 0,
+        onEditGoal: _editDailyGoal,
+        formatDuration: _formatDuration,
+      ),
+      const SizedBox(height: 8),
+    ];
   }
 
-  int _longestStreak(Map<String, dynamic> dailyMap) {
-    int longest = 0, current = 0;
-    final keys = dailyMap.keys.toList()..sort();
-    DateTime? lastDate;
-    for (final key in keys) {
-      if (_daySeconds(dailyMap, key) <= 0) continue;
-      final date = DateTime.tryParse(key);
-      if (date == null) continue;
-      if (lastDate != null && date.difference(lastDate).inDays == 1) {
-        current++;
-      } else {
-        current = 1;
-      }
-      longest = max(longest, current);
-      lastDate = date;
-    }
-    return longest;
+  Future<void> _editDailyGoal() async {
+    final minutes = await showDailyGoalSheet(context,
+        currentMinutes: _goalMinutes['daily'] ?? 0, formatDuration: _formatDuration);
+    if (minutes == null || !mounted) return;
+    setState(() => _goalMinutes['daily'] = minutes);
+    // Per account, and the same daily goal Settings > Stats edits.
+    await PlayerSettings.setStatsGoalMinutesFor('daily', minutes);
+  }
+
+  List<Widget> _monthSummary(Map<String, dynamic> dailyMap, Map<String, dynamic>? bo) {
+    final l = AppLocalizations.of(context)!;
+    final now = DateTime.now();
+    final seconds = monthSecondsFrom(dailyMap, now: now);
+    // BookOrbit sends its own finished counts per month; elsewhere they come
+    // from the library's progress.
+    final int? books = bo == null
+        ? _booksFinishedThisMonth
+        : bo['finishedMonths'] is List
+            ? _finishedMonths(bo).last.count
+            : null;
+    final top = topBookThisMonth(_sessions, now: now, allLoaded: !_hasMoreSessions);
+    if (seconds <= 0 && (books ?? 0) == 0 && top == null) return const [];
+    return [
+      const SizedBox(height: 8),
+      MonthSummaryCard(
+        title: MaterialLocalizations.of(context).formatMonthYear(now),
+        listenedSeconds: seconds,
+        listenedLabel: bo != null && _media != 'listening' ? l.statsMonthTime : null,
+        booksFinished: books,
+        topBook: top,
+        formatDuration: _formatDuration,
+      ),
+    ];
   }
 
   int _activeDayCount(Map<String, dynamic> dailyMap) {
