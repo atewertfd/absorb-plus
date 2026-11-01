@@ -9830,6 +9830,252 @@ abstract class AppLocalizations {
   /// **'Path copied'**
   String get fileInfoPathCopied;
 
+  /// No description provided for @fileHealthAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Check files'**
+  String get fileHealthAction;
+
+  /// No description provided for @fileHealthTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check files'**
+  String get fileHealthTitle;
+
+  /// No description provided for @fileHealthAllFine.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing looks wrong} =1{The file looks fine} other{All {count} files look fine}}'**
+  String fileHealthAllFine(int count);
+
+  /// No description provided for @fileHealthProblems.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 problem found} other{{count} problems found}}'**
+  String fileHealthProblems(int count);
+
+  /// No description provided for @fileHealthReadOnlyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This only reads what the server already reports. Nothing is changed.'**
+  String get fileHealthReadOnlyNote;
+
+  /// No description provided for @fileHealthLocalChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded files on this device were checked too.'**
+  String get fileHealthLocalChecked;
+
+  /// No description provided for @fileHealthItemMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Book folder missing'**
+  String get fileHealthItemMissing;
+
+  /// No description provided for @fileHealthItemMissingInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The server can\'t find this book\'s folder any more. It may have been moved, renamed or deleted, or its drive is offline. A library scan on the server can find it again.'**
+  String get fileHealthItemMissingInfo;
+
+  /// No description provided for @fileHealthItemInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Book marked invalid'**
+  String get fileHealthItemInvalid;
+
+  /// No description provided for @fileHealthItemInvalidInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The server found no usable audio or ebook files for this book.'**
+  String get fileHealthItemInvalidInfo;
+
+  /// No description provided for @fileHealthInvalidFiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Unreadable files'**
+  String get fileHealthInvalidFiles;
+
+  /// No description provided for @fileHealthInvalidFilesInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The server couldn\'t read these files. They may be damaged or in a format it doesn\'t support, and playback can stop or skip at them.'**
+  String get fileHealthInvalidFilesInfo;
+
+  /// No description provided for @fileHealthEmptyFiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Files with no length'**
+  String get fileHealthEmptyFiles;
+
+  /// No description provided for @fileHealthEmptyFilesInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'These files report a length of zero, so there\'s nothing to play in them. They\'re often empty or cut off.'**
+  String get fileHealthEmptyFilesInfo;
+
+  /// No description provided for @fileHealthTrackGaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Gaps between files'**
+  String get fileHealthTrackGaps;
+
+  /// No description provided for @fileHealthTrackGapsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The book\'s timeline jumps ahead between these files, leaving a stretch where nothing plays.'**
+  String get fileHealthTrackGapsInfo;
+
+  /// No description provided for @fileHealthTrackOverlaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Overlapping files'**
+  String get fileHealthTrackOverlaps;
+
+  /// No description provided for @fileHealthTrackOverlapsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'These files overlap in the book\'s timeline, so part of one can be skipped or the position can jump.'**
+  String get fileHealthTrackOverlapsInfo;
+
+  /// No description provided for @fileHealthDurationMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Length doesn\'t add up'**
+  String get fileHealthDurationMismatch;
+
+  /// No description provided for @fileHealthDurationMismatchInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The files add up to {actual}, but the book says it\'s {expected} long. Progress and chapters can be off. A rescan on the server usually fixes this.'**
+  String fileHealthDurationMismatchInfo(String actual, String expected);
+
+  /// No description provided for @fileHealthLowBitrate.
+  ///
+  /// In en, this message translates to:
+  /// **'Low quality audio'**
+  String get fileHealthLowBitrate;
+
+  /// No description provided for @fileHealthLowBitrateInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'These files are encoded below 32 kbps and may sound muffled.'**
+  String get fileHealthLowBitrateInfo;
+
+  /// No description provided for @fileHealthMixedSampleRates.
+  ///
+  /// In en, this message translates to:
+  /// **'Mixed sample rates'**
+  String get fileHealthMixedSampleRates;
+
+  /// No description provided for @fileHealthMixedSampleRatesInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The files were recorded at different sample rates. Most players cope, but some can click or change speed where one file ends and the next starts.'**
+  String get fileHealthMixedSampleRatesInfo;
+
+  /// No description provided for @fileHealthMixedChannels.
+  ///
+  /// In en, this message translates to:
+  /// **'Mono and stereo mixed'**
+  String get fileHealthMixedChannels;
+
+  /// No description provided for @fileHealthMixedChannelsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Some files have a different number of channels than others, so the sound can change between files.'**
+  String get fileHealthMixedChannelsInfo;
+
+  /// No description provided for @fileHealthChaptersPastEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Chapters past the end'**
+  String get fileHealthChaptersPastEnd;
+
+  /// No description provided for @fileHealthChaptersPastEndInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'These chapters start or end after the audio finishes, so jumping to them can go nowhere.'**
+  String get fileHealthChaptersPastEndInfo;
+
+  /// No description provided for @fileHealthLocalMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded files missing'**
+  String get fileHealthLocalMissing;
+
+  /// No description provided for @fileHealthLocalMissingInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'These downloaded files are gone from this device. Playing offline will fail where they should be.'**
+  String get fileHealthLocalMissingInfo;
+
+  /// No description provided for @fileHealthLocalSizeMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded files differ'**
+  String get fileHealthLocalSizeMismatch;
+
+  /// No description provided for @fileHealthLocalSizeMismatchInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'These downloaded files aren\'t the same size as the server\'s copies, so they may be incomplete or damaged.'**
+  String get fileHealthLocalSizeMismatchInfo;
+
+  /// No description provided for @fileHealthStartsAt.
+  ///
+  /// In en, this message translates to:
+  /// **'starts at {time}'**
+  String fileHealthStartsAt(String time);
+
+  /// No description provided for @fileHealthSizeHere.
+  ///
+  /// In en, this message translates to:
+  /// **'{local} here, {server} on the server'**
+  String fileHealthSizeHere(String local, String server);
+
+  /// No description provided for @fileHealthSampleRate.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} kHz'**
+  String fileHealthSampleRate(String value);
+
+  /// No description provided for @fileHealthMono.
+  ///
+  /// In en, this message translates to:
+  /// **'Mono'**
+  String get fileHealthMono;
+
+  /// No description provided for @fileHealthStereo.
+  ///
+  /// In en, this message translates to:
+  /// **'Stereo'**
+  String get fileHealthStereo;
+
+  /// No description provided for @fileHealthRedownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-download this book'**
+  String get fileHealthRedownload;
+
+  /// No description provided for @fileHealthRedownloadQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-download this book?'**
+  String get fileHealthRedownloadQuestion;
+
+  /// No description provided for @fileHealthRedownloadInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The copy on this device is removed and downloaded again from the server. Nothing on the server changes.'**
+  String get fileHealthRedownloadInfo;
+
+  /// No description provided for @fileHealthNotAvailableOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to your server to re-download'**
+  String get fileHealthNotAvailableOffline;
+
   /// No description provided for @resetMayNotHaveSynced.
   ///
   /// In en, this message translates to:

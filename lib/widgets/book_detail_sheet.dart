@@ -46,6 +46,7 @@ import '../services/bookmark_service.dart';
 import '../services/download_service.dart';
 import '../services/narrated_books.dart';
 import 'book_files_sheet.dart';
+import 'file_health_sheet.dart';
 import 'book_settings_sheet.dart';
 import '../services/book_settings_service.dart';
 import '../services/transcription_service.dart';
@@ -2076,6 +2077,11 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         final item = _item;
         if (item != null) {
           add(Icons.info_outline_rounded, l.fileInfoTitle, () => showBookFilesSheet(context, item));
+        }
+        if (item != null && !includeOpenDetails && !lib.isPodcastLibrary) { // Absorb Plus
+          add(Icons.fact_check_rounded, l.fileHealthAction, () => showFileHealthSheet(context,
+            itemId: widget.itemId, item: item, api: lib.isOffline ? null : auth.apiService,
+            title: title, author: authorName, coverUrl: _coverUrl));
         }
         if (!includeOpenDetails && auth.apiService != null && BookCopyDownload.available( // Absorb Plus
             userJson: auth.userJson, isBookOrbit: auth.isBookOrbit, offline: lib.isOffline)) {
