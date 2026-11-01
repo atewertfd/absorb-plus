@@ -552,11 +552,13 @@ class ProgressSyncService {
     required String location,
     required double progress,
   }) async {
+    final startedAt = DateTime.now().millisecondsSinceEpoch;
     final ok = _isOnline &&
         await api.updateEbookProgress(itemId,
             ebookLocation: location, ebookProgress: progress);
     if (ok) {
-      await _removePendingEbook(itemId);
+      // A newer page queued while this PATCH was in flight stays queued.
+      await _removePendingEbook(itemId, queuedBefore: startedAt);
       return;
     }
     if (_isOnline && api.lastEbookProgressStatus == 404) {
@@ -564,14 +566,28 @@ class ProgressSyncService {
       await _removePendingEbook(itemId);
       return;
     }
-    final pending = await getPendingEbookProgress();
-    pending[itemId] = {
-      'loc': location,
-      'prog': progress,
-      'ts': DateTime.now().millisecondsSinceEpoch,
-    };
-    await ScopedPrefs.setString('pending_ebook_progress', jsonEncode(pending));
+    await _serial(() async {
+      final pending = await getPendingEbookProgress();
+      pending[itemId] = {
+        'loc': location,
+        'prog': progress,
+        'ts': DateTime.now().millisecondsSinceEpoch,
+      };
+      await ScopedPrefs.setString('pending_ebook_progress', jsonEncode(pending));
+    });
     debugPrint('[Sync] Queued ebook progress for $itemId (offline or PATCH failed)');
+  }
+
+  /// Absorb Plus: the ebook queue and the offline listening ledger are
+  /// read-modify-written across awaits by both the player/reader and the
+  /// flush; this chain runs those changes one at a time so neither side
+  /// writes over the other's.
+  Future<void> _queueChain = Future<void>.value();
+
+  Future<T> _serial<T>(Future<T> Function() change) {
+    final run = _queueChain.then((_) => change());
+    _queueChain = run.then<void>((_) {}, onError: (Object _) {});
+    return run;
   }
 
   /// Queued ebook positions whose PATCH hasn't landed yet
@@ -592,11 +608,21 @@ class ProgressSyncService {
   /// can't put the older place back.
   Future<void> dropPendingEbookProgress(String itemId) => _removePendingEbook(itemId);
 
-  Future<void> _removePendingEbook(String itemId) async {
-    final pending = await getPendingEbookProgress();
-    if (pending.remove(itemId) == null) return;
-    await ScopedPrefs.setString('pending_ebook_progress', jsonEncode(pending));
-  }
+  /// [sentTs]: remove only the entry that was sent (a newer page queued
+  /// since keeps its place). [queuedBefore]: remove only an entry queued
+  /// before that time.
+  Future<void> _removePendingEbook(String itemId,
+          {int? sentTs, int? queuedBefore}) =>
+      _serial(() async {
+        final pending = await getPendingEbookProgress();
+        final entry = pending[itemId];
+        if (entry == null) return;
+        final ts = (entry['ts'] as num?)?.toInt();
+        if (sentTs != null && ts != sentTs) return;
+        if (queuedBefore != null && ts != null && ts >= queuedBefore) return;
+        pending.remove(itemId);
+        await ScopedPrefs.setString('pending_ebook_progress', jsonEncode(pending));
+      });
 
   Future<void> _flushPendingEbookProgress(ApiService api) async {
     final pending = await getPendingEbookProgress();
@@ -612,7 +638,8 @@ class ProgressSyncService {
       final ok = await api.updateEbookProgress(entry.key,
           ebookLocation: loc, ebookProgress: prog);
       if (ok) {
-        await _removePendingEbook(entry.key);
+        await _removePendingEbook(entry.key,
+            sentTs: (entry.value['ts'] as num?)?.toInt());
         _consecutiveFailures = 0;
       } else if (api.lastEbookProgressStatus == 404) {
         // Another server's download read here, or a book since deleted: this
@@ -633,6 +660,7 @@ class ProgressSyncService {
   Future<void> addOfflineListeningTime(String itemId, int seconds) async {
     if (seconds <= 0) return;
     final key = 'offline_listening_$itemId';
+    await _serial(() async {
     final existing = await ScopedPrefs.getInt(key) ?? 0;
     await ScopedPrefs.setInt(key, existing + seconds);
     debugPrint('[Sync] Offline listening +${seconds}s for $itemId (total=${existing + seconds}s)');
@@ -643,6 +671,7 @@ class ProgressSyncService {
       pending.add(itemId);
       await ScopedPrefs.setStringList('pending_offline_listening', pending);
     }
+    });
   }
 
   /// Buffer listening time for an item that is streaming with a live server
@@ -732,7 +761,9 @@ class ProgressSyncService {
         final key = 'offline_listening_$itemId';
         final seconds = await ScopedPrefs.getInt(key) ?? 0;
         if (seconds <= 0) {
-          await ScopedPrefs.remove(key);
+          await _serial(() async {
+            if ((await ScopedPrefs.getInt(key) ?? 0) <= 0) await ScopedPrefs.remove(key);
+          });
           flushed.add(itemId);
           continue;
         }
@@ -795,14 +826,20 @@ class ProgressSyncService {
           // key during the flush (e.g. a +60s tick that fired while the
           // server session was in flight) are preserved for the next run
           // instead of being wiped by an outright remove.
+          // Serialized with addOfflineListeningTime, so a tick landing here
+          // can't write back the pre-subtraction total.
+          final cleared = await _serial(() async {
           final current = await ScopedPrefs.getInt(key) ?? 0;
           final remaining = current - seconds;
           if (remaining > 0) {
             await ScopedPrefs.setInt(key, remaining);
+            return false;
           } else {
             await ScopedPrefs.remove(key);
-            flushed.add(itemId);
+            return true;
           }
+          });
+          if (cleared) flushed.add(itemId);
           await OfflineListeningUpload.settled(itemId);
         } catch (e) {
           debugPrint('[Sync] Failed to flush offline listening for $itemId: $e');
@@ -819,11 +856,19 @@ class ProgressSyncService {
       }
 
       // Only remove successfully flushed items from pending list
+      // (Absorb Plus: and only while nothing was added for them since, or
+      // the new seconds would sit in their key with the item off the list.)
       if (flushed.isNotEmpty) {
+        await _serial(() async {
+        final still = <String>{};
+        for (final id in flushed) {
+          if ((await ScopedPrefs.getInt('offline_listening_$id') ?? 0) > 0) still.add(id);
+        }
         final remaining = List<String>.from(
             await ScopedPrefs.getStringList('pending_offline_listening'));
-        remaining.removeWhere((id) => flushed.contains(id));
+        remaining.removeWhere((id) => flushed.contains(id) && !still.contains(id));
         await ScopedPrefs.setStringList('pending_offline_listening', remaining);
+        });
       }
     } finally {
       _isFlushingOfflineListening = false;
