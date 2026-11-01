@@ -6,6 +6,10 @@ name: CI
 # batched, and releases build their own, so pushes don't pay ~10 minutes each.
 # Pushes and pull requests that change only docs, top-level Markdown or the
 # Claude Code config skip CI entirely (nothing in them reaches a build).
+# Pushes to main and claude/** (and pull requests into them) also run the
+# integration tests against a fresh throwaway Audiobookshelf container. That
+# job lives here, not in _checks.yml, so a flaky image pull never blocks a
+# release (release.yml calls _checks.yml only).
 
 on:
   push:
@@ -32,6 +36,70 @@ permissions:
 jobs:
   checks:
     uses: ./.github/workflows/_checks.yml
+
+  integration:
+    name: Integration tests (throwaway Audiobookshelf)
+    # tool/test-server's pinned container, seeded fresh in this job, then
+    # test/integration (tag abs-server) against it: what dev.ps1 server up,
+    # server seed and itest do locally. The generated test credentials stay
+    # in tool/test-server/.env inside this job's workspace, are masked in the
+    # log and are never uploaded; the container is removed at the end.
+    if: >-
+      (github.event_name == 'push' &&
+        (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/claude/'))) ||
+      (github.event_name == 'pull_request' &&
+        (github.base_ref == 'main' || startsWith(github.base_ref, 'claude/')))
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      COMPOSE_FILE: tool/test-server/docker-compose.yml
+    steps:
+      - uses: actions/checkout@v5
+      # Pull first, with retries: a registry hiccup shouldn't fail the run.
+      - name: Pull the pinned Audiobookshelf image
+        timeout-minutes: 6
+        run: |
+          for attempt in 1 2 3; do
+            docker compose pull --quiet && exit 0
+            echo "Image pull failed (attempt $attempt), retrying"
+            sleep $((attempt * 15))
+          done
+          exit 1
+      - name: Start the throwaway server (127.0.0.1:13378 only)
+        run: |
+          docker compose up -d
+          for _ in $(seq 1 60); do
+            curl -fsS -o /dev/null http://127.0.0.1:13378/healthcheck && { echo "server ready"; exit 0; }
+            sleep 2
+          done
+          echo "Test server did not answer within 120 s"
+          exit 1
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: .flutter-version
+          cache: true
+      - run: flutter pub get
+      - name: Seed test users, books and libraries
+        run: python3 tool/test-server/seed.py
+      - name: Integration tests
+        env:
+          # A suite that can't reach the server fails here instead of skipping.
+          ABS_TEST_REQUIRED: '1'
+        run: |
+          while IFS='=' read -r key value; do
+            case "$key" in ABS_TEST_*) ;; *) continue ;; esac
+            value="${value%$'\r'}"
+            case "$key" in *PASSWORD*) echo "::add-mask::$value" ;; esac
+            export "$key=$value"
+          done < tool/test-server/.env
+          flutter test --no-pub --tags abs-server --run-skipped --concurrency=1 --reporter expanded test/integration
+      - name: Server log (on failure)
+        if: failure()
+        run: docker compose logs --no-color --tail 200 abs | sed -E 's/(token=)[^&" ]+/\1***/g'
+      - name: Remove the throwaway server
+        if: always()
+        run: docker compose down -v --remove-orphans
 
   web:
     name: Web build
