@@ -85,6 +85,8 @@ class LiveOverlayToast {
         (message: message, icon: icon));
     final entry = OverlayEntry(builder: (_) => _LiveToast(value: value));
     overlay.insert(entry);
+    // Absorb Plus: the next toast replaces this one instead of stacking on it.
+    _currentToast = entry;
     return LiveOverlayToast._(value, entry);
   }
 
@@ -98,6 +100,7 @@ class LiveOverlayToast {
     if (entry == null) return;
     _entry = null;
     _removeToast(entry);
+    if (_currentToast == entry) _currentToast = null;
     _value.dispose();
   }
 }
