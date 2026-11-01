@@ -34,8 +34,10 @@ String? defaultTailscaleLibraryPath() {
 }
 
 TailscaleNative? loadTailscaleNative({String? libraryPath}) {
+  // The environment override is for debugging only: a release build never
+  // loads native code from a path set outside the app.
   final path = libraryPath ??
-      Platform.environment['ABSORB_TAILSCALE_LIB'] ??
+      (kDebugMode ? Platform.environment['ABSORB_TAILSCALE_LIB'] : null) ??
       defaultTailscaleLibraryPath();
   if (path == null) return null;
   if (!Platform.isAndroid && !File(path).existsSync()) return null;
