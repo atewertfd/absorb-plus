@@ -45,6 +45,7 @@ class _StreamRecovery {
       checkStall: _checkStall,
       onStart: _snapshot,
       onStatus: _onStatus,
+      onReloadTimedOut: _onReloadTimedOut,
       log: (m) => debugPrint('[Recovery] $m'),
     );
   }
@@ -474,7 +475,13 @@ class _StreamRecovery {
     } finally {
       _reloadStarting = false;
     }
-    final result = await start;
+    _fullStartInFlight = true;
+    final String? result;
+    try {
+      result = await start;
+    } finally {
+      _fullStartInFlight = false;
+    }
     if (result != null) {
       debugPrint('[Recovery] Reload failed: $result');
       return false;
@@ -575,6 +582,22 @@ class _StreamRecovery {
     debugPrint('[Recovery] Source rebuilt at ${at.toStringAsFixed(1)}s on '
         'session ${sid.length > 8 ? sid.substring(0, 8) : sid}');
     return true;
+  }
+
+  // A full playItem reload is loading (see _onReloadTimedOut).
+  bool _fullStartInFlight = false;
+
+  /// The policy gave up waiting on a reload. A full start that finished
+  /// later would still have started audio, with the policy waiting and the
+  /// player reporting the held spot, then jumped back on the next attempt:
+  /// supersede it, so it backs out at its next check and closes its
+  /// session. A source swap has its own load timeout and checks that the
+  /// recovery still owns it before playing.
+  void _onReloadTimedOut() {
+    if (!_fullStartInFlight) return;
+    debugPrint('[Recovery] Abandoning the reload still loading');
+    _s._abandonLoadingStart();
+    _s._endAdvanceBuffering();
   }
 
   void _onStatus(PlaybackRecoveryStatus status, Object? error) {

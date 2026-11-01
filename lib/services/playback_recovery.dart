@@ -99,6 +99,7 @@ class PlaybackRecovery {
     this.checkStall,
     this.onStart,
     this.onStatus,
+    this.onReloadTimedOut,
     this.log,
     this.schedule = defaultSchedule,
     this.repeatDelay = const Duration(seconds: 30),
@@ -136,6 +137,10 @@ class PlaybackRecovery {
 
   final void Function(PlaybackRecoveryStatus status, Object? lastError)?
       onStatus;
+
+  /// A reload outlived [reloadTimeout] and counts as failed. The service
+  /// must make sure it can't start audio if it finishes later anyway.
+  final void Function()? onReloadTimedOut;
   final void Function(String message)? log;
 
   final List<Duration> schedule;
@@ -440,6 +445,7 @@ class PlaybackRecovery {
           '${reloadTimeout.inSeconds}s - counting it as failed');
       _lastError = e;
       ok = false;
+      if (gen == _generation) onReloadTimedOut?.call();
     } catch (e) {
       _lastError = e;
       ok = false;

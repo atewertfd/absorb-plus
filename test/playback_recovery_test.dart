@@ -218,6 +218,32 @@ void main() {
       });
     });
 
+    test('a reload that times out is reported, so it can be abandoned', () {
+      fakeAsync((async) {
+        final never = Completer<bool>();
+        var timedOut = 0;
+        var calls = 0;
+        final r = PlaybackRecovery(
+          lastPosition: () => 10,
+          reload: (_, _) {
+            calls++;
+            return calls == 1 ? never.future : Future.value(false);
+          },
+          onReloadTimedOut: () => timedOut++,
+        );
+        r.onFailure(Exception('Source error'));
+        async.elapse(const Duration(seconds: 2));
+        async.elapse(const Duration(minutes: 1));
+        expect(timedOut, 0);
+        async.elapse(const Duration(minutes: 1));
+        expect(timedOut, 1);
+        async.elapse(const Duration(seconds: 5)); // attempt 2 fails normally
+        expect(calls, 2);
+        expect(timedOut, 1, reason: 'an ordinary failure is not a timeout');
+        r.cancel('test over');
+      });
+    });
+
     test('while the server is being checked the player counts as waiting', () {
       fakeAsync((async) {
         final answer = Completer<bool>();
