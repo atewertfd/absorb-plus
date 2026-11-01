@@ -7,6 +7,7 @@ import '../services/audio_player_service.dart';
 import '../services/chapter_lookup.dart';
 import '../services/chromecast_service.dart';
 import 'absorb_slider.dart';
+import 'chapter_end_tooltip.dart';
 import 'text_scale_room.dart';
 
 // ─── DUAL PROGRESS BAR (card version) ───────────────────────
@@ -553,12 +554,18 @@ class _CardDualProgressBarState extends State<CardDualProgressBar> with WidgetsB
                     fontFeatures: const [FontFeature.tabularFigures()],
                     shadows: [Shadow(color: Theme.of(context).brightness == Brightness.dark ? Colors.black.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.5), blurRadius: 3)])),
                 if (_chapterDragValue != null && _chapterScrubSpeed < 1.0) Text(_scrubSpeedLabel(l, _chapterScrubSpeed), style: tt.labelSmall?.copyWith(color: widget.accent, fontSize: 11, fontWeight: FontWeight.w500)),
-                Text('-${_fmt(_chapterDragValue != null ? ((1.0 - _chapterDragValue!) * chapterDur) / speedDiv : chapterRemaining)}',
+                // Absorb Plus: "Chapter ends at 10:42 PM" tooltip (C5).
+                ChapterEndTooltip(
+                  enabled: active && _chapterDragValue == null,
+                  remainingSeconds: chapterDur - chapterPos,
+                  speed: speed,
+                  wholeBook: chapterSource.isEmpty || chapterUnresolved,
+                  child: Text('-${_fmt(_chapterDragValue != null ? ((1.0 - _chapterDragValue!) * chapterDur) / speedDiv : chapterRemaining)}',
                   style: tt.labelSmall?.copyWith(
                     color: _chapterDragValue != null ? widget.accent : cs.onSurface.withValues(alpha: 0.5),
                     fontSize: 11 * _progressTextScale, fontWeight: FontWeight.w500,
                     fontFeatures: const [FontFeature.tabularFigures()],
-                    shadows: [Shadow(color: Theme.of(context).brightness == Brightness.dark ? Colors.black.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.5), blurRadius: 3)])),
+                    shadows: [Shadow(color: Theme.of(context).brightness == Brightness.dark ? Colors.black.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.5), blurRadius: 3)]))),
               ],
             )),
             ], // end showChapterBar
