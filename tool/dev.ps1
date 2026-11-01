@@ -193,6 +193,13 @@ function Update-BetaFolder {
     $blob = Join-Path $dir 'data\flutter_assets\kernel_blob.bin'
     if (Test-Path -LiteralPath $blob -PathType Leaf) { Remove-Item -LiteralPath $blob -Force }
   }
+  # Same for the Tailscale library: a build made without it must not keep an
+  # older one (possibly with a different C ABI) in the beta folder.
+  $tsDll = 'absorb_tailscale.dll'
+  if (-not (Test-Path -LiteralPath (Join-Path $src $tsDll) -PathType Leaf) -and
+      (Test-Path -LiteralPath (Join-Path $dst $tsDll) -PathType Leaf)) {
+    Remove-Item -LiteralPath (Join-Path $dst $tsDll) -Force
+  }
   Write-BetaNotes
   Write-Host "beta folder: $dst ($((Get-Item $dstExe).VersionInfo.ProductVersion))" -ForegroundColor Green
 }
@@ -273,13 +280,42 @@ switch ($Command) {
     }
     $branch = (git rev-parse --abbrev-ref HEAD).Trim()
     $repo = 'atewertfd/absorb-plus'
-    $before = (gh run list --repo $repo --workflow ci.yml --branch $branch --limit 1 --json databaseId --jq '.[0].databaseId')
+    # Download only the run this call starts: a workflow_dispatch run that
+    # didn't exist before, on the commit the branch points at on GitHub, and
+    # created after the dispatch (an older run's APK would be a stale build).
+    $sha = (gh api "repos/$repo/branches/$branch" --jq '.commit.sha').Trim()
+    if (-not $sha) { throw "Branch $branch isn't on $repo; push it first." }
+    if ($sha -ne (git rev-parse HEAD).Trim()) {
+      Write-Warning "GitHub's $branch is at $($sha.Substring(0, 8)), not your HEAD; the APK is built from GitHub's commit."
+    }
+    $listRuns = {
+      gh run list --repo $repo --workflow ci.yml --branch $branch --event workflow_dispatch --limit 20 `
+        --json databaseId,headSha,createdAt | ConvertFrom-Json
+    }
+    # PowerShell 7's ConvertFrom-Json already turns createdAt into a DateTime;
+    # Windows PowerShell leaves the ISO string.
+    $utc = {
+      param($t)
+      if ($t -isnot [DateTime]) {
+        $t = [DateTime]::Parse([string]$t, [Globalization.CultureInfo]::InvariantCulture,
+          [Globalization.DateTimeStyles]::AdjustToUniversal -bor [Globalization.DateTimeStyles]::AssumeUniversal)
+      }
+      $t.ToUniversalTime()
+    }
+    $beforeIds = @(& $listRuns | ForEach-Object { [string]$_.databaseId })
+    # A little slack for clock skew between this PC and GitHub.
+    $dispatchedAt = [DateTime]::UtcNow.AddSeconds(-30)
     gh workflow run ci.yml --repo $repo --ref $branch | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw 'gh workflow run failed.' }
     $runId = $null
     for ($i = 0; $i -lt 30 -and -not $runId; $i++) {
       Start-Sleep -Seconds 4
-      $latest = (gh run list --repo $repo --workflow ci.yml --branch $branch --event workflow_dispatch --limit 1 --json databaseId --jq '.[0].databaseId')
-      if ($latest -and $latest -ne $before) { $runId = $latest }
+      $match = & $listRuns | Where-Object {
+        ($beforeIds -notcontains [string]$_.databaseId) -and
+        $_.headSha -eq $sha -and
+        ((& $utc $_.createdAt) -ge $dispatchedAt)
+      } | Sort-Object { & $utc $_.createdAt } | Select-Object -First 1
+      if ($match) { $runId = [string]$match.databaseId }
     }
     if (-not $runId) { throw 'Could not find the CI run that was just started.' }
     Write-Host "CI run $runId building the APK..."
