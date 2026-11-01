@@ -40,12 +40,19 @@ def buildTask = tasks.register('buildAbsorbTailscale') {
     description = 'Builds the built-in Tailscale library (Go, c-shared) for Android'
     inputs.files(fileTree(tsDir) { include '*.go', 'go.mod', 'go.sum', 'build-tags.txt' })
     inputs.property('targets', targets*.abi.join(','))
+    inputs.property('enabled', tsEnabled)
     outputs.dir(tsOut)
-    onlyIf { tsEnabled }
     doLast {
+        // A build without the library must not package one left over from an
+        // earlier build: its C ABI may no longer match the Dart side.
+        if (!tsEnabled) {
+            tsOut.deleteDir()
+            return
+        }
         def go = findGo()
         if (go == null) {
             logger.warn('Built-in Tailscale skipped: Go not found (install Go or pass -PabsorbTailscale=false).')
+            tsOut.deleteDir()
             return
         }
         def ndk = android.ndkDirectory
