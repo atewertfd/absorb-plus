@@ -13385,6 +13385,9 @@ class AppLocalizationsZh extends AppLocalizations {
       'Quick switcher: find books or go anywhere';
 
   @override
+  String get desktopShortcutHelp => 'Show keyboard shortcuts';
+
+  @override
   String get quickSwitcherTooltip => 'Quick switcher (Ctrl+K)';
 
   @override

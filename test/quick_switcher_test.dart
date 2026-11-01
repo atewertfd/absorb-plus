@@ -307,8 +307,10 @@ void main() {
 
     testWidgets('works while typing in a text field', variant: windows,
         (tester) async {
-      await pumpApp(tester, const TextField(autofocus: true));
+      await pumpApp(tester, const TextField());
+      await tester.tap(find.byType(TextField));
       await tester.pump();
+      expect(isTypingInTextField(), isTrue);
       await ctrlK(tester);
       expect(ran, [DesktopShortcutAction.quickSwitcher]);
     });

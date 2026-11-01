@@ -22875,6 +22875,12 @@ abstract class AppLocalizations {
   /// **'Quick switcher: find books or go anywhere'**
   String get desktopShortcutQuickSwitcher;
 
+  /// No description provided for @desktopShortcutHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Show keyboard shortcuts'**
+  String get desktopShortcutHelp;
+
   /// No description provided for @quickSwitcherTooltip.
   ///
   /// In en, this message translates to:

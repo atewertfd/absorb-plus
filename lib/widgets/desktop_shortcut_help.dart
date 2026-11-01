@@ -27,6 +27,7 @@ String desktopShortcutDescription(
       DesktopShortcutAction.nowPlaying => l.desktopShortcutNowPlaying,
       DesktopShortcutAction.fullScreen => l.desktopShortcutFullScreen,
       DesktopShortcutAction.quickSwitcher => l.desktopShortcutQuickSwitcher,
+      DesktopShortcutAction.shortcutHelp => l.desktopShortcutHelp,
     };
 
 String desktopNavigationDescription(
@@ -44,11 +45,15 @@ String desktopNavigationDescription(
 /// Every shortcut this platform has, in table order. Keys bound to the same
 /// action share a row ("F5 / Ctrl+R"); mouse extras come last.
 List<DesktopShortcutHelpEntry> desktopShortcutHelpEntries(AppLocalizations l) {
+  final labelsByAction = <DesktopShortcutAction, List<String>>{};
+  for (final shortcut in desktopShortcutDefinitions) {
+    labelsByAction.putIfAbsent(shortcut.action, () => []).add(shortcut.label);
+  }
   final entries = <DesktopShortcutHelpEntry>[
-    for (final shortcut in desktopShortcutDefinitions)
+    for (final MapEntry(key: action, value: labels) in labelsByAction.entries)
       DesktopShortcutHelpEntry(
-        desktopShortcutDescription(l, shortcut.action),
-        shortcut.label,
+        desktopShortcutDescription(l, action),
+        labels.join(' / '),
       ),
   ];
   final navigation = desktopNavigationShortcuts;
@@ -110,7 +115,7 @@ class DesktopShortcutHelpList extends StatelessWidget {
   }
 }
 
-/// The keyboard-shortcuts dialog (Settings, the quick switcher, F1 and ?).
+/// The keyboard-shortcuts dialog (Settings, the quick switcher, ? and F1).
 Future<void> showDesktopShortcutsDialog(BuildContext context) {
   return showDialog<void>(
     context: context,

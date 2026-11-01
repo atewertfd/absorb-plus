@@ -10,8 +10,11 @@ import 'expanded_card.dart';
 
 /// Intent for one of the [DesktopShortcutAction]s (playback, search...).
 class DesktopShortcutIntent extends Intent {
-  const DesktopShortcutIntent(this.action);
+  const DesktopShortcutIntent(this.action, [this.definition]);
   final DesktopShortcutAction action;
+
+  /// The binding that fired (Help has two, ? and F1, with different rules).
+  final DesktopShortcutDefinition? definition;
 }
 
 /// Intent for one of the [DesktopNavigationAction]s (Esc, back, F5...).
@@ -73,7 +76,8 @@ class DesktopShortcutScope extends StatelessWidget {
       shortcuts: <ShortcutActivator, Intent>{
         for (final shortcut in desktopShortcutDefinitions)
           if (!_browserOwns(shortcut.action))
-            shortcut.activator: DesktopShortcutIntent(shortcut.action),
+            shortcut.activator:
+                DesktopShortcutIntent(shortcut.action, shortcut),
         for (final shortcut in navigation)
           shortcut.activator: DesktopNavigationIntent(shortcut.action),
       },
@@ -107,6 +111,8 @@ class _AppShortcutAction extends DesktopShortcutCallbackAction {
       : super(
           actionOf: (intent) =>
               intent is DesktopShortcutIntent ? intent.action : null,
+          definitionOf: (intent) =>
+              intent is DesktopShortcutIntent ? intent.definition : null,
           onInvoke: (intent) {
             if (intent is DesktopShortcutIntent) {
               DesktopShortcutScope.handlers?.run(intent.action);

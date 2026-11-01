@@ -85,6 +85,7 @@ import 'rebuild_snapshots.dart';
 import 'stats_tab_refresh.dart';
 import '../utils/cover_palette.dart';
 import '../widgets/quick_switcher_sources.dart'; // Absorb Plus
+import '../widgets/desktop_shortcut_help.dart'; // Absorb Plus
 
 class AppShell extends StatefulWidget {
   final bool startOnAbsorbing;
@@ -1410,6 +1411,8 @@ class _AppShellState extends State<AppShell>
           },
           runNavAction: _runNavHoldAction,
         )));
+      case DesktopShortcutAction.shortcutHelp: // Absorb Plus
+        unawaited(showDesktopShortcutsDialog(context));
     }
   }
 

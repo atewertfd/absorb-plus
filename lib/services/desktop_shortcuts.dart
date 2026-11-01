@@ -18,6 +18,7 @@ enum DesktopShortcutAction {
   nowPlaying,
   fullScreen,
   quickSwitcher,
+  shortcutHelp,
 }
 
 class DesktopShortcutDefinition {
@@ -30,6 +31,10 @@ class DesktopShortcutDefinition {
 
   /// Works wherever focus is (function keys never type text).
   final bool global;
+
+  /// Matches the typed character instead of [key] ("?" is Shift+/ on some
+  /// keyboards and another key on others).
+  final String? character;
 
   /// Opens a dialog of its own, so it never fires from inside a dialog
   /// (the same "no dialog open" rule as [nothingMoreSpecificHasFocus]).
@@ -44,17 +49,20 @@ class DesktopShortcutDefinition {
     this.alt = false,
     this.global = false,
     this.notInDialog = false,
+    this.character,
   });
 
   /// No modifier: a key that also types text (Space, arrows, brackets).
   bool get isPlainKey => !global && !control && !shift && !alt;
 
-  SingleActivator get activator => SingleActivator(
-        key,
-        control: control,
-        shift: shift,
-        alt: alt,
-      );
+  ShortcutActivator get activator => character != null
+      ? CharacterActivator(character!)
+      : SingleActivator(
+          key,
+          control: control,
+          shift: shift,
+          alt: alt,
+        );
 }
 
 /// The shortcuts for this platform; F11 full screen is Windows-only.
@@ -127,8 +135,23 @@ const _sharedShortcutDefinitions = <DesktopShortcutDefinition>[
     control: true,
     notInDialog: true,
   ),
+  DesktopShortcutDefinition(
+    action: DesktopShortcutAction.shortcutHelp,
+    key: LogicalKeyboardKey.slash,
+    character: '?',
+    label: '?',
+    notInDialog: true,
+  ),
+  DesktopShortcutDefinition(
+    action: DesktopShortcutAction.shortcutHelp,
+    key: LogicalKeyboardKey.f1,
+    label: 'F1',
+    global: true,
+    notInDialog: true,
+  ),
 ];
 
+/// The first binding of [action] (Help has two: ? and F1).
 DesktopShortcutDefinition desktopShortcutFor(DesktopShortcutAction action) {
   if (action == DesktopShortcutAction.fullScreen) return _fullScreenShortcut;
   return _sharedShortcutDefinitions
@@ -275,15 +298,19 @@ class DesktopShortcutCallbackAction extends CallbackAction<Intent> {
   DesktopShortcutCallbackAction({
     required this.actionOf,
     required super.onInvoke,
+    this.definitionOf,
   });
 
   final DesktopShortcutAction? Function(Intent intent) actionOf;
+
+  /// The binding that fired, for actions with more than one (? and F1).
+  final DesktopShortcutDefinition? Function(Intent intent)? definitionOf;
 
   @override
   bool isEnabled(Intent intent) {
     final action = actionOf(intent);
     if (action == null) return true;
-    final shortcut = desktopShortcutFor(action);
+    final shortcut = definitionOf?.call(intent) ?? desktopShortcutFor(action);
     if (shortcut.notInDialog && focusIsInDialog()) return false;
     if (!shortcut.isPlainKey) return true;
     final desktop = defaultTargetPlatform == TargetPlatform.windows ||
