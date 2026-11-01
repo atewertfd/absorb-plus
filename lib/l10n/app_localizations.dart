@@ -22868,6 +22868,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} new'**
   String homeRecentlyAddedNewBadge(int count);
+
+  /// No description provided for @emptyStateBrowseLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse library'**
+  String get emptyStateBrowseLibrary;
+
+  /// No description provided for @emptyStateClearSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get emptyStateClearSearch;
+
+  /// No description provided for @statsNoListeningYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No listening yet'**
+  String get statsNoListeningYet;
 }
 
 class _AppLocalizationsDelegate

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../screens/settings_search_index.dart';
 import 'collapsible_section.dart';
+import 'empty_state.dart';
 
 /// Filter and rank the search index for [query]. Every whitespace-separated
 /// word must appear somewhere in the entry (title, subtitles, or section
@@ -53,10 +54,12 @@ List<SettingSearchEntry> filterSettingEntries(
 class SettingsSearchResults extends StatelessWidget {
   final List<SettingSearchEntry> results;
   final void Function(SettingSearchEntry) onOpen;
+  final VoidCallback? onClear; // Absorb Plus: empty-state button
   const SettingsSearchResults({
     super.key,
     required this.results,
     required this.onOpen,
+    this.onClear,
   });
 
   @override
@@ -65,12 +68,13 @@ class SettingsSearchResults extends StatelessWidget {
     final tt = Theme.of(context).textTheme;
     final l = AppLocalizations.of(context)!;
     if (results.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 48),
-        child: Center(
-          child: Text(l.settingsSearchNoResults,
-              style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant)),
-        ),
+      return AbsorbEmptyState(
+        icon: Icons.search_off_rounded,
+        message: l.settingsSearchNoResults,
+        actionLabel: l.emptyStateClearSearch,
+        actionIcon: Icons.close_rounded,
+        onAction: onClear,
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
       );
     }
     return Column(

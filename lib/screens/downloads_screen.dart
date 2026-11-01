@@ -17,6 +17,7 @@ import '../widgets/overlay_toast.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/local_path.dart';
 import '../widgets/desktop_input.dart';
+import '../widgets/empty_state.dart'; // Absorb Plus
 
 String _downloadRate(double? bytesPerSecond) {
   if (bytesPerSecond == null || bytesPerSecond <= 0) return '';
@@ -399,20 +400,13 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                             ebooks.isNotEmpty;
 
                         if (!hasAny) {
-                          return Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.download_done_rounded,
-                                    size: 48,
-                                    color: cs.onSurfaceVariant
-                                        .withValues(alpha: 0.4)),
-                                const SizedBox(height: 12),
-                                Text(l.downloadsNoDownloads,
-                                    style: tt.bodyLarge?.copyWith(
-                                        color: cs.onSurfaceVariant)),
-                              ],
-                            ),
+                          // Absorb Plus: shared empty state with a way out.
+                          return AbsorbEmptyState(
+                            icon: Icons.download_done_rounded,
+                            message: l.downloadsNoDownloads,
+                            actionLabel: l.emptyStateBrowseLibrary,
+                            actionIcon: Icons.library_books_rounded,
+                            onAction: () => browseLibraryFrom(context),
                           );
                         }
 

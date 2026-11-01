@@ -5071,6 +5071,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       updates: _updatesEnabled),
                 ], _settingsQuery),
                 onOpen: _openSearchResult,
+                onClear: () => setState(() { // fork: empty-state button
+                  _settingsSearchController.clear();
+                  _settingsQuery = '';
+                }),
               ),
             ),
         ],

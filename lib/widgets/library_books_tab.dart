@@ -4,6 +4,7 @@ import '../screens/library_screen.dart';
 import 'books_sheet_shared.dart';
 import 'library_grid_tiles.dart';
 import 'text_scale_room.dart';
+import 'empty_state.dart'; // Absorb Plus
 
 class LibraryBooksTab extends StatelessWidget {
   final List<Map<String, dynamic>> items;
@@ -159,25 +160,17 @@ class LibraryBooksTab extends StatelessWidget {
           ...headers,
           SliverFillRemaining(
             hasScrollBody: false,
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.library_books_outlined,
-                      size: 56, color: cs.onSurfaceVariant.withValues(alpha: 0.3)),
-                  const SizedBox(height: 12),
-                  Text(filterMsg,
-                      style: tt.bodyLarge?.copyWith(color: cs.onSurfaceVariant)),
-                  if (filter != LibraryFilter.none) ...[
-                    const SizedBox(height: 8),
-                    GestureDetector(
-                      onTap: onClearFilter,
-                      child: Text(l.libraryClearFilter,
-                          style: tt.bodySmall?.copyWith(color: cs.primary)),
-                    ),
-                  ],
-                ],
-              ),
+            // Absorb Plus: shared empty state; Clear filter or Refresh.
+            child: AbsorbEmptyState(
+              icon: Icons.library_books_outlined,
+              message: filterMsg,
+              actionLabel: filter != LibraryFilter.none
+                  ? l.libraryClearFilter
+                  : l.refreshTooltip,
+              actionIcon: filter != LibraryFilter.none
+                  ? Icons.filter_alt_off_rounded
+                  : Icons.refresh_rounded,
+              onAction: filter != LibraryFilter.none ? onClearFilter : onRefresh,
             ),
           ),
         ],

@@ -13476,4 +13476,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String homeRecentlyAddedNewBadge(int count) {
     return '$count new';
   }
+
+  @override
+  String get emptyStateBrowseLibrary => 'Browse library';
+
+  @override
+  String get emptyStateClearSearch => 'Clear search';
+
+  @override
+  String get statsNoListeningYet => 'No listening yet';
 }

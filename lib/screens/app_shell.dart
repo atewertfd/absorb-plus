@@ -116,6 +116,17 @@ class AppShell extends StatefulWidget {
     return true;
   }
 
+  /// Absorb Plus: back to the shell's Library tab from anywhere (the
+  /// empty states' "Browse library" button). False before the shell mounts.
+  static bool openLibraryGlobal() {
+    final inst = _AppShellState._instance;
+    if (inst == null || !inst.mounted) return false;
+    final nav = rootNavigatorKey.currentState;
+    if (nav != null && nav.canPop()) nav.popUntil((r) => r.isFirst);
+    inst._navigateTo(1);
+    return true;
+  }
+
   /// Switch to the Library tab and apply a tag filter. Used by the book
   /// detail sheet's tag chip so tapping a tag jumps the user to the library
   /// view filtered by that tag. Returns false when the shell or library

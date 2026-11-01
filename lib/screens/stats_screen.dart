@@ -22,6 +22,7 @@ import '../ui_themes/ui_theme_hooks.dart';
 import 'app_shell.dart';
 import '../l10n/app_localizations.dart';
 import 'stats_tab_refresh.dart';
+import '../widgets/empty_state.dart'; // Absorb Plus
 
 class StatsScreen extends StatefulWidget {
   const StatsScreen({super.key});
@@ -739,6 +740,14 @@ class _StatsScreenState extends State<StatsScreen>
         if (bo != null) _mediaPicker(cs, tt, l, bo),
         for (final id in order)
           if (!_statsHidden.contains(id)) ...sections[id]!,
+        if (_sessions.isEmpty && totalSeconds <= 0) // Absorb Plus
+          AbsorbEmptyState(
+            icon: Icons.insights_rounded,
+            message: l.statsNoListeningYet,
+            actionLabel: l.emptyStateBrowseLibrary,
+            actionIcon: Icons.library_books_rounded,
+            onAction: () => browseLibraryFrom(context),
+          ),
         if (_sessions.isNotEmpty) ...[
           _sectionTitle(tt, cs, l.statsRecentSessions),
           const SizedBox(height: 10),
