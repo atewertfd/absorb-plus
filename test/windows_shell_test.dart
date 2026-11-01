@@ -255,6 +255,34 @@ void main() {
       shell.stop();
     });
 
+    test('the quit budget fits inside the runner exit timer', () {
+      expect(
+          WindowsShell.exitSaveTimeout +
+              WindowsShell.exitFlushTimeout +
+              WindowsShell.exitSettle,
+          lessThanOrEqualTo(WindowsShell.exitBudget));
+      // kExitTimeoutMs in windows/runner/windows_shell.cpp.
+      expect(WindowsShell.exitBudget,
+          lessThan(const Duration(milliseconds: 4000)));
+    });
+
+    testWidgets('a stuck save and a stuck flush still finish within budget',
+        (tester) async {
+      final owner = Object();
+      PendingWrites.register(owner, () => Completer<void>().future);
+      addTearDown(() => PendingWrites.unregister(owner));
+      await shell.start();
+      playback.set(book: true, playing: true);
+      playback.saveGate = Completer<void>();
+      var done = false;
+      unawaited(shell.prepareToExit().then((_) => done = true));
+      await tester.pump(const Duration(milliseconds: 3000));
+      expect(done, isFalse);
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(done, isTrue);
+      shell.stop();
+    });
+
     test('settings setters return the runner state', () async {
       final result = await shell.setCloseToTray(true);
       expect(result?.closeToTray, isTrue);

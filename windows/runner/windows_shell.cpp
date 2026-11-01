@@ -24,6 +24,8 @@ constexpr UINT kTrayCallbackMessage = WM_APP + 0x3A1;
 constexpr UINT kTrayIconId = 1;
 constexpr UINT_PTR kExitTimerId = 0xAB51;
 // Upper bound for the Dart side to save progress before the process ends.
+// The Dart side keeps its save, flush and settle inside WindowsShell.exitBudget
+// (3.3 s, lib/services/windows_shell.dart); keep this above that.
 constexpr UINT kExitTimeoutMs = 4000;
 constexpr UINT kThumbRewind = 0xAB60;
 constexpr UINT kThumbPlayPause = 0xAB61;
@@ -475,7 +477,7 @@ void WindowsShell::BeginExit(bool wait_here) {
   if (!wait_here) return;
   // WM_ENDSESSION: Windows may end the process as soon as the message
   // returns, so keep pumping (Dart runs on this thread) until saved.
-  const ULONGLONG deadline = GetTickCount64() + 3000;
+  const ULONGLONG deadline = GetTickCount64() + kExitTimeoutMs;
   while (exit_state_ != ExitState::kDone && GetTickCount64() < deadline) {
     MSG msg;
     while (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE)) {

@@ -141,8 +141,20 @@ class WindowsShell {
 
   static final WindowsShell instance = WindowsShell._();
 
-  /// How long saving before quit may take; the runner gives up after 4 s.
-  static const exitSaveTimeout = Duration(milliseconds: 3000);
+  /// How long saving before quit may take in total. The runner ends the
+  /// process after 4 s (kExitTimeoutMs in windows/runner/windows_shell.cpp),
+  /// so the save, the flush of held-back writes and the final pause must all
+  /// fit inside it.
+  static const exitBudget = Duration(milliseconds: 3300);
+
+  /// The part of [exitBudget] the (network-dependent) playback save may use.
+  /// Pausing saves the position locally first, so only its sync can be cut.
+  static const exitSaveTimeout = Duration(milliseconds: 2000);
+
+  static const exitSettle = Duration(milliseconds: 150);
+
+  /// The rest goes to the local flush of held-back writes.
+  static const exitFlushTimeout = Duration(milliseconds: 1150);
 
   final MethodChannel _channel;
   final bool _enabled;
@@ -277,9 +289,9 @@ class WindowsShell {
     }
     // Debounced files (the download list), buffered history and the
     // streaming listening counter go to disk now.
-    await PendingWrites.flushAll();
+    await PendingWrites.flushAll(timeout: exitFlushTimeout);
     // Let writes started just before (preferences, logs) reach the disk.
-    await Future<void>.delayed(const Duration(milliseconds: 150));
+    await Future<void>.delayed(exitSettle);
   }
 
   void _onSettingsChanged() => unawaited(_pushStrings());
