@@ -9,6 +9,7 @@ import '../main.dart' show localeNotifier;
 import 'audio_player_service.dart';
 import 'download_service.dart';
 import 'pending_writes.dart';
+import 'windows_global_hotkeys.dart';
 
 /// What the taskbar button shows for the current book.
 enum TaskbarPlayback { none, playing, paused }
@@ -188,6 +189,8 @@ class WindowsShell {
       PlayerSettings.settingsChanged.addListener(_onSettingsChanged);
       // Changing the language doesn't notify settings, only the locale.
       localeNotifier.addListener(_onSettingsChanged);
+      // Opt-in global hotkeys share the shell's lifetime.
+      unawaited(WindowsGlobalHotkeys.instance.start());
     }
     _syncPlayback();
     _checkBusy();

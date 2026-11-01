@@ -9,6 +9,7 @@ project(runner LANGUAGES CXX)
 add_executable(${BINARY_NAME} WIN32
   "deferred_plugins.cpp"
   "flutter_window.cpp"
+  "global_hotkeys.cpp"
   "jump_list.cpp"
   "main.cpp"
   "single_instance.cpp"

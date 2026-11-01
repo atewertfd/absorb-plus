@@ -22473,6 +22473,24 @@ abstract class AppLocalizations {
   /// **'Windows didn\'t accept that change'**
   String get windowsSettingFailed;
 
+  /// No description provided for @windowsGlobalHotkeys.
+  ///
+  /// In en, this message translates to:
+  /// **'Global hotkeys'**
+  String get windowsGlobalHotkeys;
+
+  /// No description provided for @windowsGlobalHotkeysSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Work while Absorb Plus is in the background: Ctrl+Alt+Space play/pause, Ctrl+Alt+Left/Right skip back/forward, Ctrl+Alt+Up/Down volume, Ctrl+Alt+B add bookmark'**
+  String get windowsGlobalHotkeysSubtitle;
+
+  /// No description provided for @windowsGlobalHotkeysUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken by another app, not available: {keys}'**
+  String windowsGlobalHotkeysUnavailable(String keys);
+
   /// No description provided for @windowsTrayShow.
   ///
   /// In en, this message translates to:
