@@ -3735,6 +3735,7 @@ class LibraryScreenState extends State<LibraryScreen>
       hasMore: _hasMore && !_loadFailed,
       onLoadMore: _loadPage,
       controller: _scrollController,
+      generation: _loadGeneration,
       child: grid,
     );
   }

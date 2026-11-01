@@ -143,6 +143,7 @@ class LibraryAlphabetRail extends StatelessWidget {
     required this.onLoadMore,
     required this.controller,
     required this.child,
+    this.generation = 0,
   });
 
   final LibrarySort sort;
@@ -154,27 +155,34 @@ class LibraryAlphabetRail extends StatelessWidget {
   final ScrollController controller;
   final Widget child;
 
+  /// Changes whenever [items] is cleared or refilled. library_screen keeps
+  /// one list object and refills it in place, so neither its identity nor its
+  /// length tells a new filter's first page from the old list.
+  final int generation;
+
   // The grid rebuilds on every provider change; the letters only change
-  // when a page arrives (the list grows in place) or the sort does.
-  static ({Object items, int length, Object key, List<String> letters})?
-      _cache;
+  // when a page arrives or the list is refilled, or the sort changes.
+  static ({Object key, List<String> letters})? _cache;
 
   List<String> _letters() {
-    final key = (sort, podcast, descending);
+    final key = (
+      sort,
+      podcast,
+      descending,
+      generation,
+      items.length,
+      items.first['id'],
+      items.last['id'],
+    );
     final cached = _cache;
-    if (cached != null &&
-        identical(cached.items, items) &&
-        cached.length == items.length &&
-        cached.key == key) {
-      return cached.letters;
-    }
+    if (cached != null && cached.key == key) return cached.letters;
     final letters = libraryAlphabetLetters(
       items,
       sort: sort,
       podcast: podcast,
       descending: descending,
     );
-    _cache = (items: items, length: items.length, key: key, letters: letters);
+    _cache = (key: key, letters: letters);
     return letters;
   }
 
@@ -182,6 +190,7 @@ class LibraryAlphabetRail extends StatelessWidget {
   Widget build(BuildContext context) {
     final enabled = librarySortHasAlphabet(sort) &&
         items.length >= alphabetScrollerMinItems;
+    if (!enabled) _cache = null; // the list is being refilled
     return AlphabetScroller(
       controller: controller,
       enabled: enabled,
@@ -191,6 +200,122 @@ class LibraryAlphabetRail extends StatelessWidget {
       onLoadMore: onLoadMore,
       child: child,
     );
+  }
+}
+
+/// Where the rail reads the grid's layout from. The grid and its header
+/// report their sliver layout here as they lay out ([reportGrid],
+/// [reportHeader]), so the rail never has to search the render tree for
+/// them, and a change to the slivers around the grid can't break it.
+class AlphabetGridLayout {
+  SliverConstraints? _gridConstraints;
+  SliverGridDelegate? _gridDelegate;
+  SliverGeometry? _headerGeometry;
+
+  /// The layout of the nearest [AlphabetScroller] above [context], if any.
+  static AlphabetGridLayout? maybeOf(BuildContext context) => context
+      .getInheritedWidgetOfExactType<_AlphabetGridLayoutScope>()
+      ?.layout;
+
+  /// [grid], reporting its layout to the rail above [context]. Unchanged
+  /// when there is no rail.
+  static Widget reportGrid(BuildContext context, SliverGrid grid) {
+    final layout = maybeOf(context);
+    if (layout == null) return grid;
+    return _SliverLayoutReport(
+      onLayout: (constraints, _) {
+        layout._gridConstraints = constraints;
+        layout._gridDelegate = grid.gridDelegate;
+      },
+      onDetach: () {
+        layout._gridConstraints = null;
+        layout._gridDelegate = null;
+      },
+      sliver: grid,
+    );
+  }
+
+  /// [header], the scroll view's first sliver, reporting how much of it is
+  /// on screen so the rail stays below it. Unchanged when there is no rail.
+  static Widget reportHeader(BuildContext context, Widget header) {
+    final layout = maybeOf(context);
+    if (layout == null) return header;
+    return _SliverLayoutReport(
+      onLayout: (_, geometry) => layout._headerGeometry = geometry,
+      onDetach: () => layout._headerGeometry = null,
+      sliver: header,
+    );
+  }
+
+  /// The scroll offset of the grid row holding item [index], or null while
+  /// the grid hasn't been laid out.
+  double? scrollOffsetOf(int index) {
+    final constraints = _gridConstraints;
+    final delegate = _gridDelegate;
+    if (constraints == null || delegate == null) return null;
+    final row =
+        delegate.getLayout(constraints).getGeometryForChildIndex(index);
+    return constraints.precedingScrollExtent + row.scrollOffset;
+  }
+
+  /// How much of the header is on screen now.
+  double get headerPaintExtent => _headerGeometry?.paintExtent ?? 0;
+
+  /// How tall the header is when fully shown.
+  double get headerMaxExtent => _headerGeometry?.maxPaintExtent ?? 0;
+}
+
+class _AlphabetGridLayoutScope extends InheritedWidget {
+  const _AlphabetGridLayoutScope({required this.layout, required super.child});
+
+  final AlphabetGridLayout layout;
+
+  @override
+  bool updateShouldNotify(_AlphabetGridLayoutScope oldWidget) =>
+      layout != oldWidget.layout;
+}
+
+class _SliverLayoutReport extends SingleChildRenderObjectWidget {
+  const _SliverLayoutReport({
+    required this.onLayout,
+    required this.onDetach,
+    required Widget sliver,
+  }) : super(child: sliver);
+
+  final void Function(SliverConstraints, SliverGeometry) onLayout;
+  final VoidCallback onDetach;
+
+  @override
+  _RenderSliverLayoutReport createRenderObject(BuildContext context) =>
+      _RenderSliverLayoutReport(onLayout, onDetach);
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    _RenderSliverLayoutReport renderObject,
+  ) {
+    renderObject
+      ..onLayout = onLayout
+      ..onDetach = onDetach;
+  }
+}
+
+class _RenderSliverLayoutReport extends RenderProxySliver {
+  _RenderSliverLayoutReport(this.onLayout, this.onDetach);
+
+  void Function(SliverConstraints, SliverGeometry) onLayout;
+  VoidCallback onDetach;
+
+  @override
+  void performLayout() {
+    super.performLayout();
+    onLayout(constraints, geometry!);
+  }
+
+  @override
+  void detach() {
+    onDetach();
+    super.detach();
   }
 }
 
@@ -235,6 +360,7 @@ class AlphabetScrollerState extends State<AlphabetScroller> {
   static const _railWidth = 24.0;
   static const _hideAfter = Duration(milliseconds: 1500);
 
+  final _layout = AlphabetGridLayout();
   bool _hovering = false;
   bool _dragging = false;
   bool _recentlyActive = false;
@@ -310,73 +436,20 @@ class AlphabetScrollerState extends State<AlphabetScroller> {
 
   void _scrollToIndex(int index) {
     if (!widget.controller.hasClients) return;
-    final viewport = _viewport();
-    final grid = viewport == null ? null : _gridIn(viewport);
-    if (grid == null) return;
-    final SliverConstraints constraints;
-    try {
-      constraints = grid.constraints;
-    } catch (_) {
-      return; // not laid out yet
-    }
-    final layout = grid.gridDelegate.getLayout(constraints);
-    final row = layout.getGeometryForChildIndex(index).scrollOffset;
-    var target = constraints.precedingScrollExtent + row;
+    final offset = _layout.scrollOffsetOf(index);
+    if (offset == null) return; // the grid isn't laid out yet
+    var target = offset;
     final position = widget.controller.position;
     // Scrolling back brings a floating header down over the first row.
-    if (target < position.pixels) target -= _headerMaxExtent(viewport!);
+    if (target < position.pixels) target -= _layout.headerMaxExtent;
     widget.controller.jumpTo(
       target.clamp(position.minScrollExtent, position.maxScrollExtent),
     );
   }
 
-  RenderViewport? _viewport() {
-    RenderViewport? found;
-    void visit(RenderObject object) {
-      if (found != null) return;
-      if (object is RenderViewport) {
-        found = object;
-        return;
-      }
-      object.visitChildren(visit);
-    }
-
-    final root = context.findRenderObject();
-    if (root != null) visit(root);
-    return found;
-  }
-
-  static RenderSliverGrid? _gridIn(RenderViewport viewport) {
-    var child = viewport.firstChild;
-    while (child != null) {
-      if (child is RenderSliverGrid) return child;
-      if (child is RenderSliverPadding && child.child is RenderSliverGrid) {
-        return child.child! as RenderSliverGrid;
-      }
-      child = viewport.childAfter(child);
-    }
-    return null;
-  }
-
-  static double _headerMaxExtent(RenderViewport viewport) {
-    final first = viewport.firstChild;
-    if (first == null || first is RenderSliverGrid ||
-        first is RenderSliverPadding) {
-      return 0;
-    }
-    return first.geometry?.maxPaintExtent ?? 0;
-  }
-
   /// Keeps the rail below the header while it is on screen.
   void _measureTopInset() {
-    final viewport = _viewport();
-    var inset = 0.0;
-    final first = viewport?.firstChild;
-    if (first != null &&
-        first is! RenderSliverGrid &&
-        first is! RenderSliverPadding) {
-      inset = first.geometry?.paintExtent ?? 0;
-    }
+    final inset = _layout.headerPaintExtent;
     if ((inset - _topInset).abs() > 1) setState(() => _topInset = inset);
   }
 
@@ -415,11 +488,18 @@ class AlphabetScrollerState extends State<AlphabetScroller> {
 
   @override
   Widget build(BuildContext context) {
-    final child = NotificationListener<ScrollNotification>(
-      onNotification: _onScroll,
-      child: widget.child,
+    // The same tree with the rail on or off, so the grid keeps its state
+    // when a growing list turns the rail on.
+    final child = _AlphabetGridLayoutScope(
+      layout: _layout,
+      child: NotificationListener<ScrollNotification>(
+        onNotification: _onScroll,
+        child: widget.child,
+      ),
     );
-    if (!widget.enabled) return child;
+    if (!widget.enabled) {
+      return Stack(fit: StackFit.passthrough, children: [child]);
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _measureTopInset();
     });
@@ -431,6 +511,7 @@ class AlphabetScrollerState extends State<AlphabetScroller> {
     final bottom = 112 + MediaQuery.paddingOf(context).bottom;
 
     return Stack(
+      fit: StackFit.passthrough,
       children: [
         child,
         Positioned(
