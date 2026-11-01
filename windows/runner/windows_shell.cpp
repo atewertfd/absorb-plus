@@ -361,6 +361,8 @@ std::optional<LRESULT> WindowsShell::HandleMessage(HWND hwnd, UINT message,
       if (args.find(L"--minimized") == std::wstring::npos) {
         ShowFromBackground();
       }
+      while (!args.empty() && args.back() == L'\0') args.pop_back();
+      if (forwarded_launch_handler_) forwarded_launch_handler_(args);
       return 1;
     }
 

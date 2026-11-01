@@ -33,6 +33,12 @@ bool FlutterWindow::OnCreate() {
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
   shell_ = std::make_unique<WindowsShell>(
       this, flutter_controller_->engine()->messenger(), launch_);
+  jump_list_ = std::make_unique<JumpList>(
+      flutter_controller_->engine()->messenger(), launch_.arguments,
+      !launch_.probe);
+  shell_->SetForwardedLaunchHandler([this](const std::wstring& args) {
+    if (jump_list_) jump_list_->HandleForwardedLaunch(args);
+  });
 
   flutter_controller_->engine()->SetNextFrameCallback([&]() {
     // Normally shown; minimized or left in the tray for --minimized.
@@ -59,6 +65,7 @@ void FlutterWindow::ExitAfterMessageLoop(UINT exit_code) {
 void FlutterWindow::OnDestroy() {
   // The shell's channels use the engine's messenger: release them first.
   shell_ = nullptr;
+  jump_list_ = nullptr;
   if (flutter_controller_) {
     flutter_controller_ = nullptr;
   }

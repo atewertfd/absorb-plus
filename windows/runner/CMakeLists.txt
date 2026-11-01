@@ -9,6 +9,7 @@ project(runner LANGUAGES CXX)
 add_executable(${BINARY_NAME} WIN32
   "deferred_plugins.cpp"
   "flutter_window.cpp"
+  "jump_list.cpp"
   "main.cpp"
   "single_instance.cpp"
   "utils.cpp"
@@ -39,6 +40,8 @@ target_link_libraries(${BINARY_NAME} PRIVATE flutter flutter_wrapper_app)
 target_link_libraries(${BINARY_NAME} PRIVATE "dwmapi.lib")
 # Tray icon, taskbar buttons and progress (windows_shell.cpp).
 target_link_libraries(${BINARY_NAME} PRIVATE "shell32.lib" "ole32.lib")
+# Taskbar jump list (jump_list.cpp).
+target_link_libraries(${BINARY_NAME} PRIVATE "propsys.lib" "shlwapi.lib")
 target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}")
 
 # Run the Flutter tool portions of the build. This must not be removed.

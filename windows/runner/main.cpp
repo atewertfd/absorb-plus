@@ -23,6 +23,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
     if (argument == "--minimized") launch.minimized = true;
     if (argument == "--probe") launch.probe = true;
   }
+  launch.arguments = command_line_arguments;
   if (launch.probe) {
     // The probe target never reads or writes the app's own settings.
     Win32Window::SetStateRegistryKey(L"Software\\Absorb Plus\\Probe");
