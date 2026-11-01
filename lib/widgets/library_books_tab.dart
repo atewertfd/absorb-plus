@@ -6,6 +6,7 @@ import 'library_grid_tiles.dart';
 import 'text_scale_room.dart';
 import 'empty_state.dart'; // Absorb Plus
 import 'loading_placeholders.dart'; // Absorb Plus
+import 'alphabet_scroller.dart'; // Absorb Plus
 
 class LibraryBooksTab extends StatelessWidget {
   final List<Map<String, dynamic>> items;
@@ -207,10 +208,11 @@ class LibraryBooksTab extends StatelessWidget {
         controller: scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          ...headers,
+          // Absorb Plus: the A-Z rail reads the header and grid layout.
+          for (final h in headers) AlphabetGridLayout.reportHeader(context, h),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, libraryGridBottomPadding),
-            sliver: SliverGrid(
+            sliver: AlphabetGridLayout.reportGrid(context, SliverGrid(
               gridDelegate: LabelRoomGridDelegate(
                 labelRoom: textScaleRoom(context, 30),
                 crossAxisCount: cols,
@@ -269,7 +271,7 @@ class LibraryBooksTab extends StatelessWidget {
                 },
                 childCount: items.length + (hasMore ? 1 : 0),
               ),
-            ),
+            )),
           ),
         ],
       );

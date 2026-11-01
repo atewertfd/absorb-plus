@@ -834,6 +834,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
 
                     return <Widget>[
                       SliverToBoxAdapter(
+                        key: ValueKey('home-shelf:$id'), // Absorb Plus
                         child: HomeSection(
                           title: label,
                           icon: sectionIcon,

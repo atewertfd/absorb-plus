@@ -186,6 +186,7 @@ class _PlaylistPickerSheetState extends State<PlaylistPickerSheet> {
         enabled: enabled,
         label: label,
         onTap: enabled ? onTap : null,
+        excludeSemantics: true, // Absorb Plus: the row's text would repeat the label
         child: InkWell(
         onTap: enabled ? onTap : null,
         borderRadius: BorderRadius.circular(14),

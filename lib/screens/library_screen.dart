@@ -3231,6 +3231,7 @@ class LibraryScreenState extends State<LibraryScreen>
                     trailing: [
                       if (_searchController.text.isNotEmpty)
                         IconButton(
+                          tooltip: AppLocalizations.of(context)!.emptyStateClearSearch, // Absorb Plus
                           icon: const Icon(Icons.clear_rounded),
                           onPressed: () {
                             _searchController.clear();
@@ -3675,6 +3676,7 @@ class LibraryScreenState extends State<LibraryScreen>
   Future<void> _refreshAll() async {
     final lib = context.read<LibraryProvider>();
     await lib.refresh();
+    if (!mounted) return; // Absorb Plus: signed out during the refresh
     setState(() {
       _items.clear();
       _page = 0;
@@ -3735,6 +3737,7 @@ class LibraryScreenState extends State<LibraryScreen>
       hasMore: _hasMore && !_loadFailed,
       onLoadMore: _loadPage,
       controller: _scrollController,
+      generation: _loadGeneration,
       child: grid,
     );
   }

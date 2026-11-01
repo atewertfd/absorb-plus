@@ -227,6 +227,7 @@ class _EpisodeRowState extends State<EpisodeRow> {
                           );
                         }
                         return IconButton(
+                          tooltip: AppLocalizations.of(context)!.download, // Absorb Plus
                           onPressed: widget.onDownload,
                           icon: Icon(Icons.download_rounded, size: 20,
                             color: cs.onSurfaceVariant.withValues(alpha: 0.5)),

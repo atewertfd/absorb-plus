@@ -7454,5 +7454,7 @@
   "quickSwitcherKindPodcast": "Podcast",
   "quickSwitcherKindSeries": "Series",
   "quickSwitcherKindAuthor": "Author",
-  "alphabetScrollerLabel": "Jump to a letter"
+  "alphabetScrollerLabel": "Jump to a letter",
+  "stepperDecrease": "Decrease",
+  "stepperIncrease": "Increase"
 }
