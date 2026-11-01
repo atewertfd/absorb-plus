@@ -431,7 +431,9 @@ void main() {
       home: Scaffold(body: TailscaleLoginPanel(service: ts)),
     ));
     await tester.tap(find.text('Connect with Tailscale'));
-    for (var i = 0; i < 10 && opened.isEmpty; i++) {
+    // Up to ~3 s of real time: the full suite runs files in parallel and
+    // can starve this one (0.5 s was flaky there).
+    for (var i = 0; i < 60 && opened.isEmpty; i++) {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
       await tester.pump(const Duration(milliseconds: 400));
     }
