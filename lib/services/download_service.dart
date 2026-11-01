@@ -231,6 +231,9 @@ class _PendingBook {
   /// The narration keeps the server's own timings (BookOrbit's), saved on
   /// this phone when the download started, rather than the file's.
   final bool serverTimings;
+  /// Absorb Plus: each track's size as the server reports it (null where
+  /// unknown), checked when the book finishes (audit D10).
+  final List<int?> expectedSizes;
 
   /// True once the user cancels, so terminal handling cleans up instead of
   /// surfacing an error.
@@ -283,6 +286,7 @@ class _PendingBook {
     this.safSubfolder,
     this.narration = false,
     this.serverTimings = false,
+    this.expectedSizes = const [],
   }) {
     // Start the no-progress watchdog clock at creation (fresh or restored).
     lastUpdate = DateTime.now();
@@ -351,6 +355,7 @@ class _PendingBook {
         if (safSubfolder != null) 'safSubfolder': safSubfolder,
         if (narration) 'narration': true,
         if (serverTimings) 'serverTimings': true,
+        if (expectedSizes.any((s) => s != null)) 'expectedSizes': expectedSizes,
       };
 
   factory _PendingBook.fromJson(Map<String, dynamic> j) => _PendingBook(
@@ -373,6 +378,10 @@ class _PendingBook {
         safSubfolder: j['safSubfolder'] as String?,
         narration: j['narration'] == true,
         serverTimings: j['serverTimings'] == true,
+        expectedSizes: [
+          for (final s in j['expectedSizes'] as List<dynamic>? ?? const [])
+            (s as num?)?.toInt(),
+        ],
       );
 }
 
@@ -2526,6 +2535,9 @@ class DownloadService extends ChangeNotifier {
         slimSessionJson: jsonEncode(slimSession),
         safTreeUri: useSaf ? _customDownloadUri : null,
         safSubfolder: useSaf ? nestedName : null,
+        // Absorb Plus (D10): Audiobookshelf serves the files as they are, so
+        // their sizes must match. BookOrbit's may not, so it isn't checked.
+        expectedSizes: api.isBookOrbit ? const [] : expectedTrackSizes(audioTracks),
       );
       _pending[itemId] = pending;
       await _persistPending();
@@ -2533,7 +2545,7 @@ class DownloadService extends ChangeNotifier {
       // Absorb Plus: on Windows/Linux, tracks an interrupted download already
       // finished (right size on disk) aren't fetched again (audit D2).
       final finished = ForkPlatform.supportsDesktopDownloadFolder
-          ? finishedTracks(expectedPaths, expectedTrackSizes(audioTracks))
+          ? finishedTracks(expectedPaths, pending.expectedSizes)
           : const <int>{};
       for (final i in finished) {
         pending.trackStatus[i] = TaskStatus.complete;
@@ -3238,6 +3250,7 @@ class DownloadService extends ChangeNotifier {
     String? libraryId,
     String? safTreeUri,
     String? safSubfolder,
+    List<int?> expectedSizes = const [],
   }) async {
     final bookDir = '${Directory.systemTemp.path}/absorb_download_service_test/$itemId';
     _pending[itemId] = _PendingBook(
@@ -3253,6 +3266,7 @@ class DownloadService extends ChangeNotifier {
       ),
       safTreeUri: safTreeUri,
       safSubfolder: safSubfolder,
+      expectedSizes: expectedSizes,
     );
     _activeDownloadIds.add(itemId);
     _downloads[itemId] = DownloadInfo(
@@ -3416,6 +3430,24 @@ class DownloadService extends ChangeNotifier {
           'files present, treating as failure');
       p.finalizing = false; // let _failBook proceed
       await _failBook(itemId, cause: 'Missing files after download');
+      return;
+    }
+
+    // Absorb Plus: a track whose size isn't the server's is not the audio
+    // (a proxy's sign-in page saved as "01.mp3"). Fail now instead of at
+    // playback, keeping the good tracks on desktop for the retry (audit D10).
+    final wrongSize = wrongSizeTracks(localPaths, p.expectedSizes);
+    if (wrongSize.isNotEmpty) {
+      debugPrint('[Download] Finalize "$itemId": ${wrongSize.length} track(s) '
+          'not the size the server reports, treating as failure');
+      for (final i in wrongSize) {
+        try {
+          File(localPaths[i]).deleteSync();
+        } catch (_) {}
+      }
+      p.finalizing = false; // let _failBook proceed
+      await _failBook(itemId, cause: 'Downloaded files have the wrong size',
+          keepFinishedTracks: ForkPlatform.supportsDesktopDownloadFolder);
       return;
     }
 

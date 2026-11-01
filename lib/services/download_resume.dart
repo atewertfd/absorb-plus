@@ -27,6 +27,22 @@ Set<int> finishedTracks(List<String> paths, List<int?> sizes) {
   return done;
 }
 
+/// Indexes of the tracks at [paths] whose length differs from the size the
+/// server reports, such as a sign-in page a proxy answered with (audit D10).
+/// Tracks of unknown size, and missing files, are not counted here.
+List<int> wrongSizeTracks(List<String> paths, List<int?> sizes) {
+  final wrong = <int>[];
+  for (var i = 0; i < paths.length && i < sizes.length; i++) {
+    final size = sizes[i];
+    if (size == null) continue;
+    try {
+      final file = File(paths[i]);
+      if (file.existsSync() && file.lengthSync() != size) wrong.add(i);
+    } catch (_) {}
+  }
+  return wrong;
+}
+
 /// Whether [dir] is a folder with at least one file in it.
 bool folderHasFiles(String dir) {
   try {

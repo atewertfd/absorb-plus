@@ -280,6 +280,35 @@ void main() {
       expect(sizes, [3, 3, null, 3]);
       final paths = [for (var i = 0; i < 4; i++) '${dir.path}/$i.mp3'];
       expect(finishedTracks(paths, sizes), {0});
+      expect(wrongSizeTracks(paths, sizes), [1]);
+    });
+
+    test('D10 a track of the wrong size fails the book, the good one stays',
+        () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+      final s = recordsService();
+      await s.debugSeedPendingDownload(
+          itemId: 'proxy-book', trackCount: 2, expectedSizes: [3, 5000]);
+      final good = File('$seedDir/proxy-book/0.mp3')
+        ..createSync(recursive: true)
+        ..writeAsBytesSync([1, 2, 3]);
+      final page = File('$seedDir/proxy-book/1.mp3')
+        ..writeAsStringSync('<html>Sign in</html>');
+      addTearDown(() {
+        try {
+          good.parent.deleteSync(recursive: true);
+        } catch (_) {}
+      });
+
+      await s.debugHandleTaskStatus(
+          itemId: 'proxy-book', trackIndex: 0, status: TaskStatus.complete);
+      await s.debugHandleTaskStatus(
+          itemId: 'proxy-book', trackIndex: 1, status: TaskStatus.complete);
+
+      expect(s.isDownloaded('proxy-book'), isFalse);
+      expect(s.failedDownloads.single.itemId, 'proxy-book');
+      expect(page.existsSync(), isFalse);
+      expect(good.existsSync(), isTrue);
     });
 
     test('sleep is a gap well past the timer period', () {
