@@ -3231,6 +3231,7 @@ class LibraryScreenState extends State<LibraryScreen>
                     trailing: [
                       if (_searchController.text.isNotEmpty)
                         IconButton(
+                          tooltip: AppLocalizations.of(context)!.emptyStateClearSearch, // Absorb Plus
                           icon: const Icon(Icons.clear_rounded),
                           onPressed: () {
                             _searchController.clear();

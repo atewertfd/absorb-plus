@@ -335,6 +335,7 @@ class _DesktopDialogBodyState extends State<_DesktopDialogBody> {
                   clipBehavior: Clip.antiAlias,
                   child: IconButton(
                     key: const ValueKey('desktop-dialog-close-button'),
+                    tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
                     visualDensity: VisualDensity.compact,
                     icon: Icon(
                       Icons.close_rounded,

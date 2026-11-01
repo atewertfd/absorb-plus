@@ -247,6 +247,7 @@ class _CarModeScreenState extends State<CarModeScreen>
                 child: Row(
                   children: [
                     IconButton(
+                      tooltip: MaterialLocalizations.of(context).closeButtonTooltip, // Absorb Plus
                       icon: Icon(Icons.close_rounded, color: Colors.white, size: closeSize),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
@@ -486,6 +487,7 @@ class _CarModeScreenState extends State<CarModeScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
+                    tooltip: l.speed, // Absorb Plus
                     icon: Icon(Icons.speed_rounded, size: bottomIconSize),
                     color: Colors.white54,
                     onPressed: () {
@@ -503,6 +505,7 @@ class _CarModeScreenState extends State<CarModeScreen>
                   ),
                   SizedBox(width: ultra ? 16 : compact ? 24 : 40),
                   IconButton(
+                    tooltip: l.addBookmark, // Absorb Plus
                     icon: Icon(Icons.bookmark_add_outlined, size: bottomIconSize),
                     color: Colors.white54,
                     onPressed: player.hasBook ? () {

@@ -13720,4 +13720,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get alphabetScrollerLabel => 'Jump to a letter';
+
+  @override
+  String get stepperDecrease => 'Decrease';
+
+  @override
+  String get stepperIncrease => 'Increase';
 }

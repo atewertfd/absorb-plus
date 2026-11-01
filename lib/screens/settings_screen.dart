@@ -790,6 +790,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Row(children: [
       Expanded(child: Text(label, style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant))),
       IconButton(
+        tooltip: AppLocalizations.of(context)!.stepperDecrease, // Absorb Plus
         onPressed: _loaded ? onMinus : null,
         icon: const Icon(Icons.remove_circle_outline_rounded),
         color: cs.primary,
@@ -813,6 +814,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       ),
       IconButton(
+        tooltip: AppLocalizations.of(context)!.stepperIncrease, // Absorb Plus
         onPressed: _loaded ? onPlus : null,
         icon: const Icon(Icons.add_circle_outline_rounded),
         color: cs.primary,
@@ -1859,6 +1861,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   if (_settingsQuery.isNotEmpty)
                     IconButton(
+                      tooltip: AppLocalizations.of(context)!.emptyStateClearSearch, // Absorb Plus
                       icon: const Icon(Icons.close_rounded, size: 18),
                       color: cs.onSurfaceVariant,
                       onPressed: () => setState(() {

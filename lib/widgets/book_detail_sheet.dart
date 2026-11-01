@@ -3046,6 +3046,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
                     children: [
                       const Spacer(),
                       IconButton(
+                        tooltip: MaterialLocalizations.of(ctx).closeButtonTooltip, // Absorb Plus
                         icon: Icon(Icons.close_rounded, color: cs.onSurfaceVariant),
                         onPressed: () => Navigator.pop(ctx),
                       ),
@@ -4163,6 +4164,7 @@ class _FullCoverViewerState extends State<_FullCoverViewer> {
           top: MediaQuery.of(context).viewPadding.top + 8,
           left: 8,
           child: IconButton(
+            tooltip: MaterialLocalizations.of(context).closeButtonTooltip, // Absorb Plus
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.close_rounded, color: Colors.white),
             style: IconButton.styleFrom(backgroundColor: Colors.black45),
@@ -4173,6 +4175,7 @@ class _FullCoverViewerState extends State<_FullCoverViewer> {
           top: MediaQuery.of(context).viewPadding.top + 8,
           right: 8,
           child: IconButton(
+            tooltip: AppLocalizations.of(context)!.quoteShareAction, // Absorb Plus
             onPressed: _saving ? null : _saveAndShare,
             icon: _saving
                 ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))

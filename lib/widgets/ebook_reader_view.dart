@@ -2432,6 +2432,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
                   Text(l.readerFontSize, style: tt.bodyMedium),
                   const Spacer(),
                   IconButton(
+                    tooltip: l.stepperDecrease, // Absorb Plus
                     icon: Icon(Icons.remove_rounded, size: 20, color: cs.onSurfaceVariant),
                     onPressed: _fontSize > 10 ? () {
                       setSheetState(() {});
@@ -2440,6 +2441,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
                   ),
                   Text('$_fontSize', style: tt.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
                   IconButton(
+                    tooltip: l.stepperIncrease, // Absorb Plus
                     icon: Icon(Icons.add_rounded, size: 20, color: cs.onSurfaceVariant),
                     onPressed: _fontSize < 32 ? () {
                       setSheetState(() {});
@@ -7102,11 +7104,15 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
                   children: [
                     // Skips only act on the live session.
                     IconButton(
+                      tooltip: AppLocalizations.of(context)!.skipBack, // Absorb Plus
                       icon: Icon(backIcon, color: isActive ? fg : dim),
                       iconSize: 30,
                       onPressed: isActive ? () => player.skipBackward(_backSkip) : null,
                     ),
                     IconButton(
+                      tooltip: (isActive && player.isPlaying) // Absorb Plus
+                          ? AppLocalizations.of(context)!.pauseAction
+                          : AppLocalizations.of(context)!.playAction,
                       icon: Icon(
                         (isActive && player.isPlaying)
                             ? Icons.pause_circle_filled_rounded
@@ -7128,6 +7134,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
                                 : _startThisBook),
                     ),
                     IconButton(
+                      tooltip: AppLocalizations.of(context)!.skipForward, // Absorb Plus
                       icon: Icon(fwdIcon, color: isActive ? fg : dim),
                       iconSize: 30,
                       onPressed: isActive ? () => player.skipForward(_forwardSkip) : null,
@@ -7575,6 +7582,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
                                       : AppLocalizations.of(context)!.findInAudiobook,
                                 ),
                               IconButton(
+                                tooltip: MaterialLocalizations.of(context).closeButtonTooltip, // Absorb Plus
                                 icon: Icon(Icons.close_rounded, color: cs.onSurfaceVariant),
                                 onPressed: _dismissSelection,
                               ),
@@ -7680,6 +7688,7 @@ class _EbookSearchScreenState extends State<_EbookSearchScreen> {
         backgroundColor: cs.surface,
         elevation: 0,
         leading: IconButton(
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip, // Absorb Plus
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -7696,6 +7705,7 @@ class _EbookSearchScreenState extends State<_EbookSearchScreen> {
         ),
         actions: [
           IconButton(
+            tooltip: AppLocalizations.of(context)!.readerTooltipSearch, // Absorb Plus
             icon: const Icon(Icons.search_rounded),
             onPressed: _searching ? null : _run,
           ),

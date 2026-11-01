@@ -23264,6 +23264,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Jump to a letter'**
   String get alphabetScrollerLabel;
+
+  /// No description provided for @stepperDecrease.
+  ///
+  /// In en, this message translates to:
+  /// **'Decrease'**
+  String get stepperDecrease;
+
+  /// No description provided for @stepperIncrease.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase'**
+  String get stepperIncrease;
 }
 
 class _AppLocalizationsDelegate
