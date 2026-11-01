@@ -100,6 +100,7 @@ class DesktopShortcutHelpList extends StatelessWidget {
         for (final entry in desktopShortcutHelpEntries(l))
           Semantics(
             label: '${entry.description}, ${entry.keys}',
+            excludeSemantics: true, // the tile's texts would repeat it
             child: ListTile(
               dense: true,
               title: Text(entry.description),
