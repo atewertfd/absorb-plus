@@ -63,6 +63,17 @@ void main() {
       expect(ForkPlatform.supportsTranscription, isTrue);
     });
 
+    test('the Android Auto browse tree is kept only where a browser exists', () {
+      for (final p in [TargetPlatform.windows, TargetPlatform.linux]) {
+        onPlatform(p);
+        expect(ForkPlatform.hasMediaBrowser, isFalse, reason: '$p');
+      }
+      onPlatform(TargetPlatform.android, web: true);
+      expect(ForkPlatform.hasMediaBrowser, isFalse);
+      onPlatform(TargetPlatform.android);
+      expect(ForkPlatform.hasMediaBrowser, isTrue);
+    });
+
     test('the equalizer is never hidden', () {
       for (final p in TargetPlatform.values) {
         onPlatform(p);

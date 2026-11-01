@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show File; // web-safe Platform below
 import '../utils/web_safe_platform.dart';
+import '../utils/fork_platform.dart';
 import 'package:audio_service/audio_service.dart';
 
 import 'package:flutter/foundation.dart';
@@ -245,6 +246,7 @@ class AndroidAutoService {
   }
 
   void _onDownloadsChanged() {
+    if (!ForkPlatform.hasMediaBrowser) return; // Absorb Plus
     final signature = _currentDownloadsSignature();
     if (signature == _downloadsSignature) return;
     _downloadsSignature = signature;

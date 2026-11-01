@@ -214,11 +214,16 @@ class LogService {
     // Mask standalone sensitive key=value pairs not inside URLs
     // (e.g. "token=abc123" in non-URL context)
     result = result.replaceAllMapped(
-      RegExp(r'(token|secret|password|authorization|bearer|\w*key)\s*[=:]\s*(?!null\b|\*\*\*|true\b|false\b)\S+', caseSensitive: false),
+      _bareSecretPattern,
       (m) => '${m.group(1)}=***',
     );
     return result;
   }
+
+  // Absorb Plus: compiled once, not per logged line.
+  static final _bareSecretPattern =
+      RegExp(r'(token|secret|password|authorization|bearer|\w*key)\s*[=:]\s*(?!null\b|\*\*\*|true\b|false\b)\S+', caseSensitive: false);
+  static final _urlPattern = RegExp(r'https?://[^\s\]"]+');
 
   /// Sanitize URLs in log content, replacing server hosts with a connection
   /// type label (e.g. [local-ip], [tailscale], [reverse-proxy]) while keeping
@@ -227,8 +232,7 @@ class LogService {
     // Collect unique hostnames found in URLs so we can scrub bare references too
     final foundHosts = <String>{};
 
-    final urlPattern = RegExp(r'https?://[^\s\]"]+');
-    var result = content.replaceAllMapped(urlPattern, (match) {
+    var result = content.replaceAllMapped(_urlPattern, (match) {
       final url = match.group(0)!;
       try {
         final uri = Uri.parse(url);

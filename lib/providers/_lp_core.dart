@@ -2204,10 +2204,15 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       // Progress and shelves load side by side (one round trip, not two).
       final progress = _refreshProgress();
       final List<dynamic>? view;
+      // Absorb Plus: podcast libraries ask for the RSS feed fields up
+      // front instead of loading the whole view a second time for them.
+      final withRss = isPodcastLibrary;
       try {
         view = await api.getPersonalizedView(
           libraryId,
-          include: const ['numEpisodesIncomplete'],
+          include: withRss
+              ? const ['numEpisodesIncomplete', 'rssfeed']
+              : const ['numEpisodesIncomplete'],
         );
       } finally {
         await progress;
@@ -2255,7 +2260,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       StartupTiming.markHomeReady();
       SiriService().scheduleCatalogUpdate();
 
-      if (isPodcastLibrary) {
+      if (withRss) {
+        _lastRssHydrationAt = DateTime.now();
+        _lastRssHydrationLibraryId = libraryId;
+      } else if (isPodcastLibrary) {
         _hydrateRssFeedFieldsDeferred();
       }
     } catch (e) {

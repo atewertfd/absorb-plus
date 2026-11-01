@@ -54,6 +54,11 @@ abstract final class ForkPlatform {
   /// Home-screen widgets and Android Auto exist only on Android.
   static bool get hasHomeWidgets => isAndroid;
 
+  /// A car or media browser can ask for the Android Auto browse tree.
+  /// Windows, Linux and web have none, so the tree isn't kept up to date
+  /// there (download progress used to rebuild its signature every tick).
+  static bool get hasMediaBrowser => !isWeb && !isWindows && !isLinux;
+
   // Settings that only do something on a phone. Settings and its search
   // index hide them elsewhere (owner decision, 2026-10-30).
 
