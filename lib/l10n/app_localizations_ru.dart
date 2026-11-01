@@ -13476,4 +13476,17 @@ class AppLocalizationsRu extends AppLocalizations {
   String homeRecentlyAddedNewBadge(int count) {
     return '$count new';
   }
+
+  @override
+  String seekUndoBackTo(String time) {
+    return 'Back to $time';
+  }
+
+  @override
+  String get autoDownloadNextInSeries =>
+      'Download the next book in the series automatically';
+
+  @override
+  String get autoDownloadNextInSeriesSubtitle =>
+      'When the book you\'re playing is 80% done or has less than an hour left. Follows the Wi-Fi only setting.';
 }

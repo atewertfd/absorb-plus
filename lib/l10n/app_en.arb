@@ -7378,5 +7378,9 @@
   "exclusiveAudioTitle": "Exclusive audio",
   "exclusiveAudioSubtitle": "Fixes crackling or jumpy volume by skipping Windows sound effects. Other apps are muted while Absorb plays. Restart Absorb to apply.",
   "homeRecentlyAddedNewBadge": "{count} new",
-  "@homeRecentlyAddedNewBadge": {"placeholders": {"count": {"type": "int"}}}
+  "@homeRecentlyAddedNewBadge": {"placeholders": {"count": {"type": "int"}}},
+  "seekUndoBackTo": "Back to {time}",
+  "@seekUndoBackTo": {"description": "Toast after a long jump in the book; tapping it returns to the earlier position", "placeholders": {"time": {"type": "String"}}},
+  "autoDownloadNextInSeries": "Download the next book in the series automatically",
+  "autoDownloadNextInSeriesSubtitle": "When the book you're playing is 80% done or has less than an hour left. Follows the Wi-Fi only setting."
 }

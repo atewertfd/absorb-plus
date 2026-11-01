@@ -80,6 +80,7 @@ import '../l10n/app_localizations.dart';
 import '../widgets/sign_in_again.dart';
 import '../services/tailscale_service.dart'; // fork
 import 'tailscale_settings_screen.dart'; // fork
+import '../widgets/next_in_series_download_tile.dart'; // fork
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -3996,6 +3997,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         PlayerSettings.setAutoSeriesDownloadDefault(v);
                       } : null,
                     ),
+                    const Divider(height: 1, indent: 16, endIndent: 16),
+                    const NextInSeriesDownloadTile(), // fork
                     const Divider(height: 1, indent: 16, endIndent: 16),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
