@@ -13,4 +13,11 @@ that the plugin doesn't expose.
 - mpv log lines go through `debugPrint` (was `print`), so they reach the
   app's log file.
 
+- `JustAudioMediaKit.setLiveMpvProperty` (`lib/just_audio_media_kit.dart`)
+  sets an mpv property on every player that hasn't been released
+  (`MediaKitPlayer.setPropertyOnLivePlayers`, `lib/mediakit_player.dart`)
+  and keeps it in `liveMpvProperties` for players created later. Absorb Plus
+  uses it for the desktop equalizer's `af` chain
+  (`lib/services/desktop_equalizer.dart`), changed while a book plays.
+
 Everything else is unchanged from the published 2.1.0.
