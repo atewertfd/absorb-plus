@@ -49,6 +49,9 @@ class JumpList {
   std::unique_ptr<Channel> channel_;
   std::vector<std::string> arguments_;
   bool enabled_;
+  // Set once Dart asked for initialArguments, which it does right after
+  // attaching its "launch" handler.
+  bool dart_listening_ = false;
   // Entries the user removed from the list; Windows refuses to take them
   // back, so they stay out for this session.
   std::set<std::wstring> removed_;
