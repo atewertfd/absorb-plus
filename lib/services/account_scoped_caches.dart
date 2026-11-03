@@ -16,8 +16,8 @@ import 'sleep_timer_service.dart';
 /// Test seams: what [reloadAccountScopedCaches] runs besides the
 /// synchronous PlayerSettings caches.
 @visibleForTesting
-Future<void> Function() reloadAutoSleepSettings =
-    () => SleepTimerService().loadAutoSleepSettings();
+Future<void> Function() reloadAutoSleepSettings = () =>
+    SleepTimerService().loadAutoSleepSettings();
 
 @visibleForTesting
 Future<void> Function() restartSettingsSync = () async {

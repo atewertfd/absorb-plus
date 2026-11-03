@@ -32,20 +32,22 @@ void main() {
     restartSettingsSync = () async => syncRestarts++;
   });
 
-  test('the next account gets its own display settings and sleep window',
-      () async {
-    await PlayerSettings.setCoverSize('large');
-    await reloadAccountScopedCaches();
-    expect(PlayerSettings.coverSize, 'large');
+  test(
+    'the next account gets its own display settings and sleep window',
+    () async {
+      await PlayerSettings.setCoverSize('large');
+      await reloadAccountScopedCaches();
+      expect(PlayerSettings.coverSize, 'large');
 
-    UserAccountService().switchTo(server, 'bob');
-    expect(UserAccountService().activeScopeKey, scopeB);
-    await reloadAccountScopedCaches();
+      UserAccountService().switchTo(server, 'bob');
+      expect(UserAccountService().activeScopeKey, scopeB);
+      await reloadAccountScopedCaches();
 
-    expect(PlayerSettings.coverSize, isNot('large'));
-    expect(sleepReloads, 2);
-    expect(syncRestarts, 2);
-  });
+      expect(PlayerSettings.coverSize, isNot('large'));
+      expect(sleepReloads, 2);
+      expect(syncRestarts, 2);
+    },
+  );
 
   test('one failing part does not stop the others', () async {
     reloadAutoSleepSettings = () async => throw StateError('fixture');

@@ -32,8 +32,12 @@ void main() {
   });
 
   test('only ids with a local entry of the active account', () async {
-    final ids = await ProgressSyncService()
-        .withLocalProgress(['mine', 'theirs', 'legacy', 'none']);
+    final ids = await ProgressSyncService().withLocalProgress([
+      'mine',
+      'theirs',
+      'legacy',
+      'none',
+    ]);
     expect(ids, {'mine'});
   });
 

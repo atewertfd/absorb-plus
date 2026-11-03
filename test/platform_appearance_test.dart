@@ -19,8 +19,9 @@ void main() {
     expect(fired, greaterThan(0));
   });
 
-  testWidgets('fires on an accessibility change (reduce motion)',
-      (tester) async {
+  testWidgets('fires on an accessibility change (reduce motion)', (
+    tester,
+  ) async {
     var fired = 0;
     void listener() => fired++;
     PlatformAppearance.changes.addListener(listener);
@@ -34,25 +35,28 @@ void main() {
     expect(fired, greaterThan(0));
   });
 
-  testWidgets('a motion scope in MaterialApp.builder reaches a dialog',
-      (tester) async {
+  testWidgets('a motion scope in MaterialApp.builder reaches a dialog', (
+    tester,
+  ) async {
     AppMotionMode? seen;
-    await tester.pumpWidget(MaterialApp(
-      builder: (context, child) =>
-          AppMotionScope(mode: AppMotionMode.instant, child: child!),
-      home: Builder(
-        builder: (context) => TextButton(
-          onPressed: () => showDialog<void>(
-            context: context,
-            builder: (dialogContext) {
-              seen = AppMotionScope.maybeOf(dialogContext);
-              return const SizedBox();
-            },
+    await tester.pumpWidget(
+      MaterialApp(
+        builder: (context, child) =>
+            AppMotionScope(mode: AppMotionMode.instant, child: child!),
+        home: Builder(
+          builder: (context) => TextButton(
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (dialogContext) {
+                seen = AppMotionScope.maybeOf(dialogContext);
+                return const SizedBox();
+              },
+            ),
+            child: const Text('open'),
           ),
-          child: const Text('open'),
         ),
       ),
-    ));
+    );
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
 

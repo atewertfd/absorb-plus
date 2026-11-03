@@ -87,44 +87,49 @@ void main() {
       expect(old.toJson().containsKey('episodeId'), isFalse);
     });
 
-    test('a retry of a failed episode asks for the right show and episode',
-        () async {
-      final requested = <String>[];
-      final api = ApiService(
-        baseUrl: 'https://audiobookshelf.example',
-        token: 'test-token',
-        httpClient: MockClient((request) async {
-          requested.add(request.url.path);
-          return http.Response('{}', 404);
-        }),
-      );
-      final s = DownloadService.forTesting(
-        initialize: () async {},
-        cancelTasks: (_) async {},
-        deleteTaskRecord: (_) async {},
-        enqueue: (_) async => true,
-      );
-      addTearDown(s.dispose);
-      s.debugPutDownload(DownloadInfo(
-        itemId: 'li_show42-ep_7',
-        status: DownloadStatus.error,
-        title: 'Episode 7',
-        episodeId: 'ep_7',
-      ));
+    test(
+      'a retry of a failed episode asks for the right show and episode',
+      () async {
+        final requested = <String>[];
+        final api = ApiService(
+          baseUrl: 'https://audiobookshelf.example',
+          token: 'test-token',
+          httpClient: MockClient((request) async {
+            requested.add(request.url.path);
+            return http.Response('{}', 404);
+          }),
+        );
+        final s = DownloadService.forTesting(
+          initialize: () async {},
+          cancelTasks: (_) async {},
+          deleteTaskRecord: (_) async {},
+          enqueue: (_) async => true,
+        );
+        addTearDown(s.dispose);
+        s.debugPutDownload(
+          DownloadInfo(
+            itemId: 'li_show42-ep_7',
+            status: DownloadStatus.error,
+            title: 'Episode 7',
+            episodeId: 'ep_7',
+          ),
+        );
 
-      await s.retryDownload(api: api, itemId: 'li_show42-ep_7');
-      for (var i = 0; i < 20 && requested.isEmpty; i++) {
-        await pumpEventQueue();
-      }
+        await s.retryDownload(api: api, itemId: 'li_show42-ep_7');
+        for (var i = 0; i < 20 && requested.isEmpty; i++) {
+          await pumpEventQueue();
+        }
 
-      expect(requested, isNotEmpty);
-      expect(requested.first, startsWith('/api/items/li_show42'));
-    });
+        expect(requested, isNotEmpty);
+        expect(requested.first, startsWith('/api/items/li_show42'));
+      },
+    );
   });
 
   group('D13 loading the list', () {
     test('a session already trimmed is kept as stored', () {
-      const session = '{"libraryItem": {"media": {"metadata": {"title": "T"}}}}';
+      const session =
+          '{"libraryItem": {"media": {"metadata": {"title": "T"}}}}';
       final info = DownloadInfo.fromJson({
         'itemId': 'b',
         'status': DownloadStatus.downloaded.index,
@@ -191,27 +196,31 @@ void main() {
       expect(coverDir('cancel-book').existsSync(), isFalse);
     });
 
-    test('a dismissed failure removes its cover, a finished book keeps it',
-        () async {
-      final s = DownloadService.forTesting(
-        initialize: () async {},
-        cancelTasks: (_) async {},
-        deleteTaskRecord: (_) async {},
-      );
-      addTearDown(s.dispose);
-      seedCover('failed');
-      seedCover('done');
-      s.debugPutDownload(
-          DownloadInfo(itemId: 'failed', status: DownloadStatus.error));
-      s.debugPutDownload(
-          DownloadInfo(itemId: 'done', status: DownloadStatus.downloaded));
+    test(
+      'a dismissed failure removes its cover, a finished book keeps it',
+      () async {
+        final s = DownloadService.forTesting(
+          initialize: () async {},
+          cancelTasks: (_) async {},
+          deleteTaskRecord: (_) async {},
+        );
+        addTearDown(s.dispose);
+        seedCover('failed');
+        seedCover('done');
+        s.debugPutDownload(
+          DownloadInfo(itemId: 'failed', status: DownloadStatus.error),
+        );
+        s.debugPutDownload(
+          DownloadInfo(itemId: 'done', status: DownloadStatus.downloaded),
+        );
 
-      await s.dismissFailedDownload('failed');
-      await s.dismissFailedDownload('done'); // not a failure: ignored
+        await s.dismissFailedDownload('failed');
+        await s.dismissFailedDownload('done'); // not a failure: ignored
 
-      expect(coverDir('failed').existsSync(), isFalse);
-      expect(coverDir('done').existsSync(), isTrue);
-    });
+        expect(coverDir('failed').existsSync(), isFalse);
+        expect(coverDir('done').existsSync(), isTrue);
+      },
+    );
   });
 
   group('D11 cancel while the tracks are enqueued', () {
