@@ -94,6 +94,16 @@ extension ForkPlaybackTestHooks on AudioPlayerService {
     _api = api;
   }
 
+  /// Pretends the next book of the queue is pre-buffered behind this one.
+  @visibleForTesting
+  set debugPreloadedNextBook(Map<String, dynamic>? next) =>
+      _preloadedNextBook = next;
+
+  /// The hand-off to the pre-buffered next book, as the player stepping
+  /// into it fires it.
+  @visibleForTesting
+  void debugAutoQueueAdvance() => _onAutoQueueAdvanced();
+
   /// The old stream retry, as a playback error starts it.
   @visibleForTesting
   Future<void> debugAttemptStreamRetry(Object error) => _attemptStreamRetry(error);

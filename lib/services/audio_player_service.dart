@@ -2205,6 +2205,7 @@ class AudioPlayerService extends ChangeNotifier {
     final next = _preloadedNextBook;
     if (next == null) return;
     if (_autoQueueAdvancing) return;
+    if (_recovery.holdsBookHandOff) return; // fork: a dropped stream, not the end
     _autoQueueAdvancing = true;
     _beginAdvanceBuffering();
     debugPrint('[PreBuffer] Auto-queue advanced to ${next['title']}');

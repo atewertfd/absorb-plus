@@ -184,6 +184,20 @@ class _StreamRecovery {
     return false;
   }
 
+  /// The player stepped into the pre-buffered next book while a reconnect
+  /// is pending. On Android just_audio answers a source error by moving to
+  /// the next item of the queue, which in the book's last file is the next
+  /// book: that is the dropped stream, not the end of this one, so it must
+  /// not be marked finished. The reload rebuilds the source without the
+  /// next book, and it is pre-buffered again later. A stall kept its own
+  /// source playing, so a hand-off then is real.
+  bool get holdsBookHandOff {
+    if (!policy.isRecovering || policy.isStallOnly) return false;
+    debugPrint('[Recovery] Ignoring the hand-off to the next book - '
+        'the stream dropped, the book did not end');
+    return true;
+  }
+
   /// The book finished (or was skipped to its end). Ends any recovery and
   /// forgets its item, so no later attempt reloads the finished book.
   void onFinished() {
