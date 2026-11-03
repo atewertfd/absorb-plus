@@ -121,3 +121,67 @@ correct.
 - Host and client over a real loopback socket in tests (127.0.0.1, an
   ephemeral port, no external network), using a fake player facade.
 - The remote screen against a fake client.
+
+## Stage 1 as built (2026-11-03, branch `claude/phone-remote`)
+
+Code map: `docs/ARCHITECTURE.md`, row "Phone remote". Changes from the
+design above:
+
+- **Pairing is open only while the host sheet shows.** The code is issued
+  when "Phone remote" opens on the PC and dropped when it closes; a `pair`
+  outside that gets `error pairingClosed`. Codes are also single-use (a new
+  one after each pairing), besides the 2-minute expiry and the 5-try
+  replacement.
+- **Cover auth by header.** `/cover` takes `Authorization: Bearer <token>`
+  instead of `?t=<token>`, so tokens never sit in URLs or proxy logs. The
+  host serves the downloaded cover file or the app's cover cache
+  (`coverCacheManager`, fetched with the app's own headers when missing).
+- **Browser requests are refused.** Any request with an `Origin` header gets
+  403 (native remotes never send one), so a web page on the LAN can't try
+  codes or tokens.
+- **Protocol additions:**
+  - `welcome {version, hostId, hostName}` answers a good `hello`;
+  - `paired {version, token, hostId, hostName}` answers a good `pair`;
+  - `state` also carries `skipBack` and `skipForward` (the host's skip
+    amounts), and the remote's buttons send `skip` with those;
+  - WebSocket close codes tell the remote whether to retry: 4001
+    unauthorized, 4002 disconnected by the host, 4003 forgotten, 4004 host
+    stopped, 4005 too many attempts, 4006 bad request, 4007 version.
+    4001, 4002, 4003 and 4007 stop reconnecting; the rest retry with
+    backoff (1, 2, 4, 8, then every 10 s).
+- **The token only goes where it was paired.** Discovery announcements are
+  easy to fake, so a paired computer that answers from a new address is
+  listed as a new one and paired again; the remote also closes the link
+  when the `welcome` carries another host id. The token itself still
+  crosses the LAN in the clear (plain `ws://`, as designed); someone
+  sniffing the network could copy it. Forget on the host revokes it.
+- **Limits:** no WebSocket compression (a small frame can't inflate),
+  frames over 8 KB are refused, 8 connections at most and 3 per address, a
+  10-second window for the first frame, 20 discovery replies a second, auth
+  failures block an address for a minute after 5 in a minute, at most 20
+  paired devices (the longest unused goes).
+- **Settings place:** both rows ("Phone remote" on the PC, "Control another
+  device" on phones and PCs) sit in Settings → Media Controls, because Linux
+  has no Windows section. Ctrl+K has both actions too.
+- **Sign-out and account switch** close everything and turn the switch off
+  (the next account decides for itself). Paired devices are device-wide and
+  stay. Quitting starts closing without waiting (`shutdownForExit`).
+- **The remote needs a signed-in app for now**: its entries are in Settings
+  and Ctrl+K. An entry on the sign-in screen is left for later.
+- **Android needs no new permission:** the host answers discovery by unicast,
+  and `INTERNET` exists. Dart sockets aren't subject to Android's cleartext
+  policy.
+- **Display mode** keeps the screen on through the app's `ScreenWake`
+  (Android flag, Windows runner; Linux has none) and hides the system bars
+  on Android. It shows the cover, chapter, chapter progress, time left (at
+  the current speed) and a clock; a tap leaves it.
+- **Discovery** sends the probe three times in 2 s to 255.255.255.255 and
+  each interface's /24 broadcast address.
+- **Extra files:** `remote_link.dart` (the import), `remote_link_types.dart`
+  (interfaces both sides and the stubs implement), `player_facade.dart`,
+  `app_remote_player.dart`, `screens/remote_connect_screen.dart`,
+  `widgets/remote_link_settings_tiles.dart`.
+
+Not verified yet: a real phone, the Windows firewall prompt, discovery on
+networks with client isolation (manual address entry is the fallback), and
+Linux beyond CI builds.

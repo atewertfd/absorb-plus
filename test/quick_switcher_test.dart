@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:absorb/l10n/app_localizations.dart';
 import 'package:absorb/l10n/app_localizations_en.dart';
 import 'package:absorb/services/desktop_shortcuts.dart';
+import 'package:absorb/services/remote_link/remote_link.dart'
+    show remoteHostSupported, remoteLinkConnector;
 import 'package:absorb/widgets/desktop_shortcut_help.dart';
 import 'package:absorb/widgets/desktop_shortcut_scope.dart';
 import 'package:absorb/widgets/quick_switcher.dart';
@@ -419,6 +421,15 @@ void main() {
         return const SizedBox();
       }),
     ));
+    // Phone remote actions follow where the platform has them.
+    final remoteTitles = [
+      if (remoteHostSupported) l.remoteHostTitle,
+      if (remoteLinkConnector.isSupported) l.remoteControlAnother,
+    ];
+    expect(actions.skip(9).map((a) => a.title), remoteTitles);
+    expect(actions.skip(9).map((a) => a.keywords),
+        [for (final _ in remoteTitles) l.quickSwitcherKeywordsRemote]);
+    actions = actions.take(9).toList();
     expect(actions.map((a) => a.title), [
       l.quickSwitcherGoHome,
       l.quickSwitcherGoLibrary,

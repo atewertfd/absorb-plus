@@ -14014,4 +14014,273 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get dropUploadAlreadyOpen => 'Finish or close the open upload first';
+
+  @override
+  String get remoteHostTitle => 'Phone remote';
+
+  @override
+  String get remoteHostSubtitleOff => 'Control this PC from your phone';
+
+  @override
+  String remoteHostSubtitleOn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count devices connected',
+      one: '1 device connected',
+      zero: 'no devices connected',
+    );
+    return 'On · $_temp0';
+  }
+
+  @override
+  String get remoteHostSheetBody =>
+      'Your phone works as a remote and a now-playing screen while the audio plays here. Only devices you pair can connect, and only over your own network.';
+
+  @override
+  String get remoteHostSwitch => 'Allow a remote';
+
+  @override
+  String get remoteHostSwitchSubtitle =>
+      'Off by default. Windows may ask to let Absorb Plus through the firewall the first time.';
+
+  @override
+  String remoteHostPortsBusy(int first, int last) {
+    return 'Couldn\'t start: ports $first to $last are all in use.';
+  }
+
+  @override
+  String get remoteHostPairTitle => 'Pair a device';
+
+  @override
+  String get remoteHostPairHelp =>
+      'On the phone, open Absorb Plus, go to Settings, Media Controls, Control another device, pick this PC and enter the code.';
+
+  @override
+  String get remoteHostCodeLabel => 'Pairing code';
+
+  @override
+  String remoteHostCodeExpires(String time) {
+    return 'Expires in $time';
+  }
+
+  @override
+  String get remoteHostNewCode => 'New code';
+
+  @override
+  String remoteHostAddresses(String addresses) {
+    return 'Address: $addresses';
+  }
+
+  @override
+  String get remoteHostNoAddress => 'This PC has no network address right now.';
+
+  @override
+  String get remoteHostNoDiscovery =>
+      'The phone can\'t find this PC by itself right now; enter the address on the phone instead.';
+
+  @override
+  String get remoteHostConnectedTitle => 'Connected now';
+
+  @override
+  String get remoteHostPairedTitle => 'Paired devices';
+
+  @override
+  String get remoteHostNoDevices => 'No paired devices yet';
+
+  @override
+  String remoteHostLastUsed(String date) {
+    return 'Last used $date';
+  }
+
+  @override
+  String remoteHostConnectedFrom(String address, String time) {
+    return '$address, connected since $time';
+  }
+
+  @override
+  String get remoteHostForget => 'Forget';
+
+  @override
+  String get remoteHostDisconnect => 'Disconnect';
+
+  @override
+  String get remoteControlAnother => 'Control another device';
+
+  @override
+  String get remoteControlAnotherSubtitle =>
+      'Use this device as a remote for Absorb Plus on a PC';
+
+  @override
+  String get remoteConnectSearching => 'Looking for computers on your network…';
+
+  @override
+  String get remoteConnectNoneFound =>
+      'No computers found. Turn on Phone remote in the PC\'s Settings, or enter its address.';
+
+  @override
+  String get remoteConnectSearchAgain => 'Search again';
+
+  @override
+  String get remoteConnectPaired => 'Paired';
+
+  @override
+  String get remoteConnectFound => 'On your network';
+
+  @override
+  String get remoteConnectEnterAddress => 'Enter an address';
+
+  @override
+  String get remoteConnectAddressHint => '192.168.1.20:47390';
+
+  @override
+  String get remoteConnectAddressInvalid =>
+      'Enter an address like 192.168.1.20 or 192.168.1.20:47390';
+
+  @override
+  String get remoteConnectNext => 'Next';
+
+  @override
+  String remoteConnectCodeTitle(String name) {
+    return 'Pair with $name';
+  }
+
+  @override
+  String get remoteConnectCodeHelp =>
+      'Enter the 6-digit code shown in Phone remote on the PC.';
+
+  @override
+  String get remoteConnectPair => 'Pair';
+
+  @override
+  String get remoteConnectForget => 'Forget this computer';
+
+  @override
+  String get remotePairBadCode =>
+      'That code isn\'t right. Check the PC and try again.';
+
+  @override
+  String get remotePairExpired =>
+      'That code has expired. Use the new one on the PC.';
+
+  @override
+  String get remotePairClosed =>
+      'Open Phone remote in the PC\'s Settings to see the code.';
+
+  @override
+  String get remotePairTooMany =>
+      'Too many tries. Wait a minute and try again.';
+
+  @override
+  String get remotePairUnreachable =>
+      'Couldn\'t reach that computer. Check that both are on the same network.';
+
+  @override
+  String get remotePairFailed => 'Pairing didn\'t work. Try again.';
+
+  @override
+  String get remoteVersionMismatch =>
+      'Update Absorb Plus on both devices to use the remote.';
+
+  @override
+  String get remoteConnecting => 'Connecting…';
+
+  @override
+  String get remoteReconnecting => 'Reconnecting…';
+
+  @override
+  String remoteNothingPlaying(String name) {
+    return 'Nothing is playing on $name';
+  }
+
+  @override
+  String get remoteNothingLoaded => 'Start something on the PC first.';
+
+  @override
+  String get remoteCommandFailed => 'The PC couldn\'t do that.';
+
+  @override
+  String get remoteDisconnectedByHost => 'The PC disconnected this device.';
+
+  @override
+  String get remoteUnauthorized =>
+      'The PC doesn\'t know this device any more. Pair it again.';
+
+  @override
+  String get remotePairAgain => 'Pair again';
+
+  @override
+  String get remoteConnectAgain => 'Connect again';
+
+  @override
+  String get remoteDisplayMode => 'Display mode';
+
+  @override
+  String get remoteDisplayExit => 'Tap to leave display mode';
+
+  @override
+  String get remotePlay => 'Play';
+
+  @override
+  String get remotePause => 'Pause';
+
+  @override
+  String get remotePreviousChapter => 'Previous chapter';
+
+  @override
+  String get remoteNextChapter => 'Next chapter';
+
+  @override
+  String remoteSkipBack(int seconds) {
+    return 'Back $seconds seconds';
+  }
+
+  @override
+  String remoteSkipForward(int seconds) {
+    return 'Forward $seconds seconds';
+  }
+
+  @override
+  String get remoteSpeed => 'Speed';
+
+  @override
+  String get remoteSleepTimer => 'Sleep timer';
+
+  @override
+  String remoteSleepMinutes(int minutes) {
+    return '$minutes minutes';
+  }
+
+  @override
+  String get remoteSleepEndOfChapter => 'End of chapter';
+
+  @override
+  String get remoteSleepEndOfEpisode => 'End of episode';
+
+  @override
+  String remoteSleepChapters(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count chapters',
+      one: '1 chapter',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get remoteSleepCancel => 'Turn off the sleep timer';
+
+  @override
+  String remoteTimeLeft(String time) {
+    return '$time left';
+  }
+
+  @override
+  String remoteChapterTimeLeft(String time) {
+    return '$time left in the chapter';
+  }
+
+  @override
+  String get quickSwitcherKeywordsRemote => 'remote phone control pc link pair';
 }

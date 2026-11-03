@@ -6,7 +6,10 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../providers/library_provider.dart';
+import '../screens/remote_connect_screen.dart';
 import '../services/desktop_shortcuts.dart';
+import '../services/remote_link/remote_link.dart'
+    show remoteHostSupported, remoteLinkConnector;
 import '../utils/fork_platform.dart';
 import 'author_books_sheet.dart';
 import 'book_detail_sheet.dart';
@@ -14,6 +17,7 @@ import 'desktop_shortcut_help.dart';
 import 'desktop_shortcut_scope.dart';
 import 'episode_list_sheet.dart';
 import 'quick_switcher.dart';
+import 'remote_host_sheet.dart';
 import 'series_books_sheet.dart';
 
 /// How many rows of each kind a library search adds to the switcher.
@@ -75,6 +79,14 @@ List<QuickSwitcherEntry> quickSwitcherAppActions(
     action(l.desktopShortcutsTitle, Icons.keyboard_rounded,
         () => unawaited(showDesktopShortcutsDialog(context)),
         l.quickSwitcherKeywordsShortcuts),
+    if (remoteHostSupported)
+      action(l.remoteHostTitle, Icons.phonelink_rounded,
+          () => unawaited(RemoteHostSheet.show(context)),
+          l.quickSwitcherKeywordsRemote),
+    if (remoteLinkConnector.isSupported)
+      action(l.remoteControlAnother, Icons.settings_remote_rounded,
+          () => unawaited(RemoteConnectScreen.open(context)),
+          l.quickSwitcherKeywordsRemote),
   ];
 }
 
