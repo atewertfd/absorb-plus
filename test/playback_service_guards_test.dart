@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:absorb/services/audio_player_service.dart';
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -158,6 +161,73 @@ void main() {
       expect(policy.failedAtSec, 0);
       expect(policy.hasUserTarget, isTrue);
       expect(policy.resumeAtSec, 0);
+    });
+
+    test('a call during a reconnect shows paused but keeps reconnecting', () {
+      fakeAsync((async) {
+        final player = AudioPlayerService();
+        final policy = player.debugRecoveryPolicy;
+        policy.onFailure(Exception('Source error'));
+        addTearDown(() => policy.cancel('test over'));
+
+        player.debugAudioFocusLost();
+
+        expect(policy.isRecovering, isTrue,
+            reason: 'the book should be ready again when the call ends');
+        expect(player.isPlaying, isFalse, reason: 'paused for the call');
+        expect(player.isReconnecting, isFalse);
+        expect(player.isLoadingOrBuffering, isFalse);
+
+        // Attempts carry on through the call (no server here, so they fail)
+        // and none of them takes the hold away.
+        async.elapse(const Duration(seconds: 8));
+        expect(policy.attempt, greaterThanOrEqualTo(1));
+        expect(policy.isRecovering, isTrue);
+        expect(player.isPlaying, isFalse);
+
+        // The call ends: the focus handler's resume is a Play, which retries
+        // at once and lets the reconnect start audio again.
+        final attempts = policy.attempt;
+        unawaited(player.play());
+        async.flushMicrotasks();
+        expect(policy.attempt, attempts + 1);
+        expect(player.isPlaying, isTrue);
+        expect(player.isReconnecting, isTrue);
+        policy.cancel('test over');
+      });
+    });
+
+    test('an interruption is forgotten once that reconnect ends', () {
+      fakeAsync((async) {
+        final player = AudioPlayerService();
+        final policy = player.debugRecoveryPolicy;
+        policy.onFailure(Exception('Source error'));
+        player.debugAudioFocusLost();
+        expect(player.isPlaying, isFalse);
+
+        // The recovery ends without a Play (it gave up, or the stream healed).
+        policy.cancel('ended');
+        // A later drop, with the call long over, shows reconnecting again.
+        policy.onFailure(Exception('Source error'));
+        addTearDown(() => policy.cancel('test over'));
+        expect(player.isPlaying, isTrue);
+        expect(player.isReconnecting, isTrue);
+        policy.cancel('test over');
+      });
+    });
+
+    test('an interruption with no reconnect running changes nothing', () {
+      fakeAsync((async) {
+        final player = AudioPlayerService();
+        final policy = player.debugRecoveryPolicy;
+        player.debugAudioFocusLost();
+
+        policy.onFailure(Exception('Source error'));
+        addTearDown(() => policy.cancel('test over'));
+        expect(player.isPlaying, isTrue,
+            reason: 'only a reconnect that was running is held');
+        policy.cancel('test over');
+      });
     });
 
     test('togglePlayPause while reconnecting pauses', () async {

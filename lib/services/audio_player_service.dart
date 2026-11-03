@@ -3237,6 +3237,7 @@ class AudioPlayerService extends ChangeNotifier {
               // resume runs auto-rewind per the user's settings: calls and nav
               // prompts rewind like a manual pause, gated by activationDelay.
               await service._player?.pause();
+              service._recovery.onFocusLost(); // fork: a reconnect must not play over it
               service._lastPauseTime = DateTime.now();
               // Keep the spot on this phone, though: without it a server copy
               // up to a sync behind could be taken for newer (GH #440).

@@ -196,6 +196,7 @@ class _StreamRecovery {
   void onPlayItem() {
     _heldSec = null;
     if (_reloadStarting) return;
+    _focusLost = false;
     _earlyEndAt = null;
     policy.cancel('new play');
   }
@@ -336,14 +337,35 @@ class _StreamRecovery {
   /// The stream dropped while the user meant it to play, and a reconnect is
   /// waiting or running: the service reports "playing" (buffering) instead
   /// of the paused raw player, so the app, notification, car and headset
-  /// all keep treating it as playing.
-  bool get wantsToPlay => policy.isRecovering && !_s._pauseRequested;
+  /// all keep treating it as playing. Not while a call or another app holds
+  /// the audio (see [onFocusLost]): that shows paused, as it does without a
+  /// reconnect.
+  bool get wantsToPlay =>
+      policy.isRecovering && !_s._pauseRequested && !_focusLost;
+
+  // A call or another app took the audio while a reconnect was running.
+  // Reloads still go ahead, so the book is ready when the call ends, but
+  // none of them may start audio until something plays again.
+  bool _focusLost = false;
+
+  /// The audio-focus handler paused for an interruption (a phone call, or
+  /// another app taking the audio for good). A reconnect in progress keeps
+  /// going but holds the reloaded source paused: the interruption's own
+  /// resume (after a transient loss) or the user's next Play starts it.
+  void onFocusLost() {
+    if (!policy.isRecovering || _focusLost) return;
+    debugPrint('[Recovery] Audio focus lost - the reconnect will not start audio');
+    _focusLost = true;
+    _refresh();
+  }
 
   /// A Play (app, headset, car, notification, SMTC). While reconnecting it
   /// means "try now", not "start over": the recovery keeps its item and
   /// target, and the next attempt runs at once when one is waiting. True
   /// when the press was handled here.
   bool retryOnPlay() {
+    // Playing again, after an interruption too: audio may start.
+    _focusLost = false;
     if (!policy.isRecovering) {
       userAction(_RecoveryUserAction.play);
       return false;
@@ -521,6 +543,11 @@ class _StreamRecovery {
     // honour the pause now.
     if (_s._pauseRequested && (_s._player?.playing ?? false)) {
       await _s.pause();
+    } else if (_focusLost && (_s._player?.playing ?? false)) {
+      // A call or another app has the audio: hold it, as the focus handler
+      // does, without a pause() that would cancel the call's own resume.
+      debugPrint('[Recovery] Reloaded during an interruption - holding it paused');
+      await _s._player?.pause();
     }
     return true;
   }
@@ -610,6 +637,13 @@ class _StreamRecovery {
     }
     await _applySeekAfterReload(stillOurs);
     if (!stillOurs() || s._pauseRequested) return false;
+    if (_focusLost) {
+      // Loaded and in place, but a call or another app has the audio: leave
+      // it paused for the interruption's resume or the next Play.
+      debugPrint('[Recovery] Source rebuilt at ${at.toStringAsFixed(1)}s during '
+          'an interruption - holding it paused');
+      return true;
+    }
     _resumeListeningClocks();
     unawaited(s._player?.play());
     AudioPlayerService._handler?.refreshPlaybackState();
@@ -637,12 +671,15 @@ class _StreamRecovery {
   void _onStatus(PlaybackRecoveryStatus status, Object? error) {
     // "Playing" follows the recovery (see wantsToPlay): tell the app and the
     // media session whenever that changes.
-    _refresh();
     if (status == PlaybackRecoveryStatus.reconnecting) {
       _stopListeningClocks();
     } else {
       _resumeListeningClocks();
+      // The reconnect is over (a reload held for an interruption included):
+      // nothing of it is left to start audio.
+      _focusLost = false;
     }
+    _refresh();
     switch (status) {
       case PlaybackRecoveryStatus.idle:
         break;

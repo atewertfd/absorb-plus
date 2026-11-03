@@ -54,6 +54,11 @@ extension ForkPlaybackTestHooks on AudioPlayerService {
     _lastServerSync = c.serverSync;
   }
 
+  /// What the audio-focus handler tells the recovery when a call or another
+  /// app takes the audio.
+  @visibleForTesting
+  void debugAudioFocusLost() => _recovery.onFocusLost();
+
   /// Runs the completion path, as the end of the book or a skip past it.
   @visibleForTesting
   Future<void> debugCompletePlayback({bool userRequested = false}) =>
