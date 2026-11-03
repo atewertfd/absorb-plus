@@ -256,7 +256,8 @@ class UpdateCheckerService {
         data = jsonDecode(response.body) as Map<String, dynamic>;
         // CI creates the release before it uploads the files; offer it on
         // the next check, once this platform's file is there.
-        if (!hasPlatformAsset(releaseAssetsOf(data))) {
+        if (!isVersionReleaseTag(data['tag_name'] as String? ?? '') || // fork
+            !hasPlatformAsset(releaseAssetsOf(data))) {
           return UpdateCheckResult(
             UpdateCheckStatus.upToDate,
             currentVersion: await currentInstalledVersion(),
