@@ -12,6 +12,7 @@ import '../services/android_auto_service.dart';
 import '../services/book_search_index.dart';
 import '../services/carplay_service.dart';
 import '../services/audio_player_service.dart';
+import '../services/remote_link/remote_link.dart' show remoteHost; // fork
 import '../services/equalizer_service.dart';
 import '../services/session_cache.dart';
 import '../services/socket_service.dart';
@@ -1449,6 +1450,7 @@ class AuthProvider extends ChangeNotifier {
     _accountGen++;
     _signedOut = false;
     LibraryItemRequestCache.instance.clear();
+    unawaited(remoteHost.signedOut()); // fork: the phone remote closes and turns off
 
     // Stop any active playback
     try {

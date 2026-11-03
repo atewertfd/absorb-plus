@@ -9,6 +9,7 @@ import '../main.dart' show localeNotifier;
 import 'audio_player_service.dart';
 import 'download_service.dart';
 import 'pending_writes.dart';
+import 'remote_link/remote_link.dart' show remoteHost;
 import 'windows_global_hotkeys.dart';
 
 /// What the taskbar button shows for the current book.
@@ -287,6 +288,8 @@ class WindowsShell {
   @visibleForTesting
   Future<void> prepareToExit() async {
     _progressTimer?.cancel();
+    // The phone remote starts closing; never waited on.
+    remoteHost.shutdownForExit();
     if (_playback.hasBook && _playback.isPlaying) {
       try {
         await _playback.saveForExit().timeout(exitSaveTimeout);

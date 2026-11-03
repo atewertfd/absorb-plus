@@ -82,6 +82,7 @@ import '../widgets/sign_in_again.dart';
 import '../services/tailscale_service.dart'; // fork
 import 'tailscale_settings_screen.dart'; // fork
 import '../widgets/next_in_series_download_tile.dart'; // fork
+import '../widgets/remote_link_settings_tiles.dart'; // fork
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -3420,6 +3421,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         } : null,
                       ),
                     ],
+                    const RemoteLinkSettingsTiles(), // fork: phone remote
                   ],
                 ),
                 const SizedBox(height: 16),
