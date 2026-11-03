@@ -17,12 +17,10 @@ on:
     paths-ignore:
       - 'docs/**'
       - '*.md'
-      - '.claude/**'
   pull_request:
     paths-ignore:
       - 'docs/**'
       - '*.md'
-      - '.claude/**'
   workflow_dispatch:
 
 concurrency:

@@ -1,6 +1,6 @@
 # Code map
 
-How Absorb Plus is put together and where to look. The layout under `lib/` is upstream's ([pounat/absorb](https://github.com/pounat/absorb)). It stays as is so upstream merges stay clean; see "Fork rules" at the end. For a file-by-file map of each area (entry points, data flow, traps) and the open findings, see [`docs/audit/`](audit/README.md).
+How Absorb Plus is put together and where to look. The layout under `lib/` is upstream's ([pounat/absorb](https://github.com/pounat/absorb)). It stays as is so upstream merges stay clean; see "Fork rules" at the end.
 
 ## Start-up and navigation
 
@@ -85,11 +85,8 @@ How Absorb Plus is put together and where to look. The layout under `lib/` is up
 | RAM/CPU sampling | `tool/measure-windows-usage.ps1` | Read-only process counters for a running build |
 | Frame/rebuild diagnostics | `lib/utils/scroll_diagnostics.dart` | Start the app with `ABSORB_SCROLL_DIAG=1`; logs wheel input, frame timings, redraws per frame and rebuild sources to `%TEMP%\absorb-scroll-diag.txt`. Debug builds also log which widget starts each frame's rebuild and, at 15–17 s, the stacks that marked widgets dirty. Found the idle redraw loop in `AbsorbingScreen._loadQueueMode`. |
 | Desktop audio smoke test | `tool/verify-desktop-audio.ps1`, `tool/desktop_audio_smoke.dart` | Checks the libmpv backend without a server. Builds the smoke target into the Release folder, then rebuilds the normal app (`GITHUB_BUILD=true`) |
-| Claude Code guards | `tool/claude_hooks.py` (tests in `tool/tests/`), wired in `.claude/settings.json` | Blocks upstream pushes, junction-following deletes, upstream reformatting and generated-file edits; asks before release/tag deletion |
-| Claude Code procedures | `.claude/skills/*/SKILL.md` | `/status`, `/build-verify`, `/release`, `/perf-measure`, `/fork-feature`, `/upstream-merge` |
-| Claude Code subagents | `.claude/agents/*.md` | `reviewer`, `upstream-merger`, `test-writer` |
 | Fork-only lints | `tool/fork_lints.py` (tests in `tool/tests/`) | `use_build_context_synchronously` stays off in `analysis_options.yaml` (75 upstream hits); this runs one extra `dart analyze` on a lint-on mirror in `build/fork_lints/` and fails only for hits in files missing from upstream's tree. `--all` also lists upstream hits. Part of `dev.ps1 check` and CI |
-| CI | `.github/workflows/_checks.yml` (material fonts precache, analyze, tests, tool tests, removed-paths check, fork lints; reused), `ci.yml` (every push and PR except doc-only ones (`docs/**`, top-level `*.md`, `.claude/**`); web + Linux builds on `main`, PRs and manual runs; Pages deploy on `main` pushes; the signed arm64 phone-test APK on manual runs only), `release.yml` (`v*` tags: one draft release filled by Windows, Linux (tar.gz + .deb with `Depends:`), web and Android jobs, published by a last job once all succeed; no checksum files) | Flutter version from `.flutter-version` (keep it equal to the local SDK) |
+| CI | `.github/workflows/_checks.yml` (material fonts precache, analyze, tests, tool tests, removed-paths check, fork lints; reused), `ci.yml` (every push and PR except doc-only ones (`docs/**`, top-level `*.md`); web + Linux builds on `main`, PRs and manual runs; Pages deploy on `main` pushes; the signed arm64 phone-test APK on manual runs only), `release.yml` (`v*` tags: one draft release filled by Windows, Linux (tar.gz + .deb with `Depends:`), web and Android jobs, published by a last job once all succeed; no checksum files) | Flutter version from `.flutter-version` (keep it equal to the local SDK) |
 | Upstream merges | `tool/upstream_merge.py` (`dev.ps1 merge`), `tool/fork-removed-paths.txt`, `tool/fork-overrides.txt`, `tool/check_fork_removed.py` | `/upstream-merge` skill |
 
 ## Strings
