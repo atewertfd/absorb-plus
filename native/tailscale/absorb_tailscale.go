@@ -75,6 +75,12 @@ type node struct {
 	running atomic.Bool   // cached BackendState == "Running", for dial
 	kick    chan struct{} // asks the status watcher for a refresh
 
+	// prev is the `closed` channel of the node stopped before this one (nil
+	// if none). A node that never got to Start still counts as closed only
+	// once prev is, so the chain of waits never skips a node that is still
+	// closing on the same state folder.
+	prev chan struct{}
+
 	mu       sync.Mutex
 	startErr string
 	started  bool        // srv.Start succeeded
@@ -171,6 +177,7 @@ func startLocked(dir, hostname, controlURL, authKey, secret string, preferredPor
 		closed:    make(chan struct{}),
 		cancel:    cancel,
 		kick:      make(chan struct{}, 1),
+		prev:      previous,
 	}
 	n.proxy = newTailnetProxy(secret, n.dial)
 
@@ -187,7 +194,7 @@ func startLocked(dir, hostname, controlURL, authKey, secret string, preferredPor
 	}
 	go n.httpSrv.Serve(ln)
 
-	go n.run(ctx, previous)
+	go n.run(ctx, n.prev)
 	current = n
 	return n.port, nil
 }
@@ -485,6 +492,10 @@ func AbsorbTsStop() C.int {
 		n.mu.Unlock()
 		if ran {
 			n.srv.Close()
+		} else if n.prev != nil {
+			// Stopped while still waiting for the previous node: that one
+			// may still be closing, and the next node waits on us.
+			<-n.prev
 		}
 		close(n.closed)
 	}()

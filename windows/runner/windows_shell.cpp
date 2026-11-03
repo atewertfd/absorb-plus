@@ -476,6 +476,9 @@ void WindowsShell::RequestQuit() {
 void WindowsShell::BeginExit(bool wait_here) {
   if (exit_state_ == ExitState::kRunning) {
     exit_state_ = ExitState::kFlushing;
+    // A global hotkey pressed while saving would resume playback (the tray
+    // and taskbar buttons already stop at SendAction).
+    if (exit_started_handler_) exit_started_handler_();
     HWND hwnd = window_->GetHandle();
     window_->SaveWindowPlacementNow();
     if (hwnd != nullptr) ShowWindow(hwnd, SW_HIDE);

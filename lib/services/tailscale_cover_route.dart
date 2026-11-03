@@ -25,10 +25,12 @@ class TailscaleCoverRoute {
 
   /// The base URL the provider should use for [serverUrl], or null when the
   /// server is reached directly.
-  static String? routedBase(TailscaleRouting routing, String? serverUrl) {
+  static String? routedBase(TailscaleRouting routing, String? serverUrl,
+      {bool? trustSelfSigned}) {
     final clean = _clean(serverUrl);
     if (clean.isEmpty) return null;
-    final routed = routing.mediaUrl(clean);
+    final routed = routing.mediaUrl(clean,
+        trustSelfSigned: trustSelfSigned ?? TailscaleService.trustSelfSigned());
     if (routed == clean) return null;
     return _clean(routed);
   }

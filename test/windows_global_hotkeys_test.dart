@@ -142,6 +142,25 @@ void main() {
     expect(prefs.getBool(WindowsGlobalHotkeys.prefKey), isFalse);
   });
 
+  test('a quick on-off ends off, in the runner and in the state', () async {
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      sent.add(call);
+      // The runner answers the registration late.
+      if (call.method == 'register') {
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        return refused;
+      }
+      return true;
+    });
+    final on = hotkeys.setEnabled(true);
+    final off = hotkeys.setEnabled(false);
+    await Future.wait([on, off]);
+    expect(sent.map((c) => c.method), ['register', 'unregisterAll']);
+    expect(hotkeys.state.value.enabled, isFalse);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool(WindowsGlobalHotkeys.prefKey), isFalse);
+  });
+
   test('hotkeys run the player actions', () async {
     await hotkeys.setEnabled(true);
     for (final id in [1, 2, 3, 6]) {

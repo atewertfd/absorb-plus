@@ -145,19 +145,30 @@ void JumpList::HandleForwardedLaunch(const std::wstring& command_line) {
   int count = 0;
   LPWSTR* argv = CommandLineToArgvW(line.c_str(), &count);
   if (argv == nullptr) return;
-  EncodableList arguments;
+  std::vector<std::string> arguments;
   bool any = false;
   for (int i = 1; i < count; ++i) {
-    const std::string argument = Utf8FromUtf16(argv[i]);
+    std::string argument = Utf8FromUtf16(argv[i]);
     if (argument.rfind("--open-item=", 0) == 0) any = true;
-    arguments.push_back(EncodableValue(argument));
+    arguments.push_back(std::move(argument));
   }
   LocalFree(argv);
   // Plain relaunches (Start menu, desktop shortcut) only bring the window
   // forward, as before.
   if (!any) return;
+  if (!dart_listening_) {
+    // Dart hasn't attached its handler yet (still starting, or on the
+    // sign-in screen): a "launch" call now would be dropped. Hand it over
+    // as this copy's own arguments instead, latest click wins.
+    arguments_ = std::move(arguments);
+    return;
+  }
+  EncodableList list;
+  for (std::string& argument : arguments) {
+    list.push_back(EncodableValue(std::move(argument)));
+  }
   channel_->InvokeMethod("launch",
-                         std::make_unique<EncodableValue>(std::move(arguments)));
+                         std::make_unique<EncodableValue>(std::move(list)));
 }
 
 void JumpList::HandleCall(
@@ -165,6 +176,9 @@ void JumpList::HandleCall(
     std::unique_ptr<flutter::MethodResult<EncodableValue>> result) {
   const std::string& method = call.method_name();
   if (method == "initialArguments") {
+    // Dart sets its handler before asking, so later launches can go straight
+    // to it.
+    dart_listening_ = true;
     EncodableList list;
     for (const std::string& argument : arguments_) {
       list.push_back(EncodableValue(argument));

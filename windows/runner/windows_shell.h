@@ -58,6 +58,12 @@ class WindowsShell {
     forwarded_launch_handler_ = std::move(handler);
   }
 
+  // Runs once when quitting starts (the window is already hidden), so other
+  // input sources (global hotkeys) stop before the save runs.
+  void SetExitStartedHandler(std::function<void()> handler) {
+    exit_started_handler_ = std::move(handler);
+  }
+
  private:
   using Channel = flutter::MethodChannel<flutter::EncodableValue>;
   enum class ExitState { kRunning, kFlushing, kDone };
@@ -102,6 +108,7 @@ class WindowsShell {
   std::unique_ptr<Channel> shell_channel_;
   std::unique_ptr<Channel> screen_wake_channel_;
   std::function<void(const std::wstring&)> forwarded_launch_handler_;
+  std::function<void()> exit_started_handler_;
 
   UINT taskbar_created_message_ = 0;
   UINT taskbar_button_created_message_ = 0;
