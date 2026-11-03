@@ -23139,6 +23139,12 @@ abstract class AppLocalizations {
   /// **'Fixes crackling or jumpy volume by skipping Windows sound effects. Other apps are muted while Absorb plays. Restart Absorb to apply.'**
   String get exclusiveAudioSubtitle;
 
+  /// No description provided for @exclusiveAudioFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Your sound device refused exclusive audio, so Absorb is playing in normal mode'**
+  String get exclusiveAudioFallback;
+
   /// No description provided for @homeRecentlyAddedNewBadge.
   ///
   /// In en, this message translates to:

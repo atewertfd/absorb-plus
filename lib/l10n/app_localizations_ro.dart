@@ -13887,6 +13887,10 @@ class AppLocalizationsRo extends AppLocalizations {
       'Elimină trosnetele sau volumul sacadat omițând efectele sonore Windows. Celelalte aplicații sunt puse pe mut cât timp Absorb redă. Repornește Absorb pentru a aplica.';
 
   @override
+  String get exclusiveAudioFallback =>
+      'Your sound device refused exclusive audio, so Absorb is playing in normal mode';
+
+  @override
   String homeRecentlyAddedNewBadge(int count) {
     return '$count noi';
   }

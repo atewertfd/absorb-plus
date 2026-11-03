@@ -3,6 +3,25 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../services/desktop_audio.dart';
+import '../services/exclusive_audio_fallback.dart';
+import 'overlay_toast.dart';
+
+/// Shows a toast once when exclusive audio fell back to shared mode
+/// (ExclusiveAudioFallback). Called once from main.dart with the app's
+/// navigator key.
+void installExclusiveAudioFallbackNotice(GlobalKey<NavigatorState> navigator,
+    {ExclusiveAudioFallback? fallback}) {
+  final source = fallback ?? ExclusiveAudioFallback.instance;
+  source.notice.addListener(() {
+    if (!source.notice.value) return;
+    final ctx = navigator.currentContext;
+    if (ctx == null) return;
+    final l = AppLocalizations.of(ctx);
+    if (l == null) return;
+    showNavigatorOverlayToast(navigator.currentState, l.exclusiveAudioFallback,
+        icon: Icons.headphones_rounded);
+  });
+}
 
 /// Settings › Playback (Windows only): plays through the device in exclusive
 /// mode, skipping the Windows mixer and the device's sound enhancements.

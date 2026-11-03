@@ -13836,6 +13836,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Corrige chasquidos o saltos de volumen omitiendo los efectos de sonido de Windows. Las demás apps se silencian mientras Absorb reproduce. Reinicia Absorb para aplicarlo.';
 
   @override
+  String get exclusiveAudioFallback =>
+      'Your sound device refused exclusive audio, so Absorb is playing in normal mode';
+
+  @override
   String homeRecentlyAddedNewBadge(int count) {
     return '$count nuevos';
   }

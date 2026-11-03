@@ -55,6 +55,13 @@ class JustAudioMediaKit extends JustAudioPlatform {
   /// (Absorb Plus patch, see PATCHES.md), e.g. `{'audio-buffer': '1.0'}`.
   static Map<String, String> mpvProperties = const {};
 
+  /// Absorb Plus patch (see PATCHES.md): asked with every mpv log line
+  /// (level, prefix, text). Returning properties means the line was an audio
+  /// output failure those properties fix: the player sets them, reopens the
+  /// current file where it was, and doesn't report that error.
+  static Map<String, String>? Function(String level, String prefix, String text)?
+      audioOutputFallback;
+
   static final _logger = Logger('JustAudioMediaKit');
   final _players = HashMap<String, MediaKitPlayer>();
 

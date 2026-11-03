@@ -13814,6 +13814,10 @@ class AppLocalizationsPt extends AppLocalizations {
       'Corrige chiados ou volume instável ao ignorar os efeitos sonoros do Windows. Outros apps ficam mudos enquanto o Absorb reproduz. Reinicie o Absorb para aplicar.';
 
   @override
+  String get exclusiveAudioFallback =>
+      'Your sound device refused exclusive audio, so Absorb is playing in normal mode';
+
+  @override
   String homeRecentlyAddedNewBadge(int count) {
     return '$count novos';
   }

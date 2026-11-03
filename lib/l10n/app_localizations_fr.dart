@@ -13843,6 +13843,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Corrige les craquements ou les variations de volume en ignorant les effets sonores de Windows. Les autres applications sont coupées pendant la lecture d\'Absorb. Redémarrez Absorb pour appliquer.';
 
   @override
+  String get exclusiveAudioFallback =>
+      'Your sound device refused exclusive audio, so Absorb is playing in normal mode';
+
+  @override
   String homeRecentlyAddedNewBadge(int count) {
     return '$count nouveaux';
   }

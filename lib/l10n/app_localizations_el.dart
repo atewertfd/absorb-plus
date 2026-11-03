@@ -13891,6 +13891,10 @@ class AppLocalizationsEl extends AppLocalizations {
       'Διορθώνει τους κρότους ή τις ασταθείς εντάσεις παρακάμπτοντας τα ηχητικά εφέ των Windows. Οι άλλες εφαρμογές σιγάζουν όσο παίζει το Absorb. Επανεκκινήστε το Absorb για εφαρμογή.';
 
   @override
+  String get exclusiveAudioFallback =>
+      'Your sound device refused exclusive audio, so Absorb is playing in normal mode';
+
+  @override
   String homeRecentlyAddedNewBadge(int count) {
     return '$count νέα';
   }

@@ -13814,6 +13814,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Risolve scricchiolii o volume instabile saltando gli effetti sonori di Windows. Le altre app vengono silenziate mentre Absorb riproduce. Riavvia Absorb per applicare.';
 
   @override
+  String get exclusiveAudioFallback =>
+      'Your sound device refused exclusive audio, so Absorb is playing in normal mode';
+
+  @override
   String homeRecentlyAddedNewBadge(int count) {
     return '$count nuovi';
   }

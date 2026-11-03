@@ -13237,6 +13237,10 @@ class AppLocalizationsZh extends AppLocalizations {
       '跳过 Windows 音效，可修复爆音或音量忽大忽小的问题。Absorb 播放时其他应用会被静音。重启 Absorb 后生效。';
 
   @override
+  String get exclusiveAudioFallback =>
+      'Your sound device refused exclusive audio, so Absorb is playing in normal mode';
+
+  @override
   String homeRecentlyAddedNewBadge(int count) {
     return '$count 个新增';
   }

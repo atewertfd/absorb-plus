@@ -13351,6 +13351,10 @@ class AppLocalizationsJa extends AppLocalizations {
       'Windowsのサウンドエフェクトを経由しないことで、ノイズや音量の乱れを改善します。Absorbの再生中は他のアプリがミュートされます。反映するにはAbsorbを再起動してください。';
 
   @override
+  String get exclusiveAudioFallback =>
+      'Your sound device refused exclusive audio, so Absorb is playing in normal mode';
+
+  @override
   String homeRecentlyAddedNewBadge(int count) {
     return '新規$count件';
   }

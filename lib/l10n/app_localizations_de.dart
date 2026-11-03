@@ -13841,6 +13841,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Behebt Knistern oder springende Lautstärke, indem Windows-Soundeffekte übersprungen werden. Andere Apps sind stummgeschaltet, während Absorb abspielt. Zum Anwenden Absorb neu starten.';
 
   @override
+  String get exclusiveAudioFallback =>
+      'Your sound device refused exclusive audio, so Absorb is playing in normal mode';
+
+  @override
   String homeRecentlyAddedNewBadge(int count) {
     return '$count neu';
   }

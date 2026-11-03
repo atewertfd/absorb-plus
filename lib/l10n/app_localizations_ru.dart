@@ -13962,6 +13962,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Устраняет треск и скачки громкости, обходя звуковые эффекты Windows. Остальные приложения заглушаются, пока играет Absorb. Перезапустите Absorb, чтобы применить.';
 
   @override
+  String get exclusiveAudioFallback =>
+      'Your sound device refused exclusive audio, so Absorb is playing in normal mode';
+
+  @override
   String homeRecentlyAddedNewBadge(int count) {
     return 'Новых: $count';
   }

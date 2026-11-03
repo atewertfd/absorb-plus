@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'exclusive_audio_fallback.dart';
+
 const _exclusiveAudioKey = 'fork_windows_exclusive_audio';
 
 bool _initialized = false;
@@ -23,7 +25,14 @@ void initializeDesktopAudio() {
   _applyMpvProperties(exclusive: false);
   // The saved choice lands long before the first book opens; mpv reads
   // these properties when the player is created.
-  desktopExclusiveAudio().then((on) => _applyMpvProperties(exclusive: on));
+  desktopExclusiveAudio()
+      .then((on) => _applyMpvProperties(exclusive: on))
+      .catchError((Object _) {});
+  // A device that refuses exclusive mode falls back to shared mode, so there
+  // is always sound (lib/services/exclusive_audio_fallback.dart).
+  final fallback = ExclusiveAudioFallback.instance;
+  fallback.onFallBack = () => _applyMpvProperties(exclusive: false);
+  JustAudioMediaKit.audioOutputFallback = fallback.decide;
   // mpv's warnings and errors reach the app log (debugPrint, see the
   // vendored plugin's PATCHES.md). `MPVLogLevel.info` also logs the audio
   // output it opens; it was used to diagnose crackling on 2026-10-31.
@@ -45,6 +54,7 @@ Future<bool> desktopExclusiveAudio() async {
 Future<void> setDesktopExclusiveAudio(bool on) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.setBool(_exclusiveAudioKey, on);
+  if (on) ExclusiveAudioFallback.instance.reset();
   _applyMpvProperties(exclusive: on);
 }
 
@@ -59,9 +69,11 @@ Future<void> setDesktopExclusiveAudio(bool on) async {
 const desktopStreamReconnectOptions = 'reconnect=1,reconnect_delay_max=5';
 
 void _applyMpvProperties({required bool exclusive}) {
+  exclusive = exclusive && Platform.isWindows;
+  ExclusiveAudioFallback.instance.exclusiveRequested = exclusive;
   JustAudioMediaKit.mpvProperties = {
     'audio-buffer': '1.0',
     'stream-lavf-o': desktopStreamReconnectOptions,
-    if (exclusive && Platform.isWindows) 'audio-exclusive': 'yes',
+    if (exclusive) 'audio-exclusive': 'yes',
   };
 }

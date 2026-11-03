@@ -147,6 +147,9 @@ class MediaKitPlayer extends AudioPlayerPlatform {
         _updatePlaybackEvent();
       }),
       _player.stream.error.listen((error) {
+        // Absorb Plus patch: the audio output failure the log listener
+        // (below, delivered first) already recovered from.
+        if (_recoveredErrors.remove(error)) return;
         final errorUri = RegExp(r'Failed to open (.*)\.').firstMatch(error)?[1];
         if (errorUri == null || errorUri == _currentMedia?.uri) {
           _processingState = ProcessingStateMessage.idle;
@@ -178,8 +181,47 @@ class MediaKitPlayer extends AudioPlayerPlatform {
         // Absorb Plus patch: through debugPrint, so mpv's warnings (audio
         // underruns, output format) reach the app's log file.
         debugPrint('[mpv] [${event.level}] ${event.prefix}: ${event.text.trim()}');
+        final fix = JustAudioMediaKit.audioOutputFallback
+            ?.call(event.level, event.prefix, event.text.trim());
+        if (fix != null) {
+          _recoveredErrors.add(event.text.trim());
+          unawaited(_reopenWith(fix));
+        }
       }),
     ];
+  }
+
+  // Absorb Plus patch: error texts the log listener recovered from.
+  final _recoveredErrors = <String>[];
+
+  // Absorb Plus patch: where the last load asked to start, for a reopen
+  // that happens before the player reached it.
+  Duration? _loadInitialPosition;
+
+  /// Absorb Plus patch: mpv couldn't open the audio output (exclusive mode
+  /// refused). Sets [properties] on this player and reopens the current
+  /// playlist at the same spot; a pending [load] completes from the reopened
+  /// file's events as usual.
+  Future<void> _reopenWith(Map<String, String> properties) async {
+    // Read where it was before awaiting: the failed file's end resets the
+    // position to zero.
+    final playlist = _player.state.playlist;
+    var resume = _position;
+    if (resume <= Duration.zero) resume = _loadInitialPosition ?? Duration.zero;
+    try {
+      for (final entry in properties.entries) {
+        await setProperty(_player, entry.key, entry.value);
+      }
+      if (playlist.medias.isEmpty) return;
+      final start = playlist.medias[playlist.index].start;
+      _setPosition = start != null ? resume + start : resume;
+      _position = resume;
+      _logger.warning('audio output failed; reopening at $resume');
+      await _player.open(Playlist(playlist.medias, index: playlist.index),
+          play: _playing);
+    } catch (e) {
+      _logger.severe('reopen after audio output failure failed: $e');
+    }
   }
 
   void _updateDuration(Duration duration) {
@@ -234,6 +276,7 @@ class MediaKitPlayer extends AudioPlayerPlatform {
   Future<LoadResponse> load(LoadRequest request) async {
     _logger.finest('load(${request.toMap()})');
     _mediaOpened = false;
+    _loadInitialPosition = request.initialPosition; // Absorb Plus patch
     _loadCompleter = Completer();
     _currentIndex = request.initialIndex ?? 0;
     _bufferedPosition = Duration.zero;

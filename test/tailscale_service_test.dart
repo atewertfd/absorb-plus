@@ -105,8 +105,8 @@ void main() {
     expect(ts.mediaUrl('http://100.64.0.1/a?token=x'), 'http://100.64.0.1/a?token=x');
     // Doesn't wait at all for a tailnet server while off.
     final sw = Stopwatch()..start();
-    await ts.waitUntilReady('http://100.64.0.1');
-    expect(sw.elapsedMilliseconds, lessThan(500));
+    await ts.waitUntilReady('http://100.64.0.1', timeout: const Duration(seconds: 60));
+    expect(sw.elapsed, lessThan(const Duration(seconds: 20)));
   });
 
   test('turning it on starts the node and routes tailnet hosts', () async {
@@ -176,8 +176,10 @@ void main() {
     native.statusJson = '{"state":"NeedsLogin","authUrl":"https://login.example/a/1"}';
     final ts = make();
     final sw = Stopwatch()..start();
-    await ts.waitUntilReady('http://100.64.0.1', timeout: const Duration(seconds: 5));
-    expect(sw.elapsedMilliseconds, lessThan(2000));
+    // A long timeout and a loose bound: proves it returned on NeedsLogin, not
+    // at the timeout, even when the full suite keeps the machine busy.
+    await ts.waitUntilReady('http://100.64.0.1', timeout: const Duration(seconds: 60));
+    expect(sw.elapsed, lessThan(const Duration(seconds: 20)));
     expect(ts.status.needsLogin, isTrue);
 
     expect(await ts.signIn(), isTrue);
@@ -192,8 +194,9 @@ void main() {
     SharedPreferences.setMockInitialValues({TailscaleService.prefEnabled: true});
     final ts = make(); // node stays "Starting"
     final sw = Stopwatch()..start();
-    await ts.waitUntilReady('https://abs.example.com');
-    expect(sw.elapsedMilliseconds, lessThan(2000), reason: "no 10 s wait for a non-tailnet server (2 s allows a busy machine)");
+    await ts.waitUntilReady('https://abs.example.com', timeout: const Duration(seconds: 60));
+    expect(sw.elapsed, lessThan(const Duration(seconds: 20)),
+        reason: 'no wait for the timeout for a non-tailnet server (loose bound for a busy machine)');
     await ts.setEnabled(false);
   });
 

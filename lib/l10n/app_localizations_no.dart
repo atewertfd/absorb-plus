@@ -13697,6 +13697,10 @@ class AppLocalizationsNo extends AppLocalizations {
       'Fikser knitring eller hoppende volum ved å hoppe over Windows-lydeffekter. Andre apper dempes mens Absorb spiller. Start Absorb på nytt for å ta det i bruk.';
 
   @override
+  String get exclusiveAudioFallback =>
+      'Your sound device refused exclusive audio, so Absorb is playing in normal mode';
+
+  @override
   String homeRecentlyAddedNewBadge(int count) {
     return '$count nye';
   }
