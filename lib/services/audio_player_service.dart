@@ -6194,7 +6194,12 @@ class AudioPlayerService extends ChangeNotifier {
       '[Player] Stream error — retry $_streamRetryCount/$_maxStreamRetries in ${delay.inSeconds}s',
     );
 
+    final owner = _loadedStart(); // fork: see _stillLoaded
     await Future<void>.delayed(delay);
+    if (!_stillLoaded(owner)) {
+      _retryInProgress = false;
+      return;
+    }
 
     // Snapshot state before retry — playItem will overwrite these
     final itemId = _currentItemId;
