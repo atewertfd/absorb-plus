@@ -269,6 +269,7 @@ void main() async {
   PendingWrites.installLifecycleFlush(); // fork: flush held-back writes on background
   ReadListenSync.instance.start();
   NextInSeriesDownloader.start(); // fork; does nothing until turned on
+  TailscaleService.trustSelfSigned = () => trustAllCerts; // fork
   unawaited(TailscaleService.instance.init()); // fork; no-op unless turned on
   BookOrbitApiService.placeReadingSpot = NarrationService.readingSpotSeconds;
   BookOrbitApiService.keptNarration = NarrationService.instance.localOverlay;

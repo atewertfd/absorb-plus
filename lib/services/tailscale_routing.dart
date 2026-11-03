@@ -147,8 +147,11 @@ class TailscaleRouting {
 
   /// Media players (ExoPlayer, libmpv) and native downloaders can't use a
   /// proxy, so their URLs for tailnet hosts are rewritten to the node's
-  /// loopback reverse proxy. Anything else comes back unchanged.
-  String mediaUrl(String url) {
+  /// loopback reverse proxy. Anything else comes back unchanged. With
+  /// [trustSelfSigned] (the user's "trust self-signed certificates") an
+  /// https server is routed as `https-insecure`, so the proxy accepts its
+  /// certificate like Dart's own requests do.
+  String mediaUrl(String url, {bool trustSelfSigned = false}) {
     if (!active) return url;
     final uri = Uri.tryParse(url);
     if (uri == null ||
@@ -162,7 +165,9 @@ class TailscaleRouting {
     // Uri keeps path and query percent-encoded, so they pass through as sent.
     final path = (uri.path.isEmpty ? '/' : uri.path) +
         (uri.hasQuery ? '?${uri.query}' : '');
-    return 'http://127.0.0.1:$proxyPort/_ts/$secret/${uri.scheme}/$hostPort$path';
+    final scheme =
+        uri.scheme == 'https' && trustSelfSigned ? 'https-insecure' : uri.scheme;
+    return 'http://127.0.0.1:$proxyPort/_ts/$secret/$scheme/$hostPort$path';
   }
 }
 

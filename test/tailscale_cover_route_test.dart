@@ -26,6 +26,14 @@ void main() {
       );
     });
 
+    test('follows the trust self-signed certificates choice', () {
+      expect(
+        TailscaleCoverRoute.routedBase(_active, 'https://abs.tail1234.ts.net',
+            trustSelfSigned: true),
+        'http://127.0.0.1:41234/_ts/fixture-secret/https-insecure/abs.tail1234.ts.net:443',
+      );
+    });
+
     test('a cover path appended to the base matches mediaUrl', () {
       const server = 'https://abs.tail1234.ts.net/abs';
       final base = TailscaleCoverRoute.routedBase(_active, server)!;

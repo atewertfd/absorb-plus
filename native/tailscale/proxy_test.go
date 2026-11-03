@@ -18,22 +18,55 @@ const testSecret = "0123456789abcdef0123456789abcdef"
 func TestParseRoutedPath(t *testing.T) {
 	cases := []struct {
 		path, wantTarget, wantRest string
-		ok                         bool
+		insecure, ok               bool
 	}{
-		{"/_ts/" + testSecret + "/http/100.64.0.1:80/api/items/x?y", "http://100.64.0.1:80", "/api/items/x?y", true},
-		{"/_ts/" + testSecret + "/https/nas.tail.ts.net:443", "https://nas.tail.ts.net:443", "/", true},
-		{"/_ts/wrong/http/100.64.0.1:80/ping", "", "", false},
-		{"/_ts/" + testSecret + "/ftp/host:21/x", "", "", false},
-		{"/_ts/" + testSecret + "/http", "", "", false},
+		{"/_ts/" + testSecret + "/http/100.64.0.1:80/api/items/x?y", "http://100.64.0.1:80", "/api/items/x?y", false, true},
+		{"/_ts/" + testSecret + "/https/nas.tail.ts.net:443", "https://nas.tail.ts.net:443", "/", false, true},
+		{"/_ts/" + testSecret + "/https-insecure/nas.tail.ts.net:443/a", "https://nas.tail.ts.net:443", "/a", true, true},
+		{"/_ts/wrong/http/100.64.0.1:80/ping", "", "", false, false},
+		{"/_ts/" + testSecret + "/ftp/host:21/x", "", "", false, false},
+		{"/_ts/" + testSecret + "/http-insecure/host:80/x", "", "", false, false},
+		{"/_ts/" + testSecret + "/http", "", "", false, false},
 	}
 	for _, c := range cases {
-		target, rest, ok := parseRoutedPath(c.path, testSecret)
+		target, rest, insecure, ok := parseRoutedPath(c.path, testSecret)
 		if ok != c.ok {
 			t.Errorf("%s: ok=%v, want %v", c.path, ok, c.ok)
 			continue
 		}
-		if ok && (target.String() != c.wantTarget || rest != c.wantRest) {
-			t.Errorf("%s: got %s %s", c.path, target, rest)
+		if ok && (target.String() != c.wantTarget || rest != c.wantRest || insecure != c.insecure) {
+			t.Errorf("%s: got %s %s insecure=%v", c.path, target, rest, insecure)
+		}
+	}
+}
+
+// A self-signed tailnet server: the normal https route refuses it (502), the
+// https-insecure route (sent only with "trust self-signed certificates" on)
+// reaches it.
+func TestInsecureRouteSkipsCertificateCheckOnlyWhenAsked(t *testing.T) {
+	backend := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer backend.Close()
+	bu, _ := url.Parse(backend.URL)
+	p := newTailnetProxy(testSecret, func(ctx context.Context, network, address string) (net.Conn, error) {
+		return (&net.Dialer{}).DialContext(ctx, network, bu.Host)
+	})
+	defer p.closeIdle()
+	srv := httptest.NewServer(p)
+	defer srv.Close()
+
+	for scheme, want := range map[string]int{
+		"https":          http.StatusBadGateway,
+		"https-insecure": http.StatusNoContent,
+	} {
+		res, err := http.Get(srv.URL + "/_ts/" + testSecret + "/" + scheme + "/nas.tail.ts.net:443/ping")
+		if err != nil {
+			t.Fatal(err)
+		}
+		res.Body.Close()
+		if res.StatusCode != want {
+			t.Errorf("%s: status %d, want %d", scheme, res.StatusCode, want)
 		}
 	}
 }

@@ -115,7 +115,14 @@ class TailscaleService extends ChangeNotifier {
   }
 
   /// Media URL for players and native downloaders (see buildTrackUrl).
-  String mediaUrl(String url) => _routing.mediaUrl(url);
+  String mediaUrl(String url) =>
+      _routing.mediaUrl(url, trustSelfSigned: trustSelfSigned());
+
+  /// Whether the user trusts self-signed certificates (main.dart sets it to
+  /// read `trustAllCerts`). The node's proxy then skips the certificate
+  /// check for media too, as Dart's own requests already do.
+  static bool Function() trustSelfSigned = _never;
+  static bool _never() => false;
 
   /// Whether [serverUrl] would go through the tailnet with the setting on.
   bool routesServer(String serverUrl) =>
