@@ -23199,6 +23199,12 @@ abstract class AppLocalizations {
   /// **'Go to a time in the open player'**
   String get desktopShortcutGoToTime;
 
+  /// Chip on the player after the sleep timer stopped playback; tapping it seeks back to where the listener was last known to be awake
+  ///
+  /// In en, this message translates to:
+  /// **'Fell asleep around {time} · Jump back'**
+  String fellAsleepJumpBack(String time);
+
   /// Library header button and quick switcher action: opens a random book the user hasn't finished
   ///
   /// In en, this message translates to:

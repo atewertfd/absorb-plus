@@ -7445,6 +7445,8 @@
   "goToTimePastEnd": "That's past the end ({time})",
   "@goToTimePastEnd": {"placeholders": {"time": {"type": "String"}}},
   "desktopShortcutGoToTime": "Go to a time in the open player",
+  "fellAsleepJumpBack": "Fell asleep around {time} · Jump back",
+  "@fellAsleepJumpBack": {"description": "Chip on the player after the sleep timer stopped playback; tapping it seeks back to where the listener was last known to be awake", "placeholders": {"time": {"type": "String"}}},
   "surpriseMe": "Surprise me",
   "@surpriseMe": {"description": "Library header button and quick switcher action: opens a random book the user hasn't finished"},
   "surpriseMeNoneLeft": "You've finished every book in this library",

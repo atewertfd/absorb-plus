@@ -32,6 +32,7 @@ import '../utils/local_path.dart';
 import 'item_download_watch.dart';
 import '../utils/cover_cache.dart';
 import '../utils/cover_decode_size.dart';
+import 'fell_asleep_chip.dart'; // Absorb Plus
 
 class AbsorbingCard extends StatefulWidget {
   final Map<String, dynamic> item;
@@ -1220,6 +1221,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                 expandedNotifier: _edgeBarExpanded,
               ),
             ),
+          FellAsleepChip(itemId: _itemId, episodeId: _episodeId), // Absorb Plus
         ],
       ),
       ),

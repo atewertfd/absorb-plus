@@ -13689,6 +13689,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get desktopShortcutGoToTime => 'Go to a time in the open player';
 
   @override
+  String fellAsleepJumpBack(String time) {
+    return 'Fell asleep around $time · Jump back';
+  }
+
+  @override
   String get surpriseMe => 'Surprise me';
 
   @override
