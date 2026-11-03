@@ -430,6 +430,22 @@ void main() {
       l.quickSwitcherSleepTimer,
       l.desktopShortcutsTitle,
     ]);
+    // The extra match words come from the translations, not from code.
+    expect(actions.map((a) => a.keywords), [
+      '',
+      '',
+      l.quickSwitcherKeywordsAbsorbing,
+      '',
+      l.quickSwitcherKeywordsSettings,
+      l.quickSwitcherKeywordsDownloads,
+      l.quickSwitcherKeywordsPlayPause,
+      l.quickSwitcherKeywordsSleepTimer,
+      l.quickSwitcherKeywordsShortcuts,
+    ]);
+    expect(filterQuickSwitcherActions(actions, 'timer').single.title,
+        l.quickSwitcherSleepTimer);
+    expect(filterQuickSwitcherActions(actions, 'hotkeys').single.title,
+        l.desktopShortcutsTitle);
     for (final a in actions.take(8)) {
       a.onSelected();
     }
