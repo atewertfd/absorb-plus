@@ -2205,6 +2205,7 @@ class AudioPlayerService extends ChangeNotifier {
     final next = _preloadedNextBook;
     if (next == null) return;
     if (_autoQueueAdvancing) return;
+    if (_recovery.holdsBookHandOff) return; // fork: a dropped stream, not the end
     _autoQueueAdvancing = true;
     _beginAdvanceBuffering();
     debugPrint('[PreBuffer] Auto-queue advanced to ${next['title']}');
@@ -4266,6 +4267,7 @@ class AudioPlayerService extends ChangeNotifier {
         initialPosition: localPos,
         itemId: _currentItemId,
       );
+      _recovery.onSourceLoaded(localFiles: true); // fork: no stream recovery over files
       _activeConcatSource = source;
       _currentBookTrackCount = trackSources.length;
       _subscribeTrackIndex();
@@ -6144,6 +6146,7 @@ class AudioPlayerService extends ChangeNotifier {
             itemId: _currentItemId,
           )
           .timeout(_swapLoadTimeout);
+      _recovery.onSourceLoaded(localFiles: false); // fork: back on the stream
       _activeConcatSource = source;
       _currentBookTrackCount = trackSources.length;
       _subscribeTrackIndex();
@@ -6194,7 +6197,12 @@ class AudioPlayerService extends ChangeNotifier {
       '[Player] Stream error — retry $_streamRetryCount/$_maxStreamRetries in ${delay.inSeconds}s',
     );
 
+    final owner = _loadedStart(); // fork: see _stillLoaded
     await Future<void>.delayed(delay);
+    if (!_stillLoaded(owner)) {
+      _retryInProgress = false;
+      return;
+    }
 
     // Snapshot state before retry — playItem will overwrite these
     final itemId = _currentItemId;
@@ -8475,6 +8483,7 @@ class AudioPlayerService extends ChangeNotifier {
 
   @override
   void dispose() {
+    _recovery.policy.dispose(); // fork: no reconnect timer outlives the service
     _endAdvanceBuffering();
     _syncSub?.cancel();
     _bgSaveTimer?.cancel();
