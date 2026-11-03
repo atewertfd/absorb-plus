@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart' show rootNavigatorKey;
 import '../providers/auth_provider.dart';
 import '../utils/unmetered_network.dart';
+import 'account_epoch.dart';
 import 'api_service.dart';
 import 'audio_player_service.dart';
 import 'download_service.dart';
@@ -89,6 +90,7 @@ class NextInSeriesDownloader {
   final Future<String?> Function(Map<String, dynamic> book) startDownload;
 
   final _handled = <String>{};
+  int _handledEpoch = AccountEpoch.current;
   bool _busy = false;
 
   Future<NextInSeriesOutcome> check({
@@ -99,6 +101,12 @@ class NextInSeriesDownloader {
   }) async {
     if (episodeId != null || !nextInSeriesDue(positionS, totalS)) {
       return NextInSeriesOutcome.notYet;
+    }
+    // Absorb Plus: books handled for one account say nothing about another.
+    final epoch = AccountEpoch.current;
+    if (_handledEpoch != epoch) {
+      _handled.clear();
+      _handledEpoch = epoch;
     }
     if (_handled.contains(itemId)) return NextInSeriesOutcome.alreadyHandled;
     if (_busy) return NextInSeriesOutcome.notYet;
@@ -149,6 +157,9 @@ class NextInSeriesDownloader {
         next = b;
         break;
       }
+      // The account changed during the lookups: the next book belongs to
+      // the old one, and starting it would download it under the new one.
+      if (!AccountEpoch.isCurrent(epoch)) return NextInSeriesOutcome.notYet;
       _handled.add(itemId);
       if (next == null) return NextInSeriesOutcome.noNextBook;
       final nextId = next['id'] as String;
