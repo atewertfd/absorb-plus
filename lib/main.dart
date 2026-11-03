@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io' hide Platform; // web-safe Platform below
 import 'utils/web_safe_platform.dart';
+import 'utils/platform_appearance.dart'; // fork (C16)
 import 'dart:ui';
 // Flutter 3.44 moved CupertinoPageTransitionsBuilder from material.dart to
 // cupertino.dart. Older SDKs (incl. local) still re-export it from material,
@@ -394,6 +395,7 @@ class AbsorbApp extends StatelessWidget {
         snappyTransitionsNotifier,
         uiThemeNotifier,
         uiThemePreviewNotifier, // "Try it" live look (fork UI themes)
+        PlatformAppearance.changes, // fork (C16): OS dark mode, reduce motion
       ]),
       builder: (context, _) {
         final isEink = einkModeNotifier.value;
@@ -706,11 +708,14 @@ class AbsorbApp extends StatelessWidget {
                 pageTransitionsTheme: pageTransition,
                 extensions: [absorbLookFor(Brightness.dark, eink: isEink)],
               ),
-              builder: absorbLookBuilder, // Frosted surfaces (fork UI themes)
-              home: AppMotionScope(
+              // Frosted surfaces (fork UI themes). Fork (C16): the motion
+              // scope sits above the navigator, so pushed routes, dialogs
+              // and sheets see it too.
+              builder: (context, child) => AppMotionScope(
                 mode: motionMode,
-                child: AuthGate(setupLinkStream: setupLinkStream),
+                child: absorbLookBuilder(context, child),
               ),
+              home: AuthGate(setupLinkStream: setupLinkStream),
             );
       },
     );
