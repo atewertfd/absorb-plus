@@ -13689,6 +13689,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get desktopShortcutGoToTime => 'Go to a time in the open player';
 
   @override
+  String get surpriseMe => 'Surprise me';
+
+  @override
+  String get surpriseMeNoneLeft =>
+      'You\'ve finished every book in this library';
+
+  @override
+  String get surpriseMeFailed => 'Couldn\'t pick a book. Try again.';
+
+  @override
+  String get surpriseMeOffline =>
+      'Surprise me needs a connection to the server';
+
+  @override
+  String get surpriseMeBooksOnly =>
+      'Surprise me picks books. Switch to a book library.';
+
+  @override
   String get autoDownloadNextInSeries =>
       'Download the next book in the series automatically';
 

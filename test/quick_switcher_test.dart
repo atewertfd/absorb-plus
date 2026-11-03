@@ -428,6 +428,7 @@ void main() {
       l.quickSwitcherGoDownloads,
       l.quickSwitcherPlayPause,
       l.quickSwitcherSleepTimer,
+      l.surpriseMe,
       l.desktopShortcutsTitle,
     ]);
     for (final a in actions.take(8)) {

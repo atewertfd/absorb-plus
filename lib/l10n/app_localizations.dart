@@ -23199,6 +23199,36 @@ abstract class AppLocalizations {
   /// **'Go to a time in the open player'**
   String get desktopShortcutGoToTime;
 
+  /// Library header button and quick switcher action: opens a random book the user hasn't finished
+  ///
+  /// In en, this message translates to:
+  /// **'Surprise me'**
+  String get surpriseMe;
+
+  /// No description provided for @surpriseMeNoneLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve finished every book in this library'**
+  String get surpriseMeNoneLeft;
+
+  /// No description provided for @surpriseMeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t pick a book. Try again.'**
+  String get surpriseMeFailed;
+
+  /// No description provided for @surpriseMeOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Surprise me needs a connection to the server'**
+  String get surpriseMeOffline;
+
+  /// No description provided for @surpriseMeBooksOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Surprise me picks books. Switch to a book library.'**
+  String get surpriseMeBooksOnly;
+
   /// No description provided for @autoDownloadNextInSeries.
   ///
   /// In en, this message translates to:

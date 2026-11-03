@@ -52,6 +52,7 @@ import '../widgets/new_list_flow.dart';
 import '../widgets/text_scale_room.dart';
 import '../widgets/recent_searches_panel.dart';
 import '../services/recent_searches.dart';
+import '../widgets/surprise_me_button.dart'; // Absorb Plus
 
 /// Responsive grid column count based on available width and the cover size
 /// setting; scales up on tablets/iPads.
@@ -3172,6 +3173,7 @@ class LibraryScreenState extends State<LibraryScreen>
                               ),
                             ),
                           ),
+                        if (SurpriseMeButton.availableFor(lib)) const SurpriseMeButton(), // Absorb Plus
                         // Holds the row at the select button's height on
                         // tabs without it, so the search bar doesn't jump.
                         if (!canSelectItems) const SizedBox(height: 48),
