@@ -336,7 +336,15 @@ class FileHealthCheck {
   }
 
   static String baseName(String path) {
-    final decoded = path.startsWith('content://') ? Uri.decodeComponent(path) : path;
+    var decoded = path;
+    if (path.startsWith('content://')) {
+      try {
+        decoded = Uri.decodeComponent(path);
+      } catch (_) {
+        // A stray '%' in a file name: keep the URI as it is rather than let
+        // the whole check fail.
+      }
+    }
     return decoded.split(RegExp(r'[\\/]')).last;
   }
 
