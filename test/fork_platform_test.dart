@@ -74,10 +74,19 @@ void main() {
       expect(ForkPlatform.hasMediaBrowser, isTrue);
     });
 
-    test('the equalizer is never hidden', () {
+    test('the equalizer is offered on every native platform', () {
       for (final p in TargetPlatform.values) {
         onPlatform(p);
         expect(ForkPlatform.hiddenCardButtons(), isNot(contains('equalizer')));
+        expect(ForkPlatform.supportsEqualizer, isTrue);
+      }
+    });
+
+    test('the equalizer is hidden on web, where nothing applies it', () {
+      for (final p in [TargetPlatform.windows, TargetPlatform.android]) {
+        onPlatform(p, web: true);
+        expect(ForkPlatform.supportsEqualizer, isFalse);
+        expect(ForkPlatform.hiddenCardButtons(), contains('equalizer'));
       }
     });
   });

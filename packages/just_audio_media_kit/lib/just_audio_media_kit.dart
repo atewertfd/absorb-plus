@@ -62,6 +62,17 @@ class JustAudioMediaKit extends JustAudioPlatform {
   static Map<String, String>? Function(String level, String prefix, String text)?
       audioOutputFallback;
 
+  /// mpv properties the app changes while players run (Absorb Plus patch,
+  /// see PATCHES.md). Applied after [mpvProperties] on new players.
+  static final Map<String, String> liveMpvProperties = {};
+
+  /// Sets an mpv property on every live player now and on players created
+  /// later (Absorb Plus patch, see PATCHES.md). Playback keeps going.
+  static Future<void> setLiveMpvProperty(String key, String value) {
+    liveMpvProperties[key] = value;
+    return MediaKitPlayer.setPropertyOnLivePlayers(key, value);
+  }
+
   static final _logger = Logger('JustAudioMediaKit');
   final _players = HashMap<String, MediaKitPlayer>();
 

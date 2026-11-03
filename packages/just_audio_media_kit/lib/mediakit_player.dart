@@ -26,6 +26,18 @@ class MediaKitPlayer extends AudioPlayerPlatform {
 
   static final _logger = Logger('MediaKitPlayer');
 
+  /// Absorb Plus patch: players not yet released, so the app can change an
+  /// mpv property on them while they play (see PATCHES.md).
+  static final _livePlayers = <MediaKitPlayer>{};
+
+  static Future<void> setPropertyOnLivePlayers(String key, String value) =>
+      Future.wait([
+        for (final p in _livePlayers.toList())
+          setProperty(p._player, key, value).catchError((Object e) {
+            _logger.warning('could not set $key: $e');
+          }),
+      ]);
+
   final _eventController = StreamController<PlaybackEventMessage>.broadcast();
   final _dataController = StreamController<PlayerDataMessage>.broadcast();
 
@@ -69,6 +81,10 @@ class MediaKitPlayer extends AudioPlayerPlatform {
     for (final entry in JustAudioMediaKit.mpvProperties.entries) {
       setProperty(_player, entry.key, entry.value);
     }
+    for (final entry in JustAudioMediaKit.liveMpvProperties.entries) {
+      setProperty(_player, entry.key, entry.value);
+    }
+    _livePlayers.add(this);
 
     _streamSubscriptions = [
       _player.stream.duration.listen((duration) {
@@ -439,6 +455,7 @@ class MediaKitPlayer extends AudioPlayerPlatform {
   /// Release the resources used by this player.
   Future<void> release() async {
     _logger.info('releasing player resources');
+    _livePlayers.remove(this);
     _mediaOpened = false;
     await _player.dispose();
     // cancel all stream subscriptions

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'desktop_equalizer.dart';
 import 'exclusive_audio_fallback.dart';
 
 const _exclusiveAudioKey = 'fork_windows_exclusive_audio';
@@ -38,6 +39,7 @@ void initializeDesktopAudio() {
   // output it opens; it was used to diagnose crackling on 2026-10-31.
   JustAudioMediaKit.mpvLogLevel = MPVLogLevel.warn;
   JustAudioMediaKit.ensureInitialized(windows: true, linux: true);
+  DesktopEqualizer.attach(); // the equalizer as an mpv filter chain
   _initialized = true;
 }
 
