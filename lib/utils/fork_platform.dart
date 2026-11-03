@@ -96,11 +96,16 @@ abstract final class ForkPlatform {
     return true;
   }
 
+  /// The equalizer changes the sound on Android (audio effects) and on
+  /// Windows and Linux (mpv filters, services/desktop_equalizer.dart). The
+  /// browser player has no hook for it.
+  static bool get supportsEqualizer => !isWeb;
+
   /// Card button ids to hide on this platform, on top of upstream's list.
-  /// The equalizer stays: it gets a real Windows version later.
   static Set<String> hiddenCardButtons() => {
         if (!supportsCast) 'cast',
         if (!supportsTranscription) 'lyrics',
+        if (!supportsEqualizer) 'equalizer',
       };
 
   /// Opens a link in the system browser. Tests replace it.
