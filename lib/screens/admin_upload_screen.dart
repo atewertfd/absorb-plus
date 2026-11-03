@@ -49,6 +49,11 @@ class AdminUploadScreen extends StatefulWidget {
   final MediaUploader? uploader;
   final BookMetadataSearcher? metadataSearcher;
   final VoidCallback? onNavigationGuardChanged;
+  final List<MediaUploadFile>? initialFiles; // Absorb Plus: desktop drop
+
+  /// File extensions the upload accepts (lower-case, no dot).
+  static Set<String> get uploadableExtensions =>
+      _AdminUploadScreenState._supportedExtensions; // Absorb Plus
 
   const AdminUploadScreen({
     super.key,
@@ -62,6 +67,7 @@ class AdminUploadScreen extends StatefulWidget {
     this.uploader,
     this.metadataSearcher,
     this.onNavigationGuardChanged,
+    this.initialFiles,
   });
 
   @override
@@ -211,6 +217,14 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
       _loadLibrariesFromApi();
     }
     _loadMetadataProviders();
+    // Absorb Plus: files dropped on the desktop window start in the list;
+    // nothing uploads until Upload is pressed.
+    final dropped = widget.initialFiles;
+    if (dropped != null && dropped.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _pickFiles(picker: () async => dropped);
+      });
+    }
   }
 
   void _applyInitialLibraries(List<dynamic> rawLibraries) {
@@ -494,10 +508,10 @@ class _AdminUploadScreenState extends State<AdminUploadScreen> {
         .toList();
   }
 
-  Future<void> _pickFiles() async {
+  Future<void> _pickFiles({UploadFilePicker? picker}) async {
     final l = AppLocalizations.of(context)!;
     try {
-      final picked = await (widget.filePicker ?? _pickWithFilePicker)();
+      final picked = await (picker ?? widget.filePicker ?? _pickWithFilePicker)();
       if (picked == null || picked.isEmpty || !mounted) return;
       final supported = picked.where(_isSupported).toList();
       if (supported.length != picked.length) {

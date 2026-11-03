@@ -23432,6 +23432,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No chapters match'**
   String get chapterSearchNoResults;
+
+  /// No description provided for @dropUploadNotAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account can\'t upload to this server'**
+  String get dropUploadNotAllowed;
+
+  /// No description provided for @dropUploadNothingUsable.
+  ///
+  /// In en, this message translates to:
+  /// **'None of the dropped files can be uploaded'**
+  String get dropUploadNothingUsable;
+
+  /// No description provided for @dropUploadAlreadyOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish or close the open upload first'**
+  String get dropUploadAlreadyOpen;
 }
 
 class _AppLocalizationsDelegate

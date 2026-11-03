@@ -13723,4 +13723,15 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get chapterSearchNoResults => 'No chapters match';
+
+  @override
+  String get dropUploadNotAllowed =>
+      'Your account can\'t upload to this server';
+
+  @override
+  String get dropUploadNothingUsable =>
+      'None of the dropped files can be uploaded';
+
+  @override
+  String get dropUploadAlreadyOpen => 'Finish or close the open upload first';
 }

@@ -85,6 +85,10 @@ abstract final class ForkPlatform {
   /// Android uses the system folder picker (SAF) instead.
   static bool get supportsDesktopDownloadFolder => isWindows || isLinux;
 
+  /// Files or a folder dropped on the window open the upload screen.
+  /// Android and web keep upstream behaviour (no drop target).
+  static bool get supportsDesktopFileDrop => isWindows || isLinux;
+
   /// Whether a reader for ebook format [ext] (lower-case, no dot) works here.
   /// - Web: no reader works (they need local files or a loopback server).
   /// - Linux: `flutter_inappwebview` has no Linux implementation, so the

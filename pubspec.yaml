@@ -132,6 +132,9 @@ dependencies:
   # viewer; pinned direct so the bridge API is a declared dependency)
   flutter_inappwebview: ^6.0.0
   flutter_svg: ^2.3.0
+  # Windows/Linux: drop audio files or a folder on the window to upload them
+  # (Absorb Plus). 0.9 needs a newer Flutter than this repo pins.
+  desktop_drop: ^0.8.4
 
 dev_dependencies:
   audio_service_platform_interface: ^0.1.3
