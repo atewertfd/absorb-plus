@@ -110,6 +110,36 @@ void main() {
     },
   );
 
+  test('S8 a proxy 403 on refresh keeps the session; ABS 401 ends it',
+      () async {
+    Future<bool> expiresOn(int status, String body) async {
+      final client = MockClient((request) async {
+        if (request.url.path == '/auth/refresh') {
+          return http.Response(body, status);
+        }
+        return http.Response('{}', 401);
+      });
+      var expired = false;
+      final service = ApiService(
+        baseUrl: 'https://audiobookshelf.example',
+        token: 'access-old',
+        refreshToken: 'refresh-old',
+        httpClient: client,
+        refreshRetryDelay: Duration.zero,
+        onAuthExpired: () => expired = true,
+      );
+      await service.getMe();
+      return expired;
+    }
+
+    expect(await expiresOn(403, '<html>Access denied</html>'), isFalse);
+    expect(await expiresOn(401, '{"error":"Invalid refresh token"}'), isTrue);
+    expect(ApiService.refreshRejected(403, '{"error":"x"}', isBookOrbit: false),
+        isTrue);
+    expect(ApiService.refreshRejected(403, '', isBookOrbit: true), isTrue);
+    expect(ApiService.refreshRejected(502, '', isBookOrbit: false), isFalse);
+  });
+
   test('retries a transient GET transport failure once', () async {
     var requests = 0;
     final client = MockClient((request) async {
