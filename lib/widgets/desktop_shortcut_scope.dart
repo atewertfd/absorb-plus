@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import '../services/desktop_shortcuts.dart';
 import '../utils/fork_platform.dart';
 import 'expanded_card.dart';
+import 'go_to_time_dialog.dart';
 
 /// Intent for one of the [DesktopShortcutAction]s (playback, search...).
 class DesktopShortcutIntent extends Intent {
@@ -163,6 +164,12 @@ class _NavigationAction extends Action<DesktopNavigationIntent> {
       case DesktopNavigationAction.previousCard:
       case DesktopNavigationAction.nextCard:
         return DesktopShortcutScope.handlers?.canSwitchCard() ?? false;
+      case DesktopNavigationAction.goToTime:
+        if (focusIsInDialog() || !goToTimeAvailable()) return false;
+        final nav = _rootNavigator(scopeContext);
+        return nav != null &&
+            (topRouteOf(nav) is ExpandedCardRoute ||
+                (DesktopShortcutScope.handlers?.canSwitchCard() ?? false));
     }
   }
 
@@ -181,6 +188,9 @@ class _NavigationAction extends Action<DesktopNavigationIntent> {
         DesktopShortcutScope.handlers?.switchCard(-1);
       case DesktopNavigationAction.nextCard:
         DesktopShortcutScope.handlers?.switchCard(1);
+      case DesktopNavigationAction.goToTime:
+        final nav = _rootNavigator(scopeContext);
+        if (nav != null) showGoToTimeDialog(nav.context);
     }
     return null;
   }

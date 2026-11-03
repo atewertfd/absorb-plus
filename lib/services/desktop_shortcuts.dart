@@ -167,6 +167,9 @@ enum DesktopNavigationAction {
   refresh,
   previousCard,
   nextCard,
+
+  /// Absorb Plus: Ctrl+G opens "Go to time" while the player is open.
+  goToTime,
 }
 
 /// When a navigation shortcut may fire, given where keyboard focus is.
@@ -239,6 +242,12 @@ const _navigationShortcuts = <DesktopNavigationShortcut>[
     action: DesktopNavigationAction.nextCard,
     activator: SingleActivator(LogicalKeyboardKey.arrowRight, control: true),
     label: 'Ctrl+Right',
+    focusRule: DesktopShortcutFocusRule.notTyping,
+  ),
+  DesktopNavigationShortcut(
+    action: DesktopNavigationAction.goToTime,
+    activator: SingleActivator(LogicalKeyboardKey.keyG, control: true),
+    label: 'Ctrl+G',
     focusRule: DesktopShortcutFocusRule.notTyping,
   ),
   DesktopNavigationShortcut(

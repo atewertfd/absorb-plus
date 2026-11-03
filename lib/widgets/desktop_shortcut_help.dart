@@ -40,6 +40,7 @@ String desktopNavigationDescription(
       DesktopNavigationAction.refresh => l.desktopShortcutRefresh,
       DesktopNavigationAction.previousCard => l.desktopShortcutPreviousCard,
       DesktopNavigationAction.nextCard => l.desktopShortcutNextCard,
+      DesktopNavigationAction.goToTime => l.desktopShortcutGoToTime,
     };
 
 /// Every shortcut this platform has, in table order. Keys bound to the same

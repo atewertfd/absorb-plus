@@ -23151,6 +23151,54 @@ abstract class AppLocalizations {
   /// **'Back to {time}'**
   String seekUndoBackTo(String time);
 
+  /// Player More-menu action and dialog title: type a time and the player seeks there
+  ///
+  /// In en, this message translates to:
+  /// **'Go to time'**
+  String get goToTime;
+
+  /// No description provided for @goToTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get goToTimeLabel;
+
+  /// No description provided for @goToTimeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'h:mm:ss, mm:ss or minutes'**
+  String get goToTimeHint;
+
+  /// No description provided for @goToTimeGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Go'**
+  String get goToTimeGo;
+
+  /// No description provided for @goToTimeLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Length {time}'**
+  String goToTimeLength(String time);
+
+  /// No description provided for @goToTimeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a time like 1:23:45, 23:45 or 90'**
+  String get goToTimeInvalid;
+
+  /// No description provided for @goToTimePastEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s past the end ({time})'**
+  String goToTimePastEnd(String time);
+
+  /// No description provided for @desktopShortcutGoToTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to a time in the open player'**
+  String get desktopShortcutGoToTime;
+
   /// No description provided for @autoDownloadNextInSeries.
   ///
   /// In en, this message translates to:

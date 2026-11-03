@@ -283,6 +283,7 @@ void main() {
           'Ctrl+R',
           'Ctrl+Left',
           'Ctrl+Right',
+          'Ctrl+G',
           'Page Up',
           'Page Down',
         ]);
@@ -294,6 +295,7 @@ void main() {
         expect(help[l.desktopShortcutRefresh], 'F5 / Ctrl+R');
         expect(help[l.desktopShortcutPreviousCard], 'Ctrl+Left / Page Up');
         expect(help[l.desktopShortcutNextCard], 'Ctrl+Right / Page Down');
+        expect(help[l.desktopShortcutGoToTime], 'Ctrl+G');
         expect(help[l.desktopShortcutContextMenu], 'Right-click');
         expect(help[l.desktopShortcutPlayPause], 'Space');
         expect(help[l.desktopShortcutFullScreen], 'F11');

@@ -41,6 +41,7 @@ import 'overlay_toast.dart';
 import 'sleep_timer_sheet.dart';
 import 'transcription_download_prompt.dart';
 import 'desktop_input.dart';
+import 'go_to_time_dialog.dart'; // Absorb Plus
 
 /// E-ink screens dither faint greys and cover-colored accents into noise, so
 /// the card controls bump to near-black when e-ink mode is on. Disabled stays
@@ -2091,6 +2092,9 @@ class CardActionDelegate {
           highlighted: LyricsService.instance.isOn,
           onTap: _toggleLyrics,
         );
+      case goToTimeButtonId: // Absorb Plus
+        return CardWideButton(icon: goToTimeIcon, label: l.goToTime, accent: accent, isActive: isActive, large: large, compact: compact, iconsOnly: iconsOnly,
+          onTap: () => showGoToTimeDialog(context));
       default:
         return const SizedBox.shrink();
     }
@@ -2302,6 +2306,9 @@ class CardActionDelegate {
             _toggleLyrics();
           },
         );
+      case goToTimeButtonId: // Absorb Plus
+        return MoreMenuItem(icon: goToTimeIcon, label: l.goToTime, accent: accent, enabled: isActive,
+          onTap: () { Navigator.pop(ctx); showGoToTimeDialog(context); });
       default:
         return const SizedBox.shrink();
     }
