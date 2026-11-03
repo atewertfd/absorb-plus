@@ -43,6 +43,9 @@ class _PlayerTarget implements GoToTimeTarget {
   Future<void> seekTo(Duration position) => player.seekTo(position);
 }
 
+/// Longest time [parseGoToTime] accepts: 31 days, far past any book.
+const _maxMinutes = 31 * 24 * 60;
+
 /// Reads "h:mm:ss", "mm:ss" (minutes may run past 59) or plain minutes
 /// ("90", "12.5"). Returns null for anything else.
 Duration? parseGoToTime(String input) {
@@ -50,7 +53,11 @@ Duration? parseGoToTime(String input) {
   if (text.isEmpty) return null;
   if (!text.contains(':')) {
     final minutes = double.tryParse(text.replaceAll(',', '.'));
-    if (minutes == null || minutes.isNaN || minutes.isInfinite || minutes < 0) {
+    if (minutes == null ||
+        minutes.isNaN ||
+        minutes.isInfinite ||
+        minutes < 0 ||
+        minutes > _maxMinutes) {
       return null;
     }
     return Duration(milliseconds: (minutes * 60000).round());
@@ -60,7 +67,11 @@ Duration? parseGoToTime(String input) {
   final values = <int>[];
   for (final part in parts) {
     final p = part.trim();
-    if (p.isEmpty || !RegExp(r'^\d+$').hasMatch(p)) return null;
+    // Six digits is plenty (a month in minutes) and keeps int.parse and
+    // Duration far from overflow on a pasted giant number.
+    if (p.isEmpty || p.length > 6 || !RegExp(r'^\d+$').hasMatch(p)) {
+      return null;
+    }
     values.add(int.parse(p));
   }
   final seconds = values.last;

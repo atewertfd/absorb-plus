@@ -41,10 +41,6 @@ class FellAsleepMarker {
       position > at + const Duration(seconds: 5) &&
       position < stoppedAt + listenedPast;
 
-  /// Whether [position] has made the marker pointless for good (back at or
-  /// before it, or well past where the timer stopped).
-  bool spentAt(Duration position) => !usefulAt(position);
-
   Map<String, dynamic> toJson() => {
     'a': at.inMilliseconds,
     's': stoppedAt.inMilliseconds,
@@ -124,19 +120,43 @@ class FellAsleepStore extends ChangeNotifier {
   /// The live marker for [key] ("itemId" or "itemId-episodeId"), if any.
   Future<FellAsleepMarker?> markerFor(String key) async => (await _load())[key];
 
-  Future<void> put(String key, FellAsleepMarker marker) async {
-    final markers = await _load();
-    markers[key] = marker;
-    await _save(markers);
-    notifyListeners();
+  /// The key the last [put] or [clear] changed, so a chip for another book
+  /// can skip reloading.
+  String? get lastChangedKey => _lastChangedKey;
+  String? _lastChangedKey;
+
+  // Read-modify-write steps run one at a time, so a save from the sleep
+  // timer and a clear from the chip never undo each other.
+  // Null when idle, so a step never waits on a future from an earlier zone.
+  Future<void>? _queue;
+
+  Future<void> _serialized(Future<void> Function() step) {
+    final previous = _queue;
+    final next = previous == null ? step() : previous.then((_) => step());
+    late final Future<void> tail;
+    tail = next.catchError((_) {}).whenComplete(() {
+      if (identical(_queue, tail)) _queue = null;
+    });
+    _queue = tail;
+    return next;
   }
 
-  Future<void> clear(String key) async {
+  Future<void> put(String key, FellAsleepMarker marker) =>
+      _serialized(() async {
+        final markers = await _load();
+        markers[key] = marker;
+        await _save(markers);
+        _lastChangedKey = key;
+        notifyListeners();
+      });
+
+  Future<void> clear(String key) => _serialized(() async {
     final markers = await _load();
     if (markers.remove(key) == null) return;
     await _save(markers);
+    _lastChangedKey = key;
     notifyListeners();
-  }
+  });
 }
 
 /// Watches the sleep timer for signs the listener is awake and saves a

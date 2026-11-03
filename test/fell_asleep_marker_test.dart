@@ -192,6 +192,18 @@ void main() {
       expect(await store.markerFor('item24'), isNull);
     });
 
+    test('overlapping saves and clears apply in order', () async {
+      final prefs = _Prefs();
+      final store = prefs.store();
+      final a = store.put('a', marker(prefs.now));
+      final b = store.put('b', marker(prefs.now));
+      final c = store.clear('a');
+      await Future.wait([a, b, c]);
+      expect(await store.markerFor('a'), isNull);
+      expect(await store.markerFor('b'), isNotNull);
+      expect(store.lastChangedKey, 'a');
+    });
+
     test('a marker is useful between itself and 10 min past the stop', () {
       final m = marker(DateTime(2026));
       expect(m.usefulAt(_m(5)), isFalse);

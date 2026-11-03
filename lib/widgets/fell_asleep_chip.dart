@@ -91,8 +91,13 @@ class _FellAsleepChipState extends State<FellAsleepChip> {
     super.initState();
     _player = widget.player ?? _AppPlayer(AudioPlayerService());
     _store = widget.store ?? FellAsleepStore.instance;
-    _store.addListener(_reload);
+    _store.addListener(_onStoreChanged);
     _reload();
+  }
+
+  void _onStoreChanged() {
+    final changed = _store.lastChangedKey;
+    if (changed == null || changed == _key) _reload();
   }
 
   @override
@@ -108,7 +113,7 @@ class _FellAsleepChipState extends State<FellAsleepChip> {
 
   @override
   void dispose() {
-    _store.removeListener(_reload);
+    _store.removeListener(_onStoreChanged);
     _stopListening();
     super.dispose();
   }
