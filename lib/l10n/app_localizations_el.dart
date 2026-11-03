@@ -12,907 +12,919 @@ class AppLocalizationsEl extends AppLocalizations {
   String get appTitle => 'A B S O R B';
 
   @override
-  String get online => 'Online';
+  String get online => 'Σε σύνδεση';
 
   @override
-  String get offline => 'Offline';
+  String get offline => 'Εκτός σύνδεσης';
 
   @override
-  String get stillOffline => 'Still offline. Tap to try again.';
+  String get stillOffline =>
+      'Ακόμα εκτός σύνδεσης. Πατήστε για νέα προσπάθεια.';
 
   @override
-  String get retry => 'Retry';
+  String get retry => 'Επανάληψη';
 
   @override
-  String get listsNone => 'No collections or playlists';
+  String get listsNone => 'Δεν υπάρχουν συλλογές ή λίστες αναπαραγωγής';
 
   @override
   String get listsNoneHint =>
-      'Collections and playlists are made on your Audiobookshelf server, and show up here.';
+      'Οι συλλογές και οι λίστες αναπαραγωγής δημιουργούνται στον διακομιστή Audiobookshelf και εμφανίζονται εδώ.';
 
   @override
-  String get listsLoadFailed => 'Couldn\'t load your lists';
+  String get listsLoadFailed => 'Δεν ήταν δυνατή η φόρτωση των λιστών σας';
 
   @override
   String get listsLoadFailedHint =>
-      'Absorb couldn\'t reach your server for collections and playlists.';
+      'Το Absorb δεν μπόρεσε να συνδεθεί με τον διακομιστή σας για τις συλλογές και τις λίστες αναπαραγωγής.';
 
   @override
-  String get listsNoneBookOrbit => 'No collections or Smart Scopes';
+  String get listsNoneBookOrbit => 'Δεν υπάρχουν συλλογές ή Smart Scopes';
 
   @override
   String get listsNoneHintBookOrbit =>
-      'Collections and Smart Scopes are made on your BookOrbit server, and show up here.';
+      'Οι συλλογές και τα Smart Scopes δημιουργούνται στον διακομιστή BookOrbit και εμφανίζονται εδώ.';
 
   @override
   String get listsLoadFailedHintBookOrbit =>
-      'Absorb couldn\'t reach your server for collections and Smart Scopes.';
+      'Το Absorb δεν μπόρεσε να συνδεθεί με τον διακομιστή σας για τις συλλογές και τα Smart Scopes.';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Ακύρωση';
 
   @override
-  String get delete => 'Delete';
+  String get delete => 'Διαγραφή';
 
   @override
-  String get remove => 'Remove';
+  String get remove => 'Αφαίρεση';
 
   @override
-  String get save => 'Save';
+  String get save => 'Αποθήκευση';
 
   @override
-  String get done => 'Done';
+  String get done => 'Τέλος';
 
   @override
-  String get edit => 'Edit';
+  String get edit => 'Επεξεργασία';
 
   @override
-  String get search => 'Search';
+  String get search => 'Αναζήτηση';
 
   @override
-  String get apply => 'Apply';
+  String get apply => 'Εφαρμογή';
 
   @override
-  String get enable => 'Enable';
+  String get enable => 'Ενεργοποίηση';
 
   @override
-  String get clear => 'Clear';
+  String get clear => 'Εκκαθάριση';
 
   @override
-  String get off => 'Off';
+  String get off => 'Ανενεργό';
 
   @override
-  String get disabled => 'Disabled';
+  String get disabled => 'Απενεργοποιημένο';
 
   @override
-  String get later => 'Later';
+  String get later => 'Αργότερα';
 
   @override
-  String get whatsNewTitle => 'Absorb was updated';
+  String get whatsNewTitle => 'Το Absorb ενημερώθηκε';
 
   @override
   String whatsNewContent(String version) {
-    return 'You\'re now on $version.';
+    return 'Χρησιμοποιείτε πλέον την έκδοση $version.';
   }
 
   @override
-  String get whatsNewButton => 'See what\'s new';
+  String get whatsNewButton => 'Δείτε τι νέο υπάρχει';
 
   @override
-  String get whatsNewKeepShowing => 'Show this after every update';
+  String get whatsNewKeepShowing => 'Εμφάνιση μετά από κάθε ενημέρωση';
 
   @override
-  String get whatsNewKeepShowingHint => 'You can turn it back on in Settings';
+  String get whatsNewKeepShowingHint =>
+      'Μπορείτε να το ενεργοποιήσετε ξανά στις Ρυθμίσεις';
 
   @override
-  String get settingsWhatsNew => 'Show what\'s new after updates';
+  String get settingsWhatsNew => 'Εμφάνιση των νέων μετά τις ενημερώσεις';
 
   @override
   String get settingsWhatsNewSubtitle =>
-      'After an update, show what\'s new in the app';
+      'Μετά από μια ενημέρωση, εμφάνιση των νέων στην εφαρμογή';
 
   @override
-  String get gotIt => 'Got it';
+  String get gotIt => 'Κατάλαβα';
 
   @override
-  String get betaLoggingTitle => 'Logs are on';
+  String get betaLoggingTitle => 'Τα αρχεία καταγραφής είναι ενεργά';
 
   @override
   String get betaLoggingContent =>
-      'Since this is a beta, Absorb now keeps logs to help track down problems. They stay on this device unless you share them.\n\nYou can send them or turn them off in Settings, under Issues & Support. If you turn them off, later betas leave them off.';
+      'Επειδή πρόκειται για beta, το Absorb κρατά πλέον αρχεία καταγραφής για τον εντοπισμό προβλημάτων. Μένουν σε αυτήν τη συσκευή εκτός αν τα μοιραστείτε.\n\nΜπορείτε να τα στείλετε ή να τα απενεργοποιήσετε στις Ρυθμίσεις, στην ενότητα Προβλήματα & υποστήριξη. Αν τα απενεργοποιήσετε, οι επόμενες beta θα τα αφήσουν απενεργοποιημένα.';
 
   @override
-  String get preview => 'Preview';
+  String get preview => 'Προεπισκόπηση';
 
   @override
-  String get or => 'or';
+  String get or => 'ή';
 
   @override
-  String get file => 'File';
+  String get file => 'Αρχείο';
 
   @override
-  String get more => 'More';
+  String get more => 'Περισσότερα';
 
   @override
-  String get unknown => 'Unknown';
+  String get unknown => 'Άγνωστο';
 
   @override
-  String get untitled => 'Untitled';
+  String get untitled => 'Χωρίς τίτλο';
 
   @override
-  String get noThanks => 'No Thanks';
+  String get noThanks => 'Όχι, ευχαριστώ';
 
   @override
-  String get stay => 'Stay';
+  String get stay => 'Παραμονή';
 
   @override
-  String get homeTitle => 'Home';
+  String get homeTitle => 'Αρχική';
 
   @override
-  String get continueListening => 'Continue Listening';
+  String get continueListening => 'Συνέχεια ακρόασης';
 
   @override
-  String get continueReading => 'Continue Reading';
+  String get continueReading => 'Συνέχεια ανάγνωσης';
 
   @override
-  String get continueSeries => 'Continue Series';
+  String get continueSeries => 'Συνέχεια σειράς';
 
   @override
-  String get recentlyAdded => 'Recently Added';
+  String get recentlyAdded => 'Προστέθηκαν πρόσφατα';
 
   @override
-  String get listenAgain => 'Listen Again';
+  String get listenAgain => 'Ακούστε ξανά';
 
   @override
-  String get discover => 'Discover';
+  String get discover => 'Ανακάλυψη';
 
   @override
-  String get newEpisodes => 'New Episodes';
+  String get newEpisodes => 'Νέα επεισόδια';
 
   @override
-  String get downloads => 'Downloads';
+  String get downloads => 'Λήψεις';
 
   @override
-  String get noDownloadedBooks => 'No downloaded books';
+  String get noDownloadedBooks => 'Δεν υπάρχουν ληφθέντα βιβλία';
 
   @override
-  String get yourLibraryIsEmpty => 'Your library is empty';
+  String get yourLibraryIsEmpty => 'Η βιβλιοθήκη σας είναι κενή';
 
   @override
   String get downloadBooksWhileOnline =>
-      'Download books while online to listen offline';
+      'Κάντε λήψη βιβλίων ενώ είστε συνδεδεμένοι για ακρόαση εκτός σύνδεσης';
 
   @override
-  String get customizeHome => 'Customize Home';
+  String get customizeHome => 'Προσαρμογή αρχικής';
 
   @override
-  String get dragToReorderTapEye => 'Drag to reorder, tap eye to show/hide';
+  String get dragToReorderTapEye =>
+      'Σύρετε για αναδιάταξη, πατήστε το μάτι για εμφάνιση/απόκρυψη';
 
   @override
-  String get loginTagline => 'Start Absorbing';
+  String get loginTagline => 'Ξεκινήστε το Absorbing';
 
   @override
-  String get loginConnectToServer => 'Connect to your server';
+  String get loginConnectToServer => 'Σύνδεση στον διακομιστή σας';
 
   @override
-  String get loginServerAddress => 'Server address';
+  String get loginServerAddress => 'Διεύθυνση διακομιστή';
 
   @override
   String get loginServerHint => 'my.server.com';
 
   @override
-  String get loginServerHelper => 'IP:port works too (e.g. 192.168.1.5:13378)';
+  String get loginServerHelper =>
+      'Λειτουργεί και IP:θύρα (π.χ. 192.168.1.5:13378)';
 
   @override
-  String get loginCouldNotReachServer => 'Could not reach server';
+  String get loginCouldNotReachServer =>
+      'Δεν ήταν δυνατή η σύνδεση με τον διακομιστή';
 
   @override
-  String get loginAdvanced => 'Advanced';
+  String get loginAdvanced => 'Για προχωρημένους';
 
   @override
-  String get loginCustomHttpHeaders => 'Custom HTTP Headers';
+  String get loginCustomHttpHeaders => 'Προσαρμοσμένες κεφαλίδες HTTP';
 
   @override
   String get loginCustomHeadersDescription =>
-      'For Cloudflare tunnels or reverse proxies that require extra headers. Add headers before entering your server URL.';
+      'Για σήραγγες Cloudflare ή αντίστροφους διακομιστές μεσολάβησης που απαιτούν επιπλέον κεφαλίδες. Προσθέστε τις κεφαλίδες πριν εισαγάγετε τη διεύθυνση του διακομιστή.';
 
   @override
-  String get loginHeaderName => 'Header name';
+  String get loginHeaderName => 'Όνομα κεφαλίδας';
 
   @override
-  String get loginHeaderValue => 'Value';
+  String get loginHeaderValue => 'Τιμή';
 
   @override
-  String get loginAddHeader => 'Add Header';
+  String get loginAddHeader => 'Προσθήκη κεφαλίδας';
 
   @override
-  String get loginSelfSignedCertificates => 'Self-signed Certificates';
+  String get loginSelfSignedCertificates => 'Αυτο-υπογεγραμμένα πιστοποιητικά';
 
   @override
   String get loginTrustAllCertificates =>
-      'Trust all certificates (for self-signed / custom CA setups)';
+      'Εμπιστοσύνη σε όλα τα πιστοποιητικά (για αυτο-υπογεγραμμένα / προσαρμοσμένη αρχή πιστοποίησης)';
 
   @override
-  String get loginApiKey => 'API Key';
+  String get loginApiKey => 'Κλειδί API';
 
   @override
   String get loginApiKeyDescription =>
-      'Use an admin-generated API key instead of username/password. Useful when token refresh fails for your account.';
+      'Χρησιμοποιήστε κλειδί API που δημιουργήθηκε από διαχειριστή αντί για όνομα χρήστη/κωδικό πρόσβασης. Χρήσιμο όταν αποτυγχάνει η ανανέωση του διακριτικού για τον λογαριασμό σας.';
 
   @override
-  String get loginWaitingForSso => 'Waiting for SSO...';
+  String get loginWaitingForSso => 'Αναμονή για SSO...';
 
   @override
-  String get loginRedirectUri => 'Redirect URI: absorb://oauth';
+  String get loginRedirectUri => 'URI ανακατεύθυνσης: absorb://oauth';
 
   @override
-  String get loginOrSignInManually => 'or sign in manually';
+  String get loginOrSignInManually => 'ή συνδεθείτε χειροκίνητα';
 
   @override
-  String get loginUsername => 'Username';
+  String get loginUsername => 'Όνομα χρήστη';
 
   @override
-  String get loginUsernameRequired => 'Please enter your username';
+  String get loginUsernameRequired => 'Εισαγάγετε το όνομα χρήστη σας';
 
   @override
-  String get loginPassword => 'Password';
+  String get loginPassword => 'Κωδικός πρόσβασης';
 
   @override
-  String get loginSignIn => 'Sign In';
+  String get loginSignIn => 'Σύνδεση';
 
   @override
   String loginSignInAs(String username) {
-    return 'Sign in as $username?';
+    return 'Σύνδεση ως $username;';
   }
 
   @override
-  String get loginSignInToServer => 'Sign in to this server?';
+  String get loginSignInToServer => 'Σύνδεση σε αυτόν τον διακομιστή;';
 
   @override
   String loginSignedInAs(String username) {
-    return 'Signed in as $username';
+    return 'Συνδεθήκατε ως $username';
   }
 
   @override
-  String get adminCreateSetupFile => 'Share sign-in';
+  String get adminCreateSetupFile => 'Κοινοποίηση σύνδεσης';
 
   @override
   String adminSetupFileDescription(String username) {
-    return 'Creates a private sign-in link for $username that only works in the Absorb app.';
+    return 'Δημιουργεί έναν ιδιωτικό σύνδεσμο σύνδεσης για τον χρήστη $username που λειτουργεί μόνο στην εφαρμογή Absorb.';
   }
 
   @override
-  String get adminSetupFileServerUrl => 'Server URL the new user will use';
+  String get adminSetupFileServerUrl =>
+      'Διεύθυνση διακομιστή που θα χρησιμοποιήσει ο νέος χρήστης';
 
   @override
   String get adminSetupFileNoteWithHeaders =>
-      'A dedicated API key and your custom headers will be included so they can reach the server. Treat the link like a password.';
+      'Θα συμπεριληφθούν ένα ειδικό κλειδί API και οι προσαρμοσμένες κεφαλίδες σας, ώστε να έχει πρόσβαση στον διακομιστή. Αντιμετωπίστε τον σύνδεσμο σαν κωδικό πρόσβασης.';
 
   @override
   String get adminSetupFileNote =>
-      'A dedicated API key will be included. Treat the link like a password.';
+      'Θα συμπεριληφθεί ένα ειδικό κλειδί API. Αντιμετωπίστε τον σύνδεσμο σαν κωδικό πρόσβασης.';
 
   @override
-  String get adminSetupFileCreate => 'Create link';
+  String get adminSetupFileCreate => 'Δημιουργία συνδέσμου';
 
   @override
-  String get adminSetupFileSaveTitle => 'Save setup file';
+  String get adminSetupFileSaveTitle => 'Αποθήκευση αρχείου ρύθμισης';
 
   @override
   String get adminSetupFileKeyError =>
-      'Could not create an API key for this user';
+      'Δεν ήταν δυνατή η δημιουργία κλειδιού API για αυτόν τον χρήστη';
 
   @override
   String adminSetupFileSaved(String username) {
-    return 'Setup file for $username saved';
+    return 'Το αρχείο ρύθμισης για τον χρήστη $username αποθηκεύτηκε';
   }
 
   @override
   String adminSetupFileFailed(String error) {
-    return 'Failed to create sign-in: $error';
+    return 'Αποτυχία δημιουργίας σύνδεσης: $error';
   }
 
   @override
-  String get setupLinkShareTitle => 'Share sign-in';
+  String get setupLinkShareTitle => 'Κοινοποίηση σύνδεσης';
 
   @override
   String setupLinkShareDescription(String username) {
-    return 'Send this private link or have them scan the QR code to sign in as $username.';
+    return 'Στείλτε αυτόν τον ιδιωτικό σύνδεσμο ή ζητήστε να σαρώσουν τον κωδικό QR για να συνδεθούν ως $username.';
   }
 
   @override
   String setupLinkPrivateWarning(String username) {
-    return 'Anyone with this link can sign in as $username. Treat it like a password.';
+    return 'Όποιος έχει αυτόν τον σύνδεσμο μπορεί να συνδεθεί ως $username. Αντιμετωπίστε τον σαν κωδικό πρόσβασης.';
   }
 
   @override
-  String get setupLinkShare => 'Share link';
+  String get setupLinkShare => 'Κοινοποίηση συνδέσμου';
 
   @override
-  String get setupLinkCopy => 'Copy link';
+  String get setupLinkCopy => 'Αντιγραφή συνδέσμου';
 
   @override
-  String get setupLinkCopied => 'Sign-in link copied';
+  String get setupLinkCopied => 'Ο σύνδεσμος σύνδεσης αντιγράφηκε';
 
   @override
-  String get setupLinkSaveFile => 'Save setup file';
+  String get setupLinkSaveFile => 'Αποθήκευση αρχείου ρύθμισης';
 
   @override
   String get setupLinkQrError =>
-      'This setup link is too large for a QR code. Share the link instead.';
+      'Αυτός ο σύνδεσμος ρύθμισης είναι πολύ μεγάλος για κωδικό QR. Κοινοποιήστε τον σύνδεσμο.';
 
   @override
   String setupLinkShareSubject(String username) {
-    return 'Absorb sign-in for $username';
+    return 'Σύνδεση στο Absorb για τον χρήστη $username';
   }
 
   @override
-  String get setupLinkConfirmTitle => 'Sign in with this link?';
+  String get setupLinkConfirmTitle => 'Σύνδεση με αυτόν τον σύνδεσμο;';
 
   @override
   String setupLinkConfirmBody(String server, String username) {
-    return 'Sign in to $server as $username? Only continue if you trust who sent this link.';
+    return 'Σύνδεση στον $server ως $username; Συνεχίστε μόνο αν εμπιστεύεστε αυτόν που σας έστειλε τον σύνδεσμο.';
   }
 
   @override
-  String get setupLinkInvalid => 'This sign-in link is invalid or incomplete';
+  String get setupLinkInvalid =>
+      'Αυτός ο σύνδεσμος σύνδεσης δεν είναι έγκυρος ή είναι ελλιπής';
 
   @override
-  String get setupLinkSigningIn => 'Checking sign-in link...';
+  String get setupLinkSigningIn => 'Έλεγχος συνδέσμου σύνδεσης...';
 
   @override
-  String get loginPlayDownloads => 'Play your downloads';
+  String get loginPlayDownloads => 'Αναπαραγωγή των λήψεών σας';
 
   @override
   String signedOutDownloadsNote(String username) {
-    return 'You\'re signed out. Anything you listen to here syncs to $username when you sign back in.';
+    return 'Έχετε αποσυνδεθεί. Ό,τι ακούτε εδώ συγχρονίζεται με τον χρήστη $username όταν συνδεθείτε ξανά.';
   }
 
   @override
-  String get loginPasteLink => 'Paste login link';
+  String get loginPasteLink => 'Επικόλληση συνδέσμου σύνδεσης';
 
   @override
   String get loginPasteLinkHelp =>
-      'Paste the complete sign-in link you received. Treat it like a password.';
+      'Επικολλήστε ολόκληρο τον σύνδεσμο σύνδεσης που λάβατε. Αντιμετωπίστε τον σαν κωδικό πρόσβασης.';
 
   @override
-  String get loginFailed => 'Login failed';
+  String get loginFailed => 'Η σύνδεση απέτυχε';
 
   @override
-  String get loginSsoFailed => 'SSO login failed or was cancelled';
+  String get loginSsoFailed => 'Η σύνδεση SSO απέτυχε ή ακυρώθηκε';
 
   @override
   String get loginSsoAuthFailed =>
-      'SSO authentication failed. Please try again.';
+      'Ο έλεγχος ταυτότητας SSO απέτυχε. Δοκιμάστε ξανά.';
 
   @override
-  String get loginRestoreFromBackup => 'Import';
+  String get loginRestoreFromBackup => 'Εισαγωγή';
 
   @override
-  String get loginInvalidBackupFile => 'Invalid backup file';
+  String get loginInvalidBackupFile => 'Μη έγκυρο αρχείο αντιγράφου ασφαλείας';
 
   @override
-  String get loginRestoreBackupTitle => 'Restore backup?';
+  String get loginRestoreBackupTitle => 'Επαναφορά αντιγράφου ασφαλείας;';
 
   @override
   String loginRestoreBackupWithAccounts(int count) {
-    return 'This will restore all settings and $count saved account(s). You\'ll be signed in automatically.';
+    return 'Θα γίνει επαναφορά όλων των ρυθμίσεων και $count αποθηκευμένου(-ων) λογαριασμού(-ών). Θα συνδεθείτε αυτόματα.';
   }
 
   @override
   String get loginRestoreBackupNoAccounts =>
-      'This will restore all settings. No accounts were included in this backup.';
+      'Θα γίνει επαναφορά όλων των ρυθμίσεων. Αυτό το αντίγραφο ασφαλείας δεν περιλαμβάνει λογαριασμούς.';
 
   @override
-  String get loginRestore => 'Restore';
+  String get loginRestore => 'Επαναφορά';
 
   @override
   String loginRestoredAndSignedIn(String username) {
-    return 'Restored settings and signed in as $username';
+    return 'Οι ρυθμίσεις επαναφέρθηκαν και συνδεθήκατε ως $username';
   }
 
   @override
   String get loginSessionExpired =>
-      'Settings restored. Session expired - sign in to continue.';
+      'Οι ρυθμίσεις επαναφέρθηκαν. Η συνεδρία έληξε - συνδεθείτε για να συνεχίσετε.';
 
   @override
-  String get loginSettingsRestored => 'Settings restored';
+  String get loginSettingsRestored => 'Οι ρυθμίσεις επαναφέρθηκαν';
 
   @override
   String loginRestoreFailed(String error) {
-    return 'Restore failed: $error';
+    return 'Η επαναφορά απέτυχε: $error';
   }
 
   @override
-  String get loginSavedAccounts => 'saved accounts';
+  String get loginSavedAccounts => 'αποθηκευμένοι λογαριασμοί';
 
   @override
-  String get libraryTitle => 'Library';
+  String get libraryTitle => 'Βιβλιοθήκη';
 
   @override
   String get librarySearchBooksHint =>
-      'Search books, series, authors, narrators...';
+      'Αναζήτηση βιβλίων, σειρών, συγγραφέων, αφηγητών...';
 
   @override
-  String get librarySearchShowsHint => 'Search shows and episodes...';
+  String get librarySearchShowsHint => 'Αναζήτηση εκπομπών και επεισοδίων...';
 
   @override
-  String get libraryTabLibrary => 'Library';
+  String get libraryTabLibrary => 'Βιβλιοθήκη';
 
   @override
-  String get libraryTabSeries => 'Series';
+  String get libraryTabSeries => 'Σειρές';
 
   @override
-  String get libraryTabAuthors => 'Authors';
+  String get libraryTabAuthors => 'Συγγραφείς';
 
   @override
-  String get libraryTabNarrators => 'Narrators';
+  String get libraryTabNarrators => 'Αφηγητές';
 
   @override
-  String get libraryNoBooks => 'No books found';
+  String get libraryNoBooks => 'Δεν βρέθηκαν βιβλία';
 
   @override
-  String get libraryNoUnfinishedBooks => 'No unfinished books';
+  String get libraryNoUnfinishedBooks => 'Δεν υπάρχουν μη ολοκληρωμένα βιβλία';
 
   @override
-  String get libraryNoBooksInProgress => 'No books in progress';
+  String get libraryNoBooksInProgress => 'Δεν υπάρχουν βιβλία σε εξέλιξη';
 
   @override
-  String get libraryNoFinishedBooks => 'No finished books';
+  String get libraryNoFinishedBooks => 'Δεν υπάρχουν ολοκληρωμένα βιβλία';
 
   @override
-  String get libraryAllBooksStarted => 'All books have been started';
+  String get libraryAllBooksStarted => 'Έχουν ξεκινήσει όλα τα βιβλία';
 
   @override
-  String get libraryNoDownloadedBooks => 'No downloaded books';
+  String get libraryNoDownloadedBooks => 'Δεν υπάρχουν ληφθέντα βιβλία';
 
   @override
-  String get libraryNoSeriesFound => 'No series found';
+  String get libraryNoSeriesFound => 'Δεν βρέθηκαν σειρές';
 
   @override
-  String get libraryNoBooksWithEbooks => 'No books with eBooks';
+  String get libraryNoBooksWithEbooks =>
+      'Δεν υπάρχουν βιβλία με ηλεκτρονικά βιβλία';
 
   @override
   String get libraryNoBooksMissingMetadata =>
-      'No books are missing this metadata';
+      'Κανένα βιβλίο δεν στερείται αυτών των μεταδεδομένων';
 
   @override
-  String get libraryNoItemsMatchingFilter => 'No items match this filter';
+  String get libraryNoItemsMatchingFilter =>
+      'Κανένα στοιχείο δεν ταιριάζει με αυτό το φίλτρο';
 
   @override
   String libraryNoBooksInGenre(String genre) {
-    return 'No books in \"$genre\"';
+    return 'Δεν υπάρχουν βιβλία στο «$genre»';
   }
 
   @override
   String libraryNoBooksWithTag(String tag) {
-    return 'No books tagged \"$tag\"';
+    return 'Δεν υπάρχουν βιβλία με την ετικέτα «$tag»';
   }
 
   @override
-  String get libraryClearFilter => 'Clear filter';
+  String get libraryClearFilter => 'Εκκαθάριση φίλτρου';
 
   @override
-  String get libraryNoAuthorsFound => 'No authors found';
+  String get libraryNoAuthorsFound => 'Δεν βρέθηκαν συγγραφείς';
 
   @override
-  String get libraryNoNarratorsFound => 'No narrators found';
+  String get libraryNoNarratorsFound => 'Δεν βρέθηκαν αφηγητές';
 
   @override
-  String get libraryNoResults => 'No results found';
+  String get libraryNoResults => 'Δεν βρέθηκαν αποτελέσματα';
 
   @override
-  String get librarySearchBooks => 'Books';
+  String get librarySearchBooks => 'Βιβλία';
 
   @override
-  String get librarySearchShows => 'Shows';
+  String get librarySearchShows => 'Εκπομπές';
 
   @override
-  String get librarySearchEpisodes => 'Episodes';
+  String get librarySearchEpisodes => 'Επεισόδια';
 
   @override
-  String get librarySearchSeries => 'Series';
+  String get librarySearchSeries => 'Σειρές';
 
   @override
-  String get librarySearchAuthors => 'Authors';
+  String get librarySearchAuthors => 'Συγγραφείς';
 
   @override
-  String get librarySearchTags => 'Tags';
+  String get librarySearchTags => 'Ετικέτες';
 
   @override
-  String get librarySearchGenres => 'Genres';
+  String get librarySearchGenres => 'Είδη';
 
   @override
   String librarySeriesCount(int count) {
-    return '$count series';
+    return '$count σειρές';
   }
 
   @override
   String libraryAuthorsCount(int count) {
-    return '$count authors';
+    return '$count συγγραφείς';
   }
 
   @override
   String libraryNarratorsCount(int count) {
-    return '$count narrators';
+    return '$count αφηγητές';
   }
 
   @override
   String libraryBooksCount(int loaded, int total) {
-    return '$loaded/$total books';
+    return '$loaded/$total βιβλία';
   }
 
   @override
-  String get sort => 'Sort';
+  String get sort => 'Ταξινόμηση';
 
   @override
-  String get filter => 'Filter';
+  String get filter => 'Φίλτρο';
 
   @override
-  String get filterActive => 'Filter ●';
+  String get filterActive => 'Φίλτρο ●';
 
   @override
-  String get name => 'Name';
+  String get name => 'Όνομα';
 
   @override
-  String get title => 'Title';
+  String get title => 'Τίτλος';
 
   @override
-  String get author => 'Author';
+  String get author => 'Συγγραφέας';
 
   @override
-  String get dateAdded => 'Date Added';
+  String get dateAdded => 'Ημερομηνία προσθήκης';
 
   @override
-  String get numberOfBooks => 'Number of Books';
+  String get numberOfBooks => 'Αριθμός βιβλίων';
 
   @override
-  String get sortTotalDuration => 'Total duration';
+  String get sortTotalDuration => 'Συνολική διάρκεια';
 
   @override
-  String get sortLastBookAdded => 'Last book added';
+  String get sortLastBookAdded => 'Τελευταίο βιβλίο που προστέθηκε';
 
   @override
-  String get sortLastBookUpdated => 'Last book updated';
+  String get sortLastBookUpdated => 'Τελευταίο βιβλίο που ενημερώθηκε';
 
   @override
-  String get publishedYear => 'Published Year';
+  String get publishedYear => 'Έτος έκδοσης';
 
   @override
-  String get duration => 'Duration';
+  String get duration => 'Διάρκεια';
 
   @override
-  String get random => 'Random';
+  String get random => 'Τυχαία';
 
   @override
-  String get collapseSeries => 'Collapse Series';
+  String get collapseSeries => 'Σύμπτυξη σειρών';
 
   @override
-  String get notFinished => 'Not Finished';
+  String get notFinished => 'Μη ολοκληρωμένα';
 
   @override
-  String get inProgress => 'In Progress';
+  String get inProgress => 'Σε εξέλιξη';
 
   @override
-  String get filterFinished => 'Finished';
+  String get filterFinished => 'Ολοκληρώθηκε';
 
   @override
-  String get notStarted => 'Not Started';
+  String get notStarted => 'Δεν ξεκίνησαν';
 
   @override
-  String get downloaded => 'Downloaded';
+  String get downloaded => 'Ληφθέντα';
 
   @override
-  String get hasEbook => 'Has eBook';
+  String get hasEbook => 'Με ηλεκτρονικό βιβλίο';
 
   @override
-  String get noEbook => 'No eBook';
+  String get noEbook => 'Χωρίς ηλεκτρονικό βιβλίο';
 
   @override
-  String get hasSupplementaryEbook => 'Has Supplementary eBook';
+  String get hasSupplementaryEbook => 'Με συμπληρωματικό ηλεκτρονικό βιβλίο';
 
   @override
-  String get noSupplementaryEbook => 'No Supplementary eBook';
+  String get noSupplementaryEbook => 'Χωρίς συμπληρωματικό ηλεκτρονικό βιβλίο';
 
   @override
-  String get noSeries => 'No Series';
+  String get noSeries => 'Χωρίς σειρά';
 
   @override
-  String get publishedDecade => 'Published Decade';
+  String get publishedDecade => 'Δεκαετία έκδοσης';
 
   @override
-  String get tracks => 'Tracks';
+  String get tracks => 'Κομμάτια';
 
   @override
-  String get noTracks => 'No Tracks';
+  String get noTracks => 'Χωρίς κομμάτια';
 
   @override
-  String get singleTrack => 'Single Track';
+  String get singleTrack => 'Ένα κομμάτι';
 
   @override
-  String get multipleTracks => 'Multiple Tracks';
+  String get multipleTracks => 'Πολλά κομμάτια';
 
   @override
-  String get abridged => 'Abridged';
+  String get abridged => 'Συντομευμένο';
 
   @override
-  String get issues => 'Issues';
+  String get issues => 'Προβλήματα';
 
   @override
-  String get rssFeedOpen => 'RSS Feed Open';
+  String get rssFeedOpen => 'Ανοιχτή ροή RSS';
 
   @override
-  String get explicitContent => 'Explicit';
+  String get explicitContent => 'Ακατάλληλο περιεχόμενο';
 
   @override
-  String get missingMetadata => 'Missing Metadata';
+  String get missingMetadata => 'Ελλιπή μεταδεδομένα';
 
   @override
-  String get genre => 'Genre';
+  String get genre => 'Είδος';
 
   @override
-  String get tag => 'Tag';
+  String get tag => 'Ετικέτα';
 
   @override
-  String get clearFilter => 'Clear Filter';
+  String get clearFilter => 'Εκκαθάριση φίλτρου';
 
   @override
-  String get noGenresFound => 'No genres found';
+  String get noGenresFound => 'Δεν βρέθηκαν είδη';
 
   @override
-  String get noTagsFound => 'No tags found';
+  String get noTagsFound => 'Δεν βρέθηκαν ετικέτες';
 
   @override
-  String get asc => 'ASC';
+  String get asc => 'ΑΥΞ.';
 
   @override
-  String get desc => 'DESC';
+  String get desc => 'ΦΘΙΝ.';
 
   @override
-  String get fileSize => 'File Size';
+  String get fileSize => 'Μέγεθος αρχείου';
 
   @override
-  String get lastUpdated => 'Last Updated';
+  String get lastUpdated => 'Τελευταία ενημέρωση';
 
   @override
-  String get fileCreated => 'File Created';
+  String get fileCreated => 'Δημιουργία αρχείου';
 
   @override
-  String get lastModified => 'Last Modified';
+  String get lastModified => 'Τελευταία τροποποίηση';
 
   @override
-  String get authorFirstLast => 'Author (First Last)';
+  String get authorFirstLast => 'Συγγραφέας (Όνομα Επώνυμο)';
 
   @override
-  String get authorLastFirst => 'Author (Last, First)';
+  String get authorLastFirst => 'Συγγραφέας (Επώνυμο, Όνομα)';
 
   @override
-  String get progressSort => 'Progress';
+  String get progressSort => 'Πρόοδος';
 
   @override
-  String get dateStarted => 'Date Started';
+  String get dateStarted => 'Ημερομηνία έναρξης';
 
   @override
-  String get dateFinished => 'Date Finished';
+  String get dateFinished => 'Ημερομηνία ολοκλήρωσης';
 
   @override
-  String get episodeCount => 'Episode Count';
+  String get episodeCount => 'Αριθμός επεισοδίων';
 
   @override
-  String get sequence => 'Series Sequence';
+  String get sequence => 'Σειρά στην ακολουθία';
 
   @override
   String get absorbingTitle => 'Absorbing';
 
   @override
-  String get absorbingStop => 'Stop';
+  String get absorbingStop => 'Διακοπή';
 
   @override
-  String get absorbingManageQueue => 'Manage Queue';
+  String get absorbingManageQueue => 'Διαχείριση ουράς';
 
   @override
-  String get absorbingDone => 'Done';
+  String get absorbingDone => 'Τέλος';
 
   @override
-  String get absorbingNoDownloadedEpisodes => 'No downloaded episodes';
+  String get absorbingNoDownloadedEpisodes => 'Δεν υπάρχουν ληφθέντα επεισόδια';
 
   @override
-  String get absorbingNoDownloadedBooks => 'No downloaded books';
+  String get absorbingNoDownloadedBooks => 'Δεν υπάρχουν ληφθέντα βιβλία';
 
   @override
-  String get absorbingNothingPlayingYet => 'Nothing playing yet';
+  String get absorbingNothingPlayingYet => 'Δεν παίζει τίποτα ακόμα';
 
   @override
-  String get absorbingNothingAbsorbingYet => 'Nothing absorbing yet';
+  String get absorbingNothingAbsorbingYet =>
+      'Δεν υπάρχει τίποτα στο Absorbing ακόμα';
 
   @override
   String get absorbingDownloadEpisodesToListen =>
-      'Download episodes to listen offline';
+      'Κάντε λήψη επεισοδίων για ακρόαση εκτός σύνδεσης';
 
   @override
   String get absorbingDownloadBooksToListen =>
-      'Download books to listen offline';
+      'Κάντε λήψη βιβλίων για ακρόαση εκτός σύνδεσης';
 
   @override
   String get absorbingStartEpisodeFromShows =>
-      'Start an episode from the Shows tab';
+      'Ξεκινήστε ένα επεισόδιο από την καρτέλα Εκπομπές';
 
   @override
   String get absorbingStartBookFromLibrary =>
-      'Start a book from the Library tab';
+      'Ξεκινήστε ένα βιβλίο από την καρτέλα Βιβλιοθήκη';
 
   @override
-  String get carModeTitle => 'Car Mode';
+  String get carModeTitle => 'Λειτουργία αυτοκινήτου';
 
   @override
-  String get carModeNoBookLoaded => 'No book loaded';
+  String get carModeNoBookLoaded => 'Δεν έχει φορτωθεί βιβλίο';
 
   @override
-  String get carModeBookLabel => 'Book';
+  String get carModeBookLabel => 'Βιβλίο';
 
   @override
-  String get carModeChapterLabel => 'Chapter';
+  String get carModeChapterLabel => 'Κεφάλαιο';
 
   @override
-  String get carModeBookmarkDefault => 'Bookmark';
+  String get carModeBookmarkDefault => 'Σελιδοδείκτης';
 
   @override
-  String get carModeBookmarkAdded => 'Bookmark added';
+  String get carModeBookmarkAdded => 'Ο σελιδοδείκτης προστέθηκε';
 
   @override
-  String get downloadsTitle => 'Downloads';
+  String get downloadsTitle => 'Λήψεις';
 
   @override
-  String get downloadsCancelSelection => 'Cancel selection';
+  String get downloadsCancelSelection => 'Ακύρωση επιλογής';
 
   @override
-  String get downloadsSelect => 'Select';
+  String get downloadsSelect => 'Επιλογή';
 
   @override
-  String get downloadsNoDownloads => 'No downloads';
+  String get downloadsNoDownloads => 'Δεν υπάρχουν λήψεις';
 
   @override
-  String get downloadsDownloading => 'Downloading';
+  String get downloadsDownloading => 'Λήψη σε εξέλιξη';
 
   @override
-  String get downloadsQueued => 'Queued';
+  String get downloadsQueued => 'Στην ουρά';
 
   @override
-  String get downloadsCompleted => 'Completed';
+  String get downloadsCompleted => 'Ολοκληρώθηκαν';
 
   @override
-  String get downloadsEbooks => 'Ebooks';
+  String get downloadsEbooks => 'Ηλεκτρονικά βιβλία';
 
   @override
-  String get downloadsWaiting => 'Waiting...';
+  String get downloadsWaiting => 'Αναμονή...';
 
   @override
-  String get downloadsCancel => 'Cancel';
+  String get downloadsCancel => 'Ακύρωση';
 
   @override
-  String get downloadsDelete => 'Delete';
+  String get downloadsDelete => 'Διαγραφή';
 
   @override
   String downloadsDeleteCount(int count) {
-    return 'Delete $count download(s)?';
+    return 'Διαγραφή $count λήψης(-εων);';
   }
 
   @override
   String get downloadsDeleteContent =>
-      'Downloaded files will be removed from this device.';
+      'Τα ληφθέντα αρχεία θα αφαιρεθούν από αυτήν τη συσκευή.';
 
   @override
   String downloadsDeletedCount(int count) {
-    return 'Deleted $count download(s)';
+    return 'Διαγράφηκαν $count λήψη(-εις)';
   }
 
   @override
-  String get downloadsRemoveTitle => 'Remove download?';
+  String get downloadsRemoveTitle => 'Αφαίρεση λήψης;';
 
   @override
   String downloadsRemoveContent(String title) {
-    return 'Delete \"$title\" from this device?';
+    return 'Διαγραφή του «$title» από αυτήν τη συσκευή;';
   }
 
   @override
   String downloadsRemovedTitle(String title) {
-    return '\"$title\" removed';
+    return 'Το «$title» αφαιρέθηκε';
   }
 
   @override
   String downloadFailedMissingFile(String title) {
-    return 'Couldn\'t download \"$title\" - one of its files isn\'t on the server. A library scan may fix it.';
+    return 'Δεν ήταν δυνατή η λήψη του «$title» - ένα από τα αρχεία του δεν υπάρχει στον διακομιστή. Μια σάρωση της βιβλιοθήκης μπορεί να το διορθώσει.';
   }
 
   @override
   String downloadFailedNoSpace(String title) {
-    return 'Couldn\'t download \"$title\" - not enough storage space';
+    return 'Δεν ήταν δυνατή η λήψη του «$title» - δεν υπάρχει αρκετός χώρος αποθήκευσης';
   }
 
   @override
   String downloadFailedPermission(String title) {
-    return 'Couldn\'t download \"$title\" - check the download location in Settings';
+    return 'Δεν ήταν δυνατή η λήψη του «$title» - ελέγξτε τη θέση λήψης στις Ρυθμίσεις';
   }
 
   @override
   String downloadFailedGeneric(String title) {
-    return 'Couldn\'t download \"$title\"';
+    return 'Δεν ήταν δυνατή η λήψη του «$title»';
   }
 
   @override
   String downloadsSelectedCount(int count) {
-    return '$count selected';
+    return '$count επιλεγμένα';
   }
 
   @override
-  String get bookmarksTitle => 'All Bookmarks';
+  String get bookmarksTitle => 'Όλοι οι σελιδοδείκτες';
 
   @override
-  String get bookmarksTabBookmarks => 'Bookmarks';
+  String get bookmarksTabBookmarks => 'Σελιδοδείκτες';
 
   @override
-  String get bookmarksTabHighlights => 'Highlights';
+  String get bookmarksTabHighlights => 'Επισημάνσεις';
 
   @override
-  String get highlightOpenInBook => 'Open in book';
+  String get highlightOpenInBook => 'Άνοιγμα στο βιβλίο';
 
   @override
-  String get highlightDeleteAction => 'Delete highlight';
+  String get highlightDeleteAction => 'Διαγραφή επισήμανσης';
 
   @override
-  String get highlightDeleted => 'Highlight deleted';
+  String get highlightDeleted => 'Η επισήμανση διαγράφηκε';
 
   @override
   String highlightsDeleteCount(int count) {
-    return 'Delete $count highlight(s)?';
+    return 'Διαγραφή $count επισήμανσης(-εων);';
   }
 
   @override
   String highlightsDeletedCount(int count) {
-    return 'Deleted $count highlight(s)';
+    return 'Διαγράφηκαν $count επισήμανση(-εις)';
   }
 
   @override
-  String get quoteShareTitle => 'Share quote';
+  String get quoteShareTitle => 'Κοινοποίηση παραθέματος';
 
   @override
-  String get quoteShareAction => 'Share';
+  String get quoteShareAction => 'Κοινοποίηση';
 
   @override
-  String get quoteShareFailed => 'Couldn\'t make the quote image';
+  String get quoteShareFailed =>
+      'Δεν ήταν δυνατή η δημιουργία της εικόνας παραθέματος';
 
   @override
-  String get quoteShapePortrait => 'Portrait';
+  String get quoteShapePortrait => 'Κατακόρυφο';
 
   @override
-  String get quoteShapeSquare => 'Square';
+  String get quoteShapeSquare => 'Τετράγωνο';
 
   @override
   String get quoteShapeStory => 'Story';
 
   @override
-  String get quoteStyleBlur => 'Blurred';
+  String get quoteStyleBlur => 'Θολό';
 
   @override
-  String get quoteStyleDim => 'Dimmed';
+  String get quoteStyleDim => 'Σκουρυμένο';
 
   @override
-  String get quoteStyleNone => 'Plain cover';
+  String get quoteStyleNone => 'Απλό εξώφυλλο';
 
   @override
-  String get quoteTextLight => 'Light text';
+  String get quoteTextLight => 'Ανοιχτό κείμενο';
 
   @override
-  String get quoteTextDark => 'Dark text';
+  String get quoteTextDark => 'Σκούρο κείμενο';
 
   @override
-  String get quoteFieldTitle => 'Title';
+  String get quoteFieldTitle => 'Τίτλος';
 
   @override
-  String get quoteFieldDetail => 'Details';
+  String get quoteFieldDetail => 'Λεπτομέρειες';
 
   @override
-  String get quoteFieldDetailHint => 'Author, chapter, page, who said it';
+  String get quoteFieldDetailHint =>
+      'Συγγραφέας, κεφάλαιο, σελίδα, ποιος το είπε';
 
   @override
   String highlightsMeta(String chapter, String date) {
@@ -920,218 +932,220 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get bookmarksCancelSelection => 'Cancel selection';
+  String get bookmarksCancelSelection => 'Ακύρωση επιλογής';
 
   @override
-  String get bookmarksSortedByNewest => 'Sorted by newest';
+  String get bookmarksSortedByNewest => 'Ταξινόμηση κατά νεότερα';
 
   @override
-  String get bookmarksSortedByPosition => 'Sorted by position';
+  String get bookmarksSortedByPosition => 'Ταξινόμηση κατά θέση';
 
   @override
-  String get bookmarksSelect => 'Select';
+  String get bookmarksSelect => 'Επιλογή';
 
   @override
-  String get bookmarksNoBookmarks => 'No bookmarks yet';
+  String get bookmarksNoBookmarks => 'Δεν υπάρχουν σελιδοδείκτες ακόμα';
 
   @override
-  String get bookmarksSearchHint => 'Search bookmarks';
+  String get bookmarksSearchHint => 'Αναζήτηση σελιδοδεικτών';
 
   @override
-  String get bookmarksNoMatches => 'No bookmarks match your search';
+  String get bookmarksNoMatches =>
+      'Κανένας σελιδοδείκτης δεν ταιριάζει με την αναζήτησή σας';
 
   @override
   String batchDownloadQueued(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Downloading $count books',
-      one: 'Downloading 1 book',
+      other: 'Λήψη $count βιβλίων',
+      one: 'Λήψη 1 βιβλίου',
     );
     return '$_temp0';
   }
 
   @override
-  String get batchDownloadNothingNew => 'Already downloaded';
+  String get batchDownloadNothingNew => 'Έχουν ήδη ληφθεί';
 
   @override
   String bookmarksDeleteCount(int count) {
-    return 'Delete $count bookmark(s)?';
+    return 'Διαγραφή $count σελιδοδείκτη(-ών);';
   }
 
   @override
-  String get bookmarksDeleteContent => 'This cannot be undone.';
+  String get bookmarksDeleteContent =>
+      'Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.';
 
   @override
   String bookmarksDeletedCount(int count) {
-    return 'Deleted $count bookmark(s)';
+    return 'Διαγράφηκαν $count σελιδοδείκτης(-ες)';
   }
 
   @override
-  String get bookmarksJumpTitle => 'Jump to bookmark?';
+  String get bookmarksJumpTitle => 'Μετάβαση στον σελιδοδείκτη;';
 
   @override
   String bookmarksJumpContent(String title, String position, String bookTitle) {
-    return '\"$title\" at $position\nin $bookTitle';
+    return '«$title» στο $position\nστο $bookTitle';
   }
 
   @override
-  String get bookmarksJump => 'Jump';
+  String get bookmarksJump => 'Μετάβαση';
 
   @override
-  String get bookmarksNotConnected => 'Not connected to server';
+  String get bookmarksNotConnected => 'Δεν υπάρχει σύνδεση με τον διακομιστή';
 
   @override
-  String get bookmarksCouldNotLoad => 'Could not load book';
+  String get bookmarksCouldNotLoad => 'Δεν ήταν δυνατή η φόρτωση του βιβλίου';
 
   @override
   String bookmarksSelectedCount(int count) {
-    return '$count selected';
+    return '$count επιλεγμένα';
   }
 
   @override
-  String get statsTitle => 'Your Stats';
+  String get statsTitle => 'Τα στατιστικά σας';
 
   @override
-  String get statsCouldNotLoad => 'Couldn\'t load stats';
+  String get statsCouldNotLoad => 'Δεν ήταν δυνατή η φόρτωση των στατιστικών';
 
   @override
-  String get statsTotalListeningTime => 'TOTAL LISTENING TIME';
+  String get statsTotalListeningTime => 'ΣΥΝΟΛΙΚΟΣ ΧΡΟΝΟΣ ΑΚΡΟΑΣΗΣ';
 
   @override
-  String get statsHoursUnit => 'h';
+  String get statsHoursUnit => 'ω';
 
   @override
-  String get statsMinutesUnit => 'm';
+  String get statsMinutesUnit => 'λ';
 
   @override
-  String get statsSecondsUnit => 's';
+  String get statsSecondsUnit => 'δ';
 
   @override
   String statsDaysOfAudio(String days) {
-    return 'That\'s $days days of audio';
+    return 'Αυτό ισοδυναμεί με $days ημέρες ήχου';
   }
 
   @override
   String statsHoursOfAudio(String hours) {
-    return 'That\'s $hours hours of audio';
+    return 'Αυτό ισοδυναμεί με $hours ώρες ήχου';
   }
 
   @override
-  String get statsToday => 'Today';
+  String get statsToday => 'Σήμερα';
 
   @override
-  String get statsThisWeek => 'This Week';
+  String get statsThisWeek => 'Αυτή την εβδομάδα';
 
   @override
-  String get statsThisMonth => 'This Month';
+  String get statsThisMonth => 'Αυτόν τον μήνα';
 
   @override
-  String get statsActivity => 'Activity';
+  String get statsActivity => 'Δραστηριότητα';
 
   @override
-  String get statsCurrentStreak => 'Current Streak';
+  String get statsCurrentStreak => 'Τρέχουσα συνέχεια';
 
   @override
-  String get statsBestStreak => 'Best Streak';
+  String get statsBestStreak => 'Καλύτερη συνέχεια';
 
   @override
-  String get statsFinished => 'Finished';
+  String get statsFinished => 'Ολοκληρώθηκε';
 
   @override
-  String get statsBooksFinished => 'Books';
+  String get statsBooksFinished => 'Βιβλία';
 
   @override
-  String get statsEpisodesFinished => 'Episodes';
+  String get statsEpisodesFinished => 'Επεισόδια';
 
   @override
-  String get statsBooksThisYear => 'Books this year';
+  String get statsBooksThisYear => 'Βιβλία φέτος';
 
   @override
-  String get statsEpisodesThisYear => 'Episodes this year';
+  String get statsEpisodesThisYear => 'Επεισόδια φέτος';
 
   @override
-  String get statsRemoveFromYearTitle => 'Remove from this year';
+  String get statsRemoveFromYearTitle => 'Αφαίρεση από φέτος';
 
   @override
   String statsRemoveFromYearWithDate(String date, String title) {
-    return 'The finished date will still be $date on the server. This only removes \"$title\" from your Absorb books-this-year list.';
+    return 'Η ημερομηνία ολοκλήρωσης θα παραμείνει $date στον διακομιστή. Αυτό αφαιρεί μόνο το «$title» από τη λίστα βιβλίων της χρονιάς στο Absorb.';
   }
 
   @override
   String statsRemoveFromYearNoDate(String title) {
-    return 'The finished date stays on the server. This only removes \"$title\" from your Absorb books-this-year list.';
+    return 'Η ημερομηνία ολοκλήρωσης παραμένει στον διακομιστή. Αυτό αφαιρεί μόνο το «$title» από τη λίστα βιβλίων της χρονιάς στο Absorb.';
   }
 
   @override
-  String get statsRemovedFromYear => 'Removed from this year';
+  String get statsRemovedFromYear => 'Αφαιρέθηκε από φέτος';
 
   @override
-  String get statsAddBackToYearTitle => 'Add back to this year';
+  String get statsAddBackToYearTitle => 'Επανάθεση στη φετινή χρονιά';
 
   @override
   String statsAddBackToYearBody(String title) {
-    return 'Add \"$title\" back to your Absorb books-this-year list?';
+    return 'Να προστεθεί το «$title» ξανά στη λίστα βιβλίων της χρονιάς στο Absorb;';
   }
 
   @override
-  String get statsAddBack => 'Add back';
+  String get statsAddBack => 'Προσθήκη ξανά';
 
   @override
-  String get statsAddedBackToYear => 'Added back to this year';
+  String get statsAddedBackToYear => 'Προστέθηκε ξανά στη φετινή χρονιά';
 
   @override
-  String get statsHiddenFromYear => 'Hidden from this year';
+  String get statsHiddenFromYear => 'Κρυμμένα από φέτος';
 
   @override
-  String get statsNothingHidden => 'Nothing hidden';
+  String get statsNothingHidden => 'Δεν υπάρχει κάτι κρυμμένο';
 
   @override
-  String get settingsCustomizeStats => 'Customize stats';
+  String get settingsCustomizeStats => 'Προσαρμογή στατιστικών';
 
   @override
-  String get statsGoalTitle => 'Listening goal';
+  String get statsGoalTitle => 'Στόχος ακρόασης';
 
   @override
-  String get statsGoalOff => 'Off';
+  String get statsGoalOff => 'Ανενεργό';
 
   @override
-  String get statsGoalDaily => 'Daily';
+  String get statsGoalDaily => 'Ημερήσιος';
 
   @override
-  String get statsGoalWeekly => 'Weekly';
+  String get statsGoalWeekly => 'Εβδομαδιαίος';
 
   @override
-  String get statsGoalMonthly => 'Monthly';
+  String get statsGoalMonthly => 'Μηνιαίος';
 
   @override
-  String get statsGoalTarget => 'Target';
+  String get statsGoalTarget => 'Στόχος';
 
   @override
-  String get statsGoalEnterTitle => 'Set target';
+  String get statsGoalEnterTitle => 'Ορισμός στόχου';
 
   @override
-  String get statsGoalEnterTimeHint => 'Minutes or h:mm';
+  String get statsGoalEnterTimeHint => 'Λεπτά ή ω:λλ';
 
   @override
   String statsBooksShort(int count) {
-    return '$count books';
+    return '$count βιβλία';
   }
 
   @override
-  String get statsBookChallengeTitle => 'Reading challenge';
+  String get statsBookChallengeTitle => 'Πρόκληση ανάγνωσης';
 
   @override
-  String get statsBookChallengeDesc => 'Books to finish this year';
+  String get statsBookChallengeDesc => 'Βιβλία προς ολοκλήρωση φέτος';
 
   @override
-  String get statsDailyGoal => 'Daily goal';
+  String get statsDailyGoal => 'Ημερήσιος στόχος';
 
   @override
-  String get statsWeeklyGoal => 'Weekly goal';
+  String get statsWeeklyGoal => 'Εβδομαδιαίος στόχος';
 
   @override
-  String get statsMonthlyGoal => 'Monthly goal';
+  String get statsMonthlyGoal => 'Μηνιαίος στόχος';
 
   @override
   String statsGoalProgress(String done, String target) {
@@ -1140,793 +1154,811 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String statsBookChallengeProgress(int done, int target) {
-    return '$done of $target books';
+    return '$done από $target βιβλία';
   }
 
   @override
-  String get statsGoalReached => 'Goal reached';
+  String get statsGoalReached => 'Ο στόχος επιτεύχθηκε';
 
   @override
-  String get statsChartTitle => 'Listening chart';
+  String get statsChartTitle => 'Γράφημα ακρόασης';
 
   @override
-  String get statsChartBar => 'Bar';
+  String get statsChartBar => 'Ράβδοι';
 
   @override
-  String get statsChartLine => 'Line';
+  String get statsChartLine => 'Γραμμή';
 
   @override
-  String get statsChartHeatmap => 'Heatmap';
+  String get statsChartHeatmap => 'Θερμικός χάρτης';
 
   @override
-  String get statsChartDays7 => '7 days';
+  String get statsChartDays7 => '7 ημέρες';
 
   @override
-  String get statsChartDays30 => '30 days';
+  String get statsChartDays30 => '30 ημέρες';
 
   @override
-  String get statsLast30Days => 'Last 30 days';
+  String get statsLast30Days => 'Τελευταίες 30 ημέρες';
 
   @override
-  String get statsThisYearTitle => 'This year';
+  String get statsThisYearTitle => 'Φέτος';
 
   @override
-  String get statsSectionsTitle => 'Sections';
+  String get statsSectionsTitle => 'Ενότητες';
 
   @override
-  String get statsSectionTimePeriods => 'Time periods';
+  String get statsSectionTimePeriods => 'Χρονικές περίοδοι';
 
   @override
-  String get statsHeatmapLess => 'Less';
+  String get statsHeatmapLess => 'Λιγότερο';
 
   @override
-  String get statsHeatmapMore => 'More';
+  String get statsHeatmapMore => 'Περισσότερο';
 
   @override
-  String get statsDayOfWeek => 'Average by day of week';
+  String get statsDayOfWeek => 'Μέσος όρος ανά ημέρα της εβδομάδας';
 
   @override
-  String get statsTimeSavedLabel => 'Saved by speed';
+  String get statsTimeSavedLabel => 'Εξοικονόμηση λόγω ταχύτητας';
 
   @override
   String statsTimeSavedSince(String date) {
-    return 'since $date';
+    return 'από $date';
   }
 
   @override
-  String get statsTimeSavedReset => 'Reset time saved';
+  String get statsTimeSavedReset => 'Μηδενισμός χρόνου που εξοικονομήθηκε';
 
   @override
   String get statsTimeSavedResetConfirm =>
-      'Time saved will start counting again from today.';
+      'Ο χρόνος που εξοικονομήθηκε θα αρχίσει να μετράει ξανά από σήμερα.';
 
   @override
-  String get statsTimeSavedResetDone => 'Time saved reset';
+  String get statsTimeSavedResetDone =>
+      'Ο χρόνος που εξοικονομήθηκε μηδενίστηκε';
 
   @override
   String statsOnPaceFor(int count) {
-    return 'On pace for $count books';
+    return 'Με ρυθμό για $count βιβλία';
   }
 
   @override
-  String get statsDaysActive => 'Days Active';
+  String get statsDaysActive => 'Ενεργές ημέρες';
 
   @override
-  String get statsDailyAverage => 'Daily Average';
+  String get statsDailyAverage => 'Ημερήσιος μέσος όρος';
 
   @override
-  String get statsLast7Days => 'Last 7 Days';
+  String get statsLast7Days => 'Τελευταίες 7 ημέρες';
 
   @override
-  String get statsMostListened => 'Most Listened';
+  String get statsMostListened => 'Πιο ακουσμένα';
 
   @override
-  String get statsRecentSessions => 'Recent Sessions';
+  String get statsRecentSessions => 'Πρόσφατες συνεδρίες';
 
   @override
-  String get appShellHomeTab => 'Home';
+  String get appShellHomeTab => 'Αρχική';
 
   @override
-  String get appShellLibraryTab => 'Library';
+  String get appShellLibraryTab => 'Βιβλιοθήκη';
 
   @override
   String get appShellAbsorbingTab => 'Absorbing';
 
   @override
-  String get appShellStatsTab => 'Stats';
+  String get appShellStatsTab => 'Στατιστικά';
 
   @override
-  String get appShellSettingsTab => 'Settings';
+  String get appShellSettingsTab => 'Ρυθμίσεις';
 
   @override
-  String get appShellDiscoverTab => 'Discover';
+  String get appShellDiscoverTab => 'Ανακάλυψη';
 
   @override
-  String get appShellShowsTab => 'Shows';
+  String get appShellShowsTab => 'Εκπομπές';
 
   @override
-  String get appShellPodcastsTab => 'Podcasts';
+  String get appShellPodcastsTab => 'Podcast';
 
   @override
-  String get libraryTabEpisodes => 'Episodes';
+  String get libraryTabEpisodes => 'Επεισόδια';
 
   @override
-  String get filterAllEpisodes => 'All';
+  String get filterAllEpisodes => 'Όλα';
 
   @override
-  String get filterUnplayed => 'Unplayed';
+  String get filterUnplayed => 'Μη αναπαραγμένα';
 
   @override
-  String get episodeFeedEmpty => 'No episodes match this filter';
+  String get episodeFeedEmpty =>
+      'Κανένα επεισόδιο δεν ταιριάζει με αυτό το φίλτρο';
 
   @override
-  String get podcastFilterUpNext => 'Up Next';
+  String get podcastFilterUpNext => 'Επόμενα';
 
   @override
-  String get podcastFilterNew => 'New';
+  String get podcastFilterNew => 'Νέα';
 
   @override
-  String get settingsPodcastTab => 'Podcasts tab';
+  String get settingsPodcastTab => 'Καρτέλα Podcast';
 
   @override
   String get settingsPodcastTabDesc =>
-      'Give one podcast library its own tab in the bottom bar';
+      'Δώστε σε μία βιβλιοθήκη podcast τη δική της καρτέλα στη γραμμή κάτω';
 
   @override
-  String get settingsPodcastTabLibrary => 'Podcasts tab library';
+  String get settingsPodcastTabLibrary => 'Βιβλιοθήκη καρτέλας Podcast';
 
   @override
   String get settingsMergeImpliedByPodcastTab =>
-      'Always on while the Podcasts tab is enabled';
+      'Πάντα ενεργό όσο είναι ενεργοποιημένη η καρτέλα Podcast';
 
   @override
-  String get settingsEpisodeNotifs => 'Notification settings';
+  String get settingsEpisodeNotifs => 'Ρυθμίσεις ειδοποιήσεων';
 
   @override
   String get settingsEpisodeNotifsDesc =>
-      'New podcast episodes and upcoming book releases, checked in the background';
+      'Νέα επεισόδια podcast και επερχόμενες κυκλοφορίες βιβλίων, με έλεγχο στο παρασκήνιο';
 
   @override
-  String get notifIntervalOff => 'Off';
+  String get notifIntervalOff => 'Ανενεργό';
 
   @override
   String notifIntervalMinutes(int n) {
-    return 'Every $n minutes';
+    return 'Κάθε $n λεπτά';
   }
 
   @override
-  String get notifIntervalHour => 'Every hour';
+  String get notifIntervalHour => 'Κάθε ώρα';
 
   @override
   String notifIntervalHours(int n) {
-    return 'Every $n hours';
+    return 'Κάθε $n ώρες';
   }
 
   @override
-  String get settingsBatteryUnrestricted => 'Allow unrestricted battery use';
+  String get settingsBatteryUnrestricted =>
+      'Να επιτρέπεται απεριόριστη χρήση μπαταρίας';
 
   @override
   String get settingsBatteryUnrestrictedDesc =>
-      'Keeps the system from pausing background checks on some phones';
+      'Εμποδίζει το σύστημα να παγώνει τους ελέγχους στο παρασκήνιο σε ορισμένα τηλέφωνα';
 
   @override
-  String get appShellPressBackToExit => 'Press back again to exit';
+  String get appShellPressBackToExit => 'Πατήστε ξανά πίσω για έξοδο';
 
   @override
-  String get settingsTitle => 'Settings';
+  String get settingsTitle => 'Ρυθμίσεις';
 
   @override
-  String get sectionAppearance => 'Appearance';
+  String get sectionAppearance => 'Εμφάνιση';
 
   @override
-  String get languageLabel => 'Language';
+  String get languageLabel => 'Γλώσσα';
 
   @override
-  String get languageSystemDefault => 'System default';
+  String get languageSystemDefault => 'Προεπιλογή συστήματος';
 
   @override
   String get languageHelpTranslateInvite =>
-      'Want to help translate Absorb into your language?';
+      'Θέλετε να βοηθήσετε στη μετάφραση του Absorb στη γλώσσα σας;';
 
   @override
-  String get themeLabel => 'Theme';
+  String get themeLabel => 'Θέμα';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => 'Σκούρο';
 
   @override
   String get themeOled => 'OLED';
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => 'Ανοιχτό';
 
   @override
-  String get themeAuto => 'Auto';
+  String get themeAuto => 'Αυτόματο';
 
   @override
-  String get colorSourceLabel => 'Color source';
+  String get colorSourceLabel => 'Πηγή χρώματος';
 
   @override
   String get colorSourceCoverDescription =>
-      'App colors follow the currently playing book cover';
+      'Τα χρώματα της εφαρμογής ακολουθούν το εξώφυλλο του βιβλίου που παίζει';
 
   @override
   String get colorSourceWallpaperDescription =>
-      'App colors follow your system wallpaper';
+      'Τα χρώματα της εφαρμογής ακολουθούν την ταπετσαρία του συστήματος';
 
   @override
-  String get colorSourceWallpaper => 'Wallpaper';
+  String get colorSourceWallpaper => 'Ταπετσαρία';
 
   @override
-  String get colorSourceNowPlaying => 'Now Playing';
+  String get colorSourceNowPlaying => 'Τώρα παίζει';
 
   @override
-  String get colorSourceDynamic => 'Dynamic';
+  String get colorSourceDynamic => 'Δυναμικό';
 
   @override
-  String get colorSourceManual => 'Manual';
+  String get colorSourceManual => 'Χειροκίνητο';
 
   @override
   String get colorSourceManualDescription =>
-      'Use a fixed app color you choose below';
+      'Χρήση σταθερού χρώματος εφαρμογής της επιλογής σας παρακάτω';
 
   @override
-  String get colorSourceCustom => 'Custom';
+  String get colorSourceCustom => 'Προσαρμοσμένο';
 
   @override
-  String get useColorEverywhereLabel => 'Use this color everywhere';
+  String get useColorEverywhereLabel => 'Χρήση αυτού του χρώματος παντού';
 
   @override
   String get useColorEverywhereSubtitle =>
-      'Also color book detail pages and the player card with your set color instead of each book\'s cover';
+      'Χρωματίζει επίσης τις σελίδες λεπτομερειών βιβλίου και την κάρτα αναπαραγωγής με το χρώμα που ορίσατε αντί για το εξώφυλλο κάθε βιβλίου';
 
   @override
-  String get flatBackgroundLabel => 'Flat background';
+  String get flatBackgroundLabel => 'Επίπεδο φόντο';
 
   @override
   String get flatBackgroundSubtitle =>
-      'Remove the background gradient. Pure black in dark mode for OLED screens.';
+      'Αφαιρεί τη διαβάθμιση του φόντου. Καθαρό μαύρο στη σκούρα λειτουργία για οθόνες OLED.';
 
   @override
-  String get einkModeLabel => 'E-ink mode';
+  String get einkModeLabel => 'Λειτουργία e-ink';
 
   @override
   String get einkModeSubtitle =>
-      'High-contrast black and white with no animations, made for e-ink screens';
+      'Ασπρόμαυρη εμφάνιση υψηλής αντίθεσης χωρίς κινούμενα στοιχεία, για οθόνες e-ink';
 
   @override
   String get einkModeIntroBody =>
-      'Made for e-ink screens. The app switches to a flat black-and-white look with high contrast, animations are turned off, the playing card loses its background, and the live server connection stays off to save battery. Playback and progress still sync normally. Your appearance settings are kept and come back when you turn this off.';
+      'Φτιαγμένο για οθόνες e-ink. Η εφαρμογή αλλάζει σε επίπεδη ασπρόμαυρη εμφάνιση υψηλής αντίθεσης, τα κινούμενα στοιχεία απενεργοποιούνται, η κάρτα αναπαραγωγής χάνει το φόντο της και η ζωντανή σύνδεση με τον διακομιστή μένει ανενεργή για εξοικονόμηση μπαταρίας. Η αναπαραγωγή και η πρόοδος συγχρονίζονται κανονικά. Οι ρυθμίσεις εμφάνισής σας διατηρούνται και επιστρέφουν όταν το απενεργοποιήσετε.';
 
   @override
-  String get einkModeIntroConfirm => 'Turn on';
+  String get einkModeIntroConfirm => 'Ενεργοποίηση';
 
   @override
-  String get backgroundIntensityLabel => 'Background intensity';
+  String get backgroundIntensityLabel => 'Ένταση φόντου';
 
   @override
-  String get startScreenLabel => 'Start screen';
+  String get startScreenLabel => 'Αρχική οθόνη';
 
   @override
-  String get startScreenSubtitle => 'Which tab to open when the app launches';
+  String get startScreenSubtitle =>
+      'Ποια καρτέλα ανοίγει κατά την εκκίνηση της εφαρμογής';
 
   @override
-  String get startScreenHome => 'Home';
+  String get startScreenHome => 'Αρχική';
 
   @override
-  String get startScreenLibrary => 'Library';
+  String get startScreenLibrary => 'Βιβλιοθήκη';
 
   @override
   String get startScreenAbsorb => 'Absorb';
 
   @override
-  String get startScreenStats => 'Stats';
+  String get startScreenStats => 'Στατιστικά';
 
   @override
-  String get disablePageFade => 'Disable page fade';
+  String get disablePageFade => 'Απενεργοποίηση σταδιακής εναλλαγής σελίδων';
 
   @override
-  String get disablePageFadeOnSubtitle => 'Pages switch instantly';
+  String get disablePageFadeOnSubtitle => 'Οι σελίδες αλλάζουν άμεσα';
 
   @override
-  String get disablePageFadeOffSubtitle => 'Pages fade when switching tabs';
+  String get disablePageFadeOffSubtitle =>
+      'Οι σελίδες εναλλάσσονται σταδιακά κατά την αλλαγή καρτελών';
 
   @override
-  String get rectangleBookCovers => 'Rectangle book covers';
+  String get rectangleBookCovers => 'Ορθογώνια εξώφυλλα βιβλίων';
 
   @override
-  String get progressTextSize => 'Progress text size';
+  String get progressTextSize => 'Μέγεθος κειμένου προόδου';
 
   @override
   String get rectangleBookCoversOnSubtitle =>
-      'Covers display in 2:3 book proportion';
+      'Τα εξώφυλλα εμφανίζονται σε αναλογία βιβλίου 2:3';
 
   @override
-  String get rectangleBookCoversOffSubtitle => 'Covers are square';
+  String get rectangleBookCoversOffSubtitle => 'Τα εξώφυλλα είναι τετράγωνα';
 
   @override
-  String get coverSize => 'Cover size';
+  String get coverSize => 'Μέγεθος εξωφύλλων';
 
   @override
-  String get coverSizeSubtitle => 'How many covers fit across the library grid';
+  String get coverSizeSubtitle =>
+      'Πόσα εξώφυλλα χωρούν σε μία γραμμή του πλέγματος της βιβλιοθήκης';
 
   @override
-  String get coverSizeSmall => 'Small';
+  String get coverSizeSmall => 'Μικρό';
 
   @override
-  String get coverSizeMedium => 'Medium';
+  String get coverSizeMedium => 'Μεσαίο';
 
   @override
-  String get coverSizeLarge => 'Large';
+  String get coverSizeLarge => 'Μεγάλο';
 
   @override
-  String get sectionAbsorbingCards => 'Absorbing Cards';
+  String get sectionAbsorbingCards => 'Κάρτες Absorbing';
 
   @override
-  String get fullScreenPlayer => 'Full screen player';
+  String get fullScreenPlayer => 'Αναπαραγωγή πλήρους οθόνης';
 
   @override
   String get fullScreenPlayerOnSubtitle =>
-      'On - books open in full screen when played';
+      'Ενεργό - τα βιβλία ανοίγουν σε πλήρη οθόνη κατά την αναπαραγωγή';
 
   @override
-  String get fullScreenPlayerOffSubtitle => 'Off - play within card view';
+  String get fullScreenPlayerOffSubtitle =>
+      'Ανενεργό - αναπαραγωγή μέσα στην προβολή κάρτας';
 
   @override
-  String get fullBookScrubber => 'Full book scrubber';
+  String get fullBookScrubber => 'Ολίσθηση σε ολόκληρο το βιβλίο';
 
   @override
   String get fullBookScrubberOnSubtitle =>
-      'On - seekable slider across entire book';
+      'Ενεργό - ρυθμιστικό αναζήτησης σε ολόκληρο το βιβλίο';
 
   @override
-  String get fullBookScrubberOffSubtitle => 'Off - progress bar only';
+  String get fullBookScrubberOffSubtitle => 'Ανενεργό - μόνο γραμμή προόδου';
 
   @override
-  String get cardScrubbers => 'Card scrubbers';
+  String get cardScrubbers => 'Ρυθμιστικά κάρτας';
 
   @override
-  String get cardScrubbersBoth => 'Both';
+  String get cardScrubbersBoth => 'Και τα δύο';
 
   @override
-  String get cardScrubbersChapter => 'Chapter';
+  String get cardScrubbersChapter => 'Κεφάλαιο';
 
   @override
-  String get cardScrubbersLocked => 'Locked';
+  String get cardScrubbersLocked => 'Κλειδωμένα';
 
   @override
-  String get cardScrubbersBothSubtitle => 'Full book and chapter bars can seek';
+  String get cardScrubbersBothSubtitle =>
+      'Οι γραμμές ολόκληρου βιβλίου και κεφαλαίου επιτρέπουν αναζήτηση';
 
   @override
-  String get cardScrubbersChapterSubtitle => 'Only the chapter bar can seek';
+  String get cardScrubbersChapterSubtitle =>
+      'Μόνο η γραμμή κεφαλαίου επιτρέπει αναζήτηση';
 
   @override
-  String get cardScrubbersLockedSubtitle => 'Progress is shown without seeking';
+  String get cardScrubbersLockedSubtitle =>
+      'Η πρόοδος εμφανίζεται χωρίς δυνατότητα αναζήτησης';
 
   @override
-  String get speedAdjustedTime => 'Speed-adjusted time';
+  String get speedAdjustedTime => 'Χρόνος προσαρμοσμένος στην ταχύτητα';
 
   @override
   String get speedAdjustedTimeOnSubtitle =>
-      'On - all times reflect your playback speed';
+      'Ενεργό - όλοι οι χρόνοι αντικατοπτρίζουν την ταχύτητα αναπαραγωγής';
 
   @override
-  String get speedAdjustedTimeOffSubtitle => 'Off - showing raw audio duration';
+  String get speedAdjustedTimeOffSubtitle =>
+      'Ανενεργό - εμφάνιση της πραγματικής διάρκειας ήχου';
 
   @override
-  String get buttonLayout => 'Button layout';
+  String get buttonLayout => 'Διάταξη κουμπιών';
 
   @override
   String get buttonLayoutSubtitle =>
-      'How action buttons are arranged on the card';
+      'Πώς διατάσσονται τα κουμπιά ενεργειών στην κάρτα';
 
   @override
-  String get whenAbsorbed => 'When absorbed';
+  String get whenAbsorbed => 'Όταν ολοκληρωθεί';
 
   @override
-  String get whenAbsorbedInfoTitle => 'When Absorbed';
+  String get whenAbsorbedInfoTitle => 'Όταν ολοκληρωθεί';
 
   @override
   String get whenAbsorbedInfoContent =>
-      'Controls what happens to an absorbing card when you finish a book or episode.\n\nFinished cards are automatically removed from your Absorbing screen.';
+      'Ελέγχει τι συμβαίνει σε μια κάρτα Absorbing όταν τελειώνετε ένα βιβλίο ή επεισόδιο.\n\nΟι ολοκληρωμένες κάρτες αφαιρούνται αυτόματα από την οθόνη Absorbing.';
 
   @override
   String get whenAbsorbedSubtitle =>
-      'What happens to the absorbing card when a book or episode finishes';
+      'Τι συμβαίνει με την κάρτα όταν ολοκληρωθεί ένα βιβλίο ή επεισόδιο';
 
   @override
-  String get whenAbsorbedShowOverlay => 'Show Overlay';
+  String get whenAbsorbedShowOverlay => 'Εμφάνιση επικάλυψης';
 
   @override
-  String get whenAbsorbedAutoRelease => 'Auto-release';
+  String get whenAbsorbedAutoRelease => 'Αυτόματη αφαίρεση';
 
   @override
-  String get mergeLibraries => 'Unified Absorbing page';
+  String get mergeLibraries => 'Ενοποιημένη σελίδα Absorbing';
 
   @override
-  String get mergeLibrariesInfoTitle => 'Unified Absorbing Page';
+  String get mergeLibrariesInfoTitle => 'Ενοποιημένη σελίδα Absorbing';
 
   @override
   String get mergeLibrariesInfoContent =>
-      'When enabled, the Absorbing screen shows all your in-progress books and podcasts from every library in a single view. When disabled, only items from the library you currently have selected are shown.';
+      'Όταν είναι ενεργή, η οθόνη Absorbing εμφανίζει όλα τα βιβλία και τα podcast σε εξέλιξη από όλες τις βιβλιοθήκες σε μία προβολή. Όταν είναι ανενεργή, εμφανίζονται μόνο στοιχεία από τη βιβλιοθήκη που έχετε επιλέξει αυτήν τη στιγμή.';
 
   @override
   String get mergeLibrariesOnSubtitle =>
-      'Absorbing page shows items from all libraries';
+      'Η σελίδα Absorbing εμφανίζει στοιχεία από όλες τις βιβλιοθήκες';
 
   @override
   String get mergeLibrariesOffSubtitle =>
-      'Absorbing page shows current library only';
+      'Η σελίδα Absorbing εμφανίζει μόνο την τρέχουσα βιβλιοθήκη';
 
   @override
-  String get queueMode => 'Queue mode';
+  String get queueMode => 'Λειτουργία ουράς';
 
   @override
-  String get queueModeInfoTitle => 'Queue Mode';
+  String get queueModeInfoTitle => 'Λειτουργία ουράς';
 
   @override
-  String get queueModeInfoOff => 'Off';
+  String get queueModeInfoOff => 'Ανενεργό';
 
   @override
   String get queueModeInfoOffDesc =>
-      'Playback stops when the current book or episode finishes.';
+      'Η αναπαραγωγή σταματά όταν τελειώσει το τρέχον βιβλίο ή επεισόδιο.';
 
   @override
-  String get queueModeInfoManual => 'Manual Queue';
+  String get queueModeInfoManual => 'Χειροκίνητη ουρά';
 
   @override
   String get queueModeInfoManualDesc =>
-      'Your absorbing cards act as a playlist. When one finishes, the next non-finished card auto-plays. Add items with the \"Add to Absorbing\" button on a book or episode and reorder from the absorbing screen.';
+      'Οι κάρτες Absorbing λειτουργούν ως λίστα αναπαραγωγής. Όταν τελειώνει μία, παίζει αυτόματα η επόμενη μη ολοκληρωμένη κάρτα. Προσθέστε στοιχεία με το κουμπί «Προσθήκη στο Absorbing» σε ένα βιβλίο ή επεισόδιο και αναδιατάξτε τα από την οθόνη Absorbing.';
 
   @override
-  String get queueModeOff => 'Off';
+  String get queueModeOff => 'Ανενεργό';
 
   @override
-  String get queueModeManual => 'Manual';
+  String get queueModeManual => 'Χειροκίνητο';
 
   @override
-  String get queueModeAuto => 'Auto';
+  String get queueModeAuto => 'Αυτόματο';
 
   @override
-  String get queueModePlaylist => 'Playlist';
+  String get queueModePlaylist => 'Λίστα αναπαραγωγής';
 
   @override
-  String get queueModeCollection => 'Collection';
+  String get queueModeCollection => 'Συλλογή';
 
   @override
-  String get queueModeInfoPlaylist => 'Playlist Queue';
+  String get queueModeInfoPlaylist => 'Ουρά λίστας αναπαραγωγής';
 
   @override
   String get queueModeInfoPlaylistDesc =>
-      'Plays items in order from a chosen playlist, skipping anything already finished. Stops at the end of the list.';
+      'Παίζει τα στοιχεία με τη σειρά από μια επιλεγμένη λίστα αναπαραγωγής, παραλείποντας ό,τι έχει ήδη ολοκληρωθεί. Σταματά στο τέλος της λίστας.';
 
   @override
-  String get queuePlaylistPickerTitle => 'Choose a playlist';
+  String get queuePlaylistPickerTitle => 'Επιλέξτε λίστα αναπαραγωγής';
 
   @override
-  String get queuePlaylistNone => 'No playlist selected';
+  String get queuePlaylistNone => 'Δεν έχει επιλεγεί λίστα αναπαραγωγής';
 
   @override
   String queuePlaylistActiveLabel(String name) {
-    return 'Playlist: $name';
+    return 'Λίστα αναπαραγωγής: $name';
   }
 
   @override
   String get queueModePlaylistHint =>
-      'Start a playlist queue by opening a playlist on the home page.';
+      'Ξεκινήστε ουρά λίστας αναπαραγωγής ανοίγοντας μια λίστα αναπαραγωγής στην αρχική σελίδα.';
 
   @override
-  String get exit => 'Exit';
+  String get exit => 'Έξοδος';
 
   @override
   String upNext(String label) {
-    return 'Up next: $label';
+    return 'Επόμενο: $label';
   }
 
   @override
-  String get nothingUpNext => 'Nothing up next';
+  String get nothingUpNext => 'Δεν υπάρχει επόμενο';
 
   @override
-  String get showUpNextLabel => 'Show Up next on the absorbing page';
+  String get showUpNextLabel => 'Εμφάνιση του «Επόμενο» στη σελίδα Absorbing';
 
   @override
-  String get openSeries => 'Open series';
+  String get openSeries => 'Άνοιγμα σειράς';
 
   @override
-  String get openPlaylist => 'Open playlist';
+  String get openPlaylist => 'Άνοιγμα λίστας αναπαραγωγής';
 
   @override
-  String get openCollection => 'Open collection';
+  String get openCollection => 'Άνοιγμα συλλογής';
 
   @override
-  String get playlistPlayAction => 'Play playlist';
+  String get playlistPlayAction => 'Αναπαραγωγή λίστας';
 
   @override
-  String get playlistAllFinished => 'All finished';
+  String get playlistAllFinished => 'Όλα ολοκληρώθηκαν';
 
   @override
-  String get queueModeBooks => 'Books';
+  String get queueModeBooks => 'Βιβλία';
 
   @override
-  String get queueModePodcasts => 'Podcasts';
+  String get queueModePodcasts => 'Podcast';
 
   @override
-  String get autoDownloadQueue => 'Auto-download queue';
+  String get autoDownloadQueue => 'Αυτόματη λήψη ουράς';
 
   @override
-  String get autoDownloadThisSeriesLabel => 'Auto-download this series';
+  String get autoDownloadThisSeriesLabel => 'Αυτόματη λήψη αυτής της σειράς';
 
   @override
-  String get autoDownloadThisShowLabel => 'Auto-download this podcast';
+  String get autoDownloadThisShowLabel => 'Αυτόματη λήψη αυτού του podcast';
 
   @override
-  String get autoDownloadThisPlaylistLabel => 'Auto-download this playlist';
+  String get autoDownloadThisPlaylistLabel =>
+      'Αυτόματη λήψη αυτής της λίστας αναπαραγωγής';
 
   @override
-  String get autoDownloadThisCollectionLabel => 'Auto-download this collection';
+  String get autoDownloadThisCollectionLabel =>
+      'Αυτόματη λήψη αυτής της συλλογής';
 
   @override
   String autoDownloadQueueOnSubtitle(int count) {
-    return 'Keep next $count items downloaded';
+    return 'Διατήρηση των επόμενων $count στοιχείων ληφθέντων';
   }
 
   @override
-  String get autoDownloadQueueOffSubtitle => 'Off - manual downloads only';
+  String get autoDownloadQueueOffSubtitle =>
+      'Ανενεργό - μόνο χειροκίνητες λήψεις';
 
   @override
-  String get sectionPlayback => 'Playback';
+  String get sectionPlayback => 'Αναπαραγωγή';
 
   @override
-  String get sectionMediaControls => 'Media Controls';
+  String get sectionMediaControls => 'Στοιχεία ελέγχου πολυμέσων';
 
   @override
-  String get defaultSpeed => 'Default speed';
+  String get defaultSpeed => 'Προεπιλεγμένη ταχύτητα';
 
   @override
   String get defaultSpeedSubtitle =>
-      'New books start at this speed - each book remembers its own';
+      'Τα νέα βιβλία ξεκινούν με αυτήν την ταχύτητα - κάθε βιβλίο θυμάται τη δική του';
 
   @override
-  String get skipBack => 'Skip back';
+  String get skipBack => 'Μετάβαση πίσω';
 
   @override
-  String get skipForward => 'Skip forward';
+  String get skipForward => 'Μετάβαση μπροστά';
 
   @override
   String get iosLockScreenSkipHint =>
-      'The lock screen only draws the numbers iOS has icons for (5, 10, 15, 30, 45, 60, 75, 90). Other amounts show + on the button but still skip by your setting.';
+      'Η οθόνη κλειδώματος εμφανίζει μόνο τους αριθμούς για τους οποίους το iOS έχει εικονίδια (5, 10, 15, 30, 45, 60, 75, 90). Άλλα ποσά εμφανίζουν + στο κουμπί αλλά παραλείπουν πάλι σύμφωνα με τη ρύθμισή σας.';
 
   @override
-  String get longSkipButtons => 'Long skip buttons';
+  String get longSkipButtons => 'Κουμπιά μεγάλης μετάβασης';
 
   @override
   String get longSkipButtonsOnSubtitle =>
-      'On - the player shows a second, bigger skip pair';
+      'Ενεργό - το πρόγραμμα αναπαραγωγής εμφανίζει ένα δεύτερο, μεγαλύτερο ζεύγος';
 
   @override
   String get longSkipButtonsOffSubtitle =>
-      'Off - just the regular skip buttons';
+      'Ανενεργό - μόνο τα κανονικά κουμπιά μετάβασης';
 
   @override
-  String get longSkipBack => 'Long skip back';
+  String get longSkipBack => 'Μεγάλη μετάβαση πίσω';
 
   @override
-  String get longSkipForward => 'Long skip forward';
+  String get longSkipForward => 'Μεγάλη μετάβαση μπροστά';
 
   @override
-  String get coverShapeDefault => 'Default';
+  String get coverShapeDefault => 'Προεπιλογή';
 
   @override
-  String get coverShapeSquare => 'Square';
+  String get coverShapeSquare => 'Τετράγωνο';
 
   @override
-  String get coverShapeRectangle => 'Rectangle';
+  String get coverShapeRectangle => 'Ορθογώνιο';
 
   @override
-  String get coverShapeLabel => 'Cover shape';
+  String get coverShapeLabel => 'Σχήμα εξωφύλλου';
 
   @override
-  String get showSubtitles => 'Show subtitles';
+  String get showSubtitles => 'Εμφάνιση υποτίτλων';
 
   @override
   String get showSubtitlesOnSubtitle =>
-      'Subtitles show under book titles in the library and on home';
+      'Οι υπότιτλοι εμφανίζονται κάτω από τους τίτλους βιβλίων στη βιβλιοθήκη και στην αρχική';
 
   @override
   String get showSubtitlesOffSubtitle =>
-      'Off - subtitles only on the book details sheet';
+      'Ανενεργό - υπότιτλοι μόνο στο φύλλο λεπτομερειών του βιβλίου';
 
   @override
-  String get subtitleVisibilityLabel => 'Subtitles';
+  String get subtitleVisibilityLabel => 'Υπότιτλοι';
 
   @override
-  String get subtitleVisibilityDefault => 'Default';
+  String get subtitleVisibilityDefault => 'Προεπιλογή';
 
   @override
-  String get subtitleVisibilityShow => 'Show';
+  String get subtitleVisibilityShow => 'Εμφάνιση';
 
   @override
-  String get subtitleVisibilityHide => 'Hide';
+  String get subtitleVisibilityHide => 'Απόκρυψη';
 
   @override
   String currentLibrarySettingsTitle(String name) {
-    return 'Current library: $name';
+    return 'Τρέχουσα βιβλιοθήκη: $name';
   }
 
   @override
-  String get currentLibrarySkipOverride => 'Custom skip amounts';
+  String get currentLibrarySkipOverride => 'Προσαρμοσμένα ποσά μετάβασης';
 
   @override
   String get currentLibrarySkipOverrideOnSubtitle =>
-      'On - this library uses its own skip amounts';
+      'Ενεργό - αυτή η βιβλιοθήκη χρησιμοποιεί τα δικά της ποσά μετάβασης';
 
   @override
   String get currentLibrarySkipOverrideOffSubtitle =>
-      'Off - this library uses the global skip amounts';
+      'Ανενεργό - αυτή η βιβλιοθήκη χρησιμοποιεί τα καθολικά ποσά μετάβασης';
 
   @override
-  String get currentLibrarySkipBack => 'Skip back';
+  String get currentLibrarySkipBack => 'Μετάβαση πίσω';
 
   @override
-  String get currentLibrarySkipForward => 'Skip forward';
+  String get currentLibrarySkipForward => 'Μετάβαση μπροστά';
 
   @override
   String get chapterProgressInNotification =>
-      'Chapter progress in notification & Android Auto';
+      'Πρόοδος κεφαλαίου στην ειδοποίηση & στο Android Auto';
 
   @override
   String get chapterProgressOnSubtitle =>
-      'On - notification & Android Auto show chapter progress';
+      'Ενεργό - η ειδοποίηση & το Android Auto δείχνουν την πρόοδο του κεφαλαίου';
 
   @override
-  String get chapterProgressOffSubtitle => 'Off - they show full book progress';
+  String get chapterProgressOffSubtitle =>
+      'Ανενεργό - δείχνουν την πρόοδο ολόκληρου του βιβλίου';
 
   @override
   String get chapterProgressInNotificationIos =>
-      'Chapter progress on lock screen & CarPlay';
+      'Πρόοδος κεφαλαίου στην οθόνη κλειδώματος & στο CarPlay';
 
   @override
   String get chapterProgressOnSubtitleIos =>
-      'On - lock screen & CarPlay show chapter progress';
+      'Ενεργό - η οθόνη κλειδώματος & το CarPlay δείχνουν την πρόοδο του κεφαλαίου';
 
   @override
-  String get nowPlayingText => 'Now playing text';
+  String get nowPlayingText => 'Κείμενο «Τώρα παίζει»';
 
   @override
   String get nowPlayingTextSubtitle =>
-      'Choose what the media controls show on each line';
+      'Επιλέξτε τι εμφανίζουν τα στοιχεία ελέγχου πολυμέσων σε κάθε γραμμή';
 
   @override
-  String get nowPlayingTopLine => 'Top line';
+  String get nowPlayingTopLine => 'Πάνω γραμμή';
 
   @override
-  String get nowPlayingSecondLine => 'Second line';
+  String get nowPlayingSecondLine => 'Δεύτερη γραμμή';
 
   @override
-  String get nowPlayingNotShown => 'Not shown';
+  String get nowPlayingNotShown => 'Δεν εμφανίζεται';
 
   @override
   String get nowPlayingTopLineRequired =>
-      'The top line needs at least one item';
+      'Η πάνω γραμμή χρειάζεται τουλάχιστον ένα στοιχείο';
 
   @override
-  String get nowPlayingPieceChapter => 'Chapter';
+  String get nowPlayingPieceChapter => 'Κεφάλαιο';
 
   @override
-  String get nowPlayingPieceTitle => 'Book title';
+  String get nowPlayingPieceTitle => 'Τίτλος βιβλίου';
 
   @override
-  String get nowPlayingPieceNarrator => 'Narrator';
+  String get nowPlayingPieceNarrator => 'Αφηγητής';
 
   @override
-  String get nowPlayingPieceSeries => 'Series';
+  String get nowPlayingPieceSeries => 'Σειρά';
 
   @override
-  String get nowPlayingPiecePercent => 'Book percentage';
+  String get nowPlayingPiecePercent => 'Ποσοστό βιβλίου';
 
   @override
-  String get nowPlayingPieceChapterNumber => 'Chapter number';
+  String get nowPlayingPieceChapterNumber => 'Αριθμός κεφαλαίου';
 
   @override
-  String get nowPlayingPieceTimeLeft => 'Time left';
+  String get nowPlayingPieceTimeLeft => 'Χρόνος που απομένει';
 
   @override
   String nowPlayingChapterNumber(int number, int total) {
-    return 'Ch. $number/$total';
+    return 'Κεφ. $number/$total';
   }
 
   @override
   String nowPlayingTimeLeft(String time) {
-    return '$time left';
+    return 'Απομένουν $time';
   }
 
   @override
-  String get bookDockBadgePending => 'Pending';
+  String get bookDockBadgePending => 'Σε αναμονή';
 
   @override
-  String get bookDockBadgeExtracting => 'Reading file';
+  String get bookDockBadgeExtracting => 'Ανάγνωση αρχείου';
 
   @override
-  String get bookDockBadgeFetching => 'Looking up';
+  String get bookDockBadgeFetching => 'Αναζήτηση';
 
   @override
-  String get bookDockBadgeError => 'Error';
+  String get bookDockBadgeError => 'Σφάλμα';
 
   @override
-  String get bookDockNeedsReview => 'Needs review';
+  String get bookDockNeedsReview => 'Χρειάζεται έλεγχο';
 
   @override
-  String get bookDockNoMatch => 'No match';
+  String get bookDockNoMatch => 'Καμία αντιστοιχία';
 
   @override
-  String get bookDockApplied => 'Applied';
+  String get bookDockApplied => 'Εφαρμόστηκε';
 
   @override
-  String get bookDockNotApplied => 'Found details not used';
+  String get bookDockNotApplied =>
+      'Οι λεπτομέρειες που βρέθηκαν δεν χρησιμοποιήθηκαν';
 
   @override
-  String get bookDockNoDestination => 'No destination set';
+  String get bookDockNoDestination => 'Δεν έχει οριστεί προορισμός';
 
   @override
-  String get bookDockNoAuthor => 'No author yet';
+  String get bookDockNoAuthor => 'Χωρίς συγγραφέα ακόμα';
 
   @override
-  String get bookDockLookUpAgain => 'Look up again';
+  String get bookDockLookUpAgain => 'Αναζήτηση ξανά';
 
   @override
-  String get bookDockLookingUp => 'Looking up details again';
+  String get bookDockLookingUp => 'Νέα αναζήτηση λεπτομερειών';
 
   @override
-  String get bookDockLookUpFailed => 'Couldn\'t look up details';
+  String get bookDockLookUpFailed => 'Δεν ήταν δυνατή η αναζήτηση λεπτομερειών';
 
   @override
-  String get bookDockProposedChanges => 'Proposed changes';
+  String get bookDockProposedChanges => 'Προτεινόμενες αλλαγές';
 
   @override
-  String get bookDockNoChanges => 'No details found online yet';
+  String get bookDockNoChanges =>
+      'Δεν βρέθηκαν ακόμα λεπτομέρειες στο διαδίκτυο';
 
   @override
-  String get bookDockStillReading => 'The server is still reading this file';
+  String get bookDockStillReading =>
+      'Ο διακομιστής διαβάζει ακόμα αυτό το αρχείο';
 
   @override
-  String get bookDockRoleBook => 'Book';
+  String get bookDockRoleBook => 'Βιβλίο';
 
   @override
-  String get bookDockRoleCover => 'Cover';
+  String get bookDockRoleCover => 'Εξώφυλλο';
 
   @override
-  String get bookDockRoleMetadata => 'Metadata';
+  String get bookDockRoleMetadata => 'Μεταδεδομένα';
 
   @override
-  String get bookDockRoleExtra => 'Extra';
+  String get bookDockRoleExtra => 'Επιπλέον';
 
   @override
-  String get bookDockFieldTitle => 'Title';
+  String get bookDockFieldTitle => 'Τίτλος';
 
   @override
-  String get bookDockFieldSubtitle => 'Subtitle';
+  String get bookDockFieldSubtitle => 'Υπότιτλος';
 
   @override
-  String get bookDockFieldAuthors => 'Authors';
+  String get bookDockFieldAuthors => 'Συγγραφείς';
 
   @override
-  String get bookDockFieldSeries => 'Series';
+  String get bookDockFieldSeries => 'Σειρά';
 
   @override
-  String get bookDockFieldPublisher => 'Publisher';
+  String get bookDockFieldPublisher => 'Εκδότης';
 
   @override
-  String get bookDockFieldYear => 'Year';
+  String get bookDockFieldYear => 'Έτος';
 
   @override
-  String get bookDockFieldLanguage => 'Language';
+  String get bookDockFieldLanguage => 'Γλώσσα';
 
   @override
   String get bookDockFieldIsbn => 'ISBN';
 
   @override
   String bookDockMatch(int percent) {
-    return '$percent% match';
+    return '$percent% αντιστοιχία';
   }
 
   @override
@@ -1934,15 +1966,15 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count αρχεία',
+      one: '1 αρχείο',
     );
     return '$_temp0';
   }
 
   @override
   String bookDockGoesTo(String library) {
-    return 'Goes to $library';
+    return 'Πηγαίνει στη βιβλιοθήκη $library';
   }
 
   @override
@@ -1950,8 +1982,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count fields',
-      one: '1 field',
+      other: '$count πεδία',
+      one: '1 πεδίο',
     );
     return '$_temp0';
   }
@@ -1961,169 +1993,171 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files in this entry',
-      one: 'File in this entry',
+      other: '$count αρχεία σε αυτήν την καταχώριση',
+      one: 'Αρχείο σε αυτήν την καταχώριση',
     );
     return '$_temp0';
   }
 
   @override
   String bookDockAdded(String date) {
-    return 'Added $date';
+    return 'Προστέθηκε $date';
   }
 
   @override
-  String get bookDockAddToLibrary => 'Add to library';
+  String get bookDockAddToLibrary => 'Προσθήκη στη βιβλιοθήκη';
 
   @override
-  String get bookDockUseFound => 'Use found details';
+  String get bookDockUseFound => 'Χρήση των λεπτομερειών που βρέθηκαν';
 
   @override
-  String get bookDockRemoveTitle => 'Remove from Book Dock?';
+  String get bookDockRemoveTitle => 'Αφαίρεση από το Book Dock;';
 
   @override
-  String get bookDockRemoveFailed => 'Couldn\'t remove this file';
+  String get bookDockRemoveFailed =>
+      'Δεν ήταν δυνατή η αφαίρεση αυτού του αρχείου';
 
   @override
-  String get bookDockPickLibrary => 'Add to which library?';
+  String get bookDockPickLibrary => 'Σε ποια βιβλιοθήκη να προστεθεί;';
 
   @override
   String get bookDockNoLibraries =>
-      'Your account can\'t add books to a library';
+      'Ο λογαριασμός σας δεν μπορεί να προσθέσει βιβλία σε βιβλιοθήκη';
 
   @override
-  String get bookDockFileFailed => 'Couldn\'t add this file to the library';
+  String get bookDockFileFailed =>
+      'Δεν ήταν δυνατή η προσθήκη αυτού του αρχείου στη βιβλιοθήκη';
 
   @override
   String get bookDockDuplicateBody =>
-      'A file with this name is already in that library. Remove it from Book Dock?';
+      'Ένα αρχείο με αυτό το όνομα υπάρχει ήδη σε εκείνη τη βιβλιοθήκη. Να αφαιρεθεί από το Book Dock;';
 
   @override
-  String get bookDockDetailsUpdated => 'Details updated';
+  String get bookDockDetailsUpdated => 'Οι λεπτομέρειες ενημερώθηκαν';
 
   @override
-  String get bookDockUseFoundFailed => 'No found details to use';
+  String get bookDockUseFoundFailed => 'Δεν υπάρχουν λεπτομέρειες προς χρήση';
 
   @override
   String bookDockRemoveBody(String title) {
-    return 'This deletes $title from the server.';
+    return 'Αυτό διαγράφει το $title από τον διακομιστή.';
   }
 
   @override
   String bookDockRemoved(String title) {
-    return 'Removed $title from Book Dock';
+    return 'Το $title αφαιρέθηκε από το Book Dock';
   }
 
   @override
   String bookDockFiled(String title, String library) {
-    return 'Added $title to $library';
+    return 'Το $title προστέθηκε στη βιβλιοθήκη $library';
   }
 
   @override
   String bookDockFileFailedReason(String reason) {
-    return 'Couldn\'t add this file: $reason';
+    return 'Δεν ήταν δυνατή η προσθήκη αυτού του αρχείου: $reason';
   }
 
   @override
   String bookDockDuplicateTitle(String library) {
-    return 'Already in $library';
+    return 'Υπάρχει ήδη στη βιβλιοθήκη $library';
   }
 
   @override
-  String get bomatchSearchAll => 'Search all sources';
+  String get bomatchSearchAll => 'Αναζήτηση σε όλες τις πηγές';
 
   @override
-  String get bomatchSearching => 'Searching...';
+  String get bomatchSearching => 'Αναζήτηση...';
 
   @override
   String get bomatchSearchFailed =>
-      'Couldn\'t search for matches. Check your connection and try again.';
+      'Δεν ήταν δυνατή η αναζήτηση αντιστοιχιών. Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά.';
 
   @override
-  String get bomatchNoResults => 'No matches found';
+  String get bomatchNoResults => 'Δεν βρέθηκαν αντιστοιχίες';
 
   @override
-  String get bomatchStrong => 'Strong matches';
+  String get bomatchStrong => 'Ισχυρές αντιστοιχίες';
 
   @override
-  String get bomatchPossible => 'Possible matches';
+  String get bomatchPossible => 'Πιθανές αντιστοιχίες';
 
   @override
-  String get bomatchSourceTimeout => 'timed out';
+  String get bomatchSourceTimeout => 'έληξε ο χρόνος';
 
   @override
-  String get bomatchSourceBusy => 'busy';
+  String get bomatchSourceBusy => 'κατειλημμένο';
 
   @override
-  String get bomatchSourceFailed => 'failed';
+  String get bomatchSourceFailed => 'απέτυχε';
 
   @override
-  String get bomatchLinked => 'Linked';
+  String get bomatchLinked => 'Συνδέθηκε';
 
   @override
-  String get bomatchSameIsbn => 'Same ISBN';
+  String get bomatchSameIsbn => 'Ίδιο ISBN';
 
   @override
-  String get bomatchFewDetails => 'Few details';
+  String get bomatchFewDetails => 'Λίγες λεπτομέρειες';
 
   @override
-  String get bomatchBack => 'All results';
+  String get bomatchBack => 'Όλα τα αποτελέσματα';
 
   @override
-  String get bomatchFillEmpty => 'Fill empty';
+  String get bomatchFillEmpty => 'Συμπλήρωση κενών';
 
   @override
-  String get bomatchTakeAll => 'Take all';
+  String get bomatchTakeAll => 'Λήψη όλων';
 
   @override
-  String get bomatchOnlyDifferences => 'Only differences';
+  String get bomatchOnlyDifferences => 'Μόνο διαφορές';
 
   @override
-  String get bomatchNow => 'Now';
+  String get bomatchNow => 'Τώρα';
 
   @override
-  String get bomatchEmpty => 'Empty';
+  String get bomatchEmpty => 'Κενό';
 
   @override
-  String get bomatchKindNew => 'New';
+  String get bomatchKindNew => 'Νέο';
 
   @override
-  String get bomatchKindChange => 'Change';
+  String get bomatchKindChange => 'Αλλαγή';
 
   @override
-  String get bomatchKindSmall => 'Small change';
+  String get bomatchKindSmall => 'Μικρή αλλαγή';
 
   @override
-  String get bomatchKindSame => 'Same';
+  String get bomatchKindSame => 'Ίδιο';
 
   @override
-  String get bomatchKindNone => 'Not in result';
+  String get bomatchKindNone => 'Δεν υπάρχει στο αποτέλεσμα';
 
   @override
-  String get bomatchKeep => 'Keep';
+  String get bomatchKeep => 'Διατήρηση';
 
   @override
-  String get bomatchUse => 'Use';
+  String get bomatchUse => 'Χρήση';
 
   @override
-  String get bomatchMerge => 'Merge';
+  String get bomatchMerge => 'Συγχώνευση';
 
   @override
-  String get bomatchReplace => 'Replace';
+  String get bomatchReplace => 'Αντικατάσταση';
 
   @override
-  String get bomatchUseThis => 'Use this';
+  String get bomatchUseThis => 'Χρήση αυτού';
 
   @override
-  String get bomatchChosen => 'Chosen';
+  String get bomatchChosen => 'Επιλέχθηκε';
 
   @override
   String bomatchOther(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count other books',
-      one: '1 other book',
+      other: '$count άλλα βιβλία',
+      one: '1 άλλο βιβλίο',
     );
     return '$_temp0';
   }
@@ -2133,8 +2167,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count changes',
-      one: '1 change',
+      other: '$count αλλαγές',
+      one: '1 αλλαγή',
     );
     return '$_temp0';
   }
@@ -2144,8 +2178,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count new',
-      one: '1 new',
+      other: '$count νέα',
+      one: '1 νέο',
     );
     return '$_temp0';
   }
@@ -2155,9 +2189,9 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Apply $count changes',
-      one: 'Apply 1 change',
-      zero: 'Apply',
+      other: 'Εφαρμογή $count αλλαγών',
+      one: 'Εφαρμογή 1 αλλαγής',
+      zero: 'Εφαρμογή',
     );
     return '$_temp0';
   }
@@ -2167,330 +2201,332 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count other sources',
-      one: '1 other source',
+      other: '$count άλλες πηγές',
+      one: '1 άλλη πηγή',
     );
     return '$_temp0';
   }
 
   @override
   String bomatchFrom(String source) {
-    return 'From $source';
+    return 'Από $source';
   }
 
   @override
-  String get breqTitle => 'Book requests';
+  String get breqTitle => 'Αιτήματα βιβλίων';
 
   @override
-  String get breqTabRequest => 'Request a book';
+  String get breqTabRequest => 'Αίτημα βιβλίου';
 
   @override
-  String get breqTabMine => 'My requests';
+  String get breqTabMine => 'Τα αιτήματά μου';
 
   @override
-  String get breqTabAll => 'All requests';
+  String get breqTabAll => 'Όλα τα αιτήματα';
 
   @override
   String get breqNoAccess =>
-      'Your account can\'t request books on this server.';
+      'Ο λογαριασμός σας δεν μπορεί να ζητήσει βιβλία σε αυτόν τον διακομιστή.';
 
   @override
-  String get breqTitleHint => 'Book title';
+  String get breqTitleHint => 'Τίτλος βιβλίου';
 
   @override
-  String get breqAuthorHint => 'Author';
+  String get breqAuthorHint => 'Συγγραφέας';
 
   @override
-  String get breqKindAudiobook => 'Audiobook';
+  String get breqKindAudiobook => 'Ηχητικό βιβλίο';
 
   @override
-  String get breqKindEbook => 'E-book';
+  String get breqKindEbook => 'Ηλεκτρονικό βιβλίο';
 
   @override
-  String get breqKindComic => 'Comic';
+  String get breqKindComic => 'Κόμικ';
 
   @override
-  String get breqSearch => 'Search';
+  String get breqSearch => 'Αναζήτηση';
 
   @override
-  String get breqSearching => 'Searching...';
+  String get breqSearching => 'Αναζήτηση...';
 
   @override
   String get breqSearchFailed =>
-      'Couldn\'t search. Check your connection and try again.';
+      'Δεν ήταν δυνατή η αναζήτηση. Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά.';
 
   @override
   String get breqSearchPrompt =>
-      'Search for a book the library does not have yet to request it.';
+      'Αναζητήστε ένα βιβλίο που δεν υπάρχει ακόμα στη βιβλιοθήκη για να το ζητήσετε.';
 
   @override
-  String get breqNoResults => 'No matching books found';
+  String get breqNoResults => 'Δεν βρέθηκαν βιβλία που να ταιριάζουν';
 
   @override
-  String get breqInLibrary => 'In your library';
+  String get breqInLibrary => 'Στη βιβλιοθήκη σας';
 
   @override
-  String get breqYouAsked => 'You requested this';
+  String get breqYouAsked => 'Το ζητήσατε εσείς';
 
   @override
-  String get breqSomeoneAsked => 'Already requested by someone else';
+  String get breqSomeoneAsked => 'Έχει ήδη ζητηθεί από κάποιον άλλον';
 
   @override
-  String get breqView => 'View';
+  String get breqView => 'Προβολή';
 
   @override
-  String get breqRequest => 'Request';
+  String get breqRequest => 'Αίτημα';
 
   @override
-  String get breqRequested => 'Requested';
+  String get breqRequested => 'Ζητήθηκε';
 
   @override
-  String get breqAddMeToo => 'Add me too';
+  String get breqAddMeToo => 'Προσθήκη και εμένα';
 
   @override
-  String get breqLibrary => 'Library';
+  String get breqLibrary => 'Βιβλιοθήκη';
 
   @override
-  String get breqLibraryApprover => 'Let the approver decide';
+  String get breqLibraryApprover => 'Να αποφασίσει ο εγκρίνων';
 
   @override
-  String get breqLibraryChoose => 'Choose a library';
+  String get breqLibraryChoose => 'Επιλέξτε βιβλιοθήκη';
 
   @override
-  String get breqNote => 'Note for the approver';
+  String get breqNote => 'Σημείωση για τον εγκρίνοντα';
 
   @override
-  String get breqNoteHint => 'Anything worth knowing about this request';
+  String get breqNoteHint =>
+      'Οτιδήποτε αξίζει να γνωρίζουμε για αυτό το αίτημα';
 
   @override
-  String get breqAutoApproved => 'Your requests are approved right away.';
+  String get breqAutoApproved => 'Τα αιτήματά σας εγκρίνονται αμέσως.';
 
   @override
-  String get breqSubmitted => 'Request submitted';
+  String get breqSubmitted => 'Το αίτημα υποβλήθηκε';
 
   @override
-  String get breqJoined => 'Added you to the existing request';
+  String get breqJoined => 'Προστεθήκατε στο υπάρχον αίτημα';
 
   @override
-  String get breqFailed => 'Couldn\'t send the request';
+  String get breqFailed => 'Δεν ήταν δυνατή η αποστολή του αιτήματος';
 
   @override
-  String get breqStatusPending => 'Pending';
+  String get breqStatusPending => 'Σε αναμονή';
 
   @override
-  String get breqStatusApproved => 'Approved';
+  String get breqStatusApproved => 'Εγκρίθηκε';
 
   @override
-  String get breqStatusRejected => 'Rejected';
+  String get breqStatusRejected => 'Απορρίφθηκε';
 
   @override
-  String get breqStatusCancelled => 'Cancelled';
+  String get breqStatusCancelled => 'Ακυρώθηκε';
 
   @override
-  String get breqStatusSearching => 'Searching';
+  String get breqStatusSearching => 'Αναζήτηση';
 
   @override
-  String get breqStatusGrabbed => 'Release found';
+  String get breqStatusGrabbed => 'Βρέθηκε έκδοση';
 
   @override
-  String get breqStatusDownloading => 'Downloading';
+  String get breqStatusDownloading => 'Λήψη σε εξέλιξη';
 
   @override
-  String get breqStatusImporting => 'Importing';
+  String get breqStatusImporting => 'Εισαγωγή';
 
   @override
-  String get breqStatusNeedsReview => 'Needs review';
+  String get breqStatusNeedsReview => 'Χρειάζεται έλεγχο';
 
   @override
-  String get breqStatusAvailable => 'Available';
+  String get breqStatusAvailable => 'Διαθέσιμο';
 
   @override
-  String get breqStatusFailed => 'Failed';
+  String get breqStatusFailed => 'Απέτυχε';
 
   @override
-  String get breqWaitingApproval => 'Waiting for approval';
+  String get breqWaitingApproval => 'Αναμονή έγκρισης';
 
   @override
-  String get breqWaitingRelease => 'Waiting for a release to be picked';
+  String get breqWaitingRelease => 'Αναμονή για επιλογή έκδοσης';
 
   @override
-  String get breqLookingForRelease => 'Looking for a release';
+  String get breqLookingForRelease => 'Αναζήτηση έκδοσης';
 
   @override
-  String get breqStartingDownload => 'Starting the download';
+  String get breqStartingDownload => 'Έναρξη λήψης';
 
   @override
-  String get breqAddingToLibrary => 'Adding to the library';
+  String get breqAddingToLibrary => 'Προσθήκη στη βιβλιοθήκη';
 
   @override
-  String get breqWaitingCheck => 'Waiting for a manual check';
+  String get breqWaitingCheck => 'Αναμονή χειροκίνητου ελέγχου';
 
   @override
-  String get breqReady => 'Ready in your library';
+  String get breqReady => 'Έτοιμο στη βιβλιοθήκη σας';
 
   @override
-  String get breqSomethingWrong => 'Something went wrong';
+  String get breqSomethingWrong => 'Κάτι πήγε στραβά';
 
   @override
-  String get breqShowHidden => 'Show hidden';
+  String get breqShowHidden => 'Εμφάνιση κρυμμένων';
 
   @override
-  String get breqHidden => 'Hidden';
+  String get breqHidden => 'Κρυμμένο';
 
   @override
-  String get breqMineEmpty => 'You haven\'t requested any books yet.';
+  String get breqMineEmpty => 'Δεν έχετε ζητήσει ακόμα κανένα βιβλίο.';
 
   @override
-  String get breqAllEmpty => 'No requests yet.';
+  String get breqAllEmpty => 'Δεν υπάρχουν αιτήματα ακόμα.';
 
   @override
-  String get breqLoadFailed => 'Couldn\'t load requests.';
+  String get breqLoadFailed => 'Δεν ήταν δυνατή η φόρτωση των αιτημάτων.';
 
   @override
-  String get breqLoadMore => 'Load more';
+  String get breqLoadMore => 'Φόρτωση περισσότερων';
 
   @override
-  String get breqApprove => 'Approve';
+  String get breqApprove => 'Έγκριση';
 
   @override
-  String get breqReject => 'Reject';
+  String get breqReject => 'Απόρριψη';
 
   @override
-  String get breqCancel => 'Cancel request';
+  String get breqCancel => 'Ακύρωση αιτήματος';
 
   @override
-  String get breqHide => 'Hide from my list';
+  String get breqHide => 'Απόκρυψη από τη λίστα μου';
 
   @override
-  String get breqUnhide => 'Show in my list';
+  String get breqUnhide => 'Εμφάνιση στη λίστα μου';
 
   @override
-  String get breqLeave => 'Leave request';
+  String get breqLeave => 'Αποχώρηση από το αίτημα';
 
   @override
-  String get breqDelete => 'Delete request';
+  String get breqDelete => 'Διαγραφή αιτήματος';
 
   @override
-  String get breqOpenBook => 'Open book';
+  String get breqOpenBook => 'Άνοιγμα βιβλίου';
 
   @override
   String get breqCancelConfirm =>
-      'Cancel this request? A download in progress stops too.';
+      'Να ακυρωθεί αυτό το αίτημα; Θα σταματήσει και κάθε λήψη σε εξέλιξη.';
 
   @override
-  String get breqDeleteConfirm => 'Delete this request? This can\'t be undone.';
+  String get breqDeleteConfirm =>
+      'Να διαγραφεί αυτό το αίτημα; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.';
 
   @override
-  String get breqRejectTitle => 'Reject request';
+  String get breqRejectTitle => 'Απόρριψη αιτήματος';
 
   @override
-  String get breqRejectReason => 'Reason (optional)';
+  String get breqRejectReason => 'Λόγος (προαιρετικό)';
 
   @override
-  String get breqApproveTitle => 'Approve request';
+  String get breqApproveTitle => 'Έγκριση αιτήματος';
 
   @override
   String get breqApproveLibraryNeeded =>
-      'Choose the library this book goes into.';
+      'Επιλέξτε τη βιβλιοθήκη στην οποία θα μπει αυτό το βιβλίο.';
 
   @override
-  String get breqApprovedToast => 'Request approved';
+  String get breqApprovedToast => 'Το αίτημα εγκρίθηκε';
 
   @override
-  String get breqRejectedToast => 'Request rejected';
+  String get breqRejectedToast => 'Το αίτημα απορρίφθηκε';
 
   @override
-  String get breqCancelledToast => 'Request cancelled';
+  String get breqCancelledToast => 'Το αίτημα ακυρώθηκε';
 
   @override
-  String get breqHiddenToast => 'Hidden from your list';
+  String get breqHiddenToast => 'Κρύφτηκε από τη λίστα σας';
 
   @override
-  String get breqRestoredToast => 'Back on your list';
+  String get breqRestoredToast => 'Επέστρεψε στη λίστα σας';
 
   @override
-  String get breqDeletedToast => 'Request deleted';
+  String get breqDeletedToast => 'Το αίτημα διαγράφηκε';
 
   @override
-  String get breqLeftToast => 'You left this request';
+  String get breqLeftToast => 'Αποχωρήσατε από αυτό το αίτημα';
 
   @override
-  String get breqActionFailed => 'Couldn\'t update the request';
+  String get breqActionFailed => 'Δεν ήταν δυνατή η ενημέρωση του αιτήματος';
 
   @override
-  String get breqFactRequestedBy => 'Requested by';
+  String get breqFactRequestedBy => 'Ζητήθηκε από';
 
   @override
-  String get breqFactRequestedOn => 'Requested on';
+  String get breqFactRequestedOn => 'Ζητήθηκε στις';
 
   @override
-  String get breqFactLibrary => 'Library';
+  String get breqFactLibrary => 'Βιβλιοθήκη';
 
   @override
-  String get breqFactDecidedBy => 'Decided by';
+  String get breqFactDecidedBy => 'Απόφαση από';
 
   @override
-  String get breqFactNote => 'Note from the requester';
+  String get breqFactNote => 'Σημείωση από τον αιτούντα';
 
   @override
-  String get breqFactDecisionNote => 'Decision note';
+  String get breqFactDecisionNote => 'Σημείωση απόφασης';
 
   @override
-  String get breqFactAlsoWanted => 'Also wanted by';
+  String get breqFactAlsoWanted => 'Το θέλουν επίσης';
 
   @override
-  String get breqLibraryCta => 'Request a book';
+  String get breqLibraryCta => 'Αίτημα βιβλίου';
 
   @override
   String get breqSettingsSubtitle =>
-      'Ask for books the library does not have yet';
+      'Ζητήστε βιβλία που δεν υπάρχουν ακόμα στη βιβλιοθήκη';
 
   @override
-  String get navHoldBookRequests => 'Book requests';
+  String get navHoldBookRequests => 'Αιτήματα βιβλίων';
 
   @override
   String breqLibraryDefault(String library) {
-    return 'Default ($library)';
+    return 'Προεπιλογή ($library)';
   }
 
   @override
   String breqFailedReason(String reason) {
-    return 'Couldn\'t send the request: $reason';
+    return 'Δεν ήταν δυνατή η αποστολή του αιτήματος: $reason';
   }
 
   @override
   String breqDownloadingPercent(int percent) {
-    return 'Downloading, $percent%';
+    return 'Λήψη, $percent%';
   }
 
   @override
   String breqAddedTo(String library) {
-    return 'Added to $library';
+    return 'Προστέθηκε στη βιβλιοθήκη $library';
   }
 
   @override
   String breqRejectedWithNote(String note) {
-    return 'Rejected: $note';
+    return 'Απορρίφθηκε: $note';
   }
 
   @override
   String breqFailedWithReason(String reason) {
-    return 'Failed: $reason';
+    return 'Απέτυχε: $reason';
   }
 
   @override
   String breqRequestedBy(String name) {
-    return 'Requested by $name';
+    return 'Ζητήθηκε από $name';
   }
 
   @override
   String breqActionFailedReason(String reason) {
-    return 'Couldn\'t update the request: $reason';
+    return 'Δεν ήταν δυνατή η ενημέρωση του αιτήματος: $reason';
   }
 
   @override
   String breqFooterCta(String query) {
-    return 'Request \"$query\"';
+    return 'Αίτημα για «$query»';
   }
 
   @override
@@ -2498,206 +2534,208 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count requests',
-      one: '1 request',
-      zero: 'No requests',
+      other: '$count αιτήματα',
+      one: '1 αίτημα',
+      zero: 'Κανένα αίτημα',
     );
     return '$_temp0';
   }
 
   @override
-  String get breqFindRelease => 'Find a release';
+  String get breqFindRelease => 'Εύρεση έκδοσης';
 
   @override
-  String get breqTryAnotherRelease => 'Try another release';
+  String get breqTryAnotherRelease => 'Δοκιμή άλλης έκδοσης';
 
   @override
-  String get breqApproveAndFind => 'Approve and find a release';
+  String get breqApproveAndFind => 'Έγκριση και εύρεση έκδοσης';
 
   @override
-  String get breqReviewButton => 'Review download';
+  String get breqReviewButton => 'Έλεγχος λήψης';
 
   @override
-  String get breqStopDownload => 'Stop download';
+  String get breqStopDownload => 'Διακοπή λήψης';
 
   @override
   String get breqStopDownloadConfirm =>
-      'Stop this download? The request goes back to approved so another release can be picked.';
+      'Να διακοπεί αυτή η λήψη; Το αίτημα επιστρέφει σε κατάσταση εγκεκριμένου ώστε να επιλεγεί άλλη έκδοση.';
 
   @override
-  String get breqDiscardImport => 'Discard download';
+  String get breqDiscardImport => 'Απόρριψη λήψης';
 
   @override
   String get breqDiscardConfirm =>
-      'Discard this download? The request is marked failed and can be tried again with another release.';
+      'Να απορριφθεί αυτή η λήψη; Το αίτημα επισημαίνεται ως αποτυχημένο και μπορεί να δοκιμαστεί ξανά με άλλη έκδοση.';
 
   @override
-  String get breqFileAnyway => 'Add to library';
+  String get breqFileAnyway => 'Προσθήκη στη βιβλιοθήκη';
 
   @override
-  String get breqFiledToast => 'Added to the library';
+  String get breqFiledToast => 'Προστέθηκε στη βιβλιοθήκη';
 
   @override
-  String get breqDiscardedToast => 'Download discarded';
+  String get breqDiscardedToast => 'Η λήψη απορρίφθηκε';
 
   @override
-  String get breqStoppedToast => 'Download stopped';
+  String get breqStoppedToast => 'Η λήψη σταμάτησε';
 
   @override
-  String get breqGrabTitle => 'Download this release?';
+  String get breqGrabTitle => 'Λήψη αυτής της έκδοσης;';
 
   @override
-  String get breqGrab => 'Download';
+  String get breqGrab => 'Λήψη';
 
   @override
-  String get breqGrabbed => 'Download started';
+  String get breqGrabbed => 'Η λήψη ξεκίνησε';
 
   @override
-  String get breqGrabFailed => 'Couldn\'t start that download';
+  String get breqGrabFailed => 'Δεν ήταν δυνατή η έναρξη αυτής της λήψης';
 
   @override
   String get breqReleaseVipWarning =>
-      'This tracker only lets VIP accounts download it.';
+      'Αυτός ο tracker επιτρέπει τη λήψη μόνο σε λογαριασμούς VIP.';
 
   @override
   String get breqReleaseNoBookFile =>
-      'This release has no book file BookOrbit can add to a library.';
+      'Αυτή η έκδοση δεν έχει αρχείο βιβλίου που το BookOrbit μπορεί να προσθέσει σε βιβλιοθήκη.';
 
   @override
   String get breqReleaseCheckFailed =>
-      'Couldn\'t check what\'s in this release. Try again or pick another one.';
+      'Δεν ήταν δυνατός ο έλεγχος του περιεχομένου αυτής της έκδοσης. Δοκιμάστε ξανά ή επιλέξτε άλλη.';
 
   @override
-  String get breqCheckingRelease => 'Checking the files...';
+  String get breqCheckingRelease => 'Έλεγχος των αρχείων...';
 
   @override
-  String get breqSearchAgain => 'Search again';
+  String get breqSearchAgain => 'Νέα αναζήτηση';
 
   @override
-  String get breqSearchTerms => 'Search terms';
+  String get breqSearchTerms => 'Όροι αναζήτησης';
 
   @override
-  String get breqIsbnHint => 'Leave empty to search by title and author';
+  String get breqIsbnHint => 'Αφήστε κενό για αναζήτηση με τίτλο και συγγραφέα';
 
   @override
   String get breqSearchingIndexers =>
-      'Searching your indexers. This can take up to a minute.';
+      'Αναζήτηση στους indexers σας. Μπορεί να διαρκέσει έως και ένα λεπτό.';
 
   @override
-  String get breqReleasesFailed => 'Couldn\'t search for releases.';
+  String get breqReleasesFailed => 'Δεν ήταν δυνατή η αναζήτηση εκδόσεων.';
 
   @override
-  String get breqNoSourcesSetUp => 'No search sources are set up in BookOrbit.';
+  String get breqNoSourcesSetUp =>
+      'Δεν έχουν ρυθμιστεί πηγές αναζήτησης στο BookOrbit.';
 
   @override
   String get breqNoSourcesOn =>
-      'Every search source is switched off in BookOrbit.';
+      'Όλες οι πηγές αναζήτησης είναι απενεργοποιημένες στο BookOrbit.';
 
   @override
   String get breqNoSourceCarries =>
-      'None of your search sources carry this kind of book.';
+      'Καμία από τις πηγές αναζήτησης δεν διαθέτει αυτό το είδος βιβλίου.';
 
   @override
-  String get breqNoReleases => 'No releases found. Try different search terms.';
+  String get breqNoReleases =>
+      'Δεν βρέθηκαν εκδόσεις. Δοκιμάστε άλλους όρους αναζήτησης.';
 
   @override
-  String get breqFromCache => 'from a recent search';
+  String get breqFromCache => 'από πρόσφατη αναζήτηση';
 
   @override
-  String get breqIndexerUnauthorized => 'sign-in failed';
+  String get breqIndexerUnauthorized => 'η σύνδεση απέτυχε';
 
   @override
-  String get breqIndexerThrottled => 'busy';
+  String get breqIndexerThrottled => 'απασχολημένο';
 
   @override
-  String get breqIndexerTimeout => 'timed out';
+  String get breqIndexerTimeout => 'έληξε ο χρόνος';
 
   @override
-  String get breqIndexerUnreachable => 'unreachable';
+  String get breqIndexerUnreachable => 'μη προσβάσιμο';
 
   @override
-  String get breqIndexerNoMedium => 'does not carry this';
+  String get breqIndexerNoMedium => 'δεν το διαθέτει';
 
   @override
-  String get breqIndexerError => 'failed';
+  String get breqIndexerError => 'απέτυχε';
 
   @override
-  String get breqSortBest => 'Best match';
+  String get breqSortBest => 'Καλύτερη αντιστοίχιση';
 
   @override
   String get breqSortSeeders => 'Seeders';
 
   @override
-  String get breqSortSize => 'Size';
+  String get breqSortSize => 'Μέγεθος';
 
   @override
-  String get breqSortNewest => 'Newest';
+  String get breqSortNewest => 'Νεότερα';
 
   @override
   String get breqFreeleech => 'Freeleech';
 
   @override
-  String get breqVipOnly => 'VIP only';
+  String get breqVipOnly => 'Μόνο VIP';
 
   @override
-  String get breqAlreadyGrabbed => 'Downloaded before';
+  String get breqAlreadyGrabbed => 'Έχει ληφθεί ξανά';
 
   @override
   String get breqReasonIsbn => 'ISBN';
 
   @override
-  String get breqReasonTitle => 'Title';
+  String get breqReasonTitle => 'Τίτλος';
 
   @override
-  String get breqReasonAuthor => 'Author';
+  String get breqReasonAuthor => 'Συγγραφέας';
 
   @override
-  String get breqReasonUnknownFormat => 'Unknown format';
+  String get breqReasonUnknownFormat => 'Άγνωστη μορφή';
 
   @override
-  String get breqReasonExpectedSize => 'Size';
+  String get breqReasonExpectedSize => 'Μέγεθος';
 
   @override
-  String get breqReasonSuspiciousSize => 'Unusual size';
+  String get breqReasonSuspiciousSize => 'Ασυνήθιστο μέγεθος';
 
   @override
   String get breqReasonFreeleech => 'Freeleech';
 
   @override
-  String get breqReasonSeveralBooks => 'Several books';
+  String get breqReasonSeveralBooks => 'Πολλά βιβλία';
 
   @override
-  String get breqReviewTitle => 'Download waiting for a check';
+  String get breqReviewTitle => 'Λήψη σε αναμονή ελέγχου';
 
   @override
-  String get breqReviewFailed => 'Couldn\'t load the download details.';
+  String get breqReviewFailed => 'Αδυναμία φόρτωσης των στοιχείων της λήψης.';
 
   @override
   String get breqReviewDockGone =>
-      'The downloaded files are no longer in the Book Dock.';
+      'Τα ληφθέντα αρχεία δεν βρίσκονται πλέον στο Book Dock.';
 
   @override
   String get breqReviewNoLibrary =>
-      'This request has no library to add the book to.';
+      'Αυτό το αίτημα δεν έχει βιβλιοθήκη για την προσθήκη του βιβλίου.';
 
   @override
   String breqGrabFailedReason(String reason) {
-    return 'Couldn\'t start that download: $reason';
+    return 'Αδυναμία έναρξης αυτής της λήψης: $reason';
   }
 
   @override
   String breqReleaseCheckFailedReason(String reason) {
-    return 'Couldn\'t check what\'s in this release: $reason';
+    return 'Αδυναμία ελέγχου του περιεχομένου αυτής της έκδοσης: $reason';
   }
 
   @override
   String breqReleasesFailedReason(String reason) {
-    return 'Couldn\'t search for releases: $reason';
+    return 'Αδυναμία αναζήτησης εκδόσεων: $reason';
   }
 
   @override
   String breqReviewFailedReason(String reason) {
-    return 'Couldn\'t load the download details: $reason';
+    return 'Αδυναμία φόρτωσης των στοιχείων της λήψης: $reason';
   }
 
   @override
@@ -2705,9 +2743,9 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count releases',
-      one: '1 release',
-      zero: 'No releases',
+      other: '$count εκδόσεις',
+      one: '1 έκδοση',
+      zero: 'Καμία έκδοση',
     );
     return '$_temp0';
   }
@@ -2717,8 +2755,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count αρχεία',
+      one: '1 αρχείο',
     );
     return '$_temp0';
   }
@@ -2728,8 +2766,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count αρχεία',
+      one: '1 αρχείο',
     );
     return '$_temp0';
   }
@@ -2741,12 +2779,12 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String breqScore(int score) {
-    return 'Score $score';
+    return 'Βαθμολογία $score';
   }
 
   @override
   String breqReasonPreferredFormat(String format) {
-    return 'Preferred $format';
+    return 'Προτιμώμενο $format';
   }
 
   @override
@@ -2761,606 +2799,619 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String breqReviewScore(int score, int threshold) {
-    return 'Match score $score. Downloads scoring $threshold or more are added on their own.';
+    return 'Βαθμολογία αντιστοίχισης $score. Οι λήψεις με βαθμολογία $threshold ή υψηλότερη προστίθενται αυτόματα.';
   }
 
   @override
   String breqReviewRequested(String value) {
-    return 'Requested: $value';
+    return 'Ζητήθηκε: $value';
   }
 
   @override
   String breqReviewImported(String value) {
-    return 'Downloaded: $value';
+    return 'Ελήφθη: $value';
   }
 
   @override
-  String get breqKindBoth => 'Both';
+  String get breqKindBoth => 'Και τα δύο';
 
   @override
-  String get breqEbookLibrary => 'E-book library';
+  String get breqEbookLibrary => 'Βιβλιοθήκη ηλεκτρονικών βιβλίων';
 
   @override
-  String get breqAudiobookLibrary => 'Audiobook library';
+  String get breqAudiobookLibrary => 'Βιβλιοθήκη ηχητικών βιβλίων';
 
   @override
-  String get breqRequestBoth => 'Request both';
+  String get breqRequestBoth => 'Αίτημα και για τα δύο';
 
   @override
-  String get breqAddMeToBoth => 'Add me to both';
+  String get breqAddMeToBoth => 'Προσθήκη μου και στα δύο';
 
   @override
-  String get breqRequestEbook => 'Request e-book';
+  String get breqRequestEbook => 'Αίτημα ηλεκτρονικού βιβλίου';
 
   @override
-  String get breqRequestAudiobook => 'Request audiobook';
+  String get breqRequestAudiobook => 'Αίτημα ηχητικού βιβλίου';
 
   @override
-  String get breqAddMeEbook => 'Add me to the e-book request';
+  String get breqAddMeEbook => 'Προσθήκη μου στο αίτημα ηλεκτρονικού βιβλίου';
 
   @override
-  String get breqAddMeAudiobook => 'Add me to the audiobook request';
+  String get breqAddMeAudiobook => 'Προσθήκη μου στο αίτημα ηχητικού βιβλίου';
 
   @override
-  String get breqPairSubmitted => 'Requested the e-book and the audiobook';
+  String get breqPairSubmitted =>
+      'Ζητήθηκαν το ηλεκτρονικό και το ηχητικό βιβλίο';
 
   @override
   String get breqPairOneJoined =>
-      'Requested both. One was already on its way, so you were added to that request';
+      'Ζητήθηκαν και τα δύο. Το ένα ήταν ήδη καθ\' οδόν, οπότε προστεθήκατε σε αυτό το αίτημα';
 
   @override
-  String get breqJoinedBoth => 'Added you to both requests';
+  String get breqJoinedBoth => 'Προστεθήκατε και στα δύο αιτήματα';
 
   @override
   String get breqJoinsOwned =>
-      'Requested. It will join the copy already in your library';
+      'Το αίτημα υποβλήθηκε. Θα ενωθεί με το αντίγραφο που έχετε ήδη στη βιβλιοθήκη σας';
 
   @override
-  String get speedBookmarkInControls => 'Speed & bookmark in media controls';
+  String get speedBookmarkInControls =>
+      'Ταχύτητα και σελιδοδείκτης στα χειριστήρια πολυμέσων';
 
   @override
   String get speedBookmarkOnSubtitle =>
-      'On - notification shows speed & bookmark; chapter skip stays in Android Auto';
+      'Ενεργό - η ειδοποίηση δείχνει ταχύτητα και σελιδοδείκτη· η μετάβαση κεφαλαίου μένει στο Android Auto';
 
   @override
   String get speedBookmarkOffSubtitle =>
-      'Off - notification shows chapter skip; speed & bookmark stay in Android Auto';
+      'Ανενεργό - η ειδοποίηση δείχνει μετάβαση κεφαλαίου· η ταχύτητα και ο σελιδοδείκτης μένουν στο Android Auto';
 
   @override
-  String get lockSeekBar => 'Lock the seek bar';
+  String get lockSeekBar => 'Κλείδωμα γραμμής αναζήτησης';
 
   @override
   String get lockSeekBarOnSubtitle =>
-      'On - the scrubber in the notification, lockscreen and car shows progress but can\'t be dragged';
+      'Ενεργό - ο δρομέας στην ειδοποίηση, την οθόνη κλειδώματος και το αυτοκίνητο δείχνει την πρόοδο αλλά δεν μπορεί να σύρεται';
 
   @override
   String get lockSeekBarOffSubtitle =>
-      'Off - drag the scrubber in the notification, lockscreen and car to jump around';
+      'Ανενεργό - σύρετε τον δρομέα στην ειδοποίηση, την οθόνη κλειδώματος και το αυτοκίνητο για να μετακινηθείτε';
 
   @override
-  String get autoRewindOnResume => 'Auto-rewind on resume';
+  String get autoRewindOnResume => 'Αυτόματη επαναφορά κατά την επανέναρξη';
 
   @override
   String autoRewindOnSubtitle(String min, String max) {
-    return 'On - ${min}s to ${max}s based on pause length';
+    return 'Ενεργό - ${min}s έως ${max}s ανάλογα με τη διάρκεια της παύσης';
   }
 
   @override
-  String get autoRewindOffSubtitle => 'Off';
+  String get autoRewindOffSubtitle => 'Ανενεργό';
 
   @override
-  String get rewindRange => 'Rewind range';
+  String get rewindRange => 'Εύρος επαναφοράς';
 
   @override
-  String get rewindAfterPausedFor => 'Rewind after paused for';
+  String get rewindAfterPausedFor => 'Επαναφορά μετά από παύση';
 
   @override
-  String get rewindAnyPause => 'Any pause';
+  String get rewindAnyPause => 'Οποιαδήποτε παύση';
 
   @override
-  String get rewindAlwaysLabel => 'Always';
+  String get rewindAlwaysLabel => 'Πάντα';
 
   @override
   String get rewindAlwaysDescription =>
-      'Rewinds every time you resume, even after quick interruptions';
+      'Επαναφορά σε κάθε επανέναρξη, ακόμη και μετά από σύντομες διακοπές';
 
   @override
   String rewindAfterDescription(String seconds) {
-    return 'Only rewinds if paused for $seconds+ seconds';
+    return 'Επαναφορά μόνο αν η παύση διαρκέσει $seconds+ δευτερόλεπτα';
   }
 
   @override
-  String get chapterBarrier => 'Chapter barrier';
+  String get chapterBarrier => 'Όριο κεφαλαίου';
 
   @override
   String get chapterBarrierSubtitle =>
-      'Don\'t auto-rewind past the start of the current chapter';
+      'Να μην γίνεται αυτόματη επαναφορά πριν από την αρχή του τρέχοντος κεφαλαίου';
 
   @override
-  String get rewindInstant => 'Instant';
+  String get rewindInstant => 'Άμεσα';
 
   @override
   String rewindPause(String duration) {
-    return '$duration pause';
+    return 'Παύση $duration';
   }
 
   @override
-  String get rewindNoRewind => 'no rewind';
+  String get rewindNoRewind => 'χωρίς επαναφορά';
 
   @override
   String rewindSeconds(String seconds) {
-    return '${seconds}s rewind';
+    return 'Επαναφορά ${seconds}s';
   }
 
   @override
-  String get sectionSleepTimer => 'Sleep Timer';
+  String get sectionSleepTimer => 'Χρονοδιακόπτης ύπνου';
 
   @override
-  String get sleep => 'Sleep';
+  String get sleep => 'Ύπνος';
 
   @override
-  String get sleepTimer => 'Sleep Timer';
+  String get sleepTimer => 'Χρονοδιακόπτης ύπνου';
 
   @override
-  String get shakeDuringSleepTimer => 'Shake during sleep timer';
+  String get shakeDuringSleepTimer => 'Ανακίνηση κατά τον χρονοδιακόπτη ύπνου';
 
   @override
-  String get shakeOff => 'Off';
+  String get shakeOff => 'Ανενεργό';
 
   @override
-  String get shakeAddTime => 'Add Time';
+  String get shakeAddTime => 'Προσθήκη χρόνου';
 
   @override
-  String get shakeReset => 'Reset';
+  String get shakeReset => 'Επαναφορά';
 
   @override
-  String get shakeAdds => 'Shake adds';
+  String get shakeAdds => 'Η ανακίνηση προσθέτει';
 
   @override
-  String get sleepAddAmount => 'Add time amount';
+  String get sleepAddAmount => 'Ποσό χρόνου προς προσθήκη';
 
   @override
   String shakeAddsValue(int minutes) {
-    return '$minutes min';
+    return '$minutes λεπτά';
   }
 
   @override
-  String get shakeSensitivity => 'Shake sensitivity';
+  String get shakeSensitivity => 'Ευαισθησία ανακίνησης';
 
   @override
-  String get shakeSensitivityVeryLow => 'Very low';
+  String get shakeSensitivityVeryLow => 'Πολύ χαμηλή';
 
   @override
-  String get shakeSensitivityLow => 'Low';
+  String get shakeSensitivityLow => 'Χαμηλή';
 
   @override
-  String get shakeSensitivityMedium => 'Medium';
+  String get shakeSensitivityMedium => 'Μεσαία';
 
   @override
-  String get shakeSensitivityHigh => 'High';
+  String get shakeSensitivityHigh => 'Υψηλή';
 
   @override
-  String get shakeSensitivityVeryHigh => 'Very high';
+  String get shakeSensitivityVeryHigh => 'Πολύ υψηλή';
 
   @override
-  String get buttonDuringSleepTimer => 'Headphone button during wind-down';
+  String get buttonDuringSleepTimer => 'Κουμπί ακουστικών κατά την τελική φάση';
 
   @override
   String get buttonDuringSleepTimerHint =>
-      'In the final wind-down moments, one press resets the timer instead of pausing. Double press still skips.';
+      'Στις τελευταίες στιγμές πριν το τέλος, ένα πάτημα επαναφέρει τον χρονοδιακόπτη αντί να κάνει παύση. Το διπλό πάτημα εξακολουθεί να προχωρά στο επόμενο.';
 
   @override
-  String get resetTimerOnPause => 'Reset timer on pause';
+  String get resetTimerOnPause => 'Επαναφορά χρονοδιακόπτη στην παύση';
 
   @override
   String get resetTimerOnPauseOnSubtitle =>
-      'Timer restarts from full duration when you resume';
+      'Ο χρονοδιακόπτης ξεκινά ξανά από την πλήρη διάρκεια όταν συνεχίσετε';
 
   @override
   String get resetTimerOnPauseOffSubtitle =>
-      'Timer continues from where it left off';
+      'Ο χρονοδιακόπτης συνεχίζει από εκεί που σταμάτησε';
 
   @override
-  String get fadeVolumeBeforeSleep => 'Fade volume before sleep';
+  String get fadeVolumeBeforeSleep => 'Σταδιακή μείωση έντασης πριν τον ύπνο';
 
   @override
   String get fadeVolumeOnSubtitle =>
-      'Gradually lowers volume during the last 30 seconds';
+      'Μειώνει σταδιακά την ένταση στα τελευταία 30 δευτερόλεπτα';
 
   @override
   String get fadeVolumeOffSubtitle =>
-      'Playback stops immediately when timer ends';
+      'Η αναπαραγωγή σταματά αμέσως όταν λήξει ο χρονοδιακόπτης';
 
   @override
-  String get autoSleepTimer => 'Auto sleep timer';
+  String get autoSleepTimer => 'Αυτόματος χρονοδιακόπτης ύπνου';
 
   @override
   String autoSleepTimerOnSubtitle(String start, String end, int duration) {
-    return '$start - $end - $duration min';
+    return '$start - $end - $duration λεπτά';
   }
 
   @override
   String get autoSleepTimerOffSubtitle =>
-      'Automatically start a sleep timer during a time window';
+      'Αυτόματη έναρξη χρονοδιακόπτη ύπνου μέσα σε ένα χρονικό παράθυρο';
 
   @override
-  String get windowStart => 'Window start';
+  String get windowStart => 'Έναρξη παραθύρου';
 
   @override
-  String get windowEnd => 'Window end';
+  String get windowEnd => 'Λήξη παραθύρου';
 
   @override
-  String get timerDuration => 'Timer duration';
+  String get timerDuration => 'Διάρκεια χρονοδιακόπτη';
 
   @override
-  String get timer => 'Timer';
+  String get timer => 'Χρονοδιακόπτης';
 
   @override
-  String get endOfChapter => 'End of Chapter';
+  String get endOfChapter => 'Τέλος κεφαλαίου';
 
   @override
   String startMinTimer(int minutes) {
-    return 'Start $minutes min timer';
+    return 'Έναρξη χρονοδιακόπτη $minutes λεπτών';
   }
 
   @override
   String sleepAfterChapters(int count, String label) {
-    return 'Sleep after $count $label';
+    return 'Ύπνος μετά από $count $label';
   }
 
   @override
-  String get addMoreTime => 'Add more time';
+  String get addMoreTime => 'Προσθήκη χρόνου';
 
   @override
-  String get cancelTimer => 'Cancel timer';
+  String get cancelTimer => 'Ακύρωση χρονοδιακόπτη';
 
   @override
   String chaptersLeftCount(int count) {
-    return '$count ch left';
+    return '$count κεφ. απομένουν';
   }
 
   @override
-  String get sectionDownloadsAndStorage => 'Downloads & Storage';
+  String get sectionDownloadsAndStorage => 'Λήψεις και αποθήκευση';
 
   @override
-  String get downloadOverWifiOnly => 'Download network';
+  String get downloadOverWifiOnly => 'Δίκτυο λήψης';
 
   @override
-  String get downloadOverWifiOnSubtitle => 'Wi-Fi only';
+  String get downloadOverWifiOnSubtitle => 'Μόνο Wi-Fi';
 
   @override
-  String get downloadOverWifiOffSubtitle => 'Any connection';
+  String get downloadOverWifiOffSubtitle => 'Οποιαδήποτε σύνδεση';
 
   @override
-  String get autoDownloadOnWifi => 'Auto-download books you start';
+  String get autoDownloadOnWifi => 'Αυτόματη λήψη βιβλίων που ξεκινάτε';
 
   @override
-  String get autoDownloadOnWifiInfoTitle => 'Auto-Download Books You Start';
+  String get autoDownloadOnWifiInfoTitle =>
+      'Αυτόματη λήψη βιβλίων που ξεκινάτε';
 
   @override
   String get autoDownloadOnWifiInfoContent =>
-      'When you start streaming a book, the full book downloads in the background so you\'ll have it offline without starting the download yourself. These downloads follow your Download network setting above, so set it to Any connection if you want them to run on mobile data too.';
+      'Όταν ξεκινάτε ροή ενός βιβλίου, ολόκληρο το βιβλίο λαμβάνεται στο παρασκήνιο ώστε να το έχετε εκτός σύνδεσης χωρίς να ξεκινήσετε μόνοι σας τη λήψη. Αυτές οι λήψεις ακολουθούν τη ρύθμιση Δίκτυο λήψης παραπάνω, οπότε ορίστε την σε Οποιαδήποτε σύνδεση αν θέλετε να εκτελούνται και με δεδομένα κινητής.';
 
   @override
   String get autoDownloadOnWifiOnSubtitle =>
-      'Streamed books download in the background automatically';
+      'Τα βιβλία που ακούτε σε ροή λαμβάνονται αυτόματα στο παρασκήνιο';
 
   @override
-  String get autoDownloadOnWifiOffSubtitle => 'Off';
+  String get autoDownloadOnWifiOffSubtitle => 'Ανενεργό';
 
   @override
-  String get concurrentDownloads => 'Concurrent downloads';
+  String get concurrentDownloads => 'Ταυτόχρονες λήψεις';
 
   @override
-  String get autoDownload => 'Auto-download';
+  String get autoDownload => 'Αυτόματη λήψη';
 
   @override
   String get autoDownloadSubtitle =>
-      'Enable per series, podcast, playlist or collection from their detail pages';
+      'Ενεργοποίηση ανά σειρά, podcast, λίστα αναπαραγωγής ή συλλογή από τις σελίδες λεπτομερειών τους';
 
   @override
-  String get autoDownloadEnabledFor => 'Turned on for';
+  String get autoDownloadEnabledFor => 'Ενεργό για';
 
   @override
-  String get autoDownloadEnabledForNone => 'Nothing yet';
+  String get autoDownloadEnabledForNone => 'Τίποτα ακόμη';
 
   @override
-  String get autoDownloadSourceUnnamed => 'Not loaded yet';
+  String get autoDownloadSourceUnnamed => 'Δεν έχει φορτωθεί ακόμη';
 
   @override
-  String get keepNext => 'Keep next';
+  String get keepNext => 'Διατήρηση επόμενων';
 
   @override
-  String get keepNextInfoTitle => 'Keep Next';
+  String get keepNextInfoTitle => 'Διατήρηση επόμενων';
 
   @override
   String get keepNextInfoContent =>
-      'The number of items to keep downloaded, including the one you\'re currently listening to. For example, \"Keep next 3\" means the current book plus the next 2 in that series, podcast, playlist or collection will stay downloaded. This applies to every auto-download you turn on.';
+      'Ο αριθμός στοιχείων που διατηρούνται ληφθέντα, συμπεριλαμβανομένου αυτού που ακούτε τώρα. Για παράδειγμα, η «Διατήρηση επόμενων 3» σημαίνει ότι το τρέχον βιβλίο και τα επόμενα 2 της ίδιας σειράς, podcast, λίστας αναπαραγωγής ή συλλογής θα παραμένουν ληφθέντα. Ισχύει για κάθε αυτόματη λήψη που ενεργοποιείτε.';
 
   @override
-  String get deleteAbsorbedDownloads => 'Delete absorbed downloads';
+  String get deleteAbsorbedDownloads => 'Διαγραφή απορροφημένων λήψεων';
 
   @override
-  String get deleteAbsorbedDownloadsInfoTitle => 'Delete Absorbed Downloads';
+  String get deleteAbsorbedDownloadsInfoTitle =>
+      'Διαγραφή απορροφημένων λήψεων';
 
   @override
   String get deleteAbsorbedDownloadsInfoContent =>
-      'When enabled, downloaded books or episodes are automatically deleted from this device after you finish them in Absorb. Finishing an item on the web or another device won’t delete its download here.';
+      'Όταν είναι ενεργό, τα ληφθέντα βιβλία ή επεισόδια διαγράφονται αυτόματα από αυτήν τη συσκευή αφού τα ολοκληρώσετε στο Absorb. Η ολοκλήρωση ενός στοιχείου στον ιστό ή σε άλλη συσκευή δεν διαγράφει τη λήψη του εδώ.';
 
   @override
   String get deleteAbsorbedOnSubtitle =>
-      'Finished items are removed to save space';
+      'Τα ολοκληρωμένα στοιχεία αφαιρούνται για εξοικονόμηση χώρου';
 
   @override
-  String get deleteAbsorbedOffSubtitle => 'Off - finished downloads kept';
+  String get deleteAbsorbedOffSubtitle =>
+      'Ανενεργό - οι ολοκληρωμένες λήψεις διατηρούνται';
 
   @override
-  String get downloadLocation => 'Download location';
+  String get downloadLocation => 'Θέση λήψης';
 
   @override
-  String get storageUsed => 'Storage used';
+  String get storageUsed => 'Χώρος που χρησιμοποιείται';
 
   @override
   String storageUsedByDownloads(String size) {
-    return '$size used by downloads';
+    return '$size χρησιμοποιούνται από λήψεις';
   }
 
   @override
   String storageFreeOfTotal(String free, String total) {
-    return '$free free of $total';
+    return '$free ελεύθερα από $total';
   }
 
   @override
-  String get manageDownloads => 'Manage downloads';
+  String get manageDownloads => 'Διαχείριση λήψεων';
 
   @override
-  String get streamingCache => 'Streaming cache';
+  String get streamingCache => 'Προσωρινή μνήμη ροής';
 
   @override
-  String get streamingCacheInfoTitle => 'Streaming Cache';
+  String get streamingCacheInfoTitle => 'Προσωρινή μνήμη ροής';
 
   @override
   String get streamingCacheInfoContent =>
-      'Caches streamed audio to disk so it doesn\'t need to be re-downloaded if you seek back or re-listen to sections. The cache is automatically managed - oldest files are removed when the size limit is reached. This is separate from fully downloaded books.';
+      'Αποθηκεύει προσωρινά στον δίσκο τον ήχο που ακούτε σε ροή, ώστε να μη χρειάζεται να ληφθεί ξανά αν πάτε πίσω ή ξανακούσετε κάποια σημεία. Η προσωρινή μνήμη διαχειρίζεται αυτόματα - τα παλαιότερα αρχεία αφαιρούνται όταν συμπληρωθεί το όριο μεγέθους. Είναι ξεχωριστή από τα πλήρως ληφθέντα βιβλία.';
 
   @override
-  String get streamingCacheOff => 'Off';
+  String get streamingCacheOff => 'Ανενεργό';
 
   @override
   String get streamingCacheOffSubtitle =>
-      'Off - audio is streamed without caching';
+      'Ανενεργό - ο ήχος μεταδίδεται χωρίς προσωρινή αποθήκευση';
 
   @override
   String streamingCacheOnSubtitle(int size) {
-    return '$size MB - recently streamed audio is cached to disk';
+    return '$size MB - ο ήχος που ακούστηκε πρόσφατα σε ροή αποθηκεύεται προσωρινά στον δίσκο';
   }
 
   @override
-  String get clearCache => 'Clear cache';
+  String get clearCache => 'Εκκαθάριση προσωρινής μνήμης';
 
   @override
-  String get streamingCacheCleared => 'Streaming cache cleared';
+  String get streamingCacheCleared => 'Η προσωρινή μνήμη ροής εκκαθαρίστηκε';
 
   @override
-  String get sectionLibrary => 'Library';
+  String get sectionLibrary => 'Βιβλιοθήκη';
 
   @override
-  String get hideEbookOnlyTitles => 'Hide eBook-only titles';
+  String get hideEbookOnlyTitles => 'Απόκρυψη τίτλων μόνο ηλεκτρονικού βιβλίου';
 
   @override
-  String get hideEbookOnlyOnSubtitle => 'Books with no audio files are hidden';
+  String get hideEbookOnlyOnSubtitle =>
+      'Τα βιβλία χωρίς αρχεία ήχου είναι κρυμμένα';
 
   @override
-  String get hideEbookOnlyOffSubtitle => 'Off - all library items shown';
+  String get hideEbookOnlyOffSubtitle =>
+      'Ανενεργό - εμφανίζονται όλα τα στοιχεία της βιβλιοθήκης';
 
   @override
-  String get homeCardsOpenDetails => 'Open details from Home';
+  String get homeCardsOpenDetails => 'Άνοιγμα λεπτομερειών από την Αρχική';
 
   @override
   String get homeCardsOpenDetailsOnSubtitle =>
-      'Tapping a Continue Listening or Continue Reading card opens its details';
+      'Το πάτημα σε κάρτα Συνέχεια ακρόασης ή Συνέχεια ανάγνωσης ανοίγει τις λεπτομέρειές της';
 
   @override
   String get homeCardsOpenDetailsOffSubtitle =>
-      'Tapping a Continue Listening or Continue Reading card picks up where you left off';
+      'Το πάτημα σε κάρτα Συνέχεια ακρόασης ή Συνέχεια ανάγνωσης συνεχίζει από εκεί που μείνατε';
 
   @override
-  String get showGoodreadsButton => 'Show Goodreads button';
+  String get showGoodreadsButton => 'Εμφάνιση κουμπιού Goodreads';
 
   @override
   String get showGoodreadsOnSubtitle =>
-      'Book detail sheet shows a link to Goodreads';
+      'Το φύλλο λεπτομερειών βιβλίου δείχνει σύνδεσμο προς το Goodreads';
 
   @override
-  String get showGoodreadsOffSubtitle => 'Off - Goodreads button hidden';
+  String get showGoodreadsOffSubtitle =>
+      'Ανενεργό - το κουμπί Goodreads είναι κρυμμένο';
 
   @override
-  String get sectionPermissions => 'Permissions';
+  String get sectionPermissions => 'Άδειες';
 
   @override
-  String get notifications => 'Notifications';
+  String get notifications => 'Ειδοποιήσεις';
 
   @override
   String get notificationsSubtitle =>
-      'For download progress and playback controls';
+      'Για την πρόοδο λήψεων και τα χειριστήρια αναπαραγωγής';
 
   @override
-  String get notificationsAlreadyEnabled => 'Notifications already enabled';
+  String get notificationsAlreadyEnabled => 'Οι ειδοποιήσεις είναι ήδη ενεργές';
 
   @override
-  String get unrestrictedBattery => 'Unrestricted battery';
+  String get unrestrictedBattery => 'Μπαταρία χωρίς περιορισμούς';
 
   @override
   String get unrestrictedBatterySubtitle =>
-      'Prevents Android from killing background playback';
+      'Εμποδίζει το Android να τερματίζει την αναπαραγωγή στο παρασκήνιο';
 
   @override
-  String get batteryAlreadyUnrestricted => 'Battery already unrestricted';
+  String get batteryAlreadyUnrestricted =>
+      'Η μπαταρία είναι ήδη χωρίς περιορισμούς';
 
   @override
-  String get sectionIssuesAndSupport => 'Issues & Support';
+  String get sectionIssuesAndSupport => 'Προβλήματα και υποστήριξη';
 
   @override
-  String get bugsAndFeatureRequests => 'Bugs & Feature Requests';
+  String get bugsAndFeatureRequests => 'Σφάλματα και αιτήματα λειτουργιών';
 
   @override
-  String get bugsAndFeatureRequestsSubtitle => 'Open an issue on GitHub';
+  String get bugsAndFeatureRequestsSubtitle => 'Ανοίξτε ένα issue στο GitHub';
 
   @override
-  String get joinDiscord => 'Join Discord';
+  String get joinDiscord => 'Συμμετοχή στο Discord';
 
   @override
-  String get joinDiscordSubtitle => 'Community, support, and updates';
+  String get joinDiscordSubtitle => 'Κοινότητα, υποστήριξη και ενημερώσεις';
 
   @override
-  String get contact => 'Contact';
+  String get contact => 'Επικοινωνία';
 
   @override
-  String get contactSubtitle => 'Send device info via email';
+  String get contactSubtitle => 'Αποστολή στοιχείων συσκευής με email';
 
   @override
-  String get enableLogging => 'Enable logging';
+  String get enableLogging => 'Ενεργοποίηση καταγραφής';
 
   @override
   String get enableLoggingOnSubtitle =>
-      'On - logs saved to file (restart to apply)';
+      'Ενεργό - τα αρχεία καταγραφής αποθηκεύονται σε αρχείο (επανεκκίνηση για εφαρμογή)';
 
   @override
-  String get enableLoggingOffSubtitle => 'Off - no logs captured';
+  String get enableLoggingOffSubtitle =>
+      'Ανενεργό - δεν καταγράφονται αρχεία καταγραφής';
 
   @override
   String get loggingEnabledSnackbar =>
-      'Logging enabled - restart app to start capturing';
+      'Η καταγραφή ενεργοποιήθηκε - κάντε επανεκκίνηση της εφαρμογής για να ξεκινήσει';
 
   @override
   String get loggingDisabledSnackbar =>
-      'Logging disabled - restart app to stop capturing';
+      'Η καταγραφή απενεργοποιήθηκε - κάντε επανεκκίνηση της εφαρμογής για να σταματήσει';
 
   @override
-  String get sendLogs => 'Send logs';
+  String get sendLogs => 'Αποστολή αρχείων καταγραφής';
 
   @override
-  String get sendLogsSubtitle => 'Share log file as attachment';
+  String get sendLogsSubtitle =>
+      'Κοινοποίηση του αρχείου καταγραφής ως συνημμένου';
 
   @override
   String failedToShare(String error) {
-    return 'Failed to share: $error';
+    return 'Αποτυχία κοινοποίησης: $error';
   }
 
   @override
-  String get clearLogs => 'Clear logs';
+  String get clearLogs => 'Εκκαθάριση αρχείων καταγραφής';
 
   @override
-  String get logsCleared => 'Logs cleared';
+  String get logsCleared => 'Τα αρχεία καταγραφής εκκαθαρίστηκαν';
 
   @override
-  String get clearLogsQuestion => 'Clear logs?';
+  String get clearLogsQuestion => 'Εκκαθάριση αρχείων καταγραφής;';
 
   @override
   String get clearLogsContent =>
-      'This can\'t be undone. Send them first if you might want them.';
+      'Αυτή η ενέργεια δεν αναιρείται. Στείλτε τα πρώτα αν ίσως τα χρειαστείτε.';
 
   @override
-  String get sectionAdvanced => 'Advanced';
+  String get sectionAdvanced => 'Για προχωρημένους';
 
   @override
-  String get localServer => 'Local server';
+  String get localServer => 'Τοπικός διακομιστής';
 
   @override
-  String get localServerInfoTitle => 'Local Server';
+  String get localServerInfoTitle => 'Τοπικός διακομιστής';
 
   @override
   String get localServerInfoContent =>
-      'If you run your Audiobookshelf server at home, you can set a local/LAN URL here. Absorb will automatically switch to the faster local connection when it detects you\'re on your home network, and fall back to your remote URL when you\'re away.';
+      'Αν ο διακομιστής Audiobookshelf τρέχει στο σπίτι σας, μπορείτε να ορίσετε εδώ μια τοπική διεύθυνση URL/LAN. Το Absorb θα μεταβαίνει αυτόματα στη ταχύτερη τοπική σύνδεση όταν εντοπίζει ότι βρίσκεστε στο οικιακό σας δίκτυο, και θα επιστρέφει στην απομακρυσμένη διεύθυνση όταν λείπετε.';
 
   @override
-  String get localServerOnConnectedSubtitle => 'Connected via local server';
+  String get localServerOnConnectedSubtitle =>
+      'Σύνδεση μέσω τοπικού διακομιστή';
 
   @override
-  String get localServerOnRemoteSubtitle => 'Enabled - using remote server';
+  String get localServerOnRemoteSubtitle =>
+      'Ενεργό - χρήση απομακρυσμένου διακομιστή';
 
   @override
   String get localServerOffSubtitle =>
-      'Auto-switch to a LAN server on your home WiFi';
+      'Αυτόματη μετάβαση σε διακομιστή LAN στο οικιακό σας WiFi';
 
   @override
-  String get localServerUrlLabel => 'Local server URL';
+  String get localServerUrlLabel => 'URL τοπικού διακομιστή';
 
   @override
   String get localServerUrlHint => 'http://192.168.1.100:13378';
 
   @override
   String get localServerUrlSetSnackbar =>
-      'Local server URL set - will connect automatically when on your home network';
+      'Το URL τοπικού διακομιστή ορίστηκε - θα συνδέεται αυτόματα όταν βρίσκεστε στο οικιακό σας δίκτυο';
 
   @override
-  String get disableAudioFocus => 'Disable audio focus';
+  String get disableAudioFocus => 'Απενεργοποίηση εστίασης ήχου';
 
   @override
-  String get disableAudioFocusInfoTitle => 'Audio Focus';
+  String get disableAudioFocusInfoTitle => 'Εστίαση ήχου';
 
   @override
   String get disableAudioFocusInfoContent =>
-      'By default, Android gives audio \"focus\" to one app at a time - when Absorb plays, other audio (music, videos) will pause. Disabling audio focus lets Absorb play alongside other apps. Phone calls will still pause playback regardless of this setting.';
+      'Από προεπιλογή, το Android δίνει «εστίαση» ήχου σε μία εφαρμογή τη φορά - όταν παίζει το Absorb, ο υπόλοιπος ήχος (μουσική, βίντεο) κάνει παύση. Η απενεργοποίηση της εστίασης ήχου επιτρέπει στο Absorb να παίζει μαζί με άλλες εφαρμογές. Οι τηλεφωνικές κλήσεις θα διακόπτουν πάντα την αναπαραγωγή, ανεξάρτητα από αυτήν τη ρύθμιση.';
 
   @override
   String get disableAudioFocusOnSubtitle =>
-      'On - plays alongside other audio (still pauses for calls)';
+      'Ενεργό - παίζει μαζί με άλλο ήχο (διακόπτεται ακόμη για κλήσεις)';
 
   @override
   String get disableAudioFocusOffSubtitle =>
-      'Off - other audio pauses when Absorb plays';
+      'Ανενεργό - ο άλλος ήχος κάνει παύση όταν παίζει το Absorb';
 
   @override
-  String get restartRequired => 'Restart Required';
+  String get restartRequired => 'Απαιτείται επανεκκίνηση';
 
   @override
   String get restartRequiredContent =>
-      'Audio focus change requires a full restart to take effect. Close the app now?';
+      'Η αλλαγή της εστίασης ήχου απαιτεί πλήρη επανεκκίνηση για να ισχύσει. Να κλείσει η εφαρμογή τώρα;';
 
   @override
-  String get closeApp => 'Close App';
+  String get closeApp => 'Κλείσιμο εφαρμογής';
 
   @override
-  String get trustAllCertificates => 'Trust all certificates';
+  String get trustAllCertificates => 'Εμπιστοσύνη σε όλα τα πιστοποιητικά';
 
   @override
-  String get trustAllCertificatesInfoTitle => 'Self-signed Certificates';
+  String get trustAllCertificatesInfoTitle => 'Αυτοϋπογραφόμενα πιστοποιητικά';
 
   @override
-  String get mp3IndexSeeking => 'MP3 index seeking';
+  String get mp3IndexSeeking => 'Αναζήτηση MP3 με ευρετήριο';
 
   @override
-  String get mp3IndexSeekingInfoTitle => 'MP3 Index Seeking';
+  String get mp3IndexSeekingInfoTitle => 'Αναζήτηση MP3 με ευρετήριο';
 
   @override
   String get mp3IndexSeekingInfoContent =>
-      'Only enable this if you have MP3 files that don\'t seek to the right position. Inaccurate seeking usually comes from variable bitrate (VBR) MP3s. Index seeking builds an exact time map as the file is read, so jumping near the end of a large MP3 can take a moment - especially when streaming, since the file has to be read up to that point. Takes effect the next time a book or podcast episode starts.';
+      'Ενεργοποιήστε το μόνο αν έχετε αρχεία MP3 που δεν μεταβαίνουν στη σωστή θέση. Η ανακριβής αναζήτηση προέρχεται συνήθως από MP3 μεταβλητού ρυθμού bit (VBR). Η αναζήτηση με ευρετήριο δημιουργεί έναν ακριβή χάρτη χρόνου καθώς διαβάζεται το αρχείο, οπότε η μετάβαση κοντά στο τέλος ενός μεγάλου MP3 μπορεί να καθυστερήσει λίγο - ειδικά σε ροή, αφού το αρχείο πρέπει να διαβαστεί μέχρι εκείνο το σημείο. Ισχύει την επόμενη φορά που θα ξεκινήσει ένα βιβλίο ή επεισόδιο podcast.';
 
   @override
   String get mp3IndexSeekingOnSubtitle =>
-      'On - exact seeking for VBR MP3 files';
+      'Ενεργό - ακριβής αναζήτηση για αρχεία MP3 VBR';
 
   @override
-  String get mp3IndexSeekingOffSubtitle => 'Off - normal seeking';
+  String get mp3IndexSeekingOffSubtitle => 'Ανενεργό - κανονική αναζήτηση';
 
   @override
   String get trustAllCertificatesInfoContent =>
-      'Enable this if your Audiobookshelf server uses a self-signed certificate or a custom root CA. When enabled, Absorb will skip TLS certificate verification for all connections. Only enable this if you trust your network.';
+      'Ενεργοποιήστε το αν ο διακομιστής Audiobookshelf χρησιμοποιεί αυτοϋπογραφόμενο πιστοποιητικό ή προσαρμοσμένη ρίζα CA. Όταν είναι ενεργό, το Absorb παραλείπει τον έλεγχο πιστοποιητικών TLS για όλες τις συνδέσεις. Ενεργοποιήστε το μόνο αν εμπιστεύεστε το δίκτυό σας.';
 
   @override
   String get trustAllCertificatesOnSubtitle =>
-      'On - accepting all certificates';
+      'Ενεργό - γίνονται δεκτά όλα τα πιστοποιητικά';
 
   @override
   String get trustAllCertificatesOffSubtitle =>
-      'Off - only trusted certificates accepted';
+      'Ανενεργό - γίνονται δεκτά μόνο αξιόπιστα πιστοποιητικά';
 
   @override
-  String get supportTheDev => 'Support the Dev';
+  String get supportTheDev => 'Υποστηρίξτε τον προγραμματιστή';
 
   @override
-  String get buyMeACoffee => 'Buy me a coffee';
+  String get buyMeACoffee => 'Κεράστε με έναν καφέ';
 
   @override
   String appVersionFormat(String version) {
@@ -3374,328 +3425,338 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String appVersionWithServerFormat(String version, String serverVersion) {
-    return 'Absorb v$version  -  Server $serverVersion';
+    return 'Absorb v$version  -  Διακομιστής $serverVersion';
   }
 
   @override
-  String get backupAndRestore => 'Backup & Restore';
+  String get backupAndRestore => 'Αντίγραφο ασφαλείας και επαναφορά';
 
   @override
   String get backupAndRestoreSubtitle =>
-      'Save or restore all your settings to a file';
+      'Αποθήκευση ή επαναφορά όλων των ρυθμίσεών σας σε αρχείο';
 
   @override
-  String get backUp => 'Back up';
+  String get backUp => 'Δημιουργία αντιγράφου';
 
   @override
-  String get restore => 'Restore';
+  String get restore => 'Επαναφορά';
 
   @override
-  String get allBookmarks => 'All Bookmarks';
+  String get allBookmarks => 'Όλοι οι σελιδοδείκτες';
 
   @override
-  String get allBookmarksSubtitle => 'View bookmarks across all books';
+  String get allBookmarksSubtitle => 'Προβολή σελιδοδεικτών από όλα τα βιβλία';
 
   @override
-  String get switchAccount => 'Switch Account';
+  String get switchAccount => 'Αλλαγή λογαριασμού';
 
   @override
-  String get addAccount => 'Add Account';
+  String get addAccount => 'Προσθήκη λογαριασμού';
 
   @override
-  String get logOut => 'Log out';
+  String get logOut => 'Αποσύνδεση';
 
   @override
-  String get includeLoginInfoTitle => 'Include login info?';
+  String get includeLoginInfoTitle => 'Να συμπεριληφθούν στοιχεία σύνδεσης;';
 
   @override
   String get includeLoginInfoContent =>
-      'Would you like to include login credentials for all your saved accounts in the backup?\n\nThis makes it easy to restore on a new device, but the file will contain your auth tokens.';
+      'Θέλετε να συμπεριληφθούν τα στοιχεία σύνδεσης όλων των αποθηκευμένων λογαριασμών σας στο αντίγραφο ασφαλείας;\n\nΑυτό διευκολύνει την επαναφορά σε νέα συσκευή, αλλά το αρχείο θα περιέχει τα διακριτικά ταυτοποίησης (tokens) σας.';
 
   @override
-  String get noSettingsOnly => 'No, settings only';
+  String get noSettingsOnly => 'Όχι, μόνο ρυθμίσεις';
 
   @override
-  String get yesIncludeAccounts => 'Yes, include accounts';
+  String get yesIncludeAccounts => 'Ναι, με λογαριασμούς';
 
   @override
-  String get backupSavedWithAccounts => 'Backup saved (with accounts)';
+  String get backupSavedWithAccounts =>
+      'Το αντίγραφο αποθηκεύτηκε (με λογαριασμούς)';
 
   @override
-  String get backupSavedSettingsOnly => 'Backup saved (settings only)';
+  String get backupSavedSettingsOnly =>
+      'Το αντίγραφο αποθηκεύτηκε (μόνο ρυθμίσεις)';
 
   @override
   String backupFailed(String error) {
-    return 'Backup failed: $error';
+    return 'Η δημιουργία αντιγράφου απέτυχε: $error';
   }
 
   @override
-  String get restoreBackupTitle => 'Restore backup?';
+  String get restoreBackupTitle => 'Επαναφορά αντιγράφου;';
 
   @override
   String get restoreBackupContent =>
-      'This will replace all your current settings with the backup values.';
+      'Αυτό θα αντικαταστήσει όλες τις τρέχουσες ρυθμίσεις με τις τιμές του αντιγράφου.';
 
   @override
   String fromAbsorbVersion(String version) {
-    return 'From Absorb v$version';
+    return 'Από το Absorb v$version';
   }
 
   @override
   String restoreAccountsChip(int count) {
-    return '$count account(s)';
+    return '$count λογαριασμός(-οί)';
   }
 
   @override
   String restoreBookmarksChip(int count) {
-    return 'Bookmarks for $count book(s)';
+    return 'Σελιδοδείκτες για $count βιβλίο(-α)';
   }
 
   @override
-  String get restoreCustomHeadersChip => 'Custom headers';
+  String get restoreCustomHeadersChip => 'Προσαρμοσμένες κεφαλίδες';
 
   @override
-  String get invalidBackupFile => 'Invalid backup file';
+  String get invalidBackupFile => 'Μη έγκυρο αρχείο αντιγράφου';
 
   @override
-  String get settingsRestoredSuccessfully => 'Settings restored successfully';
+  String get settingsRestoredSuccessfully =>
+      'Οι ρυθμίσεις επαναφέρθηκαν με επιτυχία';
 
   @override
   String restoreFailed(String error) {
-    return 'Restore failed: $error';
+    return 'Η επαναφορά απέτυχε: $error';
   }
 
   @override
-  String get logOutTitle => 'Log out?';
+  String get logOutTitle => 'Αποσύνδεση;';
 
   @override
   String get logOutContent =>
-      'This will sign you out. Your downloads will stay on this device.';
+      'Θα αποσυνδεθείτε. Οι λήψεις σας θα παραμείνουν σε αυτήν τη συσκευή.';
 
   @override
-  String get signOut => 'Sign Out';
+  String get signOut => 'Αποσύνδεση';
 
   @override
-  String get changePasswordTitle => 'Change Password';
+  String get changePasswordTitle => 'Αλλαγή κωδικού πρόσβασης';
 
   @override
   String get changePasswordSubtitle =>
-      'Update your Audiobookshelf password safely';
+      'Ενημερώστε με ασφάλεια τον κωδικό σας στο Audiobookshelf';
 
   @override
-  String get currentPassword => 'Current password';
+  String get currentPassword => 'Τρέχων κωδικός πρόσβασης';
 
   @override
-  String get newPassword => 'New password';
+  String get newPassword => 'Νέος κωδικός πρόσβασης';
 
   @override
-  String get confirmNewPassword => 'Confirm new password';
+  String get confirmNewPassword => 'Επιβεβαίωση νέου κωδικού πρόσβασης';
 
   @override
   String get passwordChangeEffect =>
-      'Changing your password signs out your other Audiobookshelf sessions. This device stays signed in.';
+      'Η αλλαγή του κωδικού σας αποσυνδέει τις άλλες συνεδρίες σας στο Audiobookshelf. Αυτή η συσκευή παραμένει συνδεδεμένη.';
 
   @override
-  String get passwordFieldsRequired => 'Fill in all password fields';
+  String get passwordFieldsRequired =>
+      'Συμπληρώστε όλα τα πεδία κωδικού πρόσβασης';
 
   @override
-  String get passwordsDoNotMatch => 'New passwords do not match';
+  String get passwordsDoNotMatch => 'Οι νέοι κωδικοί πρόσβασης δεν ταιριάζουν';
 
   @override
   String get passwordChanged =>
-      'Password changed. Other signed-in devices were disconnected.';
+      'Ο κωδικός πρόσβασης άλλαξε. Οι άλλες συνδεδεμένες συσκευές αποσυνδέθηκαν.';
 
   @override
-  String get passwordInvalid => 'The current password is incorrect';
+  String get passwordInvalid => 'Ο τρέχων κωδικός πρόσβασης είναι λανθασμένος';
 
   @override
   String get passwordChangeUnsupported =>
-      'This server version does not support safe password changes in Absorb';
+      'Αυτή η έκδοση διακομιστή δεν υποστηρίζει ασφαλή αλλαγή κωδικού πρόσβασης στο Absorb';
 
   @override
-  String get passwordChangeFailed => 'Could not change your password';
+  String get passwordChangeFailed =>
+      'Δεν ήταν δυνατή η αλλαγή του κωδικού πρόσβασης';
 
   @override
   String get otherUserPasswordResetWarning =>
-      'Changing this password signs the user out on every device.';
+      'Η αλλαγή αυτού του κωδικού αποσυνδέει τον χρήστη από κάθε συσκευή.';
 
   @override
-  String get manageSessionsTitle => 'Signed-in Devices';
+  String get manageSessionsTitle => 'Συνδεδεμένες συσκευές';
 
   @override
   String get manageSessionsSubtitle =>
-      'Review and remove Audiobookshelf sessions';
+      'Έλεγχος και αφαίρεση συνεδριών Audiobookshelf';
 
   @override
-  String get sessionsCurrent => 'Current device';
+  String get sessionsCurrent => 'Τρέχουσα συσκευή';
 
   @override
-  String get sessionsUnknownDevice => 'Unknown device';
+  String get sessionsUnknownDevice => 'Άγνωστη συσκευή';
 
   @override
   String sessionsLastActive(String date) {
-    return 'Last active $date';
+    return 'Τελευταία δραστηριότητα $date';
   }
 
   @override
-  String get sessionsNone => 'No active sessions';
+  String get sessionsNone => 'Καμία ενεργή συνεδρία';
 
   @override
-  String get sessionsLoadMore => 'Load more';
+  String get sessionsLoadMore => 'Φόρτωση περισσότερων';
 
   @override
   String get sessionsUnsupported =>
-      'Session management requires Audiobookshelf 2.36 or newer.';
+      'Η διαχείριση συνεδριών απαιτεί Audiobookshelf 2.36 ή νεότερο.';
 
   @override
-  String get sessionsLoadFailed => 'Could not load signed-in devices';
+  String get sessionsLoadFailed =>
+      'Δεν ήταν δυνατή η φόρτωση των συνδεδεμένων συσκευών';
 
   @override
   String get sessionsLegacyNotice =>
-      'This login does not have a refresh session, so Absorb cannot identify this device in the list.';
+      'Αυτή η σύνδεση δεν έχει συνεδρία ανανέωσης, οπότε το Absorb δεν μπορεί να αναγνωρίσει αυτήν τη συσκευή στη λίστα.';
 
   @override
-  String get sessionsRemove => 'Sign out device';
+  String get sessionsRemove => 'Αποσύνδεση συσκευής';
 
   @override
-  String get sessionsRemoveTitle => 'Sign out this device?';
+  String get sessionsRemoveTitle => 'Αποσύνδεση αυτής της συσκευής;';
 
   @override
   String get sessionsRemoveContent =>
-      'This removes its refresh session. Its current access may keep working until that short-lived token expires.';
+      'Αυτό αφαιρεί τη συνεδρία ανανέωσής της. Η τρέχουσα πρόσβασή της μπορεί να συνεχίσει να λειτουργεί μέχρι να λήξει το βραχύβιο διακριτικό.';
 
   @override
-  String get sessionsRemoved => 'Device signed out';
+  String get sessionsRemoved => 'Η συσκευή αποσυνδέθηκε';
 
   @override
-  String get sessionsRemoveFailed => 'Could not sign out that device';
+  String get sessionsRemoveFailed =>
+      'Δεν ήταν δυνατή η αποσύνδεση αυτής της συσκευής';
 
   @override
-  String get sessionsSignOutAll => 'Sign out all devices';
+  String get sessionsSignOutAll => 'Αποσύνδεση όλων των συσκευών';
 
   @override
-  String get sessionsSignOutAllTitle => 'Sign out everywhere?';
+  String get sessionsSignOutAllTitle => 'Αποσύνδεση από παντού;';
 
   @override
   String get sessionsSignOutAllContent =>
-      'This removes every refresh session, including this device. Existing access tokens may work until they expire.';
+      'Αυτό αφαιρεί κάθε συνεδρία ανανέωσης, συμπεριλαμβανομένης αυτής της συσκευής. Τα υπάρχοντα διακριτικά πρόσβασης μπορεί να λειτουργούν μέχρι να λήξουν.';
 
   @override
   String podcastScheduleServerTime(String timeZone) {
-    return 'Schedule uses server time ($timeZone)';
+    return 'Το πρόγραμμα χρησιμοποιεί την ώρα του διακομιστή ($timeZone)';
   }
 
   @override
-  String get podcastScheduleServerTimeUnknown => 'Schedule uses server time';
+  String get podcastScheduleServerTimeUnknown =>
+      'Το πρόγραμμα χρησιμοποιεί την ώρα του διακομιστή';
 
   @override
-  String get editServerAddressTitle => 'Edit Server Address';
+  String get editServerAddressTitle => 'Επεξεργασία διεύθυνσης διακομιστή';
 
   @override
   String editServerAddressSubtitle(String username) {
-    return 'Update the address for $username. Use this if your server\'s address changed - it\'s still the same server, just a new URL. Your stats and downloads are kept.';
+    return 'Ενημερώστε τη διεύθυνση για τον χρήστη $username. Χρησιμοποιήστε το αν άλλαξε η διεύθυνση του διακομιστή σας - είναι ο ίδιος διακομιστής, απλώς με νέο URL. Τα στατιστικά και οι λήψεις σας διατηρούνται.';
   }
 
   @override
-  String get editServerAddressField => 'Server Address';
+  String get editServerAddressField => 'Διεύθυνση διακομιστή';
 
   @override
-  String get editServerAddressUpdated => 'Server address updated';
+  String get editServerAddressUpdated => 'Η διεύθυνση διακομιστή ενημερώθηκε';
 
   @override
-  String get editServerAddressFailed => 'Couldn\'t update server address';
+  String get editServerAddressFailed =>
+      'Αδυναμία ενημέρωσης της διεύθυνσης διακομιστή';
 
   @override
-  String get editServerAddressAction => 'Edit server address';
+  String get editServerAddressAction => 'Επεξεργασία διεύθυνσης διακομιστή';
 
   @override
-  String get editServerConnectionTitle => 'Edit Server Connection';
+  String get editServerConnectionTitle => 'Επεξεργασία σύνδεσης διακομιστή';
 
   @override
   String editServerConnectionSubtitle(String username) {
-    return 'Update the server address and custom headers for $username. Your stats and downloads are kept.';
+    return 'Ενημερώστε τη διεύθυνση διακομιστή και τις προσαρμοσμένες κεφαλίδες για τον χρήστη $username. Τα στατιστικά και οι λήψεις σας διατηρούνται.';
   }
 
   @override
-  String get editServerConnectionAction => 'Edit server connection';
+  String get editServerConnectionAction => 'Επεξεργασία σύνδεσης διακομιστή';
 
   @override
-  String get editServerConnectionUpdated => 'Server connection updated';
+  String get editServerConnectionUpdated => 'Η σύνδεση διακομιστή ενημερώθηκε';
 
   @override
-  String get editServerConnectionFailed => 'Couldn\'t update server connection';
+  String get editServerConnectionFailed =>
+      'Αδυναμία ενημέρωσης της σύνδεσης διακομιστή';
 
   @override
   String get editCustomHeadersDescription =>
-      'Used for Cloudflare tunnels or reverse proxies. These headers apply only to this saved account.';
+      'Χρησιμοποιούνται για σήραγγες Cloudflare ή αντίστροφους διαμεσολαβητές (reverse proxies). Αυτές οι κεφαλίδες ισχύουν μόνο για αυτόν τον αποθηκευμένο λογαριασμό.';
 
   @override
-  String get removeAccountAction => 'Remove account';
+  String get removeAccountAction => 'Αφαίρεση λογαριασμού';
 
   @override
-  String get removeAccountTitle => 'Remove Account?';
+  String get removeAccountTitle => 'Αφαίρεση λογαριασμού;';
 
   @override
   String removeAccountContent(String username, String server) {
-    return 'Remove $username on $server from saved accounts?\n\nYou can always add it back later by signing in again.';
+    return 'Να αφαιρεθεί ο χρήστης $username στο $server από τους αποθηκευμένους λογαριασμούς;\n\nΜπορείτε πάντα να τον προσθέσετε ξανά αργότερα συνδεόμενοι ξανά.';
   }
 
   @override
-  String get switchAccountTitle => 'Switch Account?';
+  String get switchAccountTitle => 'Αλλαγή λογαριασμού;';
 
   @override
   String switchAccountContent(String username, String server) {
-    return 'Switch to $username on $server?\n\nYour current playback will be stopped and the app will reload with the other account\'s data.';
+    return 'Αλλαγή στον χρήστη $username στο $server;\n\nΗ τρέχουσα αναπαραγωγή θα σταματήσει και η εφαρμογή θα φορτώσει ξανά με τα δεδομένα του άλλου λογαριασμού.';
   }
 
   @override
-  String get switchButton => 'Switch';
+  String get switchButton => 'Αλλαγή';
 
   @override
-  String get downloadLocationSheetTitle => 'Download Location';
+  String get downloadLocationSheetTitle => 'Θέση λήψης';
 
   @override
   String get downloadLocationSheetSubtitle =>
-      'Choose where audiobooks are saved';
+      'Επιλέξτε πού αποθηκεύονται τα ηχητικά βιβλία';
 
   @override
-  String get currentLocation => 'Current location';
+  String get currentLocation => 'Τρέχουσα θέση';
 
   @override
   String get existingDownloadsWarning =>
-      'Existing downloads stay in their current location. Only new downloads use the new path.';
+      'Οι υπάρχουσες λήψεις παραμένουν στην τρέχουσα θέση τους. Μόνο οι νέες λήψεις χρησιμοποιούν τη νέα διαδρομή.';
 
   @override
-  String get chooseFolder => 'Choose folder';
+  String get chooseFolder => 'Επιλογή φακέλου';
 
   @override
-  String get chooseDownloadFolder => 'Choose download folder';
+  String get chooseDownloadFolder => 'Επιλογή φακέλου λήψης';
 
   @override
   String get storagePermissionDenied =>
-      'Storage permission permanently denied - enable it in app settings';
+      'Η άδεια αποθήκευσης απορρίφθηκε μόνιμα - ενεργοποιήστε την στις ρυθμίσεις της εφαρμογής';
 
   @override
-  String get openSettings => 'Open Settings';
+  String get openSettings => 'Άνοιγμα ρυθμίσεων';
 
   @override
   String get storagePermissionRequired =>
-      'Storage permission is required for custom download locations';
+      'Απαιτείται άδεια αποθήκευσης για προσαρμοσμένες θέσεις λήψης';
 
   @override
   String get cannotWriteToFolder =>
-      'Cannot write to that folder - choose another location or grant file access in system settings';
+      'Δεν είναι δυνατή η εγγραφή σε αυτόν τον φάκελο - επιλέξτε άλλη θέση ή δώστε πρόσβαση σε αρχεία στις ρυθμίσεις συστήματος';
 
   @override
   String downloadLocationSetTo(String label) {
-    return 'Download location set to $label';
+    return 'Η θέση λήψης ορίστηκε σε $label';
   }
 
   @override
-  String get resetToDefault => 'Reset to default';
+  String get resetToDefault => 'Επαναφορά στην προεπιλογή';
 
   @override
-  String get resetToDefaultStorage => 'Reset to default storage';
+  String get resetToDefaultStorage => 'Επαναφορά στην προεπιλεγμένη αποθήκευση';
 
   @override
   String legacyDownloadsNotice(int count) {
@@ -3703,403 +3764,411 @@ class AppLocalizationsEl extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          '$count downloads are in an old custom folder that can no longer be opened. Re-download them or dismiss this notice.',
+          '$count λήψεις βρίσκονται σε παλιό προσαρμοσμένο φάκελο που δεν μπορεί πλέον να ανοιχτεί. Κάντε τες ξανά ή παραβλέψτε αυτήν την ειδοποίηση.',
       one:
-          '1 download is in an old custom folder that can no longer be opened. Re-download it or dismiss this notice.',
+          '1 λήψη βρίσκεται σε παλιό προσαρμοσμένο φάκελο που δεν μπορεί πλέον να ανοιχτεί. Κάντε την ξανά ή παραβλέψτε αυτήν την ειδοποίηση.',
     );
     return '$_temp0';
   }
 
   @override
-  String get redownload => 'Re-download';
+  String get redownload => 'Νέα λήψη';
 
   @override
-  String get redownloadStarted => 'Re-downloading';
+  String get redownloadStarted => 'Γίνεται νέα λήψη';
 
   @override
-  String get dismiss => 'Dismiss';
+  String get dismiss => 'Παράβλεψη';
 
   @override
-  String get tipsAndHiddenFeatures => 'Tips & Hidden Features';
+  String get tipsAndHiddenFeatures => 'Συμβουλές και κρυφές λειτουργίες';
 
   @override
-  String get tipsSubtitle => 'Get the most out of Absorb';
+  String get tipsSubtitle => 'Αξιοποιήστε στο έπακρο το Absorb';
 
   @override
-  String get adminTitle => 'Server Admin';
+  String get adminTitle => 'Διαχείριση διακομιστή';
 
   @override
-  String get adminTasksTitle => 'Server activity';
+  String get adminTasksTitle => 'Δραστηριότητα διακομιστή';
 
   @override
   String adminTasksRunning(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count tasks running',
-      one: '1 task running',
+      other: '$count εργασίες σε εξέλιξη',
+      one: '1 εργασία σε εξέλιξη',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminTasksRecent => 'Recent server activity';
+  String get adminTasksRecent => 'Πρόσφατη δραστηριότητα διακομιστή';
 
   @override
-  String get adminTasksEmpty => 'No server tasks are running';
+  String get adminTasksEmpty => 'Δεν εκτελούνται εργασίες διακομιστή';
 
   @override
   String adminTaskScanSummary(int added, int updated, int missing) {
-    return '$added added - $updated updated - $missing missing';
+    return '$added προστέθηκαν - $updated ενημερώθηκαν - $missing λείπουν';
   }
 
   @override
-  String get adminServer => 'Server';
+  String get adminServer => 'Διακομιστής';
 
   @override
-  String get adminVersion => 'Version';
+  String get adminVersion => 'Έκδοση';
 
   @override
-  String get adminUsers => 'Users';
+  String get adminUsers => 'Χρήστες';
 
   @override
-  String get adminOnline => 'Online';
+  String get adminOnline => 'Συνδεδεμένοι';
 
   @override
-  String get adminBackup => 'Backup';
+  String get adminBackup => 'Αντίγραφο ασφαλείας';
 
   @override
-  String get adminPurgeCache => 'Purge Cache';
+  String get adminPurgeCache => 'Εκκαθάριση προσωρινής μνήμης';
 
   @override
-  String get adminManage => 'Manage';
+  String get adminManage => 'Διαχείριση';
 
   @override
   String adminUsersSubtitle(int userCount, int onlineCount) {
-    return '$userCount accounts - $onlineCount online';
+    return '$userCount λογαριασμοί - $onlineCount συνδεδεμένοι';
   }
 
   @override
-  String get adminPodcasts => 'Podcasts';
+  String get adminPodcasts => 'Podcast';
 
   @override
-  String get adminPodcastsSubtitle => 'Search, add & manage shows';
+  String get adminPodcastsSubtitle =>
+      'Αναζήτηση, προσθήκη και διαχείριση εκπομπών';
 
   @override
-  String get adminScan => 'Scan';
+  String get adminScan => 'Σάρωση';
 
   @override
-  String get adminScanning => 'Scanning...';
+  String get adminScanning => 'Σάρωση...';
 
   @override
-  String get adminMatchAll => 'Match All';
+  String get adminMatchAll => 'Αντιστοίχιση όλων';
 
   @override
-  String get adminMatching => 'Matching...';
+  String get adminMatching => 'Αντιστοίχιση...';
 
   @override
-  String get adminMatchAllTitle => 'Match All Items?';
+  String get adminMatchAllTitle => 'Αντιστοίχιση όλων των στοιχείων;';
 
   @override
   String adminMatchAllContent(String name) {
-    return 'Match metadata for all items in $name? This can take a while.';
+    return 'Αντιστοίχιση μεταδεδομένων για όλα τα στοιχεία στο $name; Αυτό μπορεί να διαρκέσει λίγο.';
   }
 
   @override
   String adminScanStarted(String name) {
-    return 'Scan started for $name';
+    return 'Η σάρωση ξεκίνησε για το $name';
   }
 
   @override
-  String get adminBackupCreated => 'Backup created';
+  String get adminBackupCreated => 'Το αντίγραφο ασφαλείας δημιουργήθηκε';
 
   @override
-  String get adminBackupFailed => 'Backup failed';
+  String get adminBackupFailed => 'Η δημιουργία αντιγράφου ασφαλείας απέτυχε';
 
   @override
-  String get adminCachePurged => 'Cache purged';
+  String get adminCachePurged => 'Η προσωρινή μνήμη εκκαθαρίστηκε';
 
   @override
   String get adminRmab => 'ReadMeABook';
 
   @override
-  String get adminRmabSubtitle => 'Open in app';
+  String get adminRmabSubtitle => 'Άνοιγμα στην εφαρμογή';
 
   @override
-  String get adminRmabAdd => 'Add ReadMeABook integration';
+  String get adminRmabAdd => 'Προσθήκη ενσωμάτωσης ReadMeABook';
 
   @override
-  String get adminRmabUrlTitle => 'ReadMeABook URL';
+  String get adminRmabUrlTitle => 'URL ReadMeABook';
 
   @override
   String get adminRmabUrlHelp =>
-      'Paste your URL with login token. Generate one in RMAB, Admin, Users.';
+      'Επικολλήστε το URL σας με το διακριτικό σύνδεσης. Δημιουργήστε ένα στο RMAB, Admin, Users.';
 
   @override
   String get adminRmabUrlHint => 'https://rmab.example.com/?token=...';
 
   @override
-  String get adminRmabInvalidUrl => 'Enter a valid http(s) URL';
+  String get adminRmabInvalidUrl => 'Εισαγάγετε έγκυρο URL http(s)';
 
   @override
-  String get adminRmabSaved => 'ReadMeABook saved';
+  String get adminRmabSaved => 'Το ReadMeABook αποθηκεύτηκε';
 
   @override
-  String get adminRmabRemoved => 'ReadMeABook removed';
+  String get adminRmabRemoved => 'Το ReadMeABook αφαιρέθηκε';
 
   @override
-  String get adminRmabReload => 'Reload';
+  String get adminRmabReload => 'Επαναφόρτωση';
 
   @override
   String get adminRmabLoadFailed =>
-      'Couldn\'t load ReadMeABook. Check your URL.';
+      'Αδυναμία φόρτωσης του ReadMeABook. Ελέγξτε το URL σας.';
 
   @override
-  String get adminRmabConnected => 'Connected';
+  String get adminRmabConnected => 'Συνδεδεμένο';
 
   @override
-  String get adminRmabAskAdmin => 'Get a login URL from your server admin';
+  String get adminRmabAskAdmin =>
+      'Ζητήστε ένα URL σύνδεσης από τον διαχειριστή του διακομιστή σας';
 
   @override
   String get adminRmabUrlHelpUser =>
-      'Get a login URL from your server admin. They generate one in RMAB > Admin > Users.';
+      'Ζητήστε ένα URL σύνδεσης από τον διαχειριστή του διακομιστή σας. Το δημιουργεί στο RMAB > Admin > Users.';
 
   @override
   String get adminRmabSettingsInfo =>
-      'ReadMeABook is a self-hosted service for requesting and downloading audiobooks. It must be installed and set up by your server admin.';
+      'Το ReadMeABook είναι μια υπηρεσία αυτοφιλοξενίας για αίτημα και λήψη ηχητικών βιβλίων. Πρέπει να εγκατασταθεί και να ρυθμιστεί από τον διαχειριστή του διακομιστή σας.';
 
   @override
-  String get rmabConfigTitle => 'Connect ReadMeABook';
+  String get rmabConfigTitle => 'Σύνδεση με το ReadMeABook';
 
   @override
   String get rmabConfigExplainerAdmin =>
-      'ReadMeABook is a self-hosted service for requesting audiobooks. Generate an API token in RMAB under Admin Dashboard > Settings > API, then paste the server URL and token below. Absorb doesn\'t host or download any content, it just sends requests to your server.';
+      'Το ReadMeABook είναι μια υπηρεσία αυτοφιλοξενίας για αιτήματα ηχητικών βιβλίων. Δημιουργήστε ένα διακριτικό API στο RMAB στο Admin Dashboard > Settings > API και επικολλήστε παρακάτω το URL του διακομιστή και το διακριτικό. Το Absorb δεν φιλοξενεί ούτε κατεβάζει περιεχόμενο, απλώς στέλνει αιτήματα στον διακομιστή σας.';
 
   @override
   String get rmabConfigExplainerUser =>
-      'ReadMeABook is a self-hosted service for requesting audiobooks. Ask your server admin for the RMAB URL and an API token. Absorb doesn\'t host or download any content, it just sends requests to your server.';
+      'Το ReadMeABook είναι μια υπηρεσία αυτοφιλοξενίας για αιτήματα ηχητικών βιβλίων. Ζητήστε από τον διαχειριστή του διακομιστή σας το URL του RMAB και ένα διακριτικό API. Το Absorb δεν φιλοξενεί ούτε κατεβάζει περιεχόμενο, απλώς στέλνει αιτήματα στον διακομιστή σας.';
 
   @override
-  String get rmabConfigLearnMore => 'Learn more about ReadMeABook';
+  String get rmabConfigLearnMore => 'Μάθετε περισσότερα για το ReadMeABook';
 
   @override
-  String get rmabConfigBaseUrlLabel => 'RMAB server URL';
+  String get rmabConfigBaseUrlLabel => 'URL διακομιστή RMAB';
 
   @override
   String get rmabConfigBaseUrlHint => 'https://rmab.example.com';
 
   @override
-  String get rmabConfigTokenLabel => 'API token';
+  String get rmabConfigTokenLabel => 'Διακριτικό API';
 
   @override
   String get rmabConfigTokenHint => 'rmab_...';
 
   @override
-  String get rmabConfigLegacyUrlLabel => 'Web UI login URL (optional)';
+  String get rmabConfigLegacyUrlLabel => 'URL σύνδεσης web UI (προαιρετικό)';
 
   @override
   String get rmabConfigLegacyUrlHint => 'https://rmab.example.com/?token=...';
 
   @override
   String get rmabConfigLegacyUrlHelp =>
-      'Paste your auto-login URL so \'Open in browser view\' lands you signed in. Leave blank to use a regular login.';
+      'Επικολλήστε το URL αυτόματης σύνδεσης ώστε το «Άνοιγμα σε προβολή προγράμματος περιήγησης» να σας συνδέει αυτόματα. Αφήστε κενό για κανονική σύνδεση.';
 
   @override
   String get rmabConfigHeadersHelp =>
-      'Extra headers sent with every ReadMeABook request, for reverse proxies like Cloudflare Access.';
+      'Επιπλέον κεφαλίδες που στέλνονται με κάθε αίτημα προς το ReadMeABook, για reverse proxies όπως το Cloudflare Access.';
 
   @override
-  String get rmabConfigConnect => 'Connect';
+  String get rmabConfigConnect => 'Σύνδεση';
 
   @override
-  String get rmabConfigDisconnect => 'Disconnect';
+  String get rmabConfigDisconnect => 'Αποσύνδεση';
 
   @override
-  String get rmabConfigOpenWebView => 'Open in browser view';
+  String get rmabConfigOpenWebView =>
+      'Άνοιγμα σε προβολή προγράμματος περιήγησης';
 
   @override
   String rmabConfigConnectedAs(String name) {
-    return 'Connected as $name';
+    return 'Συνδεδεμένο ως $name';
   }
 
   @override
-  String get rmabConfigErrorInvalidUrl => 'Enter a valid http(s) URL';
+  String get rmabConfigErrorInvalidUrl => 'Εισαγάγετε έγκυρο URL http(s)';
 
   @override
-  String get rmabConfigErrorMissingToken => 'Enter your API token';
+  String get rmabConfigErrorMissingToken => 'Εισαγάγετε το διακριτικό API σας';
 
   @override
-  String get rmabConfigErrorUnauthorized => 'Token rejected by server';
+  String get rmabConfigErrorUnauthorized =>
+      'Το διακριτικό απορρίφθηκε από τον διακομιστή';
 
   @override
   String get rmabConfigErrorForbidden =>
-      'This token isn\'t allowed for that action';
+      'Αυτό το διακριτικό δεν επιτρέπεται για αυτήν την ενέργεια';
 
   @override
-  String get rmabConfigErrorNetwork => 'Couldn\'t reach RMAB. Check the URL.';
+  String get rmabConfigErrorNetwork =>
+      'Αδυναμία επικοινωνίας με το RMAB. Ελέγξτε το URL.';
 
   @override
-  String get rmabConfigErrorGeneric => 'Couldn\'t connect';
+  String get rmabConfigErrorGeneric => 'Αδυναμία σύνδεσης';
 
   @override
-  String get rmabConfigSavedSnackbar => 'ReadMeABook connected';
+  String get rmabConfigSavedSnackbar => 'Το ReadMeABook συνδέθηκε';
 
   @override
-  String get rmabConfigDisconnectedSnackbar => 'ReadMeABook disconnected';
+  String get rmabConfigDisconnectedSnackbar => 'Το ReadMeABook αποσυνδέθηκε';
 
   @override
-  String get rmabRequestCta => 'Request via ReadMeABook';
+  String get rmabRequestCta => 'Αίτημα μέσω ReadMeABook';
 
   @override
-  String get rmabSearchHeader => 'Request via ReadMeABook';
+  String get rmabSearchHeader => 'Αίτημα μέσω ReadMeABook';
 
   @override
-  String get rmabSearchHint => 'Search by title or author';
+  String get rmabSearchHint => 'Αναζήτηση με τίτλο ή συγγραφέα';
 
   @override
-  String get rmabSearchEmpty => 'No matches on your ReadMeABook server';
+  String get rmabSearchEmpty =>
+      'Καμία αντιστοίχιση στον διακομιστή ReadMeABook σας';
 
   @override
-  String get rmabSearchError => 'Couldn\'t search ReadMeABook';
+  String get rmabSearchError => 'Αδυναμία αναζήτησης στο ReadMeABook';
 
   @override
-  String get rmabSearchPrompt => 'Type a title or author to search';
+  String get rmabSearchPrompt =>
+      'Πληκτρολογήστε τίτλο ή συγγραφέα για αναζήτηση';
 
   @override
-  String get rmabSearchFooterPrompt => 'Looking for something else?';
+  String get rmabSearchFooterPrompt => 'Ψάχνετε για κάτι άλλο;';
 
   @override
   String rmabSearchFooterCta(String query) {
-    return 'Search ReadMeABook for \"$query\"';
+    return 'Αναζήτηση στο ReadMeABook για «$query»';
   }
 
   @override
   String get rmabBookDetailExplainer =>
-      'This request will be sent through your ReadMeABook server. The admin will review and process it. You can track it under My Requests on the ReadMeABook tile.';
+      'Αυτό το αίτημα θα σταλεί μέσω του διακομιστή ReadMeABook σας. Ο διαχειριστής θα το ελέγξει και θα το επεξεργαστεί. Μπορείτε να το παρακολουθείτε στα Τα αιτήματά μου, στο πλακίδιο ReadMeABook.';
 
   @override
-  String get rmabBookAlreadyAvailable => 'Already in your library';
+  String get rmabBookAlreadyAvailable => 'Ήδη στη βιβλιοθήκη σας';
 
   @override
-  String get rmabBookAlreadyRequested => 'Already requested';
+  String get rmabBookAlreadyRequested => 'Έχει ήδη ζητηθεί';
 
   @override
-  String get rmabRequestSubmitting => 'Submitting…';
+  String get rmabRequestSubmitting => 'Υποβολή…';
 
   @override
-  String get rmabRequestSent => 'Request sent';
+  String get rmabRequestSent => 'Το αίτημα στάλθηκε';
 
   @override
-  String get rmabRequestErrorAlreadyAvailable => 'Already in your library';
+  String get rmabRequestErrorAlreadyAvailable => 'Ήδη στη βιβλιοθήκη σας';
 
   @override
-  String get rmabRequestErrorBeingProcessed => 'Already being processed';
+  String get rmabRequestErrorBeingProcessed => 'Ήδη σε επεξεργασία';
 
   @override
-  String get rmabRequestErrorDuplicate => 'You\'ve already requested this';
+  String get rmabRequestErrorDuplicate => 'Το έχετε ήδη ζητήσει';
 
   @override
-  String get rmabRequestErrorValidation => 'Couldn\'t send the request';
+  String get rmabRequestErrorValidation => 'Αδυναμία αποστολής του αιτήματος';
 
   @override
   String get rmabRequestErrorUserNotFound =>
-      'Token user no longer exists. Reconnect ReadMeABook.';
+      'Ο χρήστης του διακριτικού δεν υπάρχει πλέον. Συνδεθείτε ξανά με το ReadMeABook.';
 
   @override
-  String get rmabRequestErrorIgnored => 'This book is on your ignore list';
+  String get rmabRequestErrorIgnored =>
+      'Αυτό το βιβλίο βρίσκεται στη λίστα αγνόησής σας';
 
   @override
-  String get rmabRequestErrorGeneric => 'Couldn\'t send the request';
+  String get rmabRequestErrorGeneric => 'Αδυναμία αποστολής του αιτήματος';
 
   @override
   String get rmabRequestErrorTokenRejected =>
-      'Token rejected by server. Reconnect ReadMeABook.';
+      'Το διακριτικό απορρίφθηκε από τον διακομιστή. Συνδεθείτε ξανά με το ReadMeABook.';
 
   @override
-  String get rmabMyRequestsTab => 'My Requests';
+  String get rmabMyRequestsTab => 'Τα αιτήματά μου';
 
   @override
-  String get rmabSetupTab => 'Setup';
+  String get rmabSetupTab => 'Ρύθμιση';
 
   @override
-  String get rmabMyRequestsEmpty => 'You haven\'t requested any books yet';
+  String get rmabMyRequestsEmpty => 'Δεν έχετε ζητήσει ακόμη κανένα βιβλίο';
 
   @override
-  String get rmabMyRequestsError => 'Couldn\'t load requests';
+  String get rmabMyRequestsError => 'Αδυναμία φόρτωσης αιτημάτων';
 
   @override
-  String get rmabMyRequestsRefresh => 'Refresh';
+  String get rmabMyRequestsRefresh => 'Ανανέωση';
 
   @override
-  String get rmabRequestDetailTitle => 'Request details';
+  String get rmabRequestDetailTitle => 'Λεπτομέρειες αιτήματος';
 
   @override
-  String get rmabRequestDetailStatus => 'Status';
+  String get rmabRequestDetailStatus => 'Κατάσταση';
 
   @override
-  String get rmabRequestDetailRequestedOn => 'Requested on';
+  String get rmabRequestDetailRequestedOn => 'Ζητήθηκε στις';
 
   @override
-  String get rmabRequestDetailCompletedOn => 'Completed on';
+  String get rmabRequestDetailCompletedOn => 'Ολοκληρώθηκε στις';
 
   @override
-  String get rmabRequestDetailProgress => 'Progress';
+  String get rmabRequestDetailProgress => 'Πρόοδος';
 
   @override
-  String get rmabStatusActive => 'In progress';
+  String get rmabStatusActive => 'Σε εξέλιξη';
 
   @override
-  String get rmabStatusWaiting => 'Waiting';
+  String get rmabStatusWaiting => 'Σε αναμονή';
 
   @override
-  String get rmabStatusAvailable => 'Available';
+  String get rmabStatusAvailable => 'Διαθέσιμο';
 
   @override
-  String get rmabStatusDownloaded => 'Downloaded';
+  String get rmabStatusDownloaded => 'Ληφθέν';
 
   @override
-  String get rmabStatusFailed => 'Failed';
+  String get rmabStatusFailed => 'Απέτυχε';
 
   @override
-  String get rmabStatusCancelled => 'Cancelled';
+  String get rmabStatusCancelled => 'Ακυρώθηκε';
 
   @override
-  String get rmabStatusDenied => 'Denied';
+  String get rmabStatusDenied => 'Απορρίφθηκε';
 
   @override
-  String get rmabStatusUnknown => 'Unknown';
+  String get rmabStatusUnknown => 'Άγνωστο';
 
   @override
   String narratedBy(String narrator) {
-    return 'Narrated by $narrator';
+    return 'Αφηγητής: $narrator';
   }
 
   @override
-  String get onAudible => 'on Audible';
+  String get onAudible => 'στο Audible';
 
   @override
   String percentComplete(String percent) {
-    return '$percent% complete';
+    return '$percent% ολοκληρώθηκε';
   }
 
   @override
   String get absorbing => 'Absorbing...';
 
   @override
-  String get absorbAgain => 'Absorb Again';
+  String get absorbAgain => 'Absorb ξανά';
 
   @override
   String get absorb => 'Absorb';
 
   @override
-  String get ebookOnlyNoAudio => 'eBook Only - No Audio';
+  String get ebookOnlyNoAudio => 'Μόνο ηλεκτρονικό βιβλίο - χωρίς ήχο';
 
   @override
-  String get absorbAudioNotDownloaded => 'Audio not downloaded';
+  String get absorbAudioNotDownloaded => 'Ο ήχος δεν έχει ληφθεί';
 
   @override
   String get absorbAudioNotDownloadedEbookOnly =>
-      'Audio not downloaded, ebook only';
+      'Ο ήχος δεν έχει ληφθεί, μόνο ηλεκτρονικό βιβλίο';
 
   @override
   String get fullyAbsorbed => 'Fully Absorbed';
@@ -4108,497 +4177,508 @@ class AppLocalizationsEl extends AppLocalizations {
   String get fullyAbsorbAction => 'Fully Absorb';
 
   @override
-  String get removeFromAbsorbing => 'Remove from Absorbing';
+  String get removeFromAbsorbing => 'Αφαίρεση από το Absorbing';
 
   @override
-  String get addToAbsorbing => 'Add to Absorbing';
+  String get addToAbsorbing => 'Προσθήκη στο Absorbing';
 
   @override
-  String get absorbNext => 'Absorb Next';
+  String get absorbNext => 'Absorb επόμενο';
 
   @override
-  String get absorbNextAdded => 'Up next in Absorbing';
+  String get absorbNextAdded => 'Επόμενο στο Absorbing';
 
   @override
-  String get absorbLast => 'Absorb Last';
+  String get absorbLast => 'Absorb τελευταίο';
 
   @override
-  String get absorbNextHint => 'Right after what\'s playing now';
+  String get absorbNextHint => 'Αμέσως μετά από ό,τι παίζει τώρα';
 
   @override
-  String get absorbLastHint => 'At the end of the list';
+  String get absorbLastHint => 'Στο τέλος της λίστας';
 
   @override
-  String get removedFromAbsorbing => 'Removed from Absorbing';
+  String get removedFromAbsorbing => 'Αφαιρέθηκε από το Absorbing';
 
   @override
-  String get addedToAbsorbing => 'Added to Absorbing';
+  String get addedToAbsorbing => 'Προστέθηκε στο Absorbing';
 
   @override
-  String get removeFromContinueListening => 'Remove from Continue Listening';
+  String get removeFromContinueListening => 'Αφαίρεση από τη Συνέχεια ακρόασης';
 
   @override
-  String get removedFromContinueListening => 'Removed from Continue Listening';
+  String get removedFromContinueListening =>
+      'Αφαιρέθηκε από τη Συνέχεια ακρόασης';
 
   @override
-  String get removeFromContinueReading => 'Remove from Continue Reading';
+  String get removeFromContinueReading => 'Αφαίρεση από τη Συνέχεια ανάγνωσης';
 
   @override
-  String get removedFromContinueReading => 'Removed from Continue Reading';
+  String get removedFromContinueReading =>
+      'Αφαιρέθηκε από τη Συνέχεια ανάγνωσης';
 
   @override
-  String get sessionAdd => 'Add session';
+  String get sessionAdd => 'Προσθήκη συνεδρίας';
 
   @override
-  String get sessionStartLabel => 'Started at';
+  String get sessionStartLabel => 'Ξεκίνησε στις';
 
   @override
-  String get sessionAdded => 'Session added';
+  String get sessionAdded => 'Η συνεδρία προστέθηκε';
 
   @override
-  String get sessionAddFailed => 'Could not add the session';
+  String get sessionAddFailed => 'Δεν ήταν δυνατή η προσθήκη της συνεδρίας';
 
   @override
-  String get removeSeriesFromContinueSeries => 'Remove from Continue Series';
+  String get removeSeriesFromContinueSeries =>
+      'Αφαίρεση από τη Συνέχεια σειράς';
 
   @override
-  String get removedSeriesFromContinueSeries => 'Removed from Continue Series';
+  String get removedSeriesFromContinueSeries =>
+      'Αφαιρέθηκε από τη Συνέχεια σειράς';
 
   @override
-  String get couldNotUpdate => 'Could not update, try again';
+  String get couldNotUpdate => 'Αδυναμία ενημέρωσης, δοκιμάστε ξανά';
 
   @override
-  String get recentSearchesTitle => 'Recent searches';
+  String get recentSearchesTitle => 'Πρόσφατες αναζητήσεις';
 
   @override
-  String get recentSearchesClear => 'Clear';
+  String get recentSearchesClear => 'Εκκαθάριση';
 
   @override
-  String get recentSearchesRemove => 'Remove';
+  String get recentSearchesRemove => 'Αφαίρεση';
 
   @override
   String get removedSeriesTapToUndo =>
-      'Removed from Continue Series. Tap to undo.';
+      'Αφαιρέθηκε από τη Συνέχεια σειράς. Πατήστε για αναίρεση.';
 
   @override
-  String get seriesBackOnContinueSeries => 'Back on Continue Series';
+  String get seriesBackOnContinueSeries => 'Ξανά στη Συνέχεια σειράς';
 
   @override
-  String get addToPlaylist => 'Add to Playlist';
+  String get addToPlaylist => 'Προσθήκη σε λίστα αναπαραγωγής';
 
   @override
-  String get addToCollection => 'Add to Collection';
+  String get addToCollection => 'Προσθήκη σε συλλογή';
 
   @override
-  String get downloadEbook => 'Download eBook';
+  String get downloadEbook => 'Λήψη ηλεκτρονικού βιβλίου';
 
   @override
-  String get downloadEbookAgain => 'Download eBook Again';
+  String get downloadEbookAgain => 'Νέα λήψη ηλεκτρονικού βιβλίου';
 
   @override
-  String get resetProgress => 'Reset Progress';
+  String get resetProgress => 'Επαναφορά προόδου';
 
   @override
-  String get lookupLocalMetadata => 'Lookup Local Metadata';
+  String get lookupLocalMetadata => 'Αναζήτηση τοπικών μεταδεδομένων';
 
   @override
-  String get reLookupLocalMetadata => 'Re-Lookup Local Metadata';
+  String get reLookupLocalMetadata => 'Νέα αναζήτηση τοπικών μεταδεδομένων';
 
   @override
-  String get clearLocalMetadata => 'Clear Local Metadata';
+  String get clearLocalMetadata => 'Εκκαθάριση τοπικών μεταδεδομένων';
 
   @override
-  String get searchOnGoodreads => 'Search on Goodreads';
+  String get searchOnGoodreads => 'Αναζήτηση στο Goodreads';
 
   @override
-  String get editServerDetails => 'Edit Server Details';
+  String get editServerDetails => 'Επεξεργασία στοιχείων διακομιστή';
 
   @override
-  String get encodeTab => 'Encode';
+  String get encodeTab => 'Κωδικοποίηση';
 
   @override
-  String get codec => 'Codec';
+  String get codec => 'Κωδικοποιητής';
 
   @override
-  String get bitrate => 'Bitrate';
+  String get bitrate => 'Ρυθμός bit';
 
   @override
-  String get channels => 'Channels';
+  String get channels => 'Κανάλια';
 
   @override
-  String get mono => 'Mono';
+  String get mono => 'Μονοφωνικό';
 
   @override
-  String get stereo => 'Stereo';
+  String get stereo => 'Στερεοφωνικό';
 
   @override
-  String get startM4bEncode => 'Start M4B Encode';
+  String get startM4bEncode => 'Έναρξη κωδικοποίησης M4B';
 
   @override
-  String get encodeStarted => 'M4B encode started';
+  String get encodeStarted => 'Η κωδικοποίηση M4B ξεκίνησε';
 
   @override
-  String get encodeFailed => 'Failed to start encode';
+  String get encodeFailed => 'Αποτυχία έναρξης κωδικοποίησης';
 
   @override
-  String get encodeFinished => 'M4B encode finished';
+  String get encodeFinished => 'Η κωδικοποίηση M4B ολοκληρώθηκε';
 
   @override
-  String get currentlyLabel => 'Currently:';
+  String get currentlyLabel => 'Τώρα:';
 
   @override
   String encodeOutputPathNote(String path) {
-    return 'Finished M4B will be put into your audiobook folder at: $path/';
+    return 'Το ολοκληρωμένο M4B θα τοποθετηθεί στον φάκελο των ηχητικών βιβλίων σας στη διαδρομή: $path/';
   }
 
   @override
   String encodeBackupNote(String itemId) {
-    return 'A backup of your original audio files will be stored in: /metadata/cache/items/$itemId/. Make sure to periodically purge items cache.';
+    return 'Ένα αντίγραφο ασφαλείας των αρχικών αρχείων ήχου θα αποθηκευτεί στο: /metadata/cache/items/$itemId/. Φροντίστε να εκκαθαρίζετε περιοδικά την προσωρινή μνήμη στοιχείων.';
   }
 
   @override
-  String get encodeTimeNote => 'Encoding can take up to 30 minutes.';
+  String get encodeTimeNote =>
+      'Η κωδικοποίηση μπορεί να διαρκέσει έως και 30 λεπτά.';
 
   @override
   String get encodeRescanNote =>
-      'If you have the watcher disabled you will need to re-scan this audiobook afterwards.';
+      'Αν έχετε απενεργοποιήσει το watcher, θα χρειαστεί να σαρώσετε ξανά αυτό το ηχητικό βιβλίο στη συνέχεια.';
 
   @override
-  String get aboutSection => 'About';
+  String get aboutSection => 'Πληροφορίες';
 
   @override
   String chaptersCount(int count) {
-    return 'Chapters ($count)';
+    return 'Κεφάλαια ($count)';
   }
 
   @override
   String audioTracksCount(int count) {
-    return 'Audio Tracks ($count)';
+    return 'Κομμάτια ήχου ($count)';
   }
 
   @override
   String libraryFilesCount(int count) {
-    return 'Library Files ($count)';
+    return 'Αρχεία βιβλιοθήκης ($count)';
   }
 
   @override
-  String get chapters => 'Chapters';
+  String get chapters => 'Κεφάλαια';
 
   @override
-  String get noChaptersBook => 'This book has no chapters';
+  String get noChaptersBook => 'Αυτό το βιβλίο δεν έχει κεφάλαια';
 
   @override
-  String get noChaptersPodcast => 'This podcast has no chapters';
+  String get noChaptersPodcast => 'Αυτό το podcast δεν έχει κεφάλαια';
 
   @override
-  String get failedToLoad => 'Failed to load';
+  String get failedToLoad => 'Αποτυχία φόρτωσης';
 
   @override
   String startedDate(String date) {
-    return 'Started $date';
+    return 'Ξεκίνησε $date';
   }
 
   @override
   String finishedDate(String date) {
-    return 'Finished $date';
+    return 'Ολοκληρώθηκε $date';
   }
 
   @override
   String andCountMore(int count) {
-    return 'and $count more';
+    return 'και άλλα $count';
   }
 
   @override
-  String get markAsFullyAbsorbedQuestion => 'Mark as Fully Absorbed?';
+  String get markAsFullyAbsorbedQuestion => 'Επισήμανση ως Fully Absorbed;';
 
   @override
   String get markAsFullyAbsorbedContent =>
-      'This will set your progress to 100% and stop playback if this book is playing.';
+      'Η πρόοδός σας θα οριστεί στο 100% και η αναπαραγωγή θα σταματήσει αν παίζει αυτό το βιβλίο.';
 
   @override
-  String get markedAsFinishedNiceWork => 'Marked as finished - nice work!';
+  String get markedAsFinishedNiceWork =>
+      'Επισημάνθηκε ως ολοκληρωμένο - μπράβο!';
 
   @override
   String get failedToUpdateCheckConnection =>
-      'Failed to update - check your connection';
+      'Αποτυχία ενημέρωσης - ελέγξτε τη σύνδεσή σας';
 
   @override
-  String get markAsNotFinishedQuestion => 'Mark as Not Finished?';
+  String get markAsNotFinishedQuestion => 'Επισήμανση ως μη ολοκληρωμένου;';
 
   @override
   String get markAsNotFinishedContent =>
-      'This will clear the finished status and put your position back at the start.';
+      'Θα διαγραφεί η κατάσταση ολοκλήρωσης και η θέση σας θα επιστρέψει στην αρχή.';
 
   @override
-  String get unmark => 'Unmark';
+  String get unmark => 'Αφαίρεση επισήμανσης';
 
   @override
   String get markedAsNotFinishedBackAtIt =>
-      'Marked as not finished - back at it!';
+      'Επισημάνθηκε ως μη ολοκληρωμένο - πάμε πάλι!';
 
   @override
-  String get resetProgressQuestion => 'Reset Progress?';
+  String get resetProgressQuestion => 'Επαναφορά προόδου;';
 
   @override
   String get resetProgressContent =>
-      'This will erase all progress for this book and set it back to the beginning. This can\'t be undone.';
+      'Θα διαγραφεί όλη η πρόοδος για αυτό το βιβλίο και θα επιστρέψει στην αρχή. Αυτή η ενέργεια δεν αναιρείται.';
 
   @override
-  String get progressResetFreshStart => 'Progress reset - fresh start!';
+  String get progressResetFreshStart => 'Η πρόοδος επαναφέρθηκε - νέα αρχή!';
 
   @override
-  String get clearLocalMetadataQuestion => 'Clear Local Metadata?';
+  String get clearLocalMetadataQuestion => 'Εκκαθάριση τοπικών μεταδεδομένων;';
 
   @override
   String get clearLocalMetadataContent =>
-      'This will remove the locally stored metadata and revert to whatever the server has.';
+      'Θα αφαιρεθούν τα τοπικά αποθηκευμένα μεταδεδομένα και θα χρησιμοποιηθούν όσα έχει ο διακομιστής.';
 
   @override
-  String get localMetadataCleared => 'Local metadata cleared';
+  String get localMetadataCleared => 'Τα τοπικά μεταδεδομένα εκκαθαρίστηκαν';
 
   @override
-  String get saveEbook => 'Save eBook';
+  String get saveEbook => 'Αποθήκευση ηλεκτρονικού βιβλίου';
 
   @override
-  String get noEbookFileFound => 'No ebook file found';
+  String get noEbookFileFound => 'Δεν βρέθηκε αρχείο ηλεκτρονικού βιβλίου';
 
   @override
-  String get bookmark => 'Bookmark';
+  String get bookmark => 'Σελιδοδείκτης';
 
   @override
-  String get bookmarks => 'Bookmarks';
+  String get bookmarks => 'Σελιδοδείκτες';
 
   @override
   String bookmarksWithCount(int count) {
-    return 'Bookmarks ($count)';
+    return 'Σελιδοδείκτες ($count)';
   }
 
   @override
-  String get playbackSpeed => 'Playback Speed';
+  String get playbackSpeed => 'Ταχύτητα αναπαραγωγής';
 
   @override
-  String get noBookmarksYet => 'No bookmarks yet';
+  String get noBookmarksYet => 'Δεν υπάρχουν σελιδοδείκτες ακόμη';
 
   @override
   String get longPressBookmarkHint =>
-      'Long-press the bookmark button to quick save';
+      'Πατήστε παρατεταμένα το κουμπί σελιδοδείκτη για γρήγορη αποθήκευση';
 
   @override
-  String get addBookmark => 'Add Bookmark';
+  String get addBookmark => 'Προσθήκη σελιδοδείκτη';
 
   @override
-  String get editBookmark => 'Edit Bookmark';
+  String get editBookmark => 'Επεξεργασία σελιδοδείκτη';
 
   @override
-  String get titleLabel => 'Title';
+  String get titleLabel => 'Τίτλος';
 
   @override
-  String get noteOptionalLabel => 'Note (optional)';
+  String get noteOptionalLabel => 'Σημείωση (προαιρετικό)';
 
   @override
-  String get editLayout => 'Edit Layout';
+  String get editLayout => 'Επεξεργασία διάταξης';
 
   @override
-  String get inMenu => 'In menu';
+  String get inMenu => 'Στο μενού';
 
   @override
-  String get bookmarkAdded => 'Bookmark added';
+  String get bookmarkAdded => 'Ο σελιδοδείκτης προστέθηκε';
 
   @override
-  String get startPlayingSomethingFirst => 'Start playing something first';
+  String get startPlayingSomethingFirst =>
+      'Ξεκινήστε πρώτα την αναπαραγωγή κάποιου στοιχείου';
 
   @override
-  String get playbackHistory => 'Playback History';
+  String get playbackHistory => 'Ιστορικό αναπαραγωγής';
 
   @override
-  String get historyLocalTab => 'History';
+  String get historyLocalTab => 'Ιστορικό';
 
   @override
-  String get historyServerTab => 'Sessions';
+  String get historyServerTab => 'Συνεδρίες';
 
   @override
-  String get historyNoServerSessions => 'No server sessions for this item yet';
+  String get historyNoServerSessions =>
+      'Δεν υπάρχουν ακόμη συνεδρίες διακομιστή για αυτό το στοιχείο';
 
   @override
-  String get historyServerLoadFailed => 'Could not load server sessions';
+  String get historyServerLoadFailed =>
+      'Δεν ήταν δυνατή η φόρτωση των συνεδριών διακομιστή';
 
   @override
-  String get clearHistoryTooltip => 'Clear history';
+  String get clearHistoryTooltip => 'Εκκαθάριση ιστορικού';
 
   @override
-  String get tapEventToJump => 'Tap an event to jump to that position';
+  String get tapEventToJump =>
+      'Πατήστε ένα συμβάν για μετάβαση σε εκείνη τη θέση';
 
   @override
-  String get noHistoryYet => 'No history yet';
+  String get noHistoryYet => 'Δεν υπάρχει ιστορικό ακόμη';
 
   @override
   String jumpedToPosition(String position) {
-    return 'Jumped to $position';
+    return 'Μετάβαση στο $position';
   }
 
   @override
   String booksInSeriesCount(int count) {
-    return '$count books in this series';
+    return '$count βιβλία σε αυτήν τη σειρά';
   }
 
   @override
   String bookNumber(String number) {
-    return 'Book $number';
+    return 'Βιβλίο $number';
   }
 
   @override
   String downloadRemainingCount(int count) {
-    return 'Download Remaining ($count)';
+    return 'Λήψη υπολοίπων ($count)';
   }
 
   @override
-  String get downloadAll => 'Download All';
+  String get downloadAll => 'Λήψη όλων';
 
   @override
-  String get markAllNotFinished => 'Mark All Not Finished';
+  String get markAllNotFinished => 'Επισήμανση όλων ως μη ολοκληρωμένων';
 
   @override
-  String get markAllFinished => 'Mark All Finished';
+  String get markAllFinished => 'Επισήμανση όλων ως ολοκληρωμένων';
 
   @override
-  String get markAllNotFinishedQuestion => 'Mark All Not Finished?';
+  String get markAllNotFinishedQuestion =>
+      'Επισήμανση όλων ως μη ολοκληρωμένων;';
 
   @override
-  String get fullyAbsorbSeries => 'Fully Absorb Series?';
+  String get fullyAbsorbSeries => 'Fully Absorb σειράς;';
 
   @override
-  String get turnAutoDownloadOff => 'Turn Auto-Download Off';
+  String get turnAutoDownloadOff => 'Απενεργοποίηση αυτόματης λήψης';
 
   @override
-  String get turnAutoDownloadOn => 'Turn Auto-Download On';
+  String get turnAutoDownloadOn => 'Ενεργοποίηση αυτόματης λήψης';
 
   @override
-  String get autoDownloadThisSeries => 'Auto-Download This Series?';
+  String get autoDownloadThisSeries => 'Αυτόματη λήψη αυτής της σειράς;';
 
   @override
   String get autoDownloadSeriesContent =>
-      'Automatically download the next books as you listen.';
+      'Αυτόματη λήψη των επόμενων βιβλίων καθώς ακούτε.';
 
   @override
-  String get standalone => 'Standalone';
+  String get standalone => 'Αυτόνομα';
 
   @override
-  String get episodes => 'Episodes';
+  String get episodes => 'Επεισόδια';
 
   @override
-  String get noEpisodesFound => 'No episodes found';
+  String get noEpisodesFound => 'Δεν βρέθηκαν επεισόδια';
 
   @override
-  String get markFinished => 'Mark Finished';
+  String get markFinished => 'Επισήμανση ως ολοκληρωμένου';
 
   @override
-  String get markUnfinished => 'Mark Unfinished';
+  String get markUnfinished => 'Επισήμανση ως μη ολοκληρωμένου';
 
   @override
-  String get allEpisodes => 'All Episodes';
+  String get allEpisodes => 'Όλα τα επεισόδια';
 
   @override
-  String get aboutThisEpisode => 'About This Episode';
+  String get aboutThisEpisode => 'Σχετικά με αυτό το επεισόδιο';
 
   @override
-  String get reversePlayOrder => 'Reverse play order';
+  String get reversePlayOrder => 'Αντίστροφη σειρά αναπαραγωγής';
 
   @override
   String selectedCount(int count) {
-    return '$count selected';
+    return '$count επιλεγμένα';
   }
 
   @override
-  String get selectAll => 'Select All';
+  String get selectAll => 'Επιλογή όλων';
 
   @override
-  String get deselectAll => 'Deselect All';
+  String get deselectAll => 'Αποεπιλογή όλων';
 
   @override
-  String get autoDownloadThisPodcast => 'Auto-Download This Podcast?';
+  String get autoDownloadThisPodcast => 'Αυτόματη λήψη αυτού του podcast;';
 
   @override
   String get autoDownloadPodcastContent =>
-      'Automatically download the next episodes as you listen.';
+      'Αυτόματη λήψη των επόμενων επεισοδίων καθώς ακούτε.';
 
   @override
-  String get download => 'Download';
+  String get download => 'Λήψη';
 
   @override
-  String get deleteDownload => 'Delete Download';
+  String get deleteDownload => 'Διαγραφή λήψης';
 
   @override
-  String get casting => 'Casting';
+  String get casting => 'Μετάδοση';
 
   @override
-  String get castingTo => 'Casting to';
+  String get castingTo => 'Μετάδοση σε';
 
   @override
-  String get editDetails => 'Edit Details';
+  String get editDetails => 'Επεξεργασία στοιχείων';
 
   @override
-  String get quickMatch => 'Quick Match';
+  String get quickMatch => 'Γρήγορη αντιστοίχιση';
 
   @override
-  String get quickMatchNoUpdates => 'No updates necessary';
+  String get quickMatchNoUpdates => 'Δεν χρειάζονται ενημερώσεις';
 
   @override
-  String get custom => 'Custom';
+  String get custom => 'Προσαρμοσμένο';
 
   @override
-  String get authorOptionalLabel => 'Author (optional)';
+  String get authorOptionalLabel => 'Συγγραφέας (προαιρετικό)';
 
   @override
   String get noResultsFound =>
-      'No results found.\nTry adjusting your search or provider.';
+      'Δεν βρέθηκαν αποτελέσματα.\nΔοκιμάστε να προσαρμόσετε την αναζήτηση ή τον πάροχο.';
 
   @override
-  String get searchForMetadataAbove => 'Search for metadata above';
+  String get searchForMetadataAbove => 'Αναζητήστε μεταδεδομένα παραπάνω';
 
   @override
-  String get applyThisMatch => 'Apply This Match?';
+  String get applyThisMatch => 'Εφαρμογή αυτής της αντιστοίχισης;';
 
   @override
-  String get metadataUpdated => 'Metadata updated';
+  String get metadataUpdated => 'Τα μεταδεδομένα ενημερώθηκαν';
 
   @override
-  String get failedToUpdateMetadata => 'Failed to update metadata';
+  String get failedToUpdateMetadata => 'Αποτυχία ενημέρωσης μεταδεδομένων';
 
   @override
-  String get subtitleLabel => 'Subtitle';
+  String get subtitleLabel => 'Υπότιτλος';
 
   @override
-  String get authorLabel => 'Author';
+  String get authorLabel => 'Συγγραφέας';
 
   @override
-  String get narratorLabel => 'Narrator';
+  String get narratorLabel => 'Αφηγητής';
 
   @override
-  String get seriesLabel => 'Series';
+  String get seriesLabel => 'Σειρά';
 
   @override
-  String get addSeries => 'Add series';
+  String get addSeries => 'Προσθήκη σειράς';
 
   @override
-  String get removeSeries => 'Remove series';
+  String get removeSeries => 'Αφαίρεση σειράς';
 
   @override
-  String get descriptionLabel => 'Description';
+  String get descriptionLabel => 'Περιγραφή';
 
   @override
-  String get publisherLabel => 'Publisher';
+  String get publisherLabel => 'Εκδότης';
 
   @override
-  String get yearLabel => 'Year';
+  String get yearLabel => 'Έτος';
 
   @override
-  String get genresLabel => 'Genres';
+  String get genresLabel => 'Είδη';
 
   @override
-  String get tagsLabel => 'Tags';
+  String get tagsLabel => 'Ετικέτες';
 
   @override
-  String get commaSeparated => 'Comma separated';
+  String get commaSeparated => 'Χωρισμένα με κόμμα';
 
   @override
   String get asinLabel => 'ASIN';
@@ -4607,347 +4687,352 @@ class AppLocalizationsEl extends AppLocalizations {
   String get isbnLabel => 'ISBN';
 
   @override
-  String get coverImage => 'Cover Image';
+  String get coverImage => 'Εικόνα εξωφύλλου';
 
   @override
-  String get coverRemove => 'Remove cover';
+  String get coverRemove => 'Αφαίρεση εξωφύλλου';
 
   @override
   String get coverRemoveConfirm =>
-      'Remove this book\'s cover? It will show the generated title card instead.';
+      'Να αφαιρεθεί το εξώφυλλο αυτού του βιβλίου; Θα εμφανίζεται στη θέση του η δημιουργημένη κάρτα τίτλου.';
 
   @override
-  String get coverRemoved => 'Cover removed';
+  String get coverRemoved => 'Το εξώφυλλο αφαιρέθηκε';
 
   @override
-  String get coverRemoveFailed => 'Could not remove the cover';
+  String get coverRemoveFailed => 'Δεν ήταν δυνατή η αφαίρεση του εξωφύλλου';
 
   @override
-  String get coverUrlLabel => 'Cover URL';
+  String get coverUrlLabel => 'URL εξωφύλλου';
 
   @override
   String get coverUrlHint => 'https://...';
 
   @override
-  String get localMetadata => 'Local Metadata';
+  String get localMetadata => 'Τοπικά μεταδεδομένα';
 
   @override
-  String get overrideLocalDisplay => 'Override local display';
+  String get overrideLocalDisplay => 'Παράκαμψη τοπικής εμφάνισης';
 
   @override
-  String get metadataSavedLocally => 'Metadata saved locally';
+  String get metadataSavedLocally => 'Τα μεταδεδομένα αποθηκεύτηκαν τοπικά';
 
   @override
-  String get notes => 'Notes';
+  String get notes => 'Σημειώσεις';
 
   @override
-  String get newNote => 'New Note';
+  String get newNote => 'Νέα σημείωση';
 
   @override
-  String get editNote => 'Edit Note';
+  String get editNote => 'Επεξεργασία σημείωσης';
 
   @override
-  String get noNotesYet => 'No notes yet';
+  String get noNotesYet => 'Δεν υπάρχουν σημειώσεις ακόμη';
 
   @override
-  String get markdownIsSupported => 'Markdown is supported';
+  String get markdownIsSupported => 'Υποστηρίζεται Markdown';
 
   @override
   String get markdownMd => 'Markdown (.md)';
 
   @override
-  String get keepsFormattingIntact => 'Keeps formatting intact';
+  String get keepsFormattingIntact => 'Διατηρεί τη μορφοποίηση';
 
   @override
-  String get plainTextTxt => 'Plain Text (.txt)';
+  String get plainTextTxt => 'Απλό κείμενο (.txt)';
 
   @override
-  String get simpleTextNoFormatting => 'Simple text, no formatting';
+  String get simpleTextNoFormatting => 'Απλό κείμενο, χωρίς μορφοποίηση';
 
   @override
-  String get untitledNote => 'Untitled note';
+  String get untitledNote => 'Σημείωση χωρίς τίτλο';
 
   @override
-  String get titleHint => 'Title';
+  String get titleHint => 'Τίτλος';
 
   @override
-  String get noteBodyHint => 'Write your note... (supports markdown)';
+  String get noteBodyHint =>
+      'Γράψτε τη σημείωσή σας... (υποστηρίζεται markdown)';
 
   @override
-  String get nothingToPreview => 'Nothing to preview';
+  String get nothingToPreview => 'Τίποτα για προεπισκόπηση';
 
   @override
-  String get audioEnhancements => 'Audio Enhancements';
+  String get audioEnhancements => 'Βελτιώσεις ήχου';
 
   @override
-  String get presets => 'PRESETS';
+  String get presets => 'ΠΡΟΕΠΙΛΟΓΕΣ';
 
   @override
-  String get equalizer => 'EQUALIZER';
+  String get equalizer => 'ΙΣΟΣΤΑΘΜΙΣΤΗΣ';
 
   @override
-  String get effects => 'EFFECTS';
+  String get effects => 'ΕΦΕ';
 
   @override
-  String get bassBoost => 'Bass Boost';
+  String get bassBoost => 'Ενίσχυση μπάσων';
 
   @override
   String get surround => 'Surround';
 
   @override
-  String get loudness => 'Loudness';
+  String get loudness => 'Ένταση ήχου (Loudness)';
 
   @override
-  String get monoAudio => 'Mono Audio';
+  String get monoAudio => 'Μονοφωνικός ήχος';
 
   @override
-  String get skipSilence => 'Skip Silence';
+  String get skipSilence => 'Παράλειψη σιωπής';
 
   @override
-  String get resetAll => 'Reset All';
+  String get resetAll => 'Επαναφορά όλων';
 
   @override
-  String get collectionNotFound => 'Collection not found';
+  String get collectionNotFound => 'Η συλλογή δεν βρέθηκε';
 
   @override
-  String get deleteCollection => 'Delete Collection';
+  String get deleteCollection => 'Διαγραφή συλλογής';
 
   @override
   String get deleteCollectionContent =>
-      'Are you sure you want to delete this collection?';
+      'Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτήν τη συλλογή;';
 
   @override
-  String get deleteCollectionFailed => 'Couldn\'t delete the collection';
+  String get deleteCollectionFailed => 'Αδυναμία διαγραφής της συλλογής';
 
   @override
   String get deletePermissionRequired =>
-      'Delete permission required. Ask the root admin to grant you the delete permission.';
+      'Απαιτείται άδεια διαγραφής. Ζητήστε από τον root διαχειριστή να σας τη χορηγήσει.';
 
   @override
-  String get deleteFilesCheckbox => 'Also delete the files on the server';
+  String get deleteFilesCheckbox => 'Διαγραφή και των αρχείων στον διακομιστή';
 
   @override
   String get deleteFilesCheckedHint =>
-      'The files are deleted from the server for good.';
+      'Τα αρχεία διαγράφονται οριστικά από τον διακομιστή.';
 
   @override
   String get deleteFilesUncheckedHint =>
-      'The files stay on the server, so the next library scan can add this back.';
+      'Τα αρχεία παραμένουν στον διακομιστή, οπότε η επόμενη σάρωση βιβλιοθήκης μπορεί να το προσθέσει ξανά.';
 
   @override
-  String get deleteFromServerAction => 'Delete from Server';
+  String get deleteFromServerAction => 'Διαγραφή από τον διακομιστή';
 
   @override
-  String get deleteFromServerTitle => 'Delete from server';
+  String get deleteFromServerTitle => 'Διαγραφή από τον διακομιστή';
 
   @override
   String deleteFromServerContent(String title) {
-    return 'Delete \"$title\" from Audiobookshelf?';
+    return 'Διαγραφή του «$title» από το Audiobookshelf;';
   }
 
   @override
   String deletedFromServer(String title) {
-    return 'Deleted \"$title\"';
+    return 'Διαγράφηκε το «$title»';
   }
 
   @override
   String get deleteFromServerFailed =>
-      'Couldn\'t delete that. Check the server logs.';
+      'Αδυναμία διαγραφής. Ελέγξτε τα αρχεία καταγραφής του διακομιστή.';
 
   @override
-  String get playlistNotFound => 'Playlist not found';
+  String get playlistNotFound => 'Η λίστα αναπαραγωγής δεν βρέθηκε';
 
   @override
-  String get deletePlaylist => 'Delete Playlist';
+  String get deletePlaylist => 'Διαγραφή λίστας αναπαραγωγής';
 
   @override
   String get deletePlaylistContent =>
-      'Are you sure you want to delete this playlist?';
+      'Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτήν τη λίστα αναπαραγωγής;';
 
   @override
-  String get newPlaylist => 'New Playlist';
+  String get newPlaylist => 'Νέα λίστα αναπαραγωγής';
 
   @override
-  String get playlistNameHint => 'Playlist name';
+  String get playlistNameHint => 'Όνομα λίστας αναπαραγωγής';
 
   @override
   String addedToName(String name) {
-    return 'Added to \"$name\"';
+    return 'Προστέθηκε στο «$name»';
   }
 
   @override
-  String get failedToAdd => 'Failed to add';
+  String get failedToAdd => 'Αποτυχία προσθήκης';
 
   @override
-  String get newCollection => 'New Collection';
+  String get newCollection => 'Νέα συλλογή';
 
   @override
-  String get collectionNameHint => 'Collection name';
+  String get collectionNameHint => 'Όνομα συλλογής';
 
   @override
-  String get listsNewCollectionSubtitle => 'Group books into a list you keep';
+  String get listsNewCollectionSubtitle =>
+      'Ομαδοποιήστε βιβλία σε μια λίστα που κρατάτε';
 
   @override
   String get listsNewCollectionNeedsBookSubtitle =>
-      'Start it with at least one book';
+      'Ξεκινήστε την με τουλάχιστον ένα βιβλίο';
 
   @override
-  String get listsNewPlaylistSubtitle => 'Line up books to listen to in order';
+  String get listsNewPlaylistSubtitle =>
+      'Τακτοποιήστε βιβλία για να τα ακούτε με σειρά';
 
   @override
-  String get listsAddBooksNow => 'Add books now';
+  String get listsAddBooksNow => 'Προσθήκη βιβλίων τώρα';
 
   @override
   String get listsPickBooksNext =>
-      'You\'ll pick books next. A collection on this server needs at least one.';
+      'Στη συνέχεια θα επιλέξετε βιβλία. Μια συλλογή σε αυτόν τον διακομιστή χρειάζεται τουλάχιστον ένα.';
 
   @override
-  String get listsCreate => 'Create';
+  String get listsCreate => 'Δημιουργία';
 
   @override
   String get listsCollectionNeedsBook =>
-      'A collection needs at least one book, so nothing was created.';
+      'Μια συλλογή χρειάζεται τουλάχιστον ένα βιβλίο, οπότε δεν δημιουργήθηκε τίποτα.';
 
   @override
-  String get listsCreateFailed => 'Couldn\'t create it';
+  String get listsCreateFailed => 'Αδυναμία δημιουργίας';
 
   @override
-  String get castToDevice => 'Cast to Device';
+  String get castToDevice => 'Μετάδοση σε συσκευή';
 
   @override
-  String get searchingForCastDevices => 'Searching for Cast devices...';
+  String get searchingForCastDevices => 'Αναζήτηση συσκευών Cast...';
 
   @override
-  String get castDevice => 'Cast Device';
+  String get castDevice => 'Συσκευή Cast';
 
   @override
-  String get stopCasting => 'Stop Casting';
+  String get stopCasting => 'Διακοπή μετάδοσης';
 
   @override
-  String get disconnect => 'Disconnect';
+  String get disconnect => 'Αποσύνδεση';
 
   @override
-  String get audioOutput => 'Audio Output';
+  String get audioOutput => 'Έξοδος ήχου';
 
   @override
-  String get noOutputDevicesFound => 'No output devices found';
+  String get noOutputDevicesFound => 'Δεν βρέθηκαν συσκευές εξόδου';
 
   @override
-  String get welcomeToAbsorb => 'Welcome to Absorb Plus';
+  String get welcomeToAbsorb => 'Καλώς ήρθατε στο Absorb Plus';
 
   @override
-  String get welcomeTagline => 'An Audiobookshelf client.';
+  String get welcomeTagline => 'Ένας πελάτης Audiobookshelf.';
 
   @override
   String get welcomeAbsorbingTitle => 'Absorbing';
 
   @override
   String get welcomeAbsorbingIntro =>
-      'We use \"absorb\" in place of \"play\" and \"listen\". Prefer the classic wording? Switch it in Settings.';
+      'Χρησιμοποιούμε το «absorb» αντί για «αναπαραγωγή» και «ακρόαση». Προτιμάτε την κλασική διατύπωση; Αλλάξτε την στις Ρυθμίσεις.';
 
   @override
   String get welcomeAbsorbingTabBullet =>
-      'Absorbing tab - what you\'re currently listening to';
+      'Καρτέλα Absorbing - αυτό που ακούτε αυτήν τη στιγμή';
 
   @override
-  String get welcomeAbsorbButtonBullet => 'Absorb button - start playback';
+  String get welcomeAbsorbButtonBullet => 'Κουμπί Absorb - έναρξη αναπαραγωγής';
 
   @override
-  String get welcomeFullyAbsorbBullet => 'Fully Absorb - mark as finished';
+  String get welcomeFullyAbsorbBullet =>
+      'Fully Absorb - επισήμανση ως ολοκληρωμένου';
 
   @override
-  String get welcomeGettingAroundTitle => 'Getting around';
+  String get welcomeGettingAroundTitle => 'Πλοήγηση';
 
   @override
   String get welcomeGettingAroundBody =>
-      'Tap any cover to open its details. Continue Listening cards are different - tap to play right away, press and hold to open details.';
+      'Πατήστε σε οποιοδήποτε εξώφυλλο για να ανοίξετε τις λεπτομέρειές του. Οι κάρτες Συνέχεια ακρόασης διαφέρουν - πατήστε για άμεση αναπαραγωγή, πατήστε παρατεταμένα για άνοιγμα λεπτομερειών.';
 
   @override
-  String get welcomeMakeItYoursTitle => 'Make it yours';
+  String get welcomeMakeItYoursTitle => 'Κάντε το δικό σας';
 
   @override
   String get welcomeMakeItYoursBody =>
-      'Mess around in Settings to tune Absorb to your taste. The Tips & Hidden Features section in there is worth a look.';
+      'Πειραματιστείτε στις Ρυθμίσεις για να προσαρμόσετε το Absorb στα γούστα σας. Αξίζει να δείτε την ενότητα Συμβουλές και κρυφές λειτουργίες εκεί μέσα.';
 
   @override
-  String get getStarted => 'Get Started';
+  String get getStarted => 'Ξεκινήστε';
 
   @override
-  String get showMore => 'Show more';
+  String get showMore => 'Εμφάνιση περισσότερων';
 
   @override
-  String get showLess => 'Show less';
+  String get showLess => 'Εμφάνιση λιγότερων';
 
   @override
-  String get readMore => 'Read more';
+  String get readMore => 'Διαβάστε περισσότερα';
 
   @override
-  String get removeDownloadQuestion => 'Remove download?';
+  String get removeDownloadQuestion => 'Αφαίρεση λήψης;';
 
   @override
-  String get removeDownloadContent => 'This will be removed from your device.';
+  String get removeDownloadContent => 'Θα αφαιρεθεί από τη συσκευή σας.';
 
   @override
   String get removeWhichDownload =>
-      'The audiobook and the ebook are both on this device. Choose what to remove.';
+      'Το ηχητικό βιβλίο και το ηλεκτρονικό βιβλίο βρίσκονται και τα δύο σε αυτήν τη συσκευή. Επιλέξτε τι θα αφαιρεθεί.';
 
   @override
-  String get downloadRemoved => 'Download removed';
+  String get downloadRemoved => 'Η λήψη αφαιρέθηκε';
 
   @override
-  String get finished => 'Finished';
+  String get finished => 'Ολοκληρώθηκε';
 
   @override
-  String get saved => 'Downloaded';
+  String get saved => 'Ληφθέν';
 
   @override
-  String get selectLibrary => 'Select Library';
+  String get selectLibrary => 'Επιλογή βιβλιοθήκης';
 
   @override
-  String get switchLibraryTooltip => 'Switch library';
+  String get switchLibraryTooltip => 'Αλλαγή βιβλιοθήκης';
 
   @override
-  String get refreshTooltip => 'Refresh';
+  String get refreshTooltip => 'Ανανέωση';
 
   @override
-  String get noBooksFound => 'No books found';
+  String get noBooksFound => 'Δεν βρέθηκαν βιβλία';
 
   @override
-  String get userFallback => 'User';
+  String get userFallback => 'Χρήστης';
 
   @override
-  String get rootAdmin => 'Root Admin';
+  String get rootAdmin => 'Root διαχειριστής';
 
   @override
-  String get admin => 'Admin';
+  String get admin => 'Διαχειριστής';
 
   @override
-  String get serverAdmin => 'Server Admin';
+  String get serverAdmin => 'Διαχείριση διακομιστή';
 
   @override
-  String get serverAdminSubtitle => 'Manage users, libraries & server settings';
+  String get serverAdminSubtitle =>
+      'Διαχείριση χρηστών, βιβλιοθηκών και ρυθμίσεων διακομιστή';
 
   @override
   String serverUpdateAvailable(String version) {
-    return 'Server update $version available';
+    return 'Διαθέσιμη ενημέρωση διακομιστή $version';
   }
 
   @override
-  String get justNow => 'Just now';
+  String get justNow => 'Μόλις τώρα';
 
   @override
   String minutesAgo(int count) {
-    return '${count}m ago';
+    return 'πριν από $count λ.';
   }
 
   @override
   String hoursAgo(int count) {
-    return '${count}h ago';
+    return 'πριν από $count ώρ.';
   }
 
   @override
   String daysAgo(int count) {
-    return '${count}d ago';
+    return 'πριν από $count ημ.';
   }
 
   @override
@@ -4963,90 +5048,91 @@ class AppLocalizationsEl extends AppLocalizations {
   String get root => 'Root';
 
   @override
-  String get coverPlayPause => 'Cover play/pause';
+  String get coverPlayPause => 'Αναπαραγωγή/παύση από το εξώφυλλο';
 
   @override
-  String get coverPlayPauseOnSubtitle => 'On - tap cover art to play/pause';
+  String get coverPlayPauseOnSubtitle =>
+      'Ενεργό - πατήστε το εξώφυλλο για αναπαραγωγή/παύση';
 
   @override
   String get coverPlayPauseOffSubtitle =>
-      'Off - dedicated play/pause button in controls';
+      'Ανενεργό - ξεχωριστό κουμπί αναπαραγωγής/παύσης στα χειριστήρια';
 
   @override
-  String get cardBackground => 'Card background';
+  String get cardBackground => 'Φόντο κάρτας';
 
   @override
-  String get cardBackgroundBlurred => 'Blurred';
+  String get cardBackgroundBlurred => 'Θολό';
 
   @override
-  String get cardBackgroundGradient => 'Gradient';
+  String get cardBackgroundGradient => 'Διαβάθμιση';
 
   @override
   String get queueModeMergedSubtitle =>
-      'Playback stops, manual queue, or auto-plays next item';
+      'Η αναπαραγωγή σταματά, χειροκίνητη ουρά ή αυτόματη αναπαραγωγή του επόμενου στοιχείου';
 
   @override
-  String get queueModeSeriesLabel => 'Series';
+  String get queueModeSeriesLabel => 'Σειρά';
 
   @override
-  String get queueModeShowLabel => 'Show';
+  String get queueModeShowLabel => 'Εκπομπή';
 
   @override
-  String get queueModeInfoSeries => 'Series';
+  String get queueModeInfoSeries => 'Σειρά';
 
   @override
   String get queueModeInfoSeriesDesc =>
-      'Automatically plays the next book in a series or the next episode in a podcast show.';
+      'Παίζει αυτόματα το επόμενο βιβλίο μιας σειράς ή το επόμενο επεισόδιο μιας εκπομπής podcast.';
 
   @override
-  String get resetButtonGridQuestion => 'Reset button grid?';
+  String get resetButtonGridQuestion => 'Επαναφορά πλέγματος κουμπιών;';
 
   @override
   String get resetButtonGridContent =>
-      'This will restore the default button layout, order, and toggle settings.';
+      'Θα επαναφερθούν η προεπιλεγμένη διάταξη κουμπιών, η σειρά και οι ρυθμίσεις εναλλαγής.';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'Επαναφορά';
 
   @override
-  String get buttonGridReset => 'Button grid reset';
+  String get buttonGridReset => 'Το πλέγμα κουμπιών επαναφέρθηκε';
 
   @override
-  String get resetButtonGrid => 'Reset button grid';
+  String get resetButtonGrid => 'Επαναφορά πλέγματος κουμπιών';
 
   @override
-  String get chapterBarrierOnRewind => 'Chapter barrier on rewind';
+  String get chapterBarrierOnRewind => 'Όριο κεφαλαίου στην επαναφορά';
 
   @override
-  String get chapterBarrierInfoTitle => 'Chapter barrier';
+  String get chapterBarrierInfoTitle => 'Όριο κεφαλαίου';
 
   @override
   String get chapterBarrierInfoContent =>
-      'When skipping back, the playback will snap to the start of the current chapter instead of crossing into the previous one.\n\nDouble-tap the skip back button within 2 seconds to break through the barrier.';
+      'Κατά την πίσω μετάβαση, η αναπαραγωγή θα πηγαίνει στην αρχή του τρέχοντος κεφαλαίου αντί να περνά στο προηγούμενο.\n\nΠατήστε δύο φορές το κουμπί πίσω μετάβασης μέσα σε 2 δευτερόλεπτα για να ξεπεράσετε το όριο.';
 
   @override
   String get chapterBarrierOnRewindOnSubtitle =>
-      'On - rewind snaps to chapter start';
+      'Ενεργό - η επαναφορά σταματά στην αρχή του κεφαλαίου';
 
   @override
   String get chapterBarrierOnRewindOffSubtitle =>
-      'Off - rewind crosses chapter boundaries';
+      'Ανενεργό - η επαναφορά διασχίζει τα όρια κεφαλαίων';
 
   @override
   String autoRewindOnSubtitleFormat(String min, String max) {
-    return 'On -${min}s to ${max}s based on pause length';
+    return 'Ενεργό - ${min}s έως ${max}s ανάλογα με τη διάρκεια της παύσης';
   }
 
   @override
-  String get rewindOnSessionStart => 'Rewind on session start';
+  String get rewindOnSessionStart => 'Επαναφορά στην έναρξη συνεδρίας';
 
   @override
   String get rewindOnSessionStartInfoContent =>
-      'Normal auto-rewind triggers when you resume from a pause within an active session. This setting adds a rewind when starting a completely new session - for example after the app was closed, playback was stopped, or you open the app fresh.\n\nWhen enabled, playback rewinds by the full max rewind amount at the start of every new session so you can re-hear where you left off.';
+      'Η κανονική αυτόματη επαναφορά ενεργοποιείται όταν συνεχίζετε από παύση μέσα σε ενεργή συνεδρία. Αυτή η ρύθμιση προσθέτει επαναφορά κατά την έναρξη εντελώς νέας συνεδρίας - για παράδειγμα αφού κλείσει η εφαρμογή, σταματήσει η αναπαραγωγή ή ανοίξετε την εφαρμογή από την αρχή.\n\nΌταν είναι ενεργή, η αναπαραγωγή γυρίζει πίσω κατά το πλήρες μέγιστο ποσό επαναφοράς στην αρχή κάθε νέας συνεδρίας, ώστε να ξανακούσετε το σημείο που σταματήσατε.';
 
   @override
   String rewindOnSessionStartOnSubtitle(String seconds) {
-    return 'On - rewinds ${seconds}s when starting a new session';
+    return 'Ενεργό - επαναφορά ${seconds}s κατά την έναρξη νέας συνεδρίας';
   }
 
   @override
@@ -5061,21 +5147,21 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String rewindSecondsPause(String seconds) {
-    return '${seconds}s pause';
+    return 'παύση ${seconds}s';
   }
 
   @override
   String rewindMinPause(String minutes) {
-    return '$minutes min pause';
+    return 'παύση $minutes λεπτών';
   }
 
   @override
   String rewindHrPause(String hours) {
-    return '$hours hr pause';
+    return 'παύση $hours ωρών';
   }
 
   @override
-  String get rewindOneHrPause => '1 hr pause';
+  String get rewindOneHrPause => 'παύση 1 ώρας';
 
   @override
   String speedValue(String speed) {
@@ -5089,30 +5175,31 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String minutesValue(int minutes) {
-    return '$minutes min';
+    return '$minutes λεπτά';
   }
 
   @override
-  String get chimeBeforeSleep => 'Chime before sleep';
+  String get chimeBeforeSleep => 'Ήχος ειδοποίησης πριν τον ύπνο';
 
   @override
   String get chimeBeforeSleepOnSubtitle =>
-      'Plays a gentle bell when the timer is about to end';
+      'Παίζει ένα απαλό κουδούνι όταν ο χρονοδιακόπτης πρόκειται να λήξει';
 
   @override
-  String get chimeBeforeSleepOffSubtitle => 'No sound warning before sleep';
+  String get chimeBeforeSleepOffSubtitle =>
+      'Καμία ηχητική προειδοποίηση πριν τον ύπνο';
 
   @override
-  String get windDownDuration => 'Wind-down duration';
+  String get windDownDuration => 'Διάρκεια τελικής φάσης';
 
   @override
   String windDownDurationSubtitle(int seconds) {
-    return 'Fade and chime start ${seconds}s before sleep';
+    return 'Η σταδιακή μείωση και ο ήχος ξεκινούν ${seconds}s πριν τον ύπνο';
   }
 
   @override
   String fadeVolumeOnSubtitleDynamic(int seconds) {
-    return 'Gradually lowers volume over the last ${seconds}s';
+    return 'Μειώνει σταδιακά την ένταση στα τελευταία ${seconds}s';
   }
 
   @override
@@ -5125,239 +5212,249 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get endOfChapterShort => 'End of chapter';
+  String get endOfChapterShort => 'Τέλος κεφαλαίου';
 
   @override
-  String get endOfChapterOnSubtitle => 'Stop at the end of the current chapter';
+  String get endOfChapterOnSubtitle =>
+      'Διακοπή στο τέλος του τρέχοντος κεφαλαίου';
 
   @override
-  String get endOfChapterOffSubtitle => 'Use a timed sleep timer';
+  String get endOfChapterOffSubtitle => 'Χρήση χρονοδιακόπτη ύπνου με διάρκεια';
 
   @override
-  String get showExplicitBadge => 'Show explicit badge';
+  String get showExplicitBadge => 'Εμφάνιση σήματος ακατάλληλου περιεχομένου';
 
   @override
   String get showExplicitBadgeOnSubtitle =>
-      'Explicit items show an \"E\" badge';
+      'Τα στοιχεία με ακατάλληλο περιεχόμενο δείχνουν σήμα «E»';
 
   @override
-  String get showExplicitBadgeOffSubtitle => 'Off - explicit badge hidden';
+  String get showExplicitBadgeOffSubtitle =>
+      'Ανενεργό - το σήμα είναι κρυμμένο';
 
   @override
-  String get showEbookBadge => 'Show ebook badge';
+  String get showEbookBadge => 'Εμφάνιση σήματος ηλεκτρονικού βιβλίου';
 
   @override
   String get showEbookBadgeOnSubtitle =>
-      'Books with an ebook show a book icon on the cover';
+      'Τα βιβλία με ηλεκτρονικό βιβλίο δείχνουν εικονίδιο βιβλίου στο εξώφυλλο';
 
   @override
-  String get showEbookBadgeOffSubtitle => 'Off - ebook badge hidden';
+  String get showEbookBadgeOffSubtitle =>
+      'Ανενεργό - το σήμα ηλεκτρονικού βιβλίου είναι κρυμμένο';
 
   @override
-  String get libraryFallback => 'Library';
+  String get libraryFallback => 'Βιβλιοθήκη';
 
   @override
-  String get preReleaseUpdatesInfoTitle => 'Pre-release Updates';
+  String get preReleaseUpdatesInfoTitle => 'Ενημερώσεις προ-έκδοσης';
 
   @override
   String get preReleaseUpdatesInfoContent =>
-      'When enabled, the update checker will also notify you about alpha and pre-release builds from GitHub. These may be less stable but include the latest features and fixes.';
+      'Όταν είναι ενεργό, ο έλεγχος ενημερώσεων θα σας ειδοποιεί και για εκδόσεις alpha και προ-εκδόσεις από το GitHub. Μπορεί να είναι λιγότερο σταθερές, αλλά περιλαμβάνουν τις πιο πρόσφατες λειτουργίες και διορθώσεις.';
 
   @override
-  String get includePreReleases => 'Include pre-releases';
+  String get includePreReleases => 'Συμπερίληψη προ-εκδόσεων';
 
   @override
   String get includePreReleasesOnSubtitle =>
-      'On - checking for alpha & pre-release builds';
+      'Ενεργό - έλεγχος για εκδόσεις alpha και προ-εκδόσεις';
 
   @override
-  String get includePreReleasesOffSubtitle => 'Off - stable releases only';
+  String get includePreReleasesOffSubtitle =>
+      'Ανενεργό - μόνο σταθερές εκδόσεις';
 
   @override
-  String get setTooltip => 'Set';
+  String get setTooltip => 'Ορισμός';
 
   @override
-  String get saveAbsorbBackup => 'Save Absorb backup';
+  String get saveAbsorbBackup => 'Αποθήκευση αντιγράφου ασφαλείας του Absorb';
 
   @override
-  String get checkForUpdate => 'Check for update';
+  String get checkForUpdate => 'Έλεγχος για ενημέρωση';
 
   @override
-  String get onLatestVersion => 'You\'re on the latest version';
+  String get onLatestVersion => 'Έχετε την τελευταία έκδοση';
 
   @override
-  String get updateAvailable => 'Update available';
+  String get updateAvailable => 'Διαθέσιμη ενημέρωση';
 
   @override
-  String get preReleaseAvailable => 'Pre-release available';
+  String get preReleaseAvailable => 'Διαθέσιμη προ-έκδοση';
 
   @override
   String updateDialogContent(String kind, String latest, String current) {
-    return 'A new $kind of Absorb is available: $latest\n\nYou are on $current.';
+    return 'Υπάρχει νέα $kind του Absorb: $latest\n\nΕίστε στην έκδοση $current.';
   }
 
   @override
-  String get updateKindPreRelease => 'pre-release';
+  String get updateKindPreRelease => 'προ-έκδοση';
 
   @override
-  String get updateKindVersion => 'version';
+  String get updateKindVersion => 'έκδοση';
 
   @override
-  String get downloadButton => 'Download';
+  String get downloadButton => 'Λήψη';
 
   @override
-  String get updateDownloading => 'Downloading update...';
+  String get updateDownloading => 'Λήψη ενημέρωσης...';
 
   @override
   String get updateInstallPermissionDenied =>
-      'Install permission denied. Enable \"Install unknown apps\" for Absorb in system settings.';
+      'Η άδεια εγκατάστασης απορρίφθηκε. Ενεργοποιήστε το «Εγκατάσταση άγνωστων εφαρμογών» για το Absorb στις ρυθμίσεις του συστήματος.';
 
   @override
-  String get updateOpeningInBrowser => 'In-app update failed, opening browser';
+  String get updateOpeningInBrowser =>
+      'Η ενημέρωση εντός εφαρμογής απέτυχε, άνοιγμα στο πρόγραμμα περιήγησης';
 
   @override
-  String get sendToEreader => 'Send to E-Reader';
+  String get sendToEreader => 'Αποστολή σε e-reader';
 
   @override
   String sendingToEreader(String device) {
-    return 'Sending to $device...';
+    return 'Αποστολή στη συσκευή $device...';
   }
 
   @override
   String sendToEreaderSuccess(String device) {
-    return 'Sent to $device';
+    return 'Στάλθηκε στη συσκευή $device';
   }
 
   @override
-  String get sendToEreaderFailed => 'Couldn\'t send the ebook';
+  String get sendToEreaderFailed =>
+      'Δεν ήταν δυνατή η αποστολή του ηλεκτρονικού βιβλίου';
 
   @override
-  String get pickEreaderDevice => 'Pick a device';
+  String get pickEreaderDevice => 'Επιλέξτε συσκευή';
 
   @override
   String get adminEmail => 'Email';
 
   @override
-  String get adminEmailSubtitle => 'SMTP and e-reader devices';
+  String get adminEmailSubtitle => 'SMTP και συσκευές e-reader';
 
   @override
   String get smtpSection => 'SMTP';
 
   @override
-  String get smtpSetupGuide => 'Setup guide';
+  String get smtpSetupGuide => 'Οδηγός ρύθμισης';
 
   @override
-  String get smtpHost => 'Host';
+  String get smtpHost => 'Διακομιστής';
 
   @override
-  String get smtpPort => 'Port';
+  String get smtpPort => 'Θύρα';
 
   @override
-  String get smtpSecure => 'Secure';
+  String get smtpSecure => 'Ασφαλής';
 
   @override
-  String get smtpRejectUnauthorized => 'Reject unauthorized TLS';
+  String get smtpRejectUnauthorized => 'Απόρριψη μη εξουσιοδοτημένου TLS';
 
   @override
-  String get smtpUser => 'Username';
+  String get smtpUser => 'Όνομα χρήστη';
 
   @override
-  String get smtpPass => 'Password';
+  String get smtpPass => 'Κωδικός πρόσβασης';
 
   @override
-  String get smtpFromAddress => 'From address';
+  String get smtpFromAddress => 'Διεύθυνση αποστολέα';
 
   @override
-  String get smtpTestAddress => 'Test address';
+  String get smtpTestAddress => 'Διεύθυνση δοκιμής';
 
   @override
-  String get smtpSendTest => 'Send test';
+  String get smtpSendTest => 'Αποστολή δοκιμής';
 
   @override
-  String get smtpSaveSettings => 'Save';
+  String get smtpSaveSettings => 'Αποθήκευση';
 
   @override
-  String get smtpSaved => 'Email settings saved';
+  String get smtpSaved => 'Οι ρυθμίσεις email αποθηκεύτηκαν';
 
   @override
-  String get smtpSaveFailed => 'Couldn\'t save email settings';
+  String get smtpSaveFailed =>
+      'Δεν ήταν δυνατή η αποθήκευση των ρυθμίσεων email';
 
   @override
-  String get smtpTestSent => 'Test email sent';
+  String get smtpTestSent => 'Το δοκιμαστικό email στάλθηκε';
 
   @override
-  String get smtpTestFailed => 'Test email failed';
+  String get smtpTestFailed => 'Το δοκιμαστικό email απέτυχε';
 
   @override
-  String get ereaderDevicesTitle => 'E-Reader devices';
+  String get ereaderDevicesTitle => 'Συσκευές e-reader';
 
   @override
-  String get ereaderDevicesEmpty => 'No devices yet. Add one below.';
+  String get ereaderDevicesEmpty =>
+      'Δεν υπάρχουν συσκευές ακόμη. Προσθέστε μία παρακάτω.';
 
   @override
-  String get addEreaderDevice => 'Add device';
+  String get addEreaderDevice => 'Προσθήκη συσκευής';
 
   @override
-  String get editEreaderDevice => 'Edit device';
+  String get editEreaderDevice => 'Επεξεργασία συσκευής';
 
   @override
-  String get deleteEreaderDevice => 'Delete';
+  String get deleteEreaderDevice => 'Διαγραφή';
 
   @override
-  String get ereaderDeviceName => 'Name';
+  String get ereaderDeviceName => 'Όνομα';
 
   @override
   String get ereaderDeviceEmail => 'Email';
 
   @override
-  String get ereaderAvailability => 'Who can use this device';
+  String get ereaderAvailability =>
+      'Ποιος μπορεί να χρησιμοποιεί αυτή τη συσκευή';
 
   @override
-  String get ereaderAvailAdminOrUp => 'Admins only';
+  String get ereaderAvailAdminOrUp => 'Μόνο διαχειριστές';
 
   @override
-  String get ereaderAvailUserOrUp => 'All users';
+  String get ereaderAvailUserOrUp => 'Όλοι οι χρήστες';
 
   @override
-  String get ereaderAvailGuestOrUp => 'Everyone';
+  String get ereaderAvailGuestOrUp => 'Όλοι';
 
   @override
-  String get ereaderAvailSpecificUsers => 'Specific users';
+  String get ereaderAvailSpecificUsers => 'Συγκεκριμένοι χρήστες';
 
   @override
   String ereaderSpecificUsersN(int count) {
-    return 'Specific users ($count)';
+    return 'Συγκεκριμένοι χρήστες ($count)';
   }
 
   @override
-  String get ereaderDevicesSaved => 'Devices saved';
+  String get ereaderDevicesSaved => 'Οι συσκευές αποθηκεύτηκαν';
 
   @override
-  String get ereaderDevicesSaveFailed => 'Couldn\'t save devices';
+  String get ereaderDevicesSaveFailed =>
+      'Δεν ήταν δυνατή η αποθήκευση των συσκευών';
 
   @override
   String libraryCountOne(int count) {
-    return '$count library';
+    return '$count βιβλιοθήκη';
   }
 
   @override
   String libraryCountOther(int count) {
-    return '$count libraries';
+    return '$count βιβλιοθήκες';
   }
 
   @override
   String serverVersionLabel(String version) {
-    return 'Server $version';
+    return 'Διακομιστής $version';
   }
 
   @override
   String appVersionServerSuffix(String version) {
-    return '  ·  Server $version';
+    return '  ·  Διακομιστής $version';
   }
 
   @override
   String backupDateFormat(int month, int day, int year) {
-    return '$month/$day/$year';
+    return '$day/$month/$year';
   }
 
   @override
@@ -5365,132 +5462,135 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get bookmarksSortedByPositionReversed =>
-      'Sorted by position (reversed)';
+      'Ταξινόμηση κατά θέση (αντίστροφη)';
 
   @override
   String bookmarksJumpShortContent(String title, String position) {
-    return '\"$title\" at $position';
+    return '«$title» στο $position';
   }
 
   @override
-  String get deleteBookmarkQuestion => 'Delete bookmark?';
+  String get deleteBookmarkQuestion => 'Διαγραφή σελιδοδείκτη;';
 
   @override
-  String get cardIconsOnlyChip => 'Icons only';
+  String get cardIconsOnlyChip => 'Μόνο εικονίδια';
 
   @override
-  String get cardMoreInGridChip => '\"More\" in grid';
+  String get cardMoreInGridChip => '«Περισσότερα» στο πλέγμα';
 
   @override
-  String get cardLayoutHidden => 'Hidden';
+  String get cardLayoutHidden => 'Κρυφό';
 
   @override
-  String get speed => 'Speed';
+  String get speed => 'Ταχύτητα';
 
   @override
-  String get desktopShortcutPlayPause => 'Play / pause';
+  String get desktopShortcutPlayPause => 'Αναπαραγωγή / παύση';
 
   @override
-  String get desktopShortcutRewind => 'Rewind';
+  String get desktopShortcutRewind => 'Επαναφορά πίσω';
 
   @override
-  String get desktopShortcutForward => 'Fast-forward';
+  String get desktopShortcutForward => 'Γρήγορη προώθηση';
 
   @override
-  String get desktopShortcutSlower => 'Decrease playback speed';
+  String get desktopShortcutSlower => 'Μείωση ταχύτητας αναπαραγωγής';
 
   @override
-  String get desktopShortcutFaster => 'Increase playback speed';
+  String get desktopShortcutFaster => 'Αύξηση ταχύτητας αναπαραγωγής';
 
   @override
-  String get desktopShortcutNormalSpeed => 'Reset playback speed';
+  String get desktopShortcutNormalSpeed => 'Επαναφορά ταχύτητας αναπαραγωγής';
 
   @override
-  String get desktopShortcutSearch => 'Open search';
+  String get desktopShortcutSearch => 'Άνοιγμα αναζήτησης';
 
   @override
-  String get desktopShortcutLibrary => 'Open library';
+  String get desktopShortcutLibrary => 'Άνοιγμα βιβλιοθήκης';
 
   @override
-  String get desktopShortcutNowPlaying => 'Open now playing';
+  String get desktopShortcutNowPlaying => 'Άνοιγμα τρέχουσας αναπαραγωγής';
 
   @override
-  String get desktopShortcutFullScreen => 'Full screen';
+  String get desktopShortcutFullScreen => 'Πλήρης οθόνη';
 
   @override
-  String get desktopShortcutClosePlayer => 'Close the full-screen player';
+  String get desktopShortcutClosePlayer =>
+      'Κλείσιμο του προγράμματος αναπαραγωγής πλήρους οθόνης';
 
   @override
-  String get desktopShortcutBack => 'Go back (close the top page or sheet)';
+  String get desktopShortcutBack =>
+      'Πίσω (κλείσιμο της επάνω σελίδας ή καρτέλας)';
 
   @override
-  String get desktopShortcutRefresh => 'Refresh the list on screen';
+  String get desktopShortcutRefresh => 'Ανανέωση της λίστας στην οθόνη';
 
   @override
-  String get desktopShortcutPreviousCard => 'Previous Absorbing card';
+  String get desktopShortcutPreviousCard => 'Προηγούμενη κάρτα Absorbing';
 
   @override
-  String get desktopShortcutNextCard => 'Next Absorbing card';
+  String get desktopShortcutNextCard => 'Επόμενη κάρτα Absorbing';
 
   @override
-  String get desktopShortcutContextMenu => 'Open the long-press menu';
+  String get desktopShortcutContextMenu =>
+      'Άνοιγμα του μενού παρατεταμένου πατήματος';
 
   @override
-  String get desktopShortcutMouseBack => 'Mouse back button';
+  String get desktopShortcutMouseBack => 'Κουμπί «Πίσω» του ποντικιού';
 
   @override
-  String get desktopShortcutRightClick => 'Right-click';
+  String get desktopShortcutRightClick => 'Δεξί κλικ';
 
   @override
-  String get desktopShortcutDragShelves => 'Drag shelves and cards sideways';
+  String get desktopShortcutDragShelves => 'Σύρετε ράφια και κάρτες οριζόντια';
 
   @override
-  String get desktopShortcutMouseDrag => 'Click and drag';
+  String get desktopShortcutMouseDrag => 'Κλικ και σύρσιμο';
 
   @override
-  String get details => 'Details';
+  String get details => 'Λεπτομέρειες';
 
   @override
-  String get episodeDetailsLabel => 'Episode Details';
+  String get episodeDetailsLabel => 'Λεπτομέρειες επεισοδίου';
 
   @override
-  String get bookDetailsLabel => 'Book Details';
+  String get bookDetailsLabel => 'Λεπτομέρειες βιβλίου';
 
   @override
   String get equalizerShort => 'EQ';
 
   @override
-  String get equalizerLabel => 'Equalizer';
+  String get equalizerLabel => 'Ισοσταθμιστής';
 
   @override
-  String get cast => 'Cast';
+  String get cast => 'Μετάδοση';
 
   @override
   String castingToDevice(String device) {
-    return 'Casting to $device';
+    return 'Μετάδοση στη συσκευή $device';
   }
 
   @override
   String castToDeviceNamed(String device) {
-    return 'Cast to $device';
+    return 'Μετάδοση στη συσκευή $device';
   }
 
   @override
-  String get historyShort => 'History';
+  String get historyShort => 'Ιστορικό';
 
   @override
   String atPosition(String position) {
-    return 'at $position';
+    return 'στο $position';
   }
 
   @override
   String chaptersChip(int count) {
-    return '$count chapters';
+    return '$count κεφάλαια';
   }
 
   @override
   String chapterNumber(int number) {
-    return 'Chapter $number';
+    return 'Κεφάλαιο $number';
   }
 
   @override
@@ -5499,66 +5599,66 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get fileInfoTitle => 'File info';
+  String get fileInfoTitle => 'Πληροφορίες αρχείων';
 
   @override
   String fileInfoFileCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count αρχεία',
+      one: '1 αρχείο',
     );
     return '$_temp0';
   }
 
   @override
-  String get fileInfoNone => 'This book has no file details.';
+  String get fileInfoNone => 'Αυτό το βιβλίο δεν έχει λεπτομέρειες αρχείων.';
 
   @override
-  String get fileInfoAudio => 'Audio';
+  String get fileInfoAudio => 'Ήχος';
 
   @override
-  String get fileInfoEbook => 'Ebook';
+  String get fileInfoEbook => 'Ηλεκτρονικό βιβλίο';
 
   @override
-  String get fileInfoOther => 'Other files';
+  String get fileInfoOther => 'Άλλα αρχεία';
 
   @override
   String get fileInfoBookOrbitNote =>
-      'BookOrbit doesn\'t report codec or bitrate.';
+      'Το BookOrbit δεν αναφέρει κωδικοποιητή ή ρυθμό bit.';
 
   @override
   String fileInfoChannels(int count) {
-    return '$count channels';
+    return '$count κανάλια';
   }
 
   @override
-  String get fileInfoCover => 'Cover';
+  String get fileInfoCover => 'Εξώφυλλο';
 
   @override
-  String get fileInfoMetadata => 'Metadata';
+  String get fileInfoMetadata => 'Μεταδεδομένα';
 
   @override
-  String get fileInfoSupplement => 'Extra';
+  String get fileInfoSupplement => 'Πρόσθετο';
 
   @override
-  String get fileInfoPathCopied => 'Path copied';
+  String get fileInfoPathCopied => 'Η διαδρομή αντιγράφηκε';
 
   @override
-  String get fileHealthAction => 'Check files';
+  String get fileHealthAction => 'Έλεγχος αρχείων';
 
   @override
-  String get fileHealthTitle => 'Check files';
+  String get fileHealthTitle => 'Έλεγχος αρχείων';
 
   @override
   String fileHealthAllFine(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'All $count files look fine',
-      one: 'The file looks fine',
-      zero: 'Nothing looks wrong',
+      other: 'Και τα $count αρχεία φαίνονται εντάξει',
+      one: 'Το αρχείο φαίνεται εντάξει',
+      zero: 'Δεν φαίνεται κάτι λάθος',
     );
     return '$_temp0';
   }
@@ -5568,120 +5668,120 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count problems found',
-      one: '1 problem found',
+      other: 'Βρέθηκαν $count προβλήματα',
+      one: 'Βρέθηκε 1 πρόβλημα',
     );
     return '$_temp0';
   }
 
   @override
   String get fileHealthReadOnlyNote =>
-      'This only reads what the server already reports. Nothing is changed.';
+      'Διαβάζονται μόνο όσα αναφέρει ήδη ο διακομιστής. Δεν αλλάζει τίποτα.';
 
   @override
   String get fileHealthLocalChecked =>
-      'Downloaded files on this device were checked too.';
+      'Ελέγχθηκαν και τα ληφθέντα αρχεία σε αυτή τη συσκευή.';
 
   @override
-  String get fileHealthItemMissing => 'Book folder missing';
+  String get fileHealthItemMissing => 'Λείπει ο φάκελος του βιβλίου';
 
   @override
   String get fileHealthItemMissingInfo =>
-      'The server can\'t find this book\'s folder any more. It may have been moved, renamed or deleted, or its drive is offline. A library scan on the server can find it again.';
+      'Ο διακομιστής δεν βρίσκει πια τον φάκελο αυτού του βιβλίου. Ίσως μετακινήθηκε, μετονομάστηκε ή διαγράφηκε, ή ο δίσκος του είναι εκτός σύνδεσης. Μια σάρωση βιβλιοθήκης στον διακομιστή μπορεί να τον βρει ξανά.';
 
   @override
-  String get fileHealthItemInvalid => 'Book marked invalid';
+  String get fileHealthItemInvalid => 'Το βιβλίο επισημάνθηκε ως μη έγκυρο';
 
   @override
   String get fileHealthItemInvalidInfo =>
-      'The server found no usable audio or ebook files for this book.';
+      'Ο διακομιστής δεν βρήκε αρχεία ήχου ή ηλεκτρονικού βιβλίου που να μπορούν να χρησιμοποιηθούν για αυτό το βιβλίο.';
 
   @override
-  String get fileHealthInvalidFiles => 'Unreadable files';
+  String get fileHealthInvalidFiles => 'Μη αναγνώσιμα αρχεία';
 
   @override
   String get fileHealthInvalidFilesInfo =>
-      'The server couldn\'t read these files. They may be damaged or in a format it doesn\'t support, and playback can stop or skip at them.';
+      'Ο διακομιστής δεν μπόρεσε να διαβάσει αυτά τα αρχεία. Μπορεί να είναι κατεστραμμένα ή σε μορφή που δεν υποστηρίζει, και η αναπαραγωγή μπορεί να σταματήσει ή να τα προσπεράσει.';
 
   @override
-  String get fileHealthEmptyFiles => 'Files with no length';
+  String get fileHealthEmptyFiles => 'Αρχεία χωρίς διάρκεια';
 
   @override
   String get fileHealthEmptyFilesInfo =>
-      'These files report a length of zero, so there\'s nothing to play in them. They\'re often empty or cut off.';
+      'Αυτά τα αρχεία αναφέρουν μηδενική διάρκεια, επομένως δεν υπάρχει τίποτα να αναπαραχθεί. Συχνά είναι κενά ή κομμένα.';
 
   @override
-  String get fileHealthTrackGaps => 'Gaps between files';
+  String get fileHealthTrackGaps => 'Κενά μεταξύ αρχείων';
 
   @override
   String get fileHealthTrackGapsInfo =>
-      'The book\'s timeline jumps ahead between these files, leaving a stretch where nothing plays.';
+      'Η χρονολογική σειρά του βιβλίου προχωρά μπροστά ανάμεσα σε αυτά τα αρχεία, αφήνοντας ένα τμήμα όπου δεν παίζει τίποτα.';
 
   @override
-  String get fileHealthTrackOverlaps => 'Overlapping files';
+  String get fileHealthTrackOverlaps => 'Αρχεία που επικαλύπτονται';
 
   @override
   String get fileHealthTrackOverlapsInfo =>
-      'These files overlap in the book\'s timeline, so part of one can be skipped or the position can jump.';
+      'Αυτά τα αρχεία επικαλύπτονται στη χρονολογική σειρά του βιβλίου, οπότε ένα τμήμα μπορεί να παραλειφθεί ή η θέση να μεταπηδήσει.';
 
   @override
-  String get fileHealthDurationMismatch => 'Length doesn\'t add up';
+  String get fileHealthDurationMismatch => 'Η διάρκεια δεν συμφωνεί';
 
   @override
   String fileHealthDurationMismatchInfo(String actual, String expected) {
-    return 'The files add up to $actual, but the book says it\'s $expected long. Progress and chapters can be off. A rescan on the server usually fixes this.';
+    return 'Τα αρχεία αθροίζουν σε $actual, αλλά το βιβλίο δηλώνει διάρκεια $expected. Η πρόοδος και τα κεφάλαια μπορεί να είναι λανθασμένα. Μια νέα σάρωση στον διακομιστή συνήθως το διορθώνει.';
   }
 
   @override
-  String get fileHealthLowBitrate => 'Low quality audio';
+  String get fileHealthLowBitrate => 'Ήχος χαμηλής ποιότητας';
 
   @override
   String get fileHealthLowBitrateInfo =>
-      'These files are encoded below 32 kbps and may sound muffled.';
+      'Αυτά τα αρχεία είναι κωδικοποιημένα κάτω από 32 kbps και μπορεί να ακούγονται πνιχτά.';
 
   @override
-  String get fileHealthMixedSampleRates => 'Mixed sample rates';
+  String get fileHealthMixedSampleRates => 'Ανάμεικτοι ρυθμοί δειγματοληψίας';
 
   @override
   String get fileHealthMixedSampleRatesInfo =>
-      'The files were recorded at different sample rates. Most players cope, but some can click or change speed where one file ends and the next starts.';
+      'Τα αρχεία ηχογραφήθηκαν με διαφορετικούς ρυθμούς δειγματοληψίας. Τα περισσότερα προγράμματα αναπαραγωγής το αντιμετωπίζουν, αλλά ορισμένα μπορεί να κάνουν κλικ ή να αλλάξουν ταχύτητα εκεί που τελειώνει ένα αρχείο και ξεκινά το επόμενο.';
 
   @override
-  String get fileHealthMixedChannels => 'Mono and stereo mixed';
+  String get fileHealthMixedChannels => 'Ανάμεικτα μονοφωνικά και στερεοφωνικά';
 
   @override
   String get fileHealthMixedChannelsInfo =>
-      'Some files have a different number of channels than others, so the sound can change between files.';
+      'Ορισμένα αρχεία έχουν διαφορετικό αριθμό καναλιών από άλλα, οπότε ο ήχος μπορεί να αλλάζει μεταξύ των αρχείων.';
 
   @override
-  String get fileHealthChaptersPastEnd => 'Chapters past the end';
+  String get fileHealthChaptersPastEnd => 'Κεφάλαια μετά το τέλος';
 
   @override
   String get fileHealthChaptersPastEndInfo =>
-      'These chapters start or end after the audio finishes, so jumping to them can go nowhere.';
+      'Αυτά τα κεφάλαια ξεκινούν ή τελειώνουν μετά το τέλος του ήχου, οπότε η μετάβαση σε αυτά μπορεί να μην οδηγεί πουθενά.';
 
   @override
-  String get fileHealthLocalMissing => 'Downloaded files missing';
+  String get fileHealthLocalMissing => 'Λείπουν ληφθέντα αρχεία';
 
   @override
   String get fileHealthLocalMissingInfo =>
-      'These downloaded files are gone from this device. Playing offline will fail where they should be.';
+      'Αυτά τα ληφθέντα αρχεία δεν υπάρχουν πια σε αυτή τη συσκευή. Η αναπαραγωγή εκτός σύνδεσης θα αποτύχει εκεί που θα έπρεπε να βρίσκονται.';
 
   @override
-  String get fileHealthLocalSizeMismatch => 'Downloaded files differ';
+  String get fileHealthLocalSizeMismatch => 'Τα ληφθέντα αρχεία διαφέρουν';
 
   @override
   String get fileHealthLocalSizeMismatchInfo =>
-      'These downloaded files aren\'t the same size as the server\'s copies, so they may be incomplete or damaged.';
+      'Αυτά τα ληφθέντα αρχεία δεν έχουν το ίδιο μέγεθος με τα αντίγραφα του διακομιστή, οπότε μπορεί να είναι ελλιπή ή κατεστραμμένα.';
 
   @override
   String fileHealthStartsAt(String time) {
-    return 'starts at $time';
+    return 'ξεκινά στο $time';
   }
 
   @override
   String fileHealthSizeHere(String local, String server) {
-    return '$local here, $server on the server';
+    return '$local εδώ, $server στον διακομιστή';
   }
 
   @override
@@ -5690,129 +5790,130 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get fileHealthMono => 'Mono';
+  String get fileHealthMono => 'Μονοφωνικό';
 
   @override
-  String get fileHealthStereo => 'Stereo';
+  String get fileHealthStereo => 'Στερεοφωνικό';
 
   @override
-  String get fileHealthRedownload => 'Re-download this book';
+  String get fileHealthRedownload => 'Νέα λήψη αυτού του βιβλίου';
 
   @override
-  String get fileHealthRedownloadQuestion => 'Re-download this book?';
+  String get fileHealthRedownloadQuestion => 'Νέα λήψη αυτού του βιβλίου;';
 
   @override
   String get fileHealthRedownloadInfo =>
-      'The copy on this device is removed and downloaded again from the server. If the book is playing, it stops. Nothing on the server changes.';
+      'Το αντίγραφο σε αυτή τη συσκευή αφαιρείται και λαμβάνεται ξανά από τον διακομιστή. Αν το βιβλίο παίζει, θα σταματήσει. Στον διακομιστή δεν αλλάζει τίποτα.';
 
   @override
   String get fileHealthNotAvailableOffline =>
-      'Connect to your server to re-download';
+      'Συνδεθείτε στον διακομιστή σας για νέα λήψη';
 
   @override
   String get resetMayNotHaveSynced =>
-      'Reset may not have synced - check your server';
+      'Η επαναφορά ίσως δεν συγχρονίστηκε - ελέγξτε τον διακομιστή σας';
 
   @override
   String failedToDownloadEbook(int code) {
-    return 'Failed to download ebook ($code)';
+    return 'Αποτυχία λήψης ηλεκτρονικού βιβλίου ($code)';
   }
 
   @override
   String get serverReturnedErrorPage =>
-      'Server returned an error page instead of the ebook file';
+      'Ο διακομιστής επέστρεψε σελίδα σφάλματος αντί για το αρχείο του ηλεκτρονικού βιβλίου';
 
   @override
   String ebookSaved(String filename) {
-    return 'Saved: $filename';
+    return 'Αποθηκεύτηκε: $filename';
   }
 
   @override
   String errorSavingEbook(String error) {
-    return 'Error saving ebook: $error';
+    return 'Σφάλμα αποθήκευσης ηλεκτρονικού βιβλίου: $error';
   }
 
   @override
   String failedToSaveError(String error) {
-    return 'Failed to save: $error';
+    return 'Αποτυχία αποθήκευσης: $error';
   }
 
   @override
-  String get adminBackupsLabel => 'Backups';
+  String get adminBackupsLabel => 'Αντίγραφα ασφαλείας';
 
   @override
-  String get adminListeningNow => 'Listening Now';
+  String get adminListeningNow => 'Ακούνε τώρα';
 
   @override
-  String get adminLibraries => 'Libraries';
+  String get adminLibraries => 'Βιβλιοθήκες';
 
   @override
-  String get adminLibraryShows => 'shows';
+  String get adminLibraryShows => 'εκπομπές';
 
   @override
-  String get adminLibraryBooks => 'books';
+  String get adminLibraryBooks => 'βιβλία';
 
   @override
-  String get adminLibraryFolders => 'folders';
+  String get adminLibraryFolders => 'φάκελοι';
 
   @override
-  String get adminLibrarySize => 'size';
+  String get adminLibrarySize => 'μέγεθος';
 
   @override
-  String get adminLibraryDuration => 'duration';
+  String get adminLibraryDuration => 'διάρκεια';
 
   @override
   String adminLibraryIssues(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count missing or invalid items',
-      one: '1 missing or invalid item',
+      other: '$count στοιχεία που λείπουν ή δεν είναι έγκυρα',
+      one: '1 στοιχείο που λείπει ή δεν είναι έγκυρο',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminLibraryReview => 'Review';
+  String get adminLibraryReview => 'Έλεγχος';
 
   @override
-  String get adminMissingTitle => 'Missing Items';
+  String get adminMissingTitle => 'Στοιχεία που λείπουν';
 
   @override
   String adminMissingSubtitle(String library) {
-    return 'Entries in $library whose files are missing or unreadable';
+    return 'Εγγραφές στη βιβλιοθήκη $library των οποίων τα αρχεία λείπουν ή δεν διαβάζονται';
   }
 
   @override
-  String get adminMissingNone => 'No missing or invalid items';
+  String get adminMissingNone =>
+      'Δεν υπάρχουν στοιχεία που λείπουν ή δεν είναι έγκυρα';
 
   @override
-  String get adminMissingBadge => 'Missing';
+  String get adminMissingBadge => 'Λείπει';
 
   @override
-  String get adminInvalidBadge => 'Invalid';
+  String get adminInvalidBadge => 'Μη έγκυρο';
 
   @override
-  String get adminMissingDeleteTitle => 'Remove entry';
+  String get adminMissingDeleteTitle => 'Αφαίρεση εγγραφής';
 
   @override
   String adminMissingDeleteOneContent(String title) {
-    return 'Remove \"$title\" from Audiobookshelf?';
+    return 'Αφαίρεση του «$title» από το Audiobookshelf;';
   }
 
   @override
   String adminMissingDeleteManyContent(int count) {
-    return 'Remove $count entries from Audiobookshelf?';
+    return 'Αφαίρεση $count εγγραφών από το Audiobookshelf;';
   }
 
   @override
   String adminMissingDeleteCount(int count) {
-    return 'Delete $count';
+    return 'Διαγραφή $count';
   }
 
   @override
   String adminMissingRemovedOne(String title) {
-    return 'Removed $title';
+    return 'Αφαιρέθηκε το $title';
   }
 
   @override
@@ -5820,719 +5921,730 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Removed $count entries',
-      one: 'Removed 1 entry',
+      other: 'Αφαιρέθηκαν $count εγγραφές',
+      one: 'Αφαιρέθηκε 1 εγγραφή',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminMissingDeleteFailed => 'Failed to delete entry';
+  String get adminMissingDeleteFailed => 'Αποτυχία διαγραφής εγγραφής';
 
   @override
-  String get adminMatchAction => 'Match';
+  String get adminMatchAction => 'Αντιστοίχιση';
 
   @override
   String adminMatchingStarted(String name) {
-    return 'Matching started for $name';
+    return 'Η αντιστοίχιση ξεκίνησε για $name';
   }
 
   @override
-  String get adminMatchFailed => 'Failed';
+  String get adminMatchFailed => 'Απέτυχε';
 
   @override
   String adminScanFailed(String name) {
-    return 'Failed to scan $name';
+    return 'Αποτυχία σάρωσης του $name';
   }
 
   @override
-  String get adminPurgeCacheFailed => 'Failed';
+  String get adminPurgeCacheFailed => 'Απέτυχε';
 
   @override
   String get adminUsersRootBadge => 'root';
 
   @override
-  String get adminUsersAdminBadge => 'admin';
+  String get adminUsersAdminBadge => 'διαχειριστής';
 
   @override
-  String get adminUsersDisabledBadge => 'disabled';
+  String get adminUsersDisabledBadge => 'απενεργοποιημένος';
 
   @override
-  String get adminUsersEditUserTooltip => 'Edit user';
+  String get adminUsersEditUserTooltip => 'Επεξεργασία χρήστη';
 
   @override
-  String get adminUsersOnlineNow => 'Online now';
+  String get adminUsersOnlineNow => 'Συνδεδεμένος τώρα';
 
   @override
   String adminUsersLastSeen(String time) {
-    return 'Last seen $time';
+    return 'Τελευταία δραστηριότητα $time';
   }
 
   @override
-  String get adminUsersNever => 'Never';
+  String get adminUsersNever => 'Ποτέ';
 
   @override
-  String get adminUsersTotal => 'Total';
+  String get adminUsersTotal => 'Σύνολο';
 
   @override
-  String get adminUsersNoReadingActivity => 'No reading activity';
+  String get adminUsersNoReadingActivity => 'Καμία δραστηριότητα ανάγνωσης';
 
   @override
-  String get adminUsersLoadingDots => 'Loading...';
+  String get adminUsersLoadingDots => 'Φόρτωση...';
 
   @override
-  String get adminUsersLoadMoreSessions => 'Load more sessions';
+  String get adminUsersLoadMoreSessions => 'Φόρτωση περισσότερων συνεδριών';
 
   @override
-  String get adminUsersNoRecentSessions => 'No recent sessions';
+  String get adminUsersNoRecentSessions => 'Δεν υπάρχουν πρόσφατες συνεδρίες';
 
   @override
-  String get adminUsersLibraryProgress => 'Library Progress';
+  String get adminUsersLibraryProgress => 'Πρόοδος βιβλιοθήκης';
 
   @override
   String adminUsersLoadMoreRemaining(int count) {
-    return 'Load More ($count remaining)';
+    return 'Φόρτωση περισσότερων (απομένουν $count)';
   }
 
   @override
   String adminUsersMonthsAgo(int count) {
-    return '${count}mo ago';
+    return 'πριν από $count μ.';
   }
 
   @override
-  String get adminUsersNewUser => 'New User';
+  String get adminUsersNewUser => 'Νέος χρήστης';
 
   @override
-  String get adminUsersEditUser => 'Edit User';
+  String get adminUsersEditUser => 'Επεξεργασία χρήστη';
 
   @override
-  String get adminUsersUsername => 'Username';
+  String get adminUsersUsername => 'Όνομα χρήστη';
 
   @override
-  String get adminUsersEnterUsername => 'Enter username';
+  String get adminUsersEnterUsername => 'Εισαγάγετε όνομα χρήστη';
 
   @override
-  String get adminUsersPassword => 'Password';
+  String get adminUsersPassword => 'Κωδικός πρόσβασης';
 
   @override
-  String get adminUsersNewPassword => 'New Password';
+  String get adminUsersNewPassword => 'Νέος κωδικός πρόσβασης';
 
   @override
-  String get adminUsersEnterPassword => 'Enter password';
+  String get adminUsersEnterPassword => 'Εισαγάγετε κωδικό πρόσβασης';
 
   @override
-  String get adminUsersLeaveBlankToKeep => 'Leave blank to keep current';
+  String get adminUsersLeaveBlankToKeep =>
+      'Αφήστε κενό για να διατηρηθεί ο τρέχων';
 
   @override
-  String get adminUsersAccountType => 'Account Type';
+  String get adminUsersAccountType => 'Τύπος λογαριασμού';
 
   @override
-  String get adminUsersTypeGuest => 'Guest';
+  String get adminUsersTypeGuest => 'Επισκέπτης';
 
   @override
-  String get adminUsersTypeUser => 'User';
+  String get adminUsersTypeUser => 'Χρήστης';
 
   @override
-  String get adminUsersTypeAdmin => 'Admin';
+  String get adminUsersTypeAdmin => 'Διαχειριστής';
 
   @override
-  String get adminUsersStatus => 'Status';
+  String get adminUsersStatus => 'Κατάσταση';
 
   @override
-  String get adminUsersAccountActive => 'Account Active';
+  String get adminUsersAccountActive => 'Ενεργός λογαριασμός';
 
   @override
-  String get adminUsersAccountActiveSub => 'Disabled accounts cannot log in';
+  String get adminUsersAccountActiveSub =>
+      'Οι απενεργοποιημένοι λογαριασμοί δεν μπορούν να συνδεθούν';
 
   @override
-  String get adminUsersLocked => 'Locked';
+  String get adminUsersLocked => 'Κλειδωμένος';
 
   @override
-  String get adminUsersLockedSub => 'Prevents password changes';
+  String get adminUsersLockedSub => 'Αποτρέπει την αλλαγή κωδικού πρόσβασης';
 
   @override
-  String get adminUsersPermissions => 'Permissions';
+  String get adminUsersPermissions => 'Δικαιώματα';
 
   @override
-  String get adminUsersPermDownload => 'Download';
+  String get adminUsersPermDownload => 'Λήψη';
 
   @override
-  String get adminUsersPermUpdate => 'Update';
+  String get adminUsersPermUpdate => 'Ενημέρωση';
 
   @override
-  String get adminUsersPermUpdateSub => 'Edit metadata and library items';
+  String get adminUsersPermUpdateSub =>
+      'Επεξεργασία μεταδεδομένων και στοιχείων βιβλιοθήκης';
 
   @override
-  String get adminUsersPermDelete => 'Delete';
+  String get adminUsersPermDelete => 'Διαγραφή';
 
   @override
-  String get adminUsersPermUpload => 'Upload';
+  String get adminUsersPermUpload => 'Μεταφόρτωση';
 
   @override
-  String get adminUsersPermExplicit => 'Explicit Content';
+  String get adminUsersPermExplicit => 'Περιεχόμενο για ενήλικες';
 
   @override
-  String get adminUsersLibraryAccess => 'Library Access';
+  String get adminUsersLibraryAccess => 'Πρόσβαση σε βιβλιοθήκες';
 
   @override
-  String get adminUsersAccessAllLibraries => 'Access All Libraries';
+  String get adminUsersAccessAllLibraries => 'Πρόσβαση σε όλες τις βιβλιοθήκες';
 
   @override
-  String get adminUsersCreateUser => 'Create User';
+  String get adminUsersCreateUser => 'Δημιουργία χρήστη';
 
   @override
-  String get adminUsersSaveChanges => 'Save Changes';
+  String get adminUsersSaveChanges => 'Αποθήκευση αλλαγών';
 
   @override
-  String get adminUsersUsernameRequired => 'Username is required';
+  String get adminUsersUsernameRequired => 'Το όνομα χρήστη είναι υποχρεωτικό';
 
   @override
-  String get adminUsersPasswordRequired => 'Password is required';
+  String get adminUsersPasswordRequired =>
+      'Ο κωδικός πρόσβασης είναι υποχρεωτικός';
 
   @override
-  String get adminUsersUserCreated => 'User created';
+  String get adminUsersUserCreated => 'Ο χρήστης δημιουργήθηκε';
 
   @override
-  String get adminUsersUserUpdated => 'User updated';
+  String get adminUsersUserUpdated => 'Ο χρήστης ενημερώθηκε';
 
   @override
-  String get adminUsersFailedCreate => 'Failed to create user';
+  String get adminUsersFailedCreate => 'Αποτυχία δημιουργίας χρήστη';
 
   @override
-  String get adminUsersFailedUpdate => 'Failed to update user';
+  String get adminUsersFailedUpdate => 'Αποτυχία ενημέρωσης χρήστη';
 
   @override
-  String get adminUsersThisUser => 'this user';
+  String get adminUsersThisUser => 'αυτόν τον χρήστη';
 
   @override
-  String get adminUsersDeleteUserTitle => 'Delete User?';
+  String get adminUsersDeleteUserTitle => 'Διαγραφή χρήστη;';
 
   @override
   String adminUsersDeleteUserContent(String name) {
-    return 'Permanently delete $name?';
+    return 'Οριστική διαγραφή του $name;';
   }
 
   @override
   String adminUsersUserDeleted(String name) {
-    return '$name deleted';
+    return 'Ο χρήστης $name διαγράφηκε';
   }
 
   @override
-  String get adminUsersFailedDelete => 'Failed to delete user';
+  String get adminUsersFailedDelete => 'Αποτυχία διαγραφής χρήστη';
 
   @override
-  String get adminUsersUnlinkOpenId => 'Unlink OpenID';
+  String get adminUsersUnlinkOpenId => 'Αποσύνδεση OpenID';
 
   @override
-  String get adminUsersUnlinkOpenIdTitle => 'Unlink OpenID?';
+  String get adminUsersUnlinkOpenIdTitle => 'Αποσύνδεση OpenID;';
 
   @override
   String adminUsersUnlinkOpenIdContent(String name) {
-    return 'Remove the OpenID connection for $name? They\'ll need to sign in with OpenID again to re-link.';
+    return 'Αφαίρεση της σύνδεσης OpenID για τον χρήστη $name; Θα χρειαστεί να συνδεθεί ξανά με OpenID για να γίνει εκ νέου σύνδεση.';
   }
 
   @override
-  String get adminUsersOpenIdUnlinked => 'OpenID unlinked';
+  String get adminUsersOpenIdUnlinked => 'Το OpenID αποσυνδέθηκε';
 
   @override
-  String get adminUsersFailedUnlinkOpenId => 'Failed to unlink OpenID';
+  String get adminUsersFailedUnlinkOpenId => 'Αποτυχία αποσύνδεσης OpenID';
 
   @override
   String adminUsersByAuthor(String author) {
-    return 'by $author';
+    return 'από $author';
   }
 
   @override
-  String get adminUsersListened => 'Listened';
+  String get adminUsersListened => 'Ακροάθηκε';
 
   @override
-  String get adminUsersStartedAtPosition => 'Started at position';
+  String get adminUsersStartedAtPosition => 'Ξεκίνησε στη θέση';
 
   @override
-  String get adminUsersEndedAtPosition => 'Ended at position';
+  String get adminUsersEndedAtPosition => 'Τελείωσε στη θέση';
 
   @override
-  String get adminUsersTotalDuration => 'Total duration';
+  String get adminUsersTotalDuration => 'Συνολική διάρκεια';
 
   @override
-  String get adminUsersStarted => 'Started';
+  String get adminUsersStarted => 'Ξεκίνησε';
 
   @override
-  String get adminUsersUpdated => 'Updated';
+  String get adminUsersUpdated => 'Ενημερώθηκε';
 
   @override
-  String get adminUsersClient => 'Client';
+  String get adminUsersClient => 'Πελάτης';
 
   @override
-  String get adminUsersDevice => 'Device';
+  String get adminUsersDevice => 'Συσκευή';
 
   @override
-  String get adminUsersOs => 'OS';
+  String get adminUsersOs => 'Λειτουργικό σύστημα';
 
   @override
-  String get adminUsersPlayMethod => 'Play method';
+  String get adminUsersPlayMethod => 'Μέθοδος αναπαραγωγής';
 
   @override
-  String get adminUsersPlayDirect => 'Direct play';
+  String get adminUsersPlayDirect => 'Άμεση αναπαραγωγή';
 
   @override
-  String get adminUsersPlayDirectStream => 'Direct stream';
+  String get adminUsersPlayDirectStream => 'Άμεση ροή';
 
   @override
-  String get adminUsersPlayTranscode => 'Transcode';
+  String get adminUsersPlayTranscode => 'Μετακωδικοποίηση';
 
   @override
-  String get adminUsersPlayLocal => 'Local';
+  String get adminUsersPlayLocal => 'Τοπική';
 
   @override
-  String get adminPodcastsCheckNewEpisodesTitle => 'Check for New Episodes';
+  String get adminPodcastsCheckNewEpisodesTitle => 'Έλεγχος για νέα επεισόδια';
 
   @override
   String get adminPodcastsCheckNewEpisodesContent =>
-      'This will check RSS feeds for all podcasts and download any new episodes found (if auto-download is enabled).';
+      'Θα γίνει έλεγχος των ροών RSS όλων των podcast και λήψη των νέων επεισοδίων που θα βρεθούν (αν είναι ενεργή η αυτόματη λήψη).';
 
   @override
   String get adminPodcastsCheckNewEpisodesSubtitle =>
-      'Scan RSS feed and download new episodes';
+      'Σάρωση ροής RSS και λήψη νέων επεισοδίων';
 
   @override
-  String get adminPodcastsCheck => 'Check';
+  String get adminPodcastsCheck => 'Έλεγχος';
 
   @override
-  String get adminPodcastsCheckingForNew => 'Checking for new episodes…';
+  String get adminPodcastsCheckingForNew => 'Έλεγχος για νέα επεισόδια…';
 
   @override
-  String get adminPodcastsCheckingForNewDots => 'Checking for new episodes...';
+  String get adminPodcastsCheckingForNewDots => 'Έλεγχος για νέα επεισόδια...';
 
   @override
-  String get adminPodcastsFailedCheckEpisodes => 'Failed to check episodes';
+  String get adminPodcastsFailedCheckEpisodes => 'Αποτυχία ελέγχου επεισοδίων';
 
   @override
-  String get adminPodcastsCheckFeedsTooltip => 'Check feeds for new episodes';
+  String get adminPodcastsCheckFeedsTooltip => 'Έλεγχος ροών για νέα επεισόδια';
 
   @override
-  String get adminPodcastsNoPodcastsYet => 'No podcasts yet';
+  String get adminPodcastsNoPodcastsYet => 'Δεν υπάρχουν podcast ακόμη';
 
   @override
-  String get adminPodcastsTapPlusHint => 'Tap + to search and add shows';
+  String get adminPodcastsTapPlusHint =>
+      'Πατήστε + για αναζήτηση και προσθήκη εκπομπών';
 
   @override
   String adminPodcastsEpisodesCount(int count) {
-    return '$count episodes';
+    return '$count επεισόδια';
   }
 
   @override
-  String get adminPodcastsAddPodcast => 'Add Podcast';
+  String get adminPodcastsAddPodcast => 'Προσθήκη podcast';
 
   @override
-  String get adminPodcastsCouldNotFindFeed => 'Could not find podcast feed';
+  String get adminPodcastsCouldNotFindFeed => 'Δεν βρέθηκε η ροή του podcast';
 
   @override
-  String get adminPodcastsSearchHint => 'Search for podcasts…';
+  String get adminPodcastsSearchHint => 'Αναζήτηση podcast…';
 
   @override
-  String get adminPodcastsSearchItunesHint => 'Search iTunes...';
+  String get adminPodcastsSearchItunesHint => 'Αναζήτηση στο iTunes...';
 
   @override
   String adminPodcastsSearchItunesFor(String query) {
-    return 'Search iTunes for \"$query\"';
+    return 'Αναζήτηση στο iTunes για «$query»';
   }
 
   @override
-  String get adminPodcastsNoPodcastsFound => 'No podcasts found';
+  String get adminPodcastsNoPodcastsFound => 'Δεν βρέθηκαν podcast';
 
   @override
-  String get adminPodcastsRelToday => 'Today';
+  String get adminPodcastsRelToday => 'Σήμερα';
 
   @override
   String adminPodcastsWeeksAgo(int count) {
-    return '${count}w ago';
+    return 'πριν από $count εβδ.';
   }
 
   @override
   String adminPodcastsMonthsAgo(int count) {
-    return '${count}mo ago';
+    return 'πριν από $count μ.';
   }
 
   @override
   String adminPodcastsYearsAgo(int count) {
-    return '${count}y ago';
+    return 'πριν από $count έτ.';
   }
 
   @override
   String adminPodcastsUpdated(String when) {
-    return 'Updated $when';
+    return 'Ενημερώθηκε $when';
   }
 
   @override
-  String get adminPodcastsGenreAll => 'All';
+  String get adminPodcastsGenreAll => 'Όλα';
 
   @override
-  String get adminPodcastsGenreArts => 'Arts';
+  String get adminPodcastsGenreArts => 'Τέχνες';
 
   @override
-  String get adminPodcastsGenreComedy => 'Comedy';
+  String get adminPodcastsGenreComedy => 'Κωμωδία';
 
   @override
-  String get adminPodcastsGenreEducation => 'Education';
+  String get adminPodcastsGenreEducation => 'Εκπαίδευση';
 
   @override
-  String get adminPodcastsGenreTvFilm => 'TV & Film';
+  String get adminPodcastsGenreTvFilm => 'Τηλεόραση και ταινίες';
 
   @override
-  String get adminPodcastsGenreMusic => 'Music';
+  String get adminPodcastsGenreMusic => 'Μουσική';
 
   @override
-  String get adminPodcastsGenreNews => 'News';
+  String get adminPodcastsGenreNews => 'Ειδήσεις';
 
   @override
-  String get adminPodcastsGenreReligion => 'Religion';
+  String get adminPodcastsGenreReligion => 'Θρησκεία';
 
   @override
-  String get adminPodcastsGenreScience => 'Science';
+  String get adminPodcastsGenreScience => 'Επιστήμη';
 
   @override
-  String get adminPodcastsGenreSports => 'Sports';
+  String get adminPodcastsGenreSports => 'Αθλητισμός';
 
   @override
-  String get adminPodcastsGenreTechnology => 'Technology';
+  String get adminPodcastsGenreTechnology => 'Τεχνολογία';
 
   @override
-  String get adminPodcastsGenreBusiness => 'Business';
+  String get adminPodcastsGenreBusiness => 'Επιχειρήσεις';
 
   @override
-  String get adminPodcastsGenreFiction => 'Fiction';
+  String get adminPodcastsGenreFiction => 'Μυθοπλασία';
 
   @override
-  String get adminPodcastsGenreSocietyCulture => 'Society & Culture';
+  String get adminPodcastsGenreSocietyCulture => 'Κοινωνία και πολιτισμός';
 
   @override
-  String get adminPodcastsGenreHealthFitness => 'Health & Fitness';
+  String get adminPodcastsGenreHealthFitness => 'Υγεία και φυσική κατάσταση';
 
   @override
-  String get adminPodcastsGenreTrueCrime => 'True Crime';
+  String get adminPodcastsGenreTrueCrime => 'Αληθινό έγκλημα';
 
   @override
-  String get adminPodcastsGenreHistory => 'History';
+  String get adminPodcastsGenreHistory => 'Ιστορία';
 
   @override
-  String get adminPodcastsGenreKidsFamily => 'Kids & Family';
+  String get adminPodcastsGenreKidsFamily => 'Παιδιά και οικογένεια';
 
   @override
   String get adminPodcastsPodcastFallback => 'Podcast';
 
   @override
-  String get adminPodcastsEpisodeFallback => 'Episode';
+  String get adminPodcastsEpisodeFallback => 'Επεισόδιο';
 
   @override
-  String get adminPodcastsNoFeedFound => 'No feed URL found';
+  String get adminPodcastsNoFeedFound => 'Δεν βρέθηκε URL ροής';
 
   @override
-  String get adminPodcastsNoFeedAvailable => 'No feed URL available';
+  String get adminPodcastsNoFeedAvailable => 'Δεν υπάρχει διαθέσιμο URL ροής';
 
   @override
   String adminPodcastsAddedToLibrary(String title) {
-    return '$title added to library';
+    return 'Το $title προστέθηκε στη βιβλιοθήκη';
   }
 
   @override
   String adminPodcastsFailedToAdd(String title) {
-    return 'Failed to add $title';
+    return 'Αποτυχία προσθήκης του $title';
   }
 
   @override
   String adminPodcastsEpisodesInFeed(int count) {
-    return '$count episodes in feed';
+    return '$count επεισόδια στη ροή';
   }
 
   @override
   String adminPodcastsMoreEpisodes(int count) {
-    return '+ $count more episodes';
+    return '+ $count ακόμη επεισόδια';
   }
 
   @override
-  String get adminPodcastsAdding => 'Adding…';
+  String get adminPodcastsAdding => 'Προσθήκη…';
 
   @override
-  String get adminPodcastsAddToLibrary => 'Add to Library';
+  String get adminPodcastsAddToLibrary => 'Προσθήκη στη βιβλιοθήκη';
 
   @override
-  String get adminPodcastsRemoveShowTitle => 'Remove Show?';
+  String get adminPodcastsRemoveShowTitle => 'Αφαίρεση εκπομπής;';
 
   @override
   String adminPodcastsRemoveShowContent(String title) {
-    return 'Remove \"$title\" and all its episodes from the server? This cannot be undone.';
+    return 'Αφαίρεση του «$title» και όλων των επεισοδίων του από τον διακομιστή; Αυτό δεν μπορεί να αναιρεθεί.';
   }
 
   @override
   String adminPodcastsRemovedShow(String title) {
-    return 'Removed \"$title\"';
+    return 'Αφαιρέθηκε το «$title»';
   }
 
   @override
-  String get adminPodcastsFailedRemoveShow => 'Failed to remove show';
+  String get adminPodcastsFailedRemoveShow => 'Αποτυχία αφαίρεσης εκπομπής';
 
   @override
-  String get adminPodcastsRemoveShowTooltip => 'Remove show';
+  String get adminPodcastsRemoveShowTooltip => 'Αφαίρεση εκπομπής';
 
   @override
-  String get adminPodcastsSelectMultipleTooltip => 'Select multiple';
+  String get adminPodcastsSelectMultipleTooltip => 'Πολλαπλή επιλογή';
 
   @override
   String adminPodcastsDownloadedCount(int count) {
-    return '$count downloaded';
+    return '$count ληφθέντα';
   }
 
   @override
-  String get adminPodcastsTabDownloaded => 'Downloaded';
+  String get adminPodcastsTabDownloaded => 'Ληφθέντα';
 
   @override
-  String get adminPodcastsTabFeed => 'Feed';
+  String get adminPodcastsTabFeed => 'Ροή';
 
   @override
-  String get adminPodcastsTabSettings => 'Settings';
+  String get adminPodcastsTabSettings => 'Ρυθμίσεις';
 
   @override
   String adminPodcastsDownloadingEpisode(String title) {
-    return 'Downloading \"$title\"';
+    return 'Λήψη του «$title»';
   }
 
   @override
-  String get adminPodcastsFailedDownload => 'Failed to download';
+  String get adminPodcastsFailedDownload => 'Αποτυχία λήψης';
 
   @override
-  String get adminPodcastsDeleteEpisodeTitle => 'Delete Episode?';
+  String get adminPodcastsDeleteEpisodeTitle => 'Διαγραφή επεισοδίου;';
 
   @override
   String adminPodcastsDeleteEpisodeContent(String title) {
-    return 'Delete \"$title\"?';
+    return 'Διαγραφή του «$title»;';
   }
 
   @override
-  String get adminPodcastsDeleted => 'Deleted';
+  String get adminPodcastsDeleted => 'Διαγράφηκε';
 
   @override
-  String get adminPodcastsFailed => 'Failed';
+  String get adminPodcastsFailed => 'Απέτυχε';
 
   @override
-  String get adminPodcastsDeleteEpisodesTitle => 'Delete Episodes?';
+  String get adminPodcastsDeleteEpisodesTitle => 'Διαγραφή επεισοδίων;';
 
   @override
   String adminPodcastsDeleteEpisodesContent(int count) {
-    return 'Delete $count episode(s) from the server?';
+    return 'Διαγραφή $count επεισοδίου/ων από τον διακομιστή;';
   }
 
   @override
   String adminPodcastsDeletedEpisodes(int count) {
-    return 'Deleted $count episode(s)';
+    return 'Διαγράφηκαν $count επεισόδιο/α';
   }
 
   @override
-  String get adminPodcastsBrowseFeedToDownload => 'Browse feed to download';
+  String get adminPodcastsBrowseFeedToDownload => 'Περιήγηση στη ροή για λήψη';
 
   @override
-  String get adminPodcastsDownloadingDots => 'Downloading...';
+  String get adminPodcastsDownloadingDots => 'Λήψη...';
 
   @override
   String adminPodcastsDeleteEpisodesCount(int count) {
-    return 'Delete $count episode(s)';
+    return 'Διαγραφή $count επεισοδίου/ων';
   }
 
   @override
   String adminPodcastsDownloadingCount(int count) {
-    return 'Downloading $count episode(s)';
+    return 'Λήψη $count επεισοδίου/ων';
   }
 
   @override
   String adminPodcastsDownloadEpisodesCount(int count) {
-    return 'Download $count episode(s)';
+    return 'Λήψη $count επεισοδίου/ων';
   }
 
   @override
-  String get adminPodcastsLookForEpisodesAfter => 'Look for episodes after';
+  String get adminPodcastsLookForEpisodesAfter =>
+      'Αναζήτηση επεισοδίων μετά από';
 
   @override
-  String get adminPodcastsSelectDate => 'Select date';
+  String get adminPodcastsSelectDate => 'Επιλογή ημερομηνίας';
 
   @override
-  String get adminPodcastsMaxEpisodes => 'Max episodes to download';
+  String get adminPodcastsMaxEpisodes =>
+      'Μέγιστος αριθμός επεισοδίων προς λήψη';
 
   @override
   String adminPodcastsNoNewEpisodesAfter(String date) {
-    return 'No new episodes found after $date';
+    return 'Δεν βρέθηκαν νέα επεισόδια μετά τις $date';
   }
 
   @override
   String adminPodcastsFoundNewEpisodes(int count) {
-    return 'Found $count new episode(s) - downloading';
+    return 'Βρέθηκαν $count νέο/α επεισόδιο/α - γίνεται λήψη';
   }
 
   @override
   String get adminPodcastsFailedToCheckNew =>
-      'Failed to check for new episodes';
+      'Αποτυχία ελέγχου για νέα επεισόδια';
 
   @override
-  String get adminPodcastsCheckAndDownload => 'Check & Download';
+  String get adminPodcastsCheckAndDownload => 'Έλεγχος και λήψη';
 
   @override
-  String get adminPodcastsMatchPodcast => 'Match Podcast';
+  String get adminPodcastsMatchPodcast => 'Αντιστοίχιση podcast';
 
   @override
   String get adminPodcastsMatchPodcastSubtitle =>
-      'Search iTunes to update cover and metadata';
+      'Αναζήτηση στο iTunes για ενημέρωση εξώφυλλου και μεταδεδομένων';
 
   @override
   String get adminPodcastsAutoDownloadNewEpisodes =>
-      'Auto-Download New Episodes';
+      'Αυτόματη λήψη νέων επεισοδίων';
 
   @override
   String get adminPodcastsAutoDownloadOnSubtitle =>
-      'Server downloads new episodes automatically';
+      'Ο διακομιστής κατεβάζει αυτόματα τα νέα επεισόδια';
 
   @override
   String get adminPodcastsAutoDownloadOffSubtitle =>
-      'New episodes are not auto-downloaded';
+      'Τα νέα επεισόδια δεν κατεβαίνουν αυτόματα';
 
   @override
   String get adminPodcastsFailedAutoDownloadUpdate =>
-      'Failed to update auto-download setting';
+      'Αποτυχία ενημέρωσης της ρύθμισης αυτόματης λήψης';
 
   @override
-  String get adminPodcastsMaxEpisodesToKeep => 'Max episodes to keep';
+  String get adminPodcastsMaxEpisodesToKeep =>
+      'Μέγιστος αριθμός επεισοδίων προς διατήρηση';
 
   @override
   String get adminPodcastsMaxEpisodesToKeepHelp =>
-      '0 keeps every episode. After a new episode is auto-downloaded, Audiobookshelf removes the oldest episode when the show is over this limit.';
+      'Το 0 διατηρεί όλα τα επεισόδια. Μετά την αυτόματη λήψη ενός νέου επεισοδίου, το Audiobookshelf αφαιρεί το παλαιότερο επεισόδιο όταν η εκπομπή ξεπερνά αυτό το όριο.';
 
   @override
-  String get adminPodcastsNoEpisodeLimit => 'No limit';
+  String get adminPodcastsNoEpisodeLimit => 'Χωρίς όριο';
 
   @override
-  String get adminPodcastsEpisodeLimitInvalid => 'Enter 0 or a whole number';
+  String get adminPodcastsEpisodeLimitInvalid =>
+      'Εισαγάγετε 0 ή έναν ακέραιο αριθμό';
 
   @override
-  String get adminPodcastsCheckSchedule => 'Check Schedule';
+  String get adminPodcastsCheckSchedule => 'Πρόγραμμα ελέγχου';
 
   @override
-  String get adminPodcastsFrequency => 'Frequency';
+  String get adminPodcastsFrequency => 'Συχνότητα';
 
   @override
-  String get adminPodcastsFreqHourly => 'Hourly';
+  String get adminPodcastsFreqHourly => 'Ωριαία';
 
   @override
-  String get adminPodcastsFreqDaily => 'Daily';
+  String get adminPodcastsFreqDaily => 'Ημερήσια';
 
   @override
-  String get adminPodcastsFreqWeekly => 'Weekly';
+  String get adminPodcastsFreqWeekly => 'Εβδομαδιαία';
 
   @override
-  String get adminPodcastsDay => 'Day';
+  String get adminPodcastsDay => 'Ημέρα';
 
   @override
-  String get adminPodcastsTime => 'Time';
+  String get adminPodcastsTime => 'Ώρα';
 
   @override
-  String get adminPodcastsDaySun => 'Sun';
+  String get adminPodcastsDaySun => 'Κυρ';
 
   @override
-  String get adminPodcastsDayMon => 'Mon';
+  String get adminPodcastsDayMon => 'Δευ';
 
   @override
-  String get adminPodcastsDayTue => 'Tue';
+  String get adminPodcastsDayTue => 'Τρί';
 
   @override
-  String get adminPodcastsDayWed => 'Wed';
+  String get adminPodcastsDayWed => 'Τετ';
 
   @override
-  String get adminPodcastsDayThu => 'Thu';
+  String get adminPodcastsDayThu => 'Πέμ';
 
   @override
-  String get adminPodcastsDayFri => 'Fri';
+  String get adminPodcastsDayFri => 'Παρ';
 
   @override
-  String get adminPodcastsDaySat => 'Sat';
+  String get adminPodcastsDaySat => 'Σάβ';
 
   @override
-  String get adminPodcastsFeedUrl => 'Feed URL';
+  String get adminPodcastsFeedUrl => 'URL ροής';
 
   @override
-  String get adminPodcastsBack => 'Back';
+  String get adminPodcastsBack => 'Πίσω';
 
   @override
-  String get adminPodcastsRootOnly => 'Root Only';
+  String get adminPodcastsRootOnly => 'Μόνο root';
 
   @override
-  String get adminPodcastsDeleting => 'Deleting...';
+  String get adminPodcastsDeleting => 'Διαγραφή...';
 
   @override
-  String get adminPodcastsDeleteEpisode => 'Delete Episode';
+  String get adminPodcastsDeleteEpisode => 'Διαγραφή επεισοδίου';
 
   @override
   String adminPodcastsSeasonChip(String season) {
-    return 'Season $season';
+    return 'Κύκλος $season';
   }
 
   @override
   String adminPodcastsEpChip(String number) {
-    return 'Ep. $number';
+    return 'Επ. $number';
   }
 
   @override
-  String get adminPodcastsApplyingMatch => 'Applying match...';
+  String get adminPodcastsApplyingMatch => 'Εφαρμογή αντιστοίχισης...';
 
   @override
-  String get adminPodcastsNoResults => 'No results';
+  String get adminPodcastsNoResults => 'Κανένα αποτέλεσμα';
 
   @override
-  String get adminPodcastsPodcastMatched => 'Podcast matched and updated';
+  String get adminPodcastsPodcastMatched =>
+      'Το podcast αντιστοιχίστηκε και ενημερώθηκε';
 
   @override
-  String get adminPodcastsFailedMatch => 'Failed to match podcast';
+  String get adminPodcastsFailedMatch => 'Αποτυχία αντιστοίχισης του podcast';
 
   @override
-  String get adminPodcastsSelectAll => 'Select all';
+  String get adminPodcastsSelectAll => 'Επιλογή όλων';
 
   @override
-  String get adminPodcastsSelectAllNew => 'New only';
+  String get adminPodcastsSelectAllNew => 'Μόνο τα νέα';
 
   @override
-  String get adminPodcastsSortNewestFirst => 'Newest first';
+  String get adminPodcastsSortNewestFirst => 'Πρώτα τα νεότερα';
 
   @override
-  String get adminPodcastsSortOldestFirst => 'Oldest first';
+  String get adminPodcastsSortOldestFirst => 'Πρώτα τα παλαιότερα';
 
   @override
-  String get adminPodcastsEditInfo => 'Edit Info';
+  String get adminPodcastsEditInfo => 'Επεξεργασία στοιχείων';
 
   @override
   String get adminPodcastsEditInfoSubtitle =>
-      'Change title, description, cover and more';
+      'Αλλαγή τίτλου, περιγραφής, εξώφυλλου και άλλων';
 
   @override
-  String get adminPodcastsEditTitle => 'Edit Podcast';
+  String get adminPodcastsEditTitle => 'Επεξεργασία podcast';
 
   @override
-  String get adminPodcastsReleaseDate => 'Release date';
+  String get adminPodcastsReleaseDate => 'Ημερομηνία κυκλοφορίας';
 
   @override
-  String get adminPodcastsExplicit => 'Explicit';
+  String get adminPodcastsExplicit => 'Για ενήλικες';
 
   @override
-  String get adminPodcastsExplicitSubtitle => 'Mark this podcast as explicit';
+  String get adminPodcastsExplicitSubtitle =>
+      'Επισήμανση αυτού του podcast ως περιεχομένου για ενήλικες';
 
   @override
-  String get episodeListEpisodeFallback => 'Episode';
+  String get episodeListEpisodeFallback => 'Επεισόδιο';
 
   @override
-  String get episodeListUnknownPodcast => 'Unknown Podcast';
+  String get episodeListUnknownPodcast => 'Άγνωστο podcast';
 
   @override
   String episodeListMarkedFinished(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count episodes marked as finished',
-      one: '1 episode marked as finished',
+      other: '$count επεισόδια επισημάνθηκαν ως ολοκληρωμένα',
+      one: '1 επεισόδιο επισημάνθηκε ως ολοκληρωμένο',
     );
     return '$_temp0';
   }
@@ -6542,51 +6654,55 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count episodes marked as unfinished',
-      one: '1 episode marked as unfinished',
+      other: '$count επεισόδια επισημάνθηκαν ως μη ολοκληρωμένα',
+      one: '1 επεισόδιο επισημάνθηκε ως μη ολοκληρωμένο',
     );
     return '$_temp0';
   }
 
   @override
   String get episodeListUnsubscribeFromNewEpisodes =>
-      'Unsubscribe from New Episodes';
+      'Διακοπή συνδρομής στα νέα επεισόδια';
 
   @override
-  String get episodeListSubscribeToNewEpisodes => 'Subscribe to New Episodes';
+  String get episodeListSubscribeToNewEpisodes => 'Συνδρομή στα νέα επεισόδια';
 
   @override
-  String get episodeListSubscribeTitle => 'Subscribe to this podcast?';
+  String get episodeListSubscribeTitle => 'Συνδρομή σε αυτό το podcast;';
 
   @override
   String get episodeListSubscribeContent =>
-      'New episodes will be automatically downloaded and added to your absorbing queue when they appear on the server.';
+      'Τα νέα επεισόδια θα λαμβάνονται αυτόματα και θα προστίθενται στην ουρά Absorbing μόλις εμφανιστούν στον διακομιστή.';
 
   @override
-  String get episodeListSubscribe => 'Subscribe';
+  String get episodeListSubscribe => 'Συνδρομή';
 
   @override
-  String get episodeListShowFinishedEpisodes => 'Show Finished Episodes';
+  String get episodeListShowFinishedEpisodes =>
+      'Εμφάνιση ολοκληρωμένων επεισοδίων';
 
   @override
-  String get episodeListHideFinishedEpisodes => 'Hide Finished Episodes';
+  String get episodeListHideFinishedEpisodes =>
+      'Απόκρυψη ολοκληρωμένων επεισοδίων';
 
   @override
-  String get episodeListShowSettings => 'Show Settings';
+  String get episodeListShowSettings => 'Εμφάνιση ρυθμίσεων';
 
   @override
-  String get episodeListPlaysNewerToOlder => 'Plays newer to older episodes';
+  String get episodeListPlaysNewerToOlder =>
+      'Αναπαραγωγή από τα νεότερα στα παλαιότερα επεισόδια';
 
   @override
-  String get episodeListPlaysOlderToNewer => 'Plays older to newer episodes';
+  String get episodeListPlaysOlderToNewer =>
+      'Αναπαραγωγή από τα παλαιότερα στα νεότερα επεισόδια';
 
   @override
   String episodeListEpisodeCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count episodes',
-      one: '1 episode',
+      other: '$count επεισόδια',
+      one: '1 επεισόδιο',
     );
     return '$_temp0';
   }
@@ -6596,135 +6712,139 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count unfinished',
-      one: '1 unfinished',
+      other: '$count μη ολοκληρωμένα',
+      one: '1 μη ολοκληρωμένο',
     );
     return '$_temp0';
   }
 
   @override
-  String get episodeListAutoDownloadChip => 'Auto-Download';
+  String get episodeListAutoDownloadChip => 'Αυτόματη λήψη';
 
   @override
-  String get episodeListSubscribedChip => 'Subscribed';
+  String get episodeListSubscribedChip => 'Συνδρομητής';
 
   @override
-  String get episodeListExplicitChip => 'Explicit';
+  String get episodeListExplicitChip => 'Για ενήλικες';
 
   @override
-  String get episodeListSortNewest => 'Newest';
+  String get episodeListSortNewest => 'Νεότερα';
 
   @override
-  String get episodeListSortOldest => 'Oldest';
+  String get episodeListSortOldest => 'Παλαιότερα';
 
   @override
-  String get episodeListSortBy => 'Sort episodes';
+  String get episodeListSortBy => 'Ταξινόμηση επεισοδίων';
 
   @override
-  String get episodeListSortPubDate => 'Publish date';
+  String get episodeListSortPubDate => 'Ημερομηνία δημοσίευσης';
 
   @override
-  String get episodeListSortTitle => 'Title';
+  String get episodeListSortTitle => 'Τίτλος';
 
   @override
-  String get episodeListSortSeason => 'Season';
+  String get episodeListSortSeason => 'Κύκλος';
 
   @override
-  String get episodeListSortEpisode => 'Episode number';
+  String get episodeListSortEpisode => 'Αριθμός επεισοδίου';
 
   @override
-  String get episodeListSortFileName => 'File name';
+  String get episodeListSortFileName => 'Όνομα αρχείου';
 
   @override
-  String get episodeListSortReverseHint => 'Tap again to reverse the order';
+  String get episodeListSortReverseHint =>
+      'Πατήστε ξανά για αντιστροφή της σειράς';
 
   @override
   String episodeListAddedToAbsorbing(String title) {
-    return 'Added \"$title\" to Absorbing';
+    return 'Το «$title» προστέθηκε στο Absorbing';
   }
 
   @override
-  String get episodeDetailEpisodeFallback => 'Episode';
+  String get episodeDetailEpisodeFallback => 'Επεισόδιο';
 
   @override
-  String get episodeDetailMarkedNotFinished => 'Marked as not finished';
+  String get episodeDetailMarkedNotFinished =>
+      'Επισημάνθηκε ως μη ολοκληρωμένο';
 
   @override
-  String get episodeDetailMarkedFinishedNice => 'Marked as finished - nice!';
+  String get episodeDetailMarkedFinishedNice =>
+      'Επισημάνθηκε ως ολοκληρωμένο - μπράβο!';
 
   @override
   String get episodeDetailMarkAbsorbedContent =>
-      'This will set your progress to 100% for this episode.';
+      'Η πρόοδός σας για αυτό το επεισόδιο θα οριστεί στο 100%.';
 
   @override
   String get episodeDetailResetProgressContent =>
-      'This will erase all progress for this episode and set it back to the beginning. This can\'t be undone.';
+      'Θα διαγραφεί όλη η πρόοδος για αυτό το επεισόδιο και θα επιστρέψει στην αρχή. Δεν μπορεί να αναιρεθεί.';
 
   @override
-  String get episodeDetailToday => 'Today';
+  String get episodeDetailToday => 'Σήμερα';
 
   @override
-  String get episodeDetailYesterday => 'Yesterday';
+  String get episodeDetailYesterday => 'Χθες';
 
   @override
   String episodeDetailDaysAgo(int count) {
-    return '${count}d ago';
+    return 'πριν από $count ημ.';
   }
 
   @override
   String episodeDetailWeeksAgo(int count) {
-    return '${count}w ago';
+    return 'πριν από $count εβδ.';
   }
 
   @override
   String episodeDetailDurationHm(int hours, int minutes) {
-    return '${hours}h ${minutes}m';
+    return '$hours ώ $minutes λ';
   }
 
   @override
   String episodeDetailDurationM(int minutes) {
-    return '${minutes}m';
+    return '$minutes λ';
   }
 
   @override
-  String get episodeDetailResume => 'Resume';
+  String get episodeDetailResume => 'Συνέχεια';
 
   @override
-  String get episodeDetailPlayEpisode => 'Play Episode';
+  String get episodeDetailPlayEpisode => 'Αναπαραγωγή επεισοδίου';
 
   @override
   String episodeDetailEpisodeNumber(String number) {
-    return 'Episode $number';
+    return 'Επεισόδιο $number';
   }
 
   @override
   String episodeDetailSeasonNumber(String number) {
-    return 'Season $number';
+    return 'Κύκλος $number';
   }
 
   @override
-  String get editMetadataUpdatedFromMatch => 'Metadata updated from match';
+  String get editMetadataUpdatedFromMatch =>
+      'Τα μεταδεδομένα ενημερώθηκαν από την αντιστοίχιση';
 
   @override
   String editMetadataConfirmMatch(String title) {
-    return 'This will update the server metadata for this book using:\n\n\"$title\"\n\nAll fields and the cover will be overwritten on the server.';
+    return 'Θα ενημερωθούν τα μεταδεδομένα του διακομιστή για αυτό το βιβλίο με βάση:\n\n«$title»\n\nΌλα τα πεδία και το εξώφυλλο θα αντικατασταθούν στον διακομιστή.';
   }
 
   @override
   String editMetadataConfirmMatchWithAuthor(String title, String author) {
-    return 'This will update the server metadata for this book using:\n\n\"$title\" by $author\n\nAll fields and the cover will be overwritten on the server.';
+    return 'Θα ενημερωθούν τα μεταδεδομένα του διακομιστή για αυτό το βιβλίο με βάση:\n\n«$title» από $author\n\nΌλα τα πεδία και το εξώφυλλο θα αντικατασταθούν στον διακομιστή.';
   }
 
   @override
-  String get seriesBooksFindMissingTitle => 'Find Missing Books';
+  String get seriesBooksFindMissingTitle => 'Εύρεση βιβλίων που λείπουν';
 
   @override
   String get seriesBooksFindMissingContent =>
-      'This searches Audible to find books in this series that may be missing from your library.\n\nBooks are matched by ASIN first (depending on whether your server has ASINs for its books), then falls back to title matching. Results may not be perfectly accurate.';
+      'Γίνεται αναζήτηση στο Audible για βιβλία αυτής της σειράς που ίσως λείπουν από τη βιβλιοθήκη σας.\n\nΤα βιβλία αντιστοιχίζονται πρώτα με ASIN (αν ο διακομιστής σας έχει ASIN για τα βιβλία του) και, αν όχι, με βάση τον τίτλο. Τα αποτελέσματα ενδέχεται να μην είναι απόλυτα ακριβή.';
 
   @override
   String get seriesBooksCouldNotFindOnAudible =>
-      'Could not find this series on Audible';
+      'Δεν βρέθηκε αυτή η σειρά στο Audible';
 
   @override
   String seriesBooksMarkAllNotFinishedContent(int count) {
@@ -6732,8 +6852,9 @@ class AppLocalizationsEl extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          'This will clear the finished status for all $count books in this series.',
-      one: 'This will clear the finished status for the 1 book in this series.',
+          'Θα καθαριστεί η κατάσταση ολοκλήρωσης για όλα τα $count βιβλία αυτής της σειράς.',
+      one:
+          'Θα καθαριστεί η κατάσταση ολοκλήρωσης για το 1 βιβλίο αυτής της σειράς.',
     );
     return '$_temp0';
   }
@@ -6743,243 +6864,248 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'This will mark all $count books in this series as finished.',
-      one: 'This will mark the 1 book in this series as finished.',
+      other:
+          'Και τα $count βιβλία αυτής της σειράς θα επισημανθούν ως ολοκληρωμένα.',
+      one: 'Το 1 βιβλίο αυτής της σειράς θα επισημανθεί ως ολοκληρωμένο.',
     );
     return '$_temp0';
   }
 
   @override
-  String get seriesBooksUnmarkAll => 'Unmark All';
+  String get seriesBooksUnmarkAll => 'Αφαίρεση επισήμανσης όλων';
 
   @override
-  String get seriesBooksShowAllBooks => 'Show all books';
+  String get seriesBooksShowAllBooks => 'Εμφάνιση όλων των βιβλίων';
 
   @override
-  String get seriesBooksGroupBySubSeries => 'Group by sub-series';
+  String get seriesBooksGroupBySubSeries => 'Ομαδοποίηση κατά υποσειρά';
 
   @override
-  String get seriesBooksLoadingSubSeries => 'Loading sub-series...';
+  String get seriesBooksLoadingSubSeries => 'Φόρτωση υποσειρών...';
 
   @override
   String seriesBooksBookCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count βιβλία',
+      one: '1 βιβλίο',
     );
     return '$_temp0';
   }
 
   @override
-  String get seriesBooksDone => 'Done';
+  String get seriesBooksDone => 'Τέλος';
 
   @override
   String get seriesBooksExplicitBadge => 'E';
 
   @override
-  String get expandedCardStreaming => 'Streaming';
+  String get expandedCardStreaming => 'Ροή';
 
   @override
-  String get expandedCardDeviceFallback => 'Device';
+  String get expandedCardDeviceFallback => 'Συσκευή';
 
   @override
   String bookmarksScreenPositionInBook(String position, String bookTitle) {
-    return '$position in $bookTitle';
+    return '$position στο «$bookTitle»';
   }
 
   @override
-  String get bookmarksScreenClose => 'Close';
+  String get bookmarksScreenClose => 'Κλείσιμο';
 
   @override
-  String get bookmarksScreenSortNewest => 'Newest';
+  String get bookmarksScreenSortNewest => 'Νεότερα';
 
   @override
-  String get bookmarksScreenSortPosition => 'Position';
+  String get bookmarksScreenSortPosition => 'Θέση';
 
   @override
   String statsScreenStreakDays(int count) {
-    return '${count}d';
+    return '$count ημ.';
   }
 
   @override
   String statsScreenSessionCountOne(int count) {
-    return '$count session';
+    return '$count συνεδρία';
   }
 
   @override
   String statsScreenSessionCountOther(int count) {
-    return '$count sessions';
+    return '$count συνεδρίες';
   }
 
   @override
-  String get statsScreenDayMon => 'Mon';
+  String get statsScreenDayMon => 'Δευ';
 
   @override
-  String get statsScreenDayTue => 'Tue';
+  String get statsScreenDayTue => 'Τρί';
 
   @override
-  String get statsScreenDayWed => 'Wed';
+  String get statsScreenDayWed => 'Τετ';
 
   @override
-  String get statsScreenDayThu => 'Thu';
+  String get statsScreenDayThu => 'Πέμ';
 
   @override
-  String get statsScreenDayFri => 'Fri';
+  String get statsScreenDayFri => 'Παρ';
 
   @override
-  String get statsScreenDaySat => 'Sat';
+  String get statsScreenDaySat => 'Σάβ';
 
   @override
-  String get statsScreenDaySun => 'Sun';
+  String get statsScreenDaySun => 'Κυρ';
 
   @override
   String statsScreenDurationHm(int h, int m) {
-    return '${h}h ${m}m';
+    return '$h ώ $m λ';
   }
 
   @override
   String statsScreenDurationM(int m) {
-    return '${m}m';
+    return '$m λ';
   }
 
   @override
-  String get statsScreenDurationLessThanMin => '<1m';
+  String get statsScreenDurationLessThanMin => '<1 λ';
 
   @override
-  String get statsScreenDurationZero => '0m';
+  String get statsScreenDurationZero => '0 λ';
 
   @override
   String statsScreenDurationShortH(int h) {
-    return '${h}h';
+    return '$h ώ';
   }
 
   @override
   String statsScreenDurationShortM(int m) {
-    return '${m}m';
+    return '$m λ';
   }
 
   @override
-  String get statsScreenCouldNotLoadItem => 'Could not load item';
+  String get statsScreenCouldNotLoadItem =>
+      'Δεν ήταν δυνατή η φόρτωση του στοιχείου';
 
   @override
-  String get statsScreenCouldNotFindEpisode => 'Could not find episode';
+  String get statsScreenCouldNotFindEpisode => 'Δεν βρέθηκε το επεισόδιο';
 
   @override
   String statsScreenByAuthor(String author) {
-    return 'by $author';
+    return 'από $author';
   }
 
   @override
-  String get statsScreenListened => 'Listened';
+  String get statsScreenListened => 'Ακροάθηκε';
 
   @override
-  String get sessionEditTitle => 'Edit session';
+  String get sessionEditTitle => 'Επεξεργασία συνεδρίας';
 
   @override
-  String get sessionDayLabel => 'Day';
+  String get sessionDayLabel => 'Ημέρα';
 
   @override
-  String get sessionEndPosition => 'Ending position';
+  String get sessionEndPosition => 'Θέση λήξης';
 
   @override
   String get sessionEndPositionHint =>
-      'Changing this may also update your current progress.';
+      'Η αλλαγή αυτού μπορεί να ενημερώσει και την τρέχουσα πρόοδό σας.';
 
   @override
-  String get statsViewSessions => 'View sessions';
+  String get statsViewSessions => 'Προβολή συνεδριών';
 
   @override
   String statsSessionsForDate(String date) {
-    return 'Sessions for $date';
+    return 'Συνεδρίες για $date';
   }
 
   @override
   String get statsNoSessionsForDate =>
-      'No listening sessions found for this day';
+      'Δεν βρέθηκαν συνεδρίες ακρόασης για αυτή την ημέρα';
 
   @override
-  String get statsSearchSessions => 'Search sessions';
+  String get statsSearchSessions => 'Αναζήτηση συνεδριών';
 
   @override
-  String get statsNoSessionSearchResults => 'No sessions match your search';
+  String get statsNoSessionSearchResults =>
+      'Καμία συνεδρία δεν ταιριάζει με την αναζήτησή σας';
 
   @override
-  String get statsSessionsLoadFailed => 'Could not load sessions for this day';
+  String get statsSessionsLoadFailed =>
+      'Δεν ήταν δυνατή η φόρτωση των συνεδριών για αυτή την ημέρα';
 
   @override
-  String get sessionDeleteConfirmTitle => 'Delete session?';
+  String get sessionDeleteConfirmTitle => 'Διαγραφή συνεδρίας;';
 
   @override
   String get sessionDeleteConfirmBody =>
-      'This removes the session and lowers your listening totals by its time. It cannot be undone.';
+      'Η συνεδρία αφαιρείται και τα συνολικά σας στατιστικά ακρόασης μειώνονται κατά τη διάρκειά της. Δεν μπορεί να αναιρεθεί.';
 
   @override
-  String get sessionSaved => 'Session updated';
+  String get sessionSaved => 'Η συνεδρία ενημερώθηκε';
 
   @override
-  String get sessionDeleted => 'Session deleted';
+  String get sessionDeleted => 'Η συνεδρία διαγράφηκε';
 
   @override
-  String get sessionSaveFailed => 'Could not save changes';
+  String get sessionSaveFailed => 'Δεν ήταν δυνατή η αποθήκευση των αλλαγών';
 
   @override
-  String get sessionDeleteFailed => 'Could not delete this session';
+  String get sessionDeleteFailed =>
+      'Δεν ήταν δυνατή η διαγραφή αυτής της συνεδρίας';
 
   @override
-  String get statsScreenStartedAtPosition => 'Started at position';
+  String get statsScreenStartedAtPosition => 'Ξεκίνησε στη θέση';
 
   @override
-  String get statsScreenEndedAtPosition => 'Ended at position';
+  String get statsScreenEndedAtPosition => 'Τελείωσε στη θέση';
 
   @override
-  String get statsScreenTotalDuration => 'Total duration';
+  String get statsScreenTotalDuration => 'Συνολική διάρκεια';
 
   @override
-  String get statsScreenStarted => 'Started';
+  String get statsScreenStarted => 'Ξεκίνησε';
 
   @override
-  String get statsScreenUpdated => 'Updated';
+  String get statsScreenUpdated => 'Ενημερώθηκε';
 
   @override
-  String get statsScreenClient => 'Client';
+  String get statsScreenClient => 'Πελάτης';
 
   @override
-  String get statsScreenDevice => 'Device';
+  String get statsScreenDevice => 'Συσκευή';
 
   @override
-  String get statsScreenOs => 'OS';
+  String get statsScreenOs => 'Λειτουργικό σύστημα';
 
   @override
-  String get statsScreenPlayMethod => 'Play method';
+  String get statsScreenPlayMethod => 'Μέθοδος αναπαραγωγής';
 
   @override
-  String get statsScreenLoading => 'Loading...';
+  String get statsScreenLoading => 'Φόρτωση...';
 
   @override
-  String get statsScreenJumpToStart => 'Jump to start';
+  String get statsScreenJumpToStart => 'Μετάβαση στην αρχή';
 
   @override
-  String get statsScreenJumpToEnd => 'Jump to end';
+  String get statsScreenJumpToEnd => 'Μετάβαση στο τέλος';
 
   @override
-  String get statsScreenPlayMethodDirect => 'Direct play';
+  String get statsScreenPlayMethodDirect => 'Άμεση αναπαραγωγή';
 
   @override
-  String get statsScreenPlayMethodDirectStream => 'Direct stream';
+  String get statsScreenPlayMethodDirectStream => 'Άμεση ροή';
 
   @override
-  String get statsScreenPlayMethodTranscode => 'Transcode';
+  String get statsScreenPlayMethodTranscode => 'Μετακωδικοποίηση';
 
   @override
-  String get statsScreenPlayMethodLocal => 'Local';
+  String get statsScreenPlayMethodLocal => 'Τοπική';
 
   @override
-  String get statsScreenAmLabel => 'AM';
+  String get statsScreenAmLabel => 'π.μ.';
 
   @override
-  String get statsScreenPmLabel => 'PM';
+  String get statsScreenPmLabel => 'μ.μ.';
 
   @override
   String statsScreenDateAtTime(
@@ -6990,134 +7116,136 @@ class AppLocalizationsEl extends AppLocalizations {
     String minute,
     String ampm,
   ) {
-    return '$month $day, $year at $hour:$minute $ampm';
+    return '$day $month $year, $hour:$minute $ampm';
   }
 
   @override
-  String get statsScreenMonthJan => 'Jan';
+  String get statsScreenMonthJan => 'Ιαν';
 
   @override
-  String get statsScreenMonthFeb => 'Feb';
+  String get statsScreenMonthFeb => 'Φεβ';
 
   @override
-  String get statsScreenMonthMar => 'Mar';
+  String get statsScreenMonthMar => 'Μαρ';
 
   @override
-  String get statsScreenMonthApr => 'Apr';
+  String get statsScreenMonthApr => 'Απρ';
 
   @override
-  String get statsScreenMonthMay => 'May';
+  String get statsScreenMonthMay => 'Μάι';
 
   @override
-  String get statsScreenMonthJun => 'Jun';
+  String get statsScreenMonthJun => 'Ιουν';
 
   @override
-  String get statsScreenMonthJul => 'Jul';
+  String get statsScreenMonthJul => 'Ιουλ';
 
   @override
-  String get statsScreenMonthAug => 'Aug';
+  String get statsScreenMonthAug => 'Αυγ';
 
   @override
-  String get statsScreenMonthSep => 'Sep';
+  String get statsScreenMonthSep => 'Σεπ';
 
   @override
-  String get statsScreenMonthOct => 'Oct';
+  String get statsScreenMonthOct => 'Οκτ';
 
   @override
-  String get statsScreenMonthNov => 'Nov';
+  String get statsScreenMonthNov => 'Νοε';
 
   @override
-  String get statsScreenMonthDec => 'Dec';
+  String get statsScreenMonthDec => 'Δεκ';
 
   @override
-  String get upcomingReleasesTitle => 'Upcoming Releases';
+  String get upcomingReleasesTitle => 'Επερχόμενες κυκλοφορίες';
 
   @override
-  String get upcomingReleasesRescanTitle => 'Rescan?';
+  String get upcomingReleasesRescanTitle => 'Νέα σάρωση;';
 
   @override
   String upcomingReleasesRescanContent(int days) {
-    return 'These results are $days days old. Release dates may have changed - would you like to rescan?';
+    return 'Αυτά τα αποτελέσματα είναι $days ημερών. Οι ημερομηνίες κυκλοφορίας ίσως έχουν αλλάξει - θέλετε νέα σάρωση;';
   }
 
   @override
-  String get upcomingReleasesNotNow => 'Not now';
+  String get upcomingReleasesNotNow => 'Όχι τώρα';
 
   @override
-  String get upcomingReleasesRescan => 'Rescan';
+  String get upcomingReleasesRescan => 'Νέα σάρωση';
 
   @override
-  String get upcomingReleasesRescanReleaseDate => 'Rescan Release Date';
+  String get upcomingReleasesRescanReleaseDate =>
+      'Νέα σάρωση ημερομηνίας κυκλοφορίας';
 
   @override
-  String get upcomingReleasesRescanning => 'Rescanning...';
+  String get upcomingReleasesRescanning => 'Νέα σάρωση...';
 
   @override
   String upcomingReleasesUpdatedWithDate(String date) {
-    return 'Updated - $date';
+    return 'Ενημερώθηκε - $date';
   }
 
   @override
-  String get upcomingReleasesNoReleaseDateFound => 'No release date found';
+  String get upcomingReleasesNoReleaseDateFound =>
+      'Δεν βρέθηκε ημερομηνία κυκλοφορίας';
 
   @override
-  String get upcomingReleasesRescanFailed => 'Rescan failed';
+  String get upcomingReleasesRescanFailed => 'Η νέα σάρωση απέτυχε';
 
   @override
-  String get upcomingReleasesRemoveFromList => 'Remove from list';
+  String get upcomingReleasesRemoveFromList => 'Αφαίρεση από τη λίστα';
 
   @override
-  String get upcomingReleasesRemovedFromList => 'Removed from list';
+  String get upcomingReleasesRemovedFromList => 'Αφαιρέθηκε από τη λίστα';
 
   @override
-  String get upcomingReleasesDateChip => 'Date';
+  String get upcomingReleasesDateChip => 'Ημερομηνία';
 
   @override
   String upcomingReleasesCheckingSeries(String name, int processed, int total) {
-    return 'Checking $name... ($processed/$total)';
+    return 'Έλεγχος του $name... ($processed/$total)';
   }
 
   @override
-  String get upcomingReleasesLoadingSeries => 'Loading series...';
+  String get upcomingReleasesLoadingSeries => 'Φόρτωση σειρών...';
 
   @override
-  String get upcomingReleasesScannedToday => '(scanned today)';
+  String get upcomingReleasesScannedToday => '(σαρώθηκε σήμερα)';
 
   @override
-  String get upcomingReleasesScannedYesterday => '(scanned yesterday)';
+  String get upcomingReleasesScannedYesterday => '(σαρώθηκε χθες)';
 
   @override
   String upcomingReleasesScannedDaysAgo(int days) {
-    return '(scanned $days days ago)';
+    return '(σαρώθηκε πριν από $days ημέρες)';
   }
 
   @override
   String upcomingReleasesUpcomingCount(int count) {
-    return '$count upcoming';
+    return '$count επερχόμενα';
   }
 
   @override
   String upcomingReleasesRecentCount(int count) {
-    return '$count recent';
+    return '$count πρόσφατα';
   }
 
   @override
   String get upcomingReleasesNoneFound =>
-      'No upcoming or recent releases found';
+      'Δεν βρέθηκαν επερχόμενες ή πρόσφατες κυκλοφορίες';
 
   @override
   String upcomingReleasesAcrossSeries(String summary, int count) {
-    return '$summary across $count series';
+    return '$summary σε $count σειρές';
   }
 
   @override
   String upcomingReleasesCheckedSeries(int count) {
-    return 'Checked $count series on Audible';
+    return 'Ελέγχθηκαν $count σειρές στο Audible';
   }
 
   @override
   String upcomingReleasesDateFormat(String month, int day, int year) {
-    return '$month $day, $year';
+    return '$day $month $year';
   }
 
   @override
@@ -7126,52 +7254,52 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get upcomingReleasesBadgeUpcoming => 'UPCOMING';
+  String get upcomingReleasesBadgeUpcoming => 'ΕΠΕΡΧΟΜΕΝΟ';
 
   @override
-  String get upcomingReleasesBadgeAdded => 'ADDED';
+  String get upcomingReleasesBadgeAdded => 'ΠΡΟΣΤΕΘΗΚΕ';
 
   @override
-  String get upcomingReleasesBadgeMissing => 'MISSING';
+  String get upcomingReleasesBadgeMissing => 'ΛΕΙΠΕΙ';
 
   @override
-  String get upcomingReleasesScanSettingsTitle => 'Scan settings';
+  String get upcomingReleasesScanSettingsTitle => 'Ρυθμίσεις σάρωσης';
 
   @override
   String get upcomingReleasesFinishedAfterTitle =>
-      'Consider a series finished after';
+      'Θεώρηση σειράς ως ολοκληρωμένης μετά από';
 
   @override
   String get upcomingReleasesFinishedAfterDesc =>
-      'Series whose last book is older than this are skipped during scans and only re-checked every month or two.';
+      'Οι σειρές των οποίων το τελευταίο βιβλίο είναι παλαιότερο από αυτό το όριο παραλείπονται στις σαρώσεις και ελέγχονται ξανά μόνο ανά ένα-δύο μήνες.';
 
   @override
   String upcomingReleasesFinishedAfterYears(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count years',
-      one: '1 year',
+      other: '$count έτη',
+      one: '1 έτος',
     );
     return '$_temp0';
   }
 
   @override
-  String get upcomingReleasesFinishedAfterNever => 'Never';
+  String get upcomingReleasesFinishedAfterNever => 'Ποτέ';
 
   @override
-  String get upcomingReleasesSkippedTitle => 'Skipped series';
+  String get upcomingReleasesSkippedTitle => 'Σειρές που παραλείφθηκαν';
 
   @override
-  String get upcomingReleasesSkippedNone => 'Nothing skipped yet';
+  String get upcomingReleasesSkippedNone => 'Δεν έχει παραλειφθεί τίποτα ακόμη';
 
   @override
   String upcomingReleasesSkippedCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count skipped',
-      one: '1 skipped',
+      other: '$count παραλείφθηκαν',
+      one: '1 παραλείφθηκε',
     );
     return '$_temp0';
   }
@@ -7181,105 +7309,105 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Last book $count years ago',
-      one: 'Last book 1 year ago',
-      zero: 'Last book under a year ago',
+      other: 'Τελευταίο βιβλίο πριν από $count έτη',
+      one: 'Τελευταίο βιβλίο πριν από 1 έτος',
+      zero: 'Τελευταίο βιβλίο πριν από λιγότερο από έτος',
     );
     return '$_temp0';
   }
 
   @override
   String get upcomingReleasesSkippedUnmatched =>
-      'Couldn\'t match this series on Audible';
+      'Δεν ήταν δυνατή η αντιστοίχιση αυτής της σειράς στο Audible';
 
   @override
-  String get upcomingReleasesSkippedScanNow => 'Scan now';
+  String get upcomingReleasesSkippedScanNow => 'Σάρωση τώρα';
 
   @override
-  String get upcomingReleasesSkippedAlwaysScan => 'Always scan';
+  String get upcomingReleasesSkippedAlwaysScan => 'Πάντα σάρωση';
 
   @override
-  String get upcomingReleasesSkippedNeverScan => 'Never scan';
+  String get upcomingReleasesSkippedNeverScan => 'Ποτέ σάρωση';
 
   @override
   String upcomingReleasesSkippedScanFound(String name) {
-    return 'Found new releases in $name';
+    return 'Βρέθηκαν νέες κυκλοφορίες στο $name';
   }
 
   @override
   String upcomingReleasesSkippedScanNone(String name) {
-    return 'Nothing new in $name';
+    return 'Τίποτα νέο στο $name';
   }
 
   @override
   String get upcomingReleasesSkippedOtherLibrary =>
-      'This list came from a different library. Run a rescan to refresh it.';
+      'Αυτή η λίστα προέρχεται από άλλη βιβλιοθήκη. Κάντε νέα σάρωση για να ανανεωθεί.';
 
   @override
-  String get upcomingReleasesChipUpcoming => 'Upcoming';
+  String get upcomingReleasesChipUpcoming => 'Επερχόμενα';
 
   @override
   String upcomingReleasesChipMissing(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count missing',
-      one: '1 missing',
-      zero: 'Missing',
+      other: '$count λείπουν',
+      one: '1 λείπει',
+      zero: 'Λείπουν',
     );
     return '$_temp0';
   }
 
   @override
-  String get upcomingReleasesNoMissing => 'No missing books found';
+  String get upcomingReleasesNoMissing => 'Δεν βρέθηκαν βιβλία που λείπουν';
 
   @override
-  String get upcomingReleasesScanSeries => 'Scan series';
+  String get upcomingReleasesScanSeries => 'Σάρωση σειρών';
 
   @override
-  String get upcomingReleasesScanUpcomingOption => 'Upcoming releases';
+  String get upcomingReleasesScanUpcomingOption => 'Επερχόμενες κυκλοφορίες';
 
   @override
   String get upcomingReleasesScanUpcomingOptionDesc =>
-      'Quick scan for new and upcoming books';
+      'Γρήγορη σάρωση για νέα και επερχόμενα βιβλία';
 
   @override
-  String get upcomingReleasesScanDeepOption => 'Deep scan';
+  String get upcomingReleasesScanDeepOption => 'Βαθιά σάρωση';
 
   @override
   String get upcomingReleasesScanDeepOptionDesc =>
-      'Also finds missing books in every series - takes longer';
+      'Βρίσκει επίσης βιβλία που λείπουν σε κάθε σειρά - διαρκεί περισσότερο';
 
   @override
   String get upcomingReleasesFirstScanNote =>
-      'The first scan checks every series on Audible and can take a few minutes. Later scans get much quicker once your series are sorted.';
+      'Η πρώτη σάρωση ελέγχει κάθε σειρά στο Audible και μπορεί να διαρκέσει μερικά λεπτά. Οι επόμενες γίνονται πολύ πιο γρήγορα όταν οι σειρές σας έχουν ταξινομηθεί.';
 
   @override
-  String get upcomingReleasesLastScanReport => 'Last scan report';
+  String get upcomingReleasesLastScanReport => 'Αναφορά τελευταίας σάρωσης';
 
   @override
   String upcomingReleasesReportChecked(int count) {
-    return 'Checked on Audible: $count';
+    return 'Ελέγχθηκαν στο Audible: $count';
   }
 
   @override
   String upcomingReleasesReportSkipped(int count) {
-    return 'Skipped: $count';
+    return 'Παραλείφθηκαν: $count';
   }
 
   @override
   String upcomingReleasesReportUnmatched(int count) {
-    return 'Couldn\'t match on Audible: $count';
+    return 'Χωρίς αντιστοίχιση στο Audible: $count';
   }
 
   @override
   String upcomingReleasesReportFailed(int count) {
-    return 'Failed to check: $count';
+    return 'Αποτυχία ελέγχου: $count';
   }
 
   @override
   String upcomingReleasesReportFound(int upcoming, int recent) {
-    return 'Found $upcoming upcoming, $recent recent';
+    return 'Βρέθηκαν $upcoming επερχόμενα, $recent πρόσφατα';
   }
 
   @override
@@ -7288,123 +7416,126 @@ class AppLocalizationsEl extends AppLocalizations {
     int recent,
     int missing,
   ) {
-    return 'Found $upcoming upcoming, $recent recent, $missing missing';
+    return 'Βρέθηκαν $upcoming επερχόμενα, $recent πρόσφατα, $missing που λείπουν';
   }
 
   @override
   String upcomingReleasesReportMore(int count) {
-    return '+$count more';
+    return '+$count ακόμη';
   }
 
   @override
-  String get upcomingReleasesBadgeNew => 'NEW';
+  String get upcomingReleasesBadgeNew => 'ΝΕΟ';
 
   @override
-  String get upcomingReleasesOpenLibrarySeries => 'Open series in library';
+  String get upcomingReleasesOpenLibrarySeries =>
+      'Άνοιγμα σειράς στη βιβλιοθήκη';
 
   @override
-  String get upcomingReleasesAsinCopied => 'Series ASIN copied';
+  String get upcomingReleasesAsinCopied => 'Το ASIN της σειράς αντιγράφηκε';
 
   @override
-  String get upcomingReleasesSetSeriesAsin => 'Set series ASIN';
+  String get upcomingReleasesSetSeriesAsin => 'Ορισμός ASIN σειράς';
 
   @override
   String get upcomingReleasesSetAsinInstructions =>
-      'Find the series on audible.com and copy the page link - the ASIN is the 10-character code starting with B0 (like B08S2YN3YS). Pasting the whole link works too.';
+      'Βρείτε τη σειρά στο audible.com και αντιγράψτε τον σύνδεσμο της σελίδας - το ASIN είναι ο κωδικός 10 χαρακτήρων που ξεκινά με B0 (π.χ. B08S2YN3YS). Λειτουργεί και η επικόλληση ολόκληρου του συνδέσμου.';
 
   @override
-  String get upcomingReleasesSetAsinHint => 'B0… or audible.com link';
+  String get upcomingReleasesSetAsinHint => 'B0… ή σύνδεσμος audible.com';
 
   @override
-  String get upcomingReleasesSetAsinSave => 'Save';
+  String get upcomingReleasesSetAsinSave => 'Αποθήκευση';
 
   @override
-  String get upcomingReleasesSetAsinInvalid => 'No ASIN found in that text';
+  String get upcomingReleasesSetAsinInvalid =>
+      'Δεν βρέθηκε ASIN σε αυτό το κείμενο';
 
   @override
-  String get upcomingReleasesSetAsinSaved => 'Series linked - scanning now';
+  String get upcomingReleasesSetAsinSaved =>
+      'Η σειρά συνδέθηκε - γίνεται σάρωση';
 
   @override
   String upcomingReleasesRemoveTitle(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Remove $count books',
-      one: 'Remove book',
+      other: 'Αφαίρεση $count βιβλίων',
+      one: 'Αφαίρεση βιβλίου',
     );
     return '$_temp0';
   }
 
   @override
-  String get upcomingReleasesRemoveThisScan => 'Remove from this scan';
+  String get upcomingReleasesRemoveThisScan => 'Αφαίρεση από αυτή τη σάρωση';
 
   @override
   String get upcomingReleasesRemoveThisScanDesc =>
-      'Can come back on a future scan';
+      'Μπορεί να επανεμφανιστεί σε μελλοντική σάρωση';
 
   @override
   String get upcomingReleasesRemoveForever =>
-      'Remove from this and future scans';
+      'Αφαίρεση από αυτή και τις μελλοντικές σαρώσεις';
 
   @override
   String get upcomingReleasesRemoveForeverDesc =>
-      'Goes to the removed list, restore any time';
+      'Πηγαίνει στη λίστα των αφαιρεθέντων, με δυνατότητα επαναφοράς οποτεδήποτε';
 
   @override
   String get upcomingReleasesRemovedForeverToast =>
-      'Removed - won\'t show on future scans';
+      'Αφαιρέθηκε - δεν θα εμφανίζεται στις μελλοντικές σαρώσεις';
 
   @override
-  String get upcomingReleasesRemovedBooksTitle => 'Removed books';
+  String get upcomingReleasesRemovedBooksTitle => 'Αφαιρεθέντα βιβλία';
 
   @override
   String upcomingReleasesRemovedCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count βιβλία',
+      one: '1 βιβλίο',
     );
     return '$_temp0';
   }
 
   @override
-  String get upcomingReleasesRemovedNone => 'No removed books';
+  String get upcomingReleasesRemovedNone => 'Δεν υπάρχουν αφαιρεθέντα βιβλία';
 
   @override
-  String get upcomingReleasesRestore => 'Restore';
+  String get upcomingReleasesRestore => 'Επαναφορά';
 
   @override
-  String get upcomingReleasesRestoredToast => 'Restored';
+  String get upcomingReleasesRestoredToast => 'Έγινε επαναφορά';
 
   @override
   String get upcomingReleasesRestoredNextScan =>
-      'Restored - it will show after the next scan';
+      'Έγινε επαναφορά - θα εμφανιστεί μετά την επόμενη σάρωση';
 
   @override
   String upcomingReleasesSelectedCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count selected',
-      one: '1 selected',
+      other: '$count επιλεγμένα',
+      one: '1 επιλεγμένο',
     );
     return '$_temp0';
   }
 
   @override
-  String get upcomingReleasesBulkRequest => 'Request';
+  String get upcomingReleasesBulkRequest => 'Αίτημα';
 
   @override
-  String get upcomingReleasesBulkRemove => 'Remove';
+  String get upcomingReleasesBulkRemove => 'Αφαίρεση';
 
   @override
   String upcomingReleasesBulkRemoved(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count removed',
-      one: '1 removed',
+      other: '$count αφαιρέθηκαν',
+      one: '1 αφαιρέθηκε',
     );
     return '$_temp0';
   }
@@ -7414,15 +7545,15 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count requests sent',
-      one: '1 request sent',
+      other: 'στάλθηκαν $count αιτήματα',
+      one: 'στάλθηκε 1 αίτημα',
     );
     return '$_temp0';
   }
 
   @override
   String upcomingReleasesBulkRequestSkipped(int count) {
-    return '$count skipped';
+    return '$count παραλείφθηκαν';
   }
 
   @override
@@ -7430,439 +7561,445 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count series rescanned',
-      one: '1 series rescanned',
+      other: 'έγινε νέα σάρωση σε $count σειρές',
+      one: 'έγινε νέα σάρωση σε 1 σειρά',
     );
     return '$_temp0';
   }
 
   @override
   String upcomingReleasesBulkScanFound(int count) {
-    return '$count with new books';
+    return '$count με νέα βιβλία';
   }
 
   @override
-  String get seriesExcludeFromScan => 'Exclude from series scan';
+  String get seriesExcludeFromScan => 'Εξαίρεση από τη σάρωση σειρών';
 
   @override
-  String get seriesIncludeInScan => 'Include in series scan';
+  String get seriesIncludeInScan => 'Συμπερίληψη στη σάρωση σειρών';
 
   @override
-  String get homeScreenEpisodeFallback => 'Episode';
+  String get homeScreenEpisodeFallback => 'Επεισόδιο';
 
   @override
-  String get libraryScreenUnknownTitle => 'Unknown Title';
+  String get libraryScreenUnknownTitle => 'Άγνωστος τίτλος';
 
   @override
-  String get playlistDetailDefaultName => 'Playlist';
+  String get playlistDetailDefaultName => 'Λίστα αναπαραγωγής';
 
   @override
   String playlistDetailItemCount(int count) {
-    return '$count items';
+    return '$count στοιχεία';
   }
 
   @override
-  String get playlistDetailUnfinished => 'Unfinished';
+  String get playlistDetailUnfinished => 'Μη ολοκληρωμένα';
 
   @override
-  String get playlistDetailRemoveFromPlaylist => 'Remove from playlist';
+  String get playlistDetailRemoveFromPlaylist =>
+      'Αφαίρεση από τη λίστα αναπαραγωγής';
 
   @override
-  String get playlistDetailDone => 'Done';
+  String get playlistDetailDone => 'Τέλος';
 
   @override
   String playlistDetailItemsMarkedFinished(int count) {
-    return '$count items marked finished';
+    return '$count στοιχεία επισημάνθηκαν ως ολοκληρωμένα';
   }
 
   @override
   String playlistDetailItemsMarkedUnfinished(int count) {
-    return '$count items marked unfinished';
+    return '$count στοιχεία επισημάνθηκαν ως μη ολοκληρωμένα';
   }
 
   @override
   String playlistDetailItemsRemoved(int count) {
-    return '$count items removed';
+    return '$count στοιχεία αφαιρέθηκαν';
   }
 
   @override
   String playlistDetailAddedToAbsorbing(String title) {
-    return 'Added \"$title\" to Absorbing';
+    return 'Το «$title» προστέθηκε στο Absorbing';
   }
 
   @override
-  String get collectionDetailDefaultName => 'Collection';
+  String get collectionDetailDefaultName => 'Συλλογή';
 
   @override
   String smartScopeBookCount(int count) {
-    return 'Smart Scope · $count books';
+    return 'Smart Scope · $count βιβλία';
   }
 
   @override
-  String get smartScopeNew => 'New Smart Scope';
+  String get smartScopeNew => 'Νέο Smart Scope';
 
   @override
   String get smartScopeNewSubtitle =>
-      'Save a set of filters as a list that keeps itself up to date';
+      'Αποθηκεύστε ένα σύνολο φίλτρων ως λίστα που ενημερώνεται μόνη της';
 
   @override
-  String get smartScopeEditTitle => 'Edit Smart Scope';
+  String get smartScopeEditTitle => 'Επεξεργασία Smart Scope';
 
   @override
-  String get smartScopeIcon => 'Icon';
+  String get smartScopeIcon => 'Εικονίδιο';
 
   @override
-  String get smartScopePublic => 'Visible to all users';
+  String get smartScopePublic => 'Ορατό σε όλους τους χρήστες';
 
   @override
-  String get smartScopeKobo => 'Sync to Kobo';
+  String get smartScopeKobo => 'Συγχρονισμός με Kobo';
 
   @override
-  String get smartScopeRules => 'Rules';
+  String get smartScopeRules => 'Κανόνες';
 
   @override
-  String get smartScopeMatchAll => 'Match all';
+  String get smartScopeMatchAll => 'Αντιστοιχία με όλους';
 
   @override
-  String get smartScopeMatchAny => 'Match any';
+  String get smartScopeMatchAny => 'Αντιστοιχία με οποιονδήποτε';
 
   @override
-  String get smartScopeAddRule => 'Add rule';
+  String get smartScopeAddRule => 'Προσθήκη κανόνα';
 
   @override
-  String get smartScopeAddGroup => 'Add group';
+  String get smartScopeAddGroup => 'Προσθήκη ομάδας';
 
   @override
-  String get smartScopeGroup => 'Group';
+  String get smartScopeGroup => 'Ομάδα';
 
   @override
-  String get smartScopeStartFrom => 'Start from';
+  String get smartScopeStartFrom => 'Έναρξη από';
 
   @override
-  String get smartScopeFromScratch => 'Build from scratch';
+  String get smartScopeFromScratch => 'Δημιουργία από το μηδέν';
 
   @override
-  String get smartScopeTplHasSeries => 'Has a series';
+  String get smartScopeTplHasSeries => 'Έχει σειρά';
 
   @override
-  String get smartScopeTplRecent => 'Added recently';
+  String get smartScopeTplRecent => 'Προστέθηκε πρόσφατα';
 
   @override
-  String get smartScopeTplPdf => 'PDF only';
+  String get smartScopeTplPdf => 'Μόνο PDF';
 
   @override
-  String get smartScopeTplNoGenres => 'No genres';
+  String get smartScopeTplNoGenres => 'Χωρίς είδη';
 
   @override
-  String get smartScopeTplEpub => 'EPUB only';
+  String get smartScopeTplEpub => 'Μόνο EPUB';
 
   @override
-  String get smartScopeCounting => 'Counting...';
+  String get smartScopeCounting => 'Καταμέτρηση...';
 
   @override
-  String get smartScopeSort => 'Default sort';
+  String get smartScopeSort => 'Προεπιλεγμένη ταξινόμηση';
 
   @override
-  String get smartScopeAddSort => 'Add sort level';
+  String get smartScopeAddSort => 'Προσθήκη επιπέδου ταξινόμησης';
 
   @override
-  String get smartScopeSortNone => 'No sort set, so books sort by title.';
+  String get smartScopeSortNone =>
+      'Δεν έχει οριστεί ταξινόμηση, οπότε τα βιβλία ταξινομούνται κατά τίτλο.';
 
   @override
-  String get smartScopeAscending => 'Ascending';
+  String get smartScopeAscending => 'Αύξουσα';
 
   @override
-  String get smartScopeDescending => 'Descending';
+  String get smartScopeDescending => 'Φθίνουσα';
 
   @override
-  String get smartScopeDelete => 'Delete Smart Scope';
+  String get smartScopeDelete => 'Διαγραφή Smart Scope';
 
   @override
-  String get smartScopeSaveFailed => 'Couldn\'t save the Smart Scope';
+  String get smartScopeSaveFailed =>
+      'Δεν ήταν δυνατή η αποθήκευση του Smart Scope';
 
   @override
-  String get smartScopeDeleteFailed => 'Couldn\'t delete the Smart Scope';
+  String get smartScopeDeleteFailed =>
+      'Δεν ήταν δυνατή η διαγραφή του Smart Scope';
 
   @override
-  String get smartScopeLoadFailed => 'Couldn\'t load the Smart Scope';
+  String get smartScopeLoadFailed =>
+      'Δεν ήταν δυνατή η φόρτωση του Smart Scope';
 
   @override
   String get smartScopeUnsupportedRule =>
-      'This rule can only be changed on the BookOrbit web. It\'s kept as it is.';
+      'Αυτός ο κανόνας μπορεί να αλλάξει μόνο στο web του BookOrbit. Διατηρείται ως έχει.';
 
   @override
-  String get smartScopeAnd => 'and';
+  String get smartScopeAnd => 'και';
 
   @override
-  String get smartScopeDays => 'days';
+  String get smartScopeDays => 'ημέρες';
 
   @override
-  String get smartScopeWeeks => 'weeks';
+  String get smartScopeWeeks => 'εβδομάδες';
 
   @override
-  String get smartScopeMonths => 'months';
+  String get smartScopeMonths => 'μήνες';
 
   @override
-  String get smartScopePickDate => 'Pick a date';
+  String get smartScopePickDate => 'Επιλέξτε ημερομηνία';
 
   @override
-  String get smartScopeAddValue => 'Add a value';
+  String get smartScopeAddValue => 'Προσθήκη τιμής';
 
   @override
-  String get smartScopeValue => 'Value';
+  String get smartScopeValue => 'Τιμή';
 
   @override
-  String get smartScopeCustomFields => 'Custom fields';
+  String get smartScopeCustomFields => 'Προσαρμοσμένα πεδία';
 
   @override
-  String get smartScopeAnyProvider => 'Any provider';
+  String get smartScopeAnyProvider => 'Οποιοσδήποτε πάροχος';
 
   @override
-  String get smartScopeScoreOutstanding => 'Outstanding';
+  String get smartScopeScoreOutstanding => 'Εξαιρετικό';
 
   @override
-  String get smartScopeScoreGood => 'Good';
+  String get smartScopeScoreGood => 'Καλό';
 
   @override
-  String get smartScopeScoreFair => 'Fair';
+  String get smartScopeScoreFair => 'Μέτριο';
 
   @override
-  String get smartScopeScorePoor => 'Poor';
+  String get smartScopeScorePoor => 'Κακό';
 
   @override
   String get smartScopeMb => 'MB';
 
   @override
-  String get smartScopeMaxValues => 'Up to 20 values';
+  String get smartScopeMaxValues => 'Έως 20 τιμές';
 
   @override
-  String get scopeFieldTitle => 'Title';
+  String get scopeFieldTitle => 'Τίτλος';
 
   @override
-  String get scopeFieldAuthor => 'Author';
+  String get scopeFieldAuthor => 'Συγγραφέας';
 
   @override
-  String get scopeFieldSeries => 'Series';
+  String get scopeFieldSeries => 'Σειρά';
 
   @override
-  String get scopeFieldSeriesIndex => 'Series number';
+  String get scopeFieldSeriesIndex => 'Αριθμός σειράς';
 
   @override
-  String get scopeFieldGenre => 'Genre';
+  String get scopeFieldGenre => 'Είδος';
 
   @override
-  String get scopeFieldTag => 'Tag';
+  String get scopeFieldTag => 'Ετικέτα';
 
   @override
-  String get scopeFieldReadStatus => 'Read status';
+  String get scopeFieldReadStatus => 'Κατάσταση ανάγνωσης';
 
   @override
-  String get scopeFieldReadProgress => 'Reading progress';
+  String get scopeFieldReadProgress => 'Πρόοδος ανάγνωσης';
 
   @override
-  String get scopeFieldRating => 'Your rating';
+  String get scopeFieldRating => 'Η βαθμολογία σας';
 
   @override
-  String get scopeFieldFormat => 'Format';
+  String get scopeFieldFormat => 'Μορφή';
 
   @override
-  String get scopeFieldLibrary => 'Library';
+  String get scopeFieldLibrary => 'Βιβλιοθήκη';
 
   @override
-  String get scopeFieldCollection => 'Collection';
+  String get scopeFieldCollection => 'Συλλογή';
 
   @override
-  String get scopeFieldPublisher => 'Publisher';
+  String get scopeFieldPublisher => 'Εκδότης';
 
   @override
-  String get scopeFieldLanguage => 'Language';
+  String get scopeFieldLanguage => 'Γλώσσα';
 
   @override
-  String get scopeFieldPublishedDate => 'Published date';
+  String get scopeFieldPublishedDate => 'Ημερομηνία έκδοσης';
 
   @override
-  String get scopeFieldPublishedYear => 'Published year';
+  String get scopeFieldPublishedYear => 'Έτος έκδοσης';
 
   @override
-  String get scopeFieldAddedAt => 'Date added';
+  String get scopeFieldAddedAt => 'Ημερομηνία προσθήκης';
 
   @override
-  String get scopeFieldStartedAt => 'Date started';
+  String get scopeFieldStartedAt => 'Ημερομηνία έναρξης';
 
   @override
-  String get scopeFieldFinishedAt => 'Date finished';
+  String get scopeFieldFinishedAt => 'Ημερομηνία ολοκλήρωσης';
 
   @override
-  String get scopeFieldPageCount => 'Page count';
+  String get scopeFieldPageCount => 'Αριθμός σελίδων';
 
   @override
-  String get scopeFieldFileSize => 'File size';
+  String get scopeFieldFileSize => 'Μέγεθος αρχείου';
 
   @override
-  String get scopeFieldCommunityRating => 'Community rating';
+  String get scopeFieldCommunityRating => 'Βαθμολογία κοινότητας';
 
   @override
-  String get scopeFieldCommunityRatingCount => 'Community review count';
+  String get scopeFieldCommunityRatingCount => 'Αριθμός κριτικών κοινότητας';
 
   @override
-  String get scopeFieldMetadataScore => 'Metadata score';
+  String get scopeFieldMetadataScore => 'Βαθμολογία μεταδεδομένων';
 
   @override
   String get scopeFieldIsbn => 'ISBN';
 
   @override
-  String get scopeFieldDescription => 'Description';
+  String get scopeFieldDescription => 'Περιγραφή';
 
   @override
-  String get scopeFieldCover => 'Cover';
+  String get scopeFieldCover => 'Εξώφυλλο';
 
   @override
-  String get scopeFieldAudioCover => 'Audiobook cover';
+  String get scopeFieldAudioCover => 'Εξώφυλλο ηχητικού βιβλίου';
 
   @override
-  String get scopeFieldFileAvailability => 'File availability';
+  String get scopeFieldFileAvailability => 'Διαθεσιμότητα αρχείων';
 
   @override
-  String get scopeFieldLockStatus => 'Lock status';
+  String get scopeFieldLockStatus => 'Κατάσταση κλειδώματος';
 
   @override
-  String get scopeFieldSeriesStatus => 'Series status';
+  String get scopeFieldSeriesStatus => 'Κατάσταση σειράς';
 
   @override
-  String get scopeSortUpdatedAt => 'Date updated';
+  String get scopeSortUpdatedAt => 'Ημερομηνία ενημέρωσης';
 
   @override
-  String get scopeSortLastReadAt => 'Last read';
+  String get scopeSortLastReadAt => 'Τελευταία ανάγνωση';
 
   @override
-  String get scopeSortRandom => 'Random';
+  String get scopeSortRandom => 'Τυχαία';
 
   @override
-  String get scopeOpContains => 'contains';
+  String get scopeOpContains => 'περιέχει';
 
   @override
-  String get scopeOpNotContains => 'does not contain';
+  String get scopeOpNotContains => 'δεν περιέχει';
 
   @override
-  String get scopeOpStartsWith => 'starts with';
+  String get scopeOpStartsWith => 'ξεκινά με';
 
   @override
-  String get scopeOpEndsWith => 'ends with';
+  String get scopeOpEndsWith => 'τελειώνει με';
 
   @override
-  String get scopeOpEq => 'is';
+  String get scopeOpEq => 'είναι';
 
   @override
-  String get scopeOpNotEq => 'is not';
+  String get scopeOpNotEq => 'δεν είναι';
 
   @override
-  String get scopeOpIsEmpty => 'is empty';
+  String get scopeOpIsEmpty => 'είναι κενό';
 
   @override
-  String get scopeOpIsNotEmpty => 'is not empty';
+  String get scopeOpIsNotEmpty => 'δεν είναι κενό';
 
   @override
-  String get scopeOpGt => 'greater than';
+  String get scopeOpGt => 'μεγαλύτερο από';
 
   @override
-  String get scopeOpGte => 'at least';
+  String get scopeOpGte => 'τουλάχιστον';
 
   @override
-  String get scopeOpLt => 'less than';
+  String get scopeOpLt => 'μικρότερο από';
 
   @override
-  String get scopeOpLte => 'at most';
+  String get scopeOpLte => 'το πολύ';
 
   @override
-  String get scopeOpBetween => 'between';
+  String get scopeOpBetween => 'μεταξύ';
 
   @override
-  String get scopeOpIncludesAny => 'includes any of';
+  String get scopeOpIncludesAny => 'περιλαμβάνει οποιοδήποτε από';
 
   @override
-  String get scopeOpIncludesAll => 'includes all of';
+  String get scopeOpIncludesAll => 'περιλαμβάνει όλα από';
 
   @override
-  String get scopeOpExcludesAll => 'excludes all of';
+  String get scopeOpExcludesAll => 'εξαιρεί όλα από';
 
   @override
-  String get scopeOpBefore => 'before';
+  String get scopeOpBefore => 'πριν από';
 
   @override
-  String get scopeOpAfter => 'after';
+  String get scopeOpAfter => 'μετά από';
 
   @override
-  String get scopeOpWithinLast => 'within the last';
+  String get scopeOpWithinLast => 'εντός των τελευταίων';
 
   @override
-  String get scopeOpIsMissing => 'is missing';
+  String get scopeOpIsMissing => 'λείπει';
 
   @override
-  String get scopeOpIsPresent => 'is present';
+  String get scopeOpIsPresent => 'υπάρχει';
 
   @override
-  String get scopeOpIsUnread => 'is unread';
+  String get scopeOpIsUnread => 'δεν έχει διαβαστεί';
 
   @override
-  String get scopeOpIsInProgress => 'is in progress';
+  String get scopeOpIsInProgress => 'βρίσκεται σε εξέλιξη';
 
   @override
-  String get scopeOpIsFinished => 'is finished';
+  String get scopeOpIsFinished => 'έχει ολοκληρωθεί';
 
   @override
-  String get scopeOpIsLocked => 'is locked';
+  String get scopeOpIsLocked => 'είναι κλειδωμένο';
 
   @override
-  String get scopeOpIsUnlocked => 'is unlocked';
+  String get scopeOpIsUnlocked => 'είναι ξεκλείδωτο';
 
   @override
-  String get scopeOpIsUpNext => 'is up next';
+  String get scopeOpIsUpNext => 'είναι το επόμενο';
 
   @override
-  String get scopeOpIsTrue => 'is yes';
+  String get scopeOpIsTrue => 'είναι ναι';
 
   @override
-  String get scopeOpIsFalse => 'is no';
+  String get scopeOpIsFalse => 'είναι όχι';
 
   @override
   String smartScopeMatchCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books match',
-      one: '1 book matches',
-      zero: 'No books match',
+      other: '$count βιβλία ταιριάζουν',
+      one: '1 βιβλίο ταιριάζει',
+      zero: 'Κανένα βιβλίο δεν ταιριάζει',
     );
     return '$_temp0';
   }
 
   @override
   String smartScopeDeleteConfirm(String name) {
-    return 'Delete \"$name\"? This can\'t be undone.';
+    return 'Διαγραφή του «$name»; Δεν μπορεί να αναιρεθεί.';
   }
 
   @override
   String collectionDetailBookCount(int count) {
-    return '$count books';
+    return '$count βιβλία';
   }
 
   @override
-  String get collectionDetailDone => 'Done';
+  String get collectionDetailDone => 'Τέλος';
 
   @override
   String collectionDetailAddedToAbsorbing(String title) {
-    return 'Added \"$title\" to Absorbing';
+    return 'Το «$title» προστέθηκε στο Absorbing';
   }
 
   @override
-  String get audibleSeriesNoBooksFound => 'No books found on Audible';
+  String get audibleSeriesNoBooksFound => 'Δεν βρέθηκαν βιβλία στο Audible';
 
   @override
-  String get audibleSeriesFailedToLoad => 'Failed to load series from Audible';
+  String get audibleSeriesFailedToLoad =>
+      'Αποτυχία φόρτωσης της σειράς από το Audible';
 
   @override
   String audibleSeriesSummary(int total, int missing) {
-    return '$total on Audible · $missing missing';
+    return '$total στο Audible · $missing λείπουν';
   }
 
   @override
@@ -7871,195 +8008,201 @@ class AppLocalizationsEl extends AppLocalizations {
     int missing,
     int upcoming,
   ) {
-    return '$total on Audible · $missing missing · $upcoming upcoming';
+    return '$total στο Audible · $missing λείπουν · $upcoming επερχόμενα';
   }
 
   @override
   String audibleSeriesFilterMissing(int count) {
-    return 'Missing ($count)';
+    return 'Λείπουν ($count)';
   }
 
   @override
   String audibleSeriesFilterUpcoming(int count) {
-    return 'Upcoming ($count)';
+    return 'Επερχόμενα ($count)';
   }
 
   @override
   String audibleSeriesFilterAll(int count) {
-    return 'All ($count)';
+    return 'Όλα ($count)';
   }
 
   @override
-  String get audibleSeriesSearching => 'Searching Audible...';
+  String get audibleSeriesSearching => 'Αναζήτηση στο Audible...';
 
   @override
-  String get audibleSeriesCompleteSeries => 'You have the complete series!';
+  String get audibleSeriesCompleteSeries => 'Έχετε ολόκληρη τη σειρά!';
 
   @override
-  String get audibleSeriesNoUpcoming => 'No upcoming releases found';
+  String get audibleSeriesNoUpcoming => 'Δεν βρέθηκαν επερχόμενες κυκλοφορίες';
 
   @override
-  String get audibleSeriesUpcomingBadge => 'UPCOMING';
+  String get audibleSeriesUpcomingBadge => 'ΕΠΕΡΧΟΜΕΝΟ';
 
   @override
-  String get audibleSeriesAbridged => 'Abridged';
+  String get audibleSeriesAbridged => 'Συνοπτική έκδοση';
 
   @override
-  String get audibleSeriesRegionTitle => 'Audible Region';
+  String get audibleSeriesRegionTitle => 'Περιοχή Audible';
 
   @override
-  String get audibleSeriesOpenOnAudible => 'Open on Audible';
+  String get audibleSeriesOpenOnAudible => 'Άνοιγμα στο Audible';
 
   @override
-  String get audibleSeriesAddToCalendar => 'Add to Calendar';
+  String get audibleSeriesAddToCalendar => 'Προσθήκη στο ημερολόγιο';
 
   @override
-  String get audibleSeriesAddToUpcoming => 'Add to upcoming releases';
+  String get audibleSeriesAddToUpcoming =>
+      'Προσθήκη στις επερχόμενες κυκλοφορίες';
 
   @override
-  String get audibleSeriesAddedToUpcoming => 'Added to upcoming releases';
+  String get audibleSeriesAddedToUpcoming =>
+      'Προστέθηκε στις επερχόμενες κυκλοφορίες';
 
   @override
-  String get audibleSeriesAlreadyInUpcoming => 'Already on the upcoming page';
+  String get audibleSeriesAlreadyInUpcoming =>
+      'Υπάρχει ήδη στη σελίδα επερχόμενων';
 
   @override
-  String get audibleSeriesCouldNotOpenAudible => 'Could not open Audible';
+  String get audibleSeriesCouldNotOpenAudible =>
+      'Δεν ήταν δυνατό το άνοιγμα του Audible';
 
   @override
-  String get audibleSeriesCouldNotOpenCalendar => 'Could not open calendar';
+  String get audibleSeriesCouldNotOpenCalendar =>
+      'Δεν ήταν δυνατό το άνοιγμα του ημερολογίου';
 
   @override
   String audibleSeriesCalendarDescription(String seriesName) {
-    return 'New audiobook release in the $seriesName series';
+    return 'Νέα κυκλοφορία ηχητικού βιβλίου στη σειρά $seriesName';
   }
 
   @override
-  String get authorBooksGroupBySeries => 'Group by series';
+  String get authorBooksGroupBySeries => 'Ομαδοποίηση κατά σειρά';
 
   @override
-  String get authorBooksList => 'List';
+  String get authorBooksList => 'Λίστα';
 
   @override
-  String get authorBooksGrid => 'Grid';
+  String get authorBooksGrid => 'Πλέγμα';
 
   @override
   String authorBooksBookCount(int count) {
-    return '$count books';
+    return '$count βιβλία';
   }
 
   @override
-  String get metadataLookupCover => 'Cover';
+  String get metadataLookupCover => 'Εξώφυλλο';
 
   @override
-  String get metadataLookupChooseFields => 'Choose Fields to Apply';
+  String get metadataLookupChooseFields => 'Επιλογή πεδίων προς εφαρμογή';
 
   @override
   String metadataLookupApplyFields(int count) {
-    return 'Apply $count fields';
+    return 'Εφαρμογή $count πεδίων';
   }
 
   @override
   String metadataLookupFieldsSavedLocally(int count) {
-    return '$count fields saved locally';
+    return '$count πεδία αποθηκεύτηκαν τοπικά';
   }
 
   @override
-  String get metadataLookupOverrideLocalDisplay => 'Override local display';
+  String get metadataLookupOverrideLocalDisplay =>
+      'Παράκαμψη τοπικής εμφάνισης';
 
   @override
-  String get equalizerPresetFlat => 'Flat';
+  String get equalizerPresetFlat => 'Επίπεδο';
 
   @override
-  String get equalizerPresetVoiceBoost => 'Voice Boost';
+  String get equalizerPresetVoiceBoost => 'Ενίσχυση φωνής';
 
   @override
-  String get equalizerPresetBassBoost => 'Bass Boost';
+  String get equalizerPresetBassBoost => 'Ενίσχυση μπάσων';
 
   @override
-  String get equalizerPresetTrebleBoost => 'Treble Boost';
+  String get equalizerPresetTrebleBoost => 'Ενίσχυση πρίμων';
 
   @override
   String get equalizerPresetPodcast => 'Podcast';
 
   @override
-  String get equalizerPresetAudiobook => 'Audiobook';
+  String get equalizerPresetAudiobook => 'Ηχητικό βιβλίο';
 
   @override
-  String get equalizerPresetReduceNoise => 'Reduce Noise';
+  String get equalizerPresetReduceNoise => 'Μείωση θορύβου';
 
   @override
-  String get equalizerPresetLoudness => 'Loudness';
+  String get equalizerPresetLoudness => 'Ένταση';
 
   @override
   String equalizerEditingSavedNamed(String title) {
-    return 'Editing saved EQ for \"$title\"';
+    return 'Επεξεργασία αποθηκευμένου EQ για το «$title»';
   }
 
   @override
-  String get equalizerEditingSavedGeneric => 'Editing saved EQ';
+  String get equalizerEditingSavedGeneric => 'Επεξεργασία αποθηκευμένου EQ';
 
   @override
-  String get equalizerPerBookEq => 'Per-book EQ';
+  String get equalizerPerBookEq => 'EQ ανά βιβλίο';
 
   @override
-  String get notesDeleteNoteQuestion => 'Delete note?';
+  String get notesDeleteNoteQuestion => 'Διαγραφή σημείωσης;';
 
   @override
   String notesDeleteNoteContent(String title) {
-    return 'Delete \"$title\"?';
+    return 'Διαγραφή του «$title»;';
   }
 
   @override
-  String get notesExport => 'Export';
+  String get notesExport => 'Εξαγωγή';
 
   @override
-  String get notesNewNote => 'New note';
+  String get notesNewNote => 'Νέα σημείωση';
 
   @override
-  String get librarySortFilterUpcomingReleases => 'Scan Series';
+  String get librarySortFilterUpcomingReleases => 'Σάρωση σειρών';
 
   @override
   String get librarySortFilterMatchAllAuthorsSubtitle =>
-      'Fetch a photo and bio for every author from the metadata provider';
+      'Λήψη φωτογραφίας και βιογραφικού για κάθε συγγραφέα από τον πάροχο μεταδεδομένων';
 
   @override
   String get librarySortFilterUpcomingReleasesSubtitle =>
-      'Check Audible for upcoming and missing books in your series';
+      'Έλεγχος του Audible για επερχόμενα και ελλιπή βιβλία στις σειρές σας';
 
   @override
   String sleepTimerSheetChaptersLeft(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count chapters left',
-      one: '1 chapter left',
+      other: 'απομένουν $count κεφάλαια',
+      one: 'απομένει 1 κεφάλαιο',
     );
     return '$_temp0';
   }
 
   @override
   String sleepTimerSheetAddMinutesChip(int minutes) {
-    return '+${minutes}m';
+    return '+$minutes λ';
   }
 
   @override
   String sleepTimerSheetAddChaptersChip(int count) {
-    return '+$count ch';
+    return '+$count κεφ.';
   }
 
   @override
   String sleepTimerSheetMinShort(int minutes) {
-    return '${minutes}m';
+    return '$minutes λ';
   }
 
   @override
   String sleepTimerSheetSecondsShort(int seconds) {
-    return '${seconds}s';
+    return '$seconds δ';
   }
 
   @override
   String sleepTimerSheetMinSecShort(int minutes, int seconds) {
-    return '${minutes}m ${seconds}s';
+    return '$minutes λ $seconds δ';
   }
 
   @override
@@ -8067,15 +8210,15 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count chapters',
-      one: '1 chapter',
+      other: '$count κεφάλαια',
+      one: '1 κεφάλαιο',
     );
     return '$_temp0';
   }
 
   @override
   String sleepTimerSheetChaptersChip(int count) {
-    return '$count ch';
+    return '$count κεφ.';
   }
 
   @override
@@ -8083,75 +8226,77 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Sleep after $count chapters',
-      one: 'Sleep after 1 chapter',
+      other: 'Ύπνος μετά από $count κεφάλαια',
+      one: 'Ύπνος μετά από 1 κεφάλαιο',
     );
     return '$_temp0';
   }
 
   @override
-  String get sleepTimerSheetRewindOnSleep => 'Rewind on sleep';
+  String get sleepTimerSheetRewindOnSleep => 'Επαναφορά πίσω κατά τον ύπνο';
 
   @override
-  String get sleepTimerSheetShake => 'Shake';
+  String get sleepTimerSheetShake => 'Ανακίνηση';
 
   @override
   String sleepTimerSheetAddsMinutes(int minutes) {
-    return 'Adds $minutes min';
+    return 'Προσθέτει $minutes λεπτά';
   }
 
   @override
-  String get sleepTimerSheetAddsOneChapter => 'Adds 1 chapter';
+  String get sleepTimerSheetAddsOneChapter => 'Προσθέτει 1 κεφάλαιο';
 
   @override
-  String get sleepTimerSheetResetsToFull => 'Resets to full duration';
+  String get sleepTimerSheetResetsToFull => 'Επαναφέρει την πλήρη διάρκεια';
 
   @override
-  String get sleepTimerSheetTabSpecificChapter => 'Chapter';
+  String get sleepTimerSheetTabSpecificChapter => 'Κεφάλαιο';
 
   @override
-  String get sleepTimerSheetSpecificNoChapters => 'No chapters available';
+  String get sleepTimerSheetSpecificNoChapters =>
+      'Δεν υπάρχουν διαθέσιμα κεφάλαια';
 
   @override
   String sleepTimerSheetSpecificChapterFallback(int number) {
-    return 'Chapter $number';
+    return 'Κεφάλαιο $number';
   }
 
   @override
-  String get sleepTimerSheetSpecificPassedShort => 'passed';
+  String get sleepTimerSheetSpecificPassedShort => 'παρήλθε';
 
   @override
-  String get sleepTimerSheetSpecificStart => 'Chapter Start';
+  String get sleepTimerSheetSpecificStart => 'Αρχή κεφαλαίου';
 
   @override
-  String get sleepTimerSheetSpecificEnd => 'Chapter End';
+  String get sleepTimerSheetSpecificEnd => 'Τέλος κεφαλαίου';
 
   @override
-  String get sleepTimerSheetSpecificEndsAt => 'Sleep timer will end at';
+  String get sleepTimerSheetSpecificEndsAt =>
+      'Ο χρονοδιακόπτης ύπνου θα λήξει στις';
 
   @override
   String sleepTimerSheetSpecificCountdown(String countdown) {
-    return 'in $countdown';
+    return 'σε $countdown';
   }
 
   @override
   String get sleepTimerSheetSpecificAlreadyPassed =>
-      'This point has already passed';
+      'Αυτό το σημείο έχει ήδη παρέλθει';
 
   @override
-  String get sleepTimerSheetSpecificStartButton => 'Start timer';
+  String get sleepTimerSheetSpecificStartButton => 'Έναρξη χρονοδιακόπτη';
 
   @override
-  String get sleepTimerSheetSpecificStartButtonPassed => 'Already passed';
+  String get sleepTimerSheetSpecificStartButtonPassed => 'Έχει ήδη παρέλθει';
 
   @override
-  String get timeAm => 'AM';
+  String get timeAm => 'π.μ.';
 
   @override
-  String get timePm => 'PM';
+  String get timePm => 'μ.μ.';
 
   @override
-  String get collectionPickerCollectionFallback => 'Collection';
+  String get collectionPickerCollectionFallback => 'Συλλογή';
 
   @override
   String collectionPickerNameWithCount(String name, int count) {
@@ -8159,7 +8304,7 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get playlistPickerPlaylistFallback => 'Playlist';
+  String get playlistPickerPlaylistFallback => 'Λίστα αναπαραγωγής';
 
   @override
   String playlistPickerNameWithCount(String name, int count) {
@@ -8167,323 +8312,330 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get cardChaptersPlayFromChapterTitle => 'Play from chapter?';
+  String get cardChaptersPlayFromChapterTitle => 'Αναπαραγωγή από το κεφάλαιο;';
 
   @override
   String cardChaptersPlayFromChapterContent(String title) {
-    return 'Start playing from \"$title\"?';
+    return 'Έναρξη αναπαραγωγής από το «$title»;';
   }
 
   @override
-  String get cardChaptersPlay => 'Play';
+  String get cardChaptersPlay => 'Αναπαραγωγή';
 
   @override
-  String get absorbingSharedToday => 'Today';
+  String get absorbingSharedToday => 'Σήμερα';
 
   @override
-  String get absorbingSharedYesterday => 'Yesterday';
+  String get absorbingSharedYesterday => 'Χθες';
 
   @override
-  String get absorbingSharedMonday => 'Monday';
+  String get absorbingSharedMonday => 'Δευτέρα';
 
   @override
-  String get absorbingSharedTuesday => 'Tuesday';
+  String get absorbingSharedTuesday => 'Τρίτη';
 
   @override
-  String get absorbingSharedWednesday => 'Wednesday';
+  String get absorbingSharedWednesday => 'Τετάρτη';
 
   @override
-  String get absorbingSharedThursday => 'Thursday';
+  String get absorbingSharedThursday => 'Πέμπτη';
 
   @override
-  String get absorbingSharedFriday => 'Friday';
+  String get absorbingSharedFriday => 'Παρασκευή';
 
   @override
-  String get absorbingSharedSaturday => 'Saturday';
+  String get absorbingSharedSaturday => 'Σάββατο';
 
   @override
-  String get absorbingSharedSunday => 'Sunday';
+  String get absorbingSharedSunday => 'Κυριακή';
 
   @override
-  String get absorbingSharedAm => 'AM';
+  String get absorbingSharedAm => 'π.μ.';
 
   @override
-  String get absorbingSharedPm => 'PM';
+  String get absorbingSharedPm => 'μ.μ.';
 
   @override
   String sectionDetailAddedToAbsorbing(String title) {
-    return 'Added \"$title\" to Absorbing';
+    return 'Το «$title» προστέθηκε στο Absorbing';
   }
 
   @override
-  String get sectionDetailDoneBadge => 'Done';
+  String get sectionDetailDoneBadge => 'Τέλος';
 
   @override
-  String get homeCustomizeAddGenreTitle => 'Add Genre Section';
+  String get homeCustomizeAddGenreTitle => 'Προσθήκη ενότητας είδους';
 
   @override
   String get homeCustomizeAddGenreSubtitle =>
-      'Pick a genre to show on your home screen';
+      'Επιλέξτε ένα είδος για εμφάνιση στην αρχική οθόνη';
 
   @override
-  String get homeSectionDoneBadge => 'Done';
+  String get homeSectionDoneBadge => 'Τέλος';
 
   @override
-  String get tipsSheetQuickBookmarksTitle => 'Quick Bookmarks';
+  String get tipsSheetQuickBookmarksTitle => 'Γρήγοροι σελιδοδείκτες';
 
   @override
   String get tipsSheetQuickBookmarksDesc =>
-      'Long-press the bookmark button on any card to instantly drop a bookmark at your current position without opening the bookmark sheet.';
+      'Πατήστε παρατεταμένα το κουμπί σελιδοδείκτη σε οποιαδήποτε κάρτα για να προσθέσετε άμεσα σελιδοδείκτη στην τρέχουσα θέση χωρίς να ανοίξετε το φύλλο σελιδοδεικτών.';
 
   @override
-  String get tipsSheetCoverPlayPauseTitle => 'Cover Play/Pause';
+  String get tipsSheetCoverPlayPauseTitle =>
+      'Αναπαραγωγή/παύση από το εξώφυλλο';
 
   @override
   String get tipsSheetCoverPlayPauseDesc =>
-      'Tap the cover art on any card to play or pause. Toggle this in Settings under Absorbing Cards. A faint pause icon shows when playing so you know it\'s tappable.';
+      'Πατήστε το εξώφυλλο σε οποιαδήποτε κάρτα για αναπαραγωγή ή παύση. Εναλλάξτε το στις Ρυθμίσεις, στις Κάρτες Absorbing. Ένα αχνό εικονίδιο παύσης εμφανίζεται κατά την αναπαραγωγή ώστε να ξέρετε ότι πατιέται.';
 
   @override
-  String get tipsSheetFullScreenPlayerTitle => 'Full Screen Player';
+  String get tipsSheetFullScreenPlayerTitle =>
+      'Πρόγραμμα αναπαραγωγής πλήρους οθόνης';
 
   @override
   String get tipsSheetFullScreenPlayerDesc =>
-      'Swipe up on any absorbing card to open the full screen player. Swipe down to dismiss it.';
+      'Σύρετε προς τα πάνω σε οποιαδήποτε κάρτα absorbing για να ανοίξετε το πρόγραμμα αναπαραγωγής πλήρους οθόνης. Σύρετε προς τα κάτω για να το κλείσετε.';
 
   @override
-  String get tipsSheetQuickAddAbsorbingTitle => 'Quick Add to Absorbing';
+  String get tipsSheetQuickAddAbsorbingTitle =>
+      'Γρήγορη προσθήκη στο Absorbing';
 
   @override
   String get tipsSheetQuickAddAbsorbingDesc =>
-      'Swipe right on any book in a list sheet (series, author, search results) to instantly add it to your absorbing queue.';
+      'Σύρετε δεξιά σε οποιοδήποτε βιβλίο σε φύλλο λίστας (σειρά, συγγραφέας, αποτελέσματα αναζήτησης) για να το προσθέσετε άμεσα στην ουρά absorbing.';
 
   @override
-  String get tipsSheetShakeExtendSleepTitle => 'Shake to Extend Sleep';
+  String get tipsSheetShakeExtendSleepTitle => 'Ανακίνηση για παράταση ύπνου';
 
   @override
   String get tipsSheetShakeExtendSleepDesc =>
-      'If you have a sleep timer running and shake your phone, it\'ll add extra minutes. Configure the amount in Settings under Sleep Timer.';
+      'Αν έχετε ενεργό χρονοδιακόπτη ύπνου και ανακινήσετε το τηλέφωνο, θα προστεθούν επιπλέον λεπτά. Ορίστε το ποσό στις Ρυθμίσεις, στον Χρονοδιακόπτη ύπνου.';
 
   @override
-  String get tipsSheetSeriesNavigationTitle => 'Series Navigation';
+  String get tipsSheetSeriesNavigationTitle => 'Πλοήγηση σειράς';
 
   @override
   String get tipsSheetSeriesNavigationDesc =>
-      'Tap the series name in any book\'s detail popup to see all books in the series, sorted in reading order with sequence badges on each cover.';
+      'Πατήστε το όνομα της σειράς στο αναδυόμενο παράθυρο λεπτομερειών ενός βιβλίου για να δείτε όλα τα βιβλία της σειράς, ταξινομημένα με σειρά ανάγνωσης και με σήματα αρίθμησης σε κάθε εξώφυλλο.';
 
   @override
-  String get tipsSheetSwipeBetweenBooksTitle => 'Swipe Between Books';
+  String get tipsSheetSwipeBetweenBooksTitle => 'Σύρσιμο μεταξύ βιβλίων';
 
   @override
   String get tipsSheetSwipeBetweenBooksDesc =>
-      'Swipe left and right on the Absorbing screen to switch between your in-progress books. With Manual queue mode on, the cards also act as your queue, so the next one auto-plays when the current one finishes.';
+      'Σύρετε αριστερά και δεξιά στην οθόνη Absorbing για εναλλαγή μεταξύ των βιβλίων που διαβάζετε. Με ενεργή τη χειροκίνητη λειτουργία ουράς, οι κάρτες λειτουργούν και ως ουρά, ώστε το επόμενο να παίζει αυτόματα όταν τελειώσει το τρέχον.';
 
   @override
-  String get tipsSheetTapToSeekTitle => 'Tap to Seek';
+  String get tipsSheetTapToSeekTitle => 'Πάτημα για αναζήτηση';
 
   @override
   String get tipsSheetTapToSeekDesc =>
-      'Tap anywhere on the chapter or book progress bar to jump directly to that position. You can also drag the bars for fine-grained control.';
+      'Πατήστε οπουδήποτε στη γραμμή προόδου κεφαλαίου ή βιβλίου για μετάβαση απευθείας σε εκείνη τη θέση. Μπορείτε επίσης να σύρετε τις γραμμές για ακριβή έλεγχο.';
 
   @override
-  String get tipsSheetSpeedAdjustedTimeTitle => 'Speed-Adjusted Time';
+  String get tipsSheetSpeedAdjustedTimeTitle =>
+      'Χρόνος προσαρμοσμένος στην ταχύτητα';
 
   @override
   String get tipsSheetSpeedAdjustedTimeDesc =>
-      'Every time shown - position, remaining, chapters, bookmarks - adjusts to your playback speed. Listening at 1.5x? The times shown reflect how long they\'ll actually take you.';
+      'Κάθε χρόνος που εμφανίζεται - θέση, υπόλοιπο, κεφάλαια, σελιδοδείκτες - προσαρμόζεται στην ταχύτητα αναπαραγωγής. Ακούτε στο 1.5x; Οι χρόνοι δείχνουν πόσο θα σας πάρει πραγματικά.';
 
   @override
-  String get tipsSheetPlaybackHistoryTitle => 'Playback History';
+  String get tipsSheetPlaybackHistoryTitle => 'Ιστορικό αναπαραγωγής';
 
   @override
   String get tipsSheetPlaybackHistoryDesc =>
-      'Tap the History button on any card to see a timeline of every play, pause, seek, and speed change. Tap any event to jump back to that position.';
+      'Πατήστε το κουμπί Ιστορικό σε οποιαδήποτε κάρτα για να δείτε χρονολόγιο κάθε αναπαραγωγής, παύσης, αναζήτησης και αλλαγής ταχύτητας. Πατήστε οποιοδήποτε συμβάν για να επιστρέψετε σε εκείνη τη θέση.';
 
   @override
-  String get tipsSheetAutoRewindTitle => 'Auto-Rewind';
+  String get tipsSheetAutoRewindTitle => 'Αυτόματη επαναφορά';
 
   @override
   String get tipsSheetAutoRewindDesc =>
-      'When you resume after a pause, Absorb automatically rewinds a few seconds so you don\'t lose your place. The rewind amount scales with how long you were away. Configure it in Settings.';
+      'Όταν συνεχίζετε μετά από παύση, το Absorb γυρίζει αυτόματα πίσω λίγα δευτερόλεπτα για να μη χάσετε το σημείο σας. Το ποσό εξαρτάται από το πόσο καιρό λείπατε. Ρυθμίστε το στις Ρυθμίσεις.';
 
   @override
-  String get tipsSheetSeriesQueueModeTitle => 'Series Queue Mode';
+  String get tipsSheetSeriesQueueModeTitle => 'Λειτουργία ουράς σειράς';
 
   @override
   String get tipsSheetSeriesQueueModeDesc =>
-      'When you finish a book that\'s part of a series, Absorb can automatically play the next book. Set queue mode to \"Series\" in Settings.';
+      'Όταν τελειώσετε ένα βιβλίο που ανήκει σε σειρά, το Absorb μπορεί να παίξει αυτόματα το επόμενο. Ορίστε τη λειτουργία ουράς σε «Σειρά» στις Ρυθμίσεις.';
 
   @override
-  String get tipsSheetOfflineModeTitle => 'Offline Mode';
+  String get tipsSheetOfflineModeTitle => 'Λειτουργία εκτός σύνδεσης';
 
   @override
   String get tipsSheetOfflineModeDesc =>
-      'Tap the airplane button on the Absorbing screen to enter offline mode. This stops syncing, saves data, and only shows your downloaded books. Great for flights or low signal areas.';
+      'Πατήστε το κουμπί αεροπλάνου στην οθόνη Absorbing για να μπείτε σε λειτουργία εκτός σύνδεσης. Σταματά τον συγχρονισμό, εξοικονομεί δεδομένα και εμφανίζει μόνο τα ληφθέντα βιβλία. Ιδανικό για πτήσεις ή περιοχές με χαμηλό σήμα.';
 
   @override
-  String get tipsSheetUpcomingReleasesTitle => 'Upcoming Releases';
+  String get tipsSheetUpcomingReleasesTitle => 'Επερχόμενες κυκλοφορίες';
 
   @override
   String get tipsSheetUpcomingReleasesDesc =>
-      'On the Series tab, tap the tab again to open its sort and filter sheet, then choose Upcoming Releases to see new and upcoming books across your series, sorted by release date.';
+      'Στην καρτέλα Σειρές, πατήστε ξανά την καρτέλα για να ανοίξει το φύλλο ταξινόμησης και φίλτρων, και επιλέξτε Επερχόμενες κυκλοφορίες για να δείτε νέα και επερχόμενα βιβλία στις σειρές σας, ταξινομημένα κατά ημερομηνία κυκλοφορίας.';
 
   @override
-  String get tipsSheetPerBookEqTitle => 'Per-Book Equalizer';
+  String get tipsSheetPerBookEqTitle => 'Ισοσταθμιστής ανά βιβλίο';
 
   @override
   String get tipsSheetPerBookEqDesc =>
-      'Each book remembers its own equalizer settings. Tweak EQ once for a sci-fi epic and the next time you play it, it sounds the same.';
+      'Κάθε βιβλίο θυμάται τις δικές του ρυθμίσεις ισοσταθμιστή. Ρυθμίστε τον EQ μία φορά για ένα έπος επιστημονικής φαντασίας και την επόμενη φορά θα ακούγεται το ίδιο.';
 
   @override
-  String get tipsSheetPerBookSpeedTitle => 'Per-Book Speed';
+  String get tipsSheetPerBookSpeedTitle => 'Ταχύτητα ανά βιβλίο';
 
   @override
   String get tipsSheetPerBookSpeedDesc =>
-      'Playback speed is saved per book. Run nonfiction at 1.5x and dramatic fiction at 1.0x without setting it every time.';
+      'Η ταχύτητα αναπαραγωγής αποθηκεύεται ανά βιβλίο. Ακούστε μη λογοτεχνία στο 1.5x και δραματική λογοτεχνία στο 1.0x χωρίς να το ορίζετε κάθε φορά.';
 
   @override
-  String get tipsSheetAutoSleepWindowTitle => 'Auto Sleep Window';
+  String get tipsSheetAutoSleepWindowTitle => 'Παράθυρο αυτόματου ύπνου';
 
   @override
   String get tipsSheetAutoSleepWindowDesc =>
-      'Pick the hours you usually fall asleep and the sleep timer will start itself when you begin listening in that window.';
+      'Επιλέξτε τις ώρες που συνήθως κοιμάστε και ο χρονοδιακόπτης ύπνου θα ξεκινά μόνος του όταν αρχίζετε να ακούτε μέσα σε αυτό το παράθυρο.';
 
   @override
-  String get tipsSheetSleepFadeChimeTitle => 'Sleep Fade and Chime';
+  String get tipsSheetSleepFadeChimeTitle => 'Σταδιακή μείωση και ήχος ύπνου';
 
   @override
   String get tipsSheetSleepFadeChimeDesc =>
-      'When the sleep timer ends, audio gradually fades out and an optional chime plays so it doesn\'t cut off mid-sentence.';
+      'Όταν λήγει ο χρονοδιακόπτης ύπνου, ο ήχος μειώνεται σταδιακά και παίζει προαιρετικό κουδούνι ώστε να μην κόβεται στη μέση μιας πρότασης.';
 
   @override
-  String get tipsSheetCarModeTitle => 'Car Mode';
+  String get tipsSheetCarModeTitle => 'Λειτουργία αυτοκινήτου';
 
   @override
   String get tipsSheetCarModeDesc =>
-      'Tap the car icon to switch to giant-button mode designed for safer use while driving.';
+      'Πατήστε το εικονίδιο αυτοκινήτου για εναλλαγή στη λειτουργία με τεράστια κουμπιά, σχεδιασμένη για ασφαλέστερη χρήση κατά την οδήγηση.';
 
   @override
-  String get tipsSheetAudibleSeriesTitle => 'Audible Series Discovery';
+  String get tipsSheetAudibleSeriesTitle => 'Ανακάλυψη σειρών Audible';
 
   @override
   String get tipsSheetAudibleSeriesDesc =>
-      'Open a series and use the overflow menu (the three dots) to pull the full series list from Audible, including missing entries and books you haven\'t started.';
+      'Ανοίξτε μια σειρά και χρησιμοποιήστε το μενού επιλογών (οι τρεις τελείες) για να λάβετε την πλήρη λίστα της σειράς από το Audible, με τα βιβλία που λείπουν και αυτά που δεν έχετε ξεκινήσει.';
 
   @override
-  String get tipsSheetTranscribeBookmarkTitle => 'Transcribe Bookmarks';
+  String get tipsSheetTranscribeBookmarkTitle =>
+      'Απομαγνητοφώνηση σελιδοδεικτών';
 
   @override
   String get tipsSheetTranscribeBookmarkDesc =>
-      'Turn the audio at any bookmark into text, fully on your device. Enable it in Settings under Advanced > Transcription and download a model, then tap Transcribe on a bookmark - the text lands in its note, ready to fix up or share.';
+      'Μετατρέψτε τον ήχο σε οποιονδήποτε σελιδοδείκτη σε κείμενο, εξ ολοκλήρου στη συσκευή σας. Ενεργοποιήστε το στις Ρυθμίσεις, στις Για προχωρημένους > Απομαγνητοφώνηση και κάντε λήψη ενός μοντέλου, μετά πατήστε Απομαγνητοφώνηση σε έναν σελιδοδείκτη - το κείμενο μπαίνει στη σημείωσή του, έτοιμο για διόρθωση ή κοινοποίηση.';
 
   @override
   String get tipsSheetFindBetweenFormatsTitle =>
-      'Jump Between Audiobook and Ebook';
+      'Μετάβαση μεταξύ ηχητικού και ηλεκτρονικού βιβλίου';
 
   @override
   String get tipsSheetFindBetweenFormatsDesc =>
-      'With transcription on and the book downloaded, pause and tap Find position in ebook on the player to open the ebook at the passage you just heard. In the reader, select some text and tap the headphones to start the audiobook right there.';
+      'Με ενεργή την απομαγνητοφώνηση και ληφθέν το βιβλίο, κάντε παύση και πατήστε Εύρεση θέσης στο ηλεκτρονικό βιβλίο στο πρόγραμμα αναπαραγωγής για να ανοίξει το ηλεκτρονικό βιβλίο στο απόσπασμα που μόλις ακούσατε. Στον αναγνώστη, επιλέξτε κείμενο και πατήστε τα ακουστικά για να ξεκινήσει το ηχητικό βιβλίο ακριβώς από εκεί.';
 
   @override
-  String get tipsSheetShareQuoteTitle => 'Share Quotes';
+  String get tipsSheetShareQuoteTitle => 'Κοινοποίηση αποσπασμάτων';
 
   @override
   String get tipsSheetShareQuoteDesc =>
-      'Share an ebook highlight or a bookmark note as an image with the quote over the book cover. Look for the share option on highlights and in the bookmark sheet.';
+      'Κοινοποιήστε μια επισήμανση ηλεκτρονικού βιβλίου ή μια σημείωση σελιδοδείκτη ως εικόνα με το απόσπασμα πάνω από το εξώφυλλο του βιβλίου. Αναζητήστε την επιλογή κοινοποίησης στις επισημάνσεις και στο φύλλο σελιδοδεικτών.';
 
   @override
-  String get tipsSheetClipExportTitle => 'Export Audio Clips';
+  String get tipsSheetClipExportTitle => 'Εξαγωγή αποσπασμάτων ήχου';
 
   @override
   String get tipsSheetClipExportDesc =>
-      'Open a bookmark and tap Export clip to trim and save a short audio snippet of the book, cover art included - great for sharing a favorite scene.';
+      'Ανοίξτε έναν σελιδοδείκτη και πατήστε Εξαγωγή αποσπάσματος για να κόψετε και να αποθηκεύσετε ένα σύντομο απόσπασμα ήχου του βιβλίου, με το εξώφυλλο - ιδανικό για κοινοποίηση μιας αγαπημένης σκηνής.';
 
   @override
-  String get tipsSheetAllHighlightsTitle => 'All Highlights in One Place';
+  String get tipsSheetAllHighlightsTitle => 'Όλες οι επισημάνσεις σε ένα μέρος';
 
   @override
   String get tipsSheetAllHighlightsDesc =>
-      'The All Bookmarks page has a Highlights tab collecting every ebook highlight from every book. Tap one to share it or jump back into the book.';
+      'Η σελίδα Όλοι οι σελιδοδείκτες έχει μια καρτέλα Επισημάνσεις που συγκεντρώνει κάθε επισήμανση ηλεκτρονικού βιβλίου από κάθε βιβλίο. Πατήστε μία για να την κοινοποιήσετε ή να επιστρέψετε στο βιβλίο.';
 
   @override
-  String get tipsSheetVolumeKeyPagesTitle => 'Volume-Key Page Turns';
+  String get tipsSheetVolumeKeyPagesTitle =>
+      'Αλλαγή σελίδας με τα πλήκτρα έντασης';
 
   @override
   String get tipsSheetVolumeKeyPagesDesc =>
-      'Turn ebook pages with the volume keys. Enable it in the reader\'s settings - normal or mirrored direction, and it can stay on even while audio is playing.';
+      'Γυρίστε τις σελίδες του ηλεκτρονικού βιβλίου με τα πλήκτρα έντασης. Ενεργοποιήστε το στις ρυθμίσεις του αναγνώστη - κανονική ή ανεστραμμένη κατεύθυνση, και μπορεί να παραμένει ενεργό ακόμη και όταν παίζει ήχος.';
 
   @override
-  String get tipsSheetSettingsSyncTitle => 'Settings Sync';
+  String get tipsSheetSettingsSyncTitle => 'Συγχρονισμός ρυθμίσεων';
 
   @override
   String get tipsSheetSettingsSyncDesc =>
-      'Keep your settings, per-book speeds and Absorbing order in step across devices through your own WebDAV server. Set it up in Settings under Backup and sync.';
+      'Κρατήστε τις ρυθμίσεις, τις ταχύτητες ανά βιβλίο και τη σειρά του Absorbing συγχρονισμένα μεταξύ συσκευών μέσω του δικού σας διακομιστή WebDAV. Ρυθμίστε το στις Ρυθμίσεις, στο Αντίγραφο ασφαλείας και συγχρονισμός.';
 
   @override
-  String get tipsSheetNavLongPressTitle => 'Long-Press the Bottom Tabs';
+  String get tipsSheetNavLongPressTitle =>
+      'Παρατεταμένο πάτημα στις καρτέλες κάτω';
 
   @override
   String get tipsSheetNavLongPressDesc =>
-      'Hold the Home tab to switch libraries from any page. Hold the Library tab to jump straight into search.';
+      'Κρατήστε πατημένη την καρτέλα Αρχική για να αλλάξετε βιβλιοθήκη από οποιαδήποτε σελίδα. Κρατήστε πατημένη την καρτέλα Βιβλιοθήκη για να μεταβείτε απευθείας στην αναζήτηση.';
 
   @override
-  String get bookCardUnknownTitle => 'Unknown Title';
+  String get bookCardUnknownTitle => 'Άγνωστος τίτλος';
 
   @override
   String get bookCardExplicitBadge => 'E';
 
   @override
-  String get bookCardDone => 'Done';
+  String get bookCardDone => 'Τέλος';
 
   @override
-  String get bookCardSaved => 'Saved';
+  String get bookCardSaved => 'Ληφθέν';
 
   @override
-  String get episodeRowEpisode => 'Episode';
+  String get episodeRowEpisode => 'Επεισόδιο';
 
   @override
-  String get episodeRowToday => 'Today';
+  String get episodeRowToday => 'Σήμερα';
 
   @override
-  String get episodeRowYesterday => 'Yesterday';
+  String get episodeRowYesterday => 'Χθες';
 
   @override
   String episodeRowDaysAgo(int count) {
-    return '${count}d ago';
+    return 'πριν $countημ.';
   }
 
   @override
   String episodeRowWeeksAgo(int count) {
-    return '${count}w ago';
+    return 'πριν $countεβδ.';
   }
 
   @override
   String episodeRowDurationHm(int hours, int minutes) {
-    return '${hours}h ${minutes}m';
+    return '$hoursω $minutesλ';
   }
 
   @override
   String episodeRowDurationM(int minutes) {
-    return '${minutes}m';
+    return '$minutesλ';
   }
 
   @override
   String episodeRowSeasonShort(String number) {
-    return 'S$number';
+    return 'Σ$number';
   }
 
   @override
   String episodeRowEpisodeShort(String number) {
-    return 'E$number';
+    return 'Ε$number';
   }
 
   @override
   String get librarySearchResultsExplicitBadge => 'E';
 
   @override
-  String get librarySearchResultsDone => 'Done';
+  String get librarySearchResultsDone => 'Τέλος';
 
   @override
-  String get librarySearchResultsSaved => 'Saved';
+  String get librarySearchResultsSaved => 'Ληφθέν';
 
   @override
   String librarySearchResultsSequence(String number) {
@@ -8491,18 +8643,18 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get librarySearchResultsUnknownSeries => 'Unknown Series';
+  String get librarySearchResultsUnknownSeries => 'Άγνωστη σειρά';
 
   @override
-  String get librarySearchResultsUnknownEpisode => 'Unknown Episode';
+  String get librarySearchResultsUnknownEpisode => 'Άγνωστο επεισόδιο';
 
   @override
   String librarySearchResultsBookCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count βιβλία',
+      one: '1 βιβλίο',
     );
     return '$_temp0';
   }
@@ -8511,10 +8663,10 @@ class AppLocalizationsEl extends AppLocalizations {
   String get libraryGridTilesExplicitBadge => 'E';
 
   @override
-  String get libraryGridTilesDone => 'Done';
+  String get libraryGridTilesDone => 'Τέλος';
 
   @override
-  String get libraryGridTilesSaved => 'Saved';
+  String get libraryGridTilesSaved => 'Ληφθέν';
 
   @override
   String libraryGridTilesSequence(String number) {
@@ -8522,133 +8674,137 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get libraryGridTilesUnknownSeries => 'Unknown Series';
+  String get libraryGridTilesUnknownSeries => 'Άγνωστη σειρά';
 
   @override
-  String get seriesCardUnknownSeries => 'Unknown Series';
+  String get seriesCardUnknownSeries => 'Άγνωστη σειρά';
 
   @override
   String seriesCardBookCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count βιβλία',
+      one: '1 βιβλίο',
     );
     return '$_temp0';
   }
 
   @override
-  String get cardProgressFineScrubbing => 'Fine Scrubbing';
+  String get cardProgressFineScrubbing => 'Ακριβής μετακίνηση';
 
   @override
-  String get cardProgressQuarterSpeed => 'Quarter Speed';
+  String get cardProgressQuarterSpeed => 'Τέταρτο ταχύτητας';
 
   @override
-  String get cardProgressHalfSpeed => 'Half Speed';
+  String get cardProgressHalfSpeed => 'Μισή ταχύτητα';
 
   @override
   String cardProgressChapterPrefix(String number) {
-    return 'Chapter $number';
+    return 'Κεφάλαιο $number';
   }
 
   @override
-  String get cardEdgeProgressFineScrubbing => 'Fine Scrubbing';
+  String get cardEdgeProgressFineScrubbing => 'Ακριβής μετακίνηση';
 
   @override
-  String get cardEdgeProgressQuarterSpeed => 'Quarter Speed';
+  String get cardEdgeProgressQuarterSpeed => 'Τέταρτο ταχύτητας';
 
   @override
-  String get cardEdgeProgressHalfSpeed => 'Half Speed';
+  String get cardEdgeProgressHalfSpeed => 'Μισή ταχύτητα';
 
   @override
-  String get authSessionExpired => 'Session expired. Please log in again.';
+  String get authSessionExpired => 'Η συνεδρία έληξε. Συνδεθείτε ξανά.';
 
   @override
   String authCannotReachServer(String url) {
-    return 'Cannot reach server at $url';
+    return 'Αδυναμία επικοινωνίας με τον διακομιστή στο $url';
   }
 
   @override
-  String get authInvalidUsernameOrPassword => 'Invalid username or password';
+  String get authInvalidUsernameOrPassword =>
+      'Μη έγκυρο όνομα χρήστη ή κωδικός πρόσβασης';
 
   @override
-  String get authInvalidApiKey => 'Invalid API key';
+  String get authInvalidApiKey => 'Μη έγκυρο κλειδί API';
 
   @override
   String get authLoginFailedDetail =>
-      'Login failed - check your server address and credentials';
+      'Η σύνδεση απέτυχε - ελέγξτε τη διεύθυνση του διακομιστή και τα στοιχεία σας';
 
   @override
-  String get authUnexpectedServerResponse => 'Unexpected server response';
+  String get authUnexpectedServerResponse =>
+      'Μη αναμενόμενη απάντηση διακομιστή';
 
   @override
-  String get authSsoUnexpectedResponse => 'SSO returned an unexpected response';
+  String get authSsoUnexpectedResponse =>
+      'Το SSO επέστρεψε μη αναμενόμενη απάντηση';
 
   @override
-  String get authSwitchedToLocalServer => 'Switched to local server';
+  String get authSwitchedToLocalServer => 'Μετάβαση σε τοπικό διακομιστή';
 
   @override
-  String get authSwitchedToRemoteServer => 'Switched to remote server';
+  String get authSwitchedToRemoteServer =>
+      'Μετάβαση σε απομακρυσμένο διακομιστή';
 
   @override
-  String get lpDeletedFinishedDownload => 'Deleted finished download';
+  String get lpDeletedFinishedDownload => 'Η ολοκληρωμένη λήψη διαγράφηκε';
 
   @override
   String lpSubscribedPodcastDownloading(String showTitle, int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count new episodes downloading',
-      one: '1 new episode downloading',
+      other: 'λήψη $count νέων επεισοδίων',
+      one: 'λήψη 1 νέου επεισοδίου',
     );
     return '$showTitle: $_temp0';
   }
 
   @override
   String lpSubscribedEpisodeAddedStart(String showTitle) {
-    return '$showTitle added to the top of your queue';
+    return 'Το $showTitle προστέθηκε στην κορυφή της ουράς σας';
   }
 
   @override
   String lpSubscribedEpisodeAddedSecond(String showTitle) {
-    return '$showTitle added 2nd in your queue';
+    return 'Το $showTitle προστέθηκε 2ο στην ουρά σας';
   }
 
   @override
   String lpSubscribedEpisodeAddedEnd(String showTitle) {
-    return '$showTitle added to the end of your queue';
+    return 'Το $showTitle προστέθηκε στο τέλος της ουράς σας';
   }
 
   @override
   String lpSubscribedEpisodeDownloaded(String showTitle) {
-    return 'New $showTitle episode downloaded';
+    return 'Λήφθηκε νέο επεισόδιο του $showTitle';
   }
 
   @override
-  String get statsWeekStartsOn => 'Week starts on';
+  String get statsWeekStartsOn => 'Η εβδομάδα ξεκινά';
 
   @override
-  String get episodeListNewEpisodePosition => 'New episode position';
+  String get episodeListNewEpisodePosition => 'Θέση νέου επεισοδίου';
 
   @override
-  String get episodeListPositionTop => 'Top of queue';
+  String get episodeListPositionTop => 'Κορυφή ουράς';
 
   @override
-  String get episodeListPositionSecond => 'Second in queue';
+  String get episodeListPositionSecond => 'Δεύτερο στην ουρά';
 
   @override
-  String get episodeListPositionEnd => 'End of queue';
+  String get episodeListPositionEnd => 'Τέλος ουράς';
 
   @override
-  String get episodeListPositionNone => 'Don\'t add to queue';
+  String get episodeListPositionNone => 'Να μην προστίθεται στην ουρά';
 
   @override
-  String get episodeListPositionNoneDesc => 'Still notified and downloaded';
+  String get episodeListPositionNoneDesc => 'Θα υπάρχει ειδοποίηση και λήψη';
 
   @override
   String sleepRewindUndoNote(int minutes) {
-    return 'Hit play within $minutes minutes and the rewind is undone';
+    return 'Πατήστε αναπαραγωγή εντός $minutes λεπτών και η επαναφορά αναιρείται';
   }
 
   @override
@@ -8656,8 +8812,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Queue: downloading $count items',
-      one: 'Queue: downloading 1 item',
+      other: 'Ουρά: λήψη $count στοιχείων',
+      one: 'Ουρά: λήψη 1 στοιχείου',
     );
     return '$_temp0';
   }
@@ -8667,8 +8823,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Downloading $count books',
-      one: 'Downloading 1 book',
+      other: 'Λήψη $count βιβλίων',
+      one: 'Λήψη 1 βιβλίου',
     );
     return '$_temp0';
   }
@@ -8678,71 +8834,71 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Downloading $count episodes',
-      one: 'Downloading 1 episode',
+      other: 'Λήψη $count επεισοδίων',
+      one: 'Λήψη 1 επεισοδίου',
     );
     return '$_temp0';
   }
 
   @override
-  String get downloadNotifProgressChannelName => 'Download Progress';
+  String get downloadNotifProgressChannelName => 'Πρόοδος λήψεων';
 
   @override
   String get downloadNotifProgressChannelDesc =>
-      'Shows progress during audiobook downloads';
+      'Εμφανίζει την πρόοδο κατά τη λήψη ηχητικών βιβλίων';
 
   @override
-  String get downloadNotifAlertChannelName => 'Download Alerts';
+  String get downloadNotifAlertChannelName => 'Ειδοποιήσεις λήψεων';
 
   @override
   String get downloadNotifAlertChannelDesc =>
-      'Notifications when downloads finish or fail';
+      'Ειδοποιήσεις όταν ολοκληρώνονται ή αποτυγχάνουν λήψεις';
 
   @override
-  String get downloadNotifDownloadingTitle => 'Downloading…';
+  String get downloadNotifDownloadingTitle => 'Λήψη…';
 
   @override
   String downloadNotifActiveCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count downloads active',
-      one: '1 download active',
+      other: '$count ενεργές λήψεις',
+      one: '1 ενεργή λήψη',
     );
     return '$_temp0';
   }
 
   @override
   String downloadNotifSlotTitle(String title) {
-    return 'Downloading: $title';
+    return 'Λήψη: $title';
   }
 
   @override
-  String get downloadNotifStartingLabel => 'Starting…';
+  String get downloadNotifStartingLabel => 'Έναρξη…';
 
   @override
-  String get downloadNotifCompleteTitle => 'Download Complete';
+  String get downloadNotifCompleteTitle => 'Η λήψη ολοκληρώθηκε';
 
   @override
   String downloadNotifCompleteBody(String title) {
-    return '$title is ready to listen offline';
+    return 'Το $title είναι έτοιμο για ακρόαση εκτός σύνδεσης';
   }
 
   @override
-  String get downloadNotifFailedTitle => 'Download Failed';
+  String get downloadNotifFailedTitle => 'Η λήψη απέτυχε';
 
   @override
-  String get upcomingNotifChannelName => 'Upcoming Release Scan';
+  String get upcomingNotifChannelName => 'Σάρωση επερχόμενων κυκλοφοριών';
 
   @override
   String get upcomingNotifChannelDesc =>
-      'Shows progress while scanning for upcoming releases';
+      'Εμφανίζει την πρόοδο κατά τη σάρωση για επερχόμενες κυκλοφορίες';
 
   @override
-  String get upcomingNotifScanTitle => 'Scanning for upcoming releases';
+  String get upcomingNotifScanTitle => 'Σάρωση για επερχόμενες κυκλοφορίες';
 
   @override
-  String get upcomingNotifStartingScan => 'Starting scan…';
+  String get upcomingNotifStartingScan => 'Έναρξη σάρωσης…';
 
   @override
   String upcomingNotifCheckingSeries(
@@ -8750,51 +8906,53 @@ class AppLocalizationsEl extends AppLocalizations {
     int current,
     int total,
   ) {
-    return 'Checking $seriesName… ($current/$total)';
+    return 'Έλεγχος $seriesName… ($current/$total)';
   }
 
   @override
-  String get upcomingNotifFoundTitle => 'Upcoming releases found!';
+  String get upcomingNotifFoundTitle => 'Βρέθηκαν επερχόμενες κυκλοφορίες!';
 
   @override
   String upcomingNotifFoundBody(int books, int series) {
     String _temp0 = intl.Intl.pluralLogic(
       series,
       locale: localeName,
-      other: '$series series',
-      one: '1 series',
+      other: '$series σειρές',
+      one: '1 σειρά',
     );
-    return '$books upcoming across $_temp0';
+    return '$books επερχόμενα σε $_temp0';
   }
 
   @override
-  String get androidAutoTabContinue => 'Continue';
+  String get androidAutoTabContinue => 'Συνέχεια';
 
   @override
-  String get androidAutoTabLibrary => 'Library';
+  String get androidAutoTabLibrary => 'Βιβλιοθήκη';
 
   @override
-  String get androidAutoTabDownloads => 'Downloads';
+  String get androidAutoTabDownloads => 'Λήψεις';
 
   @override
-  String get settingsSearchHint => 'Search settings...';
+  String get settingsSearchHint => 'Αναζήτηση ρυθμίσεων...';
 
   @override
-  String get settingsSearchNoResults => 'No matching settings';
+  String get settingsSearchNoResults => 'Καμία αντίστοιχη ρύθμιση';
 
   @override
-  String get carConnectAutoplay => 'Start playback when Android Auto connects';
+  String get carConnectAutoplay =>
+      'Έναρξη αναπαραγωγής όταν συνδεθεί το Android Auto';
 
   @override
-  String get carConnectAutoplayIos => 'Start playback when CarPlay connects';
+  String get carConnectAutoplayIos =>
+      'Έναρξη αναπαραγωγής όταν συνδεθεί το CarPlay';
 
   @override
   String get carConnectAutoplayOnSubtitle =>
-      'The last book you were listening to starts by itself when the car connects';
+      'Το τελευταίο βιβλίο που ακούγατε ξεκινά αυτόματα όταν συνδεθεί το αυτοκίνητο';
 
   @override
   String get carConnectAutoplayOffSubtitle =>
-      'Playback waits for you to press play';
+      'Η αναπαραγωγή περιμένει να πατήσετε αναπαραγωγή';
 
   @override
   String get sectionCar => 'Android Auto';
@@ -8806,471 +8964,479 @@ class AppLocalizationsEl extends AppLocalizations {
   String get sectionSiri => 'Siri';
 
   @override
-  String get siriUseWithSiri => 'Use with Siri';
+  String get siriUseWithSiri => 'Χρήση με το Siri';
 
   @override
   String get siriStatusOn =>
-      'On. Siri can find and play your books and podcasts by name.';
+      'Ενεργό. Το Siri μπορεί να βρει και να παίξει τα βιβλία και τα podcast σας με το όνομά τους.';
 
   @override
   String get siriStatusAsk =>
-      'Let Siri find and play your books and podcasts by name.';
+      'Αφήστε το Siri να βρίσκει και να παίζει τα βιβλία και τα podcast σας με το όνομά τους.';
 
   @override
   String get siriStatusOff =>
-      'Siri is turned off for Absorb. Turn it on in iOS Settings.';
+      'Το Siri είναι απενεργοποιημένο για το Absorb. Ενεργοποιήστε το στις Ρυθμίσεις του iOS.';
 
   @override
-  String get siriAllow => 'Allow';
+  String get siriAllow => 'Να επιτρέπεται';
 
   @override
-  String get siriOpenSettings => 'Open Settings';
+  String get siriOpenSettings => 'Άνοιγμα ρυθμίσεων';
 
   @override
-  String get siriThingsToSay => 'Things to say';
+  String get siriThingsToSay => 'Τι να πείτε';
 
   @override
   String get siriExamples =>
-      '\"Play [book title] on Absorb\"\n\"Play [series name] on Absorb\"\n\"Play something by [author] on Absorb\"\n\"Play the latest episode of [podcast] on Absorb\"\n\"Resume Absorb\"\n\"Skip back in Absorb\"\n\"Next chapter in Absorb\"\n\"Set a sleep timer in Absorb\"\n\"Add a bookmark in Absorb\"\n\"What am I listening to in Absorb\"';
+      '«Παίξε [τίτλος βιβλίου] στο Absorb»\n«Παίξε [όνομα σειράς] στο Absorb»\n«Παίξε κάτι από [συγγραφέας] στο Absorb»\n«Παίξε το τελευταίο επεισόδιο του [podcast] στο Absorb»\n«Συνέχισε το Absorb»\n«Πήγαινε πίσω στο Absorb»\n«Επόμενο κεφάλαιο στο Absorb»\n«Ορισμός χρονοδιακόπτη ύπνου στο Absorb»\n«Πρόσθεσε σελιδοδείκτη στο Absorb»\n«Τι ακούω στο Absorb»';
 
   @override
   String get siriShortcutsNote =>
-      'Resume, pause, skips, chapters, the sleep timer, bookmarks and what\'s playing work even without this permission. They are also in the Shortcuts app for automations and the Action button.';
+      'Η συνέχιση, η παύση, οι μεταβάσεις, τα κεφάλαια, ο χρονοδιακόπτης ύπνου, οι σελιδοδείκτες και το τι παίζει λειτουργούν ακόμη και χωρίς αυτήν την άδεια. Υπάρχουν επίσης στην εφαρμογή Συντομεύσεις για αυτοματισμούς και το κουμπί Action.';
 
   @override
-  String get carBookOrder => 'Book order in the car';
+  String get carBookOrder => 'Σειρά βιβλίων στο αυτοκίνητο';
 
   @override
-  String get carBookOrderReverse => 'Reverse book order';
+  String get carBookOrderReverse => 'Αντίστροφη σειρά βιβλίων';
 
   @override
-  String get carBookOrderReverseSubtitle => 'Z to A, or oldest added first';
+  String get carBookOrderReverseSubtitle =>
+      'Ω προς Α, ή πρώτα τα παλαιότερα προστεθέντα';
 
   @override
-  String get carPodcastOrder => 'Podcast order in the car';
+  String get carPodcastOrder => 'Σειρά podcast στο αυτοκίνητο';
 
   @override
-  String get carEpisodesOldestFirst => 'Oldest episodes first';
+  String get carEpisodesOldestFirst => 'Πρώτα τα παλαιότερα επεισόδια';
 
   @override
   String get carEpisodesOldestFirstSubtitle =>
-      'For shows you listen to from the start';
+      'Για εκπομπές που ακούτε από την αρχή';
 
   @override
-  String get androidAutoCatBooks => 'Books';
+  String get androidAutoCatBooks => 'Βιβλία';
 
   @override
-  String get androidAutoCatSeries => 'Series';
+  String get androidAutoCatSeries => 'Σειρές';
 
   @override
-  String get androidAutoCatAuthors => 'Authors';
+  String get androidAutoCatAuthors => 'Συγγραφείς';
 
   @override
-  String get androidAutoCatCollections => 'Collections';
+  String get androidAutoCatCollections => 'Συλλογές';
 
   @override
-  String get androidAutoCatPlaylists => 'Playlists';
+  String get androidAutoCatPlaylists => 'Λίστες αναπαραγωγής';
 
   @override
-  String get showTipsAgain => 'Show tips again';
+  String get showTipsAgain => 'Εμφάνιση συμβουλών ξανά';
 
   @override
   String get showTipsAgainSubtitle =>
-      'Bring back feature tips you\'ve dismissed';
+      'Επαναφορά των συμβουλών λειτουργιών που έχετε κλείσει';
 
   @override
-  String get tipsRestored => 'Tips restored';
+  String get tipsRestored => 'Οι συμβουλές επαναφέρθηκαν';
 
   @override
-  String get resetSpeedPresets => 'Reset speed presets';
+  String get resetSpeedPresets => 'Επαναφορά προεπιλογών ταχύτητας';
 
   @override
   String get resetSpeedPresetsSubtitle =>
-      'Restore the default playback speed chips';
+      'Επαναφορά των προεπιλεγμένων επιλογών ταχύτητας αναπαραγωγής';
 
   @override
-  String get speedPresetsReset => 'Speed presets reset';
+  String get speedPresetsReset => 'Οι προεπιλογές ταχύτητας επαναφέρθηκαν';
 
   @override
-  String get editAuthor => 'Edit author';
+  String get editAuthor => 'Επεξεργασία συγγραφέα';
 
   @override
-  String get authorName => 'Name';
+  String get authorName => 'Όνομα';
 
   @override
-  String get authorImage => 'Author image';
+  String get authorImage => 'Εικόνα συγγραφέα';
 
   @override
-  String get authorRemoveImage => 'Remove image';
+  String get authorRemoveImage => 'Αφαίρεση εικόνας';
 
   @override
-  String get authorRemoveImageTitle => 'Remove author image?';
+  String get authorRemoveImageTitle => 'Αφαίρεση εικόνας συγγραφέα;';
 
   @override
   String get authorRemoveImageConfirm =>
-      'This deletes the image on the server.';
+      'Αυτό διαγράφει την εικόνα στον διακομιστή.';
 
   @override
-  String get authorImageRemoved => 'Image removed';
+  String get authorImageRemoved => 'Η εικόνα αφαιρέθηκε';
 
   @override
-  String get authorImageFailed => 'Couldn\'t update author image';
+  String get authorImageFailed => 'Αδυναμία ενημέρωσης της εικόνας συγγραφέα';
 
   @override
-  String get authorUpdated => 'Author updated';
+  String get authorUpdated => 'Ο συγγραφέας ενημερώθηκε';
 
   @override
-  String get authorUpdateFailed => 'Couldn\'t update author';
+  String get authorUpdateFailed => 'Αδυναμία ενημέρωσης του συγγραφέα';
 
   @override
-  String get authorMatched => 'Author updated from match';
+  String get authorMatched => 'Ο συγγραφέας ενημερώθηκε από αντιστοίχιση';
 
   @override
-  String get authorNoMatchFound => 'No match found';
+  String get authorNoMatchFound => 'Δεν βρέθηκε αντιστοίχιση';
 
   @override
   String authorMergedInto(String name) {
-    return 'Merged into $name';
+    return 'Συγχωνεύθηκε στο $name';
   }
 
   @override
   String get authorQuickMatchHint =>
-      'Pull name, ASIN, description and image from Audible for the chosen region.';
+      'Λήψη ονόματος, ASIN, περιγραφής και εικόνας από το Audible για την επιλεγμένη περιοχή.';
 
   @override
-  String get region => 'Region';
+  String get region => 'Περιοχή';
 
   @override
-  String get editTabDetails => 'Details';
+  String get editTabDetails => 'Λεπτομέρειες';
 
   @override
-  String get editTabCover => 'Cover';
+  String get editTabCover => 'Εξώφυλλο';
 
   @override
-  String get editTabMatch => 'Match';
+  String get editTabMatch => 'Αντιστοίχιση';
 
   @override
-  String get editTabEmbed => 'Embed';
+  String get editTabEmbed => 'Ενσωμάτωση';
 
   @override
-  String get chapterEditorTitle => 'Edit Chapters';
+  String get chapterEditorTitle => 'Επεξεργασία κεφαλαίων';
 
   @override
-  String get chapterNotConnected => 'Not connected to a server';
+  String get chapterNotConnected => 'Δεν υπάρχει σύνδεση με διακομιστή';
 
   @override
-  String get chapterErrorFirstNotZero => 'First chapter must start at 0:00';
+  String get chapterErrorFirstNotZero =>
+      'Το πρώτο κεφάλαιο πρέπει να ξεκινά στο 0:00';
 
   @override
   String get chapterErrorStartAfterPrevious =>
-      'Start must come after the previous chapter';
+      'Η έναρξη πρέπει να είναι μετά το προηγούμενο κεφάλαιο';
 
   @override
-  String get chapterErrorStartBeforeEnd => 'Start must be before the book ends';
+  String get chapterErrorStartBeforeEnd =>
+      'Η έναρξη πρέπει να είναι πριν το τέλος του βιβλίου';
 
   @override
-  String get chapterErrorTitleRequired => 'Title required';
+  String get chapterErrorTitleRequired => 'Απαιτείται τίτλος';
 
   @override
-  String get chapterEditStartTitle => 'Edit start time';
+  String get chapterEditStartTitle => 'Επεξεργασία ώρας έναρξης';
 
   @override
-  String get chapterTimeHintSeconds => 'Seconds';
+  String get chapterTimeHintSeconds => 'Δευτερόλεπτα';
 
   @override
-  String get chapterTimeHintFull => 'HH:MM:SS or seconds';
+  String get chapterTimeHintFull => 'ΩΩ:ΛΛ:ΔΔ ή δευτερόλεπτα';
 
   @override
-  String get chapterInvalidTime => 'Invalid time';
+  String get chapterInvalidTime => 'Μη έγκυρος χρόνος';
 
   @override
-  String get chapterLocked => 'Chapter is locked';
+  String get chapterLocked => 'Το κεφάλαιο είναι κλειδωμένο';
 
   @override
-  String get chapterAllLocked => 'All chapters are locked';
+  String get chapterAllLocked => 'Όλα τα κεφάλαια είναι κλειδωμένα';
 
   @override
   String chapterTrackTitle(int number) {
-    return 'Track $number';
+    return 'Κομμάτι $number';
   }
 
   @override
-  String get chapterNoAudioForPosition => 'No audio for this position';
+  String get chapterNoAudioForPosition => 'Δεν υπάρχει ήχος για αυτήν τη θέση';
 
   @override
-  String get chapterCouldNotPlayPreview => 'Could not play preview';
+  String get chapterCouldNotPlayPreview =>
+      'Δεν ήταν δυνατή η αναπαραγωγή της προεπισκόπησης';
 
   @override
   String chapterStartSetTo(String time) {
-    return 'Start set to $time';
+    return 'Η έναρξη ορίστηκε σε $time';
   }
 
   @override
-  String get chapterAddNumberedTitle => 'Add numbered chapters';
+  String get chapterAddNumberedTitle => 'Προσθήκη αριθμημένων κεφαλαίων';
 
   @override
   String chapterNextPreview(String first, String second) {
-    return 'Next: \"$first\", \"$second\", ...';
+    return 'Επόμενα: «$first», «$second», ...';
   }
 
   @override
-  String get chapterHowMany => 'How many chapters';
+  String get chapterHowMany => 'Πόσα κεφάλαια';
 
   @override
-  String get add => 'Add';
+  String get add => 'Προσθήκη';
 
   @override
-  String get chapterCountRange => 'Enter a count between 1 and 150';
+  String get chapterCountRange => 'Εισαγάγετε αριθμό από 1 έως 150';
 
   @override
-  String get chapterTitlesUpdated => 'Chapter titles updated';
+  String get chapterTitlesUpdated => 'Οι τίτλοι κεφαλαίων ενημερώθηκαν';
 
   @override
-  String get chaptersApplied => 'Chapters applied';
+  String get chaptersApplied => 'Τα κεφάλαια εφαρμόστηκαν';
 
   @override
-  String get chapterDiscardTitle => 'Discard changes?';
+  String get chapterDiscardTitle => 'Απόρριψη αλλαγών;';
 
   @override
-  String get chapterDiscardMessage => 'Revert to the saved chapters.';
+  String get chapterDiscardMessage => 'Επιστροφή στα αποθηκευμένα κεφάλαια.';
 
   @override
-  String get chapterRemoveAllTitle => 'Remove all chapters?';
+  String get chapterRemoveAllTitle => 'Αφαίρεση όλων των κεφαλαίων;';
 
   @override
   String get chapterRemoveAllMessage =>
-      'This removes every chapter from this book.';
+      'Αυτό αφαιρεί όλα τα κεφάλαια από αυτό το βιβλίο.';
 
   @override
-  String get chapterAllRemoved => 'All chapters removed';
+  String get chapterAllRemoved => 'Όλα τα κεφάλαια αφαιρέθηκαν';
 
   @override
-  String get chapterFixHighlighted => 'Fix the highlighted chapters first';
+  String get chapterFixHighlighted =>
+      'Διορθώστε πρώτα τα επισημασμένα κεφάλαια';
 
   @override
-  String get chaptersUpdated => 'Chapters updated';
+  String get chaptersUpdated => 'Τα κεφάλαια ενημερώθηκαν';
 
   @override
   String get ok => 'OK';
 
   @override
-  String get chapterSaveButton => 'Save chapters';
+  String get chapterSaveButton => 'Αποθήκευση κεφαλαίων';
 
   @override
-  String get chapterAddHint => 'Add chapter (e.g. \"Chapter 01\")';
+  String get chapterAddHint => 'Προσθήκη κεφαλαίου (π.χ. «Κεφάλαιο 01»)';
 
   @override
-  String get chapterAddTooltip => 'Add chapter(s)';
+  String get chapterAddTooltip => 'Προσθήκη κεφαλαίων';
 
   @override
-  String get chapterRemoveAll => 'Remove All';
+  String get chapterRemoveAll => 'Αφαίρεση όλων';
 
   @override
-  String get chapterShiftTimes => 'Shift Times';
+  String get chapterShiftTimes => 'Μετατόπιση χρόνων';
 
   @override
-  String get chapterFromTracks => 'From Tracks';
+  String get chapterFromTracks => 'Από κομμάτια';
 
   @override
-  String get chapterLookup => 'Lookup';
+  String get chapterLookup => 'Αναζήτηση';
 
   @override
-  String get chapterShowSeconds => 'Show seconds';
+  String get chapterShowSeconds => 'Εμφάνιση δευτερολέπτων';
 
   @override
   String chapterWindowMinutes(int minutes) {
-    return '$minutes min';
+    return '$minutes λεπτά';
   }
 
   @override
-  String get chapterLoopCut => 'Loop the cut';
+  String get chapterLoopCut => 'Επανάληψη της κοπής';
 
   @override
-  String get chapterFindStart => 'Find the start';
+  String get chapterFindStart => 'Εύρεση της αρχής';
 
   @override
-  String get chapterFindStartListening => 'Listening around the marker';
+  String get chapterFindStartListening => 'Ακρόαση γύρω από τον δείκτη';
 
   @override
-  String get chapterFindStartNone => 'Nothing here sounds like a chapter start';
+  String get chapterFindStartNone =>
+      'Τίποτα εδώ δεν ακούγεται σαν αρχή κεφαλαίου';
 
   @override
-  String get chapterFindStartWider => 'Search wider';
+  String get chapterFindStartWider => 'Ευρύτερη αναζήτηση';
 
   @override
   String get chapterFindStartCeiling =>
-      'Searched half an hour around the marker. The start is further off than that, or there\'s no chapter announcement to hear.';
+      'Έγινε αναζήτηση μισής ώρας γύρω από τον δείκτη. Η αρχή βρίσκεται πιο μακριά ή δεν υπάρχει ανακοίνωση κεφαλαίου στον ήχο.';
 
   @override
-  String get chapterFindStartStrong => 'Sounds like this chapter';
+  String get chapterFindStartStrong => 'Ακούγεται σαν αυτό το κεφάλαιο';
 
   @override
-  String get chapterFindStartMaybe => 'Chapter-like words';
+  String get chapterFindStartMaybe => 'Λέξεις τύπου κεφαλαίου';
 
   @override
   String chapterFindStartGap(String seconds) {
-    return '${seconds}s gap';
+    return 'Κενό ${seconds}s';
   }
 
   @override
   String chapterFindStartRange(String from, String to) {
-    return 'Searched $from to $to';
+    return 'Αναζήτηση από $from έως $to';
   }
 
   @override
   String get chapterFindStartNeedsModel =>
-      'Turn on transcription in Settings and download a model first';
+      'Ενεργοποιήστε πρώτα την απομαγνητοφώνηση στις Ρυθμίσεις και κάντε λήψη ενός μοντέλου';
 
   @override
-  String get chapterFindStartUseThis => 'Use this';
+  String get chapterFindStartUseThis => 'Χρήση αυτού';
 
   @override
   String chapterFindStartTitle(String title) {
-    return 'Title: $title';
+    return 'Τίτλος: $title';
   }
 
   @override
-  String get chapterShiftBySeconds => 'Shift by (seconds)';
+  String get chapterShiftBySeconds => 'Μετατόπιση κατά (δευτερόλεπτα)';
 
   @override
   String get chapterShiftHint =>
-      'Shifts every unlocked chapter. Use a negative value to move them earlier.';
+      'Μετατοπίζει κάθε ξεκλείδωτο κεφάλαιο. Χρησιμοποιήστε αρνητική τιμή για να τα μετακινήσετε νωρίτερα.';
 
   @override
-  String get chapterTitleHint => 'Chapter title';
+  String get chapterTitleHint => 'Τίτλος κεφαλαίου';
 
   @override
-  String get chapterStopPreview => 'Stop preview';
+  String get chapterStopPreview => 'Διακοπή προεπισκόπησης';
 
   @override
-  String get chapterPreviewFromHere => 'Preview from here';
+  String get chapterPreviewFromHere => 'Προεπισκόπηση από εδώ';
 
   @override
-  String get chapterScrubHint => 'Drag or nudge to move the start';
+  String get chapterScrubHint =>
+      'Σύρετε ή μετακινήστε για να αλλάξετε την έναρξη';
 
   @override
   String chapterStartAt(String time) {
-    return 'Start at $time';
+    return 'Έναρξη στις $time';
   }
 
   @override
-  String get chapterUnlock => 'Unlock';
+  String get chapterUnlock => 'Ξεκλείδωμα';
 
   @override
-  String get chapterLock => 'Lock';
+  String get chapterLock => 'Κλείδωμα';
 
   @override
-  String get chapterInsertBelow => 'Insert below';
+  String get chapterInsertBelow => 'Εισαγωγή από κάτω';
 
   @override
-  String get chapterFindTitle => 'Find chapters';
+  String get chapterFindTitle => 'Εύρεση κεφαλαίων';
 
   @override
   String get chapterFindSubtitle =>
-      'Looks up chapters from Audible/Audnexus by ASIN.';
+      'Αναζητά κεφάλαια από το Audible/Audnexus με ASIN.';
 
   @override
-  String get chapterEnterAsin => 'Enter an ASIN';
+  String get chapterEnterAsin => 'Εισαγάγετε ένα ASIN';
 
   @override
-  String get chapterLookupFailed => 'Lookup failed - check the ASIN';
+  String get chapterLookupFailed => 'Η αναζήτηση απέτυχε - ελέγξτε το ASIN';
 
   @override
-  String get chapterNoChaptersFound => 'No chapters found for that ASIN';
+  String get chapterNoChaptersFound => 'Δεν βρέθηκαν κεφάλαια για αυτό το ASIN';
 
   @override
-  String get chapterRemoveBranding => 'Remove Audible branding (intro/outro)';
+  String get chapterRemoveBranding =>
+      'Αφαίρεση branding Audible (εισαγωγή/επίλογος)';
 
   @override
   String chapterFoundCount(int count) {
-    return '$count chapters found';
+    return 'Βρέθηκαν $count κεφάλαια';
   }
 
   @override
   String chapterAudibleVsBook(String audible, String book) {
-    return 'Audible $audible  -  Book $book';
+    return 'Audible $audible  -  Βιβλίο $book';
   }
 
   @override
   String get chapterAudibleLonger =>
-      'The Audible version is longer than your file - later chapters may not line up.';
+      'Η έκδοση του Audible είναι μεγαλύτερη από το αρχείο σας - τα τελευταία κεφάλαια μπορεί να μην ταιριάζουν.';
 
   @override
   String get chapterAudibleShorter =>
-      'The Audible version is shorter than your file - chapters may not line up.';
+      'Η έκδοση του Audible είναι μικρότερη από το αρχείο σας - τα κεφάλαια μπορεί να μην ταιριάζουν.';
 
   @override
-  String get chapterTitlesOnly => 'Titles only';
+  String get chapterTitlesOnly => 'Μόνο τίτλοι';
 
   @override
-  String get chapterApplyChapters => 'Apply chapters';
+  String get chapterApplyChapters => 'Εφαρμογή κεφαλαίων';
 
   @override
-  String get coverSearchTitle => 'Search for a cover';
+  String get coverSearchTitle => 'Αναζήτηση εξωφύλλου';
 
   @override
   String get coverSearchRefineHint =>
-      'Refine the title/author to clean up results - this does not change the book.';
+      'Βελτιώστε τον τίτλο/συγγραφέα για πιο καθαρά αποτελέσματα - αυτό δεν αλλάζει το βιβλίο.';
 
   @override
-  String get coverNoneFound => 'No covers found';
+  String get coverNoneFound => 'Δεν βρέθηκαν εξώφυλλα';
 
   @override
-  String get coverEnterTitleFirst => 'Enter a title first';
+  String get coverEnterTitleFirst => 'Εισαγάγετε πρώτα έναν τίτλο';
 
   @override
-  String get coverUpdated => 'Cover updated';
+  String get coverUpdated => 'Το εξώφυλλο ενημερώθηκε';
 
   @override
-  String get coverCouldNotUpdate => 'Could not update cover';
+  String get coverCouldNotUpdate => 'Δεν ήταν δυνατή η ενημέρωση του εξωφύλλου';
 
   @override
-  String get coverApply => 'Apply cover';
+  String get coverApply => 'Εφαρμογή εξωφύλλου';
 
   @override
-  String get coverUnknownResolution => 'Unknown resolution';
+  String get coverUnknownResolution => 'Άγνωστη ανάλυση';
 
   @override
   String get embedIntro =>
-      'Embed metadata into audio files including cover image and chapters.';
+      'Ενσωμάτωση μεταδεδομένων στα αρχεία ήχου, μαζί με το εξώφυλλο και τα κεφάλαια.';
 
   @override
-  String get embedBackupOption => 'Back up audio files first';
+  String get embedBackupOption => 'Αρχικά αντίγραφο ασφαλείας των αρχείων ήχου';
 
   @override
   String get embedNoteInFolder =>
-      'Metadata will be embedded in the audio tracks inside your audiobook folder.';
+      'Τα μεταδεδομένα θα ενσωματωθούν στα κομμάτια ήχου μέσα στον φάκελο των ηχητικών βιβλίων σας.';
 
   @override
   String get embedNoteMultiTrack =>
-      'Chapters are not embedded in multi-track audiobooks.';
+      'Τα κεφάλαια δεν ενσωματώνονται σε ηχητικά βιβλία πολλών κομματιών.';
 
   @override
   String get embedNoteNavigateAway =>
-      'Once the task is started you can navigate away from this page.';
+      'Μόλις ξεκινήσει η εργασία, μπορείτε να φύγετε από αυτήν τη σελίδα.';
 
   @override
-  String get embedStartButton => 'Start Metadata Embed';
+  String get embedStartButton => 'Έναρξη ενσωμάτωσης μεταδεδομένων';
 
   @override
   String embedProgress(String percent) {
-    return 'Embedding $percent%';
+    return 'Ενσωμάτωση $percent%';
   }
 
   @override
-  String get embedProgressIndeterminate => 'Embedding...';
+  String get embedProgressIndeterminate => 'Ενσωμάτωση...';
 
   @override
   String taskProgressKeepsRunning(String percent) {
-    return '$percent% - keeps running if you leave this page';
+    return '$percent% - συνεχίζεται αν φύγετε από αυτήν τη σελίδα';
   }
 
   @override
-  String get taskStarting => 'Starting...';
+  String get taskStarting => 'Έναρξη...';
 
   @override
   String get embedBackupNoteIntro =>
-      'A backup of your original audio files will be stored on the server in ';
+      'Ένα αντίγραφο ασφαλείας των αρχικών αρχείων ήχου θα αποθηκευτεί στον διακομιστή στο ';
 
   @override
   String embedBackupNotePath(String itemId) {
@@ -9279,1176 +9445,1193 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get embedBackupNoteOutro =>
-      '. Make sure to periodically purge the items cache.';
+      '. Φροντίστε να εκκαθαρίζετε περιοδικά την προσωρινή μνήμη στοιχείων.';
 
   @override
-  String get embedDialogTitle => 'Embed metadata';
+  String get embedDialogTitle => 'Ενσωμάτωση μεταδεδομένων';
 
   @override
   String embedConfirmMessage(int count, String backup) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '# audio files',
-      one: '# audio file',
+      other: '# αρχεία ήχου',
+      one: '# αρχείο ήχου',
     );
-    return 'Embed metadata into $_temp0? Your audio files will be rewritten$backup.';
+    return 'Ενσωμάτωση μεταδεδομένων σε $_temp0; Τα αρχεία ήχου σας θα ξαναγραφούν$backup.';
   }
 
   @override
-  String get embedConfirmBackupClause => ' (originals backed up first)';
+  String get embedConfirmBackupClause =>
+      ' (πρώτα αντίγραφο ασφαλείας των αρχικών)';
 
   @override
-  String get embedConfirmAction => 'Embed';
+  String get embedConfirmAction => 'Ενσωμάτωση';
 
   @override
-  String get embedCouldNotStart => 'Could not start embed';
+  String get embedCouldNotStart => 'Δεν ήταν δυνατή η έναρξη της ενσωμάτωσης';
 
   @override
-  String get embedStarted => 'Embed started';
+  String get embedStarted => 'Η ενσωμάτωση ξεκίνησε';
 
   @override
-  String get embedComplete => 'Embed complete';
+  String get embedComplete => 'Η ενσωμάτωση ολοκληρώθηκε';
 
   @override
-  String get embedFailed => 'Embed failed';
+  String get embedFailed => 'Η ενσωμάτωση απέτυχε';
 
   @override
-  String get encodeComplete => 'Encode complete';
+  String get encodeComplete => 'Η κωδικοποίηση ολοκληρώθηκε';
 
   @override
-  String get encodeFailedTask => 'Encode failed';
+  String get encodeFailedTask => 'Η κωδικοποίηση απέτυχε';
 
   @override
   String encodeProgress(String percent) {
-    return 'Encoding $percent%';
+    return 'Κωδικοποίηση $percent%';
   }
 
   @override
-  String get encodeProgressIndeterminate => 'Encoding...';
+  String get encodeProgressIndeterminate => 'Κωδικοποίηση...';
 
   @override
-  String get adminApiKeys => 'API Keys';
+  String get adminApiKeys => 'Κλειδιά API';
 
   @override
-  String get adminApiKeysSubtitle => 'Programmatic access tokens';
+  String get adminApiKeysSubtitle => 'Διακριτικά προγραμματιστικής πρόσβασης';
 
   @override
-  String get adminApiKeysNewTitle => 'New API Key';
+  String get adminApiKeysNewTitle => 'Νέο κλειδί API';
 
   @override
-  String get adminApiKeysName => 'Name';
+  String get adminApiKeysName => 'Όνομα';
 
   @override
-  String get adminApiKeysNameHint => 'e.g. Home Assistant';
+  String get adminApiKeysNameHint => 'π.χ. Home Assistant';
 
   @override
-  String get adminApiKeysOwner => 'User';
+  String get adminApiKeysOwner => 'Χρήστης';
 
   @override
-  String get adminApiKeysExpiration => 'Expiration';
+  String get adminApiKeysExpiration => 'Λήξη';
 
   @override
-  String get adminApiKeysActive => 'Active';
+  String get adminApiKeysActive => 'Ενεργό';
 
   @override
-  String get adminApiKeysActiveSub => 'Key works as soon as it\'s created';
+  String get adminApiKeysActiveSub => 'Το κλειδί λειτουργεί μόλις δημιουργηθεί';
 
   @override
-  String get adminApiKeysInactive => 'Inactive';
+  String get adminApiKeysInactive => 'Ανενεργό';
 
   @override
-  String get adminApiKeysExpired => 'Expired';
+  String get adminApiKeysExpired => 'Έληξε';
 
   @override
-  String get adminApiKeysCreate => 'Create Key';
+  String get adminApiKeysCreate => 'Δημιουργία κλειδιού';
 
   @override
-  String get adminApiKeysCreated => 'API key created';
+  String get adminApiKeysCreated => 'Το κλειδί API δημιουργήθηκε';
 
   @override
-  String get adminApiKeysTokenLabel => 'Your new API key';
+  String get adminApiKeysTokenLabel => 'Το νέο κλειδί API σας';
 
   @override
   String get adminApiKeysCopyWarning =>
-      'Copy this key now. For security it won\'t be shown again.';
+      'Αντιγράψτε αυτό το κλειδί τώρα. Για λόγους ασφαλείας δεν θα εμφανιστεί ξανά.';
 
   @override
-  String get adminApiKeysCopy => 'Copy';
+  String get adminApiKeysCopy => 'Αντιγραφή';
 
   @override
-  String get adminApiKeysCopied => 'Copied to clipboard';
+  String get adminApiKeysCopied => 'Αντιγράφηκε στο πρόχειρο';
 
   @override
-  String get adminApiKeysDone => 'Done';
+  String get adminApiKeysDone => 'Τέλος';
 
   @override
-  String get adminApiKeysDeleteTitle => 'Revoke API key?';
+  String get adminApiKeysDeleteTitle => 'Ανάκληση κλειδιού API;';
 
   @override
-  String get adminApiKeysDeleted => 'API key revoked';
+  String get adminApiKeysDeleted => 'Το κλειδί API ανακλήθηκε';
 
   @override
-  String get adminApiKeysRevoke => 'Revoke';
+  String get adminApiKeysRevoke => 'Ανάκληση';
 
   @override
-  String get adminApiKeysSetActive => 'Set active';
+  String get adminApiKeysSetActive => 'Ορισμός ως ενεργό';
 
   @override
-  String get adminApiKeysSetInactive => 'Set inactive';
+  String get adminApiKeysSetInactive => 'Ορισμός ως ανενεργό';
 
   @override
-  String get adminApiKeysFailedCreate => 'Couldn\'t create API key';
+  String get adminApiKeysFailedCreate => 'Αδυναμία δημιουργίας κλειδιού API';
 
   @override
-  String get adminApiKeysFailedDelete => 'Couldn\'t revoke API key';
+  String get adminApiKeysFailedDelete => 'Αδυναμία ανάκλησης κλειδιού API';
 
   @override
-  String get adminApiKeysFailedUpdate => 'Couldn\'t update API key';
+  String get adminApiKeysFailedUpdate => 'Αδυναμία ενημέρωσης κλειδιού API';
 
   @override
-  String get adminApiKeysEmpty => 'No API keys yet';
+  String get adminApiKeysEmpty => 'Δεν υπάρχουν ακόμη κλειδιά API';
 
   @override
   String get adminApiKeysEmptySub =>
-      'Create one to let apps and scripts reach your server';
+      'Δημιουργήστε ένα για να επιτρέψετε σε εφαρμογές και σενάρια να φτάνουν στον διακομιστή σας';
 
   @override
-  String get adminApiKeysNeverUsed => 'Never used';
+  String get adminApiKeysNeverUsed => 'Δεν έχει χρησιμοποιηθεί';
 
   @override
-  String get adminApiKeysNeverExpires => 'No expiration';
+  String get adminApiKeysNeverExpires => 'Χωρίς λήξη';
 
   @override
-  String get adminApiKeysNameRequired => 'Enter a name';
+  String get adminApiKeysNameRequired => 'Εισαγάγετε όνομα';
 
   @override
-  String get adminApiKeysUserRequired => 'Pick a user';
+  String get adminApiKeysUserRequired => 'Επιλέξτε χρήστη';
 
   @override
-  String get adminApiKeysExpNever => 'Never';
+  String get adminApiKeysExpNever => 'Ποτέ';
 
   @override
-  String get adminApiKeysExp7d => '7 days';
+  String get adminApiKeysExp7d => '7 ημέρες';
 
   @override
-  String get adminApiKeysExp30d => '30 days';
+  String get adminApiKeysExp30d => '30 ημέρες';
 
   @override
-  String get adminApiKeysExp90d => '90 days';
+  String get adminApiKeysExp90d => '90 ημέρες';
 
   @override
-  String get adminApiKeysExp1y => '1 year';
+  String get adminApiKeysExp1y => '1 έτος';
 
   @override
   String adminApiKeysLastUsed(String time) {
-    return 'Last used $time';
+    return 'Τελευταία χρήση $time';
   }
 
   @override
   String adminApiKeysExpiresOn(String date) {
-    return 'Expires $date';
+    return 'Λήγει $date';
   }
 
   @override
   String adminApiKeysDeleteContent(String name) {
-    return 'Revoke \"$name\"? Apps using this key will lose access immediately.';
+    return 'Ανάκληση του «$name»; Οι εφαρμογές που χρησιμοποιούν αυτό το κλειδί θα χάσουν αμέσως την πρόσβαση.';
   }
 
   @override
-  String get endOfEpisode => 'End of Episode';
+  String get endOfEpisode => 'Τέλος επεισοδίου';
 
   @override
-  String get sleepTimerSheetEpisodeSleepStart => 'Sleep at end of episode';
+  String get sleepTimerSheetEpisodeSleepStart =>
+      'Ύπνος στο τέλος του επεισοδίου';
 
   @override
-  String get bookmarkListen => 'Listen';
+  String get bookmarkListen => 'Ακρόαση';
 
   @override
-  String get bookmarkPause => 'Pause';
+  String get bookmarkPause => 'Παύση';
 
   @override
-  String get bookmarkPreviewFailed => 'Couldn\'t play this spot.';
+  String get bookmarkPreviewFailed =>
+      'Αδυναμία αναπαραγωγής αυτού του σημείου.';
 
   @override
-  String get clipExport => 'Export clip';
+  String get clipExport => 'Εξαγωγή αποσπάσματος';
 
   @override
-  String get clipJumpToStart => 'Jump to start';
+  String get clipJumpToStart => 'Μετάβαση στην αρχή';
 
   @override
-  String get clipJumpToEnd => 'Jump to end';
+  String get clipJumpToEnd => 'Μετάβαση στο τέλος';
 
   @override
-  String get clipSetStart => 'Set start';
+  String get clipSetStart => 'Ορισμός αρχής';
 
   @override
-  String get clipSetEnd => 'Set end';
+  String get clipSetEnd => 'Ορισμός τέλους';
 
   @override
-  String get clipInLabel => 'In';
+  String get clipInLabel => 'Αρχή';
 
   @override
-  String get clipOutLabel => 'Out';
+  String get clipOutLabel => 'Τέλος';
 
   @override
-  String get clipSave => 'Save clip';
+  String get clipSave => 'Αποθήκευση αποσπάσματος';
 
   @override
   String clipExportSaved(String filename) {
-    return 'Saved $filename';
+    return 'Αποθηκεύτηκε το $filename';
   }
 
   @override
   String get clipExportClamped =>
-      'Clip saved, shortened to the end of this track';
+      'Το απόσπασμα αποθηκεύτηκε, κόπηκε στο τέλος αυτού του κομματιού';
 
   @override
-  String get clipExportFailed => 'Couldn\'t export the clip.';
+  String get clipExportFailed => 'Αδυναμία εξαγωγής του αποσπάσματος.';
 
   @override
   String get clipDownloadToExport =>
-      'Download this book first to export a clip on iPhone.';
+      'Κάντε πρώτα λήψη αυτού του βιβλίου για να εξαγάγετε απόσπασμα στο iPhone.';
 
   @override
-  String get fsPickerTitle => 'Select folder';
+  String get fsPickerTitle => 'Επιλογή φακέλου';
 
   @override
-  String get fsServerRoot => 'Server root';
+  String get fsServerRoot => 'Ρίζα διακομιστή';
 
   @override
-  String get fsEmptyFolder => 'No subfolders here';
+  String get fsEmptyFolder => 'Δεν υπάρχουν υποφάκελοι εδώ';
 
   @override
-  String get fsUseThisFolder => 'Use this folder';
+  String get fsUseThisFolder => 'Χρήση αυτού του φακέλου';
 
   @override
-  String get adminLibrariesManage => 'Libraries';
+  String get adminLibrariesManage => 'Βιβλιοθήκες';
 
   @override
-  String get adminLibrariesManageSubtitle => 'Create, edit and reorder';
+  String get adminLibrariesManageSubtitle =>
+      'Δημιουργία, επεξεργασία και αναδιάταξη';
 
   @override
-  String get adminUploadTitle => 'Upload media';
+  String get adminUploadTitle => 'Μεταφόρτωση πολυμέσων';
 
   @override
-  String get adminUploadSubtitle => 'Add books and podcasts from files';
+  String get adminUploadSubtitle => 'Προσθήκη βιβλίων και podcast από αρχεία';
 
   @override
   String get adminUploadNoLibraries =>
-      'Create a library before uploading media.';
+      'Δημιουργήστε μια βιβλιοθήκη πριν από τη μεταφόρτωση πολυμέσων.';
 
   @override
-  String get adminUploadDestination => 'Destination';
+  String get adminUploadDestination => 'Προορισμός';
 
   @override
-  String get adminUploadFolder => 'Library folder';
+  String get adminUploadFolder => 'Φάκελος βιβλιοθήκης';
 
   @override
-  String get adminUploadDetails => 'Item details';
+  String get adminUploadDetails => 'Στοιχεία αντικειμένου';
 
   @override
-  String get adminUploadOptional => 'Optional';
+  String get adminUploadOptional => 'Προαιρετικό';
 
   @override
-  String get adminUploadAutoMetadata => 'Auto-fetch metadata';
+  String get adminUploadAutoMetadata => 'Αυτόματη λήψη μεταδεδομένων';
 
   @override
   String get adminUploadAutoMetadataSubtitle =>
-      'Fill title, author and series from the best match';
+      'Συμπλήρωση τίτλου, συγγραφέα και σειράς από την καλύτερη αντιστοιχία';
 
   @override
-  String get adminUploadMetadataProvider => 'Metadata provider';
+  String get adminUploadMetadataProvider => 'Πάροχος μεταδεδομένων';
 
   @override
-  String get adminUploadMetadataSearching => 'Searching for metadata...';
+  String get adminUploadMetadataSearching => 'Αναζήτηση μεταδεδομένων...';
 
   @override
   String get adminUploadMetadataNoResults =>
-      'No metadata match found. You can still upload this item.';
+      'Δεν βρέθηκε αντιστοιχία μεταδεδομένων. Μπορείτε να μεταφορτώσετε το αντικείμενο ούτως ή άλλως.';
 
   @override
   String get adminUploadMetadataFailed =>
-      'Couldn\'t search for metadata. You can still upload this item.';
+      'Η αναζήτηση μεταδεδομένων απέτυχε. Μπορείτε να μεταφορτώσετε το αντικείμενο ούτως ή άλλως.';
 
   @override
-  String get adminUploadDestinationPreview => 'Server destination';
+  String get adminUploadDestinationPreview => 'Προορισμός στον διακομιστή';
 
   @override
-  String get adminUploadFiles => 'Files';
+  String get adminUploadFiles => 'Αρχεία';
 
   @override
   String adminUploadSelectedFiles(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count αρχεία',
+      one: '1 αρχείο',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminUploadChooseFiles => 'Choose files';
+  String get adminUploadChooseFiles => 'Επιλογή αρχείων';
 
   @override
-  String get adminUploadAddFiles => 'Add files';
+  String get adminUploadAddFiles => 'Προσθήκη αρχείων';
 
   @override
   String get adminUploadBookFilesHint =>
-      'Choose audio or ebook files. You can also include covers and metadata files.';
+      'Επιλέξτε αρχεία ήχου ή ηλεκτρονικών βιβλίων. Μπορείτε να συμπεριλάβετε και εξώφυλλα ή αρχεία μεταδεδομένων.';
 
   @override
   String get adminUploadPodcastFilesHint =>
-      'Choose one or more audio files. You can also include covers and metadata files.';
+      'Επιλέξτε ένα ή περισσότερα αρχεία ήχου. Μπορείτε να συμπεριλάβετε και εξώφυλλα ή αρχεία μεταδεδομένων.';
 
   @override
   String get adminUploadUnsupportedFiles =>
-      'Some selected files are not supported by Audiobookshelf.';
+      'Ορισμένα από τα επιλεγμένα αρχεία δεν υποστηρίζονται από το Audiobookshelf.';
 
   @override
   String get adminUploadFilePickerFailed =>
-      'Couldn\'t open the selected files.';
+      'Δεν ήταν δυνατό το άνοιγμα των επιλεγμένων αρχείων.';
 
   @override
-  String get adminUploadTitleRequired => 'Enter a title';
+  String get adminUploadTitleRequired => 'Εισαγάγετε έναν τίτλο';
 
   @override
-  String get adminUploadLibraryRequired => 'Choose a library';
+  String get adminUploadLibraryRequired => 'Επιλέξτε μια βιβλιοθήκη';
 
   @override
-  String get adminUploadFolderRequired => 'Choose a library folder';
+  String get adminUploadFolderRequired => 'Επιλέξτε έναν φάκελο βιβλιοθήκης';
 
   @override
-  String get adminUploadFilesRequired => 'Choose at least one file';
+  String get adminUploadFilesRequired => 'Επιλέξτε τουλάχιστον ένα αρχείο';
 
   @override
   String get adminUploadPodcastFileRequired =>
-      'Choose at least one audio file for this podcast.';
+      'Επιλέξτε τουλάχιστον ένα αρχείο ήχου για αυτό το podcast.';
 
   @override
   String get adminUploadBookFileRequired =>
-      'Choose at least one audio or ebook file for this book.';
+      'Επιλέξτε τουλάχιστον ένα αρχείο ήχου ή ηλεκτρονικού βιβλίου για αυτό το βιβλίο.';
 
   @override
   String get adminUploadPathCheckFailed =>
-      'Couldn\'t check the destination folder. Nothing was uploaded.';
+      'Δεν ήταν δυνατός ο έλεγχος του φακέλου προορισμού. Δεν μεταφορτώθηκε τίποτα.';
 
   @override
   String get adminUploadDestinationExists =>
-      'That destination folder already exists on the server.';
+      'Ο φάκελος προορισμού υπάρχει ήδη στον διακομιστή.';
 
   @override
   String adminUploadDestinationUsedBy(String title) {
-    return 'That destination is already used by \"$title\".';
+    return 'Ο προορισμός χρησιμοποιείται ήδη από το «$title».';
   }
 
   @override
-  String get adminUploadAddToExistingTitle => 'Folder already exists';
+  String get adminUploadAddToExistingTitle => 'Ο φάκελος υπάρχει ήδη';
 
   @override
   String adminUploadAddToExisting(String title) {
-    return 'That folder belongs to \"$title\". Add the files to it? The server picks them up on its next scan.';
+    return 'Ο φάκελος ανήκει στο «$title». Να προστεθούν τα αρχεία σε αυτόν; Ο διακομιστής θα τα εντοπίσει στην επόμενη σάρωση.';
   }
 
   @override
   String get adminUploadAddToExistingNoItem =>
-      'That folder already exists on the server. Add the files to it?';
+      'Ο φάκελος υπάρχει ήδη στον διακομιστή. Να προστεθούν τα αρχεία σε αυτόν;';
 
   @override
-  String get adminUploadAddToBook => 'Add to an existing book';
+  String get adminUploadAddToBook => 'Προσθήκη σε υπάρχον βιβλίο';
 
   @override
-  String get adminUploadAddToBookHint => 'Search this library';
+  String get adminUploadAddToBookHint => 'Αναζήτηση σε αυτή τη βιβλιοθήκη';
 
   @override
-  String get adminUploadNoBooksFound => 'No books found';
+  String get adminUploadNoBooksFound => 'Δεν βρέθηκαν βιβλία';
 
   @override
   String adminUploadAddingTo(String title) {
-    return 'Adding files to \"$title\"';
+    return 'Προσθήκη αρχείων στο «$title»';
   }
 
   @override
   String adminUploadAddedTo(String title) {
-    return 'Added files to \"$title\"';
+    return 'Τα αρχεία προστέθηκαν στο «$title»';
   }
 
   @override
   String get adminUploadTargetNoFolder =>
-      'Couldn\'t find that book\'s folder on the server.';
+      'Δεν βρέθηκε ο φάκελος του βιβλίου στον διακομιστή.';
 
   @override
   String adminUploadTargetFolderMismatch(String preview, String folder) {
-    return 'The server would put these files in \"$preview\", not in that book\'s folder \"$folder\". Nothing was uploaded.';
+    return 'Ο διακομιστής θα τοποθετούσε τα αρχεία στο «$preview», όχι στον φάκελο του βιβλίου «$folder». Δεν μεταφορτώθηκε τίποτα.';
   }
 
   @override
-  String get adminUploadUploading => 'Uploading...';
+  String get adminUploadUploading => 'Μεταφόρτωση...';
 
   @override
   String adminUploadProgress(int percent) {
-    return 'Uploading $percent%';
+    return 'Μεταφόρτωση $percent%';
   }
 
   @override
-  String get adminUploadButton => 'Upload';
+  String get adminUploadButton => 'Μεταφόρτωση';
 
   @override
   String adminUploadComplete(String title) {
-    return 'Uploaded \"$title\"';
+    return 'Το «$title» μεταφορτώθηκε';
   }
 
   @override
-  String get adminUploadFailed => 'Upload failed';
+  String get adminUploadFailed => 'Η μεταφόρτωση απέτυχε';
 
   @override
   String adminUploadFailedReason(String error) {
-    return 'Upload failed: $error';
+    return 'Η μεταφόρτωση απέτυχε: $error';
   }
 
   @override
   String get adminUploadReselectFiles =>
-      'Choose the files again before retrying.';
+      'Επιλέξτε ξανά τα αρχεία πριν επαναλάβετε.';
 
   @override
-  String get adminServerSettings => 'Server settings';
+  String get adminServerSettings => 'Ρυθμίσεις διακομιστή';
 
   @override
-  String get adminServerSettingsSubtitle => 'Scanner, storage and sorting';
+  String get adminServerSettingsSubtitle =>
+      'Σαρωτής, αποθήκευση και ταξινόμηση';
 
   @override
-  String get adminAuthentication => 'Authentication';
+  String get adminAuthentication => 'Έλεγχος ταυτότητας';
 
   @override
   String get adminAuthenticationSubtitle =>
-      'Password and OpenID Connect sign-in';
+      'Σύνδεση με κωδικό πρόσβασης και OpenID Connect';
 
   @override
-  String get adminStats => 'Statistics';
+  String get adminStats => 'Στατιστικά';
 
   @override
-  String get adminStatsSubtitle => 'Library and listening totals';
+  String get adminStatsSubtitle => 'Σύνολα βιβλιοθήκης και ακρόασης';
 
   @override
-  String get adminAllSessions => 'All sessions';
+  String get adminAllSessions => 'Όλες οι συνεδρίες';
 
   @override
   String get adminAllSessionsSubtitle =>
-      'View and manage all listening sessions';
+      'Προβολή και διαχείριση όλων των συνεδριών ακρόασης';
 
   @override
-  String get adminSessionsAllUsers => 'All users';
+  String get adminSessionsAllUsers => 'Όλοι οι χρήστες';
 
   @override
-  String get adminSessionsEmpty => 'No sessions';
+  String get adminSessionsEmpty => 'Καμία συνεδρία';
 
   @override
-  String get statsLibraryTotals => 'Library totals';
+  String get statsLibraryTotals => 'Σύνολα βιβλιοθήκης';
 
   @override
-  String get statsTotalItems => 'Items';
+  String get statsTotalItems => 'Αντικείμενα';
 
   @override
-  String get statsAudioFiles => 'Audio files';
+  String get statsAudioFiles => 'Αρχεία ήχου';
 
   @override
-  String get statsTotalSize => 'Total size';
+  String get statsTotalSize => 'Συνολικό μέγεθος';
 
   @override
-  String get statsBooks => 'Books';
+  String get statsBooks => 'Βιβλία';
 
   @override
-  String get statsPodcasts => 'Podcasts';
+  String get statsPodcasts => 'Podcast';
 
   @override
-  String get statsBooksSize => 'Books size';
+  String get statsBooksSize => 'Μέγεθος βιβλίων';
 
   @override
-  String get statsYearReview => 'Year in review';
+  String get statsYearReview => 'Ανασκόπηση έτους';
 
   @override
-  String get statsNoYearData => 'No data for this year';
+  String get statsNoYearData => 'Δεν υπάρχουν δεδομένα για αυτό το έτος';
 
   @override
-  String get statsListeningTime => 'Listening time';
+  String get statsListeningTime => 'Χρόνος ακρόασης';
 
   @override
-  String get statsSessions => 'Sessions';
+  String get statsSessions => 'Συνεδρίες';
 
   @override
-  String get statsBooksAdded => 'Books added';
+  String get statsBooksAdded => 'Βιβλία που προστέθηκαν';
 
   @override
-  String get statsAuthorsAdded => 'Authors added';
+  String get statsAuthorsAdded => 'Συγγραφείς που προστέθηκαν';
 
   @override
-  String get statsTopAuthors => 'Top authors';
+  String get statsTopAuthors => 'Κορυφαίοι συγγραφείς';
 
   @override
-  String get statsTopNarrators => 'Top narrators';
+  String get statsTopNarrators => 'Κορυφαίοι αφηγητές';
 
   @override
-  String get statsTopGenres => 'Top genres';
+  String get statsTopGenres => 'Κορυφαία είδη';
 
   @override
-  String get srvScannerSection => 'Scanner';
+  String get srvScannerSection => 'Σαρωτής';
 
   @override
-  String get srvFindCovers => 'Find covers';
+  String get srvFindCovers => 'Εύρεση εξώφυλλων';
 
   @override
-  String get srvCoverProvider => 'Cover provider';
+  String get srvCoverProvider => 'Πάροχος εξώφυλλων';
 
   @override
-  String get srvParseSubtitles => 'Parse subtitles from filename';
+  String get srvParseSubtitles => 'Ανάγνωση υποτίτλων από το όνομα αρχείου';
 
   @override
-  String get srvPreferMatched => 'Prefer matched metadata';
+  String get srvPreferMatched => 'Προτίμηση αντιστοιχισμένων μεταδεδομένων';
 
   @override
-  String get srvDisableWatcher => 'Disable folder watcher';
+  String get srvDisableWatcher => 'Απενεργοποίηση παρακολούθησης φακέλων';
 
   @override
-  String get srvStorageSection => 'Storage';
+  String get srvStorageSection => 'Αποθήκευση';
 
   @override
-  String get srvStoreCover => 'Store cover with item';
+  String get srvStoreCover => 'Αποθήκευση εξώφυλλου με το αντικείμενο';
 
   @override
-  String get srvStoreMetadata => 'Store metadata with item';
+  String get srvStoreMetadata => 'Αποθήκευση μεταδεδομένων με το αντικείμενο';
 
   @override
-  String get srvMetadataFormat => 'Metadata file format';
+  String get srvMetadataFormat => 'Μορφή αρχείου μεταδεδομένων';
 
   @override
-  String get srvFormatSection => 'Display and format';
+  String get srvFormatSection => 'Εμφάνιση και μορφή';
 
   @override
-  String get srvDateFormat => 'Date format';
+  String get srvDateFormat => 'Μορφή ημερομηνίας';
 
   @override
-  String get srvTimeFormat => 'Time format';
+  String get srvTimeFormat => 'Μορφή ώρας';
 
   @override
-  String get srvLanguage => 'Server language';
+  String get srvLanguage => 'Γλώσσα διακομιστή';
 
   @override
-  String get srvChromecast => 'Chromecast support';
+  String get srvChromecast => 'Υποστήριξη Chromecast';
 
   @override
-  String get srvAllowIframe => 'Allow iframe embedding';
+  String get srvAllowIframe => 'Να επιτρέπεται η ενσωμάτωση iframe';
 
   @override
-  String get srvSortingSection => 'Sorting';
+  String get srvSortingSection => 'Ταξινόμηση';
 
   @override
-  String get srvIgnorePrefixes => 'Ignore prefixes when sorting';
+  String get srvIgnorePrefixes => 'Παράβλεψη προθεμάτων στην ταξινόμηση';
 
   @override
-  String get srvSortingPrefixes => 'Sorting prefixes';
+  String get srvSortingPrefixes => 'Προθέματα ταξινόμησης';
 
   @override
-  String get srvAddPrefix => 'Add prefix';
+  String get srvAddPrefix => 'Προσθήκη προθέματος';
 
   @override
-  String get srvSave => 'Save settings';
+  String get srvSave => 'Αποθήκευση ρυθμίσεων';
 
   @override
-  String get srvSavePrefixes => 'Save prefixes';
+  String get srvSavePrefixes => 'Αποθήκευση προθεμάτων';
 
   @override
-  String get srvSaved => 'Settings saved';
+  String get srvSaved => 'Οι ρυθμίσεις αποθηκεύτηκαν';
 
   @override
-  String get srvSaveFailed => 'Couldn\'t save settings';
+  String get srvSaveFailed => 'Δεν ήταν δυνατή η αποθήκευση των ρυθμίσεων';
 
   @override
-  String get srvPrefixesSaved => 'Sorting prefixes updated';
+  String get srvPrefixesSaved => 'Τα προθέματα ταξινόμησης ενημερώθηκαν';
 
   @override
-  String get authSetLoadFailed => 'Couldn\'t load authentication settings';
+  String get authSetLoadFailed =>
+      'Δεν ήταν δυνατή η φόρτωση των ρυθμίσεων ελέγχου ταυτότητας';
 
   @override
-  String get authSetCustomMessage => 'Custom message on login';
+  String get authSetCustomMessage => 'Προσαρμοσμένο μήνυμα στη σύνδεση';
 
   @override
-  String get authSetMessage => 'Message';
+  String get authSetMessage => 'Μήνυμα';
 
   @override
-  String get authSetPasswordAuth => 'Password authentication';
+  String get authSetPasswordAuth => 'Έλεγχος ταυτότητας με κωδικό πρόσβασης';
 
   @override
-  String get authSetOpenId => 'OpenID Connect authentication';
+  String get authSetOpenId => 'Έλεγχος ταυτότητας OpenID Connect';
 
   @override
-  String get authSetGuide => 'Setup guide';
+  String get authSetGuide => 'Οδηγός ρύθμισης';
 
   @override
-  String get authSetIssuerUrl => 'Issuer URL';
+  String get authSetIssuerUrl => 'URL εκδότη';
 
   @override
-  String get authSetAutoPopulate => 'Auto-populate';
+  String get authSetAutoPopulate => 'Αυτόματη συμπλήρωση';
 
   @override
-  String get authSetAuthorizeUrl => 'Authorize URL';
+  String get authSetAuthorizeUrl => 'URL εξουσιοδότησης';
 
   @override
-  String get authSetTokenUrl => 'Token URL';
+  String get authSetTokenUrl => 'URL διακριτικού';
 
   @override
-  String get authSetUserinfoUrl => 'Userinfo URL';
+  String get authSetUserinfoUrl => 'URL πληροφοριών χρήστη';
 
   @override
-  String get authSetJwksUrl => 'JWKS URL';
+  String get authSetJwksUrl => 'URL JWKS';
 
   @override
-  String get authSetLogoutUrl => 'Logout URL';
+  String get authSetLogoutUrl => 'URL αποσύνδεσης';
 
   @override
-  String get authSetClientId => 'Client ID';
+  String get authSetClientId => 'Αναγνωριστικό πελάτη';
 
   @override
-  String get authSetClientSecret => 'Client secret';
+  String get authSetClientSecret => 'Μυστικό πελάτη';
 
   @override
-  String get authSetSigningAlgorithm => 'Signing algorithm';
+  String get authSetSigningAlgorithm => 'Αλγόριθμος υπογραφής';
 
   @override
-  String get authSetRedirectUris => 'Allowed mobile redirect URIs';
+  String get authSetRedirectUris =>
+      'Επιτρεπόμενα URI ανακατεύθυνσης για κινητά';
 
   @override
   String get authSetRedirectUrisInfo =>
-      'Apps can only return to these addresses after sign-in. Absorb uses absorb://oauth. An asterisk (*) as the only entry allows any address.';
+      'Οι εφαρμογές μπορούν να επιστρέψουν μετά τη σύνδεση μόνο σε αυτές τις διευθύνσεις. Το Absorb χρησιμοποιεί absorb://oauth. Ένας αστερίσκος (*) ως μοναδική εγγραφή επιτρέπει οποιαδήποτε διεύθυνση.';
 
   @override
-  String get authSetAddRedirectUri => 'Add URI';
+  String get authSetAddRedirectUri => 'Προσθήκη URI';
 
   @override
-  String get authSetAddAbsorbRedirect => 'Add absorb://oauth';
+  String get authSetAddAbsorbRedirect => 'Προσθήκη absorb://oauth';
 
   @override
-  String get authSetSubfolder => 'Subfolder for redirect URLs';
+  String get authSetSubfolder => 'Υποφάκελος για τα URL ανακατεύθυνσης';
 
   @override
-  String get authSetSubfolderNone => 'None';
+  String get authSetSubfolderNone => 'Κανένας';
 
   @override
   String get authSetWebRedirectInfo =>
-      'Allow these URLs in your OAuth provider so sign-in can return to the web app:';
+      'Επιτρέψτε αυτά τα URL στον πάροχο OAuth ώστε η σύνδεση να επιστρέφει στην εφαρμογή web:';
 
   @override
-  String get authSetButtonText => 'Button text';
+  String get authSetButtonText => 'Κείμενο κουμπιού';
 
   @override
-  String get authSetMatchExisting => 'Match existing users by';
+  String get authSetMatchExisting => 'Αντιστοίχιση υπαρχόντων χρηστών με';
 
   @override
-  String get authSetMatchNone => 'Do not match';
+  String get authSetMatchNone => 'Χωρίς αντιστοίχιση';
 
   @override
   String get authSetMatchEmail => 'Email';
 
   @override
-  String get authSetMatchUsername => 'Username';
+  String get authSetMatchUsername => 'Όνομα χρήστη';
 
   @override
   String get authSetMatchExistingInfo =>
-      'Used to link existing users. Once linked, users are matched by their unique ID from the provider.';
+      'Χρησιμοποιείται για τη σύνδεση υπαρχόντων χρηστών. Μετά τη σύνδεση, οι χρήστες αντιστοιχίζονται με το μοναδικό αναγνωριστικό τους από τον πάροχο.';
 
   @override
-  String get authSetAutoLaunch => 'Auto launch';
+  String get authSetAutoLaunch => 'Αυτόματη εκκίνηση';
 
   @override
   String get authSetAutoLaunchInfo =>
-      'Open the provider automatically from the web login page. /login?autoLaunch=0 skips it.';
+      'Άνοιγμα του παρόχου αυτόματα από τη σελίδα σύνδεσης web. Το /login?autoLaunch=0 την παρακάμπτει.';
 
   @override
-  String get authSetAutoRegister => 'Auto register';
+  String get authSetAutoRegister => 'Αυτόματη εγγραφή';
 
   @override
   String get authSetAutoRegisterInfo =>
-      'Create new users automatically after they sign in';
+      'Δημιουργία νέων χρηστών αυτόματα μετά τη σύνδεσή τους';
 
   @override
   String get authSetClaimsInfo =>
-      'Leave these empty to turn off group and permission assignment. New users then get the User role.';
+      'Αφήστε τα κενά για να απενεργοποιήσετε την ανάθεση ομάδων και δικαιωμάτων. Οι νέοι χρήστες θα λαμβάνουν τότε τον ρόλο User.';
 
   @override
-  String get authSetGroupClaim => 'Group claim';
+  String get authSetGroupClaim => 'Claim ομάδας';
 
   @override
   String get authSetGroupClaimInfo =>
-      'Claim that lists the user\'s groups, usually groups. Groups named admin, user or guest set the role, and the highest one wins. If no group matches, sign-in is refused.';
+      'Το claim που απαριθμεί τις ομάδες του χρήστη, συνήθως groups. Οι ομάδες με όνομα admin, user ή guest ορίζουν τον ρόλο και επικρατεί η υψηλότερη. Αν καμία ομάδα δεν ταιριάζει, η σύνδεση απορρίπτεται.';
 
   @override
-  String get authSetPermsClaim => 'Advanced permission claim';
+  String get authSetPermsClaim => 'Claim προηγμένων δικαιωμάτων';
 
   @override
   String get authSetPermsClaimInfo =>
-      'Claim with permissions for non-admin users. If the claim is missing, sign-in is refused, and a missing option counts as off. Expected format:';
+      'Claim με δικαιώματα για χρήστες που δεν είναι διαχειριστές. Αν το claim λείπει, η σύνδεση απορρίπτεται και μια επιλογή που λείπει θεωρείται απενεργοποιημένη. Αναμενόμενη μορφή:';
 
   @override
   String get authSetRestartNote =>
-      'Restart the server after saving to apply OpenID Connect changes.';
+      'Κάντε επανεκκίνηση του διακομιστή μετά την αποθήκευση για να εφαρμοστούν οι αλλαγές OpenID Connect.';
 
   @override
-  String get authSetNoChanges => 'No changes to save';
+  String get authSetNoChanges => 'Δεν υπάρχουν αλλαγές για αποθήκευση';
 
   @override
-  String get authSetNeedOneMethod => 'Turn on at least one sign-in method';
+  String get authSetNeedOneMethod =>
+      'Ενεργοποιήστε τουλάχιστον μία μέθοδο σύνδεσης';
 
   @override
   String authSetFieldRequired(String field) {
-    return '$field is required';
+    return 'Το πεδίο $field είναι υποχρεωτικό';
   }
 
   @override
   String authSetInvalidRedirectUri(String uri) {
-    return 'Invalid redirect URI: $uri';
+    return 'Μη έγκυρο URI ανακατεύθυνσης: $uri';
   }
 
   @override
   String get authSetAsteriskAlone =>
-      'An asterisk (*) must be the only redirect URI';
+      'Ο αστερίσκος (*) πρέπει να είναι το μοναδικό URI ανακατεύθυνσης';
 
   @override
   String authSetInvalidClaim(String field) {
-    return '$field is not a valid claim name';
+    return 'Το $field δεν είναι έγκυρο όνομα claim';
   }
 
   @override
   String authSetIssuerFailed(String error) {
-    return 'Couldn\'t read the issuer: $error';
+    return 'Δεν ήταν δυνατή η ανάγνωση του εκδότη: $error';
   }
 
   @override
-  String get libNoneYet => 'No libraries yet';
+  String get libNoneYet => 'Δεν υπάρχουν βιβλιοθήκες ακόμη';
 
   @override
-  String get libReorderFailed => 'Couldn\'t save the new order';
+  String get libReorderFailed => 'Δεν ήταν δυνατή η αποθήκευση της νέας σειράς';
 
   @override
-  String get libDeleteTitle => 'Delete library?';
+  String get libDeleteTitle => 'Διαγραφή βιβλιοθήκης;';
 
   @override
   String get libDeleteBody =>
-      'This permanently removes the library and all of its items from the server.';
+      'Αυτό αφαιρεί οριστικά τη βιβλιοθήκη και όλα τα αντικείμενά της από τον διακομιστή.';
 
   @override
-  String get libDeleted => 'Library deleted';
+  String get libDeleted => 'Η βιβλιοθήκη διαγράφηκε';
 
   @override
-  String get libDeleteFailed => 'Couldn\'t delete library';
+  String get libDeleteFailed => 'Δεν ήταν δυνατή η διαγραφή της βιβλιοθήκης';
 
   @override
   String libFolderCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count folders',
-      one: '1 folder',
+      other: '$count φάκελοι',
+      one: '1 φάκελος',
     );
     return '$_temp0';
   }
 
   @override
-  String get libNewTitle => 'New library';
+  String get libNewTitle => 'Νέα βιβλιοθήκη';
 
   @override
-  String get libEditTitle => 'Edit library';
+  String get libEditTitle => 'Επεξεργασία βιβλιοθήκης';
 
   @override
-  String get libName => 'Library name';
+  String get libName => 'Όνομα βιβλιοθήκης';
 
   @override
-  String get libMediaType => 'Media type';
+  String get libMediaType => 'Τύπος πολυμέσων';
 
   @override
-  String get libMediaBook => 'Books';
+  String get libMediaBook => 'Βιβλία';
 
   @override
-  String get libMediaPodcast => 'Podcasts';
+  String get libMediaPodcast => 'Podcast';
 
   @override
-  String get libProvider => 'Metadata provider';
+  String get libProvider => 'Πάροχος μεταδεδομένων';
 
   @override
-  String get libIcon => 'Icon';
+  String get libIcon => 'Εικονίδιο';
 
   @override
-  String get libFolders => 'Folders';
+  String get libFolders => 'Φάκελοι';
 
   @override
-  String get libAddFolder => 'Add folder';
+  String get libAddFolder => 'Προσθήκη φακέλου';
 
   @override
-  String get libNoFolders => 'Add at least one folder';
+  String get libNoFolders => 'Προσθέστε τουλάχιστον έναν φάκελο';
 
   @override
-  String get libAdvanced => 'Advanced settings';
+  String get libAdvanced => 'Σύνθετες ρυθμίσεις';
 
   @override
-  String get libCoverShape => 'Cover shape';
+  String get libCoverShape => 'Σχήμα εξώφυλλου';
 
   @override
-  String get libCoverSquare => 'Square';
+  String get libCoverSquare => 'Τετράγωνο';
 
   @override
-  String get libCoverStandard => 'Standard';
+  String get libCoverStandard => 'Στάνταρ';
 
   @override
-  String get libDisableWatcher => 'Disable folder watcher';
+  String get libDisableWatcher => 'Απενεργοποίηση παρακολούθησης φακέλων';
 
   @override
-  String get libSkipAsin => 'Skip matching books that have an ASIN';
+  String get libSkipAsin => 'Παράλειψη αντιστοίχισης βιβλίων με ASIN';
 
   @override
-  String get libSkipIsbn => 'Skip matching books that have an ISBN';
+  String get libSkipIsbn => 'Παράλειψη αντιστοίχισης βιβλίων με ISBN';
 
   @override
-  String get libHideSingleSeries => 'Hide single-book series';
+  String get libHideSingleSeries => 'Απόκρυψη σειρών ενός βιβλίου';
 
   @override
-  String get libAudiobooksOnly => 'Audiobooks only';
+  String get libAudiobooksOnly => 'Μόνο ηχητικά βιβλία';
 
   @override
-  String get libEpubScripted => 'Allow scripted ePub content';
+  String get libEpubScripted => 'Να επιτρέπεται περιεχόμενο ePub με σενάρια';
 
   @override
-  String get libLaterBooksOnly => 'Only show later books in Continue Series';
+  String get libLaterBooksOnly =>
+      'Εμφάνιση μόνο των επόμενων βιβλίων στη Συνέχεια σειράς';
 
   @override
-  String get libPodcastRegion => 'Podcast search region';
+  String get libPodcastRegion => 'Περιοχή αναζήτησης podcast';
 
   @override
-  String get libMarkPercent => 'Finished at % complete';
+  String get libMarkPercent => 'Ολοκληρώθηκε στο % της προόδου';
 
   @override
-  String get libMarkTime => 'Finished with seconds left';
+  String get libMarkTime => 'Ολοκληρώθηκε με υπόλοιπο δευτερολέπτων';
 
   @override
-  String get libAutoScan => 'Auto-scan schedule (cron)';
+  String get libAutoScan => 'Πρόγραμμα αυτόματης σάρωσης (cron)';
 
   @override
-  String get libCreate => 'Create library';
+  String get libCreate => 'Δημιουργία βιβλιοθήκης';
 
   @override
-  String get libUpdate => 'Save changes';
+  String get libUpdate => 'Αποθήκευση αλλαγών';
 
   @override
-  String get libNameRequired => 'Enter a library name';
+  String get libNameRequired => 'Εισαγάγετε ένα όνομα βιβλιοθήκης';
 
   @override
-  String get libCreated => 'Library created';
+  String get libCreated => 'Η βιβλιοθήκη δημιουργήθηκε';
 
   @override
-  String get libCreateFailed => 'Couldn\'t create library';
+  String get libCreateFailed => 'Δεν ήταν δυνατή η δημιουργία της βιβλιοθήκης';
 
   @override
-  String get libUpdated => 'Library updated';
+  String get libUpdated => 'Η βιβλιοθήκη ενημερώθηκε';
 
   @override
-  String get libUpdateFailed => 'Couldn\'t update library';
+  String get libUpdateFailed => 'Δεν ήταν δυνατή η ενημέρωση της βιβλιοθήκης';
 
   @override
-  String get libRemoveFoldersTitle => 'Remove folders?';
+  String get libRemoveFoldersTitle => 'Αφαίρεση φακέλων;';
 
   @override
   String get libRemoveFoldersBody =>
-      'Removing a folder deletes its items from the library. This can\'t be undone.';
+      'Η αφαίρεση ενός φακέλου διαγράφει τα αντικείμενά του από τη βιβλιοθήκη. Αυτό δεν μπορεί να αναιρεθεί.';
 
   @override
-  String get readEbook => 'Read';
+  String get readEbook => 'Ανάγνωση';
 
   @override
-  String get ebookDownload => 'Download';
+  String get ebookDownload => 'Λήψη';
 
   @override
-  String get ebookDownloaded => 'Downloaded';
+  String get ebookDownloaded => 'Ληφθέν';
 
   @override
-  String get ebookSavedOffline => 'Saved for offline reading';
+  String get ebookSavedOffline => 'Αποθηκεύτηκε για ανάγνωση εκτός σύνδεσης';
 
   @override
-  String get ebookRemovedOffline => 'Removed from offline';
+  String get ebookRemovedOffline =>
+      'Αφαιρέθηκε από την αποθήκευση εκτός σύνδεσης';
 
   @override
-  String get ebookOfflineFailed => 'Couldn\'t download the ebook';
+  String get ebookOfflineFailed =>
+      'Δεν ήταν δυνατή η λήψη του ηλεκτρονικού βιβλίου';
 
   @override
-  String get ebookSaveToDevice => 'Save to device';
+  String get ebookSaveToDevice => 'Αποθήκευση στη συσκευή';
 
   @override
-  String get ebookSaveToDeviceTitle => 'Save to device?';
+  String get ebookSaveToDeviceTitle => 'Αποθήκευση στη συσκευή;';
 
   @override
   String get ebookSaveToDeviceBody =>
-      'This saves a copy of the ebook file somewhere on your device (you pick where). It won\'t make the book available offline in the reader - use Download for that.';
+      'Αποθηκεύει ένα αντίγραφο του αρχείου του ηλεκτρονικού βιβλίου κάπου στη συσκευή σας (εσείς επιλέγετε πού). Δεν θα κάνει το βιβλίο διαθέσιμο εκτός σύνδεσης στον αναγνώστη - γι\' αυτό χρησιμοποιήστε τη Λήψη.';
 
   @override
   String get readerFormatUnsupported =>
-      'This ebook format can\'t be opened in the reader yet';
+      'Αυτή η μορφή ηλεκτρονικού βιβλίου δεν μπορεί ακόμη να ανοιχτεί στον αναγνώστη';
 
   @override
   String get readerCouldNotOpen =>
-      'This ebook couldn\'t be opened. The file may be damaged.';
+      'Δεν ήταν δυνατό το άνοιγμα αυτού του ηλεκτρονικού βιβλίου. Το αρχείο ίσως είναι κατεστραμμένο.';
 
   @override
-  String get moreActions => 'More';
+  String get moreActions => 'Περισσότερα';
 
   @override
-  String get readerChapters => 'Chapters';
+  String get readerChapters => 'Κεφάλαια';
 
   @override
-  String get readerSettings => 'Reader Settings';
+  String get readerSettings => 'Ρυθμίσεις αναγνώστη';
 
   @override
-  String get readerFontSize => 'Font Size';
+  String get readerFontSize => 'Μέγεθος γραμματοσειράς';
 
   @override
-  String get readerLineSpacing => 'Line Spacing';
+  String get readerLineSpacing => 'Διάστιχο';
 
   @override
-  String get readerTextAlignment => 'Alignment';
+  String get readerTextAlignment => 'Στοίχιση';
 
   @override
-  String get readerAlignJustified => 'Justified';
+  String get readerAlignJustified => 'Πλήρης';
 
   @override
-  String get readerAlignLeft => 'Left';
+  String get readerAlignLeft => 'Αριστερά';
 
   @override
-  String get readerSideMargins => 'Side margins';
+  String get readerSideMargins => 'Πλαϊνά περιθώρια';
 
   @override
-  String get readerTopBottom => 'Top & bottom';
+  String get readerTopBottom => 'Επάνω και κάτω';
 
   @override
-  String get readerPageLayout => 'Page layout';
+  String get readerPageLayout => 'Διάταξη σελίδας';
 
   @override
-  String get readerPinTopBar => 'Keep the title and progress bar on screen';
+  String get readerPinTopBar =>
+      'Διατήρηση τίτλου και γραμμής προόδου στην οθόνη';
 
   @override
   String get readerPinTopBarHint =>
-      'Pins them above the page instead of showing them on tap. The page gets a little shorter so no text is covered.';
+      'Τα καρφιτσώνει πάνω από τη σελίδα αντί να εμφανίζονται με πάτημα. Η σελίδα γίνεται λίγο πιο κοντή ώστε να μην καλύπτεται κείμενο.';
 
   @override
-  String get readerTopBarProgress => 'Top bar progress';
+  String get readerTopBarProgress => 'Πρόοδος στην επάνω γραμμή';
 
   @override
-  String get readerTopBarProgressBook => 'Book';
+  String get readerTopBarProgressBook => 'Βιβλίο';
 
   @override
-  String get readerTopBarProgressChapter => 'Chapter';
+  String get readerTopBarProgressChapter => 'Κεφάλαιο';
 
   @override
-  String get readerTopBarProgressBoth => 'Both';
+  String get readerTopBarProgressBoth => 'Και τα δύο';
 
   @override
-  String get readerSectionText => 'Text';
+  String get readerSectionText => 'Κείμενο';
 
   @override
-  String get readerSectionPage => 'Page';
+  String get readerSectionPage => 'Σελίδα';
 
   @override
-  String get readerSectionTopBar => 'Top bar and screen';
+  String get readerSectionTopBar => 'Επάνω γραμμή και οθόνη';
 
   @override
-  String get readerSectionControls => 'Controls';
+  String get readerSectionControls => 'Χειριστήρια';
 
   @override
-  String get readerSectionStats => 'Stats';
+  String get readerSectionStats => 'Στατιστικά';
 
   @override
-  String get readerParagraphSpacing => 'Paragraph spacing';
+  String get readerParagraphSpacing => 'Απόσταση παραγράφων';
 
   @override
-  String get readerParagraphSpacingBook => 'Book\'s own';
+  String get readerParagraphSpacingBook => 'Του ίδιου του βιβλίου';
 
   @override
-  String get readerTapZones => 'Tap zones';
+  String get readerTapZones => 'Ζώνες πατήματος';
 
   @override
   String get readerTapZonesHint =>
-      'Drag the lines to resize the squares. Tap a square to change what it does, or start from a layout.';
+      'Σύρετε τις γραμμές για να αλλάξετε το μέγεθος των τετραγώνων. Πατήστε ένα τετράγωνο για να αλλάξετε τι κάνει ή ξεκινήστε από μια διάταξη.';
 
   @override
-  String get readerTapPrev => 'Previous page';
+  String get readerTapPrev => 'Προηγούμενη σελίδα';
 
   @override
-  String get readerTapNext => 'Next page';
+  String get readerTapNext => 'Επόμενη σελίδα';
 
   @override
-  String get readerTapMenu => 'Show controls';
+  String get readerTapMenu => 'Εμφάνιση χειριστηρίων';
 
   @override
-  String get readerTapNothing => 'Nothing';
+  String get readerTapNothing => 'Τίποτα';
 
   @override
-  String get readerTapKeepMenu => 'One square has to show the controls';
+  String get readerTapKeepMenu =>
+      'Ένα τετράγωνο πρέπει να εμφανίζει τα χειριστήρια';
 
   @override
-  String get readerHideControls => 'Hide controls after';
+  String get readerHideControls => 'Απόκρυψη χειριστηρίων μετά από';
 
   @override
-  String get readerHideControlsNever => 'Never';
+  String get readerHideControlsNever => 'Ποτέ';
 
   @override
-  String get readerBarNotes => 'Notes and highlights';
+  String get readerBarNotes => 'Σημειώσεις και επισημάνσεις';
 
   @override
   String readerHideControlsAfter(int seconds) {
-    return '${seconds}s';
+    return '$secondsδ';
   }
 
   @override
   String get playerDownloadStreamingInstead =>
-      'This download couldn\'t be played, so it\'s streaming from the server. Downloading it again may fix it.';
+      'Αυτή η λήψη δεν μπόρεσε να αναπαραχθεί, οπότε γίνεται ροή από τον διακομιστή. Μια νέα λήψη ίσως το διορθώσει.';
 
   @override
-  String get playerReconnecting => 'Connection lost, reconnecting…';
+  String get playerReconnecting => 'Η σύνδεση χάθηκε, γίνεται επανασύνδεση…';
 
   @override
   String get playerReconnectFailed =>
-      'Couldn\'t reconnect to the server, so playback stopped.';
+      'Δεν ήταν δυνατή η επανασύνδεση με τον διακομιστή, οπότε η αναπαραγωγή σταμάτησε.';
 
   @override
-  String get readerPageTurn => 'Page turn';
+  String get readerPageTurn => 'Αλλαγή σελίδας';
 
   @override
-  String get readerPageTurnNone => 'None';
+  String get readerPageTurnNone => 'Καμία';
 
   @override
-  String get readerPageTurnSlide => 'Slide';
+  String get readerPageTurnSlide => 'Ολίσθηση';
 
   @override
-  String get readerPageTurnCurl => 'Curl';
+  String get readerPageTurnCurl => 'Κύλιση φύλλου';
 
   @override
-  String get readerPageTurnRipple => 'Ripple';
+  String get readerPageTurnRipple => 'Κυματισμός';
 
   @override
-  String get readerScrollMode => 'Scroll mode';
+  String get readerScrollMode => 'Λειτουργία κύλισης';
 
   @override
   String get readerScrollModeHint =>
-      'Scroll down through the book instead of turning pages. Applies to every book.';
+      'Κύλιση προς τα κάτω στο βιβλίο αντί για αλλαγή σελίδων. Ισχύει για όλα τα βιβλία.';
 
   @override
-  String get readerKeepAwake => 'Keep the screen on';
+  String get readerKeepAwake => 'Διατήρηση της οθόνης αναμμένης';
 
   @override
   String get readerKeepAwakeHint =>
-      'Stops the screen timing out while you read at your own pace. Auto scroll and read along always keep it on.';
+      'Εμποδίζει το σβήσιμο της οθόνης όσο διαβάζετε με τον δικό σας ρυθμό. Η αυτόματη κύλιση και η ανάγνωση με τον ήχο την κρατούν πάντα αναμμένη.';
 
   @override
-  String get readerLayoutAuto => 'Auto';
+  String get readerLayoutAuto => 'Αυτόματα';
 
   @override
-  String get readerLayoutSingle => 'Single';
+  String get readerLayoutSingle => 'Μονή';
 
   @override
-  String get readerLayoutTwoPage => 'Two-page';
+  String get readerLayoutTwoPage => 'Διπλή σελίδα';
 
   @override
-  String get readerTheme => 'Theme';
+  String get readerTheme => 'Θέμα';
 
   @override
-  String get readerFont => 'Font';
+  String get readerFont => 'Γραμματοσειρά';
 
   @override
-  String get readerVolumeNav => 'Volume keys turn pages';
+  String get readerVolumeNav => 'Τα πλήκτρα έντασης αλλάζουν σελίδα';
 
   @override
-  String get readerVolumeNavOff => 'Off';
+  String get readerVolumeNavOff => 'Ανενεργό';
 
   @override
-  String get readerVolumeNavNormal => 'Normal';
+  String get readerVolumeNavNormal => 'Κανονικό';
 
   @override
-  String get readerVolumeNavMirrored => 'Mirrored';
+  String get readerVolumeNavMirrored => 'Αντίστροφο';
 
   @override
-  String get readerAutoScroll => 'Auto scroll';
+  String get readerAutoScroll => 'Αυτόματη κύλιση';
 
   @override
   String get readerAutoScrollSubtitle =>
-      'The next page paints over this one from the top down - drag the middle of the screen to change speed, tap to stop';
+      'Η επόμενη σελίδα καλύπτει αυτήν από πάνω προς τα κάτω - σύρετε τη μέση της οθόνης για να αλλάξετε ταχύτητα, πατήστε για διακοπή';
 
   @override
-  String get readerAutoScrollStarted => 'Auto scroll started';
+  String get readerAutoScrollStarted => 'Η αυτόματη κύλιση ξεκίνησε';
 
   @override
-  String get readerAutoScrollPaused => 'Paused - press and hold to stop';
+  String get readerAutoScrollPaused =>
+      'Σε παύση - πατήστε παρατεταμένα για διακοπή';
 
   @override
-  String get readerAutoScrollResumed => 'Auto scroll resumed';
+  String get readerAutoScrollResumed => 'Η αυτόματη κύλιση συνεχίστηκε';
 
   @override
-  String get readerAutoScrollStopped => 'Auto scroll off';
+  String get readerAutoScrollStopped => 'Η αυτόματη κύλιση απενεργοποιήθηκε';
 
   @override
-  String get readerAutoScrollEndOfBook => 'End of book - auto scroll off';
+  String get readerAutoScrollEndOfBook =>
+      'Τέλος βιβλίου - η αυτόματη κύλιση απενεργοποιήθηκε';
 
   @override
   String readerAutoScrollSpeed(int percent) {
-    return 'Speed $percent%';
+    return 'Ταχύτητα $percent%';
   }
 
   @override
-  String get readerMoreControls => 'More controls';
+  String get readerMoreControls => 'Περισσότερα χειριστήρια';
 
   @override
-  String get readerAutoScrollSleep => 'Auto scroll sleep timer';
+  String get readerAutoScrollSleep => 'Χρονοδιακόπτης ύπνου αυτόματης κύλισης';
 
   @override
   String get readerAutoScrollSleepHint =>
-      'Stops the scrolling after a while and lets the screen go dark.';
+      'Σταματά την κύλιση μετά από λίγο και αφήνει την οθόνη να σβήσει.';
 
   @override
   String readerAutoScrollSleepMinutes(int minutes) {
-    return '$minutes min';
+    return '$minutes λεπτά';
   }
 
   @override
   String readerAutoScrollSleepLeft(int minutes) {
-    return '$minutes min left';
+    return 'απομένουν $minutes λεπτά';
   }
 
   @override
   String readerAutoScrollSleepIn(int minutes) {
-    return 'Auto scroll stops in $minutes min';
+    return 'Η αυτόματη κύλιση σταματά σε $minutes λεπτά';
   }
 
   @override
-  String get readerAutoScrollSleepOff => 'Auto scroll sleep timer off';
+  String get readerAutoScrollSleepOff =>
+      'Ο χρονοδιακόπτης ύπνου αυτόματης κύλισης είναι ανενεργός';
 
   @override
-  String get readerAutoScrollSleepEnded => 'Sleep timer - auto scroll off';
+  String get readerAutoScrollSleepEnded =>
+      'Χρονοδιακόπτης ύπνου - η αυτόματη κύλιση απενεργοποιήθηκε';
 
   @override
-  String get readerDownloadStarted => 'Download started';
+  String get readerDownloadStarted => 'Η λήψη ξεκίνησε';
 
   @override
-  String get detailChaptersJumpTitle => 'Jump to this chapter?';
+  String get detailChaptersJumpTitle => 'Μετάβαση σε αυτό το κεφάλαιο;';
 
   @override
   String detailChaptersJumpContent(String title) {
-    return 'Playback moves to \"$title\".';
+    return 'Η αναπαραγωγή μετακινείται στο «$title».';
   }
 
   @override
-  String get detailChaptersJump => 'Jump';
+  String get detailChaptersJump => 'Μετάβαση';
 
   @override
   String detailChaptersFinished(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count chapters finished',
-      one: '1 chapter finished',
+      other: '$count κεφάλαια ολοκληρώθηκαν',
+      one: '1 κεφάλαιο ολοκληρώθηκε',
     );
     return '$_temp0';
   }
@@ -10458,609 +10641,620 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count other listeners',
-      one: '1 other listener',
-      zero: 'No other listeners',
+      other: '$count άλλοι ακροατές',
+      one: '1 άλλος ακροατής',
+      zero: 'Κανένας άλλος ακροατής',
     );
     return '$_temp0';
   }
 
   @override
-  String get seriesUpNext => 'Up next';
+  String get seriesUpNext => 'Επόμενο';
 
   @override
-  String get seriesJumpToUpNext => 'Jump to up next';
+  String get seriesJumpToUpNext => 'Μετάβαση στο επόμενο';
 
   @override
-  String get seriesStatsFinished => 'Finished';
+  String get seriesStatsFinished => 'Ολοκληρώθηκαν';
 
   @override
-  String get seriesStatsListened => 'Listened';
+  String get seriesStatsListened => 'Ακούστηκαν';
 
   @override
-  String get seriesStatsLeft => 'Left';
+  String get seriesStatsLeft => 'Απομένουν';
 
   @override
   String seriesFinishedOf(int done, int total) {
-    return '$done of $total';
+    return '$done από $total';
   }
 
   @override
-  String get detailSessionsNone => 'No listening sessions yet';
+  String get detailSessionsNone => 'Δεν υπάρχουν συνεδρίες ακρόασης ακόμη';
 
   @override
   String detailSessionsAll(int count) {
-    return 'All $count sessions';
+    return 'Όλες οι $count συνεδρίες';
   }
 
   @override
-  String get readerVolumeNavWhilePlaying => 'Even while audio is playing';
+  String get readerVolumeNavWhilePlaying =>
+      'Ακόμη και κατά την αναπαραγωγή ήχου';
 
   @override
-  String get readerTranslateWith => 'Translate with';
+  String get readerTranslateWith => 'Μετάφραση με';
 
   @override
-  String get readerTranslateApp => 'App on this device';
+  String get readerTranslateApp => 'Εφαρμογή σε αυτή τη συσκευή';
 
   @override
-  String get readerTranslateApple => 'Built into iOS';
+  String get readerTranslateApple => 'Ενσωματωμένο στο iOS';
 
   @override
-  String get readerTranslateWeb => 'Opens in your browser';
+  String get readerTranslateWeb => 'Ανοίγει στο πρόγραμμα περιήγησης';
 
   @override
   String get readerTranslateHint =>
-      'Selected text is sent to the translator you pick.';
+      'Το επιλεγμένο κείμενο αποστέλλεται στον μεταφραστή που θα επιλέξετε.';
 
   @override
-  String get readerMoreFonts => 'Download more fonts';
+  String get readerMoreFonts => 'Λήψη περισσότερων γραμματοσειρών';
 
   @override
-  String get readerFontRemove => 'Remove download';
+  String get readerFontRemove => 'Αφαίρεση λήψης';
 
   @override
   String readerFontDownloadFailed(String font) {
-    return 'Couldn\'t download $font';
+    return 'Δεν ήταν δυνατή η λήψη της γραμματοσειράς $font';
   }
 
   @override
-  String get readerAnnotations => 'Annotations';
+  String get readerAnnotations => 'Σχολιασμοί';
 
   @override
   String readerHighlights(int count) {
-    return 'Highlights ($count)';
+    return 'Επισημάνσεις ($count)';
   }
 
   @override
   String readerBookmarks(int count) {
-    return 'Bookmarks ($count)';
+    return 'Σελιδοδείκτες ($count)';
   }
 
   @override
-  String get readerNoHighlights => 'No highlights yet';
+  String get readerNoHighlights => 'Δεν υπάρχουν επισημάνσεις ακόμη';
 
   @override
-  String get readerHistory => 'History';
+  String get readerHistory => 'Ιστορικό';
 
   @override
-  String get sessionReading => 'Reading';
+  String get sessionReading => 'Ανάγνωση';
 
   @override
   String get readerHistoryEmpty =>
-      'Pages you leave are listed here, so you can always get back to them.';
+      'Οι σελίδες που αφήνετε εμφανίζονται εδώ, ώστε να μπορείτε πάντα να επιστρέφετε σε αυτές.';
 
   @override
-  String get readerHistoryClosed => 'Closed the book';
+  String get readerHistoryClosed => 'Έκλεισε το βιβλίο';
 
   @override
-  String get readerHistoryBeforeJump => 'Before a jump';
+  String get readerHistoryBeforeJump => 'Πριν από μια μετάβαση';
 
   @override
-  String get readerHistoryBeforeSync => 'Before matching the audio';
+  String get readerHistoryBeforeSync => 'Πριν από την αντιστοίχιση με τον ήχο';
 
   @override
-  String get readerLogReading => 'Count reading time in stats';
+  String get readerLogReading => 'Καταμέτρηση χρόνου ανάγνωσης στα στατιστικά';
 
   @override
   String get readerLogReadingHint =>
-      'Logs your time in the reader as a session so it shows in your stats. On Audiobookshelf it counts as listening time.';
+      'Καταγράφει τον χρόνο σας στον αναγνώστη ως συνεδρία ώστε να εμφανίζεται στα στατιστικά σας. Στο Audiobookshelf μετράει ως χρόνος ακρόασης.';
 
   @override
-  String get readerNoBookmarks => 'No bookmarks yet';
+  String get readerNoBookmarks => 'Δεν υπάρχουν σελιδοδείκτες ακόμη';
 
   @override
-  String get readerBookmarkDefault => 'Bookmark';
+  String get readerBookmarkDefault => 'Σελιδοδείκτης';
 
   @override
-  String get readerNoteTitle => 'Note';
+  String get readerNoteTitle => 'Σημείωση';
 
   @override
-  String get readerNoteHint => 'Add a note...';
+  String get readerNoteHint => 'Προσθέστε μια σημείωση...';
 
   @override
-  String get backupAndSync => 'Backup and sync';
+  String get backupAndSync => 'Αντίγραφο ασφαλείας και συγχρονισμός';
 
   @override
   String get backupAndSyncSubtitle =>
-      'Save a backup file, or keep settings in step across devices';
+      'Αποθηκεύστε ένα αρχείο αντιγράφου ή διατηρήστε τις ρυθμίσεις συγχρονισμένες σε όλες τις συσκευές';
 
   @override
-  String get syncSettingsExperimental => 'Experimental';
+  String get syncSettingsExperimental => 'Πειραματικό';
 
   @override
   String get syncSettingsExperimentalBody =>
-      'Sync is new and still being worked on. If two devices change things while they are apart, one side can lose its changes. Keep a backup file as your safe copy.';
+      'Ο συγχρονισμός είναι νέος και βρίσκεται ακόμη υπό ανάπτυξη. Αν δύο συσκευές αλλάξουν πράγματα ενώ δεν είναι συνδεδεμένες, η μία πλευρά μπορεί να χάσει τις αλλαγές της. Κρατήστε ένα αρχείο αντιγράφου ως ασφαλές αντίγραφο.';
 
   @override
-  String get syncSettingsNeedServer => 'Need a server?';
+  String get syncSettingsNeedServer => 'Χρειάζεστε διακομιστή;';
 
   @override
   String get syncSettingsNeedServerSub =>
-      'Any WebDAV server works. Nextcloud is a free self-hosted one.';
+      'Λειτουργεί οποιοσδήποτε διακομιστής WebDAV. Το Nextcloud είναι ένας δωρεάν διακομιστής για αυτοφιλοξενία.';
 
   @override
-  String get syncSettingsConnection => 'Connection';
+  String get syncSettingsConnection => 'Σύνδεση';
 
   @override
-  String get syncSettingsConnectionNotSet => 'Not set up yet';
+  String get syncSettingsConnectionNotSet => 'Δεν έχει ρυθμιστεί ακόμη';
 
   @override
-  String get syncSettingsBackupFile => 'Backup file';
+  String get syncSettingsBackupFile => 'Αρχείο αντιγράφου ασφαλείας';
 
   @override
   String get syncSettingsBackupFilePlain =>
-      'Save everything to a file you keep.';
+      'Αποθήκευση των πάντων σε ένα αρχείο που κρατάτε εσείς.';
 
   @override
   String get syncSettingsBackupFileWithSync =>
-      'Save everything to a file you keep. Include login info and restoring it on another phone turns sync on there too.';
+      'Αποθήκευση των πάντων σε ένα αρχείο που κρατάτε εσείς. Συμπεριλαμβάνει τα στοιχεία σύνδεσης και η επαναφορά του σε άλλο τηλέφωνο ενεργοποιεί και εκεί τον συγχρονισμό.';
 
   @override
-  String get syncSettingsStatusOff => 'Not syncing';
+  String get syncSettingsStatusOff => 'Χωρίς συγχρονισμό';
 
   @override
-  String get syncSettingsStatusProblem => 'Could not reach your server';
+  String get syncSettingsStatusProblem =>
+      'Δεν ήταν δυνατή η επικοινωνία με τον διακομιστή σας';
 
   @override
-  String get syncSettings => 'Sync settings between devices';
+  String get syncSettings => 'Συγχρονισμός ρυθμίσεων μεταξύ συσκευών';
 
   @override
-  String get syncSettingsExtras => 'Also sync';
+  String get syncSettingsExtras => 'Συγχρονισμός και';
 
   @override
-  String get syncSettingsIncludeRmab => 'ReadMeABook settings';
+  String get syncSettingsIncludeRmab => 'Ρυθμίσεις ReadMeABook';
 
   @override
   String get syncSettingsIncludeRmabSub =>
-      'Puts your ReadMeABook API token in the synced file';
+      'Τοποθετεί το διακριτικό API του ReadMeABook στο συγχρονισμένο αρχείο';
 
   @override
   String get syncSettingsSubtitle =>
-      'Keep your settings in step through your own WebDAV server';
+      'Διατηρήστε τις ρυθμίσεις σας συγχρονισμένες μέσω του δικού σας διακομιστή WebDAV';
 
   @override
-  String get syncSettingsEnable => 'Sync settings';
+  String get syncSettingsEnable => 'Συγχρονισμός ρυθμίσεων';
 
   @override
-  String get syncSettingsServerUrl => 'WebDAV folder URL';
+  String get syncSettingsServerUrl => 'URL φακέλου WebDAV';
 
   @override
   String get syncSettingsServerUrlHint =>
       'https://cloud.example.com/remote.php/dav/files/you/Absorb';
 
   @override
-  String get syncSettingsUsername => 'Username';
+  String get syncSettingsUsername => 'Όνομα χρήστη';
 
   @override
-  String get syncSettingsPassword => 'Password';
+  String get syncSettingsPassword => 'Κωδικός πρόσβασης';
 
   @override
-  String get syncSettingsHeaders => 'Custom headers (optional)';
+  String get syncSettingsHeaders => 'Προσαρμοσμένες κεφαλίδες (προαιρετικό)';
 
   @override
   String get syncSettingsHeadersHint =>
-      'One per line, like CF-Access-Client-Id: abc123';
+      'Μία ανά γραμμή, όπως CF-Access-Client-Id: abc123';
 
   @override
-  String get syncSettingsTest => 'Test connection';
+  String get syncSettingsTest => 'Δοκιμή σύνδεσης';
 
   @override
-  String get syncSettingsHoldToUpload => 'Hold to upload now';
+  String get syncSettingsHoldToUpload =>
+      'Πατήστε παρατεταμένα για άμεση μεταφόρτωση';
 
   @override
-  String get syncSettingsUploadNow => 'Upload now';
+  String get syncSettingsUploadNow => 'Μεταφόρτωση τώρα';
 
   @override
-  String get syncSettingsDownloadNow => 'Download now';
+  String get syncSettingsDownloadNow => 'Λήψη τώρα';
 
   @override
-  String get syncSettingsOk => 'Connected';
+  String get syncSettingsOk => 'Συνδέθηκε';
 
   @override
-  String get syncSettingsNoRemote => 'Connected - nothing synced yet';
+  String get syncSettingsNoRemote =>
+      'Συνδέθηκε - δεν έχει συγχρονιστεί τίποτα ακόμη';
 
   @override
-  String get syncSettingsAuthFailed => 'Wrong username or password';
+  String get syncSettingsAuthFailed => 'Λάθος όνομα χρήστη ή κωδικός πρόσβασης';
 
   @override
-  String get syncSettingsNetworkError => 'Could not reach that address';
+  String get syncSettingsNetworkError =>
+      'Δεν ήταν δυνατή η επικοινωνία με αυτή τη διεύθυνση';
 
   @override
   String get syncSettingsNotConfigured =>
-      'Fill in the address, username and password first';
+      'Συμπληρώστε πρώτα τη διεύθυνση, το όνομα χρήστη και τον κωδικό πρόσβασης';
 
   @override
-  String get syncSettingsTooLarge => 'Your settings are too big to sync';
+  String get syncSettingsTooLarge =>
+      'Οι ρυθμίσεις σας είναι πολύ μεγάλες για συγχρονισμό';
 
   @override
-  String get syncSettingsUploaded => 'Settings uploaded';
+  String get syncSettingsUploaded => 'Οι ρυθμίσεις μεταφορτώθηκαν';
 
   @override
-  String get syncSettingsApplied => 'Settings updated from your other device';
+  String get syncSettingsApplied =>
+      'Οι ρυθμίσεις ενημερώθηκαν από την άλλη συσκευή σας';
 
   @override
   String syncSettingsAppliedCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count settings updated from your other device',
-      one: '1 setting updated from your other device',
+      other: '$count ρυθμίσεις ενημερώθηκαν από την άλλη συσκευή σας',
+      one: '1 ρύθμιση ενημερώθηκε από την άλλη συσκευή σας',
     );
     return '$_temp0';
   }
 
   @override
-  String get syncSettingsUpToDate => 'Already up to date';
+  String get syncSettingsUpToDate => 'Ήδη ενημερωμένο';
 
   @override
   String syncSettingsLastSynced(String when) {
-    return 'Last synced $when';
+    return 'Τελευταίος συγχρονισμός $when';
   }
 
   @override
-  String get syncSettingsNever => 'Not synced yet';
+  String get syncSettingsNever => 'Δεν έχει συγχρονιστεί ακόμη';
 
   @override
   String navHoldPickTitle(String tab) {
-    return 'Holding $tab will...';
+    return 'Το παρατεταμένο πάτημα στο $tab θα...';
   }
 
   @override
   String get navHoldPickBody =>
-      'Choose what a long press on this tab does. You can change it later in Settings.';
+      'Επιλέξτε τι κάνει το παρατεταμένο πάτημα σε αυτή την καρτέλα. Μπορείτε να το αλλάξετε αργότερα στις Ρυθμίσεις.';
 
   @override
-  String get navHoldSettingTitle => 'Tab hold shortcuts';
+  String get navHoldSettingTitle =>
+      'Συντομεύσεις παρατεταμένου πατήματος καρτελών';
 
   @override
-  String get navHoldSettingSubtitle => 'What holding each tab does';
+  String get navHoldSettingSubtitle =>
+      'Τι κάνει το παρατεταμένο πάτημα σε κάθε καρτέλα';
 
   @override
-  String get navHoldAskNextTime => 'Ask next time';
+  String get navHoldAskNextTime => 'Ερώτηση την επόμενη φορά';
 
   @override
-  String get navHoldNothing => 'Nothing';
+  String get navHoldNothing => 'Τίποτα';
 
   @override
-  String get navHoldPlayPause => 'Play / pause';
+  String get navHoldPlayPause => 'Αναπαραγωγή / παύση';
 
   @override
-  String get navHoldOfflineMode => 'Offline mode';
+  String get navHoldOfflineMode => 'Λειτουργία εκτός σύνδεσης';
 
   @override
-  String get navHoldOfflineOn => 'Offline mode on';
+  String get navHoldOfflineOn => 'Λειτουργία εκτός σύνδεσης ενεργή';
 
   @override
-  String get navHoldOfflineOff => 'Offline mode off';
+  String get navHoldOfflineOff => 'Λειτουργία εκτός σύνδεσης ανενεργή';
 
   @override
-  String get navHoldMenu => 'Always show menu';
+  String get navHoldMenu => 'Να εμφανίζεται πάντα το μενού';
 
   @override
-  String get navHoldStop => 'Stop playback';
+  String get navHoldStop => 'Διακοπή αναπαραγωγής';
 
   @override
-  String get navHoldRmabSearch => 'ReadMeABook search';
+  String get navHoldRmabSearch => 'Αναζήτηση ReadMeABook';
 
   @override
-  String get navHoldRmabRequests => 'My book requests';
+  String get navHoldRmabRequests => 'Τα αιτήματά μου για βιβλία';
 
   @override
-  String get navHoldRmabWeb => 'ReadMeABook site';
+  String get navHoldRmabWeb => 'Ιστότοπος ReadMeABook';
 
   @override
-  String get navHoldAdd => 'Add';
+  String get navHoldAdd => 'Προσθήκη';
 
   @override
-  String get navHoldMoveLeft => 'Move left';
+  String get navHoldMoveLeft => 'Μετακίνηση αριστερά';
 
   @override
-  String get navHoldMoveRight => 'Move right';
+  String get navHoldMoveRight => 'Μετακίνηση δεξιά';
 
   @override
-  String get navHoldRemoveFromMenu => 'Remove from menu';
+  String get navHoldRemoveFromMenu => 'Αφαίρεση από το μενού';
 
   @override
-  String get navHoldEditHint => 'Hold an item to move or remove it';
+  String get navHoldEditHint =>
+      'Πατήστε παρατεταμένα ένα στοιχείο για να το μετακινήσετε ή να το αφαιρέσετε';
 
   @override
-  String get navHoldResetMenu => 'Reset the hold menu items';
+  String get navHoldResetMenu =>
+      'Επαναφορά στοιχείων του μενού παρατεταμένου πατήματος';
 
   @override
-  String get navHoldMenuReset => 'Menu items reset';
+  String get navHoldMenuReset => 'Τα στοιχεία του μενού επαναφέρθηκαν';
 
   @override
-  String get bookStatsAction => 'Listening stats';
+  String get bookStatsAction => 'Στατιστικά ακρόασης';
 
   @override
-  String get bookStatsYou => 'You';
+  String get bookStatsYou => 'Εσείς';
 
   @override
-  String get bookStatsEveryone => 'Everyone';
+  String get bookStatsEveryone => 'Όλοι';
 
   @override
-  String get bookStatsListened => 'Time listened';
+  String get bookStatsListened => 'Χρόνος ακρόασης';
 
   @override
-  String get bookStatsSessions => 'Sessions';
+  String get bookStatsSessions => 'Συνεδρίες';
 
   @override
-  String get bookStatsFirst => 'First listened';
+  String get bookStatsFirst => 'Πρώτη ακρόαση';
 
   @override
-  String get bookStatsLast => 'Last listened';
+  String get bookStatsLast => 'Τελευταία ακρόαση';
 
   @override
-  String get bookStatsListeners => 'People who started it';
+  String get bookStatsListeners => 'Άτομα που το ξεκίνησαν';
 
   @override
-  String get bookStatsFinishedCount => 'People who finished it';
+  String get bookStatsFinishedCount => 'Άτομα που το ολοκλήρωσαν';
 
   @override
-  String get bookStatsTotalTime => 'Time listened by everyone';
+  String get bookStatsTotalTime => 'Χρόνος ακρόασης από όλους';
 
   @override
-  String get bookStatsNobody => 'Nobody has started this yet';
+  String get bookStatsNobody => 'Κανείς δεν το έχει ξεκινήσει ακόμη';
 
   @override
   String get bookStatsScanning =>
-      'Scanning through sessions, this could take a while...';
+      'Σάρωση των συνεδριών, ίσως πάρει λίγο χρόνο...';
 
   @override
   String bookStatsScanningCount(int done, int total) {
-    return 'Scanning through sessions, $done of $total people...';
+    return 'Σάρωση των συνεδριών, $done από $total άτομα...';
   }
 
   @override
   String bookStatsLastChecked(String when) {
-    return 'Checked $when';
+    return 'Έλεγχος $when';
   }
 
   @override
-  String get activityYourReading => 'Your reading';
+  String get activityYourReading => 'Η ανάγνωσή σας';
 
   @override
-  String get activityYourListening => 'Your listening';
+  String get activityYourListening => 'Η ακρόασή σας';
 
   @override
   String activityLastRead(String when) {
-    return 'Last read $when';
+    return 'Τελευταία ανάγνωση $when';
   }
 
   @override
   String activityLastListened(String when) {
-    return 'Last listened $when';
+    return 'Τελευταία ακρόαση $when';
   }
 
   @override
-  String get activityNotStarted => 'Not started';
+  String get activityNotStarted => 'Δεν έχει ξεκινήσει';
 
   @override
-  String get activityNoReading => 'No reading sessions yet';
+  String get activityNoReading => 'Δεν υπάρχουν συνεδρίες ανάγνωσης ακόμη';
 
   @override
-  String get activityTime => 'Time';
+  String get activityTime => 'Χρόνος';
 
   @override
-  String get activityAverage => 'Avg';
+  String get activityAverage => 'Μέσος';
 
   @override
-  String get activityProgress => 'Progress';
+  String get activityProgress => 'Πρόοδος';
 
   @override
   String activityReached(String percent) {
-    return '$percent reached';
+    return 'Έφτασε στο $percent';
   }
 
   @override
-  String get readingLogTitle => 'Reading log';
+  String get readingLogTitle => 'Ημερολόγιο ανάγνωσης';
 
   @override
-  String get readingLogTotalTime => 'Total time';
+  String get readingLogTotalTime => 'Συνολικός χρόνος';
 
   @override
-  String get readingLogAverageSession => 'Average session';
+  String get readingLogAverageSession => 'Μέση συνεδρία';
 
   @override
-  String get readingLogActiveDays => 'Active days';
+  String get readingLogActiveDays => 'Ενεργές ημέρες';
 
   @override
   String readingLogActiveDaysOf(int active, int total) {
-    return '$active of $total';
+    return '$active από $total';
   }
 
   @override
-  String get readingLogPace => 'Pace';
+  String get readingLogPace => 'Ρυθμός';
 
   @override
   String readingLogPacePerHour(String percent) {
-    return '$percent%/h';
+    return '$percent%/ώ';
   }
 
   @override
-  String get readingLogLastRead => 'Last read';
+  String get readingLogLastRead => 'Τελευταία ανάγνωση';
 
   @override
-  String get readingLogStarted => 'Started';
+  String get readingLogStarted => 'Ξεκίνησε';
 
   @override
-  String get readingLogFinished => 'Finished';
+  String get readingLogFinished => 'Ολοκληρώθηκε';
 
   @override
-  String get readingLogNotSet => 'Not set';
+  String get readingLogNotSet => 'Δεν ορίστηκε';
 
   @override
   String readingLogLeftMinutes(int m) {
-    return 'About ${m}m to finish';
+    return 'Περίπου $mλ για την ολοκλήρωση';
   }
 
   @override
   String readingLogLeftHours(int h) {
-    return 'About ${h}h to finish';
+    return 'Περίπου $hώ για την ολοκλήρωση';
   }
 
   @override
   String readingLogLeftHoursMinutes(int h, int m) {
-    return 'About ${h}h ${m}m to finish';
+    return 'Περίπου $hώ $mλ για την ολοκλήρωση';
   }
 
   @override
-  String get readingLogLeftMax => 'Over 99h to finish';
+  String get readingLogLeftMax => 'Πάνω από 99ώ για την ολοκλήρωση';
 
   @override
   String readingLogUpOnLastWeek(int percent) {
-    return 'Up $percent% on the week before';
+    return 'Αύξηση $percent% σε σχέση με την προηγούμενη εβδομάδα';
   }
 
   @override
   String readingLogDownOnLastWeek(int percent) {
-    return 'Down $percent% on the week before';
+    return 'Μείωση $percent% σε σχέση με την προηγούμενη εβδομάδα';
   }
 
   @override
-  String get readingLogNewThisWeek => 'New this week';
+  String get readingLogNewThisWeek => 'Νέο αυτή την εβδομάδα';
 
   @override
-  String get readingLogSameAsLastWeek => 'Same as the week before';
+  String get readingLogSameAsLastWeek => 'Ίδιο με την προηγούμενη εβδομάδα';
 
   @override
-  String get readingLogQuietTwoWeeks => 'Nothing in the last two weeks';
+  String get readingLogQuietTwoWeeks => 'Τίποτα τις τελευταίες δύο εβδομάδες';
 
   @override
-  String get readingLogWhereYouRead => 'Where you read it';
+  String get readingLogWhereYouRead => 'Πού το διαβάσατε';
 
   @override
-  String get readingLogSourceIos => 'iOS app';
+  String get readingLogSourceIos => 'Εφαρμογή iOS';
 
   @override
-  String get readingLogSourceAndroid => 'Android app';
+  String get readingLogSourceAndroid => 'Εφαρμογή Android';
 
   @override
-  String get readingLogChartTitle => 'Progress over time';
+  String get readingLogChartTitle => 'Πρόοδος με την πάροδο του χρόνου';
 
   @override
-  String get readingLogChartPosition => 'Position reached';
+  String get readingLogChartPosition => 'Θέση που επιτεύχθηκε';
 
   @override
-  String get readingLogChartMinutes => 'Minutes';
+  String get readingLogChartMinutes => 'Λεπτά';
 
   @override
-  String get readingLogRecords => 'Records';
+  String get readingLogRecords => 'Ρεκόρ';
 
   @override
-  String get readingLogLongestSession => 'Longest session';
+  String get readingLogLongestSession => 'Μεγαλύτερη συνεδρία';
 
   @override
-  String get readingLogBestDay => 'Best day';
+  String get readingLogBestDay => 'Καλύτερη ημέρα';
 
   @override
-  String get readingLogLongestStreak => 'Longest streak';
+  String get readingLogLongestStreak => 'Μεγαλύτερη σειρά';
 
   @override
   String readingLogStreakDays(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count days',
-      one: '1 day',
+      other: '$count ημέρες',
+      one: '1 ημέρα',
     );
     return '$_temp0';
   }
 
   @override
-  String get readingLogJumpedBack => 'Jumped back';
+  String get readingLogJumpedBack => 'Επιστροφές πίσω';
 
   @override
   String readingLogJumpedBackTimes(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count times',
-      one: '1 time',
+      other: '$count φορές',
+      one: '1 φορά',
     );
     return '$_temp0';
   }
 
   @override
-  String get readingLogFirstOpened => 'First opened';
+  String get readingLogFirstOpened => 'Πρώτο άνοιγμα';
 
   @override
-  String get readingLogAttempts => 'Attempts';
+  String get readingLogAttempts => 'Προσπάθειες';
 
   @override
   String readingLogAttempt(int index) {
-    return 'Attempt $index';
+    return 'Προσπάθεια $index';
   }
 
   @override
   String readingLogAttemptBegan(int index) {
-    return 'Attempt $index began';
+    return 'Η προσπάθεια $index ξεκίνησε';
   }
 
   @override
-  String get readingLogOutcomeCompleted => 'Completed';
+  String get readingLogOutcomeCompleted => 'Ολοκληρώθηκε';
 
   @override
-  String get readingLogOutcomeSkimmed => 'Skimmed';
+  String get readingLogOutcomeSkimmed => 'Ξεφυλλίστηκε';
 
   @override
-  String get readingLogOutcomeAbandoned => 'Abandoned';
+  String get readingLogOutcomeAbandoned => 'Εγκαταλείφθηκε';
 
   @override
-  String get readingLogOutcomeInProgress => 'In progress';
+  String get readingLogOutcomeInProgress => 'Σε εξέλιξη';
 
   @override
   String readingLogSpanRange(String from, String to) {
-    return '$from to $to';
+    return '$from έως $to';
   }
 
   @override
   String readingLogSpanSince(String from) {
-    return 'Since $from';
+    return 'Από $from';
   }
 
   @override
   String readingLogSpanEnded(String to) {
-    return 'Ended $to';
+    return 'Τελείωσε $to';
   }
 
   @override
-  String get readingLogSpanUnknown => 'No dates recorded';
+  String get readingLogSpanUnknown => 'Δεν καταγράφηκαν ημερομηνίες';
 
   @override
   String readingLogSessionCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count sessions',
-      one: '1 session',
+      other: '$count συνεδρίες',
+      one: '1 συνεδρία',
     );
     return '$_temp0';
   }
 
   @override
   String readingLogShowing(int shown, int total) {
-    return '$shown of $total';
+    return '$shown από $total';
   }
 
   @override
@@ -11068,748 +11262,769 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count days without reading',
-      one: '1 day without reading',
+      other: '$count ημέρες χωρίς ανάγνωση',
+      one: '1 ημέρα χωρίς ανάγνωση',
     );
     return '$_temp0';
   }
 
   @override
-  String get readingLogEmpty => 'No sessions recorded yet';
+  String get readingLogEmpty => 'Δεν έχουν καταγραφεί συνεδρίες ακόμη';
 
   @override
   String get readingLogEmptyHint =>
-      'Sessions show up here as you read or listen, from any app or device that syncs with BookOrbit.';
+      'Οι συνεδρίες εμφανίζονται εδώ καθώς διαβάζετε ή ακούτε, από οποιαδήποτε εφαρμογή ή συσκευή που συγχρονίζεται με το BookOrbit.';
 
   @override
-  String get readingLogNoMatches => 'No sessions in this range';
+  String get readingLogNoMatches => 'Δεν υπάρχουν συνεδρίες σε αυτό το εύρος';
 
   @override
-  String get readingLogAllTime => 'All time';
+  String get readingLogAllTime => 'Συνολικά';
 
   @override
-  String get readingLogLast30 => 'Last 30 days';
+  String get readingLogLast30 => 'Τελευταίες 30 ημέρες';
 
   @override
-  String get readingLogLast90 => 'Last 90 days';
+  String get readingLogLast90 => 'Τελευταίες 90 ημέρες';
 
   @override
-  String get readingLogThisYear => 'This year';
+  String get readingLogThisYear => 'Φέτος';
 
   @override
-  String get readingLogAllFormats => 'All formats';
+  String get readingLogAllFormats => 'Όλες οι μορφές';
 
   @override
-  String get readingLogSortBy => 'Sort by';
+  String get readingLogSortBy => 'Ταξινόμηση κατά';
 
   @override
-  String get readingLogSortDay => 'Day';
+  String get readingLogSortDay => 'Ημέρα';
 
   @override
-  String get readingLogSortLength => 'Length';
+  String get readingLogSortLength => 'Διάρκεια';
 
   @override
-  String get readingLogSortChange => 'Change';
+  String get readingLogSortChange => 'Μεταβολή';
 
   @override
-  String get readingLogSortReached => 'Reached';
+  String get readingLogSortReached => 'Επίτευξη';
 
   @override
-  String get readingLogNewestFirst => 'Newest first';
+  String get readingLogNewestFirst => 'Πρώτα τα νεότερα';
 
   @override
-  String get readingLogOldestFirst => 'Oldest first';
+  String get readingLogOldestFirst => 'Πρώτα τα παλαιότερα';
 
   @override
-  String get readingLogMostFirst => 'Most first';
+  String get readingLogMostFirst => 'Πρώτα τα περισσότερα';
 
   @override
-  String get readingLogLeastFirst => 'Least first';
+  String get readingLogLeastFirst => 'Πρώτα τα λιγότερα';
 
   @override
-  String get readingLogDeleteTitle => 'Delete this session?';
+  String get readingLogDeleteTitle => 'Διαγραφή αυτής της συνεδρίας;';
 
   @override
   String get readingLogDeleteBody =>
-      'It comes off the book\'s reading log and your stats on BookOrbit.';
+      'Αφαιρείται από το ημερολόγιο ανάγνωσης του βιβλίου και από τα στατιστικά σας στο BookOrbit.';
 
   @override
-  String get readingLogDeleteFailed => 'Couldn\'t delete the session';
+  String get readingLogDeleteFailed =>
+      'Δεν ήταν δυνατή η διαγραφή της συνεδρίας';
 
   @override
-  String get readingLogLoadFailed => 'Couldn\'t load the reading log';
+  String get readingLogLoadFailed =>
+      'Δεν ήταν δυνατή η φόρτωση του ημερολογίου ανάγνωσης';
 
   @override
-  String get navHoldServerScan => 'Server scan';
+  String get navHoldServerScan => 'Σάρωση διακομιστή';
 
   @override
-  String get navHoldScanAll => 'Scan all libraries';
+  String get navHoldScanAll => 'Σάρωση όλων των βιβλιοθηκών';
 
   @override
   String navHoldScanLibrary(String name) {
-    return 'Scan $name';
+    return 'Σάρωση $name';
   }
 
   @override
-  String get navHoldScanStarted => 'Scan started';
+  String get navHoldScanStarted => 'Η σάρωση ξεκίνησε';
 
   @override
-  String get navHoldScanFailed => 'Could not start the scan';
+  String get navHoldScanFailed => 'Δεν ήταν δυνατή η έναρξη της σάρωσης';
 
   @override
-  String get navHoldAdminLogs => 'Server logs';
+  String get navHoldAdminLogs => 'Αρχεία καταγραφής διακομιστή';
 
   @override
   String navHoldAdminPage(String page) {
-    return 'Admin: $page';
+    return 'Διαχείριση: $page';
   }
 
   @override
-  String get navHoldNothingPlaying => 'Nothing to play yet';
+  String get navHoldNothingPlaying =>
+      'Δεν υπάρχει τίποτα για αναπαραγωγή ακόμη';
 
   @override
-  String get navHoldReadBook => 'Read current book';
+  String get navHoldReadBook => 'Ανάγνωση τρέχοντος βιβλίου';
 
   @override
-  String get navHoldBookDetails => 'Current book details';
+  String get navHoldBookDetails => 'Λεπτομέρειες τρέχοντος βιβλίου';
 
   @override
-  String get syncSourceTitle => 'Which copy should sync keep?';
+  String get syncSourceTitle => 'Ποιο αντίγραφο να κρατήσει ο συγχρονισμός;';
 
   @override
   String get syncSourceBody =>
-      'This backup turned settings sync on. Use the server\'s last sync, or make this backup the source of truth? Choosing the backup replaces the copy on the server for all your synced devices.';
+      'Αυτό το αντίγραφο ασφαλείας ενεργοποίησε τον συγχρονισμό ρυθμίσεων. Να χρησιμοποιηθεί ο τελευταίος συγχρονισμός του διακομιστή ή να γίνει αυτό το αντίγραφο η πηγή αναφοράς; Αν επιλέξετε το αντίγραφο, αντικαθίσταται το αντίγραφο στον διακομιστή για όλες τις συγχρονισμένες συσκευές σας.';
 
   @override
-  String get syncSourceUseServer => 'Server\'s last sync';
+  String get syncSourceUseServer => 'Τελευταίος συγχρονισμός διακομιστή';
 
   @override
-  String get syncSourceUseBackup => 'This backup';
+  String get syncSourceUseBackup => 'Αυτό το αντίγραφο';
 
   @override
   String get syncSettingsWhatTravels =>
-      'Your preferences, per-book speeds, home layout, Absorbing order, notes and ebook highlights travel. Logins, download folders, auto-download switches, reader looks and anything not yet sent to your server stay on this device.';
+      'Οι προτιμήσεις σας, οι ταχύτητες ανά βιβλίο, η διάταξη της αρχικής, η σειρά του Absorbing, οι σημειώσεις και οι επισημάνσεις ηλεκτρονικών βιβλίων συγχρονίζονται. Τα στοιχεία σύνδεσης, οι φάκελοι λήψεων, οι διακόπτες αυτόματης λήψης, η εμφάνιση του αναγνώστη και ό,τι δεν έχει σταλεί ακόμη στον διακομιστή σας μένουν σε αυτή τη συσκευή.';
 
   @override
   String get syncSettingsDownloadWarnTitle =>
-      'Replace this device\'s settings?';
+      'Αντικατάσταση των ρυθμίσεων αυτής της συσκευής;';
 
   @override
   String get syncSettingsDownloadWarnBody =>
-      'The synced copy will overwrite the settings on this device.';
+      'Το συγχρονισμένο αντίγραφο θα αντικαταστήσει τις ρυθμίσεις αυτής της συσκευής.';
 
   @override
-  String get syncSettingsDownloadWarnConfirm => 'Replace';
+  String get syncSettingsDownloadWarnConfirm => 'Αντικατάσταση';
 
   @override
-  String get readerCopied => 'Copied to clipboard';
+  String get readerCopied => 'Αντιγράφηκε στο πρόχειρο';
 
   @override
-  String get dictionaryNotFound => 'No definition found for this word.';
+  String get dictionaryNotFound => 'Δεν βρέθηκε ορισμός για αυτή τη λέξη.';
 
   @override
   String get dictionaryError =>
-      'Couldn\'t reach the dictionary. Check your connection.';
+      'Δεν ήταν δυνατή η επικοινωνία με το λεξικό. Ελέγξτε τη σύνδεσή σας.';
 
   @override
-  String get dictionaryRetry => 'Retry';
+  String get dictionaryRetry => 'Επανάληψη';
 
   @override
-  String get dictionarySearchWeb => 'Search the web';
+  String get dictionarySearchWeb => 'Αναζήτηση στο web';
 
   @override
-  String get readerTooltipCopy => 'Copy';
+  String get readerTooltipCopy => 'Αντιγραφή';
 
   @override
-  String get readerTooltipSearch => 'Search';
+  String get readerTooltipSearch => 'Αναζήτηση';
 
   @override
-  String get readerTooltipDefine => 'Define';
+  String get readerTooltipDefine => 'Ορισμός';
 
   @override
-  String get readerTooltipTranslate => 'Translate';
+  String get readerTooltipTranslate => 'Μετάφραση';
 
   @override
-  String get readerSearchHint => 'Search this book…';
+  String get readerSearchHint => 'Αναζήτηση σε αυτό το βιβλίο…';
 
   @override
   String readerSearchMatches(int count, String query) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count matches for \"$query\"',
-      one: '$count match for \"$query\"',
+      other: '$count αποτελέσματα για «$query»',
+      one: '$count αποτέλεσμα για «$query»',
     );
     return '$_temp0';
   }
 
   @override
-  String get readerSearchEmpty => 'Type a word or phrase and tap search.';
+  String get readerSearchEmpty =>
+      'Πληκτρολογήστε μια λέξη ή φράση και πατήστε αναζήτηση.';
 
   @override
   String readerSearchNoResults(String query) {
-    return 'No matches for \"$query\".';
+    return 'Κανένα αποτέλεσμα για «$query».';
   }
 
   @override
-  String get transcriptionTitle => 'Transcription';
+  String get transcriptionTitle => 'Απομαγνητοφώνηση';
 
   @override
   String get transcriptionAdvancedSubtitle =>
-      'For transcribing bookmarks and finding your spot between audiobook and ebook';
+      'Για απομαγνητοφώνηση σελιδοδεικτών και εύρεση της θέσης σας ανάμεσα στο ηχητικό και το ηλεκτρονικό βιβλίο';
 
   @override
-  String get transcriptionEnable => 'Enable transcription';
+  String get transcriptionEnable => 'Ενεργοποίηση απομαγνητοφώνησης';
 
   @override
   String get transcriptionEnableSubtitle =>
-      'Adds Transcribe to bookmarks, Find position in ebook to the player, and Find in audiobook to the reader';
+      'Προσθέτει Απομαγνητοφώνηση στους σελιδοδείκτες, Εύρεση θέσης στο ηλεκτρονικό βιβλίο στο πρόγραμμα αναπαραγωγής και Εύρεση στο ηχητικό βιβλίο στον αναγνώστη';
 
   @override
   String get transcriptionDisclaimer =>
-      'Runs entirely on your device, nothing is sent anywhere. It uses extra battery and processing while it works, and only downloaded books can be transcribed.';
+      'Εκτελείται εξ ολοκλήρου στη συσκευή σας, τίποτα δεν αποστέλλεται πουθενά. Καταναλώνει επιπλέον μπαταρία και επεξεργαστική ισχύ όσο λειτουργεί και μπορούν να απομαγνητοφωνηθούν μόνο βιβλία που έχουν ληφθεί.';
 
   @override
   String get transcriptionNeedModelHint =>
-      'Download a model below to start transcribing.';
+      'Κάντε λήψη ενός μοντέλου παρακάτω για να ξεκινήσετε την απομαγνητοφώνηση.';
 
   @override
-  String get transcriptionModelSection => 'Models';
+  String get transcriptionModelSection => 'Μοντέλα';
 
   @override
   String get transcriptionModelTiny => 'Tiny';
 
   @override
   String get transcriptionModelTinyDesc =>
-      'Quickest, less accurate. About 31 MB.';
+      'Το ταχύτερο, λιγότερο ακριβές. Περίπου 31 MB.';
 
   @override
   String get transcriptionModelBase => 'Base';
 
   @override
-  String get transcriptionModelBaseDesc => 'A good middle ground. About 57 MB.';
+  String get transcriptionModelBaseDesc =>
+      'Μια καλή ενδιάμεση λύση. Περίπου 57 MB.';
 
   @override
   String get transcriptionModelSmall => 'Small';
 
   @override
   String get transcriptionModelSmallDesc =>
-      'Slower but most accurate - best on a high-end phone. About 182 MB.';
+      'Πιο αργό αλλά το πιο ακριβές - ιδανικό σε κορυφαίο κινητό. Περίπου 182 MB.';
 
   @override
   String get transcriptionAutoHint =>
-      'With more than one downloaded, each job picks between them. Books with an ebook get the quickest one, since the exact words come from the ebook anyway. Books without one get the most accurate - except read along, which stays below Small so it can keep up with the narration.';
+      'Αν έχετε κάνει λήψη περισσότερων από ένα, κάθε εργασία επιλέγει ανάμεσά τους. Τα βιβλία με ηλεκτρονικό βιβλίο παίρνουν το ταχύτερο, αφού οι ακριβείς λέξεις προέρχονται ούτως ή άλλως από αυτό. Τα βιβλία χωρίς αυτό παίρνουν το πιο ακριβές - εκτός από την ανάγνωση με τον ήχο, που μένει κάτω από το Small ώστε να προλαβαίνει την αφήγηση.';
 
   @override
-  String get transcriptionDownload => 'Download';
+  String get transcriptionDownload => 'Λήψη';
 
   @override
   String get transcriptionDownloadFailed =>
-      'Download failed. Check your connection and try again.';
+      'Η λήψη απέτυχε. Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά.';
 
   @override
-  String get transcribe => 'Transcribe';
+  String get transcribe => 'Απομαγνητοφώνηση';
 
   @override
-  String get transcribing => 'Transcribing...';
+  String get transcribing => 'Απομαγνητοφώνηση...';
 
   @override
-  String get transcriptionResultTitle => 'Transcript';
+  String get transcriptionResultTitle => 'Απομαγνητοφώνηση';
 
   @override
-  String get transcriptionSaveToNote => 'Save to note';
+  String get transcriptionSaveToNote => 'Αποθήκευση στη σημείωση';
 
   @override
-  String get transcriptionSavedToNote => 'Saved to bookmark note';
+  String get transcriptionSavedToNote =>
+      'Αποθηκεύτηκε στη σημείωση του σελιδοδείκτη';
 
   @override
   String get transcriptionDisabledHint =>
-      'Turn on bookmark transcription in Settings, under Advanced.';
+      'Ενεργοποιήστε την απομαγνητοφώνηση σελιδοδεικτών στις Ρυθμίσεις, στα Σύνθετα.';
 
   @override
   String get transcriptionNoModelDownloaded =>
-      'Download a transcription model in Settings first.';
+      'Κάντε πρώτα λήψη ενός μοντέλου απομαγνητοφώνησης στις Ρυθμίσεις.';
 
   @override
   String get transcriptionNotDownloadedBook =>
-      'Download this book or connect to your server to transcribe it.';
+      'Κάντε λήψη αυτού του βιβλίου ή συνδεθείτε στον διακομιστή σας για να το απομαγνητοφωνήσετε.';
 
   @override
   String get transcriptionNoMetadataMsg =>
-      'Can\'t locate this spot in the download. Try re-downloading the book.';
+      'Δεν είναι δυνατός ο εντοπισμός αυτού του σημείου στη λήψη. Δοκιμάστε να κάνετε ξανά λήψη του βιβλίου.';
 
   @override
   String get transcriptionBusyMsg =>
-      'Already transcribing something. Give it a moment.';
+      'Γίνεται ήδη απομαγνητοφώνηση. Περιμένετε λίγο.';
 
   @override
-  String get transcriptionEmptyMsg => 'No speech was found at this spot.';
+  String get transcriptionEmptyMsg => 'Δεν βρέθηκε ομιλία σε αυτό το σημείο.';
 
   @override
   String get transcriptionFailedMsg =>
-      'Couldn\'t transcribe this spot. Please try again.';
+      'Δεν ήταν δυνατή η απομαγνητοφώνηση αυτού του σημείου. Δοκιμάστε ξανά.';
 
   @override
-  String get transcriptionPlaySnippet => 'Listen';
+  String get transcriptionPlaySnippet => 'Ακρόαση';
 
   @override
-  String get transcriptionPauseSnippet => 'Pause';
+  String get transcriptionPauseSnippet => 'Παύση';
 
   @override
   String get transcriptionIntroBody =>
-      'This listens to the chosen amount of audio, starting just before the bookmark, and turns it into text on your device. Longer clips take longer, and transcription isn\'t 100% accurate. The text is saved into the bookmark\'s note when it\'s done, ready to fix up or share.';
+      'Ακούει την επιλεγμένη διάρκεια ήχου, ξεκινώντας λίγο πριν από τον σελιδοδείκτη, και τη μετατρέπει σε κείμενο στη συσκευή σας. Τα μεγαλύτερα αποσπάσματα παίρνουν περισσότερο χρόνο και η απομαγνητοφώνηση δεν είναι 100% ακριβής. Το κείμενο αποθηκεύεται στη σημείωση του σελιδοδείκτη όταν τελειώσει, έτοιμο για διόρθωση ή κοινοποίηση.';
 
   @override
   String get transcriptionUseEbookText =>
-      'Use the ebook\'s exact text when it can be matched';
+      'Χρήση του ακριβούς κειμένου του ηλεκτρονικού βιβλίου όταν υπάρχει αντιστοίχιση';
 
   @override
-  String get lyricsMode => 'Live transcript';
+  String get lyricsMode => 'Ζωντανή απομαγνητοφώνηση';
 
   @override
-  String get lyricsListeningAhead => 'Listening ahead...';
+  String get lyricsListeningAhead => 'Ακρόαση εκ των προτέρων...';
 
   @override
-  String get lyricsDisplaySection => 'Live transcript';
+  String get lyricsDisplaySection => 'Ζωντανή απομαγνητοφώνηση';
 
   @override
-  String get lyricsFontSize => 'Line size';
+  String get lyricsFontSize => 'Μέγεθος γραμμής';
 
   @override
-  String get lyricsMaxLines => 'Lines shown';
+  String get lyricsMaxLines => 'Γραμμές που εμφανίζονται';
 
   @override
-  String get lyricsFullCover => 'Use the whole cover';
+  String get lyricsFullCover => 'Χρήση ολόκληρου του εξώφυλλου';
 
   @override
   String get lyricsFullCoverHint =>
-      'Shows the transcript in place of the artwork while it runs, fitting as many lines as there is room for.';
+      'Εμφανίζει την απομαγνητοφώνηση στη θέση του εξώφυλλου όσο εκτελείται, χωρώντας όσες γραμμές επιτρέπει ο χώρος.';
 
   @override
   String get lyricsBatteryInfo =>
-      'Live transcript and read along use extra battery and processing while they run. On phones with slower processors, lines can take longer to appear.';
+      'Η ζωντανή απομαγνητοφώνηση και η ανάγνωση με τον ήχο καταναλώνουν επιπλέον μπαταρία και επεξεργαστική ισχύ όσο λειτουργούν. Σε κινητά με πιο αργούς επεξεργαστές, οι γραμμές μπορεί να αργούν να εμφανιστούν.';
 
   @override
-  String get lyricsClearCache => 'Clear transcript cache';
+  String get lyricsClearCache =>
+      'Εκκαθάριση προσωρινής μνήμης απομαγνητοφώνησης';
 
   @override
   String lyricsClearCacheHint(String size) {
-    return '$size of saved transcript lines. Cleared books and episodes are transcribed again as you listen.';
+    return '$size αποθηκευμένων γραμμών απομαγνητοφώνησης. Τα βιβλία και τα επεισόδια που θα εκκαθαριστούν απομαγνητοφωνούνται ξανά καθώς ακούτε.';
   }
 
   @override
   String get lyricsClearCacheConfirm =>
-      'Delete the saved transcripts for every book and episode? They rebuild automatically as you listen.';
+      'Να διαγραφούν οι αποθηκευμένες απομαγνητοφωνήσεις για κάθε βιβλίο και επεισόδιο; Δημιουργούνται ξανά αυτόματα καθώς ακούτε.';
 
   @override
-  String get lyricsCacheCleared => 'Transcript cache cleared';
+  String get lyricsCacheCleared =>
+      'Η προσωρινή μνήμη απομαγνητοφώνησης εκκαθαρίστηκε';
 
   @override
   String get lyricsIntroBody =>
-      'This listens a little ahead of the narration and shows each line as it is spoken, transcribed on your phone - nothing leaves the device. After turning it on, hold off on pressing play for a few seconds while it gets ahead. The transcript appears once its head start is ready, and starting paused gives it the smoothest run. It uses extra battery and processing while it runs.';
+      'Ακούει λίγο πριν από την αφήγηση και εμφανίζει κάθε γραμμή καθώς εκφωνείται, με απομαγνητοφώνηση στο κινητό σας - τίποτα δεν φεύγει από τη συσκευή. Αφού την ενεργοποιήσετε, περιμένετε λίγα δευτερόλεπτα πριν πατήσετε αναπαραγωγή ώστε να προπορευτεί. Η απομαγνητοφώνηση εμφανίζεται όταν είναι έτοιμη η προπορεία της και η έναρξη σε παύση δίνει την πιο ομαλή λειτουργία. Καταναλώνει επιπλέον μπαταρία και επεξεργαστική ισχύ όσο εκτελείται.';
 
   @override
   String lyricsBuildingLead(String percent) {
-    return 'Getting ahead of the narration... $percent';
+    return 'Προπορεία σε σχέση με την αφήγηση... $percent';
   }
 
   @override
   String lyricsCantKeepUp(String speed) {
-    return 'Can\'t transcribe as fast as you\'re listening at $speed';
+    return 'Δεν είναι δυνατή η απομαγνητοφώνηση με την ταχύτητα που ακούτε στα $speed';
   }
 
   @override
-  String get lyricsTurnOn => 'Turn on';
+  String get lyricsTurnOn => 'Ενεργοποίηση';
 
   @override
-  String get readAlong => 'Read along';
+  String get readAlong => 'Ανάγνωση με τον ήχο';
 
   @override
-  String get readAlongNeedsPlaying => 'Play this book\'s audiobook first';
+  String get readAlongNeedsPlaying => 'Αναπαραγάγετε πρώτα το ηχητικό βιβλίο';
 
   @override
-  String get narrationListen => 'Listen';
+  String get narrationListen => 'Ακρόαση';
 
   @override
-  String get narrationPlayFromHere => 'Play from here';
+  String get narrationPlayFromHere => 'Αναπαραγωγή από εδώ';
 
   @override
-  String get narrationPreparing => 'Getting the narration ready';
+  String get narrationPreparing => 'Προετοιμασία της αφήγησης';
 
   @override
-  String get narrationNone => 'This ebook has no narration to play';
+  String get narrationNone =>
+      'Αυτό το ηλεκτρονικό βιβλίο δεν έχει αφήγηση για αναπαραγωγή';
 
   @override
-  String get narrationDownloadTitle => 'Download to listen';
+  String get narrationDownloadTitle => 'Λήψη για ακρόαση';
 
   @override
   String get narrationDownloadBody =>
-      'This book is an EPUB3 that reads itself aloud. Audiobookshelf can\'t stream its narration, so the audio needs to be downloaded before it plays.';
+      'Αυτό το βιβλίο είναι EPUB3 που διαβάζεται μόνο του φωναχτά. Το Audiobookshelf δεν μπορεί να μεταδώσει την αφήγησή του, οπότε ο ήχος πρέπει να ληφθεί πριν αναπαραχθεί.';
 
   @override
   String get narrationDownloadStarted =>
-      'Downloading the narration. Tap Absorb when it finishes.';
+      'Λήψη της αφήγησης. Πατήστε Absorb όταν τελειώσει.';
 
   @override
   String get narrationTextBody =>
-      'This book\'s EPUB has its own words for every moment of the audio, so the text is copied straight from the book. Pick how much to add to the bookmark\'s note.';
+      'Το EPUB αυτού του βιβλίου έχει δικές του λέξεις για κάθε στιγμή του ήχου, οπότε το κείμενο αντιγράφεται απευθείας από το βιβλίο. Επιλέξτε πόσο να προστεθεί στη σημείωση του σελιδοδείκτη.';
 
   @override
-  String get narrationTextLoading => 'Getting the words from the book';
+  String get narrationTextLoading => 'Λήψη των λέξεων από το βιβλίο';
 
   @override
-  String get downloadToAbsorb => 'Download to Absorb';
+  String get downloadToAbsorb => 'Λήψη στο Absorb';
 
   @override
-  String get narrationUpNextTitle => 'Download what\'s up next';
+  String get narrationUpNextTitle => 'Λήψη του επόμενου';
 
   @override
   String narrationUpNextBody(String title) {
-    return '$title is next in your queue. It\'s an EPUB3 that reads itself aloud, so it needs to be downloaded before it can play.';
+    return 'Το $title είναι το επόμενο στην ουρά σας. Είναι EPUB3 που διαβάζεται μόνο του φωναχτά, οπότε πρέπει να ληφθεί πριν αναπαραχθεί.';
   }
 
   @override
   String narrationQueueStopped(String title) {
-    return 'Stopped before $title. Download it to keep going.';
+    return 'Διακοπή πριν από το $title. Κάντε λήψη για να συνεχίσετε.';
   }
 
   @override
   String get transcriptionNeedsDownload =>
-      'This needs the audio on your phone. Download it now?';
+      'Χρειάζεται τον ήχο στο κινητό σας. Να γίνει λήψη τώρα;';
 
   @override
   String get transcriptionDownloadStarted =>
-      'Downloading. Turn this on again when it finishes';
+      'Λήψη σε εξέλιξη. Ενεργοποιήστε το ξανά όταν τελειώσει';
 
   @override
-  String get readAlongFollow => 'Read along follows';
+  String get readAlongFollow => 'Η ανάγνωση με τον ήχο ακολουθεί';
 
   @override
-  String get syncReadingListening => 'Keep reading and listening in sync';
+  String get syncReadingListening => 'Συγχρονισμός ανάγνωσης και ακρόασης';
 
   @override
   String get syncReadingListeningHint =>
-      'For books with an audiobook and an ebook. When you stop listening, the ebook moves to where you stopped. When you leave the reader, the audiobook moves to your page. Only moves forward.';
+      'Για βιβλία με ηχητικό και ηλεκτρονικό βιβλίο. Όταν σταματάτε την ακρόαση, το ηλεκτρονικό βιβλίο μετακινείται στο σημείο που σταματήσατε. Όταν φεύγετε από τον αναγνώστη, το ηχητικό βιβλίο μετακινείται στη σελίδα σας. Μετακινείται μόνο προς τα εμπρός.';
 
   @override
-  String get syncEbookMoved => 'Ebook moved to where you stopped listening';
+  String get syncEbookMoved =>
+      'Το ηλεκτρονικό βιβλίο μετακινήθηκε στο σημείο που σταματήσατε την ακρόαση';
 
   @override
-  String get syncAudioMoved => 'Audiobook moved to where you stopped reading';
+  String get syncAudioMoved =>
+      'Το ηχητικό βιβλίο μετακινήθηκε στο σημείο που σταματήσατε την ανάγνωση';
 
   @override
-  String get syncAudioOffer => 'Tap to jump to where you stopped reading';
+  String get syncAudioOffer =>
+      'Πατήστε για μετάβαση στο σημείο που σταματήσατε την ανάγνωση';
 
   @override
-  String get syncFindingAudio => 'Finding your page in the audiobook';
+  String get syncFindingAudio => 'Εύρεση της σελίδας σας στο ηχητικό βιβλίο';
 
   @override
-  String get syncFindingEbook => 'Finding your spot in the ebook';
+  String get syncFindingEbook => 'Εύρεση της θέσης σας στο ηλεκτρονικό βιβλίο';
 
   @override
-  String get syncFailed => 'Couldn\'t sync your place';
+  String get syncFailed => 'Δεν ήταν δυνατός ο συγχρονισμός της θέσης σας';
 
   @override
-  String get syncAlreadyTogether => 'Already in sync';
+  String get syncAlreadyTogether => 'Ήδη συγχρονισμένα';
 
   @override
-  String get syncPosition => 'Sync position';
+  String get syncPosition => 'Συγχρονισμός θέσης';
 
   @override
   String get readAlongFollowHint =>
-      'Word timing is worked out between the transcript\'s timestamps, so it can drift slightly inside a sentence.';
+      'Ο χρονισμός των λέξεων υπολογίζεται ανάμεσα στις χρονοσημάνσεις της απομαγνητοφώνησης, οπότε μπορεί να παρεκκλίνει ελαφρώς μέσα σε μια πρόταση.';
 
   @override
-  String get readAlongFollowWord => 'Word';
+  String get readAlongFollowWord => 'Λέξη';
 
   @override
-  String get readAlongFollowSentence => 'Sentence';
+  String get readAlongFollowSentence => 'Πρόταση';
 
   @override
-  String get readAlongColor => 'Read along color';
+  String get readAlongColor => 'Χρώμα ανάγνωσης με τον ήχο';
 
   @override
-  String get readAlongLost => 'Can\'t find the narration on the page';
+  String get readAlongLost => 'Δεν βρέθηκε η αφήγηση στη σελίδα';
 
   @override
-  String get readAlongBackToNarration => 'Back to narration';
+  String get readAlongBackToNarration => 'Επιστροφή στην αφήγηση';
 
   @override
-  String get findInEbook => 'Find in ebook';
+  String get findInEbook => 'Εύρεση στο ηλεκτρονικό βιβλίο';
 
   @override
-  String get findInEbookSearching => 'Finding this spot in the ebook...';
+  String get findInEbookSearching =>
+      'Εύρεση αυτού του σημείου στο ηλεκτρονικό βιβλίο...';
 
   @override
-  String get findInEbookNotFound => 'Couldn\'t find this spot in the ebook.';
+  String get findInEbookNotFound =>
+      'Δεν βρέθηκε αυτό το σημείο στο ηλεκτρονικό βιβλίο.';
 
   @override
-  String get findInEbookNeedsEpub => 'Find in ebook needs an EPUB ebook.';
+  String get findInEbookNeedsEpub =>
+      'Η εύρεση στο ηλεκτρονικό βιβλίο απαιτεί ηλεκτρονικό βιβλίο EPUB.';
 
   @override
-  String get findInEbookNoEbook => 'This book doesn\'t have an ebook.';
+  String get findInEbookNoEbook => 'Αυτό το βιβλίο δεν έχει ηλεκτρονική μορφή.';
 
   @override
-  String get findInAudiobook => 'Find in audiobook';
+  String get findInAudiobook => 'Εύρεση στο ηχητικό βιβλίο';
 
   @override
   String get findInAudiobookSearching =>
-      'Finding this spot in the audiobook...';
+      'Εύρεση αυτού του σημείου στο ηχητικό βιβλίο...';
 
   @override
   String get findInAudiobookStillSearching =>
-      'Still searching the audio for this spot...';
+      'Συνεχίζεται η αναζήτηση αυτού του σημείου στον ήχο...';
 
   @override
   String get findInAudiobookSearchingLong =>
-      'Long chapter, still searching. This can take a minute or two...';
+      'Μεγάλο κεφάλαιο, η αναζήτηση συνεχίζεται. Μπορεί να πάρει ένα ή δύο λεπτά...';
 
   @override
   String get findInAudiobookNotFound =>
-      'Couldn\'t find this spot in the audiobook.';
+      'Δεν βρέθηκε αυτό το σημείο στο ηχητικό βιβλίο.';
 
   @override
   String get transcriptionWhisperInfo =>
-      'Transcription is powered by Whisper, an open speech recognition model that listens to the narration and writes out the words - all on this device.';
+      'Η απομαγνητοφώνηση βασίζεται στο Whisper, ένα ανοιχτό μοντέλο αναγνώρισης ομιλίας που ακούει την αφήγηση και γράφει τις λέξεις - όλα σε αυτή τη συσκευή.';
 
   @override
-  String get transcriptionWhisperLearnMore => 'Learn more about Whisper';
+  String get transcriptionWhisperLearnMore =>
+      'Μάθετε περισσότερα για το Whisper';
 
   @override
   String get findInAudiobookIntroBody =>
-      'This listens to the audiobook near where you\'re reading and matches it to this passage, all on your device. It can take up to a minute. If the spot can\'t be matched confidently, nothing moves.';
+      'Ακούει το ηχητικό βιβλίο κοντά στο σημείο που διαβάζετε και το αντιστοιχίζει με αυτό το απόσπασμα, όλα στη συσκευή σας. Μπορεί να πάρει έως ένα λεπτό. Αν το σημείο δεν μπορεί να αντιστοιχιστεί με βεβαιότητα, δεν μετακινείται τίποτα.';
 
   @override
-  String get findInAudiobookAfterLabel => 'When the spot is found';
+  String get findInAudiobookAfterLabel => 'Όταν βρεθεί το σημείο';
 
   @override
-  String get findInAudiobookStay => 'Keep reading';
+  String get findInAudiobookStay => 'Συνέχεια ανάγνωσης';
 
   @override
-  String get findInAudiobookGoPlayer => 'Open the player';
+  String get findInAudiobookGoPlayer => 'Άνοιγμα του προγράμματος αναπαραγωγής';
 
   @override
-  String get findInAudiobookPlaying => 'Playing this passage in the audiobook';
+  String get findInAudiobookPlaying =>
+      'Αναπαραγωγή αυτού του αποσπάσματος στο ηχητικό βιβλίο';
 
   @override
   String get catchUpAudioAhead =>
-      'The audiobook is further along. Tap to go there.';
+      'Το ηχητικό βιβλίο είναι πιο μπροστά. Πατήστε για μετάβαση εκεί.';
 
   @override
   String get catchUpPageAhead =>
-      'This page is ahead of the audiobook. Tap to move the audiobook here.';
+      'Αυτή η σελίδα είναι πιο μπροστά από το ηχητικό βιβλίο. Πατήστε για να μετακινηθεί εδώ το ηχητικό βιβλίο.';
 
   @override
-  String get readerShortcutButton => 'Shortcut button';
+  String get readerShortcutButton => 'Κουμπί συντόμευσης';
 
   @override
-  String get keepScreenOn => 'Keep screen on';
+  String get keepScreenOn => 'Διατήρηση οθόνης αναμμένης';
 
   @override
-  String get keepScreenOnActive => 'Screen stays on';
+  String get keepScreenOnActive => 'Η οθόνη μένει αναμμένη';
 
   @override
   String get keepScreenOnUntilClosed =>
-      'Screen stays on until you close the app';
+      'Η οθόνη μένει αναμμένη μέχρι να κλείσετε την εφαρμογή';
 
   @override
-  String get keepScreenOnOff => 'Screen can turn off again';
+  String get keepScreenOnOff => 'Η οθόνη μπορεί να σβήνει ξανά';
 
   @override
   String get keepScreenOnOffUntilRestart =>
-      'Off until the app restarts. The Settings switch stays on';
+      'Ανενεργό μέχρι την επανεκκίνηση της εφαρμογής. Ο διακόπτης στις Ρυθμίσεις παραμένει ενεργός';
 
   @override
-  String get keepScreenOnPlayer => 'Keep the screen on in the player';
+  String get keepScreenOnPlayer =>
+      'Διατήρηση της οθόνης αναμμένης στο πρόγραμμα αναπαραγωγής';
 
   @override
   String get keepScreenOnPlayerSubtitle =>
-      'The screen stays on while the player is open';
+      'Η οθόνη μένει αναμμένη όσο είναι ανοιχτό το πρόγραμμα αναπαραγωγής';
 
   @override
-  String get keepScreenOnCarMode => 'Keep the screen on in car mode';
+  String get keepScreenOnCarMode =>
+      'Διατήρηση της οθόνης αναμμένης στη λειτουργία αυτοκινήτου';
 
   @override
   String get keepScreenOnCarModeSubtitle =>
-      'The screen stays on while car mode is open';
+      'Η οθόνη μένει αναμμένη όσο είναι ανοιχτή η λειτουργία αυτοκινήτου';
 
   @override
-  String get loginServerType => 'Server type';
+  String get loginServerType => 'Τύπος διακομιστή';
 
   @override
   String get authBookOrbitDefaultPassword =>
-      'This account still has its default password. Change it in BookOrbit, then sign in again.';
+      'Αυτός ο λογαριασμός έχει ακόμη τον προεπιλεγμένο κωδικό πρόσβασης. Αλλάξτε τον στο BookOrbit και συνδεθείτε ξανά.';
 
   @override
   String get authBookOrbitPasswordOff =>
-      'Password sign-in is turned off on this server. Sign in with a magic link or single sign-on.';
+      'Η σύνδεση με κωδικό πρόσβασης είναι απενεργοποιημένη σε αυτόν τον διακομιστή. Συνδεθείτε με magic link ή single sign-on.';
 
   @override
   String get authServerIsBookOrbit =>
-      'This is a BookOrbit server. Choose BookOrbit above the server address.';
+      'Αυτός είναι διακομιστής BookOrbit. Επιλέξτε BookOrbit πάνω από τη διεύθυνση του διακομιστή.';
 
   @override
   String get authServerIsAudiobookshelf =>
-      'This is an Audiobookshelf server. Choose Audiobookshelf above the server address.';
+      'Αυτός είναι διακομιστής Audiobookshelf. Επιλέξτε Audiobookshelf πάνω από τη διεύθυνση του διακομιστή.';
 
   @override
   String get castNotAvailableBookOrbit =>
-      'Casting is not available with BookOrbit servers';
+      'Η μετάδοση δεν είναι διαθέσιμη με διακομιστές BookOrbit';
 
   @override
   String get loginMagicLink => 'Magic link';
 
   @override
   String get loginMagicLinkDescription =>
-      'Sign in with a BookOrbit magic link, or paste a password link to set your password.';
+      'Συνδεθείτε με ένα magic link του BookOrbit ή επικολλήστε έναν σύνδεσμο κωδικού για να ορίσετε τον κωδικό πρόσβασής σας.';
 
   @override
-  String get collectionPublicTitle => 'Public';
+  String get collectionPublicTitle => 'Δημόσια';
 
   @override
   String get collectionPublicSubtitle =>
-      'Everyone on this server can see this collection';
+      'Όλοι σε αυτόν τον διακομιστή μπορούν να δουν αυτή τη συλλογή';
 
   @override
   String loginSignInWithProvider(String provider) {
-    return 'Sign in with $provider';
+    return 'Σύνδεση με $provider';
   }
 
   @override
-  String get loginSignInWithSso => 'Sign in with SSO';
+  String get loginSignInWithSso => 'Σύνδεση με SSO';
 
   @override
-  String get loginChooseSsoProvider => 'Choose how to sign in';
+  String get loginChooseSsoProvider => 'Επιλέξτε τρόπο σύνδεσης';
 
   @override
   String get loginRedirectUriBookOrbit =>
-      'Redirect URI: bookorbit://oauth2-callback';
+      'URI ανακατεύθυνσης: bookorbit://oauth2-callback';
 
   @override
-  String get readStatusTitle => 'Reading status';
+  String get readStatusTitle => 'Κατάσταση ανάγνωσης';
 
   @override
   String get readStatusHint =>
-      'BookOrbit keeps a status you pick here until you change it.';
+      'Το BookOrbit κρατά την κατάσταση που επιλέγετε εδώ μέχρι να την αλλάξετε.';
 
   @override
-  String get readStatusUnread => 'Unread';
+  String get readStatusUnread => 'Μη αναγνωσμένο';
 
   @override
-  String get readStatusWantToRead => 'Want to read';
+  String get readStatusWantToRead => 'Θέλω να το διαβάσω';
 
   @override
-  String get readStatusReading => 'Reading';
+  String get readStatusReading => 'Διαβάζεται';
 
   @override
-  String get readStatusOnHold => 'On hold';
+  String get readStatusOnHold => 'Σε αναμονή';
 
   @override
-  String get readStatusRereading => 'Rereading';
+  String get readStatusRereading => 'Επανανάγνωση';
 
   @override
-  String get readStatusRead => 'Read';
+  String get readStatusRead => 'Αναγνωσμένο';
 
   @override
-  String get readStatusSkimmed => 'Skimmed';
+  String get readStatusSkimmed => 'Ξεφυλλισμένο';
 
   @override
-  String get readStatusAbandoned => 'Abandoned';
+  String get readStatusAbandoned => 'Εγκαταλειμμένο';
 
   @override
-  String get personalNoteTitle => 'Your note';
+  String get personalNoteTitle => 'Η σημείωσή σας';
 
   @override
-  String get personalNoteAdd => 'Add a private note';
+  String get personalNoteAdd => 'Προσθήκη ιδιωτικής σημείωσης';
 
   @override
-  String get personalNoteHint => 'Only you can see this note.';
+  String get personalNoteHint => 'Μόνο εσείς βλέπετε αυτή τη σημείωση.';
 
   @override
-  String get moreLikeThis => 'More like this';
+  String get moreLikeThis => 'Περισσότερα σαν αυτό';
 
   @override
-  String get coverSlotAudiobook => 'Audiobook cover';
+  String get coverSlotAudiobook => 'Εξώφυλλο ηχητικού βιβλίου';
 
   @override
-  String get coverSlotBook => 'Book cover';
+  String get coverSlotBook => 'Εξώφυλλο βιβλίου';
 
   @override
-  String get cardButtonFill => 'Button background';
+  String get cardButtonFill => 'Φόντο κουμπιών';
 
   @override
   String get cardButtonFillSubtitle =>
-      'How the buttons on the player card are filled';
+      'Πώς γεμίζουν τα κουμπιά στην κάρτα του προγράμματος αναπαραγωγής';
 
   @override
-  String get cardButtonFillClear => 'Clear';
+  String get cardButtonFillClear => 'Διαφανές';
 
   @override
-  String get cardButtonFillSubtle => 'Subtle';
+  String get cardButtonFillSubtle => 'Διακριτικό';
 
   @override
-  String get cardButtonFillSolid => 'Solid';
+  String get cardButtonFillSolid => 'Συμπαγές';
 
   @override
   String get loginBookOrbitPreview =>
-      'BookOrbit support is new. Playback, downloads and browsing work, but some screens may still look or act like Audiobookshelf. Follow the progress on GitHub, and let us know if something seems off.';
+      'Η υποστήριξη BookOrbit είναι νέα. Η αναπαραγωγή, οι λήψεις και η περιήγηση λειτουργούν, αλλά ορισμένες οθόνες μπορεί να μοιάζουν ή να συμπεριφέρονται ακόμη σαν το Audiobookshelf. Παρακολουθήστε την πρόοδο στο GitHub και πείτε μας αν κάτι φαίνεται λάθος.';
 
   @override
-  String get signedOutTapToSignIn => 'Signed out. Tap to sign in again.';
+  String get signedOutTapToSignIn =>
+      'Αποσυνδεθήκατε. Πατήστε για να συνδεθείτε ξανά.';
 
   @override
   String get authSignedOutKeepListening =>
-      'You\'ve been signed out. Downloads still play. Tap the red cloud to sign in again.';
+      'Έχετε αποσυνδεθεί. Οι λήψεις εξακολουθούν να αναπαράγονται. Πατήστε το κόκκινο σύννεφο για να συνδεθείτε ξανά.';
 
   @override
   String signedOutSyncNote(String username, String server) {
-    return 'What you listen to while signed out is kept on this phone and syncs when you sign back in as $username on $server. Any way of signing in to that account works.';
+    return 'Ό,τι ακούτε ενώ είστε αποσυνδεδεμένοι μένει σε αυτό το κινητό και συγχρονίζεται όταν συνδεθείτε ξανά ως $username στο $server. Λειτουργεί οποιοσδήποτε τρόπος σύνδεσης σε αυτόν τον λογαριασμό.';
   }
 
   @override
-  String get comicReadingDirection => 'Reading direction';
+  String get comicReadingDirection => 'Κατεύθυνση ανάγνωσης';
 
   @override
   String comicPageNumber(int page) {
-    return 'Page $page';
+    return 'Σελίδα $page';
   }
 
   @override
   String get comicBookmarkRemoveFailed =>
-      'Couldn\'t remove the bookmark from the server. Try again when you\'re online.';
+      'Δεν ήταν δυνατή η αφαίρεση του σελιδοδείκτη από τον διακομιστή. Δοκιμάστε ξανά όταν είστε συνδεδεμένοι.';
 
   @override
-  String get comicLeftToRight => 'Left to right';
+  String get comicLeftToRight => 'Από αριστερά προς δεξιά';
 
   @override
-  String get comicRightToLeft => 'Right to left (manga)';
+  String get comicRightToLeft => 'Από δεξιά προς αριστερά (manga)';
 
   @override
   String get comicNeedsConnection =>
-      'This comic opens page by page from your server, so it needs a connection.';
+      'Αυτό το κόμικ ανοίγει σελίδα σελίδα από τον διακομιστή σας, οπότε χρειάζεται σύνδεση.';
 
   @override
-  String get comicNoPages => 'No pages found in this comic.';
+  String get comicNoPages => 'Δεν βρέθηκαν σελίδες σε αυτό το κόμικ.';
 
   @override
-  String get boAdminTitle => 'Server admin';
+  String get boAdminTitle => 'Διαχείριση διακομιστή';
 
   @override
-  String get boAdminSubtitle => 'Users and libraries on this BookOrbit server';
+  String get boAdminSubtitle =>
+      'Χρήστες και βιβλιοθήκες σε αυτόν τον διακομιστή BookOrbit';
 
   @override
-  String get boAdminUsers => 'Users';
+  String get boAdminUsers => 'Χρήστες';
 
   @override
-  String get boAdminLibraries => 'Libraries';
+  String get boAdminLibraries => 'Βιβλιοθήκες';
 
   @override
   String boAdminUserCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count people',
-      one: '1 person',
+      other: '$count άτομα',
+      one: '1 άτομο',
     );
     return '$_temp0';
   }
@@ -11819,851 +12034,862 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count libraries',
-      one: '1 library',
+      other: '$count βιβλιοθήκες',
+      one: '1 βιβλιοθήκη',
     );
     return '$_temp0';
   }
 
   @override
-  String get boAdminSaved => 'Saved';
+  String get boAdminSaved => 'Αποθηκεύτηκε';
 
   @override
-  String get boAdminFailed => 'That didn\'t work. Try again.';
+  String get boAdminFailed => 'Δεν λειτούργησε. Δοκιμάστε ξανά.';
 
   @override
-  String get boAdminOffline => 'Couldn\'t reach the server.';
+  String get boAdminOffline =>
+      'Δεν ήταν δυνατή η επικοινωνία με τον διακομιστή.';
 
   @override
-  String get boUsersSearch => 'Search users';
+  String get boUsersSearch => 'Αναζήτηση χρηστών';
 
   @override
-  String get boUsersNone => 'No users here';
+  String get boUsersNone => 'Δεν υπάρχουν χρήστες εδώ';
 
   @override
-  String get boUsersFilterAll => 'All';
+  String get boUsersFilterAll => 'Όλοι';
 
   @override
-  String get boUsersFilterAdmins => 'Admins';
+  String get boUsersFilterAdmins => 'Διαχειριστές';
 
   @override
-  String get boUsersFilterActive => 'Active';
+  String get boUsersFilterActive => 'Ενεργοί';
 
   @override
-  String get boUsersFilterInactive => 'Inactive';
+  String get boUsersFilterInactive => 'Ανενεργοί';
 
   @override
-  String get boUsersFilterAttention => 'Needs attention';
+  String get boUsersFilterAttention => 'Χρειάζονται προσοχή';
 
   @override
-  String get boUserBadgeAdmin => 'Admin';
+  String get boUserBadgeAdmin => 'Διαχειριστής';
 
   @override
-  String get boUserBadgeInactive => 'Inactive';
+  String get boUserBadgeInactive => 'Ανενεργός';
 
   @override
-  String get boUserBadgeLocked => 'Locked';
+  String get boUserBadgeLocked => 'Κλειδωμένος';
 
   @override
-  String get boUserBadgeNoPassword => 'No password yet';
+  String get boUserBadgeNoPassword => 'Χωρίς κωδικό ακόμη';
 
   @override
   String boUserLastActive(String date) {
-    return 'Last active $date';
+    return 'Τελευταία δραστηριότητα $date';
   }
 
   @override
-  String get boUserNeverSignedIn => 'Never signed in';
+  String get boUserNeverSignedIn => 'Δεν έχει συνδεθεί ποτέ';
 
   @override
-  String get boUserNew => 'New user';
+  String get boUserNew => 'Νέος χρήστης';
 
   @override
-  String get boUserCreate => 'Create';
+  String get boUserCreate => 'Δημιουργία';
 
   @override
-  String get boUserUsername => 'Username';
+  String get boUserUsername => 'Όνομα χρήστη';
 
   @override
   String get boUserUsernameHint =>
-      'At least 3 characters. It cannot be changed later.';
+      'Τουλάχιστον 3 χαρακτήρες. Δεν μπορεί να αλλάξει αργότερα.';
 
   @override
-  String get boUserName => 'Name';
+  String get boUserName => 'Όνομα';
 
   @override
   String get boUserEmail => 'Email';
 
   @override
-  String get boUserEmailInvalid => 'Enter a valid email address';
+  String get boUserEmailInvalid => 'Εισαγάγετε μια έγκυρη διεύθυνση email';
 
   @override
-  String get boUserActive => 'Active';
+  String get boUserActive => 'Ενεργός';
 
   @override
-  String get boUserActiveSubtitle => 'Inactive users can\'t sign in';
+  String get boUserActiveSubtitle =>
+      'Οι ανενεργοί χρήστες δεν μπορούν να συνδεθούν';
 
   @override
-  String get boUserAdmin => 'Administrator';
+  String get boUserAdmin => 'Διαχειριστής';
 
   @override
-  String get boUserAdminSubtitle => 'Full access to everything on the server';
+  String get boUserAdminSubtitle => 'Πλήρης πρόσβαση σε όλα στον διακομιστή';
 
   @override
   String get boUserAdminHasAll =>
-      'Administrators have every permission and see every library.';
+      'Οι διαχειριστές έχουν όλα τα δικαιώματα και βλέπουν κάθε βιβλιοθήκη.';
 
   @override
-  String get boUserPermissions => 'Permissions';
+  String get boUserPermissions => 'Δικαιώματα';
 
   @override
-  String get boUserPresetNone => 'None';
+  String get boUserPresetNone => 'Κανένα';
 
   @override
-  String get boUserPresetStandard => 'Standard';
+  String get boUserPresetStandard => 'Στάνταρ';
 
   @override
-  String get boUserPresetEverything => 'Everything';
+  String get boUserPresetEverything => 'Όλα';
 
   @override
-  String get boUserLibraries => 'Libraries';
+  String get boUserLibraries => 'Βιβλιοθήκες';
 
   @override
-  String get boUserLibrariesHint => 'The libraries this person can see.';
+  String get boUserLibrariesHint =>
+      'Οι βιβλιοθήκες που μπορεί να δει αυτό το άτομο.';
 
   @override
-  String get boUserPasswordLink => 'Send password link';
+  String get boUserPasswordLink => 'Αποστολή συνδέσμου κωδικού';
 
   @override
   String get boUserPasswordLinkSubtitle =>
-      'A link to set a new password, valid for 15 minutes';
+      'Ένας σύνδεσμος για τον ορισμό νέου κωδικού, ισχύει για 15 λεπτά';
 
   @override
   String get boUserExternal =>
-      'Signs in through single sign-on, so the password is managed there.';
+      'Συνδέεται μέσω single sign-on, οπότε ο κωδικός πρόσβασης διαχειρίζεται εκεί.';
 
   @override
-  String get boUserUnlock => 'Unlock account';
+  String get boUserUnlock => 'Ξεκλείδωμα λογαριασμού';
 
   @override
-  String get boUserUnlocked => 'Account unlocked';
+  String get boUserUnlocked => 'Ο λογαριασμός ξεκλειδώθηκε';
 
   @override
-  String get boUserDelete => 'Delete user';
+  String get boUserDelete => 'Διαγραφή χρήστη';
 
   @override
   String boUserDeleteTitle(String name) {
-    return 'Delete $name?';
+    return 'Διαγραφή του $name;';
   }
 
   @override
   String get boUserDeleteBody =>
-      'Their account and everything they have on this server are removed. This cannot be undone.';
+      'Ο λογαριασμός του και ό,τι έχει σε αυτόν τον διακομιστή αφαιρούνται. Αυτό δεν μπορεί να αναιρεθεί.';
 
   @override
-  String get boUserDeleted => 'User deleted';
+  String get boUserDeleted => 'Ο χρήστης διαγράφηκε';
 
   @override
-  String get boUserLinkTitle => 'Password link';
+  String get boUserLinkTitle => 'Σύνδεσμος κωδικού';
 
   @override
   String boUserLinkBody(String name) {
-    return 'Share this link with $name. It lets them set a password and works for 15 minutes.';
+    return 'Μοιραστείτε αυτόν τον σύνδεσμο με τον/την $name. Του επιτρέπει να ορίσει κωδικό πρόσβασης και ισχύει για 15 λεπτά.';
   }
 
   @override
   String get boPasswordRules =>
-      'At least 8 characters, with an uppercase letter, a lowercase letter and a number.';
+      'Τουλάχιστον 8 χαρακτήρες, με ένα κεφαλαίο γράμμα, ένα πεζό γράμμα και έναν αριθμό.';
 
   @override
-  String get boSetPasswordTitle => 'Set your password';
+  String get boSetPasswordTitle => 'Ορίστε τον κωδικό πρόσβασής σας';
 
   @override
-  String get boSetPasswordSubmit => 'Set password and sign in';
+  String get boSetPasswordSubmit => 'Ορισμός κωδικού και σύνδεση';
 
   @override
   String boSetPasswordLinkBody(String username, String server) {
-    return 'Choose a password for $username on $server.';
+    return 'Επιλέξτε έναν κωδικό πρόσβασης για τον/την $username στο $server.';
   }
 
   @override
   String boSetPasswordLinkBodyNoName(String server) {
-    return 'Choose a password for your account on $server.';
+    return 'Επιλέξτε έναν κωδικό πρόσβασης για τον λογαριασμό σας στο $server.';
   }
 
   @override
   String get boSetPasswordStartingBody =>
-      'This account still has the password it was created with. Choose a new one to finish signing in.';
+      'Αυτός ο λογαριασμός έχει ακόμη τον κωδικό με τον οποίο δημιουργήθηκε. Επιλέξτε νέο για να ολοκληρώσετε τη σύνδεση.';
 
   @override
   String get boSetPasswordTrust =>
-      'Only continue if you trust who sent this link.';
+      'Συνεχίστε μόνο αν εμπιστεύεστε αυτόν που έστειλε τον σύνδεσμο.';
 
   @override
   String get boPasswordLinkExpired =>
-      'This link has expired or was already used. Ask your server admin for a new one.';
+      'Αυτός ο σύνδεσμος έχει λήξει ή έχει ήδη χρησιμοποιηθεί. Ζητήστε νέο από τον διαχειριστή του διακομιστή σας.';
 
   @override
   String boPasswordSetSignInFailed(String error) {
-    return 'Your password is set, but signing in failed: $error';
+    return 'Ο κωδικός πρόσβασής σας ορίστηκε, αλλά η σύνδεση απέτυχε: $error';
   }
 
   @override
-  String get boChangePasswordSubtitle => 'Update your BookOrbit password';
+  String get boChangePasswordSubtitle =>
+      'Ενημέρωση του κωδικού πρόσβασης BookOrbit';
 
   @override
   String get boPasswordChangeEffect =>
-      'Changing your password signs out your other BookOrbit sessions. This device stays signed in.';
+      'Η αλλαγή του κωδικού πρόσβασης αποσυνδέει τις άλλες συνεδρίες σας στο BookOrbit. Αυτή η συσκευή παραμένει συνδεδεμένη.';
 
   @override
   String get boPasswordChanged =>
-      'Password changed. Other signed-in devices were signed out.';
+      'Ο κωδικός πρόσβασης άλλαξε. Οι άλλες συνδεδεμένες συσκευές αποσυνδέθηκαν.';
 
   @override
   String boPasswordShareDescription(String username) {
-    return 'Send this link or have $username scan the QR code to choose a password and sign in to Absorb. It works for 15 minutes.';
+    return 'Στείλτε αυτόν τον σύνδεσμο ή ζητήστε από τον/την $username να σαρώσει τον κωδικό QR για να επιλέξει κωδικό πρόσβασης και να συνδεθεί στο Absorb. Ισχύει για 15 λεπτά.';
   }
 
   @override
   String boPasswordShareWarning(String username) {
-    return 'Anyone with this link can choose the password for $username until it is used or expires.';
+    return 'Όποιος έχει αυτόν τον σύνδεσμο μπορεί να επιλέξει τον κωδικό πρόσβασης του/της $username μέχρι να χρησιμοποιηθεί ή να λήξει.';
   }
 
   @override
-  String get setupLinkCopyWebLink => 'Copy web link';
+  String get setupLinkCopyWebLink => 'Αντιγραφή συνδέσμου web';
 
   @override
-  String get boUserLinkCopy => 'Copy link';
+  String get boUserLinkCopy => 'Αντιγραφή συνδέσμου';
 
   @override
-  String get boUserLinkCopied => 'Link copied';
+  String get boUserLinkCopied => 'Ο σύνδεσμος αντιγράφηκε';
 
   @override
-  String get boUserLinkShare => 'Share';
+  String get boUserLinkShare => 'Κοινοποίηση';
 
   @override
   String get boUserNoLink =>
-      'The user was added, but the server sent no password link. Send one from their page.';
+      'Ο χρήστης προστέθηκε, αλλά ο διακομιστής δεν έστειλε σύνδεσμο κωδικού. Στείλτε έναν από τη σελίδα του.';
 
   @override
-  String get boPermGroupLibrary => 'Library and books';
+  String get boPermGroupLibrary => 'Βιβλιοθήκη και βιβλία';
 
   @override
-  String get boPermGroupRequests => 'Book requests';
+  String get boPermGroupRequests => 'Αιτήματα βιβλίων';
 
   @override
-  String get boPermGroupDevices => 'Devices';
+  String get boPermGroupDevices => 'Συσκευές';
 
   @override
-  String get boPermGroupIntegrations => 'Reading integrations';
+  String get boPermGroupIntegrations => 'Ενσωματώσεις ανάγνωσης';
 
   @override
   String get boPermGroupDock => 'Book Dock';
 
   @override
-  String get boPermGroupEmail => 'Email and notifications';
+  String get boPermGroupEmail => 'Email και ειδοποιήσεις';
 
   @override
-  String get boPermGroupAdmin => 'Administration';
+  String get boPermGroupAdmin => 'Διαχείριση';
 
   @override
-  String get boPermLibraryDownload => 'Download books';
+  String get boPermLibraryDownload => 'Λήψη βιβλίων';
 
   @override
-  String get boPermLibraryUpload => 'Upload books';
+  String get boPermLibraryUpload => 'Μεταφόρτωση βιβλίων';
 
   @override
-  String get boPermLibraryEditMetadata => 'Edit metadata';
+  String get boPermLibraryEditMetadata => 'Επεξεργασία μεταδεδομένων';
 
   @override
-  String get boPermLibraryDeleteBooks => 'Delete books';
+  String get boPermLibraryDeleteBooks => 'Διαγραφή βιβλίων';
 
   @override
-  String get boPermBookRequestAccess => 'Request books';
+  String get boPermBookRequestAccess => 'Αίτηση βιβλίων';
 
   @override
-  String get boPermBookRequestAutoApprove => 'Requests approved automatically';
+  String get boPermBookRequestAutoApprove => 'Αυτόματη έγκριση αιτημάτων';
 
   @override
   String get boPermBookRequestSelfFulfill =>
-      'Download requested books directly';
+      'Άμεση λήψη των βιβλίων που ζητήθηκαν';
 
   @override
-  String get boPermManageBookRequests => 'Manage book requests';
+  String get boPermManageBookRequests => 'Διαχείριση αιτημάτων βιβλίων';
 
   @override
-  String get boPermKoboSync => 'Kobo sync';
+  String get boPermKoboSync => 'Συγχρονισμός Kobo';
 
   @override
-  String get boPermKoreaderSync => 'KOReader sync';
+  String get boPermKoreaderSync => 'Συγχρονισμός KOReader';
 
   @override
-  String get boPermOpdsAccess => 'OPDS access';
+  String get boPermOpdsAccess => 'Πρόσβαση OPDS';
 
   @override
-  String get boPermHardcoverSync => 'Hardcover sync';
+  String get boPermHardcoverSync => 'Συγχρονισμός Hardcover';
 
   @override
-  String get boPermReadwiseSync => 'Readwise sync';
+  String get boPermReadwiseSync => 'Συγχρονισμός Readwise';
 
   @override
-  String get boPermStorygraphSync => 'StoryGraph sync';
+  String get boPermStorygraphSync => 'Συγχρονισμός StoryGraph';
 
   @override
-  String get boPermBookDockAccess => 'Use the Book Dock';
+  String get boPermBookDockAccess => 'Χρήση του Book Dock';
 
   @override
-  String get boPermManageBookDock => 'Manage the Book Dock';
+  String get boPermManageBookDock => 'Διαχείριση του Book Dock';
 
   @override
-  String get boPermEmailSend => 'Send books by email';
+  String get boPermEmailSend => 'Αποστολή βιβλίων με email';
 
   @override
-  String get boPermNotificationAccess => 'Notifications';
+  String get boPermNotificationAccess => 'Ειδοποιήσεις';
 
   @override
-  String get boPermManageEmail => 'Manage email';
+  String get boPermManageEmail => 'Διαχείριση email';
 
   @override
-  String get boPermManageLibraries => 'Manage libraries';
+  String get boPermManageLibraries => 'Διαχείριση βιβλιοθηκών';
 
   @override
-  String get boPermManageMetadataConfig => 'Metadata settings';
+  String get boPermManageMetadataConfig => 'Ρυθμίσεις μεταδεδομένων';
 
   @override
-  String get boPermManageIcons => 'Manage icons';
+  String get boPermManageIcons => 'Διαχείριση εικονιδίων';
 
   @override
-  String get boPermManageUsers => 'Manage users';
+  String get boPermManageUsers => 'Διαχείριση χρηστών';
 
   @override
-  String get boPermViewUserActivity => 'View user activity';
+  String get boPermViewUserActivity => 'Προβολή δραστηριότητας χρηστών';
 
   @override
-  String get boPermViewAuditLog => 'View the audit log';
+  String get boPermViewAuditLog => 'Προβολή αρχείου ελέγχου';
 
   @override
-  String get boPermManageAppSettings => 'App settings';
+  String get boPermManageAppSettings => 'Ρυθμίσεις εφαρμογής';
 
   @override
-  String get boLibsNone => 'No libraries yet';
+  String get boLibsNone => 'Δεν υπάρχουν βιβλιοθήκες ακόμη';
 
   @override
   String boLibBookCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count βιβλία',
+      one: '1 βιβλίο',
     );
     return '$_temp0';
   }
 
   @override
-  String get boLibScanNow => 'Scan now';
+  String get boLibScanNow => 'Σάρωση τώρα';
 
   @override
-  String get boLibScanStarted => 'Scan started';
+  String get boLibScanStarted => 'Η σάρωση ξεκίνησε';
 
   @override
-  String get boLibScanning => 'Scanning';
+  String get boLibScanning => 'Σάρωση';
 
   @override
   String boLibLastScan(String date, int added, int updated, int missing) {
-    return 'Scanned $date: $added added, $updated updated, $missing missing';
+    return 'Σάρωση $date: $added προστέθηκαν, $updated ενημερώθηκαν, $missing λείπουν';
   }
 
   @override
-  String get boLibScanFailed => 'The last scan failed';
+  String get boLibScanFailed => 'Η τελευταία σάρωση απέτυχε';
 
   @override
-  String get boLibNeverScanned => 'Not scanned yet';
+  String get boLibNeverScanned => 'Δεν έχει σαρωθεί ακόμη';
 
   @override
-  String get boLibNew => 'New library';
+  String get boLibNew => 'Νέα βιβλιοθήκη';
 
   @override
-  String get boLibName => 'Name';
+  String get boLibName => 'Όνομα';
 
   @override
-  String get boLibNeedName => 'Give the library a name';
+  String get boLibNeedName => 'Δώστε ένα όνομα στη βιβλιοθήκη';
 
   @override
-  String get boLibIcon => 'Icon';
+  String get boLibIcon => 'Εικονίδιο';
 
   @override
-  String get boLibFolders => 'Folders';
+  String get boLibFolders => 'Φάκελοι';
 
   @override
   String get boLibFoldersHint =>
-      'Folders on the server where this library\'s books live.';
+      'Φάκελοι στον διακομιστή όπου βρίσκονται τα βιβλία αυτής της βιβλιοθήκης.';
 
   @override
-  String get boLibNeedFolder => 'Add at least one folder';
+  String get boLibNeedFolder => 'Προσθέστε τουλάχιστον έναν φάκελο';
 
   @override
-  String get boLibAddFolder => 'Add folder';
+  String get boLibAddFolder => 'Προσθήκη φακέλου';
 
   @override
   String boLibFolderFiles(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count αρχεία',
+      one: '1 αρχείο',
     );
     return '$_temp0';
   }
 
   @override
   String boLibFolderInUse(String library) {
-    return 'Already in $library';
+    return 'Ήδη στη βιβλιοθήκη $library';
   }
 
   @override
-  String get boLibFolderUnreadable => 'The server can\'t read this folder';
+  String get boLibFolderUnreadable =>
+      'Ο διακομιστής δεν μπορεί να διαβάσει αυτόν τον φάκελο';
 
   @override
-  String get boLibFolderRescan => 'Changing the folders rescans the library.';
+  String get boLibFolderRescan =>
+      'Η αλλαγή των φακέλων σαρώνει ξανά τη βιβλιοθήκη.';
 
   @override
-  String get boLibOrganization => 'Books are stored as';
+  String get boLibOrganization => 'Τα βιβλία αποθηκεύονται ως';
 
   @override
-  String get boLibPerFolder => 'One book per folder';
+  String get boLibPerFolder => 'Ένα βιβλίο ανά φάκελο';
 
   @override
-  String get boLibPerFile => 'One book per file';
+  String get boLibPerFile => 'Ένα βιβλίο ανά αρχείο';
 
   @override
   String get boLibOrganizationFixed =>
-      'This cannot be changed after the library is created.';
+      'Αυτό δεν μπορεί να αλλάξει μετά τη δημιουργία της βιβλιοθήκης.';
 
   @override
-  String get boLibWatch => 'Watch for changes';
+  String get boLibWatch => 'Παρακολούθηση αλλαγών';
 
   @override
   String get boLibWatchSubtitle =>
-      'Pick up new and changed files as they appear';
+      'Εντοπισμός νέων και αλλαγμένων αρχείων μόλις εμφανιστούν';
 
   @override
-  String get boLibSchedule => 'Scheduled scan';
+  String get boLibSchedule => 'Προγραμματισμένη σάρωση';
 
   @override
-  String get boLibScheduleOff => 'Off';
+  String get boLibScheduleOff => 'Ανενεργή';
 
   @override
-  String get boLibScheduleDaily => 'Daily';
+  String get boLibScheduleDaily => 'Καθημερινά';
 
   @override
-  String get boLibScheduleWeekly => 'Weekly';
+  String get boLibScheduleWeekly => 'Εβδομαδιαία';
 
   @override
   String boLibScheduleCustom(String cron) {
-    return 'Custom ($cron)';
+    return 'Προσαρμοσμένη ($cron)';
   }
 
   @override
-  String get boLibScheduleHint => 'Runs at 3 AM server time.';
+  String get boLibScheduleHint => 'Εκτελείται στις 3 π.μ. ώρα διακομιστή.';
 
   @override
-  String get boLibCovers => 'Cover shape';
+  String get boLibCovers => 'Σχήμα εξωφύλλου';
 
   @override
-  String get boLibCoverBook => 'Book (2:3)';
+  String get boLibCoverBook => 'Βιβλίο (2:3)';
 
   @override
-  String get boLibCoverSquare => 'Square (1:1)';
+  String get boLibCoverSquare => 'Τετράγωνο (1:1)';
 
   @override
-  String get boLibAccess => 'Who can see it';
+  String get boLibAccess => 'Ποιος μπορεί να τη δει';
 
   @override
   String get boLibAccessHint =>
-      'Administrators see every library. Others need access here.';
+      'Οι διαχειριστές βλέπουν κάθε βιβλιοθήκη. Οι υπόλοιποι χρειάζονται πρόσβαση εδώ.';
 
   @override
-  String get boLibAccessNone => 'Only administrators so far';
+  String get boLibAccessNone => 'Μόνο διαχειριστές προς το παρόν';
 
   @override
-  String get boLibAccessAdd => 'Add person';
+  String get boLibAccessAdd => 'Προσθήκη ατόμου';
 
   @override
-  String get boLibAccessEveryoneHas => 'Everyone already has access';
+  String get boLibAccessEveryoneHas => 'Όλοι έχουν ήδη πρόσβαση';
 
   @override
-  String get boLibLevelViewer => 'Viewer';
+  String get boLibLevelViewer => 'Θεατής';
 
   @override
-  String get boLibLevelEditor => 'Editor';
+  String get boLibLevelEditor => 'Επεξεργαστής';
 
   @override
-  String get boLibLevelOwner => 'Owner';
+  String get boLibLevelOwner => 'Ιδιοκτήτης';
 
   @override
-  String get boLibAccessRemove => 'Remove access';
+  String get boLibAccessRemove => 'Αφαίρεση πρόσβασης';
 
   @override
-  String get boLibDelete => 'Delete library';
+  String get boLibDelete => 'Διαγραφή βιβλιοθήκης';
 
   @override
   String boLibDeleteTitle(String name) {
-    return 'Delete $name?';
+    return 'Διαγραφή του $name;';
   }
 
   @override
   String get boLibDeleteBody =>
-      'The library is removed from BookOrbit, with its books\' progress and highlights. The files on the server stay where they are.';
+      'Η βιβλιοθήκη αφαιρείται από το BookOrbit, μαζί με την πρόοδο και τις επισημάνσεις των βιβλίων της. Τα αρχεία στον διακομιστή παραμένουν στη θέση τους.';
 
   @override
-  String get boLibDeleted => 'Library deleted';
+  String get boLibDeleted => 'Η βιβλιοθήκη διαγράφηκε';
 
   @override
-  String get boFolderPickTitle => 'Choose a folder';
+  String get boFolderPickTitle => 'Επιλογή φακέλου';
 
   @override
-  String get boFolderUseThis => 'Use this folder';
+  String get boFolderUseThis => 'Χρήση αυτού του φακέλου';
 
   @override
-  String get boFolderEmpty => 'No folders inside';
+  String get boFolderEmpty => 'Δεν υπάρχουν φάκελοι';
 
   @override
-  String get statsTotalTime => 'TOTAL TIME';
+  String get statsTotalTime => 'ΣΥΝΟΛΙΚΟΣ ΧΡΟΝΟΣ';
 
   @override
-  String get statsTotalReadingTime => 'TOTAL READING TIME';
+  String get statsTotalReadingTime => 'ΣΥΝΟΛΙΚΟΣ ΧΡΟΝΟΣ ΑΝΑΓΝΩΣΗΣ';
 
   @override
   String statsDaysOfTime(String days) {
-    return 'That\'s $days days';
+    return 'Αυτό είναι $days ημέρες';
   }
 
   @override
   String statsHoursOfTime(String hours) {
-    return 'That\'s $hours hours';
+    return 'Αυτό είναι $hours ώρες';
   }
 
   @override
-  String get statsMediaAll => 'All';
+  String get statsMediaAll => 'Όλα';
 
   @override
-  String get statsMediaListening => 'Listening';
+  String get statsMediaListening => 'Ακρόαση';
 
   @override
-  String get statsMediaReading => 'Reading';
+  String get statsMediaReading => 'Ανάγνωση';
 
   @override
   String statsZoneMismatch(String server, String phone) {
-    return 'BookOrbit counts your days in $server, but this phone is set to $phone. Time late in the day can land on the wrong day.';
+    return 'Το BookOrbit μετρά τις ημέρες σας με ζώνη ώρας $server, αλλά αυτό το τηλέφωνο έχει ρυθμιστεί σε $phone. Ο χρόνος αργά μέσα στην ημέρα μπορεί να καταχωριστεί σε λάθος ημέρα.';
   }
 
   @override
   String statsZoneUse(String zone) {
-    return 'Use $zone';
+    return 'Χρήση $zone';
   }
 
   @override
   String statsZoneSaved(String zone) {
-    return 'BookOrbit now uses $zone. Older days can take a few minutes to catch up.';
+    return 'Το BookOrbit χρησιμοποιεί πλέον $zone. Οι παλαιότερες ημέρες μπορεί να χρειαστούν λίγα λεπτά για να ενημερωθούν.';
   }
 
   @override
-  String get statsZoneFailed => 'Couldn\'t change the time zone on BookOrbit';
+  String get statsZoneFailed =>
+      'Δεν ήταν δυνατή η αλλαγή της ζώνης ώρας στο BookOrbit';
 
   @override
-  String get statsTimeOfDay => 'Time of day';
+  String get statsTimeOfDay => 'Ώρα της ημέρας';
 
   @override
   String statsBusiestAround(String time) {
-    return 'Busiest around $time';
+    return 'Πιο πολυάσχολη περίπου στις $time';
   }
 
   @override
-  String get statsFinishedByMonth => 'Books finished by month';
+  String get statsFinishedByMonth => 'Βιβλία που ολοκληρώθηκαν ανά μήνα';
 
   @override
   String statsFinishedLast12(int count) {
-    return '$count in the last 12 months';
+    return '$count τους τελευταίους 12 μήνες';
   }
 
   @override
-  String get statsWhereTitle => 'Where you listen and read';
+  String get statsWhereTitle => 'Πού ακούτε και διαβάζετε';
 
   @override
-  String get statsLast12Months => 'Last 12 months';
+  String get statsLast12Months => 'Τελευταίοι 12 μήνες';
 
   @override
-  String get statsHabits => 'Habits';
+  String get statsHabits => 'Συνήθειες';
 
   @override
-  String get statsTypicalSession => 'Typical session';
+  String get statsTypicalSession => 'Τυπική συνεδρία';
 
   @override
-  String get statsProgressPerSession => 'Progress per session';
+  String get statsProgressPerSession => 'Πρόοδος ανά συνεδρία';
 
   @override
-  String get statsTimeToFinish => 'Time to finish';
+  String get statsTimeToFinish => 'Χρόνος ολοκλήρωσης';
 
   @override
   String statsDayCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count days',
-      one: '1 day',
+      other: '$count ημέρες',
+      one: '1 ημέρα',
     );
     return '$_temp0';
   }
 
   @override
-  String get statsBooksStarted => 'Books started';
+  String get statsBooksStarted => 'Βιβλία που ξεκίνησαν';
 
   @override
-  String get statsBooksInProgress => 'In progress';
+  String get statsBooksInProgress => 'Σε εξέλιξη';
 
   @override
-  String get statsAverageProgress => 'Average progress';
+  String get statsAverageProgress => 'Μέση πρόοδος';
 
   @override
-  String get statsTopBooks => 'Top books';
+  String get statsTopBooks => 'Κορυφαία βιβλία';
 
   @override
-  String get statsYearRead => 'Read';
+  String get statsYearRead => 'Διαβάστηκαν';
 
   @override
   String boNotificationsUnread(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count unread',
-      one: '1 unread',
-      zero: 'Nothing new',
+      other: '$count μη αναγνωσμένες',
+      one: '1 μη αναγνωσμένη',
+      zero: 'Τίποτα νέο',
     );
     return '$_temp0';
   }
 
   @override
-  String get boNotificationsMarkAllRead => 'Mark all read';
+  String get boNotificationsMarkAllRead => 'Σήμανση όλων ως αναγνωσμένων';
 
   @override
-  String get boNotificationsClearAll => 'Clear all';
+  String get boNotificationsClearAll => 'Εκκαθάριση όλων';
 
   @override
-  String get boNotificationsClearTitle => 'Clear all notifications?';
+  String get boNotificationsClearTitle => 'Εκκαθάριση όλων των ειδοποιήσεων;';
 
   @override
   String get boNotificationsClearBody =>
-      'This removes every notification from your BookOrbit account.';
+      'Αυτό αφαιρεί κάθε ειδοποίηση από τον λογαριασμό σας στο BookOrbit.';
 
   @override
-  String get boNotificationsEmpty => 'No notifications yet';
+  String get boNotificationsEmpty => 'Δεν υπάρχουν ειδοποιήσεις ακόμη';
 
   @override
-  String get boNotificationsLoadFailed => 'Couldn\'t load notifications';
+  String get boNotificationsLoadFailed =>
+      'Δεν ήταν δυνατή η φόρτωση των ειδοποιήσεων';
 
   @override
   String get boNotificationsUpdateFailed =>
-      'Couldn\'t update notifications on BookOrbit';
+      'Δεν ήταν δυνατή η ενημέρωση των ειδοποιήσεων στο BookOrbit';
 
   @override
   String boNotificationsOccurrences(int count) {
-    return 'Happened $count times';
+    return 'Συνέβη $count φορές';
   }
 
   @override
-  String get boNotificationsSettings => 'Notification settings';
+  String get boNotificationsSettings => 'Ρυθμίσεις ειδοποιήσεων';
 
   @override
   String get boNotificationsSettingsIntro =>
-      'Choose which notifications BookOrbit keeps for you.';
+      'Επιλέξτε ποιες ειδοποιήσεις διατηρεί το BookOrbit για εσάς.';
 
   @override
   String get boNotificationsProblemsHint =>
-      'Problems only notifies you when something fails or needs attention.';
+      'Το «Προβλήματα» σας ειδοποιεί μόνο όταν κάτι αποτυγχάνει ή χρειάζεται προσοχή.';
 
   @override
-  String get boNotificationLevelOff => 'Off';
+  String get boNotificationLevelOff => 'Ανενεργές';
 
   @override
-  String get boNotificationLevelProblems => 'Problems';
+  String get boNotificationLevelProblems => 'Προβλήματα';
 
   @override
-  String get boNotificationLevelAll => 'All';
+  String get boNotificationLevelAll => 'Όλες';
 
   @override
-  String get boNotificationsSaved => 'Notification settings saved';
+  String get boNotificationsSaved => 'Οι ρυθμίσεις ειδοποιήσεων αποθηκεύτηκαν';
 
   @override
   String get boNotificationsSaveFailed =>
-      'Couldn\'t save notification settings';
+      'Δεν ήταν δυνατή η αποθήκευση των ρυθμίσεων ειδοποιήσεων';
 
   @override
-  String get boNotificationGroupLibrary => 'Library';
+  String get boNotificationGroupLibrary => 'Βιβλιοθήκη';
 
   @override
-  String get boNotificationGroupFiles => 'Files';
+  String get boNotificationGroupFiles => 'Αρχεία';
 
   @override
-  String get boNotificationGroupIntegrations => 'Integrations';
+  String get boNotificationGroupIntegrations => 'Ενσωματώσεις';
 
   @override
-  String get boNotificationGroupPersonal => 'Personal';
+  String get boNotificationGroupPersonal => 'Προσωπικά';
 
   @override
-  String get boNotifyScanning => 'Library scanning';
+  String get boNotifyScanning => 'Σάρωση βιβλιοθήκης';
 
   @override
   String get boNotifyScanningDesc =>
-      'When a library scan finishes, fails, or finds missing books.';
+      'Όταν μια σάρωση βιβλιοθήκης ολοκληρώνεται, αποτυγχάνει ή εντοπίζει βιβλία που λείπουν.';
 
   @override
-  String get boNotifyMetadata => 'Metadata fetching';
+  String get boNotifyMetadata => 'Λήψη μεταδεδομένων';
 
   @override
   String get boNotifyMetadataDesc =>
-      'When metadata lookups for your books finish or fail.';
+      'Όταν οι αναζητήσεις μεταδεδομένων για τα βιβλία σας ολοκληρώνονται ή αποτυγχάνουν.';
 
   @override
-  String get boNotifyAuthorEnrichment => 'Author details';
+  String get boNotifyAuthorEnrichment => 'Στοιχεία συγγραφέα';
 
   @override
   String get boNotifyAuthorEnrichmentDesc =>
-      'When author biographies and photos finish downloading.';
+      'Όταν ολοκληρώνεται η λήψη βιογραφικών και φωτογραφιών συγγραφέων.';
 
   @override
-  String get boNotifyFileWriteBack => 'Saving to files';
+  String get boNotifyFileWriteBack => 'Αποθήκευση σε αρχεία';
 
   @override
   String get boNotifyFileWriteBackDesc =>
-      'When edited details are saved into the book files on disk.';
+      'Όταν οι επεξεργασμένες λεπτομέρειες αποθηκεύονται στα αρχεία των βιβλίων στον δίσκο.';
 
   @override
-  String get boNotifyFileRename => 'File renaming';
+  String get boNotifyFileRename => 'Μετονομασία αρχείων';
 
   @override
   String get boNotifyFileRenameDesc =>
-      'When a book file is renamed to match your naming pattern.';
+      'Όταν ένα αρχείο βιβλίου μετονομάζεται ώστε να ταιριάζει με το πρότυπο ονομασίας σας.';
 
   @override
-  String get boNotifyBulkRename => 'Bulk renaming';
+  String get boNotifyBulkRename => 'Μαζική μετονομασία';
 
   @override
   String get boNotifyBulkRenameDesc =>
-      'When renaming many books, or moving books between libraries, finishes or fails.';
+      'Όταν η μετονομασία πολλών βιβλίων ή η μετακίνηση βιβλίων μεταξύ βιβλιοθηκών ολοκληρώνεται ή αποτυγχάνει.';
 
   @override
-  String get boNotifyMigration => 'Imports';
+  String get boNotifyMigration => 'Εισαγωγές';
 
   @override
   String get boNotifyMigrationDesc =>
-      'When an import from another library app finishes or fails.';
+      'Όταν μια εισαγωγή από άλλη εφαρμογή βιβλιοθήκης ολοκληρώνεται ή αποτυγχάνει.';
 
   @override
   String get boNotifyBookDock => 'Book Dock';
 
   @override
   String get boNotifyBookDockDesc =>
-      'When Book Dock finishes adding books or runs into problems.';
+      'Όταν το Book Dock ολοκληρώνει την προσθήκη βιβλίων ή αντιμετωπίζει προβλήματα.';
 
   @override
-  String get boNotifyBookRequests => 'Book requests';
+  String get boNotifyBookRequests => 'Αιτήματα βιβλίων';
 
   @override
   String get boNotifyBookRequestsDesc =>
-      'When a book request is submitted or decided, or the book becomes available.';
+      'Όταν ένα αίτημα βιβλίου υποβάλλεται ή εγκρίνεται/απορρίπτεται, ή το βιβλίο γίνεται διαθέσιμο.';
 
   @override
-  String get boNotifyEmail => 'Email delivery';
+  String get boNotifyEmail => 'Παράδοση μέσω email';
 
   @override
   String get boNotifyEmailDesc =>
-      'When sending a book by email works or fails.';
+      'Όταν η αποστολή ενός βιβλίου μέσω email πετυχαίνει ή αποτυγχάνει.';
 
   @override
-  String get boNotifyAchievements => 'Achievements';
+  String get boNotifyAchievements => 'Επιτεύγματα';
 
   @override
-  String get boNotifyAchievementsDesc => 'When you unlock a new achievement.';
+  String get boNotifyAchievementsDesc => 'Όταν ξεκλειδώνετε ένα νέο επίτευγμα.';
 
   @override
-  String get achievementsTitle => 'Achievements';
+  String get achievementsTitle => 'Επιτεύγματα';
 
   @override
   String achievementsEarnedSummary(int earned, int total) {
-    return '$earned of $total earned';
+    return '$earned από $total κερδισμένα';
   }
 
   @override
-  String get achievementsFilterAll => 'All';
+  String get achievementsFilterAll => 'Όλα';
 
   @override
-  String get achievementsFilterEarned => 'Earned';
+  String get achievementsFilterEarned => 'Κερδισμένα';
 
   @override
-  String get achievementsFilterInProgress => 'In progress';
+  String get achievementsFilterInProgress => 'Σε εξέλιξη';
 
   @override
-  String get achievementsFilterLocked => 'Locked';
+  String get achievementsFilterLocked => 'Κλειδωμένα';
 
   @override
-  String get achievementsCategoryReading => 'Reading';
+  String get achievementsCategoryReading => 'Ανάγνωση';
 
   @override
-  String get achievementsCategoryLibrary => 'Library';
+  String get achievementsCategoryLibrary => 'Βιβλιοθήκη';
 
   @override
-  String get achievementsCategoryExploration => 'Exploration';
+  String get achievementsCategoryExploration => 'Εξερεύνηση';
 
   @override
-  String get achievementsCategoryDedication => 'Dedication';
+  String get achievementsCategoryDedication => 'Αφοσίωση';
 
   @override
-  String get achievementsCategoryDevices => 'Devices';
+  String get achievementsCategoryDevices => 'Συσκευές';
 
   @override
-  String get achievementsRarityCommon => 'Common';
+  String get achievementsRarityCommon => 'Κοινό';
 
   @override
-  String get achievementsRarityRare => 'Rare';
+  String get achievementsRarityRare => 'Σπάνιο';
 
   @override
-  String get achievementsRarityEpic => 'Epic';
+  String get achievementsRarityEpic => 'Επικό';
 
   @override
-  String get achievementsRarityLegendary => 'Legendary';
+  String get achievementsRarityLegendary => 'Θρυλικό';
 
   @override
-  String get achievementsLoadFailed => 'Couldn\'t load achievements';
+  String get achievementsLoadFailed =>
+      'Δεν ήταν δυνατή η φόρτωση των επιτευγμάτων';
 
   @override
-  String get achievementsNoneMatch => 'No achievements match this filter';
+  String get achievementsNoneMatch =>
+      'Κανένα επίτευγμα δεν ταιριάζει με αυτό το φίλτρο';
 
   @override
-  String get achievementsSecretName => 'Secret achievement';
+  String get achievementsSecretName => 'Μυστικό επίτευγμα';
 
   @override
-  String get achievementsSecretHint => 'Keep reading to reveal this one.';
+  String get achievementsSecretHint =>
+      'Συνεχίστε να διαβάζετε για να το αποκαλύψετε.';
 
   @override
   String achievementsEarnedOn(String date) {
-    return 'Earned $date';
+    return 'Κερδήθηκε $date';
   }
 
   @override
   String achievementsWhileReading(String title) {
-    return 'While reading $title';
+    return 'Κατά την ανάγνωση του $title';
   }
 
   @override
   String achievementsTierOf(int earned, int total) {
-    return 'Tier $earned of $total';
+    return 'Επίπεδο $earned από $total';
   }
 
   @override
-  String get achievementsTiers => 'Tiers';
+  String get achievementsTiers => 'Επίπεδα';
 
   @override
-  String get achievementsAllTiers => 'Every tier earned';
+  String get achievementsAllTiers => 'Όλα τα επίπεδα κερδήθηκαν';
 
   @override
   String achievementsProgress(String current, String threshold) {
@@ -12672,54 +12898,54 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String achievementsProgressBooks(String current, String threshold) {
-    return '$current / $threshold books';
+    return '$current / $threshold βιβλία';
   }
 
   @override
   String achievementsProgressPages(String current, String threshold) {
-    return '$current / $threshold pages';
+    return '$current / $threshold σελίδες';
   }
 
   @override
   String achievementsProgressHours(String current, String threshold) {
-    return '$current / $threshold hours';
+    return '$current / $threshold ώρες';
   }
 
   @override
   String achievementsProgressAnnotations(String current, String threshold) {
-    return '$current / $threshold highlights and notes';
+    return '$current / $threshold επισημάνσεις και σημειώσεις';
   }
 
   @override
   String achievementsProgressRatings(String current, String threshold) {
-    return '$current / $threshold ratings';
+    return '$current / $threshold βαθμολογίες';
   }
 
   @override
   String achievementsProgressGenres(String current, String threshold) {
-    return '$current / $threshold genres';
+    return '$current / $threshold είδη';
   }
 
   @override
   String achievementsProgressLanguages(String current, String threshold) {
-    return '$current / $threshold languages';
+    return '$current / $threshold γλώσσες';
   }
 
   @override
   String achievementsProgressDays(String current, String threshold) {
-    return '$current / $threshold days';
+    return '$current / $threshold ημέρες';
   }
 
   @override
-  String get achievementsHowToGetIt => 'How to get it';
+  String get achievementsHowToGetIt => 'Πώς να το αποκτήσετε';
 
   @override
   String achievementsHintReadingPace(int count, int days) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'You read $count hours in the last $days days.',
-      one: 'You read 1 hour in the last $days days.',
+      other: 'Διαβάσατε $count ώρες τις τελευταίες $days ημέρες.',
+      one: 'Διαβάσατε 1 ώρα τις τελευταίες $days ημέρες.',
     );
     return '$_temp0';
   }
@@ -12729,8 +12955,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'About $count days at this pace.',
-      one: 'About 1 day at this pace.',
+      other: 'Περίπου $count ημέρες με αυτόν τον ρυθμό.',
+      one: 'Περίπου 1 ημέρα με αυτόν τον ρυθμό.',
     );
     return '$_temp0';
   }
@@ -12740,8 +12966,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'About $count weeks at this pace.',
-      one: 'About 1 week at this pace.',
+      other: 'Περίπου $count εβδομάδες με αυτόν τον ρυθμό.',
+      one: 'Περίπου 1 εβδομάδα με αυτόν τον ρυθμό.',
     );
     return '$_temp0';
   }
@@ -12751,8 +12977,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'About $count months at this pace.',
-      one: 'About 1 month at this pace.',
+      other: 'Περίπου $count μήνες με αυτόν τον ρυθμό.',
+      one: 'Περίπου 1 μήνας με αυτόν τον ρυθμό.',
     );
     return '$_temp0';
   }
@@ -12762,8 +12988,9 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books from the ${decade}s are waiting on your shelves.',
-      one: '1 book from the ${decade}s is waiting on your shelves.',
+      other:
+          '$count βιβλία από τη δεκαετία του $decade περιμένουν στα ράφια σας.',
+      one: '1 βιβλίο από τη δεκαετία του $decade περιμένει στα ράφια σας.',
     );
     return '$_temp0';
   }
@@ -12773,32 +13000,32 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books from the ${century}s are waiting on your shelves.',
-      one: '1 book from the ${century}s is waiting on your shelves.',
+      other: '$count βιβλία από τον αιώνα $century περιμένουν στα ράφια σας.',
+      one: '1 βιβλίο από τον αιώνα $century περιμένει στα ράφια σας.',
     );
     return '$_temp0';
   }
 
   @override
   String achievementsHintStalled(String title, String percent, String date) {
-    return '$title is $percent read and was started on $date.';
+    return 'Το $title έχει διαβαστεί κατά $percent και ξεκίνησε στις $date.';
   }
 
   @override
   String achievementsHintStalledNoProgress(String title, String date) {
-    return '$title was started on $date.';
+    return 'Το $title ξεκίνησε στις $date.';
   }
 
   @override
-  String get achievementsHintUntitledBook => 'A book in progress';
+  String get achievementsHintUntitledBook => 'Ένα βιβλίο σε εξέλιξη';
 
   @override
   String achievementsHintNearlyFinished(int count, String percent) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books in progress are past $percent.',
-      one: '1 book in progress is past $percent.',
+      other: '$count βιβλία σε εξέλιξη έχουν ξεπεράσει το $percent.',
+      one: '1 βιβλίο σε εξέλιξη έχει ξεπεράσει το $percent.',
     );
     return '$_temp0';
   }
@@ -12808,8 +13035,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books you finished have no rating yet.',
-      one: '1 book you finished has no rating yet.',
+      other: '$count βιβλία που ολοκληρώσατε δεν έχουν ακόμη βαθμολογία.',
+      one: '1 βιβλίο που ολοκληρώσατε δεν έχει ακόμη βαθμολογία.',
     );
     return '$_temp0';
   }
@@ -12819,8 +13046,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books under $pages pages are waiting on your shelves.',
-      one: '1 book under $pages pages is waiting on your shelves.',
+      other: '$count βιβλία κάτω από $pages σελίδες περιμένουν στα ράφια σας.',
+      one: '1 βιβλίο κάτω από $pages σελίδες περιμένει στα ράφια σας.',
     );
     return '$_temp0';
   }
@@ -12830,8 +13057,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count are already in progress.',
-      one: '1 is already in progress.',
+      other: '$count είναι ήδη σε εξέλιξη.',
+      one: '1 είναι ήδη σε εξέλιξη.',
     );
     return '$_temp0';
   }
@@ -12842,8 +13069,8 @@ class AppLocalizationsEl extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          '$count books of $pages pages or more are waiting on your shelves.',
-      one: '1 book of $pages pages or more is waiting on your shelves.',
+          '$count βιβλία $pages σελίδων ή περισσότερων περιμένουν στα ράφια σας.',
+      one: '1 βιβλίο $pages σελίδων ή περισσότερων περιμένει στα ράφια σας.',
     );
     return '$_temp0';
   }
@@ -12853,15 +13080,16 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books published before $year are waiting on your shelves.',
-      one: '1 book published before $year is waiting on your shelves.',
+      other:
+          '$count βιβλία που εκδόθηκαν πριν από το $year περιμένουν στα ράφια σας.',
+      one: '1 βιβλίο που εκδόθηκε πριν από το $year περιμένει στα ράφια σας.',
     );
     return '$_temp0';
   }
 
   @override
   String achievementsHintAuthorUnread(String author, int finished, int count) {
-    return '$author: $finished finished, $count more on your shelves.';
+    return '$author: $finished ολοκληρωμένα, $count ακόμη στα ράφια σας.';
   }
 
   @override
@@ -12869,8 +13097,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books in $language are waiting on your shelves.',
-      one: '1 book in $language is waiting on your shelves.',
+      other: '$count βιβλία στα $language περιμένουν στα ράφια σας.',
+      one: '1 βιβλίο στα $language περιμένει στα ράφια σας.',
     );
     return '$_temp0';
   }
@@ -12880,8 +13108,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'You have read in $count months of $year so far.',
-      one: 'You have read in 1 month of $year so far.',
+      other: 'Έχετε διαβάσει σε $count μήνες του $year μέχρι στιγμής.',
+      one: 'Έχετε διαβάσει σε 1 μήνα του $year μέχρι στιγμής.',
     );
     return '$_temp0';
   }
@@ -12891,20 +13119,20 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$months are left.',
-      one: '$months is left.',
+      other: 'Απομένουν: $months.',
+      one: 'Απομένει: $months.',
     );
     return '$_temp0';
   }
 
   @override
   String achievementsHintNoLongBook(String pages) {
-    return 'No book on your shelves has $pages pages or more yet.';
+    return 'Κανένα βιβλίο στα ράφια σας δεν έχει ακόμη $pages σελίδες ή περισσότερες.';
   }
 
   @override
   String achievementsHintNothingBefore(String year) {
-    return 'Nothing on your shelves was published before $year.';
+    return 'Τίποτα στα ράφια σας δεν εκδόθηκε πριν από το $year.';
   }
 
   @override
@@ -12912,8 +13140,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Your shelves span only $count decades so far.',
-      one: 'Your shelves span only 1 decade so far.',
+      other: 'Τα ράφια σας καλύπτουν μόνο $count δεκαετίες μέχρι στιγμής.',
+      one: 'Τα ράφια σας καλύπτουν μόνο 1 δεκαετία μέχρι στιγμής.',
     );
     return '$_temp0';
   }
@@ -12923,890 +13151,906 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Your shelves span only $count centuries so far.',
-      one: 'Your shelves span only 1 century so far.',
+      other: 'Τα ράφια σας καλύπτουν μόνο $count αιώνες μέχρι στιγμής.',
+      one: 'Τα ράφια σας καλύπτουν μόνο 1 αιώνα μέχρι στιγμής.',
     );
     return '$_temp0';
   }
 
   @override
   String achievementsHintMissedMonth(String month, String year) {
-    return 'You did not read in $month, so $year is out of reach. The count starts again in January.';
+    return 'Δεν διαβάσατε τον μήνα $month, οπότε το $year είναι πλέον εκτός εμβέλειας. Η μέτρηση ξεκινά ξανά τον Ιανουάριο.';
   }
 
   @override
-  String get achievementsSwitch => 'Achievements';
+  String get achievementsSwitch => 'Επιτεύγματα';
 
   @override
   String get achievementsSwitchSubtitle =>
-      'Track achievements on BookOrbit. Turning this off hides them here and on the web.';
+      'Παρακολούθηση επιτευγμάτων στο BookOrbit. Αν το απενεργοποιήσετε, κρύβονται εδώ και στον ιστό.';
 
   @override
-  String get achievementsTurnedOn => 'Achievements turned on';
+  String get achievementsTurnedOn => 'Τα επιτεύγματα ενεργοποιήθηκαν';
 
   @override
-  String get achievementsTurnedOff => 'Achievements turned off';
+  String get achievementsTurnedOff => 'Τα επιτεύγματα απενεργοποιήθηκαν';
 
   @override
   String get achievementsSwitchFailed =>
-      'Couldn\'t change achievements on BookOrbit';
+      'Δεν ήταν δυνατή η αλλαγή των επιτευγμάτων στο BookOrbit';
 
   @override
-  String get downloadsFailed => 'Failed downloads';
+  String get downloadsFailed => 'Αποτυχημένες λήψεις';
 
   @override
-  String get absorbingReorderQueue => 'Reorder queue';
+  String get absorbingReorderQueue => 'Αναδιάταξη ουράς';
 
   @override
-  String get playAction => 'Play';
+  String get playAction => 'Αναπαραγωγή';
 
   @override
-  String get pauseAction => 'Pause';
+  String get pauseAction => 'Παύση';
 
   @override
-  String get rmabImportBooks => 'Import books';
+  String get rmabImportBooks => 'Εισαγωγή βιβλίων';
 
   @override
   String get rmabImportBooksSubtitle =>
-      'Search ReadMeABook and choose books to request';
+      'Αναζητήστε στο ReadMeABook και επιλέξτε βιβλία για αίτημα';
 
   @override
   String get rmabImportBooksConnectSubtitle =>
-      'Connect ReadMeABook with a URL and token first';
+      'Συνδέστε πρώτα το ReadMeABook με διεύθυνση URL και διακριτικό';
 
   @override
-  String get windowsSettingsTitle => 'Windows Settings';
+  String get windowsSettingsTitle => 'Ρυθμίσεις Windows';
 
   @override
-  String get updateCheckFrequency => 'Automatic update checks';
+  String get updateCheckFrequency => 'Αυτόματος έλεγχος ενημερώσεων';
 
   @override
   String get updateCheckFrequencySubtitle =>
-      'Checks for updates only; installation is always manual.';
+      'Ελέγχει μόνο για ενημερώσεις· η εγκατάσταση γίνεται πάντα χειροκίνητα.';
 
   @override
-  String get updateCheckOnStartup => 'On startup (once per 12 hours)';
+  String get updateCheckOnStartup => 'Κατά την εκκίνηση (μία φορά ανά 12 ώρες)';
 
   @override
-  String get updateCheckEverySixHours => 'Every 6 hours';
+  String get updateCheckEverySixHours => 'Κάθε 6 ώρες';
 
   @override
-  String get updateCheckEveryTwelveHours => 'Every 12 hours';
+  String get updateCheckEveryTwelveHours => 'Κάθε 12 ώρες';
 
   @override
-  String get updateCheckDaily => 'Daily';
+  String get updateCheckDaily => 'Καθημερινά';
 
   @override
-  String get updateCheckNever => 'Never automatically';
+  String get updateCheckNever => 'Ποτέ αυτόματα';
 
   @override
   String onLatestVersionDetail(String version) {
-    return 'You\'re on the latest version ($version)';
+    return 'Έχετε την τελευταία έκδοση ($version)';
   }
 
   @override
   String get updateCheckFailed =>
-      'Couldn\'t reach GitHub to check for updates. Check your connection and try again.';
+      'Δεν ήταν δυνατή η σύνδεση με το GitHub για έλεγχο ενημερώσεων. Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά.';
 
   @override
-  String get playlistDetailAddBooks => 'Add books to playlist';
+  String get playlistDetailAddBooks =>
+      'Προσθήκη βιβλίων στη λίστα αναπαραγωγής';
 
   @override
-  String get playlistDetailSwitchToList => 'Switch to list view';
+  String get playlistDetailSwitchToList => 'Εναλλαγή σε προβολή λίστας';
 
   @override
-  String get playlistDetailSwitchToGrid => 'Switch to grid view';
+  String get playlistDetailSwitchToGrid => 'Εναλλαγή σε προβολή πλέγματος';
 
   @override
   String get adminUploadIndexing =>
-      'Upload complete; waiting for Audiobookshelf to index...';
+      'Η μεταφόρτωση ολοκληρώθηκε· αναμονή για ευρετηρίαση από το Audiobookshelf...';
 
   @override
   String adminUploadCompletePendingIndex(String title) {
-    return 'Uploaded \"$title\"; Audiobookshelf is still indexing it';
+    return 'Μεταφορτώθηκε το «$title»· το Audiobookshelf το ευρετηριάζει ακόμη';
   }
 
   @override
   String get adminUploadPermissionDenied =>
-      'Your Audiobookshelf account does not have upload permission. Ask a server administrator to enable upload access for your account.';
+      'Ο λογαριασμός σας στο Audiobookshelf δεν έχει δικαίωμα μεταφόρτωσης. Ζητήστε από έναν διαχειριστή του διακομιστή να ενεργοποιήσει την πρόσβαση μεταφόρτωσης για τον λογαριασμό σας.';
 
   @override
-  String get uiThemeLabel => 'UI theme';
+  String get uiThemeLabel => 'Θέμα διεπαφής';
 
   @override
-  String get uiThemePickerTitle => 'Choose a look';
+  String get uiThemePickerTitle => 'Επιλέξτε εμφάνιση';
 
   @override
   String get uiThemePickerIntro =>
-      'You can change this any time in Settings > Appearance > UI theme.';
+      'Μπορείτε να το αλλάξετε οποιαδήποτε στιγμή στις Ρυθμίσεις > Εμφάνιση > Θέμα διεπαφής.';
 
   @override
-  String get uiThemePlusName => 'Standard';
+  String get uiThemePlusName => 'Στάνταρ';
 
   @override
   String get uiThemePlusDescription =>
-      'The usual Absorb Plus look, with filled panels and a soft glow from your cover colors.';
+      'Η συνηθισμένη εμφάνιση του Absorb Plus, με γεμάτα πάνελ και απαλή λάμψη από τα χρώματα των εξωφύλλων σας.';
 
   @override
-  String get uiThemeMidnightName => 'Midnight';
+  String get uiThemeMidnightName => 'Μεσάνυχτα';
 
   @override
   String get uiThemeMidnightDescription =>
-      'Pure black with thin outlines and no glow, made for OLED screens.';
+      'Καθαρό μαύρο με λεπτά περιγράμματα και χωρίς λάμψη, φτιαγμένο για οθόνες OLED.';
 
   @override
-  String get uiThemeContinue => 'Continue';
+  String get uiThemeContinue => 'Συνέχεια';
 
   @override
-  String get uiThemeFrostedName => 'Frosted';
+  String get uiThemeFrostedName => 'Παγωμένο';
 
   @override
   String get uiThemeFrostedDescription =>
-      'Soft frosted-glass panels with your cover colors glowing through.';
+      'Απαλά πάνελ από παγωμένο γυαλί με τα χρώματα των εξωφύλλων σας να λάμπουν μέσα από αυτά.';
 
   @override
-  String get uiThemeColorTitle => 'Choose a color';
+  String get uiThemeColorTitle => 'Επιλέξτε χρώμα';
 
   @override
   String get uiThemeColorIntro =>
-      'This is the same setting as Settings > Appearance > Color source.';
+      'Είναι η ίδια ρύθμιση με το Ρυθμίσεις > Εμφάνιση > Πηγή χρώματος.';
 
   @override
-  String get uiThemeColorFromCover => 'From cover';
+  String get uiThemeColorFromCover => 'Από το εξώφυλλο';
 
   @override
-  String get uiThemeBack => 'Back';
+  String get uiThemeBack => 'Πίσω';
 
   @override
-  String get uiThemeTryIt => 'Try it';
+  String get uiThemeTryIt => 'Δοκιμή';
 
   @override
   String uiThemePreviewing(String name) {
-    return 'Previewing $name';
+    return 'Προεπισκόπηση: $name';
   }
 
   @override
-  String get uiThemeKeep => 'Keep';
+  String get uiThemeKeep => 'Διατήρηση';
 
   @override
-  String get uiThemeGoBack => 'Go back';
+  String get uiThemeGoBack => 'Επιστροφή';
 
   @override
-  String get uiThemeGlass => 'Glass';
+  String get uiThemeGlass => 'Γυαλί';
 
   @override
-  String get uiThemeGlassLight => 'Light';
+  String get uiThemeGlassLight => 'Ελαφρύ';
 
   @override
-  String get uiThemeGlassMedium => 'Medium';
+  String get uiThemeGlassMedium => 'Μέτριο';
 
   @override
-  String get uiThemeGlassStrong => 'Strong';
+  String get uiThemeGlassStrong => 'Έντονο';
 
   @override
-  String get uiThemeDetails => 'Look details';
+  String get uiThemeDetails => 'Λεπτομέρειες εμφάνισης';
 
   @override
-  String get uiThemeFullCovers => 'Full-quality covers';
+  String get uiThemeFullCovers => 'Εξώφυλλα πλήρους ποιότητας';
 
   @override
-  String get uiThemeFullCoversSubtitle => 'Sharper covers that use more memory';
+  String get uiThemeFullCoversSubtitle =>
+      'Πιο καθαρά εξώφυλλα που χρησιμοποιούν περισσότερη μνήμη';
 
   @override
-  String get uiThemeExtraBadges => 'Extra cover badges';
+  String get uiThemeExtraBadges => 'Επιπλέον σήματα εξωφύλλου';
 
   @override
   String get uiThemeExtraBadgesSubtitle =>
-      'Ebook badge and the saved strip on Continue Listening';
+      'Σήμα ηλεκτρονικού βιβλίου και η λωρίδα «αποθηκευμένο» στη Συνέχεια ακρόασης';
 
   @override
-  String get uiThemeReadingShelf => 'Continue Reading as a shelf';
+  String get uiThemeReadingShelf => 'Συνέχεια ανάγνωσης ως ράφι';
 
   @override
   String get uiThemeReadingShelfSubtitle =>
-      'A normal Home shelf instead of big cards';
+      'Ένα κανονικό ράφι στην Αρχική αντί για μεγάλες κάρτες';
 
   @override
-  String get uiThemeCompactHeader => 'Compact header buttons';
+  String get uiThemeCompactHeader => 'Συμπαγή κουμπιά κεφαλίδας';
 
   @override
   String get uiThemeCompactHeaderSubtitle =>
-      'Page header buttons keep their small size';
+      'Τα κουμπιά στην κεφαλίδα της σελίδας διατηρούν το μικρό τους μέγεθος';
 
   @override
-  String get uiThemePlainWording => 'Plain wording';
+  String get uiThemePlainWording => 'Απλή διατύπωση';
 
   @override
   String get uiThemePlainWordingOnSubtitle =>
-      'Using \"Play\", \"Now Playing\", \"Finished\"';
+      'Χρήση των «Αναπαραγωγή», «Αναπαράγεται τώρα», «Ολοκληρώθηκε»';
 
   @override
   String get uiThemePlainWordingOffSubtitle =>
-      'Using \"Absorb\", \"Absorbing\", \"Fully Absorbed\"';
+      'Χρήση των «Absorb», «Absorbing», «Fully Absorbed»';
 
   @override
-  String get uiThemeSearchClassic => 'Classic';
+  String get uiThemeSearchClassic => 'Κλασικό';
 
   @override
   String whatsNewSheetTitle(String name) {
-    return 'What\'s new in $name';
+    return 'Τι νέο υπάρχει στο $name';
   }
 
   @override
   String whatsNewUpdatedFrom(String name) {
-    return 'Updated from $name';
+    return 'Ενημερώθηκε από το $name';
   }
 
   @override
   String whatsNewBuildLabel(int number) {
-    return 'build $number';
+    return 'έκδοση $number';
   }
 
   @override
-  String get whatsNewFullNotes => 'Full notes on GitHub';
+  String get whatsNewFullNotes => 'Πλήρεις σημειώσεις στο GitHub';
 
   @override
-  String get whatsNewLoading => 'Loading what\'s new';
+  String get whatsNewLoading => 'Φόρτωση των νέων';
 
   @override
-  String get whatsNewLoadFailed => 'Couldn\'t load the notes';
+  String get whatsNewLoadFailed => 'Δεν ήταν δυνατή η φόρτωση των σημειώσεων';
 
   @override
   String get whatsNewLoadFailedHint =>
-      'Check your connection, or read them on GitHub.';
+      'Ελέγξτε τη σύνδεσή σας ή διαβάστε τες στο GitHub.';
 
   @override
-  String get whatsNewOpenGitHub => 'Open on GitHub';
+  String get whatsNewOpenGitHub => 'Άνοιγμα στο GitHub';
 
   @override
-  String get settingsSeeWhatsNew => 'See what\'s new';
+  String get settingsSeeWhatsNew => 'Δείτε τι νέο υπάρχει';
 
   @override
   String get settingsSeeWhatsNewSubtitle =>
-      'The release notes for this version';
+      'Οι σημειώσεις έκδοσης για αυτήν την έκδοση';
 
   @override
-  String get windowsCloseToTray => 'Close to tray';
+  String get windowsCloseToTray => 'Κλείσιμο στην περιοχή ειδοποιήσεων';
 
   @override
   String get windowsCloseToTraySubtitle =>
-      'Closing the window keeps Absorb Plus running in the notification area. Quit from the tray icon.';
+      'Το κλείσιμο του παραθύρου διατηρεί το Absorb Plus σε λειτουργία στην περιοχή ειδοποιήσεων. Έξοδος από το εικονίδιο της περιοχής.';
 
   @override
-  String get windowsStartWithWindows => 'Start with Windows';
+  String get windowsStartWithWindows => 'Εκκίνηση με τα Windows';
 
   @override
   String get windowsStartWithWindowsSubtitle =>
-      'Open Absorb Plus when you sign in to Windows';
+      'Άνοιγμα του Absorb Plus όταν συνδέεστε στα Windows';
 
   @override
   String windowsStartWithWindowsRegistered(String command) {
-    return 'Starts: $command';
+    return 'Εκκινεί: $command';
   }
 
   @override
   String windowsStartWithWindowsOtherCopy(String command) {
-    return 'Another copy is set to start: $command. Turn on to use this copy instead.';
+    return 'Άλλο αντίγραφο έχει οριστεί να εκκινεί: $command. Ενεργοποιήστε για να χρησιμοποιηθεί αυτό το αντίγραφο.';
   }
 
   @override
   String get windowsStartupDisabledBySystem =>
-      'Switched off in Task Manager\'s Startup apps. Turn it back on there.';
+      'Απενεργοποιήθηκε στις Εφαρμογές εκκίνησης του Task Manager. Ενεργοποιήστε το ξανά εκεί.';
 
   @override
-  String get windowsStartMinimized => 'Start minimized';
+  String get windowsStartMinimized => 'Εκκίνηση ελαχιστοποιημένο';
 
   @override
   String get windowsStartMinimizedSubtitle =>
-      'When it starts with Windows, keep it in the tray (or minimized if Close to tray is off)';
+      'Όταν εκκινείται με τα Windows, παραμένει στην περιοχή ειδοποιήσεων (ή ελαχιστοποιημένο αν το Κλείσιμο στην περιοχή ειδοποιήσεων είναι ανενεργό)';
 
   @override
-  String get windowsAlwaysOnTop => 'Always on top';
+  String get windowsAlwaysOnTop => 'Πάντα στο προσκήνιο';
 
   @override
   String get windowsAlwaysOnTopSubtitle =>
-      'Keep the window above other windows';
+      'Κρατά το παράθυρο πάνω από τα άλλα παράθυρα';
 
   @override
-  String get windowsKeepAwake => 'Keep PC awake while playing or downloading';
+  String get windowsKeepAwake =>
+      'Διατήρηση του υπολογιστή ενεργού κατά την αναπαραγωγή ή λήψη';
 
   @override
   String get windowsKeepAwakeSubtitle =>
-      'Stops the PC from going to sleep. The screen can still turn off.';
+      'Εμποδίζει τον υπολογιστή να κοιμηθεί. Η οθόνη μπορεί και πάλι να σβήσει.';
 
   @override
-  String get windowsSettingFailed => 'Windows didn\'t accept that change';
+  String get windowsSettingFailed =>
+      'Τα Windows δεν αποδέχτηκαν αυτή την αλλαγή';
 
   @override
-  String get windowsGlobalHotkeys => 'Global hotkeys';
+  String get windowsGlobalHotkeys => 'Καθολικές συντομεύσεις';
 
   @override
   String get windowsGlobalHotkeysSubtitle =>
-      'Work while Absorb Plus is in the background: Ctrl+Alt+Space play/pause, Ctrl+Alt+Left/Right skip back/forward, Ctrl+Alt+Up/Down volume, Ctrl+Alt+B add bookmark';
+      'Λειτουργούν όταν το Absorb Plus είναι στο παρασκήνιο: Ctrl+Alt+Space αναπαραγωγή/παύση, Ctrl+Alt+Left/Right μετακίνηση πίσω/μπροστά, Ctrl+Alt+Up/Down ένταση, Ctrl+Alt+B προσθήκη σελιδοδείκτη';
 
   @override
   String windowsGlobalHotkeysUnavailable(String keys) {
-    return 'Taken by another app, not available: $keys';
+    return 'Χρησιμοποιούνται από άλλη εφαρμογή, μη διαθέσιμες: $keys';
   }
 
   @override
-  String get windowsTrayShow => 'Show Absorb Plus';
+  String get windowsTrayShow => 'Εμφάνιση του Absorb Plus';
 
   @override
-  String get windowsTrayQuit => 'Quit Absorb Plus';
+  String get windowsTrayQuit => 'Έξοδος από το Absorb Plus';
 
   @override
-  String get windowsTaskbarPlay => 'Play';
+  String get windowsTaskbarPlay => 'Αναπαραγωγή';
 
   @override
-  String get windowsTaskbarPause => 'Pause';
+  String get windowsTaskbarPause => 'Παύση';
 
   @override
-  String get windowsTaskbarRewind => 'Rewind';
+  String get windowsTaskbarRewind => 'Επαναφορά πίσω';
 
   @override
-  String get windowsTaskbarForward => 'Fast-forward';
+  String get windowsTaskbarForward => 'Γρήγορη προώθηση';
 
   @override
   String windowsJumpListResume(String title) {
-    return 'Resume $title';
+    return 'Συνέχεια: $title';
   }
 
   @override
   String get supportContactSubtitle =>
-      'Ask a question on the Absorb Plus GitHub';
+      'Κάντε μια ερώτηση στο GitHub του Absorb Plus';
 
   @override
-  String get githubProjectTitle => 'Absorb Plus on GitHub';
+  String get githubProjectTitle => 'Το Absorb Plus στο GitHub';
 
   @override
-  String get precacheTitle => 'Pre-load covers and book pages';
+  String get precacheTitle => 'Προφόρτωση εξωφύλλων και σελίδων βιβλίων';
 
   @override
   String get precacheSubtitle =>
-      'Fetches them in the background on Wi-Fi or a wired connection, so screens open instantly. Uses a little disk space, not memory.';
+      'Τα φορτώνει στο παρασκήνιο σε Wi-Fi ή ενσύρματη σύνδεση, ώστε οι οθόνες να ανοίγουν αμέσως. Χρησιμοποιεί λίγο χώρο στον δίσκο, όχι μνήμη.';
 
   @override
-  String get githubProjectSubtitle => 'Releases, source code and project news';
+  String get githubProjectSubtitle =>
+      'Εκδόσεις, πηγαίος κώδικας και νέα του έργου';
 
   @override
   String get supportSaveLogsSubtitle =>
-      'Save the log file to attach to a GitHub issue';
+      'Αποθηκεύστε το αρχείο καταγραφής για να το επισυνάψετε σε ένα ζήτημα στο GitHub';
 
   @override
-  String get supportSaveLogsDialogTitle => 'Save Absorb Plus logs';
+  String get supportSaveLogsDialogTitle =>
+      'Αποθήκευση καταγραφών του Absorb Plus';
 
   @override
   String supportLogsSaved(String path) {
-    return 'Logs saved to $path';
+    return 'Οι καταγραφές αποθηκεύτηκαν στο $path';
   }
 
   @override
   String supportLogsSaveFailed(String error) {
-    return 'Couldn\'t save the logs: $error';
+    return 'Δεν ήταν δυνατή η αποθήκευση των καταγραφών: $error';
   }
 
   @override
-  String get supportOpenLogsFolder => 'Open logs folder';
+  String get supportOpenLogsFolder => 'Άνοιγμα φακέλου καταγραφών';
 
   @override
   String get supportOpenLogsFolderSubtitle =>
-      'Show the log file in your file manager';
+      'Εμφάνιση του αρχείου καταγραφής στον διαχειριστή αρχείων';
 
   @override
-  String get supportOpenLogsFolderFailed => 'Couldn\'t open the logs folder';
+  String get supportOpenLogsFolderFailed =>
+      'Δεν ήταν δυνατό το άνοιγμα του φακέλου καταγραφών';
 
   @override
-  String get desktopDownloadFolderOpen => 'Open in Explorer';
+  String get desktopDownloadFolderOpen => 'Άνοιγμα στην Εξερεύνηση';
 
   @override
-  String get desktopDownloadFolderOpenLinux => 'Open folder';
+  String get desktopDownloadFolderOpenLinux => 'Άνοιγμα φακέλου';
 
   @override
-  String get desktopDownloadFolderOpenFailed => 'Couldn\'t open the folder';
+  String get desktopDownloadFolderOpenFailed =>
+      'Δεν ήταν δυνατό το άνοιγμα του φακέλου';
 
   @override
   String get desktopDownloadFolderNotWritable =>
-      'Absorb can\'t save files in that folder. Choose another one.';
+      'Το Absorb δεν μπορεί να αποθηκεύσει αρχεία σε αυτόν τον φάκελο. Επιλέξτε άλλον.';
 
   @override
   String get desktopDownloadFolderPickFailed =>
-      'Couldn\'t show the folder picker';
+      'Δεν ήταν δυνατή η εμφάνιση του επιλογέα φακέλων';
 
   @override
   String get desktopDownloadFolderNetworkPath =>
-      'Network folders (\\\\server\\share) can\'t hold downloads. Map the share to a drive letter in File Explorer, such as Z:, and choose that instead.';
+      'Οι φάκελοι δικτύου (\\\\server\\share) δεν μπορούν να φιλοξενήσουν λήψεις. Αντιστοιχίστε το κοινόχρηστο σε γράμμα μονάδας στην Εξερεύνηση αρχείων, όπως Z:, και επιλέξτε αυτό.';
 
   @override
-  String get desktopDownloadFolderDefault => 'Default folder';
+  String get desktopDownloadFolderDefault => 'Προεπιλεγμένος φάκελος';
 
   @override
-  String get bookSettingsTitle => 'Book settings';
+  String get bookSettingsTitle => 'Ρυθμίσεις βιβλίου';
 
   @override
   String bookSettingsSeries(String name) {
-    return 'Series: $name';
+    return 'Σειρά: $name';
   }
 
   @override
-  String get bookSettingsSpeed => 'Speed';
+  String get bookSettingsSpeed => 'Ταχύτητα';
 
   @override
   String get bookSettingsSpeedFromSeries =>
-      'From the last book you played in this series';
+      'Από το τελευταίο βιβλίο που παίξατε σε αυτή τη σειρά';
 
   @override
-  String get bookSettingsSkipIntro => 'Skip intro';
+  String get bookSettingsSkipIntro => 'Παράλειψη εισαγωγής';
 
   @override
   String get bookSettingsSkipIntroHint =>
-      'Only when the book starts from the beginning';
+      'Μόνο όταν το βιβλίο ξεκινά από την αρχή';
 
   @override
-  String get bookSettingsSkipOutro => 'Skip outro';
+  String get bookSettingsSkipOutro => 'Παράλειψη επιλόγου';
 
   @override
   String get bookSettingsSkipOutroHint =>
-      'Ends the book early and marks it finished';
+      'Τελειώνει το βιβλίο νωρίτερα και το σημειώνει ως ολοκληρωμένο';
 
   @override
-  String get bookSettingsSkipOff => 'Off';
+  String get bookSettingsSkipOff => 'Ανενεργή';
 
   @override
   String bookSettingsSeconds(int seconds) {
-    return '$seconds s';
+    return '$seconds δ';
   }
 
   @override
-  String get bookSettingsWholeSeries => 'Use for the whole series';
+  String get bookSettingsWholeSeries => 'Χρήση για ολόκληρη τη σειρά';
 
   @override
   String get bookSettingsWholeSeriesHint =>
-      'Intro and outro apply to every book in this series';
+      'Η εισαγωγή και ο επίλογος ισχύουν για κάθε βιβλίο αυτής της σειράς';
 
   @override
-  String get bookSettingsReset => 'Reset';
+  String get bookSettingsReset => 'Επαναφορά';
 
   @override
-  String get bookSettingsResetDone => 'Book settings reset';
+  String get bookSettingsResetDone => 'Οι ρυθμίσεις βιβλίου επαναφέρθηκαν';
 
   @override
-  String get adminDashTitle => 'Dashboard';
+  String get adminDashTitle => 'Πίνακας ελέγχου';
 
   @override
   String get adminDashSubtitle =>
-      'Who\'s listening, libraries, users and server warnings at a glance';
+      'Ποιος ακούει, βιβλιοθήκες, χρήστες και προειδοποιήσεις διακομιστή με μια ματιά';
 
   @override
-  String get adminDashNobodyListening => 'Nobody is listening right now';
+  String get adminDashNobodyListening => 'Κανείς δεν ακούει αυτή τη στιγμή';
 
   @override
   String adminDashOnlineNames(String names) {
-    return 'Online: $names';
+    return 'Συνδεδεμένοι: $names';
   }
 
   @override
-  String get adminDashListeningHistory => 'Listening history';
+  String get adminDashListeningHistory => 'Ιστορικό ακρόασης';
 
   @override
-  String get adminDashCouldNotLoad => 'Couldn\'t load this from the server';
+  String get adminDashCouldNotLoad =>
+      'Δεν ήταν δυνατή η φόρτωση από τον διακομιστή';
 
   @override
   String adminDashItemCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count items',
-      one: '1 item',
+      other: '$count στοιχεία',
+      one: '1 στοιχείο',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminDashScanAll => 'Scan all';
+  String get adminDashScanAll => 'Σάρωση όλων';
 
   @override
-  String get adminDashScanAllTitle => 'Scan all libraries?';
+  String get adminDashScanAllTitle => 'Σάρωση όλων των βιβλιοθηκών;';
 
   @override
   String get adminDashScanAllContent =>
-      'Audiobookshelf will look for new, changed and missing files in every library. This can take a while on big libraries.';
+      'Το Audiobookshelf θα αναζητήσει νέα, αλλαγμένα και ελλείποντα αρχεία σε κάθε βιβλιοθήκη. Σε μεγάλες βιβλιοθήκες μπορεί να πάρει λίγη ώρα.';
 
   @override
   String adminDashScanAllStarted(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Scan started for $count libraries',
-      one: 'Scan started for 1 library',
+      other: 'Η σάρωση ξεκίνησε για $count βιβλιοθήκες',
+      one: 'Η σάρωση ξεκίνησε για 1 βιβλιοθήκη',
     );
     return '$_temp0';
   }
 
   @override
   String adminDashScanAllPartial(int failed, int total) {
-    return '$failed of $total scans couldn\'t start';
+    return '$failed από $total σαρώσεις δεν μπόρεσαν να ξεκινήσουν';
   }
 
   @override
-  String get adminDashNoLibraries => 'No libraries yet';
+  String get adminDashNoLibraries => 'Δεν υπάρχουν βιβλιοθήκες ακόμη';
 
   @override
-  String get adminDashBackUpNow => 'Back up now';
+  String get adminDashBackUpNow => 'Δημιουργία αντιγράφου τώρα';
 
   @override
   String adminDashLastBackup(String time) {
-    return 'Last backup $time';
+    return 'Τελευταίο αντίγραφο $time';
   }
 
   @override
-  String get adminDashNoBackups => 'No backups yet';
+  String get adminDashNoBackups => 'Δεν υπάρχουν αντίγραφα ασφαλείας ακόμη';
 
   @override
-  String get adminDashManageUsers => 'Manage users';
+  String get adminDashManageUsers => 'Διαχείριση χρηστών';
 
   @override
-  String get adminDashNeverSeen => 'Never signed in';
+  String get adminDashNeverSeen => 'Δεν έχει συνδεθεί ποτέ';
 
   @override
-  String get adminDashDisabled => 'Disabled';
+  String get adminDashDisabled => 'Απενεργοποιημένος';
 
   @override
-  String get adminDashLocked => 'Locked';
+  String get adminDashLocked => 'Κλειδωμένος';
 
   @override
-  String get adminDashServerWarnings => 'Server warnings';
+  String get adminDashServerWarnings => 'Προειδοποιήσεις διακομιστή';
 
   @override
-  String get adminDashNoProblems => 'No warnings or errors in today\'s log';
+  String get adminDashNoProblems =>
+      'Καμία προειδοποίηση ή σφάλμα στην καταγραφή της σημερινής ημέρας';
 
   @override
-  String get adminDashAllLogs => 'All server logs';
+  String get adminDashAllLogs => 'Όλες οι καταγραφές διακομιστή';
 
   @override
-  String get tailscaleBuiltInTitle => 'Tailscale (built-in)';
+  String get tailscaleBuiltInTitle => 'Tailscale (ενσωματωμένο)';
 
   @override
   String get tailscaleChip => 'Tailscale';
 
   @override
-  String get desktopShortcutsTitle => 'Keyboard shortcuts';
+  String get desktopShortcutsTitle => 'Συντομεύσεις πληκτρολογίου';
 
   @override
   String get desktopShortcutsSubtitle =>
-      'Playback, speed, search, and navigation controls';
+      'Έλεγχοι αναπαραγωγής, ταχύτητας, αναζήτησης και πλοήγησης';
 
   @override
-  String get desktopShortcutsClose => 'Close';
+  String get desktopShortcutsClose => 'Κλείσιμο';
 
   @override
-  String get tailscaleConnect => 'Connect with Tailscale';
+  String get tailscaleConnect => 'Σύνδεση με Tailscale';
 
   @override
   String get tailscaleConnectHint =>
-      'Opens the Tailscale login in your browser';
+      'Ανοίγει τη σύνδεση Tailscale στο πρόγραμμα περιήγησής σας';
 
   @override
-  String get tailscaleTurnOff => 'Turn off';
+  String get tailscaleTurnOff => 'Απενεργοποίηση';
 
   @override
   String get tailscaleCardPitch =>
-      'Reach your server on your tailnet without turning on the Tailscale VPN';
+      'Φτάστε στον διακομιστή σας μέσα από το tailnet σας χωρίς να ενεργοποιήσετε το VPN του Tailscale';
 
   @override
   String get tailscaleIntro =>
-      'Reach a server on your tailnet without turning on the Tailscale app\'s VPN. Absorb joins your tailnet as its own device, for its own connections only. Test feature, off by default.';
+      'Φτάστε σε έναν διακομιστή στο tailnet σας χωρίς να ενεργοποιήσετε το VPN της εφαρμογής Tailscale. Το Absorb προστίθεται στο tailnet σας ως ξεχωριστή συσκευή, μόνο για τις δικές του συνδέσεις. Δοκιμαστική λειτουργία, ανενεργή από προεπιλογή.';
 
   @override
-  String get tailscaleUseSwitch => 'Use built-in Tailscale';
+  String get tailscaleUseSwitch => 'Χρήση ενσωματωμένου Tailscale';
 
   @override
-  String get tailscaleStatusOff => 'Off';
+  String get tailscaleStatusOff => 'Ανενεργό';
 
   @override
-  String get tailscaleStatusStarting => 'Connecting…';
+  String get tailscaleStatusStarting => 'Σύνδεση…';
 
   @override
   String get tailscaleStatusNeedsLogin =>
-      'Sign in to add this device to your tailnet';
+      'Συνδεθείτε για να προσθέσετε αυτή τη συσκευή στο tailnet σας';
 
   @override
   String get tailscaleStatusNeedsApproval =>
-      'Waiting for an admin to approve this device';
+      'Αναμονή για έγκριση αυτής της συσκευής από διαχειριστή';
 
   @override
   String tailscaleStatusConnected(String user) {
-    return 'Connected as $user';
+    return 'Συνδεδεμένο ως $user';
   }
 
   @override
-  String get tailscaleStatusConnectedNoUser => 'Connected';
+  String get tailscaleStatusConnectedNoUser => 'Συνδεδεμένο';
 
   @override
   String tailscaleStatusError(String error) {
-    return 'Problem: $error';
+    return 'Πρόβλημα: $error';
   }
 
   @override
-  String get tailscaleNotIncluded => 'Not included in this build';
+  String get tailscaleNotIncluded => 'Δεν περιλαμβάνεται σε αυτή την έκδοση';
 
   @override
-  String get tailscaleSignIn => 'Sign in with Tailscale';
+  String get tailscaleSignIn => 'Σύνδεση με Tailscale';
 
   @override
   String get tailscaleSignInNoLink =>
-      'No sign-in link yet. Try again in a moment.';
+      'Δεν υπάρχει ακόμη σύνδεσμος σύνδεσης. Δοκιμάστε ξανά σε λίγο.';
 
   @override
   String get tailscaleToggleFailed =>
-      'Couldn\'t turn built-in Tailscale on or off. Try again.';
+      'Δεν ήταν δυνατή η ενεργοποίηση ή απενεργοποίηση του ενσωματωμένου Tailscale. Δοκιμάστε ξανά.';
 
   @override
-  String get tailscaleSignOut => 'Sign out of Tailscale';
+  String get tailscaleSignOut => 'Αποσύνδεση από το Tailscale';
 
   @override
   String tailscaleDeviceAddress(String address) {
-    return 'This device: $address';
+    return 'Αυτή η συσκευή: $address';
   }
 
   @override
   String tailscaleServerRouted(String server) {
-    return 'Your server ($server) is reached through Tailscale.';
+    return 'Ο διακομιστής σας ($server) προσεγγίζεται μέσω Tailscale.';
   }
 
   @override
   String tailscaleServerNotRouted(String server) {
-    return 'Your server ($server) isn\'t a tailnet address, so it\'s reached as usual. If it is on your tailnet, add its host name below.';
+    return 'Ο διακομιστής σας ($server) δεν είναι διεύθυνση tailnet, οπότε προσεγγίζεται κανονικά. Αν βρίσκεται στο tailnet σας, προσθέστε το όνομα κεντρικού υπολογιστή του παρακάτω.';
   }
 
   @override
-  String get tailscaleExtraHostsLabel => 'Other tailnet host names';
+  String get tailscaleExtraHostsLabel =>
+      'Άλλα ονόματα κεντρικών υπολογιστών tailnet';
 
   @override
   String get tailscaleExtraHostsHint => 'nas, abs.example.com';
 
   @override
   String get tailscaleExtraHostsHelp =>
-      'Addresses in 100.64.0.0/10 and names ending in .ts.net or your tailnet\'s MagicDNS name always go through Tailscale. Separate names with commas.';
+      'Οι διευθύνσεις στο 100.64.0.0/10 και τα ονόματα που τελειώνουν σε .ts.net ή στο όνομα MagicDNS του tailnet σας περνούν πάντα μέσω Tailscale. Χωρίστε τα ονόματα με κόμματα.';
 
   @override
   String playerChapterEndsAt(String time) {
-    return 'Chapter ends at $time';
+    return 'Το κεφάλαιο τελειώνει στις $time';
   }
 
   @override
   String playerEndsAt(String time) {
-    return 'Ends at $time';
+    return 'Τελειώνει στις $time';
   }
 
   @override
   String lastPlayedOnDevice(String device, String ago) {
-    return 'Last played on $device · $ago';
+    return 'Τελευταία αναπαραγωγή στο $device · $ago';
   }
 
   @override
   String lastPlayedElsewhere(String ago) {
-    return 'Last played on another device · $ago';
+    return 'Τελευταία αναπαραγωγή σε άλλη συσκευή · $ago';
   }
 
   @override
-  String get opmlExportAction => 'Export OPML';
+  String get opmlExportAction => 'Εξαγωγή OPML';
 
   @override
-  String get opmlExportDialogTitle => 'Save podcast feeds as OPML';
+  String get opmlExportDialogTitle => 'Αποθήκευση ροών podcast ως OPML';
 
   @override
   String opmlExportSaved(String path) {
-    return 'OPML saved to $path';
+    return 'Το OPML αποθηκεύτηκε στο $path';
   }
 
   @override
-  String get opmlExportDownloaded => 'OPML downloaded';
+  String get opmlExportDownloaded => 'Το OPML λήφθηκε';
 
   @override
-  String get opmlExportFailed => 'Couldn\'t export the OPML file';
+  String get opmlExportFailed => 'Δεν ήταν δυνατή η εξαγωγή του αρχείου OPML';
 
   @override
-  String get bookCopySaveAction => 'Save a copy…';
+  String get bookCopySaveAction => 'Αποθήκευση αντιγράφου…';
 
   @override
-  String get bookCopyDialogTitle => 'Save a copy of this book';
+  String get bookCopyDialogTitle => 'Αποθήκευση αντιγράφου αυτού του βιβλίου';
 
   @override
-  String get bookCopySaving => 'Saving a copy…';
+  String get bookCopySaving => 'Αποθήκευση αντιγράφου…';
 
   @override
   String bookCopySaved(String path) {
-    return 'Copy saved to $path';
+    return 'Το αντίγραφο αποθηκεύτηκε στο $path';
   }
 
   @override
-  String get bookCopyFailed => 'Couldn\'t save a copy of this book';
+  String get bookCopyFailed =>
+      'Δεν ήταν δυνατή η αποθήκευση αντιγράφου αυτού του βιβλίου';
 
   @override
-  String get exclusiveAudioTitle => 'Exclusive audio';
+  String get exclusiveAudioTitle => 'Αποκλειστικός ήχος';
 
   @override
   String get exclusiveAudioSubtitle =>
-      'Fixes crackling or jumpy volume by skipping Windows sound effects. Other apps are muted while Absorb plays. Restart Absorb to apply.';
+      'Διορθώνει τους κρότους ή τις ασταθείς εντάσεις παρακάμπτοντας τα ηχητικά εφέ των Windows. Οι άλλες εφαρμογές σιγάζουν όσο παίζει το Absorb. Επανεκκινήστε το Absorb για εφαρμογή.';
 
   @override
   String homeRecentlyAddedNewBadge(int count) {
-    return '$count new';
+    return '$count νέα';
   }
 
   @override
   String seekUndoBackTo(String time) {
-    return 'Back to $time';
+    return 'Πίσω στο $time';
   }
 
   @override
   String get autoDownloadNextInSeries =>
-      'Download the next book in the series automatically';
+      'Αυτόματη λήψη του επόμενου βιβλίου της σειράς';
 
   @override
   String get autoDownloadNextInSeriesSubtitle =>
-      'When the book you\'re playing is 80% done or has less than an hour left. Follows the Wi-Fi only setting.';
+      'Όταν το βιβλίο που ακούτε έχει ολοκληρωθεί κατά 80% ή απομένει λιγότερο από μία ώρα. Ακολουθεί τη ρύθμιση «Μόνο Wi-Fi».';
 
   @override
-  String get emptyStateBrowseLibrary => 'Browse library';
+  String get emptyStateBrowseLibrary => 'Περιήγηση στη βιβλιοθήκη';
 
   @override
-  String get emptyStateClearSearch => 'Clear search';
+  String get emptyStateClearSearch => 'Διαγραφή αναζήτησης';
 
   @override
-  String get statsNoListeningYet => 'No listening yet';
+  String get statsNoListeningYet => 'Καμία ακρόαση ακόμη';
 
   @override
   String get desktopShortcutQuickSwitcher =>
-      'Quick switcher: find books or go anywhere';
+      'Γρήγορη εναλλαγή: βρείτε βιβλία ή μεταβείτε οπουδήποτε';
 
   @override
-  String get desktopShortcutHelp => 'Show keyboard shortcuts';
+  String get desktopShortcutHelp => 'Εμφάνιση συντομεύσεων πληκτρολογίου';
 
   @override
-  String get quickSwitcherTooltip => 'Quick switcher (Ctrl+K)';
+  String get quickSwitcherTooltip => 'Γρήγορη εναλλαγή (Ctrl+K)';
 
   @override
-  String get quickSwitcherHint => 'Search this library or type a command';
+  String get quickSwitcherHint =>
+      'Αναζητήστε σε αυτή τη βιβλιοθήκη ή πληκτρολογήστε μια εντολή';
 
   @override
-  String get quickSwitcherNoResults => 'No matches';
+  String get quickSwitcherNoResults => 'Κανένα αποτέλεσμα';
 
   @override
-  String get quickSwitcherGoHome => 'Go to Home';
+  String get quickSwitcherGoHome => 'Μετάβαση στην Αρχική';
 
   @override
-  String get quickSwitcherGoLibrary => 'Go to Library';
+  String get quickSwitcherGoLibrary => 'Μετάβαση στη Βιβλιοθήκη';
 
   @override
-  String get quickSwitcherGoAbsorbing => 'Go to Absorbing';
+  String get quickSwitcherGoAbsorbing => 'Μετάβαση στο Absorbing';
 
   @override
-  String get quickSwitcherGoStats => 'Go to Stats';
+  String get quickSwitcherGoStats => 'Μετάβαση στα Στατιστικά';
 
   @override
-  String get quickSwitcherGoSettings => 'Go to Settings';
+  String get quickSwitcherGoSettings => 'Μετάβαση στις Ρυθμίσεις';
 
   @override
-  String get quickSwitcherGoDownloads => 'Go to Downloads';
+  String get quickSwitcherGoDownloads => 'Μετάβαση στις Λήψεις';
 
   @override
-  String get quickSwitcherPlayPause => 'Play / pause';
+  String get quickSwitcherPlayPause => 'Αναπαραγωγή / παύση';
 
   @override
-  String get quickSwitcherSleepTimer => 'Sleep timer';
+  String get quickSwitcherSleepTimer => 'Χρονοδιακόπτης ύπνου';
 
   @override
-  String get quickSwitcherKindAction => 'Action';
+  String get quickSwitcherKindAction => 'Ενέργεια';
 
   @override
-  String get quickSwitcherKindBook => 'Book';
+  String get quickSwitcherKindBook => 'Βιβλίο';
 
   @override
   String get quickSwitcherKindPodcast => 'Podcast';
 
   @override
-  String get quickSwitcherKindSeries => 'Series';
+  String get quickSwitcherKindSeries => 'Σειρά';
 
   @override
-  String get quickSwitcherKindAuthor => 'Author';
+  String get quickSwitcherKindAuthor => 'Συγγραφέας';
 
   @override
-  String get alphabetScrollerLabel => 'Jump to a letter';
+  String get alphabetScrollerLabel => 'Μετάβαση σε γράμμα';
 
   @override
-  String get stepperDecrease => 'Decrease';
+  String get stepperDecrease => 'Μείωση';
 
   @override
-  String get stepperIncrease => 'Increase';
+  String get stepperIncrease => 'Αύξηση';
 
   @override
-  String get statsStreakKeepGoing => 'Listen 5 minutes today to keep it going';
+  String get statsStreakKeepGoing => 'Ακούστε 5 λεπτά σήμερα για να συνεχιστεί';
 
   @override
-  String get statsStreakHowTo => 'Listen 5 minutes a day to build a streak';
+  String get statsStreakHowTo =>
+      'Ακούστε 5 λεπτά την ημέρα για να χτίσετε σερί';
 
   @override
-  String get statsDailyGoalSheetTitle => 'Daily listening goal';
+  String get statsDailyGoalSheetTitle => 'Ημερήσιος στόχος ακρόασης';
 
   @override
   String get statsDailyGoalSheetBody =>
-      'A ring on the streak card fills as you listen today.';
+      'Ένας δακτύλιος στην κάρτα σερί γεμίζει καθώς ακούτε σήμερα.';
 
   @override
-  String get statsDailyGoalSet => 'Set a daily goal';
+  String get statsDailyGoalSet => 'Ορισμός ημερήσιου στόχου';
 
   @override
-  String get statsDailyGoalEdit => 'Change daily goal';
+  String get statsDailyGoalEdit => 'Αλλαγή ημερήσιου στόχου';
 
   @override
-  String get statsMonthListened => 'Listened';
+  String get statsMonthListened => 'Ακροάσεις';
 
   @override
-  String get statsMonthTime => 'Time';
+  String get statsMonthTime => 'Χρόνος';
 
   @override
-  String get statsMonthTopBook => 'Top book';
+  String get statsMonthTopBook => 'Κορυφαίο βιβλίο';
 
   @override
   String bookmarksSearchResults(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count results',
-      one: '1 result',
-      zero: 'No results',
+      other: '$count αποτελέσματα',
+      one: '1 αποτέλεσμα',
+      zero: 'Κανένα αποτέλεσμα',
     );
     return '$_temp0';
   }
 
   @override
-  String get bookmarksViewMenu => 'Sort and group';
+  String get bookmarksViewMenu => 'Ταξινόμηση και ομαδοποίηση';
 
   @override
-  String get bookmarksViewByBook => 'By book';
+  String get bookmarksViewByBook => 'Ανά βιβλίο';
 
   @override
-  String get bookmarksViewNewest => 'Newest first';
+  String get bookmarksViewNewest => 'Πρώτα τα νεότερα';
 
   @override
-  String get bookmarksViewPosition => 'By position';
+  String get bookmarksViewPosition => 'Ανά θέση';
 
   @override
-  String get bookmarksExportAction => 'Export bookmarks';
+  String get bookmarksExportAction => 'Εξαγωγή σελιδοδεικτών';
 
   @override
-  String get bookmarksExportDialogTitle => 'Save bookmarks as Markdown';
+  String get bookmarksExportDialogTitle =>
+      'Αποθήκευση σελιδοδεικτών ως Markdown';
 
   @override
   String bookmarksExportSaved(String path) {
-    return 'Bookmarks saved to $path';
+    return 'Οι σελιδοδείκτες αποθηκεύτηκαν στο $path';
   }
 
   @override
-  String get bookmarksExportDownloaded => 'Bookmarks downloaded';
+  String get bookmarksExportDownloaded => 'Οι σελιδοδείκτες λήφθηκαν';
 
   @override
-  String get bookmarksExportFailed => 'Couldn\'t export the bookmarks';
+  String get bookmarksExportFailed =>
+      'Δεν ήταν δυνατή η εξαγωγή των σελιδοδεικτών';
 }
