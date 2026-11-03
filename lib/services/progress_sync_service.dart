@@ -748,6 +748,10 @@ class ProgressSyncService {
     // sessions on the server.
     if (_isFlushingOfflineListening) return;
     _isFlushingOfflineListening = true;
+    // Absorb Plus: the ledger belongs to the account active now, and [api]
+    // is its session. After a switch ScopedPrefs reads the next account's
+    // keys, so the run stops rather than clear (or resend) the wrong ones.
+    final scope = _scope;
     try {
       final pending = List<String>.from(
           await ScopedPrefs.getStringList('pending_offline_listening'));
@@ -758,10 +762,12 @@ class ProgressSyncService {
       debugPrint('[Sync] Flushing offline listening time for ${pending.length} item(s)');
 
       for (final itemId in pending) {
+        if (_scope != scope) break;
         final key = 'offline_listening_$itemId';
         final seconds = await ScopedPrefs.getInt(key) ?? 0;
         if (seconds <= 0) {
           await _serial(() async {
+            if (_scope != scope) return;
             if ((await ScopedPrefs.getInt(key) ?? 0) <= 0) await ScopedPrefs.remove(key);
           });
           flushed.add(itemId);
@@ -828,7 +834,15 @@ class ProgressSyncService {
           // instead of being wiped by an outright remove.
           // Serialized with addOfflineListeningTime, so a tick landing here
           // can't write back the pre-subtraction total.
+          if (_scope != scope) {
+            // Sent for the old account, whose ledger is out of reach now:
+            // its time stays banked and goes up again (as an overwrite of
+            // the same local session) once it is active again.
+            debugPrint('[Sync] Account changed while sending offline listening - stopping');
+            break;
+          }
           final cleared = await _serial(() async {
+          if (_scope != scope) return false;
           final current = await ScopedPrefs.getInt(key) ?? 0;
           final remaining = current - seconds;
           if (remaining > 0) {
@@ -839,6 +853,7 @@ class ProgressSyncService {
             return true;
           }
           });
+          if (_scope != scope) break;
           if (cleared) flushed.add(itemId);
           await OfflineListeningUpload.settled(itemId);
         } catch (e) {
@@ -858,8 +873,9 @@ class ProgressSyncService {
       // Only remove successfully flushed items from pending list
       // (Absorb Plus: and only while nothing was added for them since, or
       // the new seconds would sit in their key with the item off the list.)
-      if (flushed.isNotEmpty) {
+      if (flushed.isNotEmpty && _scope == scope) {
         await _serial(() async {
+        if (_scope != scope) return;
         final still = <String>{};
         for (final id in flushed) {
           if ((await ScopedPrefs.getInt('offline_listening_$id') ?? 0) > 0) still.add(id);
