@@ -10,8 +10,12 @@
 //   gets another's answer (a refreshed token simply misses).
 // - The cached value is the response body; each caller decodes its own
 //   copy, so a caller changing its map can't change anyone else's.
-// - Any write request, socket item event, sign-out or account switch clears
-//   it, and an answer that was in flight across a clear is not stored.
+// - A write request that may change items, a sign-out or an account switch
+//   clears it; a socket item or progress event, or a write to one item,
+//   forgets just that item. An answer that was in flight across either is
+//   not stored. Playback session syncs and token refreshes leave it alone
+//   (audit S10): they used to wipe it every few seconds while playing, and
+//   the server's progress event for the item forgets it anyway.
 
 typedef LibraryItemCacheKey = ({
   String server,
@@ -37,6 +41,17 @@ class LibraryItemRequestCache {
   final Map<LibraryItemCacheKey, Future<String?>> _inFlight = {};
   int _generation = 0;
 
+  /// A counter stamped on every fetch start and every [forgetItem], so a
+  /// fetch can tell whether its item was forgotten while it ran without one
+  /// item's event throwing away every other item's answer.
+  int _tick = 0;
+  final Map<String, int> _forgotAt = {};
+
+  /// More forgotten items than this: drop the stamps and move the global
+  /// generation instead (every running fetch then goes unstored, which is
+  /// always safe), so the map can't grow without bound.
+  static const _maxForgotten = 256;
+
   int get length => _bodies.length;
 
   /// The body for [key]: from the cache, from a request already running, or
@@ -57,8 +72,12 @@ class LibraryItemRequestCache {
       if (running != null) return running;
     }
     final generation = _generation;
+    final startedAt = ++_tick;
     final future = load().then((body) {
-      if (body != null && generation == _generation) _store(key, body);
+      final forgotten = (_forgotAt[key.itemId] ?? 0) > startedAt;
+      if (body != null && generation == _generation && !forgotten) {
+        _store(key, body);
+      }
       return body;
     });
     _inFlight[key] = future;
@@ -78,9 +97,13 @@ class LibraryItemRequestCache {
     }
   }
 
-  /// Forgets one item (a socket event said it changed).
+  /// Forgets one item (a socket event said it changed, or a write to it).
   void forgetItem(String itemId) {
-    _generation++;
+    if (_forgotAt.length >= _maxForgotten && !_forgotAt.containsKey(itemId)) {
+      _forgotAt.clear();
+      _generation++;
+    }
+    _forgotAt[itemId] = ++_tick;
     _bodies.removeWhere((k, _) => k.itemId == itemId);
     _inFlight.removeWhere((k, _) => k.itemId == itemId);
   }
@@ -88,7 +111,47 @@ class LibraryItemRequestCache {
   /// Forgets everything (a write request, sign-out, account switch).
   void clear() {
     _generation++;
+    _forgotAt.clear();
     _bodies.clear();
     _inFlight.clear();
+  }
+
+  /// What a POST, PATCH or DELETE to [url] makes stale (audit S10).
+  ///
+  /// - Playback session syncs, closes and local sessions: nothing. They run
+  ///   every few seconds while playing; the progress they carry reaches
+  ///   cached items through the server's progress event ([forgetItem]).
+  /// - Sign-in, sign-out and token refresh: nothing (a new token misses).
+  /// - `/api/items/:id/...`, `/api/podcasts/:id/...`,
+  ///   `/api/tools/item/:id/...` and a PATCH of `/api/me/progress/:itemId`:
+  ///   that item only.
+  /// - Anything else (batch edits, scans, unknown paths): everything.
+  void invalidateForWrite(String method, Uri url) {
+    final seg = url.pathSegments;
+    final api = seg.indexOf('api');
+    if (api < 0) {
+      final last = seg.isEmpty ? '' : seg.last;
+      if (const {'login', 'logout', 'refresh'}.contains(last)) return;
+      clear();
+      return;
+    }
+    final rest = seg.sublist(api + 1);
+    String? at(int i) => i < rest.length && rest[i].isNotEmpty ? rest[i] : null;
+    switch (at(0)) {
+      case 'session':
+        return;
+      case 'items' || 'podcasts':
+        final id = at(1);
+        if (id != null && id != 'batch') return forgetItem(id);
+      case 'tools':
+        final id = at(1) == 'item' ? at(2) : null;
+        if (id != null) return forgetItem(id);
+      case 'me':
+        // PATCH /api/me/progress/:itemId names the item; DELETE names the
+        // progress record, so that one clears everything.
+        final id = method == 'PATCH' && at(1) == 'progress' ? at(2) : null;
+        if (id != null && id != 'batch') return forgetItem(id);
+    }
+    clear();
   }
 }

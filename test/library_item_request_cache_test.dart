@@ -116,6 +116,56 @@ void main() {
       expect(await cache.fetch(key('a'), () async => 'new'), 'new');
     });
 
+    test('S10 forgetting one item keeps other answers in flight', () async {
+      final cache = LibraryItemRequestCache();
+      final gateA = Completer<String?>();
+      final gateB = Completer<String?>();
+      final a = cache.fetch(key('a'), () => gateA.future);
+      final b = cache.fetch(key('b'), () => gateB.future);
+      cache.forgetItem('a');
+      gateA.complete('old a');
+      gateB.complete('b');
+      await a;
+      await b;
+      var loads = 0;
+      expect(await cache.fetch(key('b'), () async => '${++loads}'), 'b',
+          reason: 'b was stored');
+      expect(await cache.fetch(key('a'), () async => 'new a'), 'new a',
+          reason: 'a was not');
+      expect(loads, 0);
+    });
+
+    test('S10 which writes forget what', () async {
+      final cache = LibraryItemRequestCache();
+      Future<void> seed() async {
+        cache.clear();
+        for (final id in ['li_1', 'li_2']) {
+          await cache.fetch(key(id), () async => id);
+        }
+      }
+
+      Future<int> afterWrite(String method, String path) async {
+        await seed();
+        cache.invalidateForWrite(method, Uri.parse('$server$path'));
+        return cache.length;
+      }
+
+      expect(await afterWrite('POST', '/api/session/s1/sync'), 2);
+      expect(await afterWrite('POST', '/api/session/local'), 2);
+      expect(await afterWrite('POST', '/auth/refresh'), 2);
+      expect(await afterWrite('PATCH', '/api/items/li_1/media'), 1);
+      expect(await afterWrite('PATCH', '/api/me/progress/li_1'), 1);
+      expect(await afterWrite('POST', '/api/tools/item/li_1/encode-m4b'), 1);
+      expect(await afterWrite('DELETE', '/api/me/progress/prog_9'), 0);
+      expect(await afterWrite('POST', '/api/items/batch/update'), 0);
+      expect(await afterWrite('POST', '/api/libraries/lib/scan'), 0);
+      // A server under a sub-path.
+      await seed();
+      cache.invalidateForWrite(
+          'PATCH', Uri.parse('https://host.example/abs/api/items/li_2/media'));
+      expect(cache.length, 1);
+    });
+
     test('keeps at most maxEntries answers', () async {
       final cache = LibraryItemRequestCache(maxEntries: 2);
       for (final id in ['a', 'b', 'c']) {

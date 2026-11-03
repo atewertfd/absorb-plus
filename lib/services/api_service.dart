@@ -689,18 +689,23 @@ class ApiService {
   }
 
   Future<http.Response> _post(Uri url, {Map<String, String>? headers, Object? body}) {
-    LibraryItemRequestCache.instance.clear(); // a write may change an item
-    return (_httpClient ?? _sharedClient).post(url, headers: headers, body: body);
+    // A write may change an item: forget what it touches before it is sent
+    // and again once it is answered (S10, library_item_request_cache.dart).
+    LibraryItemRequestCache.instance.invalidateForWrite('POST', url);
+    return (_httpClient ?? _sharedClient).post(url, headers: headers, body: body)
+        .whenComplete(() => LibraryItemRequestCache.instance.invalidateForWrite('POST', url));
   }
 
   Future<http.Response> _patch(Uri url, {Map<String, String>? headers, Object? body}) {
-    LibraryItemRequestCache.instance.clear();
-    return (_httpClient ?? _sharedClient).patch(url, headers: headers, body: body);
+    LibraryItemRequestCache.instance.invalidateForWrite('PATCH', url);
+    return (_httpClient ?? _sharedClient).patch(url, headers: headers, body: body)
+        .whenComplete(() => LibraryItemRequestCache.instance.invalidateForWrite('PATCH', url));
   }
 
   Future<http.Response> _delete(Uri url, {Map<String, String>? headers}) {
-    LibraryItemRequestCache.instance.clear();
-    return (_httpClient ?? _sharedClient).delete(url, headers: headers);
+    LibraryItemRequestCache.instance.invalidateForWrite('DELETE', url);
+    return (_httpClient ?? _sharedClient).delete(url, headers: headers)
+        .whenComplete(() => LibraryItemRequestCache.instance.invalidateForWrite('DELETE', url));
   }
 
   /// Credential-presence diagnostic only. Never include token characters,
