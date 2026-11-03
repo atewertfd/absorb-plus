@@ -50,6 +50,7 @@ import '../screens/transcription_settings_screen.dart';
 import '../main.dart' show applyThemeMode, applyTrustAllCerts, applyFlatBackground, applyColorSource, applyManualSeed, applyGradientIntensity, applyUseColorEverywhere, applyEinkModeTheme, applyOrientationLock, localeNotifier, flatNotifier, gradientIntensityNotifier, snappyTransitionsNotifier;
 import '../services/wording.dart';
 import '../utils/share_origin.dart';
+import '../utils/test_build.dart'; // Absorb Plus
 import '../widgets/settings_search.dart';
 import 'settings_search_index.dart';
 import 'settings_search_extras.dart'; // fork
@@ -4819,7 +4820,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       onTap: () => Navigator.push(context, MaterialPageRoute(
                         builder: (_) => const TranscriptionSettingsScreen())),
                     ),
-                    const DeveloperSettingsTile(), // fork
+                    if (kTestBuild) const DeveloperSettingsTile(), // fork
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -4968,7 +4969,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
 
                 // ── Version Info ── (fork: 7 taps turn on Developer mode)
-                Center(child: GestureDetector(onTap: () => onVersionLineTapped(context), child: Row(
+                Center(child: GestureDetector(onTap: kTestBuild ? () => onVersionLineTapped(context) : null, child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(

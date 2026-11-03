@@ -84,6 +84,7 @@ import '../utils/fork_platform.dart';
 import 'rebuild_snapshots.dart';
 import 'stats_tab_refresh.dart';
 import '../utils/cover_palette.dart';
+import '../utils/test_build.dart'; // Absorb Plus
 import '../widgets/quick_switcher_sources.dart'; // Absorb Plus
 import '../widgets/desktop_shortcut_help.dart'; // Absorb Plus
 import '../widgets/developer_mode_tiles.dart'; // Absorb Plus
@@ -466,7 +467,7 @@ class _AppShellState extends State<AppShell>
     if (!mounted) return;
     await UiThemePicker.showIfUnchosen(context);
     if (!mounted) return;
-    await TestChannelLaunchPrompt.showIfNewer(context); // Absorb Plus
+    if (kTestBuild) await TestChannelLaunchPrompt.showIfNewer(context); // Absorb Plus
   }
 
   Future<void> _loadPodcastTabPrefs() async {
@@ -548,7 +549,8 @@ class _AppShellState extends State<AppShell>
 
   static const _isGithubBuild = bool.fromEnvironment('GITHUB_BUILD');
 
-  static bool get _updatesEnabled => _isGithubBuild || Platform.isWindows;
+  // The test app updates only through its test channel (Absorb Plus).
+  static bool get _updatesEnabled => !kTestBuild && (_isGithubBuild || Platform.isWindows);
 
   void _checkForUpdate() async {
     if (!_updatesEnabled || _updateDialogOpen) return;

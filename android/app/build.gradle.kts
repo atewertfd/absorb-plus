@@ -76,7 +76,7 @@ android {
         create("dev") {
             dimension = "distribution"
             applicationIdSuffix = ".dev"
-            resValue("string", "app_name", "Absorb Dev")
+            resValue("string", "app_name", "Absorb Plus Test")
             proguardFiles("proguard-flutter-keep.pro")
         }
         // GMS-free build for F-Droid: no Chromecast, Wear bridge, or in-app updater.

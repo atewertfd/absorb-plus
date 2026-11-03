@@ -125,6 +125,7 @@ class TestChannelService {
   );
 
   static const _isGithubBuild = bool.fromEnvironment('GITHUB_BUILD');
+  // Only the Absorb Plus Test app (dev flavor) installs test builds.
   static const _isPlayStoreBuild = bool.fromEnvironment('PLAYSTORE_BUILD');
 
   /// Tests set this to pretend to be (or not be) a supported build.

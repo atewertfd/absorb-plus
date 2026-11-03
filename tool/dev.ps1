@@ -364,17 +364,19 @@ switch ($Command) {
       }
       Invoke-Step -Name 'flutter-pub-get' -Run { & $flutter pub get }
       Invoke-Step -Name 'apk-local' -Run {
-        & $flutter build apk --release --no-pub --flavor github --target-platform android-arm64 --dart-define=GITHUB_BUILD=true
+        # The "Absorb Plus Test" app: dev flavor (own app id, installs beside
+        # the normal app) with Developer mode and the test channel compiled in.
+        & $flutter build apk --release --no-pub --flavor dev --target-platform android-arm64 --dart-define=GITHUB_BUILD=true --dart-define=ABSORB_TEST_BUILD=true
       }
-      $apk = Get-ChildItem 'build\app\outputs\flutter-apk' -Filter '*github-release*.apk' |
+      $apk = Get-ChildItem 'build\app\outputs\flutter-apk' -Filter '*dev-release*.apk' |
         Sort-Object LastWriteTime -Descending | Select-Object -First 1
       if (-not $apk) { throw 'The build produced no APK.' }
       Invoke-Step -Name 'apk-signature' -Run { python tool/ci/verify_apk_signature.py $apk.FullName }
       $dest = Join-Path $BetaDir 'Android'
       New-Item -ItemType Directory -Force -Path $dest | Out-Null
-      Copy-Item $apk.FullName (Join-Path $dest 'Absorb Plus beta.apk') -Force
+      Copy-Item $apk.FullName (Join-Path $dest 'Absorb Plus Test.apk') -Force
       Write-BetaNotes -AndroidRun 'local'
-      Write-Host "APK ready: $(Join-Path $dest 'Absorb Plus beta.apk')" -ForegroundColor Green
+      Write-Host "APK ready: $(Join-Path $dest 'Absorb Plus Test.apk')" -ForegroundColor Green
       if (-not $NoPublish) {
         $headSha = (git rev-parse HEAD).Trim()
         Publish-TestChannel -ApkPath $apk.FullName -Version (Get-PubspecVersion) -Commit $headSha
@@ -433,7 +435,9 @@ switch ($Command) {
     Copy-Item $apk.FullName (Join-Path $dest 'Absorb Plus beta.apk') -Force
     Write-BetaNotes -AndroidRun $runId
     Write-Host "APK ready: $(Join-Path $dest 'Absorb Plus beta.apk')" -ForegroundColor Green
-    if (-not $NoPublish) {
+    # CI builds the normal app (github flavor), not the Absorb Plus Test app,
+    # so it never goes to the test channel; test builds come from -Local.
+    if ($false) {
       # The version of the commit CI built (GitHub's branch head), when this
       # checkout has it; otherwise the local pubspec.yaml.
       $builtVersion = Get-PubspecVersion
