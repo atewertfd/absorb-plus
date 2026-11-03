@@ -287,13 +287,18 @@ void main() {
     }
 
     // The sheet does real file IO (the write check), so the tap and its
-    // follow-up run on the real clock, then the frame is pumped.
-    Future<void> tapAndWait(WidgetTester tester, String text) async {
-      await tester.runAsync(() async {
-        await tester.tap(find.text(text));
-        await Future<void>.delayed(const Duration(milliseconds: 500));
-      });
-      await tester.pump();
+    // follow-up run on the real clock. Instead of a fixed wait (flaky when
+    // the full suite loads the machine), pump until [done] holds, up to 10 s.
+    Future<void> tapAndWait(WidgetTester tester, String text,
+        bool Function() done) async {
+      await tester.runAsync(() => tester.tap(find.text(text)));
+      final deadline = DateTime.now().add(const Duration(seconds: 10));
+      while (true) {
+        await tester.runAsync(
+            () => Future<void>.delayed(const Duration(milliseconds: 20)));
+        await tester.pump();
+        if (done() || DateTime.now().isAfter(deadline)) break;
+      }
     }
 
     Future<void> expireToasts(WidgetTester tester) =>
@@ -312,7 +317,8 @@ void main() {
         expect(find.text(l.desktopDownloadFolderOpen), findsOneWidget);
         expect(find.text(l.resetToDefault), findsNothing);
 
-        await tapAndWait(tester, l.chooseFolder);
+        await tapAndWait(
+            tester, l.chooseFolder, () => s.desktopDownloadDir == tmp.path);
         await expireToasts(tester);
 
         expect(s.desktopDownloadDir, tmp.path);
@@ -322,7 +328,8 @@ void main() {
         expect(find.text(l.desktopDownloadFolderDefault), findsNothing);
         expect(find.text(l.resetToDefault), findsOneWidget);
 
-        await tapAndWait(tester, l.resetToDefault);
+        await tapAndWait(
+            tester, l.resetToDefault, () => s.desktopDownloadDir == null);
         await expireToasts(tester);
         expect(s.desktopDownloadDir, isNull);
         expect(find.text(l.desktopDownloadFolderDefault), findsOneWidget);
@@ -339,7 +346,8 @@ void main() {
             ({String? title, String? initialDirectory}) async =>
                 '${tmp.path}/does-not-exist';
         await pumpSheet(tester, s, labels);
-        await tapAndWait(tester, l.chooseFolder);
+        await tapAndWait(tester, l.chooseFolder,
+            () => find.text(l.desktopDownloadFolderNotWritable).evaluate().isNotEmpty);
         expect(find.text(l.desktopDownloadFolderNotWritable), findsOneWidget);
         await tester.pump(const Duration(seconds: 5));
         expect(s.desktopDownloadDir, isNull);
@@ -356,7 +364,8 @@ void main() {
         DesktopDownloadFolder.picker =
             ({String? title, String? initialDirectory}) async => r'\\nas\books';
         await pumpSheet(tester, s, labels);
-        await tapAndWait(tester, l.chooseFolder);
+        await tapAndWait(tester, l.chooseFolder,
+            () => find.text(l.desktopDownloadFolderNetworkPath).evaluate().isNotEmpty);
         expect(find.text(l.desktopDownloadFolderNetworkPath), findsOneWidget);
         await tester.pump(const Duration(seconds: 5));
         expect(s.desktopDownloadDir, isNull);
@@ -374,7 +383,8 @@ void main() {
             ({String? title, String? initialDirectory}) async => null;
         await pumpSheet(tester, s, labels);
         expect(find.text(l.desktopDownloadFolderOpenLinux), findsOneWidget);
-        await tapAndWait(tester, l.chooseFolder);
+        // Nothing changes on a cancelled picker, so there's nothing to wait for.
+        await tapAndWait(tester, l.chooseFolder, () => true);
         await expireToasts(tester);
         expect(s.desktopDownloadDir, isNull);
 
