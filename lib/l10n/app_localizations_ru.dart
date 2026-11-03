@@ -13656,6 +13656,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Fixes crackling or jumpy volume by skipping Windows sound effects. Other apps are muted while Absorb plays. Restart Absorb to apply.';
 
   @override
+  String get exclusiveAudioFallback =>
+      'Your sound device refused exclusive audio, so Absorb is playing in normal mode';
+
+  @override
   String homeRecentlyAddedNewBadge(int count) {
     return '$count new';
   }

@@ -50,6 +50,7 @@ import 'screens/login_screen.dart';
 import 'screens/app_shell.dart';
 import 'widgets/auth_loading_screen.dart';
 import 'widgets/beta_logging_notice.dart';
+import 'widgets/exclusive_audio_tile.dart'; // fork
 import 'widgets/setup_link_login.dart';
 import 'widgets/book_detail_sheet.dart';
 import 'utils/app_motion.dart';
@@ -270,6 +271,7 @@ void main() async {
   ReadListenSync.instance.start();
   NextInSeriesDownloader.start(); // fork; does nothing until turned on
   TailscaleService.trustSelfSigned = () => trustAllCerts; // fork
+  installExclusiveAudioFallbackNotice(rootNavigatorKey); // fork; Windows only
   unawaited(TailscaleService.instance.init()); // fork; no-op unless turned on
   BookOrbitApiService.placeReadingSpot = NarrationService.readingSpotSeconds;
   BookOrbitApiService.keptNarration = NarrationService.instance.localOverlay;
