@@ -2095,6 +2095,9 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   /// load whether a newer one has started since (account or library switch).
   String? _personalizedInFlightLibrary;
   int _personalizedGeneration = 0;
+  // Fork (C10): server answers applied to Home. An empty answer leaves the
+  // shelves empty too, so emptiness can't tell the saved copy it came last.
+  int _personalizedAnswers = 0;
 
   Future<void> loadPersonalizedView({bool force = false}) async {
     final existing = _personalizedInFlight;
@@ -2206,9 +2209,11 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     final libraryId = _selectedLibraryId;
     final scope = UserAccountService().activeScopeKey;
     if (libraryId == null || scope.isEmpty) return;
+    final answers = _personalizedAnswers;
     final snapshot = await HomeShelfSnapshot.instance.load(scope, libraryId);
     if (snapshot == null ||
         snapshot.isEmpty ||
+        answers != _personalizedAnswers ||
         _personalizedSections.isNotEmpty ||
         _selectedLibraryId != libraryId ||
         UserAccountService().activeScopeKey != scope ||
@@ -2279,6 +2284,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         return;
       }
       _personalizedSections = _withoutJustHidden(view);
+      _personalizedAnswers++;
       _registerSectionEntities(_personalizedSections);
       // Saved only under the account the request was made for. (Not compared
       // by ApiService: startup replaces it once while this request runs, and
