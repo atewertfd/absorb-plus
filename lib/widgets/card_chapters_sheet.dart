@@ -7,6 +7,7 @@ import '../screens/app_shell.dart';
 import '../services/audio_player_service.dart';
 import '../services/chromecast_service.dart';
 import 'absorbing_shared.dart';
+import 'chapter_search_list.dart';
 
 void showChaptersSheet({
   required BuildContext context,
@@ -57,9 +58,12 @@ void showChaptersSheet({
             child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(2)))),
           Text(l.chaptersCount(chapters.length), style: tt.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
-          Expanded(child: ListView.builder(
-            controller: sc, itemCount: chapters.length,
-            itemBuilder: (_, i) {
+          Expanded(child: ChapterSearchList( // Absorb Plus: search 15+ chapters
+            chapters: chapters, fallbackTitle: (i) => l.chapterNumber(i + 1),
+            builder: (_, shown) => ListView.builder(
+            controller: sc, itemCount: shown.length,
+            itemBuilder: (_, j) {
+              final i = shown[j];
               final ch = chapters[i] as Map<String, dynamic>;
               final chTitle = ch['title'] as String? ?? l.chapterNumber(i + 1);
               final start = (ch['start'] as num?)?.toDouble() ?? 0;
@@ -133,7 +137,7 @@ void showChaptersSheet({
                 },
               );
             },
-          )),
+          ))),
         ]),
       );
       },

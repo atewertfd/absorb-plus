@@ -7494,5 +7494,10 @@
   "bookmarksExportSaved": "Bookmarks saved to {path}",
   "@bookmarksExportSaved": {"placeholders": {"path": {"type": "String"}}},
   "bookmarksExportDownloaded": "Bookmarks downloaded",
-  "bookmarksExportFailed": "Couldn't export the bookmarks"
+  "bookmarksExportFailed": "Couldn't export the bookmarks",
+  "chapterSearchHint": "Search chapters or type a time (1:23:00)",
+  "chapterSearchNoResults": "No chapters match",
+  "dropUploadNotAllowed": "Your account can't upload to this server",
+  "dropUploadNothingUsable": "None of the dropped files can be uploaded",
+  "dropUploadAlreadyOpen": "Finish or close the open upload first"
 }

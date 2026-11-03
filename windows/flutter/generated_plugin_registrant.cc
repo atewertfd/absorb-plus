@@ -9,6 +9,7 @@
 #include <app_links/app_links_plugin_c_api.h>
 #include <audio_service_win/audio_service_win_plugin_c_api.h>
 #include <connectivity_plus/connectivity_plus_windows_plugin.h>
+#include <desktop_drop/desktop_drop_plugin.h>
 #include <desktop_webview_window/desktop_webview_window_plugin.h>
 #include <flutter_inappwebview_windows/flutter_inappwebview_windows_plugin_c_api.h>
 #include <media_kit_libs_windows_audio/media_kit_libs_windows_audio_plugin_c_api.h>
@@ -24,6 +25,8 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("AudioServiceWinPluginCApi"));
   ConnectivityPlusWindowsPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("ConnectivityPlusWindowsPlugin"));
+  DesktopDropPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("DesktopDropPlugin"));
   DesktopWebviewWindowPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("DesktopWebviewWindowPlugin"));
   FlutterInappwebviewWindowsPluginCApiRegisterWithRegistrar(

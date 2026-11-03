@@ -14075,4 +14075,21 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get bookmarksExportFailed =>
       'Δεν ήταν δυνατή η εξαγωγή των σελιδοδεικτών';
+
+  @override
+  String get chapterSearchHint => 'Search chapters or type a time (1:23:00)';
+
+  @override
+  String get chapterSearchNoResults => 'No chapters match';
+
+  @override
+  String get dropUploadNotAllowed =>
+      'Your account can\'t upload to this server';
+
+  @override
+  String get dropUploadNothingUsable =>
+      'None of the dropped files can be uploaded';
+
+  @override
+  String get dropUploadAlreadyOpen => 'Finish or close the open upload first';
 }
