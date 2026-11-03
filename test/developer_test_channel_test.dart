@@ -29,7 +29,7 @@ Map<String, dynamic> _release({
       {
         'name': name,
         'browser_download_url':
-            'https://github.com/atewertfd/absorb-plus/releases/download/test-channel/$name',
+            'https://github.com/atewertfd/absorb-plus-test-builds/releases/download/test-channel/$name',
       },
   ],
 };

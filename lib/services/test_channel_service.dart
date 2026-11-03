@@ -8,8 +8,9 @@ import '../utils/fork_platform.dart';
 import 'update_checker_service.dart';
 import 'update_policy.dart';
 
-/// The test channel (Absorb Plus): one rolling GitHub pre-release on the fork,
-/// tag `test-channel`, that `tool/dev.ps1 apk` refreshes with the newest
+/// The test channel (Absorb Plus): one rolling GitHub pre-release in the
+/// separate public repo `atewertfd/absorb-plus-test-builds`, tag
+/// `test-channel`, that `tool/dev.ps1 apk` refreshes with the newest
 /// signed test APK (`absorb-plus-test-<version>+<build>.apk`) and its notes.
 /// The normal updater ignores it (only `v*` tags are releases).
 
@@ -117,7 +118,7 @@ class TestChannelService {
        _installedVersion =
            installedVersion ?? UpdateCheckerService.currentInstalledVersion;
 
-  static const repo = 'atewertfd/absorb-plus';
+  static const repo = 'atewertfd/absorb-plus-test-builds';
   static const tag = 'test-channel';
   static final Uri releaseUri = Uri.parse(
     'https://api.github.com/repos/$repo/releases/tags/$tag',

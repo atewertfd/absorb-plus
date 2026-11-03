@@ -210,15 +210,15 @@ function Get-PubspecVersion {
   $line = Select-String -Path pubspec.yaml -Pattern '^version:\s*(\S+)' | Select-Object -First 1
   return $line.Matches[0].Groups[1].Value
 }
-# The test channel: one rolling GitHub pre-release on the fork, tag
-# "test-channel" (not v*, so release.yml never runs and the in-app updater
-# ignores it). Developer mode > Test channel in the Android app installs the
+# The test channel: one rolling GitHub pre-release, tag "test-channel", in the
+# separate public repo atewertfd/absorb-plus-test-builds (owner, 2026-11-03),
+# so the main repo's Releases page only shows real betas and releases. Developer mode > Test channel in the Android app installs the
 # APK from it. Puts this APK there as absorb-plus-test-<version>+<build>.apk,
 # then removes older APKs and sets the notes to "What's new". Touches no other
 # release or tag and never marks anything Latest. Skip with -NoPublish.
 function Publish-TestChannelCore {
   param([string]$ApkPath, [string]$Version, [string]$Commit)
-  $repo = 'atewertfd/absorb-plus'
+  $repo = 'atewertfd/absorb-plus-test-builds'
   $tag = 'test-channel'
   if ($Version -notmatch '^\d+\.\d+\.\d+\+\d+$') { throw "Unexpected version for the test channel: $Version" }
   $name = "absorb-plus-test-$Version.apk"
