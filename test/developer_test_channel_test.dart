@@ -143,15 +143,12 @@ void main() {
       await tester.pump(const Duration(seconds: 5));
     });
 
-    testWidgets('the Developer entry shows only while it is on', (
+    testWidgets('the Developer entry is always shown, no taps needed', (
       tester,
     ) async {
       await tester.pumpWidget(
         _app(const Scaffold(body: Column(children: [DeveloperSettingsTile()]))),
       );
-      await tester.pump();
-      expect(find.text('Developer'), findsNothing);
-      await DeveloperMode.setEnabled(true);
       await tester.pump();
       expect(find.text('Developer'), findsOneWidget);
     });

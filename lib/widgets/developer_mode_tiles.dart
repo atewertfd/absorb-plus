@@ -22,8 +22,9 @@ Future<void> onVersionLineTapped(BuildContext context) async {
   );
 }
 
-/// The Developer entry in Settings > Advanced, shown only while Developer
-/// mode is on. Brings its own divider so the hook in Settings is one line.
+/// The Developer entry in Settings > Advanced. Always shown (owner request,
+/// 2026-11-03: no hidden taps needed; the test channel code is the gate).
+/// Brings its own divider so the hook in Settings is one line.
 class DeveloperSettingsTile extends StatefulWidget {
   const DeveloperSettingsTile({super.key});
 
@@ -43,7 +44,6 @@ class _DeveloperSettingsTileState extends State<DeveloperSettingsTile> {
     return ValueListenableBuilder<bool>(
       valueListenable: DeveloperMode.enabled,
       builder: (context, on, _) {
-        if (!on) return const SizedBox.shrink();
         final l = AppLocalizations.of(context)!;
         final cs = Theme.of(context).colorScheme;
         final tt = Theme.of(context).textTheme;
