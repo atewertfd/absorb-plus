@@ -41,6 +41,9 @@ bool FlutterWindow::OnCreate() {
   shell_->SetForwardedLaunchHandler([this](const std::wstring& args) {
     if (jump_list_) jump_list_->HandleForwardedLaunch(args);
   });
+  shell_->SetExitStartedHandler([this]() {
+    if (hotkeys_) hotkeys_->UnregisterAll();
+  });
 
   flutter_controller_->engine()->SetNextFrameCallback([&]() {
     // Normally shown; minimized or left in the tray for --minimized.
