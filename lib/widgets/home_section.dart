@@ -118,18 +118,23 @@ class HomeSection extends StatelessWidget {
             behavior: onTitleTap != null ? HitTestBehavior.opaque : HitTestBehavior.deferToChild,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
+              child: LayoutBuilder(builder: (context, box) => Row( // fork: long titles ellipsize on phones
                 children: [
                   Icon(icon, size: 16, color: cs.primary.withValues(alpha: 0.7)),
                   const SizedBox(width: 8),
-                  Text(
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: shelfTitleMaxWidth(box.maxWidth,
+                        badge: sectionId == RecentlyAddedSeen.sectionId, chevron: onTitleTap != null)),
+                    child: Text(
                     title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: tt.titleSmall?.copyWith(
                       fontWeight: FontWeight.w500,
                       color: cs.onSurface.withValues(alpha: 0.8),
                       letterSpacing: 0.3,
                     ),
-                  ),
+                  )),
                   const RecentlyAddedBadge(), // fork: "N new"
                   if (onTitleTap != null) ...[
                     const SizedBox(width: 4),
@@ -144,7 +149,7 @@ class HomeSection extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
+              )),
             ),
           ),
           const SizedBox(height: 12),

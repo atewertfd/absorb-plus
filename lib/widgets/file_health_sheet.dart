@@ -85,16 +85,23 @@ class _FileHealthSheetState extends State<FileHealthSheet> {
   }
 
   Future<void> _checkLocal() async {
-    final paths = await (widget.localPaths ?? _downloadedPaths)(widget.itemId);
-    if (paths == null || paths.isEmpty || !mounted) return;
-    setState(() => _checkingLocal = true);
-    final stats = await (widget.statLocal ??
-        (p) => FileHealthCheck.statLocalFiles(p, skip: (path) => DesktopDownloadFolder.isOnMissingDrive(path)))(paths);
-    if (!mounted) return;
-    setState(() {
-      _report = FileHealthCheck.check(widget.item, local: stats);
-      _checkingLocal = false;
-    });
+    // A failed local check (download records unreadable, a drive gone) keeps
+    // the server's report rather than leaving the spinner up for good.
+    try {
+      final paths = await (widget.localPaths ?? _downloadedPaths)(widget.itemId);
+      if (paths == null || paths.isEmpty || !mounted) return;
+      setState(() => _checkingLocal = true);
+      final stats = await (widget.statLocal ??
+          (p) => FileHealthCheck.statLocalFiles(p, skip: (path) => DesktopDownloadFolder.isOnMissingDrive(path)))(paths);
+      if (!mounted) return;
+      setState(() {
+        _report = FileHealthCheck.check(widget.item, local: stats);
+        _checkingLocal = false;
+      });
+    } catch (e) {
+      debugPrint('[FileHealth] Local check failed: ${e.runtimeType}');
+      if (mounted && _checkingLocal) setState(() => _checkingLocal = false);
+    }
   }
 
   static Future<List<String>?> _downloadedPaths(String itemId) async {

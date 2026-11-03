@@ -68,6 +68,25 @@ void main() {
     await tester.pumpAndSettle();
   });
 
+  testWidgets('a local check that fails keeps the server report and stops the spinner', (tester) async {
+    await tester.pumpWidget(MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: Scaffold(
+        body: FileHealthSheet(
+          itemId: 'li',
+          item: _fixture('healthy_book'),
+          localPaths: (_) async => const ['/dl/Part 01.mp3'],
+          statLocal: (_) async => throw const FileSystemException('drive gone'),
+        ),
+      ),
+    ));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(find.text('All 3 files look fine'), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
   test('short durations keep their seconds', () {
     expect(fileHealthDuration(30.4), '30s');
     expect(fileHealthDuration(-245), '4m 5s');

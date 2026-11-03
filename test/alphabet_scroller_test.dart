@@ -32,6 +32,38 @@ void main() {
     expect(alphabetJumpIndex(down, 'A', descending: true), isNull);
   });
 
+  test('more Latin letters fold, other scripts and numbers file under #', () {
+    expect(alphabetLetterOf('Æsop'), 'A');
+    expect(alphabetLetterOf('Œuvres'), 'O');
+    expect(alphabetLetterOf('ßtraße'), 'S');
+    expect(alphabetLetterOf('İstanbul'), 'I');
+    expect(alphabetLetterOf('Ğazi'), 'G');
+    expect(alphabetLetterOf('Ștefan'), 'S');
+    expect(alphabetLetterOf('Ţara'), 'T');
+    expect(alphabetLetterOf('Ľudovít'), 'L');
+    expect(alphabetLetterOf('Đorđe'), 'D');
+    expect(alphabetLetterOf('Ελληνικά'), '#');
+    expect(alphabetLetterOf('Война и мир'), '#');
+    expect(alphabetLetterOf('ノルウェイの森'), '#');
+    expect(alphabetLetterOf('42'), '#');
+  });
+
+  test('titles in other scripts at either end never catch a missing letter',
+      () {
+    // A server sorts by code point: digits first, Greek, Cyrillic and
+    // Japanese after Z. They all file under '#'.
+    final up = ['#', 'A', 'C', 'X', '#', '#'];
+    expect(alphabetJumpIndex(up, 'B'), 2);
+    expect(alphabetJumpIndex(up, 'Y'), isNull);
+    expect(alphabetJumpIndex(up, '#'), 0);
+
+    // Descending puts them first: a missing Y goes to X, not to them.
+    final down = ['#', '#', 'X', 'C', 'A', '#'];
+    expect(alphabetJumpIndex(down, 'Y', descending: true), 2);
+    expect(alphabetJumpIndex(down, 'B', descending: true), 4);
+    expect(alphabetJumpIndex(down, '#', descending: true), 0);
+  });
+
   test('only title and author sorts get a rail', () {
     expect(librarySortHasAlphabet(LibrarySort.alphabetical), isTrue);
     expect(librarySortHasAlphabet(LibrarySort.authorName), isTrue);

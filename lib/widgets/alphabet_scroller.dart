@@ -18,19 +18,24 @@ const alphabetScrollerLetters = [
 const alphabetScrollerMinItems = 40;
 
 const _accents = {
-  'A': 'ÀÁÂÃÄÅĀĂĄ',
-  'C': 'ÇĆČ',
-  'D': 'Ď',
-  'E': 'ÈÉÊËĒĖĘĚ',
-  'I': 'ÌÍÎÏĪĮ',
-  'L': 'Ł',
-  'N': 'ÑŃŇ',
-  'O': 'ÒÓÔÕÖØŌŐ',
-  'R': 'Ř',
-  'S': 'ŚŠŞ',
-  'T': 'Ť',
-  'U': 'ÙÚÛÜŪŮŰ',
-  'Y': 'ÝŸ',
+  'A': 'ÀÁÂÃÄÅĀĂĄÆ',
+  'C': 'ÇĆČĈĊ',
+  'D': 'ĎĐ',
+  'E': 'ÈÉÊËĒĖĘĚĔ',
+  'G': 'ĞĜĠĢ',
+  'H': 'ĤĦ',
+  'I': 'ÌÍÎÏĪĮİĨĬ',
+  'J': 'Ĵ',
+  'K': 'Ķ',
+  'L': 'ŁĹĻĽĿ',
+  'N': 'ÑŃŇŅ',
+  'O': 'ÒÓÔÕÖØŌŐŎŒ',
+  'R': 'ŘŔŖ',
+  'S': 'ŚŠŞŜȘßẞ',
+  'T': 'ŤŢȚŦ',
+  'U': 'ÙÚÛÜŪŮŰŨŬŲ',
+  'W': 'Ŵ',
+  'Y': 'ÝŸŶ',
   'Z': 'ŹŻŽ',
 };
 
@@ -39,7 +44,9 @@ const _accents = {
 String alphabetLetterOf(String? text) {
   final trimmed = (text ?? '').trimLeft();
   if (trimmed.isEmpty) return '#';
-  final first = String.fromCharCode(trimmed.runes.first).toUpperCase();
+  var first = String.fromCharCode(trimmed.runes.first).toUpperCase();
+  // 'ß' upper-cases to 'SS' on the web.
+  if (first.length > 1 && first.codeUnitAt(0) < 0x80) first = first[0];
   if (first.length == 1 &&
       first.codeUnitAt(0) >= 0x41 &&
       first.codeUnitAt(0) <= 0x5A) {
@@ -56,6 +63,8 @@ int _rank(String letter) => alphabetScrollerLetters.indexOf(letter);
 /// Where the rail sends [letter] in a list whose items file under
 /// [letters]: the first item at that letter, else the first one past it in
 /// list order. Null when every item comes before it (more may still load).
+/// '#' items never stand in for a missing letter: titles in other scripts
+/// sort after Z by code point, so they turn up at either end of the list.
 int? alphabetJumpIndex(
   List<String> letters,
   String letter, {
@@ -65,6 +74,7 @@ int? alphabetJumpIndex(
   if (exact >= 0) return exact;
   final target = _rank(letter);
   for (var i = 0; i < letters.length; i++) {
+    if (letters[i] == '#') continue;
     final rank = _rank(letters[i]);
     if (descending ? rank < target : rank > target) return i;
   }

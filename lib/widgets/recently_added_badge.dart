@@ -224,3 +224,15 @@ class RecentlyAddedBadge extends StatelessWidget {
     );
   }
 }
+
+/// The widest a Home shelf title may get in a header row [rowWidth] wide,
+/// leaving room for its icon, the "N new" pill when [badge] (the Recently
+/// added shelf), the chevron when [chevron] and a stub of the divider line.
+/// Long titles (collection names, translations) ellipsize instead of
+/// overflowing on a phone; titles that fit are untouched.
+double shelfTitleMaxWidth(double rowWidth,
+    {bool badge = false, bool chevron = false}) {
+  if (!rowWidth.isFinite) return double.infinity;
+  final reserved = 16 + 8 + (badge ? 80 : 0) + (chevron ? 20 : 0) + 12 + 8;
+  return (rowWidth - reserved).clamp(0, double.infinity).toDouble();
+}
