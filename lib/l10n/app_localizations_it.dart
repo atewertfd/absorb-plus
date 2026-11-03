@@ -14336,4 +14336,94 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get quickSwitcherKeywordsSurprise => 'random pick shuffle';
+
+  @override
+  String get developerModeOn => 'Developer mode on';
+
+  @override
+  String get developerModeAlreadyOn => 'Developer mode is already on';
+
+  @override
+  String get developerTitle => 'Developer';
+
+  @override
+  String get developerSubtitle => 'Test builds and tools for development';
+
+  @override
+  String get developerModeSwitch => 'Developer mode';
+
+  @override
+  String get developerModeSwitchSubtitle =>
+      'Turning it off hides this page. Tap the version 7 times to bring it back.';
+
+  @override
+  String get testChannelTitle => 'Test channel';
+
+  @override
+  String get testChannelSubtitle => 'Install the newest test build';
+
+  @override
+  String get testChannelUnavailable =>
+      'Test builds are only for the Android GitHub version.';
+
+  @override
+  String get testChannelCodeLabel => 'Test channel code';
+
+  @override
+  String get testChannelUnlock => 'Unlock';
+
+  @override
+  String get testChannelUnlocked => 'Test channel unlocked';
+
+  @override
+  String get testChannelWrongCode => 'That code isn\'t right';
+
+  @override
+  String get testChannelLaunchCheck => 'Check for test builds on launch';
+
+  @override
+  String get testChannelLaunchCheckSubtitle =>
+      'Asks to install a newer test build when the app starts';
+
+  @override
+  String get testChannelWarning =>
+      'Test builds are unfinished and can break things. They replace the installed app and keep your data.';
+
+  @override
+  String testChannelInstalled(String version) {
+    return 'Installed: $version';
+  }
+
+  @override
+  String testChannelNewest(String version) {
+    return 'Newest test build: $version';
+  }
+
+  @override
+  String get testChannelNone => 'No test build is up yet';
+
+  @override
+  String get testChannelUpToDate => 'Up to date';
+
+  @override
+  String get testChannelInstall => 'Install';
+
+  @override
+  String get testChannelCheckNow => 'Check now';
+
+  @override
+  String get testChannelNotes => 'What\'s in it';
+
+  @override
+  String get testBuildAvailable => 'Test build available';
+
+  @override
+  String testBuildDialogContent(String latest, String current) {
+    return 'Test build $latest is out.\n\nYou are on $current.';
+  }
+
+  @override
+  String testBuildPackageLabel(int build) {
+    return 'Test build $build';
+  }
 }

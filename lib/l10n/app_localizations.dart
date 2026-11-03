@@ -24008,6 +24008,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'random pick shuffle'**
   String get quickSwitcherKeywordsSurprise;
+
+  /// No description provided for @developerModeOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer mode on'**
+  String get developerModeOn;
+
+  /// No description provided for @developerModeAlreadyOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer mode is already on'**
+  String get developerModeAlreadyOn;
+
+  /// No description provided for @developerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer'**
+  String get developerTitle;
+
+  /// No description provided for @developerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Test builds and tools for development'**
+  String get developerSubtitle;
+
+  /// No description provided for @developerModeSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer mode'**
+  String get developerModeSwitch;
+
+  /// No description provided for @developerModeSwitchSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Turning it off hides this page. Tap the version 7 times to bring it back.'**
+  String get developerModeSwitchSubtitle;
+
+  /// No description provided for @testChannelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Test channel'**
+  String get testChannelTitle;
+
+  /// No description provided for @testChannelSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Install the newest test build'**
+  String get testChannelSubtitle;
+
+  /// No description provided for @testChannelUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Test builds are only for the Android GitHub version.'**
+  String get testChannelUnavailable;
+
+  /// No description provided for @testChannelCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Test channel code'**
+  String get testChannelCodeLabel;
+
+  /// No description provided for @testChannelUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock'**
+  String get testChannelUnlock;
+
+  /// No description provided for @testChannelUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Test channel unlocked'**
+  String get testChannelUnlocked;
+
+  /// No description provided for @testChannelWrongCode.
+  ///
+  /// In en, this message translates to:
+  /// **'That code isn\'t right'**
+  String get testChannelWrongCode;
+
+  /// No description provided for @testChannelLaunchCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check for test builds on launch'**
+  String get testChannelLaunchCheck;
+
+  /// No description provided for @testChannelLaunchCheckSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Asks to install a newer test build when the app starts'**
+  String get testChannelLaunchCheckSubtitle;
+
+  /// No description provided for @testChannelWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Test builds are unfinished and can break things. They replace the installed app and keep your data.'**
+  String get testChannelWarning;
+
+  /// No description provided for @testChannelInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Installed: {version}'**
+  String testChannelInstalled(String version);
+
+  /// No description provided for @testChannelNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest test build: {version}'**
+  String testChannelNewest(String version);
+
+  /// No description provided for @testChannelNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No test build is up yet'**
+  String get testChannelNone;
+
+  /// No description provided for @testChannelUpToDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to date'**
+  String get testChannelUpToDate;
+
+  /// No description provided for @testChannelInstall.
+  ///
+  /// In en, this message translates to:
+  /// **'Install'**
+  String get testChannelInstall;
+
+  /// No description provided for @testChannelCheckNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Check now'**
+  String get testChannelCheckNow;
+
+  /// No description provided for @testChannelNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s in it'**
+  String get testChannelNotes;
+
+  /// No description provided for @testBuildAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Test build available'**
+  String get testBuildAvailable;
+
+  /// No description provided for @testBuildDialogContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Test build {latest} is out.\n\nYou are on {current}.'**
+  String testBuildDialogContent(String latest, String current);
+
+  /// No description provided for @testBuildPackageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Test build {build}'**
+  String testBuildPackageLabel(int build);
 }
 
 class _AppLocalizationsDelegate

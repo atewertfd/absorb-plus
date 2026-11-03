@@ -79,6 +79,11 @@ class UpdateDialog {
     await _runInstall(context, info);
   }
 
+  /// Absorb Plus: just the download, progress and installer part (the test
+  /// channel asks in its own words first).
+  static Future<void> install(BuildContext context, UpdateInfo info) =>
+      _runInstall(context, info);
+
   static Future<void> _runInstall(BuildContext context, UpdateInfo info) async {
     final l = AppLocalizations.of(context)!;
     if (!info.isDirectApk && !info.isWindowsInstaller) {

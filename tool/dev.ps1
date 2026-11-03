@@ -11,7 +11,9 @@
   beta-sync  refresh Desktop\Absorb Plus Beta from the last build (when it
              was open during the build)
   apk        signed phone-test APK from CI into Absorb Plus Beta\Android
-             (~10 min; run it in the background)
+             (~10 min; run it in the background), then onto the fork's
+             rolling test-channel pre-release for the app's Developer mode >
+             Test channel (-NoPublish skips that)
   bump      next build number (+1) in pubspec.yaml, for every build the
              owner gets. The beta number (lib/build_info.dart) names the
              next beta to be published and stays put; after publishing one,
@@ -46,6 +48,7 @@ param(
   [switch]$CloseRunning,
   [switch]$Local,
   [switch]$NextBeta,
+  [switch]$NoPublish,
   [switch]$Full
 )
 $script:ShowFull = [bool]$Full
@@ -207,6 +210,102 @@ function Get-PubspecVersion {
   $line = Select-String -Path pubspec.yaml -Pattern '^version:\s*(\S+)' | Select-Object -First 1
   return $line.Matches[0].Groups[1].Value
 }
+# The test channel: one rolling GitHub pre-release on the fork, tag
+# "test-channel" (not v*, so release.yml never runs and the in-app updater
+# ignores it). Developer mode > Test channel in the Android app installs the
+# APK from it. Puts this APK there as absorb-plus-test-<version>+<build>.apk,
+# then removes older APKs and sets the notes to "What's new". Touches no other
+# release or tag and never marks anything Latest. Skip with -NoPublish.
+function Publish-TestChannelCore {
+  param([string]$ApkPath, [string]$Version, [string]$Commit)
+  $repo = 'atewertfd/absorb-plus'
+  $tag = 'test-channel'
+  if ($Version -notmatch '^\d+\.\d+\.\d+\+\d+$') { throw "Unexpected version for the test channel: $Version" }
+  $name = "absorb-plus-test-$Version.apk"
+  $work = Join-Path $env:TEMP "absorb-test-channel-$PID"
+  New-Item -ItemType Directory -Force -Path $work | Out-Null
+  $asset = Join-Path $work $name
+  Copy-Item -LiteralPath $ApkPath -Destination $asset -Force
+  # Notes: the change list from "What's new" (not its local folder lines).
+  $whatsNew = Join-Path $BetaDir "What's new.txt"
+  $lines = @(if (Test-Path -LiteralPath $whatsNew) { Get-Content -LiteralPath $whatsNew })
+  $start = 0
+  for ($i = 0; $i -lt $lines.Count; $i++) { if ($lines[$i] -like 'Changes since*') { $start = $i; break } }
+  $short = if ($Commit.Length -ge 8) { $Commit.Substring(0, 8) } else { $Commit }
+  $notesFile = Join-Path $work 'notes.md'
+  $notes = @(
+    "Test build $Version (commit $short). Not a release: install it from Developer mode > Test channel in the Android app."
+    ''
+    $(if ($lines.Count) { $lines[$start..($lines.Count - 1)] })
+  )
+  # No BOM (Windows PowerShell's utf8 adds one, which would show in the notes).
+  [IO.File]::WriteAllLines($notesFile, [string[]]$notes, (New-Object Text.UTF8Encoding $false))
+
+  # Native errors must not stop the script here (a missing release is a 404).
+  $prevPreference = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  try {
+    $lookup = (gh api "repos/$repo/releases/tags/$tag" --jq '.id' 2>&1 | Out-String)
+    $exists = $LASTEXITCODE -eq 0
+    $global:LASTEXITCODE = 0
+    # Only "not found" means it is missing; anything else (offline, signed
+    # out) must not lead to a second create.
+    if (-not $exists -and $lookup -notmatch '404|Not Found') {
+      throw "Could not look up the test channel release: $($lookup.Trim())"
+    }
+    if (-not $exists) {
+      # --target only takes a commit GitHub has; otherwise the default branch.
+      gh api "repos/$repo/commits/$Commit" --jq '.sha' *> $null
+      $targetArgs = if ($LASTEXITCODE -eq 0) { @('--target', $Commit) } else { @() }
+      $global:LASTEXITCODE = 0
+    }
+  } finally {
+    $ErrorActionPreference = $prevPreference
+  }
+  if ($exists) {
+    Invoke-Step -Name 'test-channel-upload' -Run { gh release upload $tag $asset --repo $repo --clobber }
+    Invoke-Step -Name 'test-channel-notes' -Run {
+      gh release edit $tag --repo $repo --prerelease --latest=false --notes-file $notesFile
+    }
+  } else {
+    Invoke-Step -Name 'test-channel-create' -Run {
+      gh release create $tag $asset --repo $repo --prerelease --latest=false `
+        --title 'Test channel (not a release)' --notes-file $notesFile @targetArgs
+    }
+  }
+  # Older test APKs go once the new one is up, so the channel is never empty.
+  $names = @(gh release view $tag --repo $repo --json assets --jq '.assets[].name')
+  if ($LASTEXITCODE -ne 0) { throw 'Could not list the test channel files.' }
+  # GitHub may store the "+" as another character, so match the new file
+  # loosely rather than by its exact name.
+  $core, $build = $Version -split '\+'
+  $current = "^absorb-plus-test-$([regex]::Escape($core))[+._ -]$build\.apk$"
+  if (-not ($names | Where-Object { $_ -match $current })) {
+    Write-Warning "The test channel doesn't list the new APK ($name); older APKs were left there."
+    $names = @()
+  }
+  foreach ($old in $names) {
+    if ($old -notmatch $current -and $old -like 'absorb-plus-test-*.apk') {
+      Invoke-Step -Name 'test-channel-prune' -Run { gh release delete-asset $tag $old --repo $repo --yes }
+    }
+  }
+  Write-Host "test channel: $name (https://github.com/$repo/releases/tag/$tag)" -ForegroundColor Green
+}
+# A failed publish only warns: the APK in the beta folder is already fine.
+function Publish-TestChannel {
+  param([string]$ApkPath, [string]$Version, [string]$Commit)
+  try {
+    Publish-TestChannelCore -ApkPath $ApkPath -Version $Version -Commit $Commit
+  } catch {
+    Write-Warning "Test channel not updated: $_ (the APK in the beta folder is fine; -NoPublish skips this step)"
+  } finally {
+    # Only the two files this step wrote; never a recursive delete.
+    $work = Join-Path $env:TEMP "absorb-test-channel-$PID"
+    Get-ChildItem -LiteralPath $work -File -ErrorAction SilentlyContinue |
+      Remove-Item -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $work -Force -ErrorAction SilentlyContinue
+  }
+}
 
 switch ($Command) {
   'check' {
@@ -276,6 +375,10 @@ switch ($Command) {
       Copy-Item $apk.FullName (Join-Path $dest 'Absorb Plus beta.apk') -Force
       Write-BetaNotes -AndroidRun 'local'
       Write-Host "APK ready: $(Join-Path $dest 'Absorb Plus beta.apk')" -ForegroundColor Green
+      if (-not $NoPublish) {
+        $headSha = (git rev-parse HEAD).Trim()
+        Publish-TestChannel -ApkPath $apk.FullName -Version (Get-PubspecVersion) -Commit $headSha
+      }
       break
     }
     $branch = (git rev-parse --abbrev-ref HEAD).Trim()
@@ -330,6 +433,20 @@ switch ($Command) {
     Copy-Item $apk.FullName (Join-Path $dest 'Absorb Plus beta.apk') -Force
     Write-BetaNotes -AndroidRun $runId
     Write-Host "APK ready: $(Join-Path $dest 'Absorb Plus beta.apk')" -ForegroundColor Green
+    if (-not $NoPublish) {
+      # The version of the commit CI built (GitHub's branch head), when this
+      # checkout has it; otherwise the local pubspec.yaml.
+      $builtVersion = Get-PubspecVersion
+      $prevPreference = $ErrorActionPreference
+      $ErrorActionPreference = 'Continue'
+      $builtPubspec = git show "${sha}:pubspec.yaml" 2>$null
+      if ($LASTEXITCODE -eq 0 -and (($builtPubspec -join "`n") -match '(?m)^version:\s*(\S+)')) {
+        $builtVersion = $Matches[1]
+      }
+      $global:LASTEXITCODE = 0
+      $ErrorActionPreference = $prevPreference
+      Publish-TestChannel -ApkPath $apk.FullName -Version $builtVersion -Commit $sha
+    }
   }
 
   'bump' {

@@ -127,6 +127,37 @@ void main() {
     );
   });
 
+  test('the rolling test-channel pre-release is never an update', () {
+    // Its single APK has no ABI in the name, which Android would otherwise
+    // accept as a universal build.
+    final testChannel = release(
+      'test-channel',
+      assets: ['absorb-plus-test-1.12.1+399.apk'],
+    );
+    final android = hasAssetFor(
+      UpdateTarget.android,
+      supportedAbis: ['arm64-v8a'],
+    );
+    final releases = [
+      testChannel,
+      release(
+        'v1.12.1-345',
+        assets: ['absorb-1.12.1-345-android-arm64-v8a.apk'],
+      ),
+    ];
+    expect(
+      pickUpdateRelease(releases, hasPlatformAsset: android)?['tag_name'],
+      'v1.12.1-345',
+    );
+    expect(pickUpdateRelease(releases)?['tag_name'], 'v1.12.1-345');
+    expect(pickUpdateRelease([testChannel], hasPlatformAsset: android), isNull);
+    expect(pickUpdateRelease([testChannel]), isNull);
+    expect(isVersionReleaseTag('test-channel'), isFalse);
+    expect(isVersionReleaseTag('v1.12.1-345'), isTrue);
+    expect(isVersionReleaseTag('v1.11.1-288-web-x86'), isTrue);
+    expect(isVersionReleaseTag('V1.8.63'), isTrue); // an old upstream tag
+  });
+
   test('a portable Windows copy waits for the portable ZIP', () {
     final portable = hasAssetFor(UpdateTarget.windowsPortable);
     expect(portable([]), isFalse);

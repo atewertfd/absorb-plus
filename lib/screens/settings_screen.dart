@@ -83,6 +83,7 @@ import '../services/tailscale_service.dart'; // fork
 import 'tailscale_settings_screen.dart'; // fork
 import '../widgets/next_in_series_download_tile.dart'; // fork
 import '../widgets/remote_link_settings_tiles.dart'; // fork
+import '../widgets/developer_mode_tiles.dart'; // fork
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -4818,6 +4819,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       onTap: () => Navigator.push(context, MaterialPageRoute(
                         builder: (_) => const TranscriptionSettingsScreen())),
                     ),
+                    const DeveloperSettingsTile(), // fork
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -4965,8 +4967,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
 
-                // ── Version Info ──
-                Center(child: Row(
+                // ── Version Info ── (fork: 7 taps turn on Developer mode)
+                Center(child: GestureDetector(onTap: () => onVersionLineTapped(context), child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
@@ -4991,7 +4993,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             color: cs.onSurfaceVariant.withValues(alpha: 0.4)),
                       ),
                   ],
-                )),
+                ))),
 
                 if (_updatesEnabled)...[
                   const SizedBox(height: 4),
