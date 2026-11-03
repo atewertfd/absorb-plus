@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -25,17 +26,44 @@ class HomeShelfSnapshot {
   /// from the truth to be worth the flash of old content.
   static const maxAge = Duration(days: 14);
 
-  Future<File> _file(String scope, String libraryId) async {
+  static String _hash(String text) => sha1.convert(utf8.encode(text)).toString();
+
+  Future<Directory> _root() async {
     final base = await _baseDirectory();
-    final name = sha1.convert(utf8.encode('$scope|$libraryId')).toString();
-    return File('${base.path}${Platform.pathSeparator}home_shelves'
-        '${Platform.pathSeparator}$name.json');
+    return Directory('${base.path}${Platform.pathSeparator}home_shelves');
   }
+
+  /// One folder per account, so forgetting an account can remove all of its
+  /// libraries' shelves (audit C15).
+  Future<Directory> _scopeDir(String scope) async {
+    final root = await _root();
+    return Directory('${root.path}${Platform.pathSeparator}${_hash(scope)}');
+  }
+
+  Future<File> _file(String scope, String libraryId) async {
+    final dir = await _scopeDir(scope);
+    return File('${dir.path}${Platform.pathSeparator}'
+        '${_hash('$scope|$libraryId')}.json');
+  }
+
+  /// Where builds before the per-account folders kept a snapshot.
+  Future<File> _legacyFile(String scope, String libraryId) async {
+    final root = await _root();
+    return File('${root.path}${Platform.pathSeparator}'
+        '${_hash('$scope|$libraryId')}.json');
+  }
+
+  bool _pruned = false;
 
   Future<List<dynamic>?> load(String scope, String libraryId) async {
     if (kIsWeb) return null;
+    if (!_pruned) {
+      _pruned = true;
+      unawaited(pruneExpired());
+    }
     try {
-      final file = await _file(scope, libraryId);
+      var file = await _file(scope, libraryId);
+      if (!await file.exists()) file = await _legacyFile(scope, libraryId);
       if (!await file.exists()) return null;
       final age = DateTime.now().difference(await file.lastModified());
       if (age > maxAge) return null;
@@ -59,8 +87,44 @@ class HomeShelfSnapshot {
       final tmp = File('${file.path}.tmp');
       await tmp.writeAsString(text, flush: true);
       await tmp.rename(file.path);
+      final legacy = await _legacyFile(scope, libraryId);
+      if (await legacy.exists()) await legacy.delete();
     } catch (e) {
       debugPrint('[HomeSnapshot] save failed: ${e.runtimeType}');
+    }
+  }
+
+  /// Removes every saved shelf of an account (it was removed from the app).
+  /// Snapshots from before the per-account folders age out through
+  /// [pruneExpired].
+  Future<void> clearScope(String scope) async {
+    if (kIsWeb || scope.isEmpty) return;
+    try {
+      final dir = await _scopeDir(scope);
+      if (await dir.exists()) await dir.delete(recursive: true);
+    } catch (e) {
+      debugPrint('[HomeSnapshot] clear failed: ${e.runtimeType}');
+    }
+  }
+
+  /// Deletes snapshots too old to be shown ([maxAge]); they used to stay on
+  /// disk for good (audit C15).
+  Future<void> pruneExpired() async {
+    if (kIsWeb) return;
+    try {
+      final root = await _root();
+      if (!await root.exists()) return;
+      final now = DateTime.now();
+      await for (final entity in root.list(recursive: true, followLinks: false)) {
+        if (entity is! File) continue;
+        try {
+          if (now.difference(await entity.lastModified()) > maxAge) {
+            await entity.delete();
+          }
+        } catch (_) {}
+      }
+    } catch (e) {
+      debugPrint('[HomeSnapshot] prune failed: ${e.runtimeType}');
     }
   }
 }
