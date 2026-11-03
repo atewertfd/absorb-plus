@@ -23259,6 +23259,42 @@ abstract class AppLocalizations {
   /// **'Sleep timer'**
   String get quickSwitcherSleepTimer;
 
+  /// Extra space-separated words the quick switcher's Go to Absorbing action also matches. Not shown.
+  ///
+  /// In en, this message translates to:
+  /// **'now playing player'**
+  String get quickSwitcherKeywordsAbsorbing;
+
+  /// Extra space-separated search words for Go to Settings. Not shown.
+  ///
+  /// In en, this message translates to:
+  /// **'preferences options'**
+  String get quickSwitcherKeywordsSettings;
+
+  /// Extra space-separated search words for Go to Downloads. Not shown.
+  ///
+  /// In en, this message translates to:
+  /// **'offline'**
+  String get quickSwitcherKeywordsDownloads;
+
+  /// Extra space-separated search words for Play / pause. Not shown.
+  ///
+  /// In en, this message translates to:
+  /// **'resume pause'**
+  String get quickSwitcherKeywordsPlayPause;
+
+  /// Extra space-separated search words for Sleep timer. Not shown.
+  ///
+  /// In en, this message translates to:
+  /// **'timer'**
+  String get quickSwitcherKeywordsSleepTimer;
+
+  /// Extra space-separated search words for Keyboard shortcuts. Not shown.
+  ///
+  /// In en, this message translates to:
+  /// **'keys help hotkeys keyboard'**
+  String get quickSwitcherKeywordsShortcuts;
+
   /// No description provided for @quickSwitcherKindAction.
   ///
   /// In en, this message translates to:

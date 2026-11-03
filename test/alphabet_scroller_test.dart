@@ -4,6 +4,7 @@ import 'package:absorb/widgets/alphabet_scroller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// The library grid's A-Z rail: letters, jump targets, and the rail itself.
@@ -480,6 +481,44 @@ void main() {
         ..addAll([for (var i = 0; i < 100; i++) book('Quill $i')]);
       await tester.pumpWidget(library());
       expect(letters(), everyElement('Q'));
+    });
+
+    testWidgets('screen readers step through letters, even with the rail hidden',
+        (tester) async {
+      final semantics = tester.ensureSemantics();
+      final controller = ScrollController();
+      addTearDown(controller.dispose);
+      await tester.pumpWidget(harness(controller: controller, titles: titles));
+      await tester.pump();
+      expect(state(tester).railVisible, isFalse);
+
+      final rail = find.bySemanticsLabel('Jump to a letter');
+      expect(rail, findsOneWidget);
+      expect(
+        tester.getSemantics(rail),
+        matchesSemantics(
+          label: 'Jump to a letter',
+          value: '#',
+          increasedValue: 'A',
+          hasIncreaseAction: true,
+        ),
+      );
+
+      final owner = tester.binding.pipelineOwner.semanticsOwner!;
+      // # -> A -> B: B's first book reaches the top.
+      owner.performAction(tester.getSemantics(rail).id, SemanticsAction.increase);
+      await tester.pump();
+      owner.performAction(tester.getSemantics(rail).id, SemanticsAction.increase);
+      await tester.pump();
+      expect(tester.getSemantics(rail).value, 'B');
+      expect(tester.getTopLeft(find.text('Bbook 0')).dy, inInclusiveRange(0, 1));
+
+      owner.performAction(tester.getSemantics(rail).id, SemanticsAction.decrease);
+      await tester.pump();
+      expect(tester.getSemantics(rail).value, 'A');
+      // The 27 letters stay out of the reader's way.
+      expect(find.bySemanticsLabel('Q'), findsNothing);
+      semantics.dispose();
     });
 
     testWidgets('no rail for other sorts or short lists', (tester) async {

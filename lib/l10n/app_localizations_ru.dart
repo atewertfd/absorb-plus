@@ -13723,6 +13723,24 @@ class AppLocalizationsRu extends AppLocalizations {
   String get quickSwitcherSleepTimer => 'Sleep timer';
 
   @override
+  String get quickSwitcherKeywordsAbsorbing => 'now playing player';
+
+  @override
+  String get quickSwitcherKeywordsSettings => 'preferences options';
+
+  @override
+  String get quickSwitcherKeywordsDownloads => 'offline';
+
+  @override
+  String get quickSwitcherKeywordsPlayPause => 'resume pause';
+
+  @override
+  String get quickSwitcherKeywordsSleepTimer => 'timer';
+
+  @override
+  String get quickSwitcherKeywordsShortcuts => 'keys help hotkeys keyboard';
+
+  @override
   String get quickSwitcherKindAction => 'Action';
 
   @override

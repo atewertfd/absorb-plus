@@ -494,6 +494,24 @@ class AlphabetScrollerState extends State<AlphabetScroller> {
     if (changed) _jumpTo(letter);
   }
 
+  /// The letter a screen reader hears: the last one picked, else the
+  /// rail's first.
+  String get _a11yLetter => _current ?? _railLetters.first;
+
+  /// Moves [delta] letters along the rail (screen reader increase and
+  /// decrease) and jumps there.
+  @visibleForTesting
+  void stepLetter(int delta) {
+    final letters = _railLetters;
+    final i = letters.indexOf(_a11yLetter);
+    final next = (i + delta).clamp(0, letters.length - 1);
+    if (next == i) return;
+    final letter = letters[next];
+    setState(() => _current = letter);
+    _autoLoads = 0;
+    _jumpTo(letter);
+  }
+
   List<String> get _railLetters => widget.descending
       ? alphabetScrollerLetters.reversed.toList()
       : alphabetScrollerLetters;
@@ -545,7 +563,23 @@ class AlphabetScrollerState extends State<AlphabetScroller> {
           child: LayoutBuilder(
             builder: (context, constraints) {
               final height = constraints.maxHeight;
-              return MouseRegion(
+              // Screen readers get one adjustable control, present even
+              // while the rail is hidden: swipe up or down to step letters.
+              final a11yLetter = _a11yLetter;
+              final a11yIndex = letters.indexOf(a11yLetter);
+              return Semantics(
+                container: true,
+                label: AppLocalizations.of(context)!.alphabetScrollerLabel,
+                value: a11yLetter,
+                increasedValue: a11yIndex < letters.length - 1
+                    ? letters[a11yIndex + 1]
+                    : null,
+                decreasedValue: a11yIndex > 0 ? letters[a11yIndex - 1] : null,
+                onIncrease: a11yIndex < letters.length - 1
+                    ? () => stepLetter(1)
+                    : null,
+                onDecrease: a11yIndex > 0 ? () => stepLetter(-1) : null,
+                child: MouseRegion(
                 hitTestBehavior: HitTestBehavior.translucent,
                 onEnter: (_) => setState(() => _hovering = true),
                 onExit: (_) {
@@ -559,10 +593,7 @@ class AlphabetScrollerState extends State<AlphabetScroller> {
                     duration: reduceMotion
                         ? Duration.zero
                         : const Duration(milliseconds: 150),
-                    child: Semantics(
-                      container: true,
-                      label: AppLocalizations.of(context)!
-                          .alphabetScrollerLabel,
+                    child: ExcludeSemantics(
                       child: GestureDetector(
                         key: const ValueKey('alphabet-rail'),
                         behavior: HitTestBehavior.opaque,
@@ -614,7 +645,7 @@ class AlphabetScrollerState extends State<AlphabetScroller> {
                     ),
                   ),
                 ),
-              );
+              ));
             },
           ),
         ),
