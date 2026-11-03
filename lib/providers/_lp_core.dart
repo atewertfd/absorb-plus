@@ -1237,10 +1237,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
           } else {
             _startServerPingTimer();
           }
-          _startLocalProbeTimer();
+          _startLocalProbeTimer(networkChanged: true);
         });
       } else if (_deviceHasConnectivity) {
-        _startLocalProbeTimer();
+        _startLocalProbeTimer(networkChanged: true);
       }
     });
     _connectivitySub = Connectivity().onConnectivityChanged.listen((result) async {
@@ -1285,7 +1285,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
             _goOffline();
           }
         }
-        _startLocalProbeTimer();
+        _startLocalProbeTimer(networkChanged: true);
       });
     });
   }
@@ -1378,7 +1378,11 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   static const _remoteProbeFastMisses = 4;
   static const _remoteProbeMaxGap = Duration(minutes: 5);
 
-  void _startLocalProbeTimer() {
+  /// [networkChanged]: called from the connectivity handlers. Only then do
+  /// the away-from-home checks go back to every 30 s; playback starts,
+  /// foregrounding and reader closes used to reset them too, so the 5-minute
+  /// spacing was rarely reached (Absorb Plus, audit C14).
+  void _startLocalProbeTimer({bool networkChanged = false}) {
     final auth = _auth;
     if (auth == null) return;
     if (!auth.localServerEnabled || auth.localServerUrl.isEmpty) {
@@ -1391,8 +1395,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       _stopLocalProbeTimer();
       return;
     }
-    _remoteProbeMisses = 0;
-    _nextRemoteProbeAt = null;
+    if (networkChanged) {
+      _remoteProbeMisses = 0;
+      _nextRemoteProbeAt = null;
+    }
     if (_localProbeTimer != null) return;
     _localProbeFailures = 0;
     _localProbeTimer = Timer.periodic(_localProbeInterval, (_) => _probeLocalServer());
@@ -1414,8 +1420,25 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     if (url == auth.localServerUrl) {
       _localLastReachableAt = DateTime.now();
       _localProbeFailures = 0;
+      _remoteProbeMisses = 0; // fork (C14): home again
+      _nextRemoteProbeAt = null;
     }
   }
+
+  // Fork (C14) test seams.
+  @visibleForTesting
+  ({int misses, DateTime? nextAt}) get debugRemoteProbeBackoff =>
+      (misses: _remoteProbeMisses, nextAt: _nextRemoteProbeAt);
+
+  @visibleForTesting
+  void debugSetRemoteProbeBackoff(int misses, DateTime? nextAt) {
+    _remoteProbeMisses = misses;
+    _nextRemoteProbeAt = nextAt;
+  }
+
+  @visibleForTesting
+  void debugStartLocalProbeTimer({bool networkChanged = false}) =>
+      _startLocalProbeTimer(networkChanged: networkChanged);
 
   Future<void> _probeLocalServer() async {
     final auth = _auth;
