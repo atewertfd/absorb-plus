@@ -1008,7 +1008,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     for (final dl in DownloadService().downloadedItems) {
       itemIds.add(dl.itemId);
     }
+    // Fork (C9): only ids with a local entry; the rest read as null anyway.
+    final withLocal = await sync.withLocalProgress(itemIds);
     for (final itemId in itemIds) {
+      if (!withLocal.contains(itemId)) continue;
       if (_locallyFinishedItems.contains(itemId)) continue;
       if (_resetItems.contains(itemId)) continue;
       final serverFinished = _progressMap[itemId]?['isFinished'] == true;

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'api_service.dart';
 import 'download_service.dart';
 import 'offline_listening_upload.dart';
@@ -168,6 +169,23 @@ class ProgressSyncService {
       debugPrint('[Sync] Local progress for $itemId unreadable: ${e.runtimeType}');
       return null;
     }
+  }
+
+  /// Absorb Plus (audit C9): the ids in [candidates] that have a local
+  /// progress entry, found in the stored key list in one step rather than
+  /// one awaited read and decode per id. [getLocal] is null for the rest.
+  Future<Set<String>> withLocalProgress(Iterable<String> candidates) async {
+    final prefs = await SharedPreferences.getInstance();
+    final keys = prefs.getKeys();
+    final accounts = UserAccountService();
+    final scope = accounts.activeScopeKey;
+    final fallback = !accounts.hasScope;
+    return {
+      for (final id in candidates)
+        if (keys.contains(ScopedPrefs.keyForScope(scope, 'progress_$id')) ||
+            (fallback && keys.contains('progress_$id')))
+          id,
+    };
   }
 
   /// Get the saved currentTime for an item (for resuming).
