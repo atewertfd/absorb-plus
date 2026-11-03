@@ -106,7 +106,14 @@ extension ForkPlaybackTestHooks on AudioPlayerService {
 
   /// The old stream retry, as a playback error starts it.
   @visibleForTesting
-  Future<void> debugAttemptStreamRetry(Object error) => _attemptStreamRetry(error);
+  Future<void> debugAttemptStreamRetry(Object error, {bool? resume}) =>
+      _attemptStreamRetry(error, resume: resume);
+
+  /// What a mid-play move onto the downloaded files (or back onto the
+  /// stream) reports once its source has loaded.
+  @visibleForTesting
+  void debugSourceLoaded({required bool localFiles}) =>
+      _recovery.onSourceLoaded(localFiles: localFiles);
 
   /// Pretends a start is loading, the way playItem marks one.
   @visibleForTesting

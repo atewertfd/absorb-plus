@@ -65,9 +65,19 @@ class _StreamRecovery {
   bool _reloadStarting = false;
   bool _toastShown = false;
 
+  // The source is the downloaded files, moved to mid-play. The service marks
+  // local mode only once the local session has started, and not at all if
+  // that start fails, so the files are flagged here as soon as they load.
+  bool _onLocalFiles = false;
+
+  /// A source swap loaded: the downloaded files, or the stream again.
+  void onSourceLoaded({required bool localFiles}) => _onLocalFiles = localFiles;
+
+  bool get _localPlayback => _s._localSessionMode || _onLocalFiles;
+
   /// Streaming from the server: not downloaded files, not casting.
   bool get _streaming =>
-      !_s._localSessionMode &&
+      !_localPlayback &&
       _s._currentItemId != null &&
       _s._api != null &&
       !ChromecastService().isCasting;
@@ -82,7 +92,7 @@ class _StreamRecovery {
   bool handleError(Object error, {bool? resume}) {
     // Downloads, and errors a reload can't fix (a file the server refuses
     // outright, a decoder failure), keep the old short retry.
-    if (_s._localSessionMode || !PlaybackRecovery.isNetworkError(error)) {
+    if (_localPlayback || !PlaybackRecovery.isNetworkError(error)) {
       return false;
     }
     if (policy.isActive) {
@@ -209,6 +219,8 @@ class _StreamRecovery {
   /// playItem was entered. Anything but a reload of ours is a new play.
   void onPlayItem() {
     _heldSec = null;
+    // Every start builds its own source and sets local mode for itself.
+    _onLocalFiles = false;
     if (_reloadStarting) return;
     _focusLost = false;
     _earlyEndAt = null;
@@ -584,7 +596,7 @@ class _StreamRecovery {
     final s = _s;
     if (s._player == null ||
         s._api == null ||
-        s._localSessionMode ||
+        _localPlayback ||
         s._currentItemId != item.itemId ||
         s._currentEpisodeId != item.episodeId ||
         s._sourceSessionId == null ||

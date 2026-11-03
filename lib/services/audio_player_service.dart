@@ -4267,6 +4267,7 @@ class AudioPlayerService extends ChangeNotifier {
         initialPosition: localPos,
         itemId: _currentItemId,
       );
+      _recovery.onSourceLoaded(localFiles: true); // fork: no stream recovery over files
       _activeConcatSource = source;
       _currentBookTrackCount = trackSources.length;
       _subscribeTrackIndex();
@@ -6145,6 +6146,7 @@ class AudioPlayerService extends ChangeNotifier {
             itemId: _currentItemId,
           )
           .timeout(_swapLoadTimeout);
+      _recovery.onSourceLoaded(localFiles: false); // fork: back on the stream
       _activeConcatSource = source;
       _currentBookTrackCount = trackSources.length;
       _subscribeTrackIndex();
