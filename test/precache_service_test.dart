@@ -94,6 +94,25 @@ void main() {
     expect(result.items, PrecacheService.maxDetailItems);
   });
 
+  test('D15 leaving Wi-Fi stops a run in progress', () async {
+    final s = PrecacheService(
+      isUnmetered: () async => unmetered,
+      isCoverCached: (key) async => false,
+      downloadCover: (url, key, headers) async {
+        downloaded.add(url);
+        if (downloaded.length == 2) unmetered = false;
+      },
+      onItem: (id, item) {},
+      inForeground: () => true,
+      gap: Duration.zero,
+    );
+    await s.run(source(
+        home: const ['a', 'b', 'c', 'd', 'e', 'f'],
+        detail: const [],
+        library: const []));
+    expect(downloaded.length, 2);
+  });
+
   test('turning the setting off stops a run in progress', () async {
     final s = PrecacheService(
       isUnmetered: () async => true,

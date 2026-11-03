@@ -196,4 +196,47 @@ void main() {
       'ok': 'backup',
     }, reason: 'the bad main file must not replace the good backup');
   });
+
+  group('D12 a briefly locked main file', () {
+    tearDown(() {
+      JsonFileStore.debugReadOverride = (f) => f.readAsString();
+      JsonFileStore.readAttempts = 8;
+    });
+
+    test('is read once the lock lets go, not swapped for the backup',
+        () async {
+      main().writeAsStringSync(jsonEncode({'v': 'newest'}));
+      backup().writeAsStringSync(jsonEncode({'v': 'older'}));
+      var calls = 0;
+      JsonFileStore.debugReadOverride = (f) async {
+        if (f.path == main().path && calls++ < 2) {
+          throw FileSystemException('locked', f.path);
+        }
+        return f.readAsString();
+      };
+
+      final read = await newStore().read();
+
+      expect(read.source, JsonFileSource.main);
+      expect(read.value, {'v': 'newest'});
+      expect(File('${main().path}.corrupt').existsSync(), isFalse);
+    });
+
+    test('still locked: the backup is read but the main file is not called '
+        'corrupt', () async {
+      main().writeAsStringSync(jsonEncode({'v': 'newest'}));
+      backup().writeAsStringSync(jsonEncode({'v': 'older'}));
+      JsonFileStore.readAttempts = 2;
+      JsonFileStore.debugReadOverride = (f) async {
+        if (f.path == main().path) throw FileSystemException('locked', f.path);
+        return f.readAsString();
+      };
+
+      final read = await newStore().read();
+
+      expect(read.source, JsonFileSource.backup);
+      expect(read.hadCorruptCopy, isFalse);
+      expect(File('${main().path}.corrupt').existsSync(), isFalse);
+    });
+  });
 }

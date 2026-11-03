@@ -206,6 +206,9 @@ String bookmarksExportFileName(String? bookTitle) {
       .replaceAll(RegExp(r'[<>:"/\\|?*\x00-\x1F]'), '')
       .replaceAll(_whitespace, ' ')
       .trim();
-  final base = safe.length > 80 ? safe.substring(0, 80).trim() : safe;
+  // Cut by characters, not UTF-16 units, so an emoji isn't split in half.
+  final base = safe.runes.length > 80
+      ? String.fromCharCodes(safe.runes.take(80)).trim()
+      : safe;
   return base.isEmpty ? 'Absorb bookmarks.md' : '$base bookmarks.md';
 }

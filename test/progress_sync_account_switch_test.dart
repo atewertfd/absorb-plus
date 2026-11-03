@@ -155,4 +155,51 @@ void main() {
     // Stop the follow-up retry from running into the next test.
     UserAccountService().switchTo(server, 'bob');
   });
+
+  test('offline listening sent for one account is not cleared from the next',
+      () async {
+    await seedAccounts();
+    final service = ProgressSyncService();
+    await service.addOfflineListeningTime('shared-book', 120);
+
+    final sending = Completer<void>();
+    final releaseSend = Completer<void>();
+    final api = ApiService(
+      baseUrl: server,
+      token: 'a-token',
+      httpClient: MockClient((request) async {
+        if (request.method == 'GET' &&
+            request.url.path == '/api/me/progress/shared-book') {
+          return http.Response(
+              jsonEncode({'currentTime': 1, 'lastUpdate': 1}), 200);
+        }
+        if (request.method == 'GET') return itemFixture(request);
+        if (request.url.path == '/api/session/local') {
+          sending.complete();
+          await releaseSend.future;
+        }
+        return http.Response('{}', 200);
+      }),
+    );
+
+    final flush = service.flushOfflineListeningTime(api: api);
+    await sending.future;
+    // Bob signs in while Alice's time is on its way, with his own banked
+    // time for the same book id.
+    UserAccountService().switchTo(server, 'bob');
+    await service.addOfflineListeningTime('shared-book', 45);
+    releaseSend.complete();
+    await flush;
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(
+        prefs.getInt(
+            ScopedPrefs.keyForScope(scopeB, 'offline_listening_shared-book')),
+        45,
+        reason: "Bob's time is not reduced by Alice's send");
+    expect(
+        prefs.getStringList(
+            ScopedPrefs.keyForScope(scopeB, 'pending_offline_listening')),
+        contains('shared-book'));
+  });
 }

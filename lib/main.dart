@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io' hide Platform; // web-safe Platform below
 import 'utils/web_safe_platform.dart';
+import 'utils/platform_appearance.dart'; // fork (C16)
 import 'dart:ui';
 // Flutter 3.44 moved CupertinoPageTransitionsBuilder from material.dart to
 // cupertino.dart. Older SDKs (incl. local) still re-export it from material,
@@ -239,6 +240,10 @@ Future<void> applyAppearanceFromPrefs() async {
   applyUseColorEverywhere(await PlayerSettings.getUseColorEverywhere());
   snappyTransitionsNotifier.value = await PlayerSettings.getSnappyTransitions();
   classicWordingNotifier.value = await PlayerSettings.getClassicWording();
+  // Fork (C8): a synced or restored language takes effect too.
+  final lang = await PlayerSettings.getLanguage();
+  final locale = lang.isEmpty ? null : Locale(lang);
+  if (localeNotifier.value != locale) localeNotifier.value = locale;
   await applyOrientationLock();
 }
 
@@ -393,6 +398,7 @@ class AbsorbApp extends StatelessWidget {
         snappyTransitionsNotifier,
         uiThemeNotifier,
         uiThemePreviewNotifier, // "Try it" live look (fork UI themes)
+        PlatformAppearance.changes, // fork (C16): OS dark mode, reduce motion
       ]),
       builder: (context, _) {
         final isEink = einkModeNotifier.value;
@@ -705,11 +711,14 @@ class AbsorbApp extends StatelessWidget {
                 pageTransitionsTheme: pageTransition,
                 extensions: [absorbLookFor(Brightness.dark, eink: isEink)],
               ),
-              builder: absorbLookBuilder, // Frosted surfaces (fork UI themes)
-              home: AppMotionScope(
+              // Frosted surfaces (fork UI themes). Fork (C16): the motion
+              // scope sits above the navigator, so pushed routes, dialogs
+              // and sheets see it too.
+              builder: (context, child) => AppMotionScope(
                 mode: motionMode,
-                child: AuthGate(setupLinkStream: setupLinkStream),
+                child: absorbLookBuilder(context, child),
               ),
+              home: AuthGate(setupLinkStream: setupLinkStream),
             );
       },
     );
@@ -791,7 +800,14 @@ class _AuthGateState extends State<AuthGate> {
     if (_appearanceScope == null || scope == _appearanceScope) return;
     _appearanceScope = scope;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      applyAppearanceFromPrefs().catchError((Object e) {
+      final einkBefore = PlayerSettings.einkMode;
+      applyAppearanceFromPrefs().then((_) {
+        // Fork (C8): the e-ink quiet state (no socket, no polling) follows
+        // the account's setting, not just its look.
+        if (PlayerSettings.einkMode != einkBefore && mounted) {
+          context.read<LibraryProvider>().applyEinkMode(PlayerSettings.einkMode);
+        }
+      }).catchError((Object e) {
         debugPrint('[Init] Applying the account appearance failed: $e');
       });
     });

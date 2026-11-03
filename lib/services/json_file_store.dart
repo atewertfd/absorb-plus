@@ -25,7 +25,8 @@ class JsonFileRead {
 /// Plus). Used for data too big or too busy for SharedPreferences, which on
 /// Windows rewrites its whole file on the UI thread for every single set.
 ///
-/// - Writes run off the UI thread, one at a time, and land atomically: the
+/// - Writes run one at a time with asynchronous file IO (the JSON encoding
+///   itself still runs on the calling isolate), and land atomically: the
 ///   data goes to a temp file (flushed), the current file is copied to
 ///   `<name>.bak`, then the temp file is renamed over the current one.
 /// - [schedule] coalesces bursts: only the newest snapshot is written, a
@@ -100,7 +101,12 @@ class JsonFileStore {
       _mainKnownGood = true;
       return JsonFileRead(mainResult.value, JsonFileSource.main);
     }
-    if (mainResult.existed) {
+    if (mainResult.locked) {
+      // Held by another program past every retry: not corrupt, so it is
+      // neither set aside nor kept from refreshing the backup. The backup
+      // is the best there is for now.
+      debugPrint('[JsonFileStore] $fileName is locked - reading the backup');
+    } else if (mainResult.existed) {
       corrupt = true;
       _mainKnownGood = false;
       _lastPersisted = null;
@@ -134,23 +140,44 @@ class JsonFileStore {
     }
   }
 
-  Future<({bool ok, bool existed, Object? value, String? raw})> _tryRead(
-    File file,
-  ) async {
+  /// [locked]: the file is there but could not be opened (Absorb Plus,
+  /// audit D12). Antivirus or an indexer holding it at launch used to count
+  /// as corrupt, so the backup (one write older) was loaded and the last
+  /// change before quitting was lost. Reads now retry like writes do.
+  Future<({bool ok, bool existed, bool locked, Object? value, String? raw})>
+      _tryRead(File file) async {
     try {
       if (!await file.exists()) {
-        return (ok: false, existed: false, value: null, raw: null);
+        return (ok: false, existed: false, locked: false, value: null, raw: null);
       }
-      final raw = await file.readAsString();
+      final String raw;
+      try {
+        raw = await _retry(() => debugReadOverride(file),
+            attempts: readAttempts);
+      } on FileSystemException catch (e) {
+        debugPrint('[JsonFileStore] $fileName: could not open ${file.path}: $e');
+        return (ok: false, existed: true, locked: true, value: null, raw: null);
+      }
       final value = jsonDecode(raw);
       if (validate != null && !validate!(value)) {
-        return (ok: false, existed: true, value: null, raw: null);
+        return (ok: false, existed: true, locked: false, value: null, raw: null);
       }
-      return (ok: true, existed: true, value: value, raw: raw);
+      return (ok: true, existed: true, locked: false, value: value, raw: raw);
     } catch (e) {
-      return (ok: false, existed: true, value: null, raw: null);
+      return (ok: false, existed: true, locked: false, value: null, raw: null);
     }
   }
+
+  /// How many times a read is tried (about 2.5 s in all with the growing
+  /// pauses) before the file counts as locked.
+  @visibleForTesting
+  static int readAttempts = 8;
+
+  /// Test seam: reads the file's text. Lets a test simulate a lock.
+  @visibleForTesting
+  static Future<String> Function(File file) debugReadOverride =
+      _defaultRead;
+  static Future<String> _defaultRead(File file) => file.readAsString();
 
   /// Writes what [snapshot] returns a moment from now. A later call before
   /// then replaces it, so a burst of changes costs one write. The snapshot
@@ -255,13 +282,13 @@ class JsonFileStore {
   }
 
   /// Antivirus and indexers can hold a file for a moment on Windows.
-  static Future<T> _retry<T>(Future<T> Function() op) async {
+  static Future<T> _retry<T>(Future<T> Function() op, {int attempts = 5}) async {
     var delay = const Duration(milliseconds: 20);
     for (var attempt = 1; ; attempt++) {
       try {
         return await op();
       } on FileSystemException {
-        if (attempt >= 5) rethrow;
+        if (attempt >= attempts) rethrow;
         await Future<void>.delayed(delay);
         delay *= 2;
       }

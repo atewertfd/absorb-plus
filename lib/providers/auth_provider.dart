@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/account_scoped_caches.dart';
 import '../services/startup_timing.dart';
 import '../services/startup_overlap.dart';
 import '../services/api_service.dart';
@@ -1233,6 +1234,7 @@ class AuthProvider extends ChangeNotifier {
   /// local URL with the new account's token, producing 401s.
   Future<void> _onAccountActivated() async {
     PlayerSettings.notifySettingsChanged();
+    await reloadAccountScopedCaches(); // fork (C8)
     await EqualizerService().reloadForActiveAccount();
 
     await _loadLocalServerSettings();
@@ -1586,12 +1588,8 @@ class AuthProvider extends ChangeNotifier {
     // Synchronous PlayerSettings caches are loaded at startup, so refresh
     // them from the new account's scope or playback keeps the old account's
     // values until restart.
-    PlayerSettings.showExplicitBadge =
-        await PlayerSettings.getShowExplicitBadge();
-    PlayerSettings.showEbookBadge = await PlayerSettings.getShowEbookBadge();
-    PlayerSettings.mp3IndexSeeking = await PlayerSettings.getMp3IndexSeeking();
-    PlayerSettings.coverSize = await PlayerSettings.getCoverSize();
-    PlayerSettings.cardButtonFill = await PlayerSettings.getCardButtonFill();
+    // Fork (C8): also the auto sleep window and settings sync.
+    await reloadAccountScopedCaches();
 
     // Reload EQ settings from the new account's scope. Without this the
     // EqualizerService singleton keeps the previous account's in-memory

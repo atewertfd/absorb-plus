@@ -46,4 +46,15 @@ void main() {
     expect(snappyTransitionsNotifier.value, isFalse);
     expect(classicWordingNotifier.value, isFalse);
   });
+
+  test('C8 a synced language takes effect', () async {
+    addTearDown(() => localeNotifier.value = null);
+    SharedPreferences.setMockInitialValues({'language': 'de'});
+    await applyAppearanceFromPrefs();
+    expect(localeNotifier.value, const Locale('de'));
+
+    SharedPreferences.setMockInitialValues({});
+    await applyAppearanceFromPrefs();
+    expect(localeNotifier.value, isNull);
+  });
 }

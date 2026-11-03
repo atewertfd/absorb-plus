@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -5,6 +6,7 @@ import '../utils/server_url.dart';
 import 'account_epoch.dart';
 import 'api_service.dart';
 import 'auth_tokens.dart';
+import 'home_shelf_snapshot.dart';
 import 'server_backend.dart';
 
 /// Represents a saved user account (server + credentials).
@@ -212,10 +214,17 @@ class UserAccountService {
   /// user wants to re-add later). Returns true if found and removed.
   Future<bool> removeAccount(String serverUrl, String username) async {
     final before = _accounts.length;
+    final removed = _accounts
+        .where((a) => a.serverUrl == serverUrl && a.username == username)
+        .toList();
     _accounts.removeWhere(
         (a) => a.serverUrl == serverUrl && a.username == username);
     if (_accounts.length < before) {
       await _persist();
+      // Absorb Plus (C15): its saved Home shelves are only a cache.
+      for (final a in removed) {
+        unawaited(HomeShelfSnapshot.instance.clearScope(a.scopeKey));
+      }
       debugPrint('[UserAccount] Removed: $username@$serverUrl');
       return true;
     }

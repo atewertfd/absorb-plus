@@ -1008,7 +1008,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     for (final dl in DownloadService().downloadedItems) {
       itemIds.add(dl.itemId);
     }
+    // Fork (C9): only ids with a local entry; the rest read as null anyway.
+    final withLocal = await sync.withLocalProgress(itemIds);
     for (final itemId in itemIds) {
+      if (!withLocal.contains(itemId)) continue;
       if (_locallyFinishedItems.contains(itemId)) continue;
       if (_resetItems.contains(itemId)) continue;
       final serverFinished = _progressMap[itemId]?['isFinished'] == true;
@@ -1237,10 +1240,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
           } else {
             _startServerPingTimer();
           }
-          _startLocalProbeTimer();
+          _startLocalProbeTimer(networkChanged: true);
         });
       } else if (_deviceHasConnectivity) {
-        _startLocalProbeTimer();
+        _startLocalProbeTimer(networkChanged: true);
       }
     });
     _connectivitySub = Connectivity().onConnectivityChanged.listen((result) async {
@@ -1285,7 +1288,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
             _goOffline();
           }
         }
-        _startLocalProbeTimer();
+        _startLocalProbeTimer(networkChanged: true);
       });
     });
   }
@@ -1378,7 +1381,11 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   static const _remoteProbeFastMisses = 4;
   static const _remoteProbeMaxGap = Duration(minutes: 5);
 
-  void _startLocalProbeTimer() {
+  /// [networkChanged]: called from the connectivity handlers. Only then do
+  /// the away-from-home checks go back to every 30 s; playback starts,
+  /// foregrounding and reader closes used to reset them too, so the 5-minute
+  /// spacing was rarely reached (Absorb Plus, audit C14).
+  void _startLocalProbeTimer({bool networkChanged = false}) {
     final auth = _auth;
     if (auth == null) return;
     if (!auth.localServerEnabled || auth.localServerUrl.isEmpty) {
@@ -1391,8 +1398,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       _stopLocalProbeTimer();
       return;
     }
-    _remoteProbeMisses = 0;
-    _nextRemoteProbeAt = null;
+    if (networkChanged) {
+      _remoteProbeMisses = 0;
+      _nextRemoteProbeAt = null;
+    }
     if (_localProbeTimer != null) return;
     _localProbeFailures = 0;
     _localProbeTimer = Timer.periodic(_localProbeInterval, (_) => _probeLocalServer());
@@ -1414,8 +1423,25 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     if (url == auth.localServerUrl) {
       _localLastReachableAt = DateTime.now();
       _localProbeFailures = 0;
+      _remoteProbeMisses = 0; // fork (C14): home again
+      _nextRemoteProbeAt = null;
     }
   }
+
+  // Fork (C14) test seams.
+  @visibleForTesting
+  ({int misses, DateTime? nextAt}) get debugRemoteProbeBackoff =>
+      (misses: _remoteProbeMisses, nextAt: _nextRemoteProbeAt);
+
+  @visibleForTesting
+  void debugSetRemoteProbeBackoff(int misses, DateTime? nextAt) {
+    _remoteProbeMisses = misses;
+    _nextRemoteProbeAt = nextAt;
+  }
+
+  @visibleForTesting
+  void debugStartLocalProbeTimer({bool networkChanged = false}) =>
+      _startLocalProbeTimer(networkChanged: networkChanged);
 
   Future<void> _probeLocalServer() async {
     final auth = _auth;
@@ -2072,6 +2098,9 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   /// load whether a newer one has started since (account or library switch).
   String? _personalizedInFlightLibrary;
   int _personalizedGeneration = 0;
+  // Fork (C10): server answers applied to Home. An empty answer leaves the
+  // shelves empty too, so emptiness can't tell the saved copy it came last.
+  int _personalizedAnswers = 0;
 
   Future<void> loadPersonalizedView({bool force = false}) async {
     final existing = _personalizedInFlight;
@@ -2183,9 +2212,11 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     final libraryId = _selectedLibraryId;
     final scope = UserAccountService().activeScopeKey;
     if (libraryId == null || scope.isEmpty) return;
+    final answers = _personalizedAnswers;
     final snapshot = await HomeShelfSnapshot.instance.load(scope, libraryId);
     if (snapshot == null ||
         snapshot.isEmpty ||
+        answers != _personalizedAnswers ||
         _personalizedSections.isNotEmpty ||
         _selectedLibraryId != libraryId ||
         UserAccountService().activeScopeKey != scope ||
@@ -2256,6 +2287,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         return;
       }
       _personalizedSections = _withoutJustHidden(view);
+      _personalizedAnswers++;
       _registerSectionEntities(_personalizedSections);
       // Saved only under the account the request was made for. (Not compared
       // by ApiService: startup replaces it once while this request runs, and

@@ -255,6 +255,11 @@ void main() {
     });
   });
 
+  test('bookmarksExportFileName never splits an emoji at the length cap', () {
+    final name = bookmarksExportFileName('${'a' * 79}${'\u{1F4DA}' * 3}');
+    expect(name, '${'a' * 79}\u{1F4DA} bookmarks.md');
+  });
+
   test('bookmarksExportFileName drops characters file systems reject', () {
     expect(bookmarksExportFileName(null), 'Absorb bookmarks.md');
     expect(bookmarksExportFileName('  '), 'Absorb bookmarks.md');

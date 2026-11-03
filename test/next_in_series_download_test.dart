@@ -1,4 +1,5 @@
 import 'package:absorb/l10n/app_localizations.dart';
+import 'package:absorb/services/account_epoch.dart';
 import 'package:absorb/services/next_in_series_download.dart';
 import 'package:absorb/widgets/next_in_series_download_tile.dart';
 import 'package:flutter/material.dart';
@@ -136,6 +137,37 @@ void main() {
     fake.downloadError = 'nope';
     expect(await at(30000), NextInSeriesOutcome.failed);
     expect(await at(30100), NextInSeriesOutcome.alreadyHandled);
+  });
+
+  test('an account switch during the lookup starts nothing for the new one',
+      () async {
+    final seriesBooks = fake.series;
+    final switching = NextInSeriesDownloader(
+      isEnabled: () async => true,
+      mayDownloadNow: () async => true,
+      fetchItem: (id) async => fake.items[id],
+      fetchSeriesBooks: (libraryId, seriesId) async {
+        await AccountEpoch.advance();
+        return seriesBooks;
+      },
+      isDownloadedOrActive: (_) => false,
+      startDownload: (book) async {
+        fake.started.add(book['id'] as String);
+        return null;
+      },
+    );
+    expect(
+        await switching.check(itemId: 'b2', positionS: 30000, totalS: 36000),
+        NextInSeriesOutcome.notYet);
+    expect(fake.started, isEmpty);
+  });
+
+  test('books handled for one account are checked again for the next',
+      () async {
+    expect(await at(30000), NextInSeriesOutcome.started);
+    expect(await at(30100), NextInSeriesOutcome.alreadyHandled);
+    await AccountEpoch.advance();
+    expect(await at(30200), NextInSeriesOutcome.started);
   });
 
   test('series parsing matches the queue rules', () {

@@ -294,4 +294,11 @@ void main() {
       expect(stats[1].exists, isFalse);
     });
   });
+
+  test('a content URI with a stray percent sign still gives a name', () {
+    expect(FileHealthCheck.baseName('content://tree/Books%2F100%.mp3'),
+        'Books%2F100%.mp3');
+    expect(FileHealthCheck.baseName('content://tree/Books%2FTitle.mp3'),
+        'Title.mp3');
+  });
 }

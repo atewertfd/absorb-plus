@@ -71,6 +71,35 @@ void main() {
     expect(client.requests.last.headers['Authorization'], 'Bearer t');
   });
 
+  test('D14 a redirect to another host gets neither headers nor token',
+      () async {
+    final client = _FakeClient((r) async => r.url.host == 'abs.example'
+        ? http.StreamedResponse(const Stream.empty(), 302, headers: {
+            'location': 'https://cdn.example/f.zip?token=secret&sig=1',
+          })
+        : _ok(Stream.value([9])));
+    await BookCopyDownload(client).run(
+        Uri.parse('https://abs.example/api/items/x/download?token=secret'),
+        {'Authorization': 'Bearer t', 'CF-Access-Client-Id': 'id'},
+        '${dir.path}/c.zip',
+        (_, __) {});
+    final last = client.requests.last;
+    expect(last.url.host, 'cdn.example');
+    expect(last.url.queryParameters, {'sig': '1'});
+    expect(last.headers.containsKey('Authorization'), isFalse);
+    expect(last.headers.containsKey('CF-Access-Client-Id'), isFalse);
+  });
+
+  test('D14 origin check covers scheme and port', () {
+    final a = Uri.parse('https://abs.example/x');
+    expect(BookCopyDownload.sameOrigin(a, Uri.parse('https://ABS.example:443/y')),
+        isTrue);
+    expect(BookCopyDownload.sameOrigin(a, Uri.parse('http://abs.example/y')),
+        isFalse);
+    expect(BookCopyDownload.sameOrigin(a, Uri.parse('https://abs.example:8443/y')),
+        isFalse);
+  });
+
   test('a server error deletes nothing existing and leaves no partial file',
       () async {
     final dest = File('${dir.path}/b.zip')..writeAsStringSync('old');

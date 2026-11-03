@@ -63,7 +63,9 @@ class BookCopyDownload {
     try {
       if (_cancelled) throw const BookCopyCancelled();
       var response = await _send(url, headers);
-      // Follow redirects by hand so the sign-in headers come along.
+      // Follow redirects by hand so the sign-in headers come along, but only
+      // to the server itself: another host (a CDN, a misconfigured proxy)
+      // gets neither the headers nor the token query (audit D14).
       var target = url;
       for (var i = 0;
           i < 5 && const {301, 302, 303, 307, 308}.contains(response.statusCode);
@@ -71,8 +73,9 @@ class BookCopyDownload {
         final location = response.headers['location'];
         if (location == null) break;
         await response.stream.drain<void>().catchError((_) {});
-        target = target.resolve(location);
-        response = await _send(target, headers);
+        target = redirectTarget(url, target, location);
+        response = await _send(
+            target, sameOrigin(url, target) ? headers : const {});
       }
       if (response.statusCode != 200) {
         throw BookCopyFailed('HTTP ${response.statusCode}');
@@ -115,6 +118,34 @@ class BookCopyDownload {
     } finally {
       _client.close();
     }
+  }
+
+  /// Whether [b] is on the same scheme, host and port as [a].
+  @visibleForTesting
+  static bool sameOrigin(Uri a, Uri b) =>
+      a.scheme.toLowerCase() == b.scheme.toLowerCase() &&
+      a.host.toLowerCase() == b.host.toLowerCase() &&
+      a.port == b.port;
+
+  /// Where a redirect from [current] to [location] goes. Off the server
+  /// [original] names, any `token` query parameter is dropped.
+  @visibleForTesting
+  static Uri redirectTarget(Uri original, Uri current, String location) {
+    final next = current.resolve(location);
+    if (sameOrigin(original, next) ||
+        !next.queryParametersAll.containsKey('token')) {
+      return next;
+    }
+    final query = Map.of(next.queryParametersAll)..remove('token');
+    return Uri(
+      scheme: next.scheme,
+      userInfo: next.userInfo,
+      host: next.host,
+      port: next.hasPort ? next.port : null,
+      path: next.path,
+      queryParameters: query.isEmpty ? null : query,
+      fragment: next.hasFragment ? next.fragment : null,
+    );
   }
 
   Future<http.StreamedResponse> _send(Uri url, Map<String, String> headers) {

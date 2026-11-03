@@ -207,8 +207,9 @@ class PrecacheService {
       if (waited >= 60) return false;
       await Future<void>.delayed(const Duration(seconds: 5));
     }
-    // Turning the setting off stops a run that's already going.
-    return source.stillValid() && await isEnabled();
+    // Turning the setting off stops a run that's already going, and so does
+    // leaving Wi-Fi or Ethernet mid-run (Absorb Plus, audit D15).
+    return source.stillValid() && await isEnabled() && await _isUnmetered();
   }
 
   /// Downloads one cover into the disk cache unless it's already there.

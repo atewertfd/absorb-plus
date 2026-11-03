@@ -689,18 +689,23 @@ class ApiService {
   }
 
   Future<http.Response> _post(Uri url, {Map<String, String>? headers, Object? body}) {
-    LibraryItemRequestCache.instance.clear(); // a write may change an item
-    return (_httpClient ?? _sharedClient).post(url, headers: headers, body: body);
+    // A write may change an item: forget what it touches before it is sent
+    // and again once it is answered (S10, library_item_request_cache.dart).
+    LibraryItemRequestCache.instance.invalidateForWrite('POST', url);
+    return (_httpClient ?? _sharedClient).post(url, headers: headers, body: body)
+        .whenComplete(() => LibraryItemRequestCache.instance.invalidateForWrite('POST', url));
   }
 
   Future<http.Response> _patch(Uri url, {Map<String, String>? headers, Object? body}) {
-    LibraryItemRequestCache.instance.clear();
-    return (_httpClient ?? _sharedClient).patch(url, headers: headers, body: body);
+    LibraryItemRequestCache.instance.invalidateForWrite('PATCH', url);
+    return (_httpClient ?? _sharedClient).patch(url, headers: headers, body: body)
+        .whenComplete(() => LibraryItemRequestCache.instance.invalidateForWrite('PATCH', url));
   }
 
   Future<http.Response> _delete(Uri url, {Map<String, String>? headers}) {
-    LibraryItemRequestCache.instance.clear();
-    return (_httpClient ?? _sharedClient).delete(url, headers: headers);
+    LibraryItemRequestCache.instance.invalidateForWrite('DELETE', url);
+    return (_httpClient ?? _sharedClient).delete(url, headers: headers)
+        .whenComplete(() => LibraryItemRequestCache.instance.invalidateForWrite('DELETE', url));
   }
 
   /// Credential-presence diagnostic only. Never include token characters,
@@ -868,9 +873,30 @@ class ApiService {
     }();
   }
 
+  /// Absorb Plus (audit S8): whether a refresh answer means the refresh
+  /// token itself was turned down. Audiobookshelf answers that with 401; a
+  /// 403 is what a reverse proxy in front of it (Cloudflare Access,
+  /// Authelia) sends when its own sign-in lapsed, and treating it as a
+  /// rejection wiped a refresh token the server would still accept. So a
+  /// 403 counts only with Audiobookshelf's JSON error body, or on BookOrbit.
+  @visibleForTesting
+  static bool refreshRejected(int status, String body,
+      {required bool isBookOrbit}) {
+    if (status == 401) return true;
+    if (status != 403) return false;
+    if (isBookOrbit) return true;
+    try {
+      final decoded = jsonDecode(body);
+      return decoded is Map && decoded['error'] is String;
+    } catch (_) {
+      return false;
+    }
+  }
+
   /// Attempt to refresh the access token using the refresh token. A rejected
   /// refresh is kept distinct from a temporary network/server failure so only
-  /// an explicit 401/403 can expire the local session.
+  /// an explicit rejection (see [refreshRejected]) can expire the local
+  /// session.
   Future<_RefreshOutcome> _refreshAccessToken() async {
     if (_isLegacyToken || _refreshToken == null) {
       debugPrint('[API] Cannot refresh: isLegacy=$_isLegacyToken, hasRefreshToken=${_refreshToken != null}');
@@ -925,7 +951,8 @@ class ApiService {
             }
           }
 
-          if (response.statusCode == 401 || response.statusCode == 403) {
+          if (refreshRejected(response.statusCode, response.body,
+              isBookOrbit: isBookOrbit)) {
             if (await _adoptPersistedTokens()) {
               _refreshCompleter!.complete(_RefreshOutcome.refreshed);
               return _RefreshOutcome.refreshed;
