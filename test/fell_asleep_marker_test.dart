@@ -248,6 +248,7 @@ void main() {
     testWidgets('nothing without a marker', (tester) async {
       await pumpChip(tester);
       expect(find.text(text), findsNothing);
+      // ignore: invalid_use_of_protected_member
       expect(player.hasListeners, isFalse);
     });
 
