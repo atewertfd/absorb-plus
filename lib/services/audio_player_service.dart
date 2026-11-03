@@ -8475,6 +8475,7 @@ class AudioPlayerService extends ChangeNotifier {
 
   @override
   void dispose() {
+    _recovery.policy.dispose(); // fork: no reconnect timer outlives the service
     _endAdvanceBuffering();
     _syncSub?.cancel();
     _bgSaveTimer?.cancel();
