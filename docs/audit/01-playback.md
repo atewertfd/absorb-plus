@@ -328,6 +328,7 @@ Recent fixes not re-reported: stale state leaking into the next book (a14d231c),
 - There is no `com.absorb.equalizer` implementation outside Android, and `_setupSoftwareFallback` (equalizer_service.dart:112) exposes 5 bands that nothing applies.
 - `'equalizer'` is in `PlayerSettings.defaultButtonOrder` (player_settings.dart:1281) and is not filtered in `card_button_config.dart:60` `_hiddenButtons`.
 - **Fix:** add `if (kIsWeb || !Platform.isAndroid) 'equalizer'` to `_hiddenButtons`. Upstream file, 1 line, low merge risk. Alternatively, a fork hook.
+- **Partly fixed (2026-11-03, `claude/r2-voiceboost`):** bands and presets (Voice boost included) now apply on Windows and Linux as an mpv `af` chain of `equalizer` filters (`desktop_equalizer.dart`, live through the vendored plugin's `setLiveMpvProperty`); the button is hidden on web (`ForkPlatform.supportsEqualizer`). Still inert on desktop: Bass boost, Loudness and Mono. The bundled Windows libmpv has no `dynaudnorm`, `acompressor`, `alimiter`, `volume` or `aresample`, and mpv ends the file when a filter can't be created, so a loudness leveller needs a fuller libmpv first.
 
 **B7. The Cast button is shown on Windows, Linux and web, where cast can't work.** Wrong behavior; medium confidence.
 - `ChromecastService.castSupported` is a `const true`, and `init()` only runs on Android.
