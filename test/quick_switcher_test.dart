@@ -439,6 +439,7 @@ void main() {
       l.quickSwitcherGoDownloads,
       l.quickSwitcherPlayPause,
       l.quickSwitcherSleepTimer,
+      l.surpriseMe,
       l.desktopShortcutsTitle,
     ]);
     // The extra match words come from the translations, not from code.

@@ -50,6 +50,8 @@ String localizedCardButtonLabel(AppLocalizations l, CardButtonDef def) {
       return l.findInEbook;
     case 'lyrics':
       return l.lyricsMode;
+    case 'gototime': // Absorb Plus
+      return l.goToTime;
   }
   return def.label;
 }
@@ -84,6 +86,7 @@ const _allCardButtons = [
   CardButtonDef('ebook', 'Read', Icons.menu_book_rounded),
   CardButtonDef('findinebook', 'Find position in ebook', Icons.manage_search_rounded),
   CardButtonDef('lyrics', 'Live transcript', Icons.subtitles_rounded),
+  CardButtonDef('gototime', 'Go to time', Icons.more_time_rounded), // Absorb Plus
 ];
 
 /// Card buttons filtered for the current platform.

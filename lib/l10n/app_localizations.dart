@@ -23157,6 +23157,90 @@ abstract class AppLocalizations {
   /// **'Back to {time}'**
   String seekUndoBackTo(String time);
 
+  /// Player More-menu action and dialog title: type a time and the player seeks there
+  ///
+  /// In en, this message translates to:
+  /// **'Go to time'**
+  String get goToTime;
+
+  /// No description provided for @goToTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get goToTimeLabel;
+
+  /// No description provided for @goToTimeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'h:mm:ss, mm:ss or minutes'**
+  String get goToTimeHint;
+
+  /// No description provided for @goToTimeGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Go'**
+  String get goToTimeGo;
+
+  /// No description provided for @goToTimeLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Length {time}'**
+  String goToTimeLength(String time);
+
+  /// No description provided for @goToTimeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a time like 1:23:45, 23:45 or 90'**
+  String get goToTimeInvalid;
+
+  /// No description provided for @goToTimePastEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s past the end ({time})'**
+  String goToTimePastEnd(String time);
+
+  /// No description provided for @desktopShortcutGoToTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to a time in the open player'**
+  String get desktopShortcutGoToTime;
+
+  /// Chip on the player after the sleep timer stopped playback; tapping it seeks back to where the listener was last known to be awake
+  ///
+  /// In en, this message translates to:
+  /// **'Fell asleep around {time} · Jump back'**
+  String fellAsleepJumpBack(String time);
+
+  /// Library header button and quick switcher action: opens a random book the user hasn't finished
+  ///
+  /// In en, this message translates to:
+  /// **'Surprise me'**
+  String get surpriseMe;
+
+  /// No description provided for @surpriseMeNoneLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve finished every book in this library'**
+  String get surpriseMeNoneLeft;
+
+  /// No description provided for @surpriseMeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t pick a book. Try again.'**
+  String get surpriseMeFailed;
+
+  /// No description provided for @surpriseMeOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Surprise me needs a connection to the server'**
+  String get surpriseMeOffline;
+
+  /// No description provided for @surpriseMeBooksOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Surprise me picks books. Switch to a book library.'**
+  String get surpriseMeBooksOnly;
+
   /// No description provided for @autoDownloadNextInSeries.
   ///
   /// In en, this message translates to:
@@ -23918,6 +24002,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'remote phone control pc link pair'**
   String get quickSwitcherKeywordsRemote;
+
+  /// Extra search words (space separated) that find the Surprise me action in the Ctrl+K quick switcher. Not shown on screen.
+  ///
+  /// In en, this message translates to:
+  /// **'random pick shuffle'**
+  String get quickSwitcherKeywordsSurprise;
 }
 
 class _AppLocalizationsDelegate

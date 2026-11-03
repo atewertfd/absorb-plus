@@ -23,6 +23,7 @@ import '../services/ebook_cache.dart';
 import '../services/find_in_ebook.dart';
 import '../main.dart' show colorSourceNotifier, useColorEverywhereNotifier, manualSeedNotifier, manualColorScheme;
 import '../utils/local_path.dart';
+import 'fell_asleep_chip.dart'; // Absorb Plus
 
 // ─── Custom route: slide-up + fade ────────────────────────────
 
@@ -1049,6 +1050,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
                     );
                   }),
                 ),
+                FellAsleepChip(itemId: _itemId, episodeId: _episodeId, top: MediaQuery.paddingOf(context).top + 56), // Absorb Plus
               ],
             ),
     ),

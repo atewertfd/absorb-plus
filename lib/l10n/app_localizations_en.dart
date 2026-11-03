@@ -13665,6 +13665,57 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get goToTime => 'Go to time';
+
+  @override
+  String get goToTimeLabel => 'Time';
+
+  @override
+  String get goToTimeHint => 'h:mm:ss, mm:ss or minutes';
+
+  @override
+  String get goToTimeGo => 'Go';
+
+  @override
+  String goToTimeLength(String time) {
+    return 'Length $time';
+  }
+
+  @override
+  String get goToTimeInvalid => 'Type a time like 1:23:45, 23:45 or 90';
+
+  @override
+  String goToTimePastEnd(String time) {
+    return 'That\'s past the end ($time)';
+  }
+
+  @override
+  String get desktopShortcutGoToTime => 'Go to a time in the open player';
+
+  @override
+  String fellAsleepJumpBack(String time) {
+    return 'Fell asleep around $time · Jump back';
+  }
+
+  @override
+  String get surpriseMe => 'Surprise me';
+
+  @override
+  String get surpriseMeNoneLeft =>
+      'You\'ve finished every book in this library';
+
+  @override
+  String get surpriseMeFailed => 'Couldn\'t pick a book. Try again.';
+
+  @override
+  String get surpriseMeOffline =>
+      'Surprise me needs a connection to the server';
+
+  @override
+  String get surpriseMeBooksOnly =>
+      'Surprise me picks books. Switch to a book library.';
+
+  @override
   String get autoDownloadNextInSeries =>
       'Download the next book in the series automatically';
 
@@ -14117,4 +14168,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quickSwitcherKeywordsRemote => 'remote phone control pc link pair';
+
+  @override
+  String get quickSwitcherKeywordsSurprise => 'random pick shuffle';
 }

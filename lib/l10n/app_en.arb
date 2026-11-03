@@ -7435,6 +7435,25 @@
   "@homeRecentlyAddedNewBadge": {"placeholders": {"count": {"type": "int"}}},
   "seekUndoBackTo": "Back to {time}",
   "@seekUndoBackTo": {"description": "Toast after a long jump in the book; tapping it returns to the earlier position", "placeholders": {"time": {"type": "String"}}},
+  "goToTime": "Go to time",
+  "@goToTime": {"description": "Player More-menu action and dialog title: type a time and the player seeks there"},
+  "goToTimeLabel": "Time",
+  "goToTimeHint": "h:mm:ss, mm:ss or minutes",
+  "goToTimeGo": "Go",
+  "goToTimeLength": "Length {time}",
+  "@goToTimeLength": {"placeholders": {"time": {"type": "String"}}},
+  "goToTimeInvalid": "Type a time like 1:23:45, 23:45 or 90",
+  "goToTimePastEnd": "That's past the end ({time})",
+  "@goToTimePastEnd": {"placeholders": {"time": {"type": "String"}}},
+  "desktopShortcutGoToTime": "Go to a time in the open player",
+  "fellAsleepJumpBack": "Fell asleep around {time} · Jump back",
+  "@fellAsleepJumpBack": {"description": "Chip on the player after the sleep timer stopped playback; tapping it seeks back to where the listener was last known to be awake", "placeholders": {"time": {"type": "String"}}},
+  "surpriseMe": "Surprise me",
+  "@surpriseMe": {"description": "Library header button and quick switcher action: opens a random book the user hasn't finished"},
+  "surpriseMeNoneLeft": "You've finished every book in this library",
+  "surpriseMeFailed": "Couldn't pick a book. Try again.",
+  "surpriseMeOffline": "Surprise me needs a connection to the server",
+  "surpriseMeBooksOnly": "Surprise me picks books. Switch to a book library.",
   "autoDownloadNextInSeries": "Download the next book in the series automatically",
   "autoDownloadNextInSeriesSubtitle": "When the book you're playing is 80% done or has less than an hour left. Follows the Wi-Fi only setting.",
   "emptyStateBrowseLibrary": "Browse library",
@@ -7584,5 +7603,9 @@
   "@remoteTimeLeft": {"placeholders": {"time": {"type": "String"}}},
   "remoteChapterTimeLeft": "{time} left in the chapter",
   "@remoteChapterTimeLeft": {"placeholders": {"time": {"type": "String"}}},
-  "quickSwitcherKeywordsRemote": "remote phone control pc link pair"
+  "quickSwitcherKeywordsRemote": "remote phone control pc link pair",
+  "quickSwitcherKeywordsSurprise": "random pick shuffle",
+  "@quickSwitcherKeywordsSurprise": {
+    "description": "Extra search words (space separated) that find the Surprise me action in the Ctrl+K quick switcher. Not shown on screen."
+  }
 }

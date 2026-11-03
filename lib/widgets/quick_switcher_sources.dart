@@ -19,6 +19,7 @@ import 'episode_list_sheet.dart';
 import 'quick_switcher.dart';
 import 'remote_host_sheet.dart';
 import 'series_books_sheet.dart';
+import 'surprise_me_button.dart';
 
 /// How many rows of each kind a library search adds to the switcher.
 const _maxBooks = 8;
@@ -76,6 +77,8 @@ List<QuickSwitcherEntry> quickSwitcherAppActions(
         () => app.runNavAction('playPause'), l.quickSwitcherKeywordsPlayPause),
     action(l.quickSwitcherSleepTimer, Icons.bedtime_rounded,
         () => app.runNavAction('sleep'), l.quickSwitcherKeywordsSleepTimer),
+    action(l.surpriseMe, surpriseMeIcon,
+        () => unawaited(openSurpriseBook(context)), l.quickSwitcherKeywordsSurprise),
     action(l.desktopShortcutsTitle, Icons.keyboard_rounded,
         () => unawaited(showDesktopShortcutsDialog(context)),
         l.quickSwitcherKeywordsShortcuts),

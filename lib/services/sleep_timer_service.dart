@@ -7,6 +7,7 @@ import 'package:vibration/vibration.dart';
 import 'scoped_prefs.dart';
 import 'audio_player_service.dart';
 import 'chromecast_service.dart';
+import 'fell_asleep_marker.dart'; // Absorb Plus
 import 'sleep_timer_tick_policy.dart';
 
 enum SleepTimerMode { off, time, chapters, episodes }
@@ -96,7 +97,7 @@ class SleepTimerService extends ChangeNotifier {
   // Singleton
   static final SleepTimerService _instance = SleepTimerService._();
   factory SleepTimerService() => _instance;
-  SleepTimerService._();
+  SleepTimerService._() { FellAsleepTracker.attach(this); } // Absorb Plus: fell asleep marker
 
   final _player = AudioPlayerService();
   final _cast = ChromecastService();
@@ -581,6 +582,7 @@ class SleepTimerService extends ChangeNotifier {
     _isTriggeringSleep = true;
     debugPrint('[SleepTimer] Triggering sleep — pausing playback');
     try {
+      unawaited(FellAsleepTracker.instance.onSleepStopped(_playingItemKey(), _currentPositionSeconds())); // Absorb Plus
       if (_cast.isCastEngaged) {
         await _cast.pauseNowOrOnReconnect();
       } else {
