@@ -19,6 +19,7 @@ import 'audio_player_service.dart';
 import 'desktop_download_folder.dart';
 import 'download_folder_guard.dart';
 import 'download_index_store.dart';
+import 'download_key.dart';
 import 'download_resume.dart';
 import 'download_track_names.dart';
 import 'ebook_cache.dart';
@@ -84,6 +85,11 @@ class DownloadInfo {
   final String? localDirPath;
   final String? libraryId;
 
+  /// Absorb Plus: the podcast episode id of an episode download, whose
+  /// [itemId] is "<show id>-<episode id>". Records written before it was
+  /// stored don't have it ([downloadKeyParts] falls back to the old split).
+  final String? episodeId;
+
   DownloadInfo({
     required this.itemId,
     this.status = DownloadStatus.none,
@@ -103,6 +109,7 @@ class DownloadInfo {
     this.localCoverPath,
     this.localDirPath,
     this.libraryId,
+    this.episodeId,
   });
 
   Map<String, dynamic> toJson() => {
@@ -124,6 +131,7 @@ class DownloadInfo {
         'localCoverPath': localCoverPath,
         if (localDirPath != null) 'localDirPath': localDirPath,
         if (libraryId != null) 'libraryId': libraryId,
+        if (episodeId != null) 'episodeId': episodeId,
       };
 
   factory DownloadInfo.fromJson(Map<String, dynamic> json) {
@@ -179,6 +187,7 @@ class DownloadInfo {
       localCoverPath: json['localCoverPath'] as String?,
       localDirPath: json['localDirPath'] as String?,
       libraryId: json['libraryId'] as String?,
+      episodeId: json['episodeId'] as String?,
     );
   }
 }
@@ -445,6 +454,7 @@ class DownloadService extends ChangeNotifier {
         _cancelTasksOverride = null,
         _deleteTaskRecordOverride = null,
         _taskRecordsOverride = null,
+        _enqueueOverride = null,
         _indexStore = DownloadIndexStore.platformDefault() {
     UserAccountService.onScopeMoved = _moveOrigins;
   }
@@ -456,10 +466,12 @@ class DownloadService extends ChangeNotifier {
     Future<void> Function(String)? deleteTaskRecord,
     DownloadIndexStore? indexStore,
     Future<List<TaskRecord>> Function()? taskRecords,
+    Future<bool> Function(Task task)? enqueue,
   })  : _initializeOverride = initialize,
         _cancelTasksOverride = cancelTasks,
         _deleteTaskRecordOverride = deleteTaskRecord,
         _taskRecordsOverride = taskRecords,
+        _enqueueOverride = enqueue,
         _indexStore = indexStore ?? PrefsDownloadIndexStore();
 
   /// Where the download list is kept: its own file on native builds,
@@ -470,6 +482,9 @@ class DownloadService extends ChangeNotifier {
   final Future<void> Function(List<String>)? _cancelTasksOverride;
   final Future<void> Function(String)? _deleteTaskRecordOverride;
   final Future<List<TaskRecord>> Function()? _taskRecordsOverride;
+  final Future<bool> Function(Task task)? _enqueueOverride;
+  Future<bool> _enqueue(Task task) =>
+      (_enqueueOverride ?? FileDownloader().enqueue)(task);
   Future<List<TaskRecord>> _taskRecords() =>
       (_taskRecordsOverride ?? FileDownloader().database.allRecords)();
   Future<void>? _initFuture;
@@ -1213,6 +1228,7 @@ class DownloadService extends ChangeNotifier {
       }
       _downloads[itemId] = DownloadInfo(
         itemId: itemId,
+        episodeId: info.episodeId,
         status: info.status,
         progress: info.progress,
         localPaths: info.localPaths,
@@ -1537,6 +1553,7 @@ class DownloadService extends ChangeNotifier {
       if (needsUpdate) {
         _downloads[entry.key] = DownloadInfo(
           itemId: info.itemId,
+          episodeId: info.episodeId,
           status: info.status,
           localPaths: newPaths,
           sessionData: info.sessionData,
@@ -1629,6 +1646,7 @@ class DownloadService extends ChangeNotifier {
       if (needsUpdate) {
         _downloads[entry.key] = DownloadInfo(
           itemId: info.itemId,
+          episodeId: info.episodeId,
           status: info.status,
           progress: info.progress,
           localPaths: newPaths,
@@ -1715,14 +1733,14 @@ class DownloadService extends ChangeNotifier {
     _legacyExternalIds.remove(itemId);
     await _save();
     notifyListeners();
-    final episodeId = itemId.length > 36 ? itemId.substring(37) : null;
+    final key = downloadKeyParts(itemId, episodeId: info.episodeId); // D17
     await downloadItem(
       api: api,
-      itemId: itemId,
+      itemId: key.itemId,
       title: info.title ?? '',
       author: info.author,
       coverUrl: info.coverUrl,
-      episodeId: episodeId,
+      episodeId: key.episodeId,
       libraryId: info.libraryId,
     );
   }
@@ -1838,9 +1856,8 @@ class DownloadService extends ChangeNotifier {
 
       // For podcast episodes, the itemId is a composite "showUUID-episodeId".
       // Extract the library item ID (first 36 chars = UUID) for API calls.
-      final apiItemId = info.itemId.length > 36
-          ? info.itemId.substring(0, 36)
-          : info.itemId;
+      final apiItemId =
+          downloadKeyParts(info.itemId, episodeId: info.episodeId).itemId; // D17
 
       // Enrich missing title/author from server
       if (title == null || title.isEmpty) {
@@ -1926,6 +1943,7 @@ class DownloadService extends ChangeNotifier {
       if (needsUpdate) {
         _downloads[entry.key] = DownloadInfo(
           itemId: info.itemId,
+          episodeId: info.episodeId,
           status: info.status,
           progress: info.progress,
           trackCount: info.trackCount,
@@ -2144,6 +2162,7 @@ class DownloadService extends ChangeNotifier {
       ));
       _downloads[itemId] = DownloadInfo(
         itemId: itemId,
+        episodeId: episodeId,
         status: DownloadStatus.downloading,
         progress: 0,
         title: title,
@@ -2316,6 +2335,7 @@ class DownloadService extends ChangeNotifier {
           session['libraryItem'] = item;
           _downloads[entry.key] = DownloadInfo(
             itemId: info.itemId,
+            episodeId: info.episodeId,
             status: info.status,
             progress: info.progress,
             localPaths: info.localPaths,
@@ -2367,6 +2387,7 @@ class DownloadService extends ChangeNotifier {
 
     _downloads[itemId] = DownloadInfo(
       itemId: itemId,
+      episodeId: episodeId,
       status: DownloadStatus.downloading,
       progress: 0,
       title: title,
@@ -2389,6 +2410,7 @@ class DownloadService extends ChangeNotifier {
         _customDownloadUri!.isNotEmpty;
     String? bookDirRef; // filesystem path or content:// URI, for cleanup
     Directory? bookDir; // filesystem branches only
+    _PendingBook? startedBook; // Absorb Plus (D11)
     try {
       // For episodes, itemId is a composite key like 'podcastId-episodeId'.
       // Extract the real library item ID for the API call.
@@ -2438,6 +2460,7 @@ class DownloadService extends ChangeNotifier {
         if (running != null && running.status == DownloadStatus.downloading) {
           _downloads[itemId] = DownloadInfo(
             itemId: itemId,
+            episodeId: episodeId,
             status: DownloadStatus.downloading,
             progress: running.progress,
             title: title,
@@ -2530,19 +2553,22 @@ class DownloadService extends ChangeNotifier {
         unawaited(api.closePlaybackSession(sessionId));
       }
 
+      final expectedPaths = [for (final f in files) '${bookDir.path}/${f.filename}'];
+      final wifiOnly = await PlayerSettings.getWifiOnlyDownloads();
+
       // Cancelled while we were resolving? Bail before enqueueing anything.
+      // Absorb Plus: checked after the last await before the book is
+      // registered, so a cancel during the Wi-Fi setting read counts (D11).
       if (_cancelledIds.remove(itemId)) {
         _closeLinkSession(itemId);
         await _cleanupBookDir(bookDirRef, itemId);
+        await _removeCoverCache(itemId);
         _activeDownloadIds.remove(itemId);
         _downloads.remove(itemId);
         notifyListeners();
         unawaited(_processQueue());
         return;
       }
-
-      final expectedPaths = [for (final f in files) '${bookDir.path}/${f.filename}'];
-      final wifiOnly = await PlayerSettings.getWifiOnlyDownloads();
 
       final pending = _PendingBook(
         itemId: itemId,
@@ -2564,6 +2590,7 @@ class DownloadService extends ChangeNotifier {
         expectedSizes: api.isBookOrbit ? const [] : expectedTrackSizes(audioTracks),
       );
       _pending[itemId] = pending;
+      startedBook = pending;
       await _persistPending();
 
       // Absorb Plus: on Windows/Linux, tracks an interrupted download already
@@ -2646,14 +2673,27 @@ class DownloadService extends ChangeNotifier {
           progressBar: true,
           groupNotificationId: multiFile ? itemId : '',
         );
-        final ok = await FileDownloader().enqueue(task);
+        final ok = await _enqueue(task);
         debugPrint('[Download] enqueue ${i + 1}/${files.length} ok=$ok file=${files[i].filename}');
+        // Absorb Plus: cancelled while this book's tracks were being handed
+        // over. The cancel only reached the tasks enqueued by then; stop
+        // here and take back the rest (audit D11).
+        if (pending.cancelled) {
+          await _dropCancelledEnqueue(itemId, pending);
+          return;
+        }
         if (!ok) throw Exception('Failed to enqueue track ${i + 1}');
       }
       debugPrint('[Download] Enqueued ${files.length} task(s) for "$title"');
       // Every track was already there: finish the book now (Absorb Plus, D2).
       if (finished.length == files.length) await _checkBookTerminal(itemId, pending);
     } catch (e) {
+      // Absorb Plus: a cancel made the enqueue throw; it is not a failure (D11).
+      final started = startedBook;
+      if (started != null && started.cancelled) {
+        await _dropCancelledEnqueue(itemId, started);
+        return;
+      }
       await _failBook(itemId,
           cause: e, bookDirRef: bookDirRef, title: title, author: author, coverUrl: coverUrl);
     }
@@ -3226,6 +3266,7 @@ class DownloadService extends ChangeNotifier {
     unawaited(_updateBookNotification(itemId, p, now));
     _downloads[itemId] = DownloadInfo(
       itemId: itemId,
+      episodeId: p.episodeId,
       status: DownloadStatus.downloading,
       progress: p.overallProgress,
       bytesDone: p.bytesDone,
@@ -3506,6 +3547,7 @@ class DownloadService extends ChangeNotifier {
 
     _downloads[itemId] = DownloadInfo(
       itemId: itemId,
+      episodeId: p.episodeId,
       status: DownloadStatus.downloaded,
       localPaths: finalPaths,
       sessionData: p.slimSessionJson,
@@ -3577,10 +3619,12 @@ class DownloadService extends ChangeNotifier {
         ? dir
         : null;
     if (keptDir == null) await _cleanupBookDir(dir, itemId);
+    await _removeCoverCache(itemId); // Absorb Plus (D16)
 
     final msg = _mapError(cause, taskException, responseCode);
     _downloads[itemId] = DownloadInfo(
       itemId: itemId,
+      episodeId: p?.episodeId ?? _downloads[itemId]?.episodeId,
       status: DownloadStatus.error,
       failureReason: _failureReason(cause, taskException, responseCode),
       title: t,
@@ -3614,10 +3658,11 @@ class DownloadService extends ChangeNotifier {
     // initialization/network guards can reject the request without starting
     // anything, and the user must still be able to retry after that rejection.
 
-    final episodeId = itemId.length > 36 ? itemId.substring(37) : null;
+    final key = downloadKeyParts(itemId, episodeId: info.episodeId); // D17
+    final episodeId = key.episodeId;
     return downloadItem(
       api: api,
-      itemId: episodeId == null ? itemId : itemId.substring(0, 36),
+      itemId: key.itemId,
       title: info.title ?? itemId,
       author: info.author,
       coverUrl: info.coverUrl,
@@ -3632,6 +3677,7 @@ class DownloadService extends ChangeNotifier {
     if (failed?.status != DownloadStatus.error) return;
     // Absorb Plus: the finished tracks an interrupted download kept (D2).
     await _cleanupBookDir(failed!.localDirPath, itemId);
+    await _removeCoverCache(itemId); // Absorb Plus (D16)
     _resumeDirs.remove(itemId);
     _downloads.remove(itemId);
     await _save();
@@ -3653,6 +3699,47 @@ class DownloadService extends ChangeNotifier {
         icon: Icons.error_outline_rounded);
   }
 
+  /// Absorb Plus: a book cancelled while its tracks were being enqueued
+  /// (books of many files take seconds). The cancel reached only the tasks
+  /// enqueued by then; the rest would download into a recreated folder with
+  /// nothing tracking them (audit D11).
+  Future<void> _dropCancelledEnqueue(String itemId, _PendingBook p) async {
+    debugPrint('[Download] $itemId was cancelled while its tracks were '
+        'being enqueued - taking the rest back');
+    await _cancelSiblings(itemId, p, force: true);
+    await _deleteDbRecords(itemId, p.trackCount);
+    await _cleanupBookDir(p.bookDir, itemId);
+    await _removeCoverCache(itemId);
+  }
+
+  /// Absorb Plus: the cover a download caches in `<documents>/downloads/<id>`
+  /// before its tracks start. Removed when the download fails, is cancelled
+  /// or its failure is dismissed, unless a finished copy of the book still
+  /// shows it (audit D16). [force] is for deleting that finished copy.
+  Future<void> _removeCoverCache(String itemId, {bool force = false}) async {
+    if (!force && _downloads[itemId]?.status == DownloadStatus.downloaded) {
+      return;
+    }
+    try {
+      final internalBase = await _internalBasePath;
+      final coverDir = Directory('$internalBase/$itemId');
+      final coverFile = File('$internalBase/$itemId/cover.jpg');
+      // FileImage caches by path; evict so a re-download at the same path renders fresh.
+      if (coverFile.existsSync()) {
+        final evicted = PaintingBinding.instance.imageCache
+            .evict(FileImage(coverFile));
+        debugPrint('[Download] evict cover ${coverFile.path} -> $evicted');
+      }
+      if (DownloadFolderGuard.mayDeleteTree(coverDir.path, [internalBase],
+              windows: Platform.isWindows) &&
+          coverDir.existsSync()) {
+        coverDir.deleteSync(recursive: true);
+      }
+    } catch (e) {
+      debugPrint('[Download] cover cleanup failed: $e');
+    }
+  }
+
   Future<void> _handleCanceled(String itemId) async {
     final p = _pending[itemId];
     _closeLinkSession(itemId);
@@ -3662,6 +3749,7 @@ class DownloadService extends ChangeNotifier {
     // canceled - dismiss it.
     if ((p?.trackCount ?? 0) > 1) _dismissGroupNotification(itemId);
     await _cleanupBookDir(p?.bookDir, itemId);
+    await _removeCoverCache(itemId); // Absorb Plus (D16)
     _downloads.remove(itemId);
     _activeDownloadIds.remove(itemId);
     _pending.remove(itemId);
@@ -3978,6 +4066,7 @@ class DownloadService extends ChangeNotifier {
       _activeDownloadIds.add(itemId);
       _downloads[itemId] = DownloadInfo(
         itemId: itemId,
+        episodeId: p.episodeId,
         status: DownloadStatus.downloading,
         progress: 0,
         title: p.title,
@@ -4021,6 +4110,7 @@ class DownloadService extends ChangeNotifier {
         _activeDownloadIds.add(e.key);
         _downloads[e.key] = DownloadInfo(
           itemId: e.key,
+          episodeId: p.episodeId,
           status: DownloadStatus.downloading,
           progress: 0,
           title: p.title,
@@ -4193,24 +4283,7 @@ class DownloadService extends ChangeNotifier {
       }
     } catch (_) {}
 
-    try {
-      final internalBase = await _internalBasePath;
-      final coverDir = Directory('$internalBase/$itemId');
-      final coverFile = File('$internalBase/$itemId/cover.jpg');
-      // FileImage caches by path; evict so a re-download at the same path renders fresh.
-      if (coverFile.existsSync()) {
-        final evicted = PaintingBinding.instance.imageCache
-            .evict(FileImage(coverFile));
-        debugPrint('[Download] evict cover ${coverFile.path} -> $evicted');
-      }
-      if (DownloadFolderGuard.mayDeleteTree(coverDir.path, [internalBase],
-              windows: Platform.isWindows) &&
-          coverDir.existsSync()) {
-        coverDir.deleteSync(recursive: true);
-      }
-    } catch (e) {
-      debugPrint('[Download] cover cleanup failed: $e');
-    }
+    await _removeCoverCache(itemId, force: true);
 
     // Drop the offline ebook copy too, unless the reader has a claim on it.
     if (!_keptEbooks.containsKey(itemId)) await deleteCachedEbook(itemId);
