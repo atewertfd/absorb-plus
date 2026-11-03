@@ -238,6 +238,10 @@ Future<void> applyAppearanceFromPrefs() async {
   applyUseColorEverywhere(await PlayerSettings.getUseColorEverywhere());
   snappyTransitionsNotifier.value = await PlayerSettings.getSnappyTransitions();
   classicWordingNotifier.value = await PlayerSettings.getClassicWording();
+  // Fork (C8): a synced or restored language takes effect too.
+  final lang = await PlayerSettings.getLanguage();
+  final locale = lang.isEmpty ? null : Locale(lang);
+  if (localeNotifier.value != locale) localeNotifier.value = locale;
   await applyOrientationLock();
 }
 
@@ -788,7 +792,14 @@ class _AuthGateState extends State<AuthGate> {
     if (_appearanceScope == null || scope == _appearanceScope) return;
     _appearanceScope = scope;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      applyAppearanceFromPrefs().catchError((Object e) {
+      final einkBefore = PlayerSettings.einkMode;
+      applyAppearanceFromPrefs().then((_) {
+        // Fork (C8): the e-ink quiet state (no socket, no polling) follows
+        // the account's setting, not just its look.
+        if (PlayerSettings.einkMode != einkBefore && mounted) {
+          context.read<LibraryProvider>().applyEinkMode(PlayerSettings.einkMode);
+        }
+      }).catchError((Object e) {
         debugPrint('[Init] Applying the account appearance failed: $e');
       });
     });
