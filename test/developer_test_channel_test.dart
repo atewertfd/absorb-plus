@@ -19,36 +19,34 @@ Map<String, dynamic> _release({
   String tag = 'test-channel',
   List<String> assets = const [],
   String body = 'Changes since v1.12.1-345:\n- New: test channel',
-}) =>
-    {
-      'tag_name': tag,
-      'draft': false,
-      'prerelease': true,
-      'body': body,
-      'assets': [
-        for (final name in assets)
-          {
-            'name': name,
-            'browser_download_url':
-                'https://github.com/atewertfd/absorb-plus/releases/download/test-channel/$name',
-          },
-      ],
-    };
+}) => {
+  'tag_name': tag,
+  'draft': false,
+  'prerelease': true,
+  'body': body,
+  'assets': [
+    for (final name in assets)
+      {
+        'name': name,
+        'browser_download_url':
+            'https://github.com/atewertfd/absorb-plus/releases/download/test-channel/$name',
+      },
+  ],
+};
 
 TestChannelService _service(
   http.Response Function(http.Request) answer, {
   String installed = '1.12.1+345',
-}) =>
-    TestChannelService(
-      clientFactory: () => MockClient((request) async => answer(request)),
-      installedVersion: () async => installed,
-    );
+}) => TestChannelService(
+  clientFactory: () => MockClient((request) async => answer(request)),
+  installedVersion: () async => installed,
+);
 
 Widget _app(Widget home) => MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: home,
-    );
+  localizationsDelegates: AppLocalizations.localizationsDelegates,
+  supportedLocales: AppLocalizations.supportedLocales,
+  home: home,
+);
 
 void main() {
   setUp(() {
@@ -64,14 +62,22 @@ void main() {
   group('test channel code', () {
     test('checks the trimmed, upper-cased code against the hash', () {
       final hash = _hashOf('ABC-123');
-      expect(DeveloperMode.codeMatches(' abc-123 ', expectedSha256: hash),
-          isTrue);
-      expect(DeveloperMode.codeMatches('ABC-123', expectedSha256: hash),
-          isTrue);
-      expect(DeveloperMode.codeMatches('ABC-124', expectedSha256: hash),
-          isFalse);
-      expect(DeveloperMode.codeMatches('   ', expectedSha256: _hashOf('')),
-          isFalse);
+      expect(
+        DeveloperMode.codeMatches(' abc-123 ', expectedSha256: hash),
+        isTrue,
+      );
+      expect(
+        DeveloperMode.codeMatches('ABC-123', expectedSha256: hash),
+        isTrue,
+      );
+      expect(
+        DeveloperMode.codeMatches('ABC-124', expectedSha256: hash),
+        isFalse,
+      );
+      expect(
+        DeveloperMode.codeMatches('   ', expectedSha256: _hashOf('')),
+        isFalse,
+      );
     });
 
     test('a wrong code does not unlock the real channel', () async {
@@ -110,16 +116,21 @@ void main() {
       expect(counter.tap(), isFalse); // counting starts again
     });
 
-    testWidgets('seven taps on the version line turn Developer mode on',
-        (tester) async {
-      await tester.pumpWidget(_app(Scaffold(
-        body: Builder(
-          builder: (context) => TextButton(
-            onPressed: () => onVersionLineTapped(context),
-            child: const Text('GitHub - 1.12.1+345'),
+    testWidgets('seven taps on the version line turn Developer mode on', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          Scaffold(
+            body: Builder(
+              builder: (context) => TextButton(
+                onPressed: () => onVersionLineTapped(context),
+                child: const Text('GitHub - 1.12.1+345'),
+              ),
+            ),
           ),
         ),
-      )));
+      );
       for (var i = 0; i < 7; i++) {
         await tester.tap(find.text('GitHub - 1.12.1+345'));
         await tester.pump(const Duration(milliseconds: 50));
@@ -132,11 +143,12 @@ void main() {
       await tester.pump(const Duration(seconds: 5));
     });
 
-    testWidgets('the Developer entry shows only while it is on',
-        (tester) async {
-      await tester.pumpWidget(_app(const Scaffold(
-        body: Column(children: [DeveloperSettingsTile()]),
-      )));
+    testWidgets('the Developer entry shows only while it is on', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(const Scaffold(body: Column(children: [DeveloperSettingsTile()]))),
+      );
       await tester.pump();
       expect(find.text('Developer'), findsNothing);
       await DeveloperMode.setEnabled(true);
@@ -150,23 +162,35 @@ void main() {
       final plus = parseTestChannelAssetName('absorb-plus-test-1.12.1+346.apk');
       expect(plus?.version, '1.12.1');
       expect(plus?.build, 346);
-      expect(parseTestChannelAssetName('absorb-plus-test-1.12.1.346.apk')?.build,
-          346);
-      expect(parseTestChannelAssetName('absorb-plus-test-1.12.1-346.apk')?.build,
-          346);
-      expect(parseTestChannelAssetName('absorb-1.12.1-346-arm64-v8a.apk'),
-          isNull);
-      expect(parseTestChannelAssetName('absorb-plus-test-1.12.1+346.zip'),
-          isNull);
+      expect(
+        parseTestChannelAssetName('absorb-plus-test-1.12.1.346.apk')?.build,
+        346,
+      );
+      expect(
+        parseTestChannelAssetName('absorb-plus-test-1.12.1-346.apk')?.build,
+        346,
+      );
+      expect(
+        parseTestChannelAssetName('absorb-1.12.1-346-arm64-v8a.apk'),
+        isNull,
+      );
+      expect(
+        parseTestChannelAssetName('absorb-plus-test-1.12.1+346.zip'),
+        isNull,
+      );
       expect(parseTestChannelAssetName('absorb-plus-test-latest.apk'), isNull);
     });
 
     test('picks the highest build when an old APK is still there', () {
-      final build = pickTestChannelBuild(_release(assets: [
-        'absorb-plus-test-1.12.1+346.apk',
-        'absorb-plus-test-1.12.1+348.apk',
-        'notes.txt',
-      ]));
+      final build = pickTestChannelBuild(
+        _release(
+          assets: [
+            'absorb-plus-test-1.12.1+346.apk',
+            'absorb-plus-test-1.12.1+348.apk',
+            'notes.txt',
+          ],
+        ),
+      );
       expect(build?.fullVersion, '1.12.1+348');
       expect(build?.assetName, 'absorb-plus-test-1.12.1+348.apk');
       expect(build?.notes, contains('New: test channel'));
@@ -234,13 +258,15 @@ void main() {
       expect(
         (await _service(
           (_) => http.Response(
-            jsonEncode(_release(
+            jsonEncode(
+              _release(
                 tag: 'v1.12.1-346',
-                assets: ['absorb-plus-test-1.12.1+346.apk'])),
+                assets: ['absorb-plus-test-1.12.1+346.apk'],
+              ),
+            ),
             200,
           ),
-        ).check())
-            .status,
+        ).check()).status,
         TestChannelStatus.empty,
       );
     });
@@ -250,32 +276,45 @@ void main() {
     test('Android GitHub build only', () {
       expect(
         TestChannelService.supportedFor(
-            isAndroid: true, isGithubBuild: true, isPlayStoreBuild: false),
+          isAndroid: true,
+          isGithubBuild: true,
+          isPlayStoreBuild: false,
+        ),
         isTrue,
       );
       // Play Store and F-Droid (no define) builds.
       expect(
         TestChannelService.supportedFor(
-            isAndroid: true, isGithubBuild: false, isPlayStoreBuild: true),
+          isAndroid: true,
+          isGithubBuild: false,
+          isPlayStoreBuild: true,
+        ),
         isFalse,
       );
       expect(
         TestChannelService.supportedFor(
-            isAndroid: true, isGithubBuild: false, isPlayStoreBuild: false),
+          isAndroid: true,
+          isGithubBuild: false,
+          isPlayStoreBuild: false,
+        ),
         isFalse,
       );
       // Windows, Linux and web GitHub builds.
       expect(
         TestChannelService.supportedFor(
-            isAndroid: false, isGithubBuild: true, isPlayStoreBuild: false),
+          isAndroid: false,
+          isGithubBuild: true,
+          isPlayStoreBuild: false,
+        ),
         isFalse,
       );
       // Tests run as neither.
       expect(TestChannelService.isSupported, isFalse);
     });
 
-    testWidgets('elsewhere the Developer page has no test channel',
-        (tester) async {
+    testWidgets('elsewhere the Developer page has no test channel', (
+      tester,
+    ) async {
       TestChannelService.debugSupportedOverride = false;
       await tester.pumpWidget(_app(const DeveloperScreen()));
       await tester.pumpAndSettle();
@@ -290,9 +329,13 @@ void main() {
     testWidgets('the code unlocks the test channel entry', (tester) async {
       TestChannelService.debugSupportedOverride = true;
       DeveloperMode.debugCodeSha256Override = _hashOf('OPEN-SESAME');
-      await tester.pumpWidget(_app(DeveloperScreen(
-        testChannelScreenBuilder: (_) => const Text('channel page'),
-      )));
+      await tester.pumpWidget(
+        _app(
+          DeveloperScreen(
+            testChannelScreenBuilder: (_) => const Text('channel page'),
+          ),
+        ),
+      );
       await tester.pumpAndSettle();
       expect(find.text('Install the newest test build'), findsNothing);
 
@@ -317,13 +360,20 @@ void main() {
 
     testWidgets('turning Developer mode off', (tester) async {
       await DeveloperMode.setEnabled(true);
-      await tester.pumpWidget(_app(Builder(
-        builder: (context) => TextButton(
-          onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => const DeveloperScreen())),
-          child: const Text('open'),
+      await tester.pumpWidget(
+        _app(
+          Builder(
+            builder: (context) => TextButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const DeveloperScreen(),
+                ),
+              ),
+              child: const Text('open'),
+            ),
+          ),
         ),
-      )));
+      );
       await tester.tap(find.text('open'));
       await tester.pumpAndSettle();
       await tester.tap(find.byType(Switch).first);
@@ -349,18 +399,23 @@ void main() {
     );
 
     Future<void> launch(WidgetTester tester) async {
-      await tester.pumpWidget(_app(Builder(
-        builder: (context) => TextButton(
-          onPressed: () => TestChannelLaunchPrompt.showIfNewer(context),
-          child: const Text('launch'),
+      await tester.pumpWidget(
+        _app(
+          Builder(
+            builder: (context) => TextButton(
+              onPressed: () => TestChannelLaunchPrompt.showIfNewer(context),
+              child: const Text('launch'),
+            ),
+          ),
         ),
-      )));
+      );
       await tester.tap(find.text('launch'));
       await tester.pumpAndSettle();
     }
 
-    testWidgets('asks once per build, only when everything is on',
-        (tester) async {
+    testWidgets('asks once per build, only when everything is on', (
+      tester,
+    ) async {
       var checks = 0;
       TestChannelLaunchPrompt.runCheck = () async {
         checks++;
@@ -402,14 +457,20 @@ void main() {
 
   group('test channel page', () {
     testWidgets('a newer build offers Install', (tester) async {
-      await tester.pumpWidget(_app(TestChannelScreen(
-        service: _service(
-          (_) => http.Response(
-            jsonEncode(_release(assets: ['absorb-plus-test-1.12.1+346.apk'])),
-            200,
+      await tester.pumpWidget(
+        _app(
+          TestChannelScreen(
+            service: _service(
+              (_) => http.Response(
+                jsonEncode(
+                  _release(assets: ['absorb-plus-test-1.12.1+346.apk']),
+                ),
+                200,
+              ),
+            ),
           ),
         ),
-      )));
+      );
       await tester.pumpAndSettle();
       expect(find.text('Installed: 1.12.1+345'), findsOneWidget);
       expect(find.text('Newest test build: 1.12.1+346'), findsOneWidget);
@@ -418,14 +479,20 @@ void main() {
     });
 
     testWidgets('the same build says up to date', (tester) async {
-      await tester.pumpWidget(_app(TestChannelScreen(
-        service: _service(
-          (_) => http.Response(
-            jsonEncode(_release(assets: ['absorb-plus-test-1.12.1+345.apk'])),
-            200,
+      await tester.pumpWidget(
+        _app(
+          TestChannelScreen(
+            service: _service(
+              (_) => http.Response(
+                jsonEncode(
+                  _release(assets: ['absorb-plus-test-1.12.1+345.apk']),
+                ),
+                200,
+              ),
+            ),
           ),
         ),
-      )));
+      );
       await tester.pumpAndSettle();
       expect(find.text('Up to date'), findsOneWidget);
       expect(find.text('Install'), findsNothing);

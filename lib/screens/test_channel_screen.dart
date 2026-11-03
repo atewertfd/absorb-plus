@@ -75,7 +75,8 @@ class _TestChannelScreenState extends State<TestChannelScreen> {
             elevation: 0,
             color: cs.surfaceContainerHigh,
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14)),
+              borderRadius: BorderRadius.circular(14),
+            ),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -91,8 +92,7 @@ class _TestChannelScreenState extends State<TestChannelScreen> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   else if (status == TestChannelStatus.failed)
-                    Text(l.updateCheckFailed,
-                        style: TextStyle(color: cs.error))
+                    Text(l.updateCheckFailed, style: TextStyle(color: cs.error))
                   else if (status == TestChannelStatus.empty)
                     Text(l.testChannelNone)
                   else if (build != null) ...[
@@ -102,12 +102,17 @@ class _TestChannelScreenState extends State<TestChannelScreen> {
                     ),
                     if (status == TestChannelStatus.upToDate) ...[
                       const SizedBox(height: 6),
-                      Row(children: [
-                        Icon(Icons.check_circle_rounded,
-                            size: 18, color: cs.primary),
-                        const SizedBox(width: 8),
-                        Text(l.testChannelUpToDate),
-                      ]),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.check_circle_rounded,
+                            size: 18,
+                            color: cs.primary,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(l.testChannelUpToDate),
+                        ],
+                      ),
                     ],
                   ],
                 ],

@@ -79,7 +79,10 @@ abstract final class DeveloperMode {
 
   /// Whether [code] is the test channel code. Case and surrounding spaces
   /// don't matter. [expectedSha256] is for tests.
-  static bool codeMatches(String code, {@visibleForTesting String? expectedSha256}) {
+  static bool codeMatches(
+    String code, {
+    @visibleForTesting String? expectedSha256,
+  }) {
     final normalized = code.trim().toUpperCase();
     if (normalized.isEmpty) return false;
     final digest = sha256.convert(utf8.encode(normalized)).toString();

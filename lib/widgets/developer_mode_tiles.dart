@@ -54,12 +54,17 @@ class _DeveloperSettingsTileState extends State<DeveloperSettingsTile> {
             ListTile(
               leading: Icon(Icons.developer_mode_rounded, color: cs.primary),
               title: Text(l.developerTitle),
-              subtitle: Text(l.developerSubtitle,
-                  style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
-              trailing: Icon(Icons.chevron_right_rounded,
-                  color: cs.onSurfaceVariant.withValues(alpha: 0.5)),
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => const DeveloperScreen())),
+              subtitle: Text(
+                l.developerSubtitle,
+                style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+              ),
+              trailing: Icon(
+                Icons.chevron_right_rounded,
+                color: cs.onSurfaceVariant.withValues(alpha: 0.5),
+              ),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const DeveloperScreen()),
+              ),
             ),
           ],
         );
@@ -72,8 +77,8 @@ class _DeveloperSettingsTileState extends State<DeveloperSettingsTile> {
 abstract final class TestChannelLaunchPrompt {
   /// Tests swap the check for a fake.
   @visibleForTesting
-  static Future<TestChannelCheck> Function() runCheck =
-      () => TestChannelService().check();
+  static Future<TestChannelCheck> Function() runCheck = () =>
+      TestChannelService().check();
 
   /// Asks to install a newer test build, once per build, when Developer
   /// mode, the test channel and its launch check are all on. Silent on any

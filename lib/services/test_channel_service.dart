@@ -113,14 +113,15 @@ class TestChannelService {
   TestChannelService({
     http.Client Function()? clientFactory,
     Future<String> Function()? installedVersion,
-  })  : _clientFactory = clientFactory ?? http.Client.new,
-        _installedVersion =
-            installedVersion ?? UpdateCheckerService.currentInstalledVersion;
+  }) : _clientFactory = clientFactory ?? http.Client.new,
+       _installedVersion =
+           installedVersion ?? UpdateCheckerService.currentInstalledVersion;
 
   static const repo = 'atewertfd/absorb-plus';
   static const tag = 'test-channel';
-  static final Uri releaseUri =
-      Uri.parse('https://api.github.com/repos/$repo/releases/tags/$tag');
+  static final Uri releaseUri = Uri.parse(
+    'https://api.github.com/repos/$repo/releases/tags/$tag',
+  );
 
   static const _isGithubBuild = bool.fromEnvironment('GITHUB_BUILD');
   static const _isPlayStoreBuild = bool.fromEnvironment('PLAYSTORE_BUILD');
@@ -144,8 +145,7 @@ class TestChannelService {
     required bool isAndroid,
     required bool isGithubBuild,
     required bool isPlayStoreBuild,
-  }) =>
-      isAndroid && isGithubBuild && !isPlayStoreBuild;
+  }) => isAndroid && isGithubBuild && !isPlayStoreBuild;
 
   final http.Client Function() _clientFactory;
   final Future<String> Function() _installedVersion;
@@ -159,27 +159,34 @@ class TestChannelService {
     }
     final client = _clientFactory();
     try {
-      final response = await client.get(
-        releaseUri,
-        headers: const {'Accept': 'application/vnd.github.v3+json'},
-      ).timeout(const Duration(seconds: 10));
+      final response = await client
+          .get(
+            releaseUri,
+            headers: const {'Accept': 'application/vnd.github.v3+json'},
+          )
+          .timeout(const Duration(seconds: 10));
       if (response.statusCode == 404) {
-        return TestChannelCheck(TestChannelStatus.empty,
-            installedVersion: installed);
+        return TestChannelCheck(
+          TestChannelStatus.empty,
+          installedVersion: installed,
+        );
       }
       if (response.statusCode != 200) {
         debugPrint('[TestChannel] GitHub answered ${response.statusCode}');
-        return TestChannelCheck(TestChannelStatus.failed,
-            installedVersion: installed);
+        return TestChannelCheck(
+          TestChannelStatus.failed,
+          installedVersion: installed,
+        );
       }
       final data = jsonDecode(response.body);
-      final build = data is Map<String, dynamic> &&
-              data['tag_name'] == tag
+      final build = data is Map<String, dynamic> && data['tag_name'] == tag
           ? pickTestChannelBuild(data)
           : null;
       if (build == null) {
-        return TestChannelCheck(TestChannelStatus.empty,
-            installedVersion: installed);
+        return TestChannelCheck(
+          TestChannelStatus.empty,
+          installedVersion: installed,
+        );
       }
       final newer = installed == null || isNewerTestBuild(build, installed);
       return TestChannelCheck(
@@ -189,8 +196,10 @@ class TestChannelService {
       );
     } catch (error) {
       debugPrint('[TestChannel] Check failed: $error');
-      return TestChannelCheck(TestChannelStatus.failed,
-          installedVersion: installed);
+      return TestChannelCheck(
+        TestChannelStatus.failed,
+        installedVersion: installed,
+      );
     } finally {
       client.close();
     }
@@ -202,14 +211,13 @@ class TestChannelService {
     TestChannelBuild build, {
     required String installedVersion,
     required String packageLabel,
-  }) =>
-      UpdateInfo(
-        latestVersion: build.fullVersion,
-        currentVersion: installedVersion,
-        downloadUrl: build.downloadUrl,
-        releaseNotes: build.notes,
-        isPreRelease: true,
-        isDirectApk: true,
-        packageLabel: packageLabel,
-      );
+  }) => UpdateInfo(
+    latestVersion: build.fullVersion,
+    currentVersion: installedVersion,
+    downloadUrl: build.downloadUrl,
+    releaseNotes: build.notes,
+    isPreRelease: true,
+    isDirectApk: true,
+    packageLabel: packageLabel,
+  );
 }

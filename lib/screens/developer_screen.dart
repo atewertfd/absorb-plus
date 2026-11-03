@@ -52,14 +52,20 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
     if (!mounted) return;
     _codeController.clear();
     if (!ok) {
-      showOverlayToast(context, l.testChannelWrongCode,
-          icon: Icons.error_outline_rounded);
+      showOverlayToast(
+        context,
+        l.testChannelWrongCode,
+        icon: Icons.error_outline_rounded,
+      );
       return;
     }
     FocusScope.of(context).unfocus();
     setState(() => _unlocked = true);
-    showOverlayToast(context, l.testChannelUnlocked,
-        icon: Icons.lock_open_rounded);
+    showOverlayToast(
+      context,
+      l.testChannelUnlocked,
+      icon: Icons.lock_open_rounded,
+    );
   }
 
   Future<void> _turnOff() async {
@@ -90,13 +96,17 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
           const Divider(height: 1, indent: 16, endIndent: 16),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-            child: Text(l.testChannelTitle,
-                style: tt.titleSmall?.copyWith(color: cs.primary)),
+            child: Text(
+              l.testChannelTitle,
+              style: tt.titleSmall?.copyWith(color: cs.primary),
+            ),
           ),
           if (!supported)
             ListTile(
-              leading: Icon(Icons.info_outline_rounded,
-                  color: cs.onSurfaceVariant),
+              leading: Icon(
+                Icons.info_outline_rounded,
+                color: cs.onSurfaceVariant,
+              ),
               title: Text(l.testChannelUnavailable, style: subtitleStyle),
             )
           else if (!_loaded)
@@ -115,7 +125,8 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                       decoration: InputDecoration(
                         labelText: l.testChannelCodeLabel,
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                       onSubmitted: (_) => _unlock(l),
                     ),
@@ -133,18 +144,25 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
               leading: Icon(Icons.science_rounded, color: cs.primary),
               title: Text(l.testChannelTitle),
               subtitle: Text(l.testChannelSubtitle, style: subtitleStyle),
-              trailing: Icon(Icons.chevron_right_rounded,
-                  color: cs.onSurfaceVariant.withValues(alpha: 0.5)),
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: widget.testChannelScreenBuilder ??
-                    (_) => const TestChannelScreen(),
-              )),
+              trailing: Icon(
+                Icons.chevron_right_rounded,
+                color: cs.onSurfaceVariant.withValues(alpha: 0.5),
+              ),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder:
+                      widget.testChannelScreenBuilder ??
+                      (_) => const TestChannelScreen(),
+                ),
+              ),
             ),
             const Divider(height: 1, indent: 16, endIndent: 16),
             SwitchListTile(
               title: Text(l.testChannelLaunchCheck),
-              subtitle:
-                  Text(l.testChannelLaunchCheckSubtitle, style: subtitleStyle),
+              subtitle: Text(
+                l.testChannelLaunchCheckSubtitle,
+                style: subtitleStyle,
+              ),
               value: _launchCheck,
               onChanged: (v) async {
                 setState(() => _launchCheck = v);
