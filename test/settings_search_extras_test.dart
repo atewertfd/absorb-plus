@@ -90,7 +90,9 @@ void main() {
     expect(titles, isNot(contains(l.checkForUpdate)));
     // Not Windows (the test default platform is Android).
     expect(titles, isNot(contains(l.windowsCloseToTray)));
+    expect(titles, isNot(contains(l.exclusiveAudioTitle)));
   });
+
 
   Future<void> pumpSettings(WidgetTester tester, {double height = 2400}) async {
     tester.view.physicalSize = Size(1200, height);
@@ -158,6 +160,25 @@ void main() {
     await settle(tester);
 
     final tile = find.text('Close to tray');
+    expect(tile, findsOneWidget);
+    expect(tester.getCenter(tile).dy, inInclusiveRange(0, 2400));
+  });
+
+  testWidgets('Exclusive audio is found under Playback and its section opens',
+      variant: TargetPlatformVariant.only(TargetPlatform.windows),
+      (tester) async {
+    await pumpSettings(tester);
+    expect(find.text('Exclusive audio'), findsNothing);
+
+    await tester.enterText(find.byType(TextField).first, 'crackling');
+    await tester.pump();
+    final result = find.widgetWithText(ListTile, 'Exclusive audio');
+    expect(result, findsOneWidget);
+
+    await tester.tap(result);
+    await settle(tester);
+
+    final tile = find.widgetWithText(SwitchListTile, 'Exclusive audio');
     expect(tile, findsOneWidget);
     expect(tester.getCenter(tile).dy, inInclusiveRange(0, 2400));
   });

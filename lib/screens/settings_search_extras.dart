@@ -9,6 +9,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../l10n/app_localizations.dart';
+import '../widgets/exclusive_audio_tile.dart';
 import '../widgets/windows_settings_tiles.dart';
 import 'settings_search_index.dart';
 
@@ -40,6 +41,9 @@ List<SettingSearchEntry> settingsSearchExtras(
     if (bookRequests)
       SettingSearchEntry('Advanced', l.sectionAdvanced, l.breqTitle,
           [l.breqSettingsSubtitle]),
+    if (ExclusiveAudioTile.supported)
+      SettingSearchEntry('Playback', l.sectionPlayback, l.exclusiveAudioTitle,
+          [l.exclusiveAudioSubtitle]),
     SettingSearchEntry('Advanced', l.sectionAdvanced, l.rmabImportBooks,
         [l.rmabImportBooksSubtitle, l.rmabImportBooksConnectSubtitle]),
 
