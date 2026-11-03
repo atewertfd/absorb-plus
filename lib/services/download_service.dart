@@ -402,6 +402,12 @@ class _PendingBook {
 /// now-playing UI is correct).
 String? _stripLibraryItem(String? sessionJson) {
   if (sessionJson == null) return null;
+  // Absorb Plus: books saved since the list is trimmed at download time have
+  // nothing to drop; skip decoding and re-encoding them at every start (D13).
+  if (!sessionJson.contains('"episodes"') &&
+      !sessionJson.contains('"audioFiles"')) {
+    return sessionJson;
+  }
   try {
     final session = jsonDecode(sessionJson) as Map<String, dynamic>;
     final libItem = session['libraryItem'] as Map<String, dynamic>?;
@@ -2007,10 +2013,8 @@ class DownloadService extends ChangeNotifier {
       try {
         final info =
             DownloadInfo.fromJson(entry.value as Map<String, dynamic>);
-        debugPrint('[Download] Loaded: ${entry.key} '
-            'title="${info.title}" author="${info.author}" '
-            'cover=${info.coverUrl != null ? "yes" : "null"} '
-            'sessionData=${info.sessionData != null ? "${info.sessionData!.length} chars" : "null"}');
+        // Absorb Plus: one summary line below instead of a line per
+        // download, which cost a log write per book at every start (D13).
         if (info.status == DownloadStatus.downloaded ||
             info.status == DownloadStatus.error) {
           _downloads[entry.key] = info;
@@ -2021,6 +2025,7 @@ class DownloadService extends ChangeNotifier {
         debugPrint('[Download] Init error: $e');
       }
     }
+    debugPrint('[Download] Loaded ${_downloads.length} download record(s)');
   }
 
   @visibleForTesting

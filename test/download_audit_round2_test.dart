@@ -122,6 +122,35 @@ void main() {
     });
   });
 
+  group('D13 loading the list', () {
+    test('a session already trimmed is kept as stored', () {
+      const session = '{"libraryItem": {"media": {"metadata": {"title": "T"}}}}';
+      final info = DownloadInfo.fromJson({
+        'itemId': 'b',
+        'status': DownloadStatus.downloaded.index,
+        'sessionData': session,
+      });
+      expect(identical(info.sessionData, session), isTrue);
+    });
+
+    test('an untrimmed one still loses its file lists', () {
+      final info = DownloadInfo.fromJson({
+        'itemId': 'b',
+        'status': DownloadStatus.downloaded.index,
+        'sessionData': jsonEncode({
+          'libraryItem': {
+            'media': {
+              'metadata': {'title': 'T'},
+              'audioFiles': [1, 2],
+            },
+          },
+        }),
+      });
+      expect(info.sessionData, isNot(contains('audioFiles')));
+      expect(info.sessionData, contains('"title":"T"'));
+    });
+  });
+
   group('D16 cover folder', () {
     test('a failed download leaves no cover folder behind', () async {
       final s = DownloadService.forTesting(
