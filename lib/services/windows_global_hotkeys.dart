@@ -184,33 +184,54 @@ class WindowsGlobalHotkeys {
 
   bool _started = false;
 
+  /// Start and every toggle run one after another, so a quick on-off can't
+  /// end with the runner's keys and [state] disagreeing.
+  Future<void>? _queue;
+
+  Future<void> _serial(Future<void> Function() task) {
+    final previous = _queue;
+    final run =
+        previous == null ? Future<void>.sync(task) : previous.then((_) => task());
+    _queue = run.catchError((Object _) {});
+    return run;
+  }
+
   /// Reads the saved choice and registers the keys when it is on.
   Future<void> start() async {
     if (!_enabled || _started) return;
     _started = true;
     _channel.setMethodCallHandler(_onNativeCall);
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool(prefKey) ?? false) await _register();
+    await _serial(() async {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getBool(prefKey) ?? false) await _register();
+    });
   }
 
   @visibleForTesting
   void stop() {
     _channel.setMethodCallHandler(null);
     _started = false;
+    _queue = null;
     state.value = const GlobalHotkeysState();
   }
 
   /// Turns the hotkeys on or off and remembers it.
   Future<void> setEnabled(bool enabled) async {
     if (!_enabled) return;
-    if (!_started) await start();
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(prefKey, enabled);
-    if (enabled) {
-      await _register();
-    } else {
-      await _unregister();
+    if (!_started) {
+      // No need to read the saved choice: this call replaces it.
+      _started = true;
+      _channel.setMethodCallHandler(_onNativeCall);
     }
+    await _serial(() async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(prefKey, enabled);
+      if (enabled) {
+        await _register();
+      } else {
+        await _unregister();
+      }
+    });
   }
 
   Future<void> _register() async {
