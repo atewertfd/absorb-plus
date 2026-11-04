@@ -2,16 +2,16 @@ import 'package:absorb/services/backup_service.dart';
 import 'package:absorb/services/imported_settings_reload.dart';
 import 'package:absorb/services/scoped_prefs.dart';
 import 'package:absorb/services/sleep_timer_service.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/fakes.dart';
 
 /// A settings import (sync pull or restore) reaches the sleep timer and the
 /// equalizer, and keeps auto sleep's end-of-chapter mode.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const packageInfo = MethodChannel('dev.fluttercommunity.plus/package_info');
   var autoSleepReloads = 0;
   var equalizerReloads = 0;
 
@@ -26,18 +26,7 @@ void main() {
       };
 
   setUp(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-      packageInfo,
-      (call) async => {
-        'appName': 'Absorb',
-        'packageName': 'com.example.absorb',
-        'version': 'fixture',
-        'buildNumber': '1',
-        'buildSignature': '',
-        'installerStore': null,
-      },
-    );
+    fakePackageInfo();
     SharedPreferences.setMockInitialValues({});
     autoSleepReloads = 0;
     equalizerReloads = 0;
@@ -46,8 +35,7 @@ void main() {
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(packageInfo, null);
+    clearFakePackageInfo();
   });
 
   test('end-of-chapter auto sleep survives an export and import', () async {

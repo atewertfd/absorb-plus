@@ -41,10 +41,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/fakes.dart';
 
 // ── Window sizes, scales, brightness ─────────────────────────────────────
 
@@ -446,13 +447,7 @@ Future<http.Response> _fakeServer(http.Request request) async {
 // ── Fakes ────────────────────────────────────────────────────────────────
 
 class _FakeAuth extends AuthProvider {
-  final ApiService _api = ApiService(
-    baseUrl: 'http://abs.test',
-    token: 'test-token',
-    httpClient: MockClient(_fakeServer),
-    networkRetryDelay: Duration.zero,
-    refreshRetryDelay: Duration.zero,
-  );
+  final ApiService _api = mockApi(_fakeServer);
 
   @override
   ApiService? get apiService => _api;

@@ -1,24 +1,11 @@
 import 'dart:convert';
 
-import 'package:absorb/providers/auth_provider.dart';
 import 'package:absorb/providers/library_provider.dart';
-import 'package:absorb/services/api_service.dart';
 import 'package:absorb/services/download_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class _FakeAuth extends AuthProvider {
-  final api = ApiService(baseUrl: 'http://127.0.0.1:9', token: 'fixture-token');
-
-  @override
-  bool get isAuthenticated => false;
-
-  @override
-  bool get isSignedOut => false;
-
-  @override
-  ApiService? get apiService => api;
-}
+import 'support/fakes.dart';
 
 /// Offline Home is built from the downloads and must follow them.
 void main() {
@@ -38,7 +25,7 @@ void main() {
       downloads.debugRemoveDownload('fixture-book-2');
     });
 
-    final lib = LibraryProvider()..updateAuth(_FakeAuth());
+    final lib = LibraryProvider()..updateAuth(FakeAuth());
     addTearDown(lib.dispose);
     await lib.setManualOffline(true);
     String shelves() => jsonEncode(lib.personalizedSections);

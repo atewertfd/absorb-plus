@@ -5,8 +5,9 @@ import 'package:absorb/services/audio_player_service.dart';
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/fakes.dart';
 
 /// The old stream retry (downloaded files, and errors a reconnect can't fix)
 /// waits 1-4 s before restarting the item. Run on the real service with no
@@ -15,11 +16,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  ApiService fakeApi() => ApiService(
-        baseUrl: 'http://abs.test',
-        token: 'test-token',
-        httpClient: MockClient((_) async => http.Response('', 404)),
-      );
+  ApiService fakeApi() =>
+      mockApi((_) async => http.Response('', 404), instantRetries: false);
 
   // A start entering playItem cancels any reconnect first thing, so a
   // reconnect parked here shows whether the retry restarted the item.

@@ -1,47 +1,30 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:absorb/providers/auth_provider.dart';
 import 'package:absorb/providers/library_provider.dart';
 import 'package:absorb/services/api_service.dart';
 import 'package:absorb/services/home_shelf_snapshot.dart';
 import 'package:absorb/services/user_account_service.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class _Auth extends AuthProvider {
-  _Auth(this.api);
-  final ApiService api;
-
-  @override
-  bool get isAuthenticated => false;
-
-  @override
-  bool get isSignedOut => false;
-
-  @override
-  ApiService? get apiService => api;
-}
+import 'support/fakes.dart';
 
 /// C10: a server that answers Home with no shelves before the saved copy
 /// has been read must win; the saved copy used to replace the real answer.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  const pathChannel = MethodChannel('plugins.flutter.io/path_provider');
-  final messenger =
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
   late Directory dir;
 
   setUp(() {
     dir = Directory.systemTemp.createTempSync('home_snapshot_race_');
-    messenger.setMockMethodCallHandler(pathChannel, (call) async => dir.path);
+    fakePathProvider(dir.path, everyFolder: true);
   });
 
   tearDown(() {
-    messenger.setMockMethodCallHandler(pathChannel, null);
+    clearFakePathProvider();
     try {
       dir.deleteSync(recursive: true);
     } catch (_) {}
@@ -77,7 +60,7 @@ void main() {
         return http.Response('{}', 404);
       }),
     );
-    final lib = LibraryProvider()..updateAuth(_Auth(api));
+    final lib = LibraryProvider()..updateAuth(FakeAuth(api));
     addTearDown(lib.dispose);
 
     await lib.selectLibrary('lib-1');

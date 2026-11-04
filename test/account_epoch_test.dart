@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:absorb/providers/auth_provider.dart';
 import 'package:absorb/providers/library_provider.dart';
 import 'package:absorb/services/account_epoch.dart';
 import 'package:absorb/services/api_service.dart';
@@ -11,20 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Hands the library a fake connection without signing anything in.
-class _FakeAuth extends AuthProvider {
-  _FakeAuth(this.api);
-  final ApiService api;
-
-  @override
-  bool get isAuthenticated => false;
-
-  @override
-  bool get isSignedOut => false;
-
-  @override
-  ApiService? get apiService => api;
-}
+import 'support/fakes.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -113,7 +99,7 @@ void main() {
         return http.Response('{}', 404);
       }),
     );
-    final lib = LibraryProvider()..updateAuth(_FakeAuth(api));
+    final lib = LibraryProvider()..updateAuth(FakeAuth(api));
     addTearDown(lib.dispose);
 
     final load = lib.loadLibraries();

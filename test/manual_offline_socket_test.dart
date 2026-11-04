@@ -1,22 +1,9 @@
-import 'package:absorb/providers/auth_provider.dart';
 import 'package:absorb/providers/library_provider.dart';
-import 'package:absorb/services/api_service.dart';
 import 'package:absorb/services/socket_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class _FakeAuth extends AuthProvider {
-  final api = ApiService(baseUrl: 'http://127.0.0.1:9', token: 'fixture-token');
-
-  @override
-  bool get isAuthenticated => false;
-
-  @override
-  bool get isSignedOut => false;
-
-  @override
-  ApiService? get apiService => api;
-}
+import 'support/fakes.dart';
 
 /// Manual offline mode holds no live server connection.
 void main() {
@@ -34,7 +21,7 @@ void main() {
 
   test('turning manual offline on closes the socket', () async {
     SharedPreferences.setMockInitialValues({});
-    final lib = LibraryProvider()..updateAuth(_FakeAuth());
+    final lib = LibraryProvider()..updateAuth(FakeAuth());
     addTearDown(lib.dispose);
     final socket = SocketService();
     socket.connect('http://127.0.0.1:9', 'fixture-token');

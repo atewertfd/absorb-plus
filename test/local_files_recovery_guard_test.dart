@@ -5,8 +5,9 @@ import 'package:absorb/services/audio_player_service.dart';
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/fakes.dart';
 
 /// A streamed book moves onto its downloaded files mid-play once the
 /// download finishes. From the moment those files load, a playback error
@@ -16,11 +17,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  ApiService fakeApi() => ApiService(
-        baseUrl: 'http://abs.test',
-        token: 'test-token',
-        httpClient: MockClient((_) async => http.Response('', 404)),
-      );
+  ApiService fakeApi() =>
+      mockApi((_) async => http.Response('', 404), instantRetries: false);
 
   // An ExoPlayer source error, as a dropped connection reports it.
   final sourceError = Exception('Source error');

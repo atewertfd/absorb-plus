@@ -7,9 +7,10 @@ import 'package:absorb/utils/fork_platform.dart';
 import 'package:absorb/widgets/desktop_download_folder_sheet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/fakes.dart';
 
 // Windows/Linux download folder: a plain folder the user picks, checked for
 // write access. Only new downloads use it; nothing existing is moved.
@@ -18,9 +19,6 @@ void main() {
   final l = lookupAppLocalizations(const Locale('en'));
   final defaultPicker = DesktopDownloadFolder.picker;
   final defaultLauncher = ForkPlatform.launcher;
-  const pathChannel = MethodChannel('plugins.flutter.io/path_provider');
-  final messenger =
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
   late Directory tmp;
   late Directory docs;
 
@@ -28,17 +26,14 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     tmp = Directory.systemTemp.createTempSync('absorb_dl_folder_');
     docs = Directory('${tmp.path}${Platform.pathSeparator}docs')..createSync();
-    messenger.setMockMethodCallHandler(pathChannel, (call) async {
-      if (call.method == 'getApplicationDocumentsDirectory') return docs.path;
-      return null;
-    });
+    fakePathProvider(docs.path);
   });
 
   tearDown(() {
     debugDefaultTargetPlatformOverride = null;
     DesktopDownloadFolder.picker = defaultPicker;
     ForkPlatform.launcher = defaultLauncher;
-    messenger.setMockMethodCallHandler(pathChannel, null);
+    clearFakePathProvider();
     try {
       tmp.deleteSync(recursive: true);
     } catch (_) {}

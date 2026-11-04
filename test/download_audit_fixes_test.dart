@@ -14,10 +14,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'support/fakes.dart';
+
 // Regression tests for the 2026-11-01 downloads audit (D1-D10, U4).
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  const pathChannel = MethodChannel('plugins.flutter.io/path_provider');
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
   late Directory tmp;
@@ -27,14 +28,11 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     tmp = Directory.systemTemp.createTempSync('absorb_dl_audit_');
     docs = Directory('${tmp.path}${Platform.pathSeparator}docs')..createSync();
-    messenger.setMockMethodCallHandler(pathChannel, (call) async {
-      if (call.method == 'getApplicationDocumentsDirectory') return docs.path;
-      return null;
-    });
+    fakePathProvider(docs.path);
   });
 
   tearDown(() {
-    messenger.setMockMethodCallHandler(pathChannel, null);
+    clearFakePathProvider();
     try {
       tmp.deleteSync(recursive: true);
     } catch (_) {}

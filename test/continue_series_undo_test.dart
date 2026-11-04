@@ -1,24 +1,16 @@
 import 'package:absorb/l10n/app_localizations.dart';
-import 'package:absorb/services/api_service.dart';
 import 'package:absorb/services/continue_series_undo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
 
-ApiService _api(MockClientHandler handler) => ApiService(
-      baseUrl: 'http://abs.test',
-      token: 'test-token',
-      httpClient: MockClient(handler),
-      networkRetryDelay: Duration.zero,
-      refreshRetryDelay: Duration.zero,
-    );
+import 'support/fakes.dart';
 
 void main() {
   group('readdSeriesToContinueListening', () {
     test('calls GET /api/me/series/:id/readd-to-continue-listening', () async {
       final calls = <String>[];
-      final api = _api((r) async {
+      final api = mockApi((r) async {
         calls.add('${r.method} ${r.url.path}');
         return http.Response('{}', 200);
       });
@@ -27,7 +19,7 @@ void main() {
     });
 
     test('anything but 200 is a failure', () async {
-      final api = _api((r) async => http.Response('nope', 404));
+      final api = mockApi((r) async => http.Response('nope', 404));
       expect(await api.readdSeriesToContinueListening('ser_1'), isFalse);
     });
   });

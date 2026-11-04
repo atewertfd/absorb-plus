@@ -5,19 +5,17 @@ import 'package:absorb/services/api_service.dart';
 import 'package:absorb/services/download_key.dart';
 import 'package:absorb/services/download_service.dart';
 import 'package:background_downloader/background_downloader.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'support/fakes.dart';
+
 // Round-2 download fixes: D11 (cancel racing the enqueue), D16 (cover
 // folder left behind), D17 (episode ids kept with the record).
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  const pathChannel = MethodChannel('plugins.flutter.io/path_provider');
-  final messenger =
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
   late Directory tmp;
   late Directory docs;
 
@@ -25,14 +23,11 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     tmp = Directory.systemTemp.createTempSync('absorb_dl_round2_');
     docs = Directory('${tmp.path}${Platform.pathSeparator}docs')..createSync();
-    messenger.setMockMethodCallHandler(pathChannel, (call) async {
-      if (call.method == 'getApplicationDocumentsDirectory') return docs.path;
-      return null;
-    });
+    fakePathProvider(docs.path);
   });
 
   tearDown(() {
-    messenger.setMockMethodCallHandler(pathChannel, null);
+    clearFakePathProvider();
     try {
       tmp.deleteSync(recursive: true);
     } catch (_) {}

@@ -8,26 +8,21 @@ import 'package:absorb/screens/settings_search_extras.dart';
 import 'package:absorb/screens/settings_search_index.dart';
 import 'package:absorb/widgets/welcome_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'support/fakes.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  const channel = MethodChannel('absorb/windows_shell');
-  final messenger =
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
   setUp(() {
     SharedPreferences.setMockInitialValues({WelcomeSheet.prefKey: true});
-    messenger.setMockMethodCallHandler(channel, (call) async {
-      if (call.method == 'getState') return <String, Object?>{};
-      return null;
-    });
+    fakeWindowsShell({});
   });
 
-  tearDown(() => messenger.setMockMethodCallHandler(channel, null));
+  tearDown(clearFakeWindowsShell);
 
   Future<List<SettingSearchEntry>> allEntries(WidgetTester tester) async {
     late List<SettingSearchEntry> entries;

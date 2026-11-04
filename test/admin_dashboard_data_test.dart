@@ -4,21 +4,14 @@ import 'package:absorb/services/admin_dashboard_data.dart';
 import 'package:absorb/services/api_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
 
-ApiService _api(MockClientHandler handler) => ApiService(
-      baseUrl: 'http://abs.test',
-      token: 'test-token',
-      httpClient: MockClient(handler),
-      networkRetryDelay: Duration.zero,
-      refreshRetryDelay: Duration.zero,
-    );
+import 'support/fakes.dart';
 
 void main() {
   group('getOpenSessions', () {
     test('reads GET /api/sessions/open', () async {
       final paths = <String>[];
-      final api = _api((r) async {
+      final api = mockApi((r) async {
         paths.add('${r.method} ${r.url.path}');
         return http.Response(
           jsonEncode({
@@ -38,9 +31,9 @@ void main() {
     });
 
     test('a refused or broken answer is null, not "nobody listening"', () async {
-      expect(await _api((_) async => http.Response('Not Found', 404)).getOpenSessions(), isNull);
-      expect(await _api((_) async => http.Response('<html>', 200)).getOpenSessions(), isNull);
-      expect(await _api((_) async => http.Response('{}', 200)).getOpenSessions(), isEmpty);
+      expect(await mockApi((_) async => http.Response('Not Found', 404)).getOpenSessions(), isNull);
+      expect(await mockApi((_) async => http.Response('<html>', 200)).getOpenSessions(), isNull);
+      expect(await mockApi((_) async => http.Response('{}', 200)).getOpenSessions(), isEmpty);
     });
   });
 

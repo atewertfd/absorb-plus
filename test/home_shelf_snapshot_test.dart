@@ -3,9 +3,10 @@ import 'dart:io';
 
 import 'package:absorb/services/home_shelf_snapshot.dart';
 import 'package:absorb/services/user_account_service.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/fakes.dart';
 
 void main() {
   late Directory dir;
@@ -80,11 +81,8 @@ void main() {
 
   test('C15 removing a saved account clears its shelves', () async {
     TestWidgetsFlutterBinding.ensureInitialized();
-    const pathChannel = MethodChannel('plugins.flutter.io/path_provider');
-    final messenger =
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
-    messenger.setMockMethodCallHandler(pathChannel, (call) async => dir.path);
-    addTearDown(() => messenger.setMockMethodCallHandler(pathChannel, null));
+    fakePathProvider(dir.path, everyFolder: true);
+    addTearDown(clearFakePathProvider);
     SharedPreferences.setMockInitialValues({
       'saved_accounts': jsonEncode([
         {'serverUrl': 'https://abs.example', 'username': 'alice', 'token': 't'},

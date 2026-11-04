@@ -3,18 +3,16 @@ import 'dart:io';
 import 'package:absorb/services/desktop_download_folder.dart';
 import 'package:absorb/services/download_folder_guard.dart';
 import 'package:absorb/services/download_service.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/fakes.dart';
 
 // Audit A9: deleting a download never removes a folder outside the app's
 // download folders (in particular a folder picked earlier), and on Windows
 // folder names compare without regard to case.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  const pathChannel = MethodChannel('plugins.flutter.io/path_provider');
-  final messenger =
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
   final sep = Platform.pathSeparator;
   late Directory tmp;
   late Directory docs;
@@ -23,14 +21,11 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     tmp = Directory.systemTemp.createTempSync('absorb_a9_');
     docs = Directory('${tmp.path}${sep}docs')..createSync();
-    messenger.setMockMethodCallHandler(pathChannel, (call) async {
-      if (call.method == 'getApplicationDocumentsDirectory') return docs.path;
-      return null;
-    });
+    fakePathProvider(docs.path);
   });
 
   tearDown(() {
-    messenger.setMockMethodCallHandler(pathChannel, null);
+    clearFakePathProvider();
     try {
       tmp.deleteSync(recursive: true);
     } catch (_) {}
