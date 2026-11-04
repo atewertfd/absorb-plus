@@ -49,6 +49,7 @@ import 'widgets/beta_logging_notice.dart';
 import 'widgets/setup_link_login.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import 'fork/fork_startup.dart';
+import 'fork/remote_link_hooks.dart';
 import 'services/startup_task_coordinator.dart';
 import 'services/startup_timing.dart';
 import 'utils/app_motion.dart';
@@ -746,6 +747,7 @@ class _AuthGateState extends State<AuthGate> {
   }
 
   void _queueSetupLink(Uri uri) {
+    if (RemoteLinkHooks.offerLink(uri)) return; // fork: phone remote pairing
     if (!SetupLinkService.isSetupLink(uri)) return;
     if (_pendingSetupLink == uri || _activeSetupLink == uri) return;
     _pendingSetupLink = uri;

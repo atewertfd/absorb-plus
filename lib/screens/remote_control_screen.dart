@@ -15,9 +15,9 @@ import '../widgets/card_buttons.dart' show Pressable;
 /// How the remote screen was left, for the connect screen.
 enum RemoteControlExit { pairAgain }
 
-/// Phone remote, the remote side (fork): what the host is playing, its
-/// controls, and a display mode. Shows "Reconnecting…" instead of stale
-/// controls while the link is down.
+/// "Control your computer", the remote screen (fork): what the PC is
+/// playing, its controls, Continue listening, and a display mode. Shows
+/// "Reconnecting…" instead of stale controls while the link is down.
 class RemoteControlScreen extends StatefulWidget {
   const RemoteControlScreen({
     super.key,
@@ -38,69 +38,82 @@ class RemoteControlScreen extends StatefulWidget {
   State<RemoteControlScreen> createState() => _RemoteControlScreenState();
 }
 
-class _RemoteControlScreenState extends State<RemoteControlScreen> {
+class _RemoteControlScreenState extends State<RemoteControlScreen>
+    with WidgetsBindingObserver {
   static const _wakeOwner = 'remoteDisplay';
   static const _speeds = [
     0.75, 1.0, 1.1, 1.2, 1.25, 1.3, 1.4, 1.5, 1.75, 2.0, 2.5, 3.0, //
   ];
-  static const _sleepMinutes = [15, 30, 45, 60, 90];
+  static const _speedStep = 0.05;
+  static const _sleepMinutes = [15, 30, 45, 60];
 
   RemoteLinkConnector get _connector => widget.connector ?? remoteLinkConnector;
 
   late RemoteLinkClient _client;
+  StreamSubscription<RemoteLinkEvent>? _events;
   bool _display = false;
   Timer? _clock;
   double? _drag;
   double? _seekTarget;
   DateTime? _seekAt;
-  String? _shownError;
+  double? _volumeDrag;
+  double? _speedTarget;
+  bool _recentAsked = false;
+  DateTime? _speedAt;
 
   @override
   void initState() {
     super.initState();
-    _client = widget.client ?? _connector.open(widget.host);
-    _client.addListener(_onClient);
-    unawaited(_client.connect());
+    WidgetsBinding.instance.addObserver(this);
+    _attach(widget.client ?? _connector.open(widget.host));
+  }
+
+  void _attach(RemoteLinkClient client) {
+    _client = client;
+    _events = client.events.listen(_onEvent);
+    unawaited(client.connect());
+  }
+
+  void _detach() {
+    unawaited(_events?.cancel());
+    _events = null;
+    _client.dispose();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _clock?.cancel();
     if (_display) _applyDisplay(false);
-    _client.removeListener(_onClient);
-    _client.dispose();
+    _detach();
     super.dispose();
   }
 
-  void _connectAgain() {
-    _client.removeListener(_onClient);
-    _client.dispose();
-    setState(() {
-      _client = _connector.open(widget.host);
-      _shownError = null;
-    });
-    _client.addListener(_onClient);
-    unawaited(_client.connect());
+  /// Back from the background (the phone slept, Wi-Fi came back): try at
+  /// once instead of waiting for the next retry.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _client.reconnectNow();
   }
 
-  void _onClient() {
-    final error = _client.lastError;
-    if (error == null) {
-      _shownError = null;
-      return;
-    }
-    if (error == _shownError || !mounted) return;
-    _shownError = error;
+  void _connectAgain() {
+    _detach();
+    setState(() => _attach(_connector.open(widget.host)));
+  }
+
+  void _onEvent(RemoteLinkEvent event) {
+    if (!mounted) return;
     final l = AppLocalizations.of(context)!;
-    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-      SnackBar(
-        content: Text(
-          error == RemoteErrorCode.nothingLoaded
-              ? l.remoteNothingLoaded
-              : l.remoteCommandFailed,
-        ),
-      ),
-    );
+    final text = switch (event.code) {
+      RemoteNoticeCode.bookmarkAdded => l.remoteBookmarkAdded,
+      RemoteErrorCode.nothingLoaded => l.remoteNothingLoaded,
+      RemoteErrorCode.notFound => l.remoteNotOnList,
+      _ => event.isError ? l.remoteCommandFailed : null,
+    };
+    if (text == null) return;
+    ScaffoldMessenger.maybeOf(context)
+      ?..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(text)));
   }
 
   void _send(RemoteCommand command) => _client.send(command);
@@ -125,12 +138,16 @@ class _RemoteControlScreenState extends State<RemoteControlScreen> {
     unawaited(ScreenWake.hold(_wakeOwner, on));
     if (ForkPlatform.isAndroid) {
       if (on) {
-        unawaited(SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky));
+        unawaited(
+          SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky),
+        );
       } else {
-        unawaited(SystemChrome.setEnabledSystemUIMode(
-          SystemUiMode.manual,
-          overlays: SystemUiOverlay.values,
-        ));
+        unawaited(
+          SystemChrome.setEnabledSystemUIMode(
+            SystemUiMode.manual,
+            overlays: SystemUiOverlay.values,
+          ),
+        );
       }
     }
   }
@@ -161,6 +178,12 @@ class _RemoteControlScreenState extends State<RemoteControlScreen> {
             ),
             actions: [
               IconButton(
+                key: const Key('remote-continue'),
+                tooltip: l.remoteContinueListening,
+                onPressed: state != null ? _showContinue : null,
+                icon: const Icon(Icons.history_rounded),
+              ),
+              IconButton(
                 key: const Key('remote-display-mode'),
                 tooltip: l.remoteDisplayMode,
                 onPressed: state != null && state.hasItem
@@ -178,46 +201,56 @@ class _RemoteControlScreenState extends State<RemoteControlScreen> {
 
   Widget _body(BuildContext context, RemotePlayerState? state) {
     final l = AppLocalizations.of(context)!;
+    // A new link answers again.
+    if (_client.phase != RemoteLinkPhase.connected) _recentAsked = false;
     switch (_client.phase) {
       case RemoteLinkPhase.closed:
         return _problem(context);
       case RemoteLinkPhase.idle:
       case RemoteLinkPhase.connecting:
       case RemoteLinkPhase.reconnecting:
+        final reconnecting = _client.phase == RemoteLinkPhase.reconnecting;
         return _waiting(
           context,
-          _client.phase == RemoteLinkPhase.reconnecting
-              ? l.remoteReconnecting
-              : l.remoteConnecting,
+          reconnecting ? l.remoteReconnecting : l.remoteConnecting,
+          hint:
+              _client.problem == RemoteLinkProblem.unreachable ||
+                  _client.problem == RemoteLinkProblem.hostStopped
+              ? l.remoteUnreachableHint
+              : null,
         );
       case RemoteLinkPhase.connected:
         if (state == null) return _waiting(context, l.remoteConnecting);
-        if (!state.hasItem) {
-          return _message(
-            context,
-            Icons.headphones_rounded,
-            l.remoteNothingPlaying(_client.hostName),
-          );
-        }
+        if (!state.hasItem) return _nothingPlaying(context);
         return _controls(context, state);
     }
   }
 
-  Widget _waiting(BuildContext context, String text) {
+  Widget _waiting(BuildContext context, String text, {String? hint}) {
     final cs = Theme.of(context).colorScheme;
+    final tt = Theme.of(context).textTheme;
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const CircularProgressIndicator(),
-          const SizedBox(height: 16),
-          Text(
-            text,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyLarge?.copyWith(color: cs.onSurfaceVariant),
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(height: 16),
+            Text(
+              text,
+              style: tt.bodyLarge?.copyWith(color: cs.onSurfaceVariant),
+            ),
+            if (hint != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                hint,
+                textAlign: TextAlign.center,
+                style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
@@ -248,6 +281,35 @@ class _RemoteControlScreenState extends State<RemoteControlScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  /// Nothing loaded on the PC: say so, and offer its Continue listening.
+  Widget _nothingPlaying(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final cs = Theme.of(context).colorScheme;
+    if (_client.recent == null && !_recentAsked) {
+      _recentAsked = true;
+      _client.requestRecent();
+    }
+    final recent = _client.recent ?? const <RemoteRecentItem>[];
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(0, 24, 0, 24),
+      children: [
+        Icon(Icons.headphones_rounded, size: 48, color: cs.onSurfaceVariant),
+        const SizedBox(height: 12),
+        Text(
+          l.remoteNothingPlaying(_client.hostName),
+          textAlign: TextAlign.center,
+          style: Theme.of(
+            context,
+          ).textTheme.bodyLarge?.copyWith(color: cs.onSurfaceVariant),
+        ),
+        if (recent.isNotEmpty) ...[
+          _sectionHeader(context, l.remoteContinueListening),
+          for (final item in recent) _recentTile(context, item),
+        ],
+      ],
     );
   }
 
@@ -298,6 +360,34 @@ class _RemoteControlScreenState extends State<RemoteControlScreen> {
     return s.position;
   }
 
+  /// The speed the last ±0.05 tap asked for, until the host shows it (so
+  /// quick taps add up).
+  double _speed(RemotePlayerState s) {
+    final target = _speedTarget;
+    final at = _speedAt;
+    if (target != null && at != null) {
+      final recent = DateTime.now().difference(at) < const Duration(seconds: 2);
+      if (recent && (s.speed - target).abs() > 0.001) return target;
+      _speedTarget = null;
+      _speedAt = null;
+    }
+    return s.speed;
+  }
+
+  void _stepSpeed(RemotePlayerState s, int direction) {
+    final next =
+        ((_speed(s) + direction * _speedStep) / _speedStep).round() *
+        _speedStep;
+    final value = double.parse(
+      next.clamp(SpeedCommand.min, SpeedCommand.max).toStringAsFixed(2),
+    );
+    _send(SpeedCommand(value));
+    setState(() {
+      _speedTarget = value;
+      _speedAt = DateTime.now();
+    });
+  }
+
   Widget _cover(BuildContext context, {double radius = 16}) {
     final cs = Theme.of(context).colorScheme;
     final bytes = _client.cover;
@@ -317,10 +407,14 @@ class _RemoteControlScreenState extends State<RemoteControlScreen> {
     );
   }
 
-  Widget _coverPlaceholder(ColorScheme cs) => Container(
+  Widget _coverPlaceholder(ColorScheme cs, {double size = 64}) => Container(
     color: cs.surfaceContainerHighest,
     alignment: Alignment.center,
-    child: Icon(Icons.headphones_rounded, size: 64, color: cs.onSurfaceVariant),
+    child: Icon(
+      Icons.headphones_rounded,
+      size: size,
+      color: cs.onSurfaceVariant,
+    ),
   );
 
   Widget _controls(BuildContext context, RemotePlayerState s) {
@@ -331,12 +425,13 @@ class _RemoteControlScreenState extends State<RemoteControlScreen> {
     final start = chapter ? s.chapterStart : 0.0;
     final end = chapter ? s.chapterEnd : (s.duration > 0 ? s.duration : 1.0);
     final position = (_drag ?? _position(s)).clamp(start, end);
+    final speed = _speed(s);
     return LayoutBuilder(
       builder: (context, constraints) {
         final coverSize = (constraints.maxWidth - 64)
             .clamp(120.0, 340.0)
             .toDouble()
-            .clamp(120.0, constraints.maxHeight * 0.42)
+            .clamp(120.0, constraints.maxHeight * 0.38)
             .toDouble();
         return SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
@@ -414,17 +509,39 @@ class _RemoteControlScreenState extends State<RemoteControlScreen> {
                   ),
                   const SizedBox(height: 12),
                   _buttons(context, s),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  const SizedBox(height: 16),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 8,
                     children: [
-                      TextButton.icon(
-                        key: const Key('remote-speed'),
-                        onPressed: () => _pickSpeed(s),
-                        icon: const Icon(Icons.speed_rounded),
-                        label: Text('${_speedLabel(s.speed)}x'),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            key: const Key('remote-speed-down'),
+                            tooltip: l.remoteSpeedSlower,
+                            onPressed: speed > SpeedCommand.min + 0.001
+                                ? () => _stepSpeed(s, -1)
+                                : null,
+                            icon: const Icon(Icons.remove_rounded),
+                          ),
+                          TextButton.icon(
+                            key: const Key('remote-speed'),
+                            onPressed: () => _pickSpeed(s),
+                            icon: const Icon(Icons.speed_rounded),
+                            label: Text('${_speedLabel(speed)}x'),
+                          ),
+                          IconButton(
+                            key: const Key('remote-speed-up'),
+                            tooltip: l.remoteSpeedFaster,
+                            onPressed: speed < SpeedCommand.max - 0.001
+                                ? () => _stepSpeed(s, 1)
+                                : null,
+                            icon: const Icon(Icons.add_rounded),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 16),
                       TextButton.icon(
                         key: const Key('remote-sleep'),
                         onPressed: () => _pickSleep(s),
@@ -437,12 +554,77 @@ class _RemoteControlScreenState extends State<RemoteControlScreen> {
                       ),
                     ],
                   ),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 8,
+                    children: [
+                      TextButton.icon(
+                        key: const Key('remote-chapters'),
+                        onPressed: _client.chapters.isEmpty
+                            ? null
+                            : () => _showChapters(s),
+                        icon: const Icon(Icons.format_list_numbered_rounded),
+                        label: Text(l.remoteChapters),
+                      ),
+                      TextButton.icon(
+                        key: const Key('remote-bookmark'),
+                        onPressed: _addBookmark,
+                        icon: const Icon(Icons.bookmark_add_outlined),
+                        label: Text(l.remoteBookmark),
+                      ),
+                      TextButton.icon(
+                        key: const Key('remote-stop'),
+                        onPressed: () => _send(const StopCommand()),
+                        icon: const Icon(Icons.stop_rounded),
+                        label: Text(l.remoteStop),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  _volume(context, s),
                 ],
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _volume(BuildContext context, RemotePlayerState s) {
+    final l = AppLocalizations.of(context)!;
+    final cs = Theme.of(context).colorScheme;
+    final shown = s.muted ? 0.0 : (_volumeDrag ?? s.volume);
+    return Row(
+      children: [
+        IconButton(
+          key: const Key('remote-mute'),
+          tooltip: s.muted ? l.remoteUnmute : l.remoteMute,
+          onPressed: () => _send(MuteCommand(!s.muted)),
+          icon: Icon(
+            s.muted || shown == 0
+                ? Icons.volume_off_rounded
+                : shown < 0.5
+                ? Icons.volume_down_rounded
+                : Icons.volume_up_rounded,
+            color: cs.onSurfaceVariant,
+          ),
+        ),
+        Expanded(
+          child: Semantics(
+            label: l.remoteVolume,
+            child: AbsorbSlider(
+              key: const Key('remote-volume'),
+              value: shown.clamp(0.0, 1.0),
+              onChanged: (v) => setState(() => _volumeDrag = v),
+              onChangeEnd: (v) {
+                _send(VolumeCommand(v));
+                setState(() => _volumeDrag = null);
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -614,6 +796,20 @@ class _RemoteControlScreenState extends State<RemoteControlScreen> {
     }
   }
 
+  Widget _sectionHeader(BuildContext context, String text) {
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 6),
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+          color: cs.primary,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
   Future<void> _pickSpeed(RemotePlayerState s) async {
     final l = AppLocalizations.of(context)!;
     final picked = await showAdaptiveActionMenu<double>(
@@ -694,6 +890,166 @@ class _RemoteControlScreenState extends State<RemoteControlScreen> {
       ),
     );
     if (picked != null) _send(picked);
+  }
+
+  Future<void> _showChapters(RemotePlayerState s) async {
+    final l = AppLocalizations.of(context)!;
+    final chapters = _client.chapters;
+    final current = chapters.lastIndexWhere((c) => c.start <= s.position + 0.5);
+    final picked = await showAdaptiveSheetDialog<RemoteChapter>(
+      context: context,
+      showDragHandle: true,
+      builder: (ctx, controller) {
+        final cs = Theme.of(ctx).colorScheme;
+        return ListView.builder(
+          controller: controller,
+          itemCount: chapters.length + 1,
+          itemBuilder: (ctx, i) {
+            if (i == 0) {
+              return ListTile(
+                title: Text(
+                  l.remoteChapters,
+                  style: Theme.of(ctx).textTheme.titleMedium,
+                ),
+              );
+            }
+            final c = chapters[i - 1];
+            final isCurrent = i - 1 == current;
+            return ListTile(
+              key: Key('remote-chapter-$i'),
+              selected: isCurrent,
+              title: Text(
+                c.title.isEmpty ? '$i' : c.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              trailing: Text(
+                fmtTime(c.end - c.start),
+                style: Theme.of(
+                  ctx,
+                ).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+              ),
+              onTap: () => Navigator.pop(ctx, c),
+            );
+          },
+        );
+      },
+    );
+    if (picked != null) _send(SeekCommand(picked.start));
+  }
+
+  Future<void> _addBookmark() async {
+    final note = await showDialog<String>(
+      context: context,
+      builder: (_) => const _BookmarkDialog(),
+    );
+    if (note != null) _send(BookmarkCommand(note));
+  }
+
+  Future<void> _showContinue() async {
+    _client.requestRecent();
+    final picked = await showAdaptiveSheetDialog<String>(
+      context: context,
+      showDragHandle: true,
+      builder: (ctx, controller) => ListenableBuilder(
+        listenable: _client,
+        builder: (ctx, _) {
+          final l = AppLocalizations.of(ctx)!;
+          final cs = Theme.of(ctx).colorScheme;
+          final recent = _client.recent;
+          return ListView(
+            controller: controller,
+            children: [
+              ListTile(
+                title: Text(
+                  l.remoteContinueListening,
+                  style: Theme.of(ctx).textTheme.titleMedium,
+                ),
+              ),
+              if (recent == null)
+                const Padding(
+                  padding: EdgeInsets.all(24),
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              else if (recent.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                  child: Text(
+                    l.remoteContinueEmpty,
+                    style: TextStyle(color: cs.onSurfaceVariant),
+                  ),
+                )
+              else
+                for (final item in recent)
+                  _recentTile(
+                    ctx,
+                    item,
+                    onTap: () => Navigator.pop(ctx, item.id),
+                  ),
+            ],
+          );
+        },
+      ),
+    );
+    if (picked != null) _send(PlayItemCommand(picked));
+  }
+
+  Widget _recentTile(
+    BuildContext context,
+    RemoteRecentItem item, {
+    VoidCallback? onTap,
+  }) {
+    final cs = Theme.of(context).colorScheme;
+    final small = Theme.of(
+      context,
+    ).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant);
+    return ListTile(
+      key: Key('remote-recent-${item.id}'),
+      leading: SizedBox(
+        width: 48,
+        height: 48,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: FutureBuilder<Uint8List?>(
+            future: _client.recentCover(item.id),
+            builder: (context, snap) {
+              final bytes = snap.data;
+              return bytes != null
+                  ? Image.memory(
+                      bytes,
+                      fit: BoxFit.cover,
+                      gaplessPlayback: true,
+                      errorBuilder: (_, __, ___) =>
+                          _coverPlaceholder(cs, size: 24),
+                    )
+                  : _coverPlaceholder(cs, size: 24);
+            },
+          ),
+        ),
+      ),
+      title: Text(item.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (item.author.isNotEmpty)
+            Text(
+              item.author,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: small,
+            ),
+          const SizedBox(height: 4),
+          LinearProgressIndicator(
+            value: item.progress,
+            minHeight: 3,
+            borderRadius: BorderRadius.circular(2),
+            backgroundColor: cs.primary.withValues(alpha: 0.15),
+          ),
+        ],
+      ),
+      onTap: onTap ?? () => _send(PlayItemCommand(item.id)),
+    );
   }
 
   // ── Display mode ──────────────────────────────────────────────────
@@ -827,6 +1183,55 @@ class _RemoteControlScreenState extends State<RemoteControlScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// "Add a bookmark here" with an optional note; pops the note.
+class _BookmarkDialog extends StatefulWidget {
+  const _BookmarkDialog();
+
+  @override
+  State<_BookmarkDialog> createState() => _BookmarkDialogState();
+}
+
+class _BookmarkDialogState extends State<_BookmarkDialog> {
+  final _note = TextEditingController();
+
+  @override
+  void dispose() {
+    _note.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return AlertDialog(
+      title: Text(l.remoteBookmarkTitle),
+      content: TextField(
+        key: const Key('remote-bookmark-note'),
+        controller: _note,
+        autofocus: true,
+        maxLength: BookmarkCommand.maxNoteLength,
+        maxLines: 3,
+        minLines: 1,
+        decoration: InputDecoration(
+          hintText: l.remoteBookmarkNoteHint,
+          counterText: '',
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l.cancel),
+        ),
+        FilledButton(
+          key: const Key('remote-bookmark-add'),
+          onPressed: () => Navigator.pop(context, _note.text.trim()),
+          child: Text(l.remoteBookmarkAdd),
+        ),
+      ],
     );
   }
 }

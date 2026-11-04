@@ -7,26 +7,31 @@ import '../l10n/app_localizations.dart';
 import '../services/remote_link/remote_link.dart';
 import 'remote_control_screen.dart';
 
-/// Phone remote, the remote side (fork): paired computers, computers found
-/// on the network, or a typed address; then the code, then the remote.
+/// "Control your computer", the remote side (fork): paired computers,
+/// computers found on the network, or a typed address; then the code, then
+/// the remote. A scanned pairing link ([link]) opens the code step filled in;
+/// the user still confirms it.
 class RemoteConnectScreen extends StatefulWidget {
   const RemoteConnectScreen({
     super.key,
     this.connector,
     this.book = const RemoteHostBook(),
+    this.link,
   });
 
   /// Injected in tests; the app uses [remoteLinkConnector].
   final RemoteLinkConnector? connector;
   final RemoteHostBook book;
+  final RemotePairingLink? link;
 
   static Future<void> open(
     BuildContext context, {
     RemoteLinkConnector? connector,
+    RemotePairingLink? link,
   }) {
     return Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => RemoteConnectScreen(connector: connector),
+        builder: (_) => RemoteConnectScreen(connector: connector, link: link),
       ),
     );
   }
@@ -46,8 +51,31 @@ class _RemoteConnectScreenState extends State<RemoteConnectScreen> {
   @override
   void initState() {
     super.initState();
-    unawaited(_loadSaved());
+    final link = widget.link;
+    if (link == null) {
+      unawaited(_loadSaved());
+    } else {
+      unawaited(_openLink(link));
+    }
     _startSearch();
+  }
+
+  /// A scanned code: a computer paired before opens at its (maybe new)
+  /// address, which it must still prove; a new one asks for the code,
+  /// already filled in.
+  Future<void> _openLink(RemotePairingLink link) async {
+    final saved = await widget.book.find(link.hostId);
+    await _loadSaved();
+    if (!mounted) return;
+    if (saved != null) {
+      final moved = saved.copyWith(address: link.address, port: link.port);
+      await widget.book.moved(link.hostId, link.address, link.port);
+      await _loadSaved();
+      if (!mounted) return;
+      await _openRemote(moved);
+      return;
+    }
+    await _pair(link.address, link.port, link.address, code: link.code);
   }
 
   @override
@@ -71,6 +99,18 @@ class _RemoteConnectScreenState extends State<RemoteConnectScreen> {
       (found) {
         if (!mounted) return;
         setState(() => _found.add(found));
+        // A paired computer at a new address: it proves itself on connect,
+        // so the saved entry can follow it.
+        for (final h in _saved) {
+          if (h.hostId == found.hostId &&
+              (h.address != found.address || h.port != found.port)) {
+            unawaited(
+              widget.book
+                  .moved(h.hostId, found.address, found.port)
+                  .then((_) => _loadSaved()),
+            );
+          }
+        }
       },
       onDone: () {
         if (mounted) setState(() => _searching = false);
@@ -98,7 +138,12 @@ class _RemoteConnectScreenState extends State<RemoteConnectScreen> {
     _startSearch();
   }
 
-  Future<void> _pair(String address, int port, String name) async {
+  Future<void> _pair(
+    String address,
+    int port,
+    String name, {
+    String code = '',
+  }) async {
     final host = await showDialog<SavedRemoteHost>(
       context: context,
       builder: (_) => _PairDialog(
@@ -106,6 +151,7 @@ class _RemoteConnectScreenState extends State<RemoteConnectScreen> {
         address: address,
         port: port,
         name: name,
+        code: code,
       ),
     );
     if (host == null || !mounted) return;
@@ -135,15 +181,11 @@ class _RemoteConnectScreenState extends State<RemoteConnectScreen> {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
     final small = tt.bodySmall?.copyWith(color: cs.onSurfaceVariant);
-    // A paired computer is listed under Paired. One that answers from a new
-    // address shows up here and is paired again: the saved token only ever
-    // goes to the address it was paired at (an announcement is easy to fake).
-    final known = {
-      for (final h in _saved) '${h.hostId}|${h.address}|${h.port}',
-    };
-    final fresh = _found
-        .where((f) => !known.contains('${f.hostId}|${f.address}|${f.port}'))
-        .toList();
+    // A paired computer is listed under Paired, even when it answers from a
+    // new address: it has to prove it knows the shared key before anything
+    // is sent, so a faked announcement gets nowhere.
+    final known = {for (final h in _saved) h.hostId};
+    final fresh = _found.where((f) => !known.contains(f.hostId)).toList();
     return Scaffold(
       appBar: AppBar(
         title: Text(l.remoteControlAnother),
@@ -158,6 +200,13 @@ class _RemoteConnectScreenState extends State<RemoteConnectScreen> {
       body: ListView(
         padding: const EdgeInsets.only(bottom: 24),
         children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+            child: Text(
+              l.remoteConnectIntro,
+              style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
+            ),
+          ),
           if (_saved.isNotEmpty) ...[
             _header(context, l.remoteConnectPaired),
             for (final host in _saved)
@@ -296,6 +345,7 @@ class _PairDialog extends StatefulWidget {
     required this.address,
     required this.port,
     required this.name,
+    this.code = '',
   });
 
   final RemoteLinkConnector connector;
@@ -303,13 +353,17 @@ class _PairDialog extends StatefulWidget {
   final int port;
   final String name;
 
+  /// From a scanned link: filled in, sent only when the user taps Pair.
+  final String code;
+
   @override
   State<_PairDialog> createState() => _PairDialogState();
 }
 
 class _PairDialogState extends State<_PairDialog> {
-  final _code = TextEditingController();
+  late final _code = TextEditingController(text: widget.code);
   bool _busy = false;
+  bool _waiting = false;
   String? _error;
 
   @override
@@ -322,6 +376,8 @@ class _PairDialogState extends State<_PairDialog> {
     RemoteErrorCode.badCode => l.remotePairBadCode,
     RemoteErrorCode.codeExpired => l.remotePairExpired,
     RemoteErrorCode.pairingClosed => l.remotePairClosed,
+    RemoteErrorCode.pairDenied => l.remotePairDenied,
+    RemoteErrorCode.tooManyDevices => l.remotePairTooManyDevices,
     RemoteErrorCode.tooManyAttempts => l.remotePairTooMany,
     RemoteErrorCode.unsupportedVersion => l.remoteVersionMismatch,
     RemotePairResult.unreachable => l.remotePairUnreachable,
@@ -342,6 +398,9 @@ class _PairDialogState extends State<_PairDialog> {
       port: widget.port,
       code: code,
       deviceName: name,
+      onWaiting: () {
+        if (mounted) setState(() => _waiting = true);
+      },
     );
     if (!mounted) return;
     if (result.host != null) {
@@ -350,6 +409,7 @@ class _PairDialogState extends State<_PairDialog> {
     }
     setState(() {
       _busy = false;
+      _waiting = false;
       _error = _message(l, result.error ?? RemoteErrorCode.failed);
       _code.clear();
     });
@@ -390,6 +450,17 @@ class _PairDialogState extends State<_PairDialog> {
               },
               onSubmitted: (_) => _submit(),
             ),
+            if (_waiting)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(
+                  l.remoteConnectWaiting,
+                  key: const Key('remote-pair-waiting'),
+                  style: tt.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ),
           ],
         ),
         actions: [

@@ -25542,38 +25542,50 @@ abstract class AppLocalizations {
   /// No description provided for @remoteHostTitle.
   ///
   /// In en, this message translates to:
-  /// **'Phone remote'**
+  /// **'Control from your phone'**
   String get remoteHostTitle;
 
   /// No description provided for @remoteHostSubtitleOff.
   ///
   /// In en, this message translates to:
-  /// **'Control this PC from your phone'**
+  /// **'Use your phone as a remote for Absorb on this PC'**
   String get remoteHostSubtitleOff;
 
   /// No description provided for @remoteHostSubtitleOn.
   ///
   /// In en, this message translates to:
-  /// **'On · {count, plural, =0{no devices connected} =1{1 device connected} other{{count} devices connected}}'**
+  /// **'On · {count, plural, =0{no phones connected} =1{1 phone connected} other{{count} phones connected}}'**
   String remoteHostSubtitleOn(int count);
 
   /// No description provided for @remoteHostSheetBody.
   ///
   /// In en, this message translates to:
-  /// **'Your phone works as a remote and a now-playing screen while the audio plays here. Only devices you pair can connect, and only over your own network.'**
+  /// **'Use your phone as a remote for this PC. The audio keeps playing here on the PC, and your phone shows what\'s playing with the buttons. Your phone and this PC need to be on the same Wi-Fi.'**
   String get remoteHostSheetBody;
 
   /// No description provided for @remoteHostSwitch.
   ///
   /// In en, this message translates to:
-  /// **'Allow a remote'**
+  /// **'Turn on'**
   String get remoteHostSwitch;
 
   /// No description provided for @remoteHostSwitchSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Off by default. Windows may ask to let Absorb Plus through the firewall the first time.'**
+  /// **'Windows may ask to let Absorb Plus through the firewall the first time. Allow it.'**
   String get remoteHostSwitchSubtitle;
+
+  /// No description provided for @remoteHostKeepOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep on when Absorb starts'**
+  String get remoteHostKeepOn;
+
+  /// No description provided for @remoteHostKeepOnSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'When this is off, it turns off each time you close Absorb.'**
+  String get remoteHostKeepOnSubtitle;
 
   /// No description provided for @remoteHostPortsBusy.
   ///
@@ -25584,37 +25596,67 @@ abstract class AppLocalizations {
   /// No description provided for @remoteHostPairTitle.
   ///
   /// In en, this message translates to:
-  /// **'Pair a device'**
+  /// **'Pair your phone'**
   String get remoteHostPairTitle;
 
-  /// No description provided for @remoteHostPairHelp.
+  /// No description provided for @remoteHostStep1.
   ///
   /// In en, this message translates to:
-  /// **'On the phone, open Absorb Plus, go to Settings, Media Controls, Control another device, pick this PC and enter the code.'**
-  String get remoteHostPairHelp;
+  /// **'1. Turn it on here.'**
+  String get remoteHostStep1;
+
+  /// No description provided for @remoteHostStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Scan the code with your phone\'s camera, or open Absorb on the phone and go to Settings > Control your computer.'**
+  String get remoteHostStep2;
+
+  /// No description provided for @remoteHostStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Enter the code on the phone, then choose Allow here.'**
+  String get remoteHostStep3;
 
   /// No description provided for @remoteHostCodeLabel.
   ///
   /// In en, this message translates to:
-  /// **'Pairing code'**
+  /// **'Code'**
   String get remoteHostCodeLabel;
 
   /// No description provided for @remoteHostCodeExpires.
   ///
   /// In en, this message translates to:
-  /// **'Expires in {time}'**
+  /// **'Works for {time}'**
   String remoteHostCodeExpires(String time);
 
-  /// No description provided for @remoteHostNewCode.
+  /// No description provided for @remoteHostPairFirst.
   ///
   /// In en, this message translates to:
-  /// **'New code'**
-  String get remoteHostNewCode;
+  /// **'Pair a phone'**
+  String get remoteHostPairFirst;
+
+  /// No description provided for @remoteHostPairAnother.
+  ///
+  /// In en, this message translates to:
+  /// **'Pair another device'**
+  String get remoteHostPairAnother;
+
+  /// No description provided for @remoteHostPairingClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Pairing is closed. Tap the button for a new code; it works for 2 minutes and for one device.'**
+  String get remoteHostPairingClosed;
+
+  /// No description provided for @remoteHostFull.
+  ///
+  /// In en, this message translates to:
+  /// **'5 devices are paired, the most allowed. Forget one to pair another.'**
+  String get remoteHostFull;
 
   /// No description provided for @remoteHostAddresses.
   ///
   /// In en, this message translates to:
-  /// **'Address: {addresses}'**
+  /// **'This PC\'s address: {addresses}'**
   String remoteHostAddresses(String addresses);
 
   /// No description provided for @remoteHostNoAddress.
@@ -25626,7 +25668,7 @@ abstract class AppLocalizations {
   /// No description provided for @remoteHostNoDiscovery.
   ///
   /// In en, this message translates to:
-  /// **'The phone can\'t find this PC by itself right now; enter the address on the phone instead.'**
+  /// **'Your phone may not find this PC by itself; type this PC\'s address on the phone instead.'**
   String get remoteHostNoDiscovery;
 
   /// No description provided for @remoteHostConnectedTitle.
@@ -25647,6 +25689,12 @@ abstract class AppLocalizations {
   /// **'No paired devices yet'**
   String get remoteHostNoDevices;
 
+  /// No description provided for @remoteHostUnusedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A device not used for 90 days is forgotten.'**
+  String get remoteHostUnusedNote;
+
   /// No description provided for @remoteHostLastUsed.
   ///
   /// In en, this message translates to:
@@ -25665,34 +25713,76 @@ abstract class AppLocalizations {
   /// **'Forget'**
   String get remoteHostForget;
 
+  /// No description provided for @remoteHostForgetAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Forget all'**
+  String get remoteHostForgetAll;
+
+  /// No description provided for @remoteHostForgetAllConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Forget all paired devices? Each one has to pair again to control this PC.'**
+  String get remoteHostForgetAllConfirm;
+
   /// No description provided for @remoteHostDisconnect.
   ///
   /// In en, this message translates to:
   /// **'Disconnect'**
   String get remoteHostDisconnect;
 
+  /// No description provided for @remoteHostAllowTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow ‘{name}’ to control Absorb on this PC?'**
+  String remoteHostAllowTitle(String name);
+
+  /// No description provided for @remoteHostAllowBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Only allow a device you know. It can play, pause and change what plays here. No answer means no.'**
+  String get remoteHostAllowBody;
+
+  /// No description provided for @remoteHostAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get remoteHostAllow;
+
+  /// No description provided for @remoteHostDeny.
+  ///
+  /// In en, this message translates to:
+  /// **'Deny'**
+  String get remoteHostDeny;
+
   /// No description provided for @remoteControlAnother.
   ///
   /// In en, this message translates to:
-  /// **'Control another device'**
+  /// **'Control your computer'**
   String get remoteControlAnother;
 
   /// No description provided for @remoteControlAnotherSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Use this device as a remote for Absorb Plus on a PC'**
+  /// **'Use this phone as a remote for Absorb on your PC'**
   String get remoteControlAnotherSubtitle;
+
+  /// No description provided for @remoteConnectIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this phone as a remote for Absorb on your PC. The audio keeps playing on the PC. Your phone and PC need to be on the same Wi-Fi. On the PC, open Settings > Control from your phone and turn it on.'**
+  String get remoteConnectIntro;
 
   /// No description provided for @remoteConnectSearching.
   ///
   /// In en, this message translates to:
-  /// **'Looking for computers on your network…'**
+  /// **'Looking for computers on your Wi-Fi…'**
   String get remoteConnectSearching;
 
   /// No description provided for @remoteConnectNoneFound.
   ///
   /// In en, this message translates to:
-  /// **'No computers found. Turn on Phone remote in the PC\'s Settings, or enter its address.'**
+  /// **'No computers found. On the PC, open Settings > Control from your phone and turn it on, or enter its address.'**
   String get remoteConnectNoneFound;
 
   /// No description provided for @remoteConnectSearchAgain.
@@ -25710,7 +25800,7 @@ abstract class AppLocalizations {
   /// No description provided for @remoteConnectFound.
   ///
   /// In en, this message translates to:
-  /// **'On your network'**
+  /// **'On your Wi-Fi'**
   String get remoteConnectFound;
 
   /// No description provided for @remoteConnectEnterAddress.
@@ -25746,8 +25836,14 @@ abstract class AppLocalizations {
   /// No description provided for @remoteConnectCodeHelp.
   ///
   /// In en, this message translates to:
-  /// **'Enter the 6-digit code shown in Phone remote on the PC.'**
+  /// **'Enter the 6-digit code shown on the PC under Control from your phone.'**
   String get remoteConnectCodeHelp;
+
+  /// No description provided for @remoteConnectWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Now choose Allow on the PC…'**
+  String get remoteConnectWaiting;
 
   /// No description provided for @remoteConnectPair.
   ///
@@ -25770,14 +25866,26 @@ abstract class AppLocalizations {
   /// No description provided for @remotePairExpired.
   ///
   /// In en, this message translates to:
-  /// **'That code has expired. Use the new one on the PC.'**
+  /// **'The code expired. Get a new one on the PC with Pair another device.'**
   String get remotePairExpired;
 
   /// No description provided for @remotePairClosed.
   ///
   /// In en, this message translates to:
-  /// **'Open Phone remote in the PC\'s Settings to see the code.'**
+  /// **'Pairing isn\'t open on the PC. On the PC, tap Pair another device for a new code.'**
   String get remotePairClosed;
+
+  /// No description provided for @remotePairDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'The PC didn\'t allow this phone. Try again and choose Allow on the PC.'**
+  String get remotePairDenied;
+
+  /// No description provided for @remotePairTooManyDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'That PC already has 5 paired devices. Forget one on the PC first.'**
+  String get remotePairTooManyDevices;
 
   /// No description provided for @remotePairTooMany.
   ///
@@ -25788,7 +25896,7 @@ abstract class AppLocalizations {
   /// No description provided for @remotePairUnreachable.
   ///
   /// In en, this message translates to:
-  /// **'Couldn\'t reach that computer. Check that both are on the same network.'**
+  /// **'Your phone and PC aren\'t on the same Wi-Fi, or the PC hasn\'t turned it on. Check both and try again.'**
   String get remotePairUnreachable;
 
   /// No description provided for @remotePairFailed.
@@ -25815,6 +25923,12 @@ abstract class AppLocalizations {
   /// **'Reconnecting…'**
   String get remoteReconnecting;
 
+  /// No description provided for @remoteUnreachableHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t reach the PC. Check that it\'s awake, Absorb is open, and both are on the same Wi-Fi.'**
+  String get remoteUnreachableHint;
+
   /// No description provided for @remoteNothingPlaying.
   ///
   /// In en, this message translates to:
@@ -25832,6 +25946,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The PC couldn\'t do that.'**
   String get remoteCommandFailed;
+
+  /// No description provided for @remoteNotOnList.
+  ///
+  /// In en, this message translates to:
+  /// **'That book isn\'t on the PC\'s list any more.'**
+  String get remoteNotOnList;
 
   /// No description provided for @remoteDisconnectedByHost.
   ///
@@ -25881,6 +26001,12 @@ abstract class AppLocalizations {
   /// **'Pause'**
   String get remotePause;
 
+  /// No description provided for @remoteStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get remoteStop;
+
   /// No description provided for @remotePreviousChapter.
   ///
   /// In en, this message translates to:
@@ -25910,6 +26036,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Speed'**
   String get remoteSpeed;
+
+  /// No description provided for @remoteSpeedSlower.
+  ///
+  /// In en, this message translates to:
+  /// **'Slower'**
+  String get remoteSpeedSlower;
+
+  /// No description provided for @remoteSpeedFaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Faster'**
+  String get remoteSpeedFaster;
 
   /// No description provided for @remoteSleepTimer.
   ///
@@ -25946,6 +26084,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Turn off the sleep timer'**
   String get remoteSleepCancel;
+
+  /// No description provided for @remoteVolume.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get remoteVolume;
+
+  /// No description provided for @remoteMute.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute'**
+  String get remoteMute;
+
+  /// No description provided for @remoteUnmute.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmute'**
+  String get remoteUnmute;
+
+  /// No description provided for @remoteChapters.
+  ///
+  /// In en, this message translates to:
+  /// **'Chapters'**
+  String get remoteChapters;
+
+  /// No description provided for @remoteBookmark.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmark'**
+  String get remoteBookmark;
+
+  /// No description provided for @remoteBookmarkTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a bookmark here'**
+  String get remoteBookmarkTitle;
+
+  /// No description provided for @remoteBookmarkNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Note (optional)'**
+  String get remoteBookmarkNoteHint;
+
+  /// No description provided for @remoteBookmarkAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get remoteBookmarkAdd;
+
+  /// No description provided for @remoteBookmarkAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmark added on the PC'**
+  String get remoteBookmarkAdded;
+
+  /// No description provided for @remoteContinueListening.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue listening'**
+  String get remoteContinueListening;
+
+  /// No description provided for @remoteContinueEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in progress on the PC.'**
+  String get remoteContinueEmpty;
 
   /// No description provided for @remoteTimeLeft.
   ///

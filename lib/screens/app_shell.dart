@@ -93,7 +93,7 @@ import '../utils/test_build.dart'; // Absorb Plus
 import '../widgets/quick_switcher_sources.dart'; // Absorb Plus
 import '../widgets/desktop_shortcut_help.dart'; // Absorb Plus
 import '../widgets/developer_mode_tiles.dart'; // Absorb Plus
-import '../services/remote_link/remote_link.dart' show remoteHost; // Absorb Plus
+import '../fork/remote_link_hooks.dart'; // Absorb Plus
 
 
 class AppShell extends StatefulWidget {
@@ -428,7 +428,7 @@ class _AppShellState extends State<AppShell>
     EreaderVolumeNav.ensureHandler();
     PlayerScreenWake.start();
     unawaited(WindowsShell.instance.start());
-    unawaited(remoteHost.start()); // Absorb Plus: phone remote (off by default)
+    RemoteLinkHooks.attachShell(context); // Absorb Plus: phone remote (off by default)
     _jumpListLaunch = attachWindowsJumpList(context); // Absorb Plus
     if (!widget.startOnAbsorbing) _loadStartScreen();
     _ensurePageBuilt(_currentIndex);
@@ -581,6 +581,7 @@ class _AppShellState extends State<AppShell>
     _updateTimer?.cancel();
     _incomingNotifications?.cancel();
     detachWindowsJumpList(_jumpListLaunch); // Absorb Plus
+    RemoteLinkHooks.detachShell(); // Absorb Plus
     _fadeController.dispose();
     _detachNavBarListener();
     _navBarAnimController.dispose();

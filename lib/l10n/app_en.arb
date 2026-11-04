@@ -8114,9 +8114,9 @@
   "dropUploadNotAllowed": "Your account can't upload to this server",
   "dropUploadNothingUsable": "None of the dropped files can be uploaded",
   "dropUploadAlreadyOpen": "Finish or close the open upload first",
-  "remoteHostTitle": "Phone remote",
-  "remoteHostSubtitleOff": "Control this PC from your phone",
-  "remoteHostSubtitleOn": "On · {count, plural, =0{no devices connected} =1{1 device connected} other{{count} devices connected}}",
+  "remoteHostTitle": "Control from your phone",
+  "remoteHostSubtitleOff": "Use your phone as a remote for Absorb on this PC",
+  "remoteHostSubtitleOn": "On · {count, plural, =0{no phones connected} =1{1 phone connected} other{{count} phones connected}}",
   "@remoteHostSubtitleOn": {
     "placeholders": {
       "count": {
@@ -8124,9 +8124,11 @@
       }
     }
   },
-  "remoteHostSheetBody": "Your phone works as a remote and a now-playing screen while the audio plays here. Only devices you pair can connect, and only over your own network.",
-  "remoteHostSwitch": "Allow a remote",
-  "remoteHostSwitchSubtitle": "Off by default. Windows may ask to let Absorb Plus through the firewall the first time.",
+  "remoteHostSheetBody": "Use your phone as a remote for this PC. The audio keeps playing here on the PC, and your phone shows what's playing with the buttons. Your phone and this PC need to be on the same Wi-Fi.",
+  "remoteHostSwitch": "Turn on",
+  "remoteHostSwitchSubtitle": "Windows may ask to let Absorb Plus through the firewall the first time. Allow it.",
+  "remoteHostKeepOn": "Keep on when Absorb starts",
+  "remoteHostKeepOnSubtitle": "When this is off, it turns off each time you close Absorb.",
   "remoteHostPortsBusy": "Couldn't start: ports {first} to {last} are all in use.",
   "@remoteHostPortsBusy": {
     "placeholders": {
@@ -8138,10 +8140,12 @@
       }
     }
   },
-  "remoteHostPairTitle": "Pair a device",
-  "remoteHostPairHelp": "On the phone, open Absorb Plus, go to Settings, Media Controls, Control another device, pick this PC and enter the code.",
-  "remoteHostCodeLabel": "Pairing code",
-  "remoteHostCodeExpires": "Expires in {time}",
+  "remoteHostPairTitle": "Pair your phone",
+  "remoteHostStep1": "1. Turn it on here.",
+  "remoteHostStep2": "2. Scan the code with your phone's camera, or open Absorb on the phone and go to Settings > Control your computer.",
+  "remoteHostStep3": "3. Enter the code on the phone, then choose Allow here.",
+  "remoteHostCodeLabel": "Code",
+  "remoteHostCodeExpires": "Works for {time}",
   "@remoteHostCodeExpires": {
     "placeholders": {
       "time": {
@@ -8149,8 +8153,11 @@
       }
     }
   },
-  "remoteHostNewCode": "New code",
-  "remoteHostAddresses": "Address: {addresses}",
+  "remoteHostPairFirst": "Pair a phone",
+  "remoteHostPairAnother": "Pair another device",
+  "remoteHostPairingClosed": "Pairing is closed. Tap the button for a new code; it works for 2 minutes and for one device.",
+  "remoteHostFull": "5 devices are paired, the most allowed. Forget one to pair another.",
+  "remoteHostAddresses": "This PC's address: {addresses}",
   "@remoteHostAddresses": {
     "placeholders": {
       "addresses": {
@@ -8159,10 +8166,11 @@
     }
   },
   "remoteHostNoAddress": "This PC has no network address right now.",
-  "remoteHostNoDiscovery": "The phone can't find this PC by itself right now; enter the address on the phone instead.",
+  "remoteHostNoDiscovery": "Your phone may not find this PC by itself; type this PC's address on the phone instead.",
   "remoteHostConnectedTitle": "Connected now",
   "remoteHostPairedTitle": "Paired devices",
   "remoteHostNoDevices": "No paired devices yet",
+  "remoteHostUnusedNote": "A device not used for 90 days is forgotten.",
   "remoteHostLastUsed": "Last used {date}",
   "@remoteHostLastUsed": {
     "placeholders": {
@@ -8183,14 +8191,28 @@
     }
   },
   "remoteHostForget": "Forget",
+  "remoteHostForgetAll": "Forget all",
+  "remoteHostForgetAllConfirm": "Forget all paired devices? Each one has to pair again to control this PC.",
   "remoteHostDisconnect": "Disconnect",
-  "remoteControlAnother": "Control another device",
-  "remoteControlAnotherSubtitle": "Use this device as a remote for Absorb Plus on a PC",
-  "remoteConnectSearching": "Looking for computers on your network…",
-  "remoteConnectNoneFound": "No computers found. Turn on Phone remote in the PC's Settings, or enter its address.",
+  "remoteHostAllowTitle": "Allow ‘{name}’ to control Absorb on this PC?",
+  "@remoteHostAllowTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "remoteHostAllowBody": "Only allow a device you know. It can play, pause and change what plays here. No answer means no.",
+  "remoteHostAllow": "Allow",
+  "remoteHostDeny": "Deny",
+  "remoteControlAnother": "Control your computer",
+  "remoteControlAnotherSubtitle": "Use this phone as a remote for Absorb on your PC",
+  "remoteConnectIntro": "Use this phone as a remote for Absorb on your PC. The audio keeps playing on the PC. Your phone and PC need to be on the same Wi-Fi. On the PC, open Settings > Control from your phone and turn it on.",
+  "remoteConnectSearching": "Looking for computers on your Wi-Fi…",
+  "remoteConnectNoneFound": "No computers found. On the PC, open Settings > Control from your phone and turn it on, or enter its address.",
   "remoteConnectSearchAgain": "Search again",
   "remoteConnectPaired": "Paired",
-  "remoteConnectFound": "On your network",
+  "remoteConnectFound": "On your Wi-Fi",
   "remoteConnectEnterAddress": "Enter an address",
   "remoteConnectAddressHint": "192.168.1.20:47390",
   "remoteConnectAddressInvalid": "Enter an address like 192.168.1.20 or 192.168.1.20:47390",
@@ -8203,18 +8225,22 @@
       }
     }
   },
-  "remoteConnectCodeHelp": "Enter the 6-digit code shown in Phone remote on the PC.",
+  "remoteConnectCodeHelp": "Enter the 6-digit code shown on the PC under Control from your phone.",
+  "remoteConnectWaiting": "Now choose Allow on the PC…",
   "remoteConnectPair": "Pair",
   "remoteConnectForget": "Forget this computer",
   "remotePairBadCode": "That code isn't right. Check the PC and try again.",
-  "remotePairExpired": "That code has expired. Use the new one on the PC.",
-  "remotePairClosed": "Open Phone remote in the PC's Settings to see the code.",
+  "remotePairExpired": "The code expired. Get a new one on the PC with Pair another device.",
+  "remotePairClosed": "Pairing isn't open on the PC. On the PC, tap Pair another device for a new code.",
+  "remotePairDenied": "The PC didn't allow this phone. Try again and choose Allow on the PC.",
+  "remotePairTooManyDevices": "That PC already has 5 paired devices. Forget one on the PC first.",
   "remotePairTooMany": "Too many tries. Wait a minute and try again.",
-  "remotePairUnreachable": "Couldn't reach that computer. Check that both are on the same network.",
+  "remotePairUnreachable": "Your phone and PC aren't on the same Wi-Fi, or the PC hasn't turned it on. Check both and try again.",
   "remotePairFailed": "Pairing didn't work. Try again.",
   "remoteVersionMismatch": "Update Absorb Plus on both devices to use the remote.",
   "remoteConnecting": "Connecting…",
   "remoteReconnecting": "Reconnecting…",
+  "remoteUnreachableHint": "Can't reach the PC. Check that it's awake, Absorb is open, and both are on the same Wi-Fi.",
   "remoteNothingPlaying": "Nothing is playing on {name}",
   "@remoteNothingPlaying": {
     "placeholders": {
@@ -8225,6 +8251,7 @@
   },
   "remoteNothingLoaded": "Start something on the PC first.",
   "remoteCommandFailed": "The PC couldn't do that.",
+  "remoteNotOnList": "That book isn't on the PC's list any more.",
   "remoteDisconnectedByHost": "The PC disconnected this device.",
   "remoteUnauthorized": "The PC doesn't know this device any more. Pair it again.",
   "remotePairAgain": "Pair again",
@@ -8233,6 +8260,7 @@
   "remoteDisplayExit": "Tap to leave display mode",
   "remotePlay": "Play",
   "remotePause": "Pause",
+  "remoteStop": "Stop",
   "remotePreviousChapter": "Previous chapter",
   "remoteNextChapter": "Next chapter",
   "remoteSkipBack": "Back {seconds} seconds",
@@ -8252,6 +8280,8 @@
     }
   },
   "remoteSpeed": "Speed",
+  "remoteSpeedSlower": "Slower",
+  "remoteSpeedFaster": "Faster",
   "remoteSleepTimer": "Sleep timer",
   "remoteSleepMinutes": "{minutes} minutes",
   "@remoteSleepMinutes": {
@@ -8272,6 +8302,17 @@
     }
   },
   "remoteSleepCancel": "Turn off the sleep timer",
+  "remoteVolume": "Volume",
+  "remoteMute": "Mute",
+  "remoteUnmute": "Unmute",
+  "remoteChapters": "Chapters",
+  "remoteBookmark": "Bookmark",
+  "remoteBookmarkTitle": "Add a bookmark here",
+  "remoteBookmarkNoteHint": "Note (optional)",
+  "remoteBookmarkAdd": "Add",
+  "remoteBookmarkAdded": "Bookmark added on the PC",
+  "remoteContinueListening": "Continue listening",
+  "remoteContinueEmpty": "Nothing in progress on the PC.",
   "remoteTimeLeft": "{time} left",
   "@remoteTimeLeft": {
     "placeholders": {

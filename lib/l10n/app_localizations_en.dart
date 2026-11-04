@@ -15126,33 +15126,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dropUploadAlreadyOpen => 'Finish or close the open upload first';
 
   @override
-  String get remoteHostTitle => 'Phone remote';
+  String get remoteHostTitle => 'Control from your phone';
 
   @override
-  String get remoteHostSubtitleOff => 'Control this PC from your phone';
+  String get remoteHostSubtitleOff =>
+      'Use your phone as a remote for Absorb on this PC';
 
   @override
   String remoteHostSubtitleOn(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count devices connected',
-      one: '1 device connected',
-      zero: 'no devices connected',
+      other: '$count phones connected',
+      one: '1 phone connected',
+      zero: 'no phones connected',
     );
     return 'On · $_temp0';
   }
 
   @override
   String get remoteHostSheetBody =>
-      'Your phone works as a remote and a now-playing screen while the audio plays here. Only devices you pair can connect, and only over your own network.';
+      'Use your phone as a remote for this PC. The audio keeps playing here on the PC, and your phone shows what\'s playing with the buttons. Your phone and this PC need to be on the same Wi-Fi.';
 
   @override
-  String get remoteHostSwitch => 'Allow a remote';
+  String get remoteHostSwitch => 'Turn on';
 
   @override
   String get remoteHostSwitchSubtitle =>
-      'Off by default. Windows may ask to let Absorb Plus through the firewall the first time.';
+      'Windows may ask to let Absorb Plus through the firewall the first time. Allow it.';
+
+  @override
+  String get remoteHostKeepOn => 'Keep on when Absorb starts';
+
+  @override
+  String get remoteHostKeepOnSubtitle =>
+      'When this is off, it turns off each time you close Absorb.';
 
   @override
   String remoteHostPortsBusy(int first, int last) {
@@ -15160,26 +15168,44 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get remoteHostPairTitle => 'Pair a device';
+  String get remoteHostPairTitle => 'Pair your phone';
 
   @override
-  String get remoteHostPairHelp =>
-      'On the phone, open Absorb Plus, go to Settings, Media Controls, Control another device, pick this PC and enter the code.';
+  String get remoteHostStep1 => '1. Turn it on here.';
 
   @override
-  String get remoteHostCodeLabel => 'Pairing code';
+  String get remoteHostStep2 =>
+      '2. Scan the code with your phone\'s camera, or open Absorb on the phone and go to Settings > Control your computer.';
+
+  @override
+  String get remoteHostStep3 =>
+      '3. Enter the code on the phone, then choose Allow here.';
+
+  @override
+  String get remoteHostCodeLabel => 'Code';
 
   @override
   String remoteHostCodeExpires(String time) {
-    return 'Expires in $time';
+    return 'Works for $time';
   }
 
   @override
-  String get remoteHostNewCode => 'New code';
+  String get remoteHostPairFirst => 'Pair a phone';
+
+  @override
+  String get remoteHostPairAnother => 'Pair another device';
+
+  @override
+  String get remoteHostPairingClosed =>
+      'Pairing is closed. Tap the button for a new code; it works for 2 minutes and for one device.';
+
+  @override
+  String get remoteHostFull =>
+      '5 devices are paired, the most allowed. Forget one to pair another.';
 
   @override
   String remoteHostAddresses(String addresses) {
-    return 'Address: $addresses';
+    return 'This PC\'s address: $addresses';
   }
 
   @override
@@ -15187,7 +15213,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get remoteHostNoDiscovery =>
-      'The phone can\'t find this PC by itself right now; enter the address on the phone instead.';
+      'Your phone may not find this PC by itself; type this PC\'s address on the phone instead.';
 
   @override
   String get remoteHostConnectedTitle => 'Connected now';
@@ -15197,6 +15223,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get remoteHostNoDevices => 'No paired devices yet';
+
+  @override
+  String get remoteHostUnusedNote =>
+      'A device not used for 90 days is forgotten.';
 
   @override
   String remoteHostLastUsed(String date) {
@@ -15212,21 +15242,47 @@ class AppLocalizationsEn extends AppLocalizations {
   String get remoteHostForget => 'Forget';
 
   @override
+  String get remoteHostForgetAll => 'Forget all';
+
+  @override
+  String get remoteHostForgetAllConfirm =>
+      'Forget all paired devices? Each one has to pair again to control this PC.';
+
+  @override
   String get remoteHostDisconnect => 'Disconnect';
 
   @override
-  String get remoteControlAnother => 'Control another device';
+  String remoteHostAllowTitle(String name) {
+    return 'Allow ‘$name’ to control Absorb on this PC?';
+  }
+
+  @override
+  String get remoteHostAllowBody =>
+      'Only allow a device you know. It can play, pause and change what plays here. No answer means no.';
+
+  @override
+  String get remoteHostAllow => 'Allow';
+
+  @override
+  String get remoteHostDeny => 'Deny';
+
+  @override
+  String get remoteControlAnother => 'Control your computer';
 
   @override
   String get remoteControlAnotherSubtitle =>
-      'Use this device as a remote for Absorb Plus on a PC';
+      'Use this phone as a remote for Absorb on your PC';
 
   @override
-  String get remoteConnectSearching => 'Looking for computers on your network…';
+  String get remoteConnectIntro =>
+      'Use this phone as a remote for Absorb on your PC. The audio keeps playing on the PC. Your phone and PC need to be on the same Wi-Fi. On the PC, open Settings > Control from your phone and turn it on.';
+
+  @override
+  String get remoteConnectSearching => 'Looking for computers on your Wi-Fi…';
 
   @override
   String get remoteConnectNoneFound =>
-      'No computers found. Turn on Phone remote in the PC\'s Settings, or enter its address.';
+      'No computers found. On the PC, open Settings > Control from your phone and turn it on, or enter its address.';
 
   @override
   String get remoteConnectSearchAgain => 'Search again';
@@ -15235,7 +15291,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get remoteConnectPaired => 'Paired';
 
   @override
-  String get remoteConnectFound => 'On your network';
+  String get remoteConnectFound => 'On your Wi-Fi';
 
   @override
   String get remoteConnectEnterAddress => 'Enter an address';
@@ -15257,7 +15313,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get remoteConnectCodeHelp =>
-      'Enter the 6-digit code shown in Phone remote on the PC.';
+      'Enter the 6-digit code shown on the PC under Control from your phone.';
+
+  @override
+  String get remoteConnectWaiting => 'Now choose Allow on the PC…';
 
   @override
   String get remoteConnectPair => 'Pair';
@@ -15271,11 +15330,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get remotePairExpired =>
-      'That code has expired. Use the new one on the PC.';
+      'The code expired. Get a new one on the PC with Pair another device.';
 
   @override
   String get remotePairClosed =>
-      'Open Phone remote in the PC\'s Settings to see the code.';
+      'Pairing isn\'t open on the PC. On the PC, tap Pair another device for a new code.';
+
+  @override
+  String get remotePairDenied =>
+      'The PC didn\'t allow this phone. Try again and choose Allow on the PC.';
+
+  @override
+  String get remotePairTooManyDevices =>
+      'That PC already has 5 paired devices. Forget one on the PC first.';
 
   @override
   String get remotePairTooMany =>
@@ -15283,7 +15350,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get remotePairUnreachable =>
-      'Couldn\'t reach that computer. Check that both are on the same network.';
+      'Your phone and PC aren\'t on the same Wi-Fi, or the PC hasn\'t turned it on. Check both and try again.';
 
   @override
   String get remotePairFailed => 'Pairing didn\'t work. Try again.';
@@ -15299,6 +15366,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get remoteReconnecting => 'Reconnecting…';
 
   @override
+  String get remoteUnreachableHint =>
+      'Can\'t reach the PC. Check that it\'s awake, Absorb is open, and both are on the same Wi-Fi.';
+
+  @override
   String remoteNothingPlaying(String name) {
     return 'Nothing is playing on $name';
   }
@@ -15308,6 +15379,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get remoteCommandFailed => 'The PC couldn\'t do that.';
+
+  @override
+  String get remoteNotOnList => 'That book isn\'t on the PC\'s list any more.';
 
   @override
   String get remoteDisconnectedByHost => 'The PC disconnected this device.';
@@ -15335,6 +15409,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get remotePause => 'Pause';
 
   @override
+  String get remoteStop => 'Stop';
+
+  @override
   String get remotePreviousChapter => 'Previous chapter';
 
   @override
@@ -15352,6 +15429,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get remoteSpeed => 'Speed';
+
+  @override
+  String get remoteSpeedSlower => 'Slower';
+
+  @override
+  String get remoteSpeedFaster => 'Faster';
 
   @override
   String get remoteSleepTimer => 'Sleep timer';
@@ -15380,6 +15463,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get remoteSleepCancel => 'Turn off the sleep timer';
+
+  @override
+  String get remoteVolume => 'Volume';
+
+  @override
+  String get remoteMute => 'Mute';
+
+  @override
+  String get remoteUnmute => 'Unmute';
+
+  @override
+  String get remoteChapters => 'Chapters';
+
+  @override
+  String get remoteBookmark => 'Bookmark';
+
+  @override
+  String get remoteBookmarkTitle => 'Add a bookmark here';
+
+  @override
+  String get remoteBookmarkNoteHint => 'Note (optional)';
+
+  @override
+  String get remoteBookmarkAdd => 'Add';
+
+  @override
+  String get remoteBookmarkAdded => 'Bookmark added on the PC';
+
+  @override
+  String get remoteContinueListening => 'Continue listening';
+
+  @override
+  String get remoteContinueEmpty => 'Nothing in progress on the PC.';
 
   @override
   String remoteTimeLeft(String time) {

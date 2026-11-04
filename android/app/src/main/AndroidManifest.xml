@@ -47,6 +47,14 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="absorb" android:host="setup"/>
             </intent-filter>
+            <!-- Absorb Plus: the phone remote's pairing page (web/pair.html)
+                 opens absorb://remote-pair with the PC's address and code. -->
+            <intent-filter android:label="Absorb remote pairing">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="absorb" android:host="remote-pair"/>
+            </intent-filter>
         </activity>
 
         <!-- OIDC callback via Chrome Custom Tab (flutter_web_auth_2) -->
