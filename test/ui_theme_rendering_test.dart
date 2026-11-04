@@ -1,4 +1,5 @@
 import 'package:absorb/l10n/app_localizations.dart';
+import 'package:absorb/ui_themes/app_backdrop.dart';
 import 'package:absorb/ui_themes/frosted.dart';
 import 'package:absorb/ui_themes/ui_theme.dart';
 import 'package:absorb/ui_themes/ui_theme_hooks.dart';
@@ -273,10 +274,13 @@ void main() {
       final edge = Colors.white.withValues(
         alpha: AbsorbLook.midnightDark.panelBorderAlpha,
       );
-      expect(t.scaffoldBackgroundColor, black);
+      // Pages are transparent over the app background, which paints the
+      // look's canvas (Plain is Midnight's default).
+      expect(t.scaffoldBackgroundColor, Colors.transparent);
+      expect(pageSurfaceColor(context), black);
       expect(t.canvasColor, black);
       expect(t.colorScheme.surface, black);
-      expect(t.appBarTheme.backgroundColor, black);
+      expect(t.appBarTheme.backgroundColor, Colors.transparent);
       expect(t.navigationBarTheme.backgroundColor, black);
       // Cards: no grey fill, a 1 px outline at the usual radius.
       expect(t.cardTheme.color, Colors.transparent);
@@ -311,7 +315,7 @@ void main() {
       );
       final t = Theme.of(context);
       const white = Color(0xFFFFFFFF);
-      expect(t.scaffoldBackgroundColor, white);
+      expect(pageSurfaceColor(context), white);
       expect(t.colorScheme.surface, white);
       expect(t.navigationBarTheme.backgroundColor, white);
       expect(t.bottomSheetTheme.backgroundColor, white);

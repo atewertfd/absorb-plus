@@ -11,7 +11,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:absorb/l10n/app_localizations.dart';
-import 'package:absorb/main.dart' show rootNavigatorKey;
+import 'package:absorb/main.dart' show coverSchemeNotifier, rootNavigatorKey;
 import 'package:absorb/providers/auth_provider.dart';
 import 'package:absorb/providers/library_provider.dart';
 import 'package:absorb/screens/absorbing_screen.dart';
@@ -28,6 +28,7 @@ import 'package:absorb/services/admin_dashboard_data.dart';
 import 'package:absorb/services/api_service.dart';
 import 'package:absorb/services/wording.dart';
 import 'package:absorb/services/whats_new_notes.dart';
+import 'package:absorb/ui_themes/app_backdrop.dart';
 import 'package:absorb/ui_themes/frosted.dart';
 import 'package:absorb/ui_themes/ui_theme.dart';
 import 'package:absorb/ui_themes/ui_theme_picker.dart';
@@ -1189,6 +1190,120 @@ void main() {
       await _scrollAll(tester);
     });
     sweep.expectClean();
+  });
+
+  group('App background', () {
+    tearDown(() {
+      appBackgroundNotifier.value = null;
+      coverSchemeNotifier.value = null;
+    });
+
+    const combos = [
+      _Combo(_phoneSmall, 1.3, Brightness.dark),
+      _Combo(_phoneSmall, 2.0, Brightness.light),
+      _Combo(_laptop, 1.0, Brightness.dark),
+      _Combo(_desktop, 1.0, Brightness.light),
+    ];
+
+    AppBackdropSpec? specOn(WidgetTester tester) =>
+        AppBackdrop.specOf(tester.element(find.byType(Scaffold).first));
+
+    testWidgets('every option on Settings, the book page and Absorbing', (
+      tester,
+    ) async {
+      for (final bg in AppBackground.values) {
+        appBackgroundNotifier.value = bg;
+        coverSchemeNotifier.value = bg == AppBackground.cover
+            ? ColorScheme.fromSeed(seedColor: const Color(0xFF2E7D32))
+            : null;
+        await sweep.run(tester, 'Settings bg=${bg.id}', combos, (c) async {
+          await pumpScreen(tester, c, const SettingsScreen());
+          expect(specOn(tester)?.kind, bg);
+          final appearance = find.descendant(
+            of: find.byWidgetPredicate(
+              (w) => w is CollapsibleSection && w.title == 'Appearance',
+              skipOffstage: false,
+            ),
+            matching: find.byType(ExpansionTile, skipOffstage: false),
+            skipOffstage: false,
+          );
+          tester.widget<ExpansionTile>(appearance.first).controller!.expand();
+          await _settle(tester);
+          final control = find.byType(
+            SegmentedButton<AppBackground>,
+            skipOffstage: false,
+          );
+          expect(control, findsOneWidget);
+          await Scrollable.ensureVisible(tester.element(control));
+          await tester.pump();
+          _Sweep.checkClippedText(tester);
+          expect(
+            tester
+                .widget<SegmentedButton<AppBackground>>(control)
+                .selected,
+            {bg},
+          );
+          await _scrollAll(tester);
+        });
+        await sweep.run(tester, 'Book page bg=${bg.id}', combos, (c) async {
+          late BuildContext home;
+          await pumpScreen(
+            tester,
+            c,
+            Scaffold(
+              body: Builder(
+                builder: (context) {
+                  home = context;
+                  return const SizedBox.expand();
+                },
+              ),
+            ),
+          );
+          expect(specOn(tester)?.kind, bg);
+          showBookDetailSheet(home, 'li-1');
+          await _settle(tester);
+          await _scrollAll(tester);
+        });
+        await sweep.run(tester, 'Absorbing bg=${bg.id}', combos, (c) async {
+          await pumpScreen(tester, c, AbsorbingScreen(key: GlobalKey()));
+          expect(find.byType(AbsorbingCard), findsWidgets);
+          expect(specOn(tester)?.kind, bg);
+        });
+      }
+      sweep.expectClean();
+    });
+
+    testWidgets('Home and Library leave the glow to the app background', (
+      tester,
+    ) async {
+      // The screens' own glow used these stops; under the app background
+      // nothing may paint it a second time.
+      bool screenGlow(Widget w) =>
+          w is DecoratedBox &&
+          w.decoration is BoxDecoration &&
+          (w.decoration as BoxDecoration).gradient is LinearGradient &&
+          ((w.decoration as BoxDecoration).gradient! as LinearGradient)
+                  .stops
+                  ?.join(',') ==
+              '0.0,0.22,0.72,1.0';
+      const c = _Combo(_laptop, 1.0, Brightness.dark);
+      for (final screen in <Widget>[
+        const HomeScreen(),
+        LibraryScreen(key: GlobalKey<LibraryScreenState>()),
+        AbsorbingScreen(key: GlobalKey()),
+      ]) {
+        await pumpScreen(tester, c, screen);
+        expect(specOn(tester)?.kind, AppBackground.glow);
+        expect(
+          find.byWidgetPredicate(screenGlow),
+          findsNothing,
+          reason: '${screen.runtimeType}',
+        );
+      }
+      // Library's floating header paints its slice of the backdrop.
+      await pumpScreen(tester, c, LibraryScreen(key: GlobalKey()));
+      expect(find.byType(AppBackdropSlice), findsWidgets);
+    });
   });
   testWidgets('Admin dashboard, long names', (tester) async {
     await sweep.run(tester, 'Admin dashboard', _fullMatrix(), (c) async {

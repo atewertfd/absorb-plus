@@ -1,6 +1,7 @@
 import 'package:absorb/l10n/app_localizations.dart';
 import 'package:absorb/main.dart' show colorSourceNotifier, manualSeedNotifier;
 import 'package:absorb/providers/library_provider.dart';
+import 'package:absorb/ui_themes/app_backdrop.dart';
 import 'package:absorb/ui_themes/frosted.dart';
 import 'package:absorb/ui_themes/ui_theme.dart';
 import 'package:absorb/ui_themes/ui_theme_picker.dart';
@@ -155,7 +156,7 @@ void main() {
       expect(_lookIn(tester), AbsorbLook.midnightLight);
       final page = tester.element(find.byType(Scaffold).first);
       // The test app is light: Midnight's paper white, outlined.
-      expect(Theme.of(page).scaffoldBackgroundColor, const Color(0xFFFFFFFF));
+      expect(pageSurfaceColor(page), const Color(0xFFFFFFFF));
       expect(Theme.of(page).cardTheme.color, Colors.transparent);
       final navTheme = NavigationBarTheme.of(
         tester.element(find.byKey(const ValueKey('app-nav'))),
