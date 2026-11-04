@@ -48,6 +48,7 @@ import '../widgets/stable_cached_network_image.dart';
 import '../utils/cover_cache.dart';
 import '../utils/cover_palette.dart';
 import '../widgets/quick_switcher_sources.dart'; // Absorb Plus
+import '../ui_themes/app_backdrop.dart'; // Absorb Plus
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -556,7 +557,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
               ),
             ),
       body: Container(
-        decoration: flatNotifier.value ? null : BoxDecoration(
+        decoration: flatNotifier.value || AppBackdrop.isActive(context) ? null : BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

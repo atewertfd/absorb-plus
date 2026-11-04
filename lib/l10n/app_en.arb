@@ -8716,5 +8716,17 @@
   "loginSplitPitch": "Your audiobooks, podcasts and ebooks from your own server, on every device.",
   "@loginSplitPitch": {"description": "Split sign-in design: short line on the hero panel."},
   "quickSwitcherKeywordsLoginDesign": "login sign in screen design layout preview",
-  "@quickSwitcherKeywordsLoginDesign": {"description": "Quick switcher: extra search words for Preview sign-in designs."}
+  "@quickSwitcherKeywordsLoginDesign": {"description": "Quick switcher: extra search words for Preview sign-in designs."},
+  "appBackgroundLabel": "Background",
+  "@appBackgroundLabel": {"description": "Settings > Appearance: the app-wide background drawn behind every screen."},
+  "appBackgroundGlow": "Soft glow",
+  "@appBackgroundGlow": {"description": "App background option: the accent glow at the top of the screen."},
+  "appBackgroundCover": "Book colors",
+  "@appBackgroundCover": {"description": "App background option: a soft gradient from the playing book's cover colors."},
+  "appBackgroundGradient": "Gradient",
+  "@appBackgroundGradient": {"description": "App background option: a two-color diagonal blend of the app color."},
+  "appBackgroundPlain": "Plain",
+  "@appBackgroundPlain": {"description": "App background option: a flat background (same as Flat background)."},
+  "appBackgroundCoverHint": "Follows the cover of the book you're listening to. Soft glow while nothing is playing.",
+  "@appBackgroundCoverHint": {"description": "Settings > Appearance > Background: shown under the options when Book colors is picked."}
 }

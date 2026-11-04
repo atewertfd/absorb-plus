@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart' show einkModeNotifier, flatNotifier;
+import '../../ui_themes/app_backdrop.dart';
 import '../../ui_themes/frosted.dart' show frostBlurSupported;
 import '../../ui_themes/ui_theme.dart';
 import '../../ui_themes/ui_theme_hooks.dart';
@@ -149,7 +150,10 @@ class LoginGlassBackdrop extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: look.canvasColor ?? cs.surface,
+      // Over the app background when there is one (its art layers on top).
+      backgroundColor: AppBackdrop.isActive(context)
+          ? Colors.transparent
+          : look.canvasColor ?? cs.surface,
       body: Stack(
         fit: StackFit.expand,
         children: [

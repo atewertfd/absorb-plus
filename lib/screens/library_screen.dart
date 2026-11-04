@@ -54,6 +54,7 @@ import '../widgets/text_scale_room.dart';
 import '../widgets/recent_searches_panel.dart';
 import '../services/recent_searches.dart';
 import '../widgets/surprise_me_button.dart'; // Absorb Plus
+import '../ui_themes/app_backdrop.dart'; // Absorb Plus
 
 /// Responsive grid column count based on available width and the cover size
 /// setting; scales up on tablets/iPads.
@@ -2871,7 +2872,7 @@ class LibraryScreenState extends State<LibraryScreen>
           : null,
       body: Stack(
         children: [
-          if (!flatNotifier.value)
+          if (!flatNotifier.value && !AppBackdrop.isActive(context))
             OverflowBox(
               maxHeight: MediaQuery.of(context).size.height,
               alignment: Alignment.topCenter,
@@ -3046,7 +3047,9 @@ class LibraryScreenState extends State<LibraryScreen>
         lib.selectedLibrary?['name'] as String? ?? l.libraryFallback;
     final topInset = MediaQuery.of(context).padding.top;
     final screenH = MediaQuery.of(context).size.height;
-    final headerBackground = flatNotifier.value
+    final headerBackground = AppBackdrop.isActive(context)
+        ? const AppBackdropSlice() // Absorb Plus: the app background
+        : flatNotifier.value
         ? ColoredBox(color: scaffoldBg)
         : ClipRect(
             child: OverflowBox(

@@ -29,6 +29,7 @@ List<SettingSearchEntry> settingsSearchEntries(BuildContext context) {
     SettingSearchEntry('Appearance', l.sectionAppearance, l.uiThemePlainWording, [l.uiThemePlainWordingOnSubtitle, l.uiThemePlainWordingOffSubtitle, l.uiThemeSearchClassic]),
     SettingSearchEntry('Appearance', l.sectionAppearance, l.themeLabel, [l.themeDark, l.themeLight, l.themeAuto]),
     SettingSearchEntry('Appearance', l.sectionAppearance, l.flatBackgroundLabel, [l.flatBackgroundSubtitle]),
+    SettingSearchEntry('Appearance', l.sectionAppearance, l.appBackgroundLabel, [l.appBackgroundGlow, l.appBackgroundCover, l.appBackgroundGradient, l.appBackgroundPlain]), // fork
     SettingSearchEntry('Appearance', l.sectionAppearance, l.einkModeLabel, [l.einkModeSubtitle]),
     SettingSearchEntry('Appearance', l.sectionAppearance, l.backgroundIntensityLabel, const []),
     SettingSearchEntry('Appearance', l.sectionAppearance, l.colorSourceLabel, [l.colorSourceDynamic, l.colorSourceManual, l.colorSourceManualDescription, l.colorSourceCoverDescription, l.colorSourceCustom]),

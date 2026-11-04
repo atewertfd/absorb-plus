@@ -90,6 +90,8 @@ import 'login_designs/login_design_preview_screen.dart'; // fork
 import '../widgets/next_in_series_download_tile.dart'; // fork
 import '../widgets/remote_link_settings_tiles.dart'; // fork
 import '../widgets/developer_mode_tiles.dart'; // fork
+import '../ui_themes/app_backdrop.dart'; // fork
+import '../ui_themes/app_background_tile.dart'; // fork
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -1822,7 +1824,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return Scaffold(
       body: Container(
-        decoration: flatNotifier.value ? null : BoxDecoration(
+        decoration: flatNotifier.value || AppBackdrop.isActive(context) ? null : BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -2180,6 +2182,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                             ),
                           ),
+                          AppBackgroundTile(flat: _flatBackground, enabled: _loaded, onFlatChanged: (v) => setState(() => _flatBackground = v)), // fork
                           SwitchListTile.adaptive(
                             contentPadding: EdgeInsets.zero,
                             title: Text(l.flatBackgroundLabel, style: tt.bodyLarge),

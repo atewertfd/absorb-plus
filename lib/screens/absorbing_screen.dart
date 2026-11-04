@@ -24,6 +24,7 @@ import '../services/wording.dart';
 import '../ui_themes/ui_theme_hooks.dart';
 import '../widgets/accessible_header_action.dart';
 import '../widgets/desktop_input.dart';
+import '../ui_themes/app_backdrop.dart'; // Absorb Plus
 
 class AbsorbingScreen extends StatefulWidget {
   const AbsorbingScreen({super.key});
@@ -689,7 +690,7 @@ class _AbsorbingScreenState extends State<AbsorbingScreen> {
     return Scaffold(
       backgroundColor: scaffoldBg,
       body: Container(
-        decoration: flatNotifier.value ? null : BoxDecoration(
+        decoration: flatNotifier.value || AppBackdrop.isActive(context) ? null : BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

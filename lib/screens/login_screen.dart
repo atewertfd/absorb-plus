@@ -31,6 +31,7 @@ import '../widgets/tailscale_login_panel.dart'; // fork
 import '../utils/fork_branding.dart'; // fork
 import '../services/login_design_store.dart'; // fork
 import 'login_designs/login_designs.dart'; // fork
+import '../ui_themes/app_backdrop.dart'; // fork
 
 part 'login_screen_fork.dart'; // fork: alternative sign-in designs
 
@@ -527,7 +528,7 @@ class _LoginScreenState extends State<LoginScreen>
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Container(
-        decoration: flatNotifier.value ? null : BoxDecoration(
+        decoration: flatNotifier.value || AppBackdrop.isActive(context) ? null : BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

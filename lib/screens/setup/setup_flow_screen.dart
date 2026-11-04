@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../l10n/app_localizations.dart';
 import '../../main.dart' show flatNotifier, gradientIntensityNotifier;
 import '../../providers/auth_provider.dart';
+import '../../ui_themes/app_backdrop.dart';
 import '../../ui_themes/ui_theme_hooks.dart';
 import '../login_screen.dart';
 import 'setup_flow_store.dart';
@@ -128,7 +129,7 @@ class SetupFlowScreenState extends State<SetupFlowScreen> {
             // the keyboard; doing it here too would do it twice.
             resizeToAvoidBottomInset: false,
             body: Container(
-              decoration: flatNotifier.value
+              decoration: flatNotifier.value || AppBackdrop.isActive(context)
                   ? null
                   : BoxDecoration(
                       gradient: LinearGradient(

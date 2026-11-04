@@ -21,6 +21,8 @@ import '../main.dart' show rootNavigatorKey;
 import 'stackable_sheet.dart';
 import 'episode_list_sheet.dart';
 import '../utils/duration_format.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../ui_themes/app_backdrop.dart'; // Absorb Plus
 
 class EpisodeDetailSheet extends StatefulWidget {
   static final Set<String> _openEpisodeKeys = <String>{};
@@ -495,7 +497,7 @@ class _EpisodeDetailSheetState extends State<EpisodeDetailSheet> {
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: pageSurfaceColor(context),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Stack(children: [
@@ -530,9 +532,9 @@ class _EpisodeDetailSheetState extends State<EpisodeDetailSheet> {
       Positioned.fill(child: DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(
         begin: Alignment.topCenter, end: Alignment.bottomCenter,
         colors: [
-          Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.6),
-          Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.85),
-          Theme.of(context).scaffoldBackgroundColor,
+          pageSurfaceColor(context).withValues(alpha: 0.6),
+          pageSurfaceColor(context).withValues(alpha: 0.85),
+          pageSurfaceColor(context),
         ],
       )))),
     ];

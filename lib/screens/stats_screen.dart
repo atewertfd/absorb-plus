@@ -26,6 +26,7 @@ import 'stats_tab_refresh.dart';
 import '../widgets/empty_state.dart'; // Absorb Plus
 import '../services/listening_streaks.dart'; // Absorb Plus
 import '../widgets/listening_streak_card.dart'; // Absorb Plus
+import '../ui_themes/app_backdrop.dart'; // Absorb Plus
 
 class StatsScreen extends StatefulWidget {
   const StatsScreen({super.key});
@@ -472,7 +473,7 @@ class _StatsScreenState extends State<StatsScreen>
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Container(
-        decoration: flatNotifier.value ? null : BoxDecoration(
+        decoration: flatNotifier.value || AppBackdrop.isActive(context) ? null : BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

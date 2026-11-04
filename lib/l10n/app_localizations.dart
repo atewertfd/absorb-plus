@@ -27350,6 +27350,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'login sign in screen design layout preview'**
   String get quickSwitcherKeywordsLoginDesign;
+
+  /// Settings > Appearance: the app-wide background drawn behind every screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Background'**
+  String get appBackgroundLabel;
+
+  /// App background option: the accent glow at the top of the screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft glow'**
+  String get appBackgroundGlow;
+
+  /// App background option: a soft gradient from the playing book's cover colors.
+  ///
+  /// In en, this message translates to:
+  /// **'Book colors'**
+  String get appBackgroundCover;
+
+  /// App background option: a two-color diagonal blend of the app color.
+  ///
+  /// In en, this message translates to:
+  /// **'Gradient'**
+  String get appBackgroundGradient;
+
+  /// App background option: a flat background (same as Flat background).
+  ///
+  /// In en, this message translates to:
+  /// **'Plain'**
+  String get appBackgroundPlain;
+
+  /// Settings > Appearance > Background: shown under the options when Book colors is picked.
+  ///
+  /// In en, this message translates to:
+  /// **'Follows the cover of the book you\'re listening to. Soft glow while nothing is playing.'**
+  String get appBackgroundCoverHint;
 }
 
 class _AppLocalizationsDelegate

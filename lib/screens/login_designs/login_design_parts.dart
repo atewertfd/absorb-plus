@@ -7,6 +7,7 @@ import '../../l10n/app_localizations.dart';
 import '../../main.dart' show flatNotifier;
 import '../../services/tailscale_service.dart';
 import '../../services/wording.dart';
+import '../../ui_themes/app_backdrop.dart';
 import '../../ui_themes/ui_theme_hooks.dart';
 import '../../utils/fork_branding.dart';
 import '../../widgets/absorb_wave_icon.dart';
@@ -30,7 +31,7 @@ class LoginDesignBackdrop extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Container(
-        decoration: flatNotifier.value
+        decoration: flatNotifier.value || AppBackdrop.isActive(context)
             ? null
             : BoxDecoration(
                 gradient: LinearGradient(

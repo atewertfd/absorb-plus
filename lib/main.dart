@@ -57,6 +57,7 @@ import 'services/startup_timing.dart';
 import 'utils/app_motion.dart';
 import 'ui_themes/ui_theme.dart';
 import 'ui_themes/frosted.dart';
+import 'ui_themes/app_backdrop.dart' show AppBackgroundStore; // fork
 import 'services/tailscale_service.dart';
 import 'utils/web_safe_platform.dart';
 import 'utils/platform_appearance.dart'; // fork (C16)
@@ -237,6 +238,7 @@ Future<void> applyAppearanceFromPrefs() async {
   applyUseColorEverywhere(await PlayerSettings.getUseColorEverywhere());
   snappyTransitionsNotifier.value = await PlayerSettings.getSnappyTransitions();
   classicWordingNotifier.value = await PlayerSettings.getClassicWording();
+  await AppBackgroundStore.load(); // fork: app background
   // Fork (C8): a synced or restored language takes effect too.
   final lang = await PlayerSettings.getLanguage();
   final locale = lang.isEmpty ? null : Locale(lang);
@@ -315,6 +317,7 @@ void main() async {
     PlayerSettings.coverSize = await PlayerSettings.getCoverSize();
     PlayerSettings.cardButtonFill = await PlayerSettings.getCardButtonFill();
     await UiThemeStore.load(); // device-wide look (Absorb Plus / Classic)
+    await AppBackgroundStore.load(); // fork: app background
     // Restore last cover seed color so the theme doesn't flash on startup
     {
       final seedInt = await PlayerSettings.getCoverSeedColor();
@@ -869,6 +872,7 @@ class _AuthGateState extends State<AuthGate> {
     PlayerSettings.mp3IndexSeeking = await PlayerSettings.getMp3IndexSeeking();
     PlayerSettings.coverSize = await PlayerSettings.getCoverSize();
     PlayerSettings.cardButtonFill = await PlayerSettings.getCardButtonFill();
+    await AppBackgroundStore.load(); // fork: per-account app background
     // Rotation lock: main() applied it before scope was active, so that pass
     // read the never-written unscoped key and always came up unlocked. The
     // timeout matters: on a headless boot (Android Auto bind) there is no

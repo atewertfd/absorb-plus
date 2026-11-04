@@ -83,6 +83,7 @@ import 'stable_cached_network_image.dart';
 import '../utils/cover_cache.dart';
 import '../utils/cover_palette.dart';
 import 'bookmark_list_controls.dart';
+import '../ui_themes/app_backdrop.dart'; // Absorb Plus
 
 // ─── BOOK DETAIL BOTTOM SHEET ───────────────────────────────
 
@@ -755,16 +756,16 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     final l = AppLocalizations.of(context)!;
     return Container(
       clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor, borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
+      decoration: BoxDecoration(color: pageSurfaceColor(context), borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
       child: Stack(children: [
         // Cover-derived color gradient background - lighter than blurred image.
         Positioned.fill(child: DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(
           begin: Alignment.topCenter, end: Alignment.bottomCenter,
           stops: const [0.0, 0.4, 1.0],
           colors: [
-            (_coverScheme?.primaryContainer ?? Theme.of(context).scaffoldBackgroundColor).withValues(alpha: 0.5),
-            Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.85),
-            Theme.of(context).scaffoldBackgroundColor,
+            (_coverScheme?.primaryContainer ?? pageSurfaceColor(context)).withValues(alpha: 0.5),
+            pageSurfaceColor(context).withValues(alpha: 0.85),
+            pageSurfaceColor(context),
           ],
         )))),
         // Don't block sheet rendering on cover-scheme palette generation -
