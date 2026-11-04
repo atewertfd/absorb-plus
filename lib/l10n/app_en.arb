@@ -1194,6 +1194,14 @@
       }
     }
   },
+  "breqBookCount": "{count, plural, =1{1 book} other{{count} books}}",
+  "@breqBookCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "breqDownloadingPercent": "Downloading, {percent}%",
   "@breqDownloadingPercent": {
     "placeholders": {
@@ -2148,11 +2156,6 @@
   "removeSeriesFromContinueSeries": "Remove from Continue Series",
   "removedSeriesFromContinueSeries": "Removed from Continue Series",
   "couldNotUpdate": "Could not update, try again",
-  "recentSearchesTitle": "Recent searches",
-  "recentSearchesClear": "Clear",
-  "recentSearchesRemove": "Remove",
-  "removedSeriesTapToUndo": "Removed from Continue Series. Tap to undo.",
-  "seriesBackOnContinueSeries": "Back on Continue Series",
   "addToPlaylist": "Add to Playlist",
   "addToCollection": "Add to Collection",
   "downloadEbook": "Download eBook",
@@ -2254,7 +2257,11 @@
   "unmark": "Unmark",
   "markedAsNotFinishedBackAtIt": "Marked as not finished - back at it!",
   "resetProgressQuestion": "Reset Progress?",
-  "resetProgressContent": "This will erase all progress for this book and set it back to the beginning. This can't be undone.",
+  "resetProgressListeningAndReading": "Your listening and reading progress will both go back to 0%.",
+  "resetProgressListening": "Your listening progress will go back to 0%.",
+  "resetProgressReading": "Your reading progress will go back to 0%.",
+  "resetProgressMarksUnread": "The book will also be marked as unread.",
+  "resetProgressCantUndo": "This can't be undone.",
   "progressResetFreshStart": "Progress reset - fresh start!",
   "clearLocalMetadataQuestion": "Clear Local Metadata?",
   "clearLocalMetadataContent": "This will remove the locally stored metadata and revert to whatever the server has.",
@@ -2845,26 +2852,6 @@
   "cardMoreInGridChip": "\"More\" in grid",
   "cardLayoutHidden": "Hidden",
   "speed": "Speed",
-  "desktopShortcutPlayPause": "Play / pause",
-  "desktopShortcutRewind": "Rewind",
-  "desktopShortcutForward": "Fast-forward",
-  "desktopShortcutSlower": "Decrease playback speed",
-  "desktopShortcutFaster": "Increase playback speed",
-  "desktopShortcutNormalSpeed": "Reset playback speed",
-  "desktopShortcutSearch": "Open search",
-  "desktopShortcutLibrary": "Open library",
-  "desktopShortcutNowPlaying": "Open now playing",
-  "desktopShortcutFullScreen": "Full screen",
-  "desktopShortcutClosePlayer": "Close the full-screen player",
-  "desktopShortcutBack": "Go back (close the top page or sheet)",
-  "desktopShortcutRefresh": "Refresh the list on screen",
-  "desktopShortcutPreviousCard": "Previous Absorbing card",
-  "desktopShortcutNextCard": "Next Absorbing card",
-  "desktopShortcutContextMenu": "Open the long-press menu",
-  "desktopShortcutMouseBack": "Mouse back button",
-  "desktopShortcutRightClick": "Right-click",
-  "desktopShortcutDragShelves": "Drag shelves and cards sideways",
-  "desktopShortcutMouseDrag": "Click and drag",
   "details": "Details",
   "episodeDetailsLabel": "Episode Details",
   "bookDetailsLabel": "Book Details",
@@ -2934,53 +2921,6 @@
   "fileInfoMetadata": "Metadata",
   "fileInfoSupplement": "Extra",
   "fileInfoPathCopied": "Path copied",
-  "fileHealthAction": "Check files",
-  "fileHealthTitle": "Check files",
-  "fileHealthAllFine": "{count, plural, =0{Nothing looks wrong} =1{The file looks fine} other{All {count} files look fine}}",
-  "@fileHealthAllFine": {"placeholders": {"count": {"type": "int"}}},
-  "fileHealthProblems": "{count, plural, =1{1 problem found} other{{count} problems found}}",
-  "@fileHealthProblems": {"placeholders": {"count": {"type": "int"}}},
-  "fileHealthReadOnlyNote": "This only reads what the server already reports. Nothing is changed.",
-  "fileHealthLocalChecked": "Downloaded files on this device were checked too.",
-  "fileHealthItemMissing": "Book folder missing",
-  "fileHealthItemMissingInfo": "The server can't find this book's folder any more. It may have been moved, renamed or deleted, or its drive is offline. A library scan on the server can find it again.",
-  "fileHealthItemInvalid": "Book marked invalid",
-  "fileHealthItemInvalidInfo": "The server found no usable audio or ebook files for this book.",
-  "fileHealthInvalidFiles": "Unreadable files",
-  "fileHealthInvalidFilesInfo": "The server couldn't read these files. They may be damaged or in a format it doesn't support, and playback can stop or skip at them.",
-  "fileHealthEmptyFiles": "Files with no length",
-  "fileHealthEmptyFilesInfo": "These files report a length of zero, so there's nothing to play in them. They're often empty or cut off.",
-  "fileHealthTrackGaps": "Gaps between files",
-  "fileHealthTrackGapsInfo": "The book's timeline jumps ahead between these files, leaving a stretch where nothing plays.",
-  "fileHealthTrackOverlaps": "Overlapping files",
-  "fileHealthTrackOverlapsInfo": "These files overlap in the book's timeline, so part of one can be skipped or the position can jump.",
-  "fileHealthDurationMismatch": "Length doesn't add up",
-  "fileHealthDurationMismatchInfo": "The files add up to {actual}, but the book says it's {expected} long. Progress and chapters can be off. A rescan on the server usually fixes this.",
-  "@fileHealthDurationMismatchInfo": {"placeholders": {"actual": {"type": "String"}, "expected": {"type": "String"}}},
-  "fileHealthLowBitrate": "Low quality audio",
-  "fileHealthLowBitrateInfo": "These files are encoded below 32 kbps and may sound muffled.",
-  "fileHealthMixedSampleRates": "Mixed sample rates",
-  "fileHealthMixedSampleRatesInfo": "The files were recorded at different sample rates. Most players cope, but some can click or change speed where one file ends and the next starts.",
-  "fileHealthMixedChannels": "Mono and stereo mixed",
-  "fileHealthMixedChannelsInfo": "Some files have a different number of channels than others, so the sound can change between files.",
-  "fileHealthChaptersPastEnd": "Chapters past the end",
-  "fileHealthChaptersPastEndInfo": "These chapters start or end after the audio finishes, so jumping to them can go nowhere.",
-  "fileHealthLocalMissing": "Downloaded files missing",
-  "fileHealthLocalMissingInfo": "These downloaded files are gone from this device. Playing offline will fail where they should be.",
-  "fileHealthLocalSizeMismatch": "Downloaded files differ",
-  "fileHealthLocalSizeMismatchInfo": "These downloaded files aren't the same size as the server's copies, so they may be incomplete or damaged.",
-  "fileHealthStartsAt": "starts at {time}",
-  "@fileHealthStartsAt": {"placeholders": {"time": {"type": "String"}}},
-  "fileHealthSizeHere": "{local} here, {server} on the server",
-  "@fileHealthSizeHere": {"placeholders": {"local": {"type": "String"}, "server": {"type": "String"}}},
-  "fileHealthSampleRate": "{value} kHz",
-  "@fileHealthSampleRate": {"placeholders": {"value": {"type": "String"}}},
-  "fileHealthMono": "Mono",
-  "fileHealthStereo": "Stereo",
-  "fileHealthRedownload": "Re-download this book",
-  "fileHealthRedownloadQuestion": "Re-download this book?",
-  "fileHealthRedownloadInfo": "The copy on this device is removed and downloaded again from the server. If the book is playing, it stops. Nothing on the server changes.",
-  "fileHealthNotAvailableOffline": "Connect to your server to re-download",
   "resetMayNotHaveSynced": "Reset may not have synced - check your server",
   "failedToDownloadEbook": "Failed to download ebook ({code})",
   "@failedToDownloadEbook": {
@@ -5702,8 +5642,6 @@
     }
   },
   "playerDownloadStreamingInstead": "This download couldn't be played, so it's streaming from the server. Downloading it again may fix it.",
-  "playerReconnecting": "Connection lost, reconnecting…",
-  "playerReconnectFailed": "Couldn't reconnect to the server, so playback stopped.",
   "readerPageTurn": "Page turn",
   "readerPageTurnNone": "None",
   "readerPageTurnSlide": "Slide",
@@ -6309,7 +6247,7 @@
   "loginChooseSsoProvider": "Choose how to sign in",
   "loginRedirectUriBookOrbit": "Redirect URI: bookorbit://oauth2-callback",
   "readStatusTitle": "Reading status",
-  "readStatusHint": "BookOrbit keeps a status you pick here until you change it.",
+  "readStatusHint": "Listening to or reading the book can change this again.",
   "readStatusUnread": "Unread",
   "readStatusWantToRead": "Want to read",
   "readStatusReading": "Reading",
@@ -7061,6 +6999,536 @@
   "achievementsTurnedOn": "Achievements turned on",
   "achievementsTurnedOff": "Achievements turned off",
   "achievementsSwitchFailed": "Couldn't change achievements on BookOrbit",
+  "boNotifyReadAlong": "Read alongs",
+  "boNotifyReadAlongDesc": "When a read along you started is ready, needs a look, or fails.",
+  "readAlongCreate": "Create read along",
+  "readAlongLoadFailed": "Couldn't check whether a read along can be made for this book.",
+  "readAlongCheckAgain": "Check again",
+  "readAlongWhyWorkerOffline": "BookOrbit's read along worker is offline right now.",
+  "readAlongWhyWorkerOutdated": "BookOrbit's read along worker needs an update to work with this server.",
+  "readAlongWhyFilesMissing": "Restore this book's missing files to make a read along.",
+  "readAlongWhyNoEpub": "Add a plain EPUB to this book to make a read along.",
+  "readAlongWhyNoEpubHasOne": "This book already has a read along and no plain EPUB to make another from.",
+  "readAlongWhyTooManyTracks": "This audiobook has more files than a read along can be made from.",
+  "readAlongWhyEpubNotAllowed": "This library doesn't take EPUB files, so a read along can't be added.",
+  "readAlongWhyNotMounted": "BookOrbit's read along worker can't reach this library's folder.",
+  "readAlongWhyRunning": "A read along is already being made for this book.",
+  "readAlongWhyUnknown": "A read along can't be made for this book right now.",
+  "readAlongSheetTitle": "Create a read along",
+  "readAlongSheetIntro": "BookOrbit matches the narration to the ebook text and adds an EPUB that highlights along with the audio.",
+  "readAlongEbook": "Ebook",
+  "readAlongEbookHint": "Pick the plain EPUB that matches the narration.",
+  "readAlongAudio": "Audiobook",
+  "readAlongTracks": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "@readAlongTracks": {"placeholders": {"count": {"type": "int"}}},
+  "readAlongExistingTitle": "{count, plural, =1{This book already has a read along} other{This book already has {count} read alongs}}",
+  "@readAlongExistingTitle": {"placeholders": {"count": {"type": "int"}}},
+  "readAlongReplace": "Replace {name}",
+  "@readAlongReplace": {"placeholders": {"name": {"type": "String"}}},
+  "readAlongKeepBoth": "{count, plural, =1{Keep both} other{Keep all of them}}",
+  "@readAlongKeepBoth": {"placeholders": {"count": {"type": "int"}}},
+  "readAlongKeepHint": "The new read along is added as another file.",
+  "readAlongReplaceHint": "The old file is only replaced once the new one passes its checks, and reading spots carry over.",
+  "readAlongReplaceNotAllowed": "Replacing a read along needs permission to delete books, so the new one is added as another file.",
+  "readAlongMadeByBookOrbit": "Made by BookOrbit",
+  "readAlongImported": "Imported",
+  "readAlongLanguage": "Narration language",
+  "readAlongPickLanguage": "Choose a language",
+  "readAlongLanguageUnsupported": "The speech model doesn't know this book's language ({language}).",
+  "@readAlongLanguageUnsupported": {"placeholders": {"language": {"type": "String"}}},
+  "readAlongLanguageFromBook": "From this book's details.",
+  "readAlongLanguageIsDefault": "Your default language.",
+  "readAlongLanguageSaved": "Saved as your default language.",
+  "readAlongSetDefault": "Set as default",
+  "readAlongDefaultFailed": "Couldn't save your default language.",
+  "readAlongHighlighting": "Highlighting",
+  "readAlongSentence": "Sentence",
+  "readAlongSentenceHint": "Highlights one sentence at a time. Recommended.",
+  "readAlongWord": "Word",
+  "readAlongWordHint": "Highlights each word. Takes longer and makes a bigger file. Still experimental.",
+  "readAlongEstimatedSize": "Estimated size: {size}",
+  "@readAlongEstimatedSize": {"placeholders": {"size": {"type": "String"}}},
+  "readAlongBackgroundNote": "Runs on the server, so you can close this. Long audiobooks can take hours, and the first run for a language downloads its speech model.",
+  "readAlongLowDisk": "Low disk space: this needs about {needed} of working space on the worker, which has {free} free.",
+  "@readAlongLowDisk": {"placeholders": {"needed": {"type": "String"}, "free": {"type": "String"}}},
+  "readAlongStart": "Start",
+  "readAlongStartFailed": "The read along couldn't be started. Try again.",
+  "readAlongStartInvalid": "Some of the picked files are no longer on this book. Check them and try again.",
+  "readAlongStartOffline": "BookOrbit's read along worker is offline. Try again later.",
+  "readAlongNotAllowed": "You don't have permission to do that.",
+  "readAlongGone": "This read along job is gone.",
+  "readAlongMovedOn": "This job had already moved on. It now shows where it is.",
+  "readAlongActionFailed": "That didn't go through. Try again.",
+  "readAlongStartedBy": "Started by {name}",
+  "@readAlongStartedBy": {"placeholders": {"name": {"type": "String"}}},
+  "readAlongStartedByOther": "Started by another user",
+  "readAlongWaiting": "Waiting to start",
+  "readAlongNextInLine": "Next in line",
+  "readAlongJobsAhead": "{count, plural, =1{1 job ahead} other{{count} jobs ahead}}",
+  "@readAlongJobsAhead": {"placeholders": {"count": {"type": "int"}}},
+  "readAlongStopping": "Stopping",
+  "readAlongStoppingHint": "Finishing the current step, then it stops. Nothing will be added to this book.",
+  "readAlongStagePreparingAudio": "Preparing the audio",
+  "readAlongStageDownloadingModel": "Downloading the speech model",
+  "readAlongStageListening": "Listening to the narration",
+  "readAlongStageMarkingUp": "Marking up the ebook text",
+  "readAlongStageAligning": "Matching the text to the narration",
+  "readAlongStageChecking": "Checking the result",
+  "readAlongStagePublishing": "Adding the read along to this book",
+  "readAlongStageWorking": "Working",
+  "readAlongFileOf": "File {current} of {total}",
+  "@readAlongFileOf": {"placeholders": {"current": {"type": "int"}, "total": {"type": "int"}}},
+  "readAlongTrackOf": "Track {current} of {total}",
+  "@readAlongTrackOf": {"placeholders": {"current": {"type": "int"}, "total": {"type": "int"}}},
+  "readAlongChapterOf": "Chapter {current} of {total}",
+  "@readAlongChapterOf": {"placeholders": {"current": {"type": "int"}, "total": {"type": "int"}}},
+  "readAlongStepOf": "Step {current} of {total}",
+  "@readAlongStepOf": {"placeholders": {"current": {"type": "int"}, "total": {"type": "int"}}},
+  "readAlongFirstRun": "First run for this language",
+  "readAlongJustStarted": "Just started",
+  "readAlongRunningFor": "Running for {duration}",
+  "@readAlongRunningFor": {"placeholders": {"duration": {"type": "String"}}},
+  "readAlongStepAudio": "Audio",
+  "readAlongStepSpeech": "Speech",
+  "readAlongStepText": "Text",
+  "readAlongStepAlign": "Align",
+  "readAlongStepCheck": "Check",
+  "readAlongStepAdd": "Add",
+  "readAlongReviewTitle": "Ready for review",
+  "readAlongReviewMatched": "{percent} of the text matched the narration. Check it before adding it to the book.",
+  "@readAlongReviewMatched": {"placeholders": {"percent": {"type": "String"}}},
+  "readAlongReviewPlain": "Check it before adding it to the book.",
+  "readAlongReviewWeb": "To leave chapters out and match again, open this book in BookOrbit on the web.",
+  "readAlongReviewExpires": "Thrown away on its own on {date} unless you review it.",
+  "@readAlongReviewExpires": {"placeholders": {"date": {"type": "String"}}},
+  "readAlongAddAnyway": "Add it anyway",
+  "readAlongDiscard": "Discard",
+  "readAlongDiscardPrompt": "Discard this read along?",
+  "readAlongKeepIt": "Keep it",
+  "readAlongReady": "Read along ready",
+  "readAlongReadyWarnings": "Read along ready, with warnings",
+  "readAlongAdded": "Added to this book as a new EPUB.",
+  "readAlongReplaced": "Replaced the old read along. Reading spots carry over.",
+  "readAlongMatchedSentences": "{matched} of {total} sentences matched the narration",
+  "@readAlongMatchedSentences": {"placeholders": {"matched": {"type": "String"}, "total": {"type": "String"}}},
+  "readAlongAudioUsed": "{percent} of the audio used",
+  "@readAlongAudioUsed": {"placeholders": {"percent": {"type": "String"}}},
+  "readAlongOutside": "Not in the narration, so left without audio: {chapters}.",
+  "@readAlongOutside": {"placeholders": {"chapters": {"type": "String"}}},
+  "readAlongOutsideMore": "{count, plural, =1{1 more chapter} other{{count} more chapters}}",
+  "@readAlongOutsideMore": {"placeholders": {"count": {"type": "int"}}},
+  "readAlongWarnUnaligned": "One or more audio tracks couldn't be matched.",
+  "readAlongWarnUnmatched": "A noticeable amount of the ebook text wasn't matched to the narration.",
+  "readAlongWarnInterpolated": "Some text timing was estimated between confident matches.",
+  "readAlongWarnDropped": "Some ebook text was left out of the highlighting.",
+  "readAlongFailed": "Read along failed",
+  "readAlongCancelled": "Read along cancelled",
+  "readAlongDiscarded": "Read along thrown away",
+  "readAlongNothingAdded": "Nothing was added to this book.",
+  "readAlongExpired": "It wasn't reviewed within 14 days, so nothing was added to this book.",
+  "readAlongRetryUntil": "Retry picks up from the last finished step until {date}.",
+  "@readAlongRetryUntil": {"placeholders": {"date": {"type": "String"}}},
+  "readAlongStartOver": "Start over",
+  "readAlongCancel": "Cancel read along",
+  "readAlongCancelPrompt": "Cancel this read along?",
+  "readAlongKeepRunning": "Keep running",
+  "readAlongErrorWorkerOffline": "BookOrbit couldn't reach its read along worker.",
+  "readAlongErrorWorkerCrashed": "The read along worker stopped unexpectedly.",
+  "readAlongErrorSourceMissing": "A picked file is no longer there.",
+  "readAlongErrorSourceChanged": "A picked file changed after the job started.",
+  "readAlongErrorInvalidSource": "The EPUB or audiobook couldn't be read.",
+  "readAlongErrorLanguage": "The speech model doesn't know the picked language.",
+  "readAlongErrorStorage": "There isn't enough free disk space on the worker to finish.",
+  "readAlongErrorAudio": "The audiobook couldn't be prepared.",
+  "readAlongErrorModel": "The speech model couldn't be downloaded.",
+  "readAlongErrorListening": "Speech recognition failed while listening to the narration.",
+  "readAlongErrorMarkup": "The ebook text couldn't be prepared for matching.",
+  "readAlongErrorAlignment": "The text couldn't be matched to the narration.",
+  "readAlongErrorOutput": "The new EPUB failed its checks.",
+  "readAlongErrorPublish": "The new EPUB couldn't be added to this book.",
+  "readAlongErrorDiscarded": "It was thrown away at review.",
+  "readAlongErrorCancelled": "It was cancelled.",
+  "readAlongErrorUnknown": "Something went wrong while making the read along.",
+  "fileInfoNoAudiobook": "No audiobook yet",
+  "fileInfoNoEbook": "No e-book yet",
+  "fileInfoRequestedBySomeone": "Requested by someone else",
+  "fileInfoOwnedSeparately": "In your library as a separate book",
+  "fileInfoCopyPath": "Copy path",
+  "fileInfoDeleteTitle": "Delete file?",
+  "fileInfoDeletePrompt": "\"{name}\" will be deleted from the server. This can't be undone.",
+  "@fileInfoDeletePrompt": {"placeholders": {"name": {"type": "String"}}},
+  "fileInfoDeleteLast": "It's the book's last audio or e-book file, so the book will show as missing.",
+  "fileInfoDeleteNotAllowed": "You don't have permission to delete files",
+  "chapterSourceEmbedded": "Read from the audio files",
+  "chapterSourceTracks": "One chapter per audio file, not saved",
+  "chapterSourceProvider": "From fetched metadata",
+  "chapterSourceMigration": "Imported from Audiobookshelf",
+  "chapterSourceManual": "Edited in BookOrbit",
+  "chapterSourceManualBy": "Edited by {name}",
+  "@chapterSourceManualBy": {"placeholders": {"name": {"type": "String"}}},
+  "chapterSourceNone": "No chapters yet",
+  "chapterProtected": "Protected from rescans",
+  "chapterNotProtected": "A rescan can replace these",
+  "chapterProtectOnSave": "Protect from rescans",
+  "chapterGetFrom": "Get Chapters From",
+  "chapterFromFiles": "The audio files",
+  "chapterFromEbookToc": "The e-book's contents",
+  "chapterFromReadAlong": "The read along",
+  "chapterFromHistory": "Earlier versions",
+  "chapterHistoryTitle": "Earlier versions",
+  "chapterHistoryEmpty": "Saved versions show up here.",
+  "chapterHistoryBy": "{source} by {name}",
+  "@chapterHistoryBy": {"placeholders": {"source": {"type": "String"}, "name": {"type": "String"}}},
+  "chapterReadingFiles": "Reading the audio files...",
+  "chapterRevertToFiles": "Revert to Files",
+  "chapterRevertTitle": "Go back to the chapters in the files?",
+  "chapterRevertMessage": "BookOrbit reads the chapters in the audio files again and stops protecting them from rescans. Unsaved edits are lost. The current list stays in the earlier versions.",
+  "chapterReverted": "Chapters set back to the audio files",
+  "chapterWriteFiles": "Write to Files",
+  "chapterWriteTitle": "Write the chapters into the audio files?",
+  "chapterWriteMessage": "{count, plural, =1{This rewrites the book's audio file with these chapters.} other{This rewrites the book's {count} audio files with these chapters.}} The audio itself is copied unchanged. Phones that already downloaded the book keep their copy until it's downloaded again.",
+  "@chapterWriteMessage": {"placeholders": {"count": {"type": "int"}}},
+  "chapterWriteConfirm": "Write",
+  "chapterWriting": "Writing the chapters into the audio files...",
+  "chapterWritten": "{count, plural, =1{Chapters written into the audio file} other{Chapters written into all {count} audio files}}",
+  "@chapterWritten": {"placeholders": {"count": {"type": "int"}}},
+  "chapterWrittenPartly": "Chapters written into {written} of {total} files. The rest were left as they were.",
+  "@chapterWrittenPartly": {"placeholders": {"written": {"type": "int"}, "total": {"type": "int"}}},
+  "chapterStaleTitle": "These chapters changed",
+  "chapterStaleMessage": "Someone else saved these chapters after you opened them. Reload to see their version. Your edits stay until you do.",
+  "chapterReload": "Reload",
+  "chapterKeepEditing": "Keep editing",
+  "matchExplicitYes": "Marked explicit",
+  "matchExplicitNo": "Not explicit",
+  "matchAbridgedYes": "Abridged",
+  "matchAbridgedNo": "Unabridged",
+  "boQuickMatchBody": "BookOrbit looks up {count, plural, =1{this book} other{these {count} books}} and fills in what it finds, following its metadata settings.",
+  "@boQuickMatchBody": {
+    "placeholders": { "count": {"type": "int"} }
+  },
+  "boQuickMatchIgnoreCache": "Ask every source again",
+  "boQuickMatchIgnoreCacheHint": "Skips saved answers. Slower, and uses more of each source's request limit.",
+  "boAdminServerCount": "{count, plural, =0{None yet} =1{1 mail server} other{{count} mail servers}}",
+  "@boAdminServerCount": {
+    "placeholders": { "count": {"type": "int"} }
+  },
+  "boEmailTitle": "Send by email",
+  "boEmailSubtitle": "Devices, mail servers and templates for sending books",
+  "boEmailTabDevices": "Devices",
+  "boEmailTabServers": "Mail servers",
+  "boEmailTabTemplates": "Templates",
+  "boEmailTabHistory": "History",
+  "boEmailName": "Name",
+  "boEmailDeleteTitle": "Delete {name}?",
+  "@boEmailDeleteTitle": {
+    "placeholders": { "name": {"type": "String"} }
+  },
+  "boEmailMakeDefault": "Make default",
+  "boEmailBadgeDefault": "Default",
+  "boEmailBadgeShared": "Shared",
+  "boEmailBadgeSystem": "Password resets",
+  "boEmailBadgeBuiltIn": "Built in",
+  "boEmailDevicesEmpty": "No devices yet. Add your e-reader's email address to send it books.",
+  "boEmailAddDevice": "Add device",
+  "boEmailNewDevice": "New device",
+  "boEmailDeviceNameHint": "My Kindle",
+  "boEmailDeviceAddress": "Email address",
+  "boEmailDeviceType": "Device",
+  "boEmailDeviceNone": "Person or inbox",
+  "boEmailDeviceKindle": "Kindle",
+  "boEmailDeviceKobo": "Kobo",
+  "boEmailDeviceOther": "Other e-reader",
+  "boEmailKindleHint": "Kindle gets the subject \"convert\" and only takes EPUB and PDF by email.",
+  "boEmailKindleApprove": "Kindle drops mail from addresses it doesn't know. In Amazon's Personal Document Settings, add {address} to the approved list.",
+  "@boEmailKindleApprove": {
+    "placeholders": { "address": {"type": "String"} }
+  },
+  "boEmailKindleApproveNoServer": "Add a mail server first to see the address Kindle needs to approve.",
+  "boEmailFormat": "Format",
+  "boEmailFormatPrimary": "Book's main file",
+  "boEmailFormatHint": "A book without this format gets its main file.",
+  "boEmailReadAlong": "Read along books",
+  "boEmailReadAlongAuto": "Automatic",
+  "boEmailReadAlongAutoHint": "Text only when a copy can be made, otherwise the original.",
+  "boEmailReadAlongText": "Text only",
+  "boEmailReadAlongTextHint": "Narration removed. Small enough for email.",
+  "boEmailReadAlongOriginal": "With narration",
+  "boEmailReadAlongOriginalHint": "Keeps the narration. Often 100 MB or more, over most mail servers' limits.",
+  "boEmailTemplate": "Template",
+  "boEmailTemplateYourDefault": "Your default",
+  "boEmailTemplateKindleHint": "Kindle never shows the message, so it skips the template.",
+  "boEmailDefaultDevice": "Default device",
+  "boEmailDefaultDeviceHint": "Picked first when you send a book.",
+  "boEmailSendTest": "Send a test email",
+  "boEmailTestSubject": "Test email from Absorb",
+  "boEmailTestBody": "This is a test from Absorb. If you can read it, books sent to {name} will arrive here too.",
+  "@boEmailTestBody": {
+    "placeholders": { "name": {"type": "String"} }
+  },
+  "boEmailTestSent": "Test email sent to {name}",
+  "@boEmailTestSent": {
+    "placeholders": { "name": {"type": "String"} }
+  },
+  "boEmailTestFailed": "The test email didn't go out: {error}",
+  "@boEmailTestFailed": {
+    "placeholders": { "error": {"type": "String"} }
+  },
+  "boEmailDeleteDevice": "Delete device",
+  "boEmailDeleteDeviceBody": "Its send history stays.",
+  "boEmailDeviceRequired": "Enter a name and an email address",
+  "boEmailLastSendFailed": "Last send failed",
+  "boEmailGroups": "Groups",
+  "boEmailGroupsHint": "Send to several devices at once.",
+  "boEmailNewGroup": "New group",
+  "boEmailGroupNameHint": "Book club",
+  "boEmailGroupMembers": "Devices in this group",
+  "boEmailGroupMembersEmpty": "Add a device first.",
+  "boEmailGroupMemberCount": "{count, plural, =0{No devices} =1{1 device} other{{count} devices}}",
+  "@boEmailGroupMemberCount": {
+    "placeholders": { "count": {"type": "int"} }
+  },
+  "boEmailDeleteGroup": "Delete group",
+  "boEmailDeleteGroupBody": "The devices in it stay.",
+  "boEmailGroupRequired": "Enter a group name",
+  "boEmailServersEmptyManage": "No mail servers yet. Add one to start sending books.",
+  "boEmailServersEmpty": "No mail servers yet. Ask an admin to add one.",
+  "boEmailAddServer": "Add mail server",
+  "boEmailNewServer": "New mail server",
+  "boEmailServerPresetOther": "Other",
+  "boEmailServerPresetHint": "A preset fills in the host, port and security. You can still change them.",
+  "boEmailServerHost": "Host",
+  "boEmailServerPort": "Port",
+  "boEmailServerSecurity": "Security",
+  "boEmailServerSecurityNone": "None",
+  "boEmailServerSecurityHint": "STARTTLS on port 587, SSL/TLS on 465.",
+  "boEmailServerNeedsPassword": "Signs in with a password",
+  "boEmailServerUsername": "Username",
+  "boEmailServerPassword": "Password",
+  "boEmailServerAppPassword": "App password",
+  "boEmailServerPasswordKeep": "Saved. Type to replace it",
+  "boEmailServerAppPasswordHint": "Gmail and iCloud need an app password, not your account password.",
+  "boEmailServerFromName": "From name",
+  "boEmailServerFromAddress": "From address",
+  "boEmailServerFromAddressHint": "Kindle owners need to approve this address.",
+  "boEmailServerShare": "Share with everyone",
+  "boEmailServerShareHint": "Other people can send books through this server without seeing the password.",
+  "boEmailServerSystem": "Send password resets and sign-in links",
+  "boEmailServerSystemHint": "The server BookOrbit uses for its own mail.",
+  "boEmailServerVerifyTls": "Check the server's certificate",
+  "boEmailServerVerifyTlsHint": "Turn this off only for a server on your own network with a self-signed certificate.",
+  "boEmailServerTest": "Test connection",
+  "boEmailServerTestSaveFirst": "Save first, then test",
+  "boEmailServerTestOk": "Connected",
+  "boEmailServerTestFailed": "Can't connect: {error}",
+  "@boEmailServerTestFailed": {
+    "placeholders": { "error": {"type": "String"} }
+  },
+  "boEmailServerDelete": "Delete mail server",
+  "boEmailServerDeleteBody": "Everyone it's shared with loses it.",
+  "boEmailServerSystemFirst": "Turn off password resets on this server before deleting it.",
+  "boEmailServerRequired": "Enter a name and a host",
+  "boEmailServerNotYours": "Someone else added this server. Only they can change it.",
+  "boEmailTemplatesEmpty": "No templates yet.",
+  "boEmailNewTemplate": "New template",
+  "boEmailTemplateSubject": "Subject",
+  "boEmailTemplateMessage": "Message",
+  "boEmailTemplateInsert": "Insert",
+  "boEmailTemplateInsertHint": "Goes in where the cursor is. Details a book doesn't have print nothing.",
+  "boEmailVarBook": "Book",
+  "boEmailVarFile": "File",
+  "boEmailVarOther": "Other",
+  "boEmailTemplatePreview": "Preview",
+  "boEmailTemplatePreviewNone": "Send a book once to preview a template with it.",
+  "boEmailTemplateAttached": "Attached: {name}",
+  "@boEmailTemplateAttached": {
+    "placeholders": { "name": {"type": "String"} }
+  },
+  "boEmailTemplateBuiltIn": "Built in. Only an admin can change it.",
+  "boEmailTemplateKindleNote": "Kindle never shows a template. It always gets the subject \"convert\".",
+  "boEmailTemplateDelete": "Delete template",
+  "boEmailTemplateDeleteBody": "Devices that use it go back to your default template.",
+  "boEmailTemplateRequired": "Enter a name and a subject",
+  "boEmailHistoryEmpty": "Nothing sent yet.",
+  "boEmailHistoryAll": "All",
+  "boEmailHistoryEveryone": "Everyone",
+  "boEmailStatusSent": "Sent",
+  "boEmailStatusSending": "Sending",
+  "boEmailStatusRetrying": "Trying again ({attempt})",
+  "@boEmailStatusRetrying": {
+    "placeholders": { "attempt": {"type": "int"} }
+  },
+  "boEmailStatusFailed": "Failed",
+  "boEmailTo": "To {name}",
+  "@boEmailTo": {
+    "placeholders": { "name": {"type": "String"} }
+  },
+  "boEmailResend": "Send again",
+  "boEmailResent": "Sending again",
+  "boEmailForget": "Remove from history",
+  "boEmailLoadMore": "Load more",
+  "boEmailUnknownBook": "Deleted book",
+  "boEmailSendNoServer": "No mail server is set up on this server yet.",
+  "boEmailSendAskAdmin": "Ask an admin to add one.",
+  "boEmailSendNoDevices": "Add a device to send this book to.",
+  "boEmailSendOptions": "Options",
+  "boEmailSendFormatEach": "Each device's own",
+  "boEmailSendServer": "Mail server",
+  "boEmailSendButton": "Send",
+  "boEmailSendGets": "Gets {format} · {size}",
+  "@boEmailSendGets": {
+    "placeholders": { "format": {"type": "String"}, "size": {"type": "String"} }
+  },
+  "boEmailSendMissing": "No {format}, gets the {got}",
+  "@boEmailSendMissing": {
+    "placeholders": { "format": {"type": "String"}, "got": {"type": "String"} }
+  },
+  "boEmailSendKindleRejects": "Kindle doesn't take {format} by email",
+  "@boEmailSendKindleRejects": {
+    "placeholders": { "format": {"type": "String"} }
+  },
+  "boEmailSendOverKindle": "{size}, over Kindle's 50 MB limit",
+  "@boEmailSendOverKindle": {
+    "placeholders": { "size": {"type": "String"} }
+  },
+  "boEmailSendOverGmail": "{size}, over Gmail's 25 MB limit",
+  "@boEmailSendOverGmail": {
+    "placeholders": { "size": {"type": "String"} }
+  },
+  "boEmailSendNarrated": "Gets the narrated copy · {size}",
+  "@boEmailSendNarrated": {
+    "placeholders": { "size": {"type": "String"} }
+  },
+  "boEmailSendHanding": "Sending through {server}",
+  "@boEmailSendHanding": {
+    "placeholders": { "server": {"type": "String"} }
+  },
+  "boEmailSendAccepted": "Sent through {server}",
+  "@boEmailSendAccepted": {
+    "placeholders": { "server": {"type": "String"} }
+  },
+  "boEmailSendFailedLine": "Didn't send: {error}",
+  "@boEmailSendFailedLine": {
+    "placeholders": { "error": {"type": "String"} }
+  },
+  "boEmailSendStillGoing": "Still sending. You'll get a notification when it's done.",
+  "boEmailKindleOriginal": "A Kindle can't take the narrated copy. Set it to text only.",
+  "boEmailNoCopy": "Couldn't make a copy without the narration.",
+  "recentSearchesTitle": "Recent searches",
+  "recentSearchesClear": "Clear",
+  "recentSearchesRemove": "Remove",
+  "removedSeriesTapToUndo": "Removed from Continue Series. Tap to undo.",
+  "seriesBackOnContinueSeries": "Back on Continue Series",
+  "desktopShortcutPlayPause": "Play / pause",
+  "desktopShortcutRewind": "Rewind",
+  "desktopShortcutForward": "Fast-forward",
+  "desktopShortcutSlower": "Decrease playback speed",
+  "desktopShortcutFaster": "Increase playback speed",
+  "desktopShortcutNormalSpeed": "Reset playback speed",
+  "desktopShortcutSearch": "Open search",
+  "desktopShortcutLibrary": "Open library",
+  "desktopShortcutNowPlaying": "Open now playing",
+  "desktopShortcutFullScreen": "Full screen",
+  "desktopShortcutClosePlayer": "Close the full-screen player",
+  "desktopShortcutBack": "Go back (close the top page or sheet)",
+  "desktopShortcutRefresh": "Refresh the list on screen",
+  "desktopShortcutPreviousCard": "Previous Absorbing card",
+  "desktopShortcutNextCard": "Next Absorbing card",
+  "desktopShortcutContextMenu": "Open the long-press menu",
+  "desktopShortcutMouseBack": "Mouse back button",
+  "desktopShortcutRightClick": "Right-click",
+  "desktopShortcutDragShelves": "Drag shelves and cards sideways",
+  "desktopShortcutMouseDrag": "Click and drag",
+  "fileHealthAction": "Check files",
+  "fileHealthTitle": "Check files",
+  "fileHealthAllFine": "{count, plural, =0{Nothing looks wrong} =1{The file looks fine} other{All {count} files look fine}}",
+  "@fileHealthAllFine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fileHealthProblems": "{count, plural, =1{1 problem found} other{{count} problems found}}",
+  "@fileHealthProblems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fileHealthReadOnlyNote": "This only reads what the server already reports. Nothing is changed.",
+  "fileHealthLocalChecked": "Downloaded files on this device were checked too.",
+  "fileHealthItemMissing": "Book folder missing",
+  "fileHealthItemMissingInfo": "The server can't find this book's folder any more. It may have been moved, renamed or deleted, or its drive is offline. A library scan on the server can find it again.",
+  "fileHealthItemInvalid": "Book marked invalid",
+  "fileHealthItemInvalidInfo": "The server found no usable audio or ebook files for this book.",
+  "fileHealthInvalidFiles": "Unreadable files",
+  "fileHealthInvalidFilesInfo": "The server couldn't read these files. They may be damaged or in a format it doesn't support, and playback can stop or skip at them.",
+  "fileHealthEmptyFiles": "Files with no length",
+  "fileHealthEmptyFilesInfo": "These files report a length of zero, so there's nothing to play in them. They're often empty or cut off.",
+  "fileHealthTrackGaps": "Gaps between files",
+  "fileHealthTrackGapsInfo": "The book's timeline jumps ahead between these files, leaving a stretch where nothing plays.",
+  "fileHealthTrackOverlaps": "Overlapping files",
+  "fileHealthTrackOverlapsInfo": "These files overlap in the book's timeline, so part of one can be skipped or the position can jump.",
+  "fileHealthDurationMismatch": "Length doesn't add up",
+  "fileHealthDurationMismatchInfo": "The files add up to {actual}, but the book says it's {expected} long. Progress and chapters can be off. A rescan on the server usually fixes this.",
+  "@fileHealthDurationMismatchInfo": {
+    "placeholders": {
+      "actual": {
+        "type": "String"
+      },
+      "expected": {
+        "type": "String"
+      }
+    }
+  },
+  "fileHealthLowBitrate": "Low quality audio",
+  "fileHealthLowBitrateInfo": "These files are encoded below 32 kbps and may sound muffled.",
+  "fileHealthMixedSampleRates": "Mixed sample rates",
+  "fileHealthMixedSampleRatesInfo": "The files were recorded at different sample rates. Most players cope, but some can click or change speed where one file ends and the next starts.",
+  "fileHealthMixedChannels": "Mono and stereo mixed",
+  "fileHealthMixedChannelsInfo": "Some files have a different number of channels than others, so the sound can change between files.",
+  "fileHealthChaptersPastEnd": "Chapters past the end",
+  "fileHealthChaptersPastEndInfo": "These chapters start or end after the audio finishes, so jumping to them can go nowhere.",
+  "fileHealthLocalMissing": "Downloaded files missing",
+  "fileHealthLocalMissingInfo": "These downloaded files are gone from this device. Playing offline will fail where they should be.",
+  "fileHealthLocalSizeMismatch": "Downloaded files differ",
+  "fileHealthLocalSizeMismatchInfo": "These downloaded files aren't the same size as the server's copies, so they may be incomplete or damaged.",
+  "fileHealthStartsAt": "starts at {time}",
+  "@fileHealthStartsAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "fileHealthSizeHere": "{local} here, {server} on the server",
+  "@fileHealthSizeHere": {
+    "placeholders": {
+      "local": {
+        "type": "String"
+      },
+      "server": {
+        "type": "String"
+      }
+    }
+  },
+  "fileHealthSampleRate": "{value} kHz",
+  "@fileHealthSampleRate": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "fileHealthMono": "Mono",
+  "fileHealthStereo": "Stereo",
+  "fileHealthRedownload": "Re-download this book",
+  "fileHealthRedownloadQuestion": "Re-download this book?",
+  "fileHealthRedownloadInfo": "The copy on this device is removed and downloaded again from the server. If the book is playing, it stops. Nothing on the server changes.",
+  "fileHealthNotAvailableOffline": "Connect to your server to re-download",
+  "playerReconnecting": "Connection lost, reconnecting…",
+  "playerReconnectFailed": "Couldn't reconnect to the server, so playback stopped.",
   "downloadsFailed": "Failed downloads",
   "absorbingReorderQueue": "Reorder queue",
   "playAction": "Play",
@@ -7197,9 +7665,21 @@
   "windowsStartWithWindows": "Start with Windows",
   "windowsStartWithWindowsSubtitle": "Open Absorb Plus when you sign in to Windows",
   "windowsStartWithWindowsRegistered": "Starts: {command}",
-  "@windowsStartWithWindowsRegistered": {"placeholders": {"command": {"type": "String"}}},
+  "@windowsStartWithWindowsRegistered": {
+    "placeholders": {
+      "command": {
+        "type": "String"
+      }
+    }
+  },
   "windowsStartWithWindowsOtherCopy": "Another copy is set to start: {command}. Turn on to use this copy instead.",
-  "@windowsStartWithWindowsOtherCopy": {"placeholders": {"command": {"type": "String"}}},
+  "@windowsStartWithWindowsOtherCopy": {
+    "placeholders": {
+      "command": {
+        "type": "String"
+      }
+    }
+  },
   "windowsStartupDisabledBySystem": "Switched off in Task Manager's Startup apps. Turn it back on there.",
   "windowsStartMinimized": "Start minimized",
   "windowsStartMinimizedSubtitle": "When it starts with Windows, keep it in the tray (or minimized if Close to tray is off)",
@@ -7211,7 +7691,13 @@
   "windowsGlobalHotkeys": "Global hotkeys",
   "windowsGlobalHotkeysSubtitle": "Work while Absorb Plus is in the background: Ctrl+Alt+Space play/pause, Ctrl+Alt+Left/Right skip back/forward, Ctrl+Alt+Up/Down volume, Ctrl+Alt+B add bookmark",
   "windowsGlobalHotkeysUnavailable": "Taken by another app, not available: {keys}",
-  "@windowsGlobalHotkeysUnavailable": {"placeholders": {"keys": {"type": "String"}}},
+  "@windowsGlobalHotkeysUnavailable": {
+    "placeholders": {
+      "keys": {
+        "type": "String"
+      }
+    }
+  },
   "windowsTrayShow": "Show Absorb Plus",
   "windowsTrayQuit": "Quit Absorb Plus",
   "windowsTaskbarPlay": "Play",
@@ -7219,7 +7705,13 @@
   "windowsTaskbarRewind": "Rewind",
   "windowsTaskbarForward": "Fast-forward",
   "windowsJumpListResume": "Resume {title}",
-  "@windowsJumpListResume": {"placeholders": {"title": {"type": "String"}}},
+  "@windowsJumpListResume": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "supportContactSubtitle": "Ask a question on the Absorb Plus GitHub",
   "githubProjectTitle": "Absorb Plus on GitHub",
   "precacheTitle": "Pre-load covers and book pages",
@@ -7228,9 +7720,21 @@
   "supportSaveLogsSubtitle": "Save the log file to attach to a GitHub issue",
   "supportSaveLogsDialogTitle": "Save Absorb Plus logs",
   "supportLogsSaved": "Logs saved to {path}",
-  "@supportLogsSaved": {"placeholders": {"path": {"type": "String"}}},
+  "@supportLogsSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "supportLogsSaveFailed": "Couldn't save the logs: {error}",
-  "@supportLogsSaveFailed": {"placeholders": {"error": {"type": "String"}}},
+  "@supportLogsSaveFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "supportOpenLogsFolder": "Open logs folder",
   "supportOpenLogsFolderSubtitle": "Show the log file in your file manager",
   "supportOpenLogsFolderFailed": "Couldn't open the logs folder",
@@ -7243,7 +7747,13 @@
   "desktopDownloadFolderDefault": "Default folder",
   "bookSettingsTitle": "Book settings",
   "bookSettingsSeries": "Series: {name}",
-  "@bookSettingsSeries": {"placeholders": {"name": {"type": "String"}}},
+  "@bookSettingsSeries": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "bookSettingsSpeed": "Speed",
   "bookSettingsSpeedFromSeries": "From the last book you played in this series",
   "bookSettingsSkipIntro": "Skip intro",
@@ -7252,7 +7762,13 @@
   "bookSettingsSkipOutroHint": "Ends the book early and marks it finished",
   "bookSettingsSkipOff": "Off",
   "bookSettingsSeconds": "{seconds} s",
-  "@bookSettingsSeconds": {"placeholders": {"seconds": {"type": "int"}}},
+  "@bookSettingsSeconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "bookSettingsWholeSeries": "Use for the whole series",
   "bookSettingsWholeSeriesHint": "Intro and outro apply to every book in this series",
   "bookSettingsReset": "Reset",
@@ -7336,14 +7852,18 @@
   "tailscaleStatusConnected": "Connected as {user}",
   "@tailscaleStatusConnected": {
     "placeholders": {
-      "user": {"type": "String"}
+      "user": {
+        "type": "String"
+      }
     }
   },
   "tailscaleStatusConnectedNoUser": "Connected",
   "tailscaleStatusError": "Problem: {error}",
   "@tailscaleStatusError": {
     "placeholders": {
-      "error": {"type": "String"}
+      "error": {
+        "type": "String"
+      }
     }
   },
   "tailscaleNotIncluded": "Not included in this build",
@@ -7354,19 +7874,25 @@
   "tailscaleDeviceAddress": "This device: {address}",
   "@tailscaleDeviceAddress": {
     "placeholders": {
-      "address": {"type": "String"}
+      "address": {
+        "type": "String"
+      }
     }
   },
   "tailscaleServerRouted": "Your server ({server}) is reached through Tailscale.",
   "@tailscaleServerRouted": {
     "placeholders": {
-      "server": {"type": "String"}
+      "server": {
+        "type": "String"
+      }
     }
   },
   "tailscaleServerNotRouted": "Your server ({server}) isn't a tailnet address, so it's reached as usual. If it is on your tailnet, add its host name below.",
   "@tailscaleServerNotRouted": {
     "placeholders": {
-      "server": {"type": "String"}
+      "server": {
+        "type": "String"
+      }
     }
   },
   "tailscaleExtraHostsLabel": "Other tailnet host names",
@@ -7419,37 +7945,85 @@
   "opmlExportAction": "Export OPML",
   "opmlExportDialogTitle": "Save podcast feeds as OPML",
   "opmlExportSaved": "OPML saved to {path}",
-  "@opmlExportSaved": {"placeholders": {"path": {"type": "String"}}},
+  "@opmlExportSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "opmlExportDownloaded": "OPML downloaded",
   "opmlExportFailed": "Couldn't export the OPML file",
   "bookCopySaveAction": "Save a copy…",
   "bookCopyDialogTitle": "Save a copy of this book",
   "bookCopySaving": "Saving a copy…",
   "bookCopySaved": "Copy saved to {path}",
-  "@bookCopySaved": {"placeholders": {"path": {"type": "String"}}},
+  "@bookCopySaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "bookCopyFailed": "Couldn't save a copy of this book",
   "exclusiveAudioTitle": "Exclusive audio",
   "exclusiveAudioSubtitle": "Fixes crackling or jumpy volume by skipping Windows sound effects. Other apps are muted while Absorb plays. Restart Absorb to apply.",
   "exclusiveAudioFallback": "Your sound device refused exclusive audio, so Absorb is playing in normal mode",
   "homeRecentlyAddedNewBadge": "{count} new",
-  "@homeRecentlyAddedNewBadge": {"placeholders": {"count": {"type": "int"}}},
+  "@homeRecentlyAddedNewBadge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "seekUndoBackTo": "Back to {time}",
-  "@seekUndoBackTo": {"description": "Toast after a long jump in the book; tapping it returns to the earlier position", "placeholders": {"time": {"type": "String"}}},
+  "@seekUndoBackTo": {
+    "description": "Toast after a long jump in the book; tapping it returns to the earlier position",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "goToTime": "Go to time",
-  "@goToTime": {"description": "Player More-menu action and dialog title: type a time and the player seeks there"},
+  "@goToTime": {
+    "description": "Player More-menu action and dialog title: type a time and the player seeks there"
+  },
   "goToTimeLabel": "Time",
   "goToTimeHint": "h:mm:ss, mm:ss or minutes",
   "goToTimeGo": "Go",
   "goToTimeLength": "Length {time}",
-  "@goToTimeLength": {"placeholders": {"time": {"type": "String"}}},
+  "@goToTimeLength": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "goToTimeInvalid": "Type a time like 1:23:45, 23:45 or 90",
   "goToTimePastEnd": "That's past the end ({time})",
-  "@goToTimePastEnd": {"placeholders": {"time": {"type": "String"}}},
+  "@goToTimePastEnd": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "desktopShortcutGoToTime": "Go to a time in the open player",
   "fellAsleepJumpBack": "Fell asleep around {time} · Jump back",
-  "@fellAsleepJumpBack": {"description": "Chip on the player after the sleep timer stopped playback; tapping it seeks back to where the listener was last known to be awake", "placeholders": {"time": {"type": "String"}}},
+  "@fellAsleepJumpBack": {
+    "description": "Chip on the player after the sleep timer stopped playback; tapping it seeks back to where the listener was last known to be awake",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "surpriseMe": "Surprise me",
-  "@surpriseMe": {"description": "Library header button and quick switcher action: opens a random book the user hasn't finished"},
+  "@surpriseMe": {
+    "description": "Library header button and quick switcher action: opens a random book the user hasn't finished"
+  },
   "surpriseMeNoneLeft": "You've finished every book in this library",
   "surpriseMeFailed": "Couldn't pick a book. Try again.",
   "surpriseMeOffline": "Surprise me needs a connection to the server",
@@ -7459,7 +8033,6 @@
   "emptyStateBrowseLibrary": "Browse library",
   "emptyStateClearSearch": "Clear search",
   "statsNoListeningYet": "No listening yet",
-    "@homeRecentlyAddedNewBadge": {"placeholders": {"count": {"type": "int"}}},
   "desktopShortcutQuickSwitcher": "Quick switcher: find books or go anywhere",
   "desktopShortcutHelp": "Show keyboard shortcuts",
   "quickSwitcherTooltip": "Quick switcher (Ctrl+K)",
@@ -7474,17 +8047,29 @@
   "quickSwitcherPlayPause": "Play / pause",
   "quickSwitcherSleepTimer": "Sleep timer",
   "quickSwitcherKeywordsAbsorbing": "now playing player",
-    "@quickSwitcherKeywordsAbsorbing": {"description": "Extra space-separated words the quick switcher's Go to Absorbing action also matches. Not shown."},
+  "@quickSwitcherKeywordsAbsorbing": {
+    "description": "Extra space-separated words the quick switcher's Go to Absorbing action also matches. Not shown."
+  },
   "quickSwitcherKeywordsSettings": "preferences options",
-    "@quickSwitcherKeywordsSettings": {"description": "Extra space-separated search words for Go to Settings. Not shown."},
+  "@quickSwitcherKeywordsSettings": {
+    "description": "Extra space-separated search words for Go to Settings. Not shown."
+  },
   "quickSwitcherKeywordsDownloads": "offline",
-    "@quickSwitcherKeywordsDownloads": {"description": "Extra space-separated search words for Go to Downloads. Not shown."},
+  "@quickSwitcherKeywordsDownloads": {
+    "description": "Extra space-separated search words for Go to Downloads. Not shown."
+  },
   "quickSwitcherKeywordsPlayPause": "resume pause",
-    "@quickSwitcherKeywordsPlayPause": {"description": "Extra space-separated search words for Play / pause. Not shown."},
+  "@quickSwitcherKeywordsPlayPause": {
+    "description": "Extra space-separated search words for Play / pause. Not shown."
+  },
   "quickSwitcherKeywordsSleepTimer": "timer",
-    "@quickSwitcherKeywordsSleepTimer": {"description": "Extra space-separated search words for Sleep timer. Not shown."},
+  "@quickSwitcherKeywordsSleepTimer": {
+    "description": "Extra space-separated search words for Sleep timer. Not shown."
+  },
   "quickSwitcherKeywordsShortcuts": "keys help hotkeys keyboard",
-    "@quickSwitcherKeywordsShortcuts": {"description": "Extra space-separated search words for Keyboard shortcuts. Not shown."},
+  "@quickSwitcherKeywordsShortcuts": {
+    "description": "Extra space-separated search words for Keyboard shortcuts. Not shown."
+  },
   "quickSwitcherKindAction": "Action",
   "quickSwitcherKindBook": "Book",
   "quickSwitcherKindPodcast": "Podcast",
@@ -7503,7 +8088,13 @@
   "statsMonthTime": "Time",
   "statsMonthTopBook": "Top book",
   "bookmarksSearchResults": "{count, plural, =0{No results} =1{1 result} other{{count} results}}",
-  "@bookmarksSearchResults": {"placeholders": {"count": {"type": "int"}}},
+  "@bookmarksSearchResults": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "bookmarksViewMenu": "Sort and group",
   "bookmarksViewByBook": "By book",
   "bookmarksViewNewest": "Newest first",
@@ -7511,7 +8102,13 @@
   "bookmarksExportAction": "Export bookmarks",
   "bookmarksExportDialogTitle": "Save bookmarks as Markdown",
   "bookmarksExportSaved": "Bookmarks saved to {path}",
-  "@bookmarksExportSaved": {"placeholders": {"path": {"type": "String"}}},
+  "@bookmarksExportSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "bookmarksExportDownloaded": "Bookmarks downloaded",
   "bookmarksExportFailed": "Couldn't export the bookmarks",
   "chapterSearchHint": "Search chapters or type a time (1:23:00)",
@@ -7522,29 +8119,71 @@
   "remoteHostTitle": "Phone remote",
   "remoteHostSubtitleOff": "Control this PC from your phone",
   "remoteHostSubtitleOn": "On · {count, plural, =0{no devices connected} =1{1 device connected} other{{count} devices connected}}",
-  "@remoteHostSubtitleOn": {"placeholders": {"count": {"type": "int"}}},
+  "@remoteHostSubtitleOn": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "remoteHostSheetBody": "Your phone works as a remote and a now-playing screen while the audio plays here. Only devices you pair can connect, and only over your own network.",
   "remoteHostSwitch": "Allow a remote",
   "remoteHostSwitchSubtitle": "Off by default. Windows may ask to let Absorb Plus through the firewall the first time.",
   "remoteHostPortsBusy": "Couldn't start: ports {first} to {last} are all in use.",
-  "@remoteHostPortsBusy": {"placeholders": {"first": {"type": "int"}, "last": {"type": "int"}}},
+  "@remoteHostPortsBusy": {
+    "placeholders": {
+      "first": {
+        "type": "int"
+      },
+      "last": {
+        "type": "int"
+      }
+    }
+  },
   "remoteHostPairTitle": "Pair a device",
   "remoteHostPairHelp": "On the phone, open Absorb Plus, go to Settings, Media Controls, Control another device, pick this PC and enter the code.",
   "remoteHostCodeLabel": "Pairing code",
   "remoteHostCodeExpires": "Expires in {time}",
-  "@remoteHostCodeExpires": {"placeholders": {"time": {"type": "String"}}},
+  "@remoteHostCodeExpires": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "remoteHostNewCode": "New code",
   "remoteHostAddresses": "Address: {addresses}",
-  "@remoteHostAddresses": {"placeholders": {"addresses": {"type": "String"}}},
+  "@remoteHostAddresses": {
+    "placeholders": {
+      "addresses": {
+        "type": "String"
+      }
+    }
+  },
   "remoteHostNoAddress": "This PC has no network address right now.",
   "remoteHostNoDiscovery": "The phone can't find this PC by itself right now; enter the address on the phone instead.",
   "remoteHostConnectedTitle": "Connected now",
   "remoteHostPairedTitle": "Paired devices",
   "remoteHostNoDevices": "No paired devices yet",
   "remoteHostLastUsed": "Last used {date}",
-  "@remoteHostLastUsed": {"placeholders": {"date": {"type": "String"}}},
+  "@remoteHostLastUsed": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "remoteHostConnectedFrom": "{address}, connected since {time}",
-  "@remoteHostConnectedFrom": {"placeholders": {"address": {"type": "String"}, "time": {"type": "String"}}},
+  "@remoteHostConnectedFrom": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "remoteHostForget": "Forget",
   "remoteHostDisconnect": "Disconnect",
   "remoteControlAnother": "Control another device",
@@ -7559,7 +8198,13 @@
   "remoteConnectAddressInvalid": "Enter an address like 192.168.1.20 or 192.168.1.20:47390",
   "remoteConnectNext": "Next",
   "remoteConnectCodeTitle": "Pair with {name}",
-  "@remoteConnectCodeTitle": {"placeholders": {"name": {"type": "String"}}},
+  "@remoteConnectCodeTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "remoteConnectCodeHelp": "Enter the 6-digit code shown in Phone remote on the PC.",
   "remoteConnectPair": "Pair",
   "remoteConnectForget": "Forget this computer",
@@ -7573,7 +8218,13 @@
   "remoteConnecting": "Connecting…",
   "remoteReconnecting": "Reconnecting…",
   "remoteNothingPlaying": "Nothing is playing on {name}",
-  "@remoteNothingPlaying": {"placeholders": {"name": {"type": "String"}}},
+  "@remoteNothingPlaying": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "remoteNothingLoaded": "Start something on the PC first.",
   "remoteCommandFailed": "The PC couldn't do that.",
   "remoteDisconnectedByHost": "The PC disconnected this device.",
@@ -7587,22 +8238,58 @@
   "remotePreviousChapter": "Previous chapter",
   "remoteNextChapter": "Next chapter",
   "remoteSkipBack": "Back {seconds} seconds",
-  "@remoteSkipBack": {"placeholders": {"seconds": {"type": "int"}}},
+  "@remoteSkipBack": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "remoteSkipForward": "Forward {seconds} seconds",
-  "@remoteSkipForward": {"placeholders": {"seconds": {"type": "int"}}},
+  "@remoteSkipForward": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "remoteSpeed": "Speed",
   "remoteSleepTimer": "Sleep timer",
   "remoteSleepMinutes": "{minutes} minutes",
-  "@remoteSleepMinutes": {"placeholders": {"minutes": {"type": "int"}}},
+  "@remoteSleepMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
   "remoteSleepEndOfChapter": "End of chapter",
   "remoteSleepEndOfEpisode": "End of episode",
   "remoteSleepChapters": "{count, plural, =1{1 chapter} other{{count} chapters}}",
-  "@remoteSleepChapters": {"placeholders": {"count": {"type": "int"}}},
+  "@remoteSleepChapters": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "remoteSleepCancel": "Turn off the sleep timer",
   "remoteTimeLeft": "{time} left",
-  "@remoteTimeLeft": {"placeholders": {"time": {"type": "String"}}},
+  "@remoteTimeLeft": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "remoteChapterTimeLeft": "{time} left in the chapter",
-  "@remoteChapterTimeLeft": {"placeholders": {"time": {"type": "String"}}},
+  "@remoteChapterTimeLeft": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "quickSwitcherKeywordsRemote": "remote phone control pc link pair",
   "quickSwitcherKeywordsSurprise": "random pick shuffle",
   "@quickSwitcherKeywordsSurprise": {
@@ -7625,9 +8312,21 @@
   "testChannelLaunchCheckSubtitle": "Asks to install a newer test build when the app starts",
   "testChannelWarning": "Test builds are unfinished and can break things. They replace the installed app and keep your data.",
   "testChannelInstalled": "Installed: {version}",
-  "@testChannelInstalled": {"placeholders": {"version": {"type": "String"}}},
+  "@testChannelInstalled": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "testChannelNewest": "Newest test build: {version}",
-  "@testChannelNewest": {"placeholders": {"version": {"type": "String"}}},
+  "@testChannelNewest": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "testChannelNone": "No test build is up yet",
   "testChannelUpToDate": "Up to date",
   "testChannelInstall": "Install",
@@ -7635,7 +8334,22 @@
   "testChannelNotes": "What's in it",
   "testBuildAvailable": "Test build available",
   "testBuildDialogContent": "Test build {latest} is out.\n\nYou are on {current}.",
-  "@testBuildDialogContent": {"placeholders": {"latest": {"type": "String"}, "current": {"type": "String"}}},
+  "@testBuildDialogContent": {
+    "placeholders": {
+      "latest": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      }
+    }
+  },
   "testBuildPackageLabel": "Test build {build}",
-  "@testBuildPackageLabel": {"placeholders": {"build": {"type": "int"}}}
+  "@testBuildPackageLabel": {
+    "placeholders": {
+      "build": {
+        "type": "int"
+      }
+    }
+  }
 }

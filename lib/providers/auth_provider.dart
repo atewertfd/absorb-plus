@@ -1766,6 +1766,7 @@ class AuthProvider extends ChangeNotifier {
       } catch (_) {}
       final token = _accessToken;
       if (token != null) {
+        SocketService().onTokenExpired = () async => await apiService?.refreshAccessTokenNow() ?? false;
         SocketService().connect(
           activeServerUrl!,
           token,

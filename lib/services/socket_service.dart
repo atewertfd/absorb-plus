@@ -20,6 +20,40 @@ class SocketService {
   String? _serverUrl;
   DateTime? _connectedAt;
 
+  /// Set by the app: gets a new access token, which comes back through
+  /// [updateToken]. True once there is one.
+  Future<bool> Function()? onTokenExpired;
+  bool _askedForToken = false;
+
+  void _onAuthFailed(dynamic data) {
+    final message = data is Map ? data['message'] : null;
+    // Audiobookshelf 2.37 says when it's only the token's age. The socket
+    // stays open, so a new token signs it in again; once per sign-in.
+    final refresh = onTokenExpired;
+    if (message == 'Token expired' && refresh != null && !_askedForToken) {
+      _askedForToken = true;
+      debugPrint('[Socket] Token expired - getting a new one');
+      refresh().then((ok) {
+        if (!ok) debugPrint('[Socket] No new token yet - waiting for the next refresh');
+      }, onError: (Object e) {
+        debugPrint('[Socket] New token failed: $e - waiting for the next refresh');
+      });
+      return;
+    }
+    // Absorb Plus: stay connected with the callbacks intact. The next token
+    // refresh hands the socket its new token through updateToken, which
+    // re-sends auth; a disconnect() here turned live sync off for the whole
+    // session, even after a brief network failure during the refresh.
+    debugPrint('[Socket] Auth failed${message is String ? ': $message' : ''}'
+        ' - waiting for a refreshed token');
+  }
+
+  @visibleForTesting
+  void debugAuthFailed(Object? data) => _onAuthFailed(data);
+
+  @visibleForTesting
+  void debugAuthenticated() => _askedForToken = false;
+
   bool get isConnected => _socket?.connected ?? false;
   bool get hasSocket => _socket != null;
 
@@ -379,17 +413,12 @@ class SocketService {
 
       _socket!.on('init', (_) {
         debugPrint('[Socket] Authenticated - user is online');
+        _askedForToken = false;
         _syncServerLogSubscription();
         onAuthenticated?.call();
       });
 
-      _socket!.on('auth_failed', (_) {
-        // Usually an access token that ran out while nothing refreshed it.
-        // Stay connected with the callbacks intact: the next refresh hands
-        // the socket its new token through updateToken, which re-sends auth.
-        // A full disconnect() here turned live sync off for the session.
-        debugPrint('[Socket] Auth failed - waiting for a refreshed token');
-      });
+      _socket!.on('auth_failed', _onAuthFailed);
 
       // Cross-device progress sync
       _socket!.on('user_item_progress_updated', (data) {
@@ -599,17 +628,12 @@ class SocketService {
 
       _socket!.on('init', (_) {
         debugPrint('[Socket] Authenticated - user is online');
+        _askedForToken = false;
         _syncServerLogSubscription();
         onAuthenticated?.call();
       });
 
-      _socket!.on('auth_failed', (_) {
-        // Usually an access token that ran out while nothing refreshed it.
-        // Stay connected with the callbacks intact: the next refresh hands
-        // the socket its new token through updateToken, which re-sends auth.
-        // A full disconnect() here turned live sync off for the session.
-        debugPrint('[Socket] Auth failed - waiting for a refreshed token');
-      });
+      _socket!.on('auth_failed', _onAuthFailed);
 
       _socket!.on('user_item_progress_updated', (data) {
         if (data is Map<String, dynamic>) {

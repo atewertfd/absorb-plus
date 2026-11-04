@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
+import '../services/api_service.dart';
 import '../services/ebook_cache.dart';
 import '../services/image_epub.dart';
 import '../services/narration_service.dart';
@@ -95,8 +96,8 @@ Future<void> openEbookReader(
       itemId: itemId,
       title: title,
       ebookFile: ebookFile,
-      epubReader: () => EbookReaderView(
-          itemId: itemId, title: title, ebookFile: ebookFile, openAtCfi: openAtCfi,
+      epubReader: (file) => EbookReaderView(
+          itemId: itemId, title: title, ebookFile: file, openAtCfi: openAtCfi,
           findText: findText, findChapterHint: findChapterHint,
           findPositionSeconds: findPositionSeconds, openAtAudioSeconds: openAtAudioSeconds,
           startReadAlong: startReadAlong),
@@ -124,7 +125,7 @@ class _EpubGate extends StatefulWidget {
   final String itemId;
   final String title;
   final Map<String, dynamic> ebookFile;
-  final Widget Function() epubReader;
+  final Widget Function(Map<String, dynamic> ebookFile) epubReader;
 
   const _EpubGate({
     required this.itemId,
@@ -140,6 +141,7 @@ class _EpubGate extends StatefulWidget {
 class _EpubGateState extends State<_EpubGate> {
   bool _decided = false;
   File? _imageEpub;
+  late Map<String, dynamic> _ebookFile = widget.ebookFile;
 
   @override
   void initState() {
@@ -153,9 +155,17 @@ class _EpubGateState extends State<_EpubGate> {
     File? imageEpub;
     try {
       final api = context.read<AuthProvider>().apiService;
+      if (api is BookOrbitApiService) {
+        final readAlong = await api.readAlongReaderFile(widget.itemId);
+        if (readAlong != null && readAlong['ino'] != widget.ebookFile['ino']) {
+          debugPrint('[EbookRouter] ${widget.itemId}: opening the read along EPUB ${readAlong['ino']} '
+              'instead of ${widget.ebookFile['ino']}');
+          _ebookFile = readAlong;
+        }
+      }
       if (api != null) {
         final file = await NarrationService.instance
-            .readerFile(api, widget.itemId, widget.ebookFile, widget.title);
+            .readerFile(api, widget.itemId, _ebookFile, widget.title);
         final pages = await imageEpubPageCount(file);
         if (pages > 0) {
           debugPrint('[EbookRouter] ${widget.itemId} is $pages page pictures - opening as a comic');
@@ -181,10 +191,10 @@ class _EpubGateState extends State<_EpubGate> {
       return ComicReaderView(
         itemId: widget.itemId,
         title: widget.title,
-        ebookFile: widget.ebookFile,
+        ebookFile: _ebookFile,
         imageEpub: imageEpub,
       );
     }
-    return widget.epubReader();
+    return widget.epubReader(_ebookFile);
   }
 }
