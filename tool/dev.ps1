@@ -5,6 +5,10 @@
 .DESCRIPTION
   check      pub get, analyze, full test suite, tool tests, removed-paths check,
              fork-only lints (tool/fork_lints.py)
+             check -Quick: for iterating. Analyze, then only the tests that
+             import a changed lib/ file (changed vs claude/slim, committed or
+             not) plus changed tests; skips fork lints, and pub get unless
+             pubspec changed. Run the full check before merging or building.
   build      Windows release into build\windows\x64\runner\Release, then
              verify the exe's version matches pubspec.yaml and refresh the
              owner's test copy in Desktop\Absorb Plus Beta
@@ -52,6 +56,7 @@ param(
   [switch]$Local,
   [switch]$NextBeta,
   [switch]$NoPublish,
+  [switch]$Quick,
   [switch]$Full
 )
 $script:ShowFull = [bool]$Full
@@ -312,6 +317,46 @@ function Publish-TestChannel {
 
 switch ($Command) {
   'check' {
+    if ($Quick) {
+      # What changed: since this branch left the integration branch, committed
+      # or not, plus untracked files. On claude/slim itself: since fork/claude/slim.
+      $head = git rev-parse HEAD
+      $slim = git rev-parse --verify --quiet claude/slim
+      $base = if ($slim -and $slim -ne $head) { git merge-base HEAD claude/slim }
+              elseif (git rev-parse --verify --quiet fork/claude/slim) { git merge-base HEAD fork/claude/slim }
+              else { $head }
+      $changed = @(@(git diff --name-only $base) + @(git ls-files --others --exclude-standard) |
+        Where-Object { $_ } | Sort-Object -Unique)
+      $needPub = -not (Test-Path (Join-Path $root '.dart_tool\package_config.json')) -or
+        ($changed | Where-Object { $_ -in 'pubspec.yaml', 'pubspec.lock' })
+      if ($needPub) { Invoke-Flutter pub get }
+      Invoke-Flutter analyze --no-pub --no-fatal-infos
+      $pkg = ((Get-Content (Join-Path $root 'pubspec.yaml') | Select-String '^name:\s*(\S+)').Matches[0].Groups[1].Value)
+      $libChanged = @($changed | Where-Object { $_ -like 'lib/*.dart' })
+      $tests = @($changed | Where-Object { $_ -like 'test/*_test.dart' -and $_ -notlike 'test/integration/*' })
+      if ($libChanged.Count) {
+        $needles = @($libChanged | ForEach-Object { "package:$pkg/" + $_.Substring(4) })
+        $tests += @(Get-ChildItem (Join-Path $root 'test') -Recurse -Filter '*_test.dart' |
+          Where-Object { $_.FullName -notlike '*\test\integration\*' } |
+          Where-Object { Select-String -Path $_.FullName -SimpleMatch -Pattern $needles -Quiet } |
+          ForEach-Object { $_.FullName.Substring($root.Length + 1).Replace('\', '/') })
+      }
+      $tests = @($tests | Sort-Object -Unique)
+      if ($tests.Count) {
+        Invoke-Step -Name 'flutter-test-quick' -Run { & $flutter test --no-pub --reporter expanded @tests } `
+          -SummaryPattern 'All tests passed|tests? passed|Some tests failed'
+        Write-Host "  ($($tests.Count) test file(s) for $($libChanged.Count) changed lib file(s))"
+      } else {
+        Write-Host "ok: no tests import the $($libChanged.Count) changed lib file(s)"
+      }
+      if ($changed | Where-Object { $_ -like 'tool/*.py' -or $_ -like 'tool/tests/*' }) {
+        Invoke-Step -Name 'tool-tests' -Run { python -m unittest discover -s tool/tests } `
+          -SummaryPattern '^Ran \d+ tests'
+      }
+      Invoke-Step -Name 'removed-paths' -Run { python tool/check_fork_removed.py } -SummaryPattern '^OK'
+      Write-Host 'quick check passed (run the full check before merging or building)' -ForegroundColor Green
+      break
+    }
     Invoke-Flutter pub get
     Invoke-Flutter analyze --no-pub --no-fatal-infos
     Invoke-Flutter test --no-pub --reporter expanded
@@ -571,5 +616,17 @@ switch ($Command) {
     git diff --numstat origin/main -- lib ':!lib/l10n' |
       ForEach-Object { $c = $_ -split "`t"; [pscustomobject]@{ Lines = [int]$c[0] + [int]$c[1]; File = $c[2] } } |
       Sort-Object Lines -Descending | Select-Object -First 10 | Format-Table -AutoSize
+  }
+}
+
+# pub get rewrites */flutter/generated_plugin*. When the content is unchanged
+# but the size Git recorded differs (an old CRLF checkout), `git status` keeps
+# calling them modified without comparing content. Re-recording them is a
+# no-op for content; files whose content really changed are left alone.
+if ($Command -in 'check', 'build', 'clean', 'apk') {
+  $gen = @(git ls-files -m -- 'windows/flutter/generated_plugin*' 'linux/flutter/generated_plugin*')
+  foreach ($f in $gen) {
+    git diff --quiet -- $f
+    if ($LASTEXITCODE -eq 0) { git add -- $f }
   }
 }
