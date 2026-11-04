@@ -26150,6 +26150,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{hours} hr {minutes} min left'**
   String downloadEtaHoursMinutes(int hours, int minutes);
+
+  /// Settings > Playback switch: all books use the default speed instead of each remembering its own.
+  ///
+  /// In en, this message translates to:
+  /// **'Same speed for every book'**
+  String get sameSpeedAllBooksTitle;
+
+  /// Explains the Same speed for every book switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Every book plays at the default speed, and changing the speed in the player changes it for all books. Off: each book (or its series) keeps its own speed.'**
+  String get sameSpeedAllBooksSubtitle;
 }
 
 class _AppLocalizationsDelegate

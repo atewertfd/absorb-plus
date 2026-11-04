@@ -71,6 +71,7 @@ import 'rebuild_snapshots.dart';
 import '../widgets/support_actions.dart';
 import '../services/update_check_policy.dart';
 import '../utils/test_build.dart'; // Absorb Plus
+import '../widgets/same_speed_tile.dart'; // Absorb Plus
 import 'settings_search_extras.dart'; // fork
 import 'server_health_screen.dart';
 import '../widgets/windows_settings_tiles.dart';
@@ -2971,6 +2972,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       const ExclusiveAudioTile(),
                       const Divider(height: 1, indent: 16, endIndent: 16),
                     ],
+                    const SameSpeedTile(), // Absorb Plus
+                    const Divider(height: 1, indent: 16, endIndent: 16),
                     // Default speed
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),

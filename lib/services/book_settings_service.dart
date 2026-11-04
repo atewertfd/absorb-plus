@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import 'player_settings.dart';
 import 'scoped_prefs.dart';
 
 /// Seconds to skip at the start (intro) and end (outro) of a book.
@@ -184,16 +185,34 @@ class BookSettingsService {
     return ScopedPrefs.getDouble(_seriesSpeedKey(seriesId));
   }
 
-  /// The book's own speed, else its series' remembered speed.
+  static const _sameSpeedKey = 'fork_same_speed_all_books';
+
+  /// Owner option (Settings > Playback): every book plays at the default
+  /// speed, and changing the speed in the player changes it for all books.
+  /// Off by default (each book, else its series, remembers its own speed).
+  static Future<bool> sameSpeedForAllBooks() async =>
+      await ScopedPrefs.getBool(_sameSpeedKey) ?? false;
+
+  static Future<void> setSameSpeedForAllBooks(bool on) =>
+      ScopedPrefs.setBool(_sameSpeedKey, on);
+
+  /// The book's own speed, else its series' remembered speed. Null (so the
+  /// default speed applies) when every book shares one speed.
   static Future<double?> bookSpeedOrSeries(String itemId) async {
+    if (await sameSpeedForAllBooks()) return null;
     final own = await ownSpeed(itemId);
     if (own != null) return own;
     return seriesSpeedFor(itemId);
   }
 
-  /// Save a book's speed and remember it for the book's series.
+  /// Save a book's speed and remember it for the book's series. When every
+  /// book shares one speed, this sets that shared (default) speed instead.
   static Future<void> saveBookSpeed(String itemId, double speed) {
     return _enqueue(() async {
+      if (await sameSpeedForAllBooks()) {
+        await PlayerSettings.setDefaultSpeed(speed);
+        return;
+      }
       await ScopedPrefs.setDouble(_bookSpeedKey(itemId), speed);
       final seriesId = await seriesIdFor(itemId);
       if (seriesId != null && seriesId.isNotEmpty) {

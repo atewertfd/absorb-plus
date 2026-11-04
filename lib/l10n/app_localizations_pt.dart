@@ -15670,4 +15670,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String downloadEtaHoursMinutes(int hours, int minutes) {
     return '$hours hr $minutes min left';
   }
+
+  @override
+  String get sameSpeedAllBooksTitle => 'Same speed for every book';
+
+  @override
+  String get sameSpeedAllBooksSubtitle =>
+      'Every book plays at the default speed, and changing the speed in the player changes it for all books. Off: each book (or its series) keeps its own speed.';
 }

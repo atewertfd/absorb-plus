@@ -8377,5 +8377,9 @@
         "type": "int"
       }
     }
-  }
+  },
+  "sameSpeedAllBooksTitle": "Same speed for every book",
+  "@sameSpeedAllBooksTitle": {"description": "Settings > Playback switch: all books use the default speed instead of each remembering its own."},
+  "sameSpeedAllBooksSubtitle": "Every book plays at the default speed, and changing the speed in the player changes it for all books. Off: each book (or its series) keeps its own speed.",
+  "@sameSpeedAllBooksSubtitle": {"description": "Explains the Same speed for every book switch."}
 }
