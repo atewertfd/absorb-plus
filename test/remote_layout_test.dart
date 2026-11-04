@@ -53,7 +53,7 @@ void main() {
       final night = RemoteLayout.preset(RemotePreset.nightstand);
       expect(night.portrait, [
         RemoteBlockEntry(RemoteBlock.cover, RemoteBlockSize.large),
-        RemoteBlockEntry(RemoteBlock.clock),
+        RemoteBlockEntry(RemoteBlock.clock, RemoteBlockSize.large),
         RemoteBlockEntry(RemoteBlock.timeLeft),
       ]);
       expect(_blocks(night.left), [RemoteBlock.cover]);
@@ -177,8 +177,14 @@ void main() {
         d.cycleSize(RemoteColumn.portrait, 5).portrait[5].size,
         RemoteBlockSize.compact,
       );
-      // The chapter title has one size: the toggle changes nothing.
-      expect(d.cycleSize(RemoteColumn.portrait, 2), d);
+      // Text blocks: the size is the text size (normal, compact, large).
+      expect(
+        d.cycleSize(RemoteColumn.portrait, 2).portrait[2].size,
+        RemoteBlockSize.compact,
+      );
+      expect(RemoteBlock.clock.sizes, contains(RemoteBlockSize.large));
+      // The stop button has no large size.
+      expect(RemoteBlock.stop.sizes, isNot(contains(RemoteBlockSize.large)));
     });
   });
 
@@ -256,59 +262,192 @@ void main() {
       expect(RemoteLayout.fromJson(null), d);
     });
 
-    test('display options round-trip; bad values fall back', () {
-      const o = RemoteDisplayOptions(
-        background: RemoteDisplayBackground.cover,
-        textSize: RemoteDisplayTextSize.huge,
-        showClock: false,
-        use24Hour: true,
+    test('the look round-trips; bad values fall back', () {
+      const o = RemoteLook(
+        accent: 'p3',
+        background: RemoteLookBackground.gradient,
+        buttons: RemoteButtonStyle.outlined,
+        corners: RemoteCorners.extraRound,
+        spacing: RemoteSpacing.compact,
+        textSize: RemoteTextSize.huge,
         dimAfterMinutes: 10,
       );
       final json = jsonDecode(jsonEncode(o.toJson()));
-      expect(json['version'], RemoteDisplayOptions.version);
-      expect(RemoteDisplayOptions.fromJson(json), o);
+      expect(json['version'], RemoteLook.version);
+      expect(RemoteLook.fromJson(json), o);
+      expect(o.swatch, RemoteLook.palette[3]);
       expect(
-        RemoteDisplayOptions.fromJson({
+        RemoteLook.fromJson({
+          'accent': 'p9',
           'background': 'neon',
+          'buttons': 3,
+          'corners': null,
           'textSize': 1,
-          'showClock': 'yes',
           'dimAfterMinutes': 7,
         }),
-        const RemoteDisplayOptions(),
+        const RemoteLook(),
       );
+    });
+  });
+
+  group('block options', () {
+    test('version 1 saves load with every option at its default', () {
+      final v1 = {
+        'version': 1,
+        'portrait': [
+          {'block': 'cover', 'size': 'large'},
+          {'block': 'titleAuthor', 'size': 'compact'},
+          {'block': 'transport'},
+          {'block': 'clock'},
+        ],
+        'landscapeLeft': [
+          {'block': 'cover'},
+        ],
+        'landscapeRight': [
+          {'block': 'progress'},
+        ],
+      };
+      final layout = RemoteLayout.fromJson(v1);
+      for (final e in layout.shown(landscape: false)) {
+        expect(e.options, isEmpty);
+      }
+      final p = layout.portrait;
+      expect(p[0].choice('corners'), 'auto');
+      expect(p[0].flag('shadow'), isFalse);
+      expect(p[0].choice('align'), 'center');
+      expect(p[0].choice('gap'), 'auto');
+      // The compact title keeps its single line.
+      expect(p[1].choice('lines'), '1');
+      expect(p[2].picked('buttons'), RemoteOptions.transportButtons);
+      expect(p[2].flag('skipSeconds'), isTrue);
+      expect(p[3].choice('hours'), 'phone');
+      expect(layout.right.single.choice('span'), 'chapter');
+      // Saved again as version 2, unchanged.
+      final again = layout.toJson();
+      expect(again['version'], 2);
+      expect(RemoteLayout.fromJson(jsonDecode(jsonEncode(again))), layout);
+    });
+
+    test('options round-trip; unknown or bad ones are dropped', () {
+      final e = RemoteBlockEntry(RemoteBlock.transport)
+          .withOption('buttons', ['play', 'back'])
+          .withOption('skipSeconds', false);
+      // Kept in the buttons' own order.
+      expect(e.picked('buttons'), ['back', 'play']);
+      final layout = RemoteLayout.defaults().replace(
+        RemoteColumn.portrait,
+        4,
+        e,
+      );
+      final read = RemoteLayout.fromJson(jsonDecode(jsonEncode(layout)));
+      expect(read, layout);
+      expect(read.portrait[4].flag('skipSeconds'), isFalse);
+
+      final bad = RemoteBlockEntry.fromJson({
+        'block': 'transport',
+        'options': {
+          'buttons': <String>[],
+          'skipSeconds': 'no',
+          'teleport': true,
+          'align': 'left', // not an option of this block
+        },
+      })!;
+      expect(bad.options, isEmpty);
+      final partly = RemoteBlockEntry.fromJson({
+        'block': 'speed',
+        'options': {
+          'presets': ['1', '7', '1.5'],
+        },
+      })!;
+      expect(partly.picked('presets'), ['1', '1.5']);
+    });
+
+    test('equal options compare equal in any order', () {
+      final a = RemoteBlockEntry(
+        RemoteBlock.clock,
+      ).withOption('hours', '24').withOption('date', true);
+      final b = RemoteBlockEntry(
+        RemoteBlock.clock,
+      ).withOption('date', true).withOption('hours', '24');
+      expect(a, b);
+      expect(a.hashCode, b.hashCode);
+      expect(a, isNot(RemoteBlockEntry(RemoteBlock.clock)));
+      // Changing the size keeps the options.
+      expect(a.nextSize().choice('hours'), '24');
     });
   });
 
   group('RemoteLayoutStore', () {
     test('saves and loads under fork keys', () async {
       SharedPreferences.setMockInitialValues({});
-      final (layout, display) = await RemoteLayoutStore.load();
-      expect(layout, RemoteLayout.defaults());
-      expect(display, const RemoteDisplayOptions());
+      final first = await RemoteLayoutStore.load();
+      expect(first.layout, RemoteLayout.defaults());
+      expect(first.look, const RemoteLook());
+      expect(first.hintShown, isFalse);
 
       final minimal = RemoteLayout.preset(RemotePreset.minimal);
-      const night = RemoteDisplayOptions(
-        background: RemoteDisplayBackground.black,
-      );
+      const night = RemoteLook(background: RemoteLookBackground.black);
       await RemoteLayoutStore.saveLayout(minimal);
-      await RemoteLayoutStore.saveDisplay(night);
+      await RemoteLayoutStore.saveLook(night);
+      await RemoteLayoutStore.saveHintShown();
       final prefs = await SharedPreferences.getInstance();
-      expect(RemoteLayoutStore.layoutKey, startsWith('fork_'));
-      expect(RemoteLayoutStore.displayKey, startsWith('fork_'));
+      for (final key in [
+        RemoteLayoutStore.layoutKey,
+        RemoteLayoutStore.lookKey,
+        RemoteLayoutStore.hintKey,
+      ]) {
+        expect(key, startsWith('fork_'));
+      }
       expect(prefs.getString(RemoteLayoutStore.layoutKey), isNotNull);
-      final (l2, d2) = await RemoteLayoutStore.load();
-      expect(l2, minimal);
-      expect(d2, night);
+      final saved = await RemoteLayoutStore.load();
+      expect(saved.layout, minimal);
+      expect(saved.look, night);
+      expect(saved.hintShown, isTrue);
+    });
+
+    test('the old display options start the look', () async {
+      SharedPreferences.setMockInitialValues({
+        RemoteLayoutStore.layoutKey: jsonEncode({
+          'version': 1,
+          'portrait': [
+            {'block': 'clock'},
+          ],
+          'landscapeLeft': <Object>[],
+          'landscapeRight': [
+            {'block': 'clock'},
+          ],
+        }),
+        RemoteLayoutStore.displayKey: jsonEncode({
+          'version': 1,
+          'background': 'cover',
+          'textSize': 'large',
+          'showClock': false,
+          'use24Hour': true,
+          'dimAfterMinutes': 5,
+        }),
+      });
+      final saved = await RemoteLayoutStore.load();
+      expect(
+        saved.look,
+        const RemoteLook(
+          background: RemoteLookBackground.cover,
+          textSize: RemoteTextSize.large,
+          dimAfterMinutes: 5,
+        ),
+      );
+      // Its 24-hour switch moved to the clocks.
+      expect(saved.layout.portrait.single.choice('hours'), '24');
+      expect(saved.layout.right.single.choice('hours'), '24');
     });
 
     test('unreadable saved JSON loads the defaults', () async {
       SharedPreferences.setMockInitialValues({
         RemoteLayoutStore.layoutKey: '{not json',
-        RemoteLayoutStore.displayKey: '[]',
+        RemoteLayoutStore.lookKey: '[]',
       });
-      final (layout, display) = await RemoteLayoutStore.load();
-      expect(layout, RemoteLayout.defaults());
-      expect(display, const RemoteDisplayOptions());
+      final saved = await RemoteLayoutStore.load();
+      expect(saved.layout, RemoteLayout.defaults());
+      expect(saved.look, const RemoteLook());
     });
   });
 }

@@ -4,6 +4,7 @@ import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:palette_generator/palette_generator.dart';
 
 import '../l10n/app_localizations.dart';
 import '../services/remote_link/remote_layout.dart';
@@ -12,6 +13,8 @@ import '../services/remote_link/remote_media_mirror.dart';
 import '../services/remote_link/remote_media_session_stub.dart'
     if (dart.library.io) '../services/remote_link/remote_media_session_io.dart';
 import '../services/screen_wake.dart';
+import '../utils/cover_accent.dart';
+import '../utils/cover_palette.dart';
 import '../utils/fork_errors.dart';
 import '../utils/fork_platform.dart';
 import '../widgets/absorb_slider.dart';
@@ -24,7 +27,7 @@ import '../widgets/remote_layout_view.dart';
 enum RemoteControlExit { pairAgain }
 
 /// "Control your computer", the remote screen (fork): what the PC is
-/// playing, its controls, Continue listening, and a display mode. Shows
+/// playing, its controls, Continue listening, and full screen. Shows
 /// "Reconnecting…" instead of stale controls while the link is down.
 class RemoteControlScreen extends StatefulWidget {
   const RemoteControlScreen({
@@ -53,23 +56,24 @@ class RemoteControlScreen extends StatefulWidget {
 class _RemoteControlScreenState extends State<RemoteControlScreen>
     with WidgetsBindingObserver {
   static const _wakeOwner = 'remoteDisplay';
-  static const _speeds = [
-    0.75, 1.0, 1.1, 1.2, 1.25, 1.3, 1.4, 1.5, 1.75, 2.0, 2.5, 3.0, //
-  ];
   static const _speedStep = 0.05;
-  static const _sleepMinutes = [15, 30, 45, 60];
 
   RemoteLinkConnector get _connector => widget.connector ?? remoteLinkConnector;
 
   late RemoteLinkClient _client;
   StreamSubscription<RemoteLinkEvent>? _events;
-  bool _display = false;
+  bool _fullScreen = false;
   Timer? _dimTimer;
   bool _dimmed = false;
   bool _editing = false;
   RemoteLayout _layout = RemoteLayout.defaults();
-  RemoteDisplayOptions _displayOptions = const RemoteDisplayOptions();
+  RemoteLook _look = const RemoteLook();
   bool _layoutTouched = false;
+  bool _hintShown = false;
+  Color? _coverAccent;
+  Uint8List? _accentFor;
+  double? _volumeTarget;
+  DateTime? _volumeAt;
   RemotePlayerState? _lastState;
   double? _drag;
   double? _seekTarget;
@@ -111,11 +115,13 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
 
   Future<void> _loadLayout() async {
     try {
-      final (layout, display) = await RemoteLayoutStore.load();
-      if (!mounted || _layoutTouched) return;
+      final saved = await RemoteLayoutStore.load();
+      if (!mounted) return;
+      _hintShown = _hintShown || saved.hintShown;
+      if (_layoutTouched) return;
       setState(() {
-        _layout = layout;
-        _displayOptions = display;
+        _layout = saved.layout;
+        _look = saved.look;
       });
     } catch (e) {
       swallow('RemoteLayout', e);
@@ -130,12 +136,28 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
     fireAndLog(RemoteLayoutStore.saveLayout(layout), 'RemoteLayout');
   }
 
-  void _setDisplayOptions(RemoteDisplayOptions options) {
+  void _setLook(RemoteLook look) {
     setState(() {
-      _displayOptions = options;
+      _look = look;
       _layoutTouched = true;
     });
-    fireAndLog(RemoteLayoutStore.saveDisplay(options), 'RemoteLayout');
+    fireAndLog(RemoteLayoutStore.saveLook(look), 'RemoteLayout');
+  }
+
+  /// A preset for the orientation being edited. Nightstand also turns the
+  /// background black and dims after 10 minutes, unless the look already
+  /// has its own background or dimming.
+  void _applyPreset(RemotePreset preset, bool landscape) {
+    _setLayout(_layout.applyPreset(preset, landscape: landscape));
+    if (preset != RemotePreset.nightstand) return;
+    _setLook(
+      _look.copyWith(
+        background: _look.background == RemoteLookBackground.theme
+            ? RemoteLookBackground.black
+            : null,
+        dimAfterMinutes: _look.dimAfterMinutes == 0 ? 10 : null,
+      ),
+    );
   }
 
   void _attach(RemoteLinkClient client) {
@@ -163,7 +185,7 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _dimTimer?.cancel();
-    if (_display) _applyDisplay(false);
+    if (_fullScreen) _applyFullScreen(false);
     _detach();
     super.dispose();
   }
@@ -200,42 +222,62 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
 
   void _send(RemoteCommand command) => _client.send(command);
 
-  // ── Display mode ──────────────────────────────────────────────────
+  // ── Full screen ───────────────────────────────────────────────────
 
-  void _setDisplay(bool on) {
-    if (_display == on) return;
+  /// Full screen is the same layout without the app bar and system bars,
+  /// with the screen kept on. Not while editing.
+  void _setFullScreen(bool on) {
+    if (_fullScreen == on || (on && _editing)) return;
     setState(() {
-      _display = on;
+      _fullScreen = on;
       _dimmed = false;
     });
-    _applyDisplay(on);
+    _applyFullScreen(on);
     _armDim();
+    if (on && !_hintShown) {
+      _hintShown = true;
+      fireAndLog(RemoteLayoutStore.saveHintShown(), 'RemoteLayout');
+      final l = AppLocalizations.of(context)!;
+      ScaffoldMessenger.maybeOf(context)
+        ?..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            key: const Key('remote-full-screen-hint'),
+            content: Text(l.remoteFullScreenHint),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+    }
   }
 
-  /// Dims the display mode after the chosen minutes without a touch.
+  /// A tap on empty space (not on a control) enters or leaves full screen.
+  void _toggleFullScreen() => _setFullScreen(!_fullScreen);
+
+  /// Dims full screen after the Look's minutes without a touch.
   void _armDim() {
     _dimTimer?.cancel();
     _dimTimer = null;
-    final minutes = _displayOptions.dimAfterMinutes;
-    if (!_display || minutes <= 0) return;
+    final minutes = _look.dimAfterMinutes;
+    if (!_fullScreen || minutes <= 0) return;
     _dimTimer = Timer(Duration(minutes: minutes), () {
       if (mounted) setState(() => _dimmed = true);
     });
   }
 
-  /// A tap wakes a dimmed display; otherwise it leaves display mode.
-  void _onDisplayTap() {
-    if (_dimmed) {
-      setState(() => _dimmed = false);
-      _armDim();
-      return;
-    }
-    _setDisplay(false);
+  /// Any touch in full screen restarts the dim countdown.
+  void _onFullScreenTouch() {
+    if (!_dimmed) _armDim();
+  }
+
+  /// The first tap on a dimmed screen only wakes it.
+  void _wake() {
+    setState(() => _dimmed = false);
+    _armDim();
   }
 
   /// Keeps the screen on (Android flag / Windows runner, the app's own
   /// [ScreenWake]) and hides the phone's system bars.
-  void _applyDisplay(bool on) {
+  void _applyFullScreen(bool on) {
     unawaited(ScreenWake.hold(_wakeOwner, on));
     if (ForkPlatform.isAndroid) {
       if (on) {
@@ -263,13 +305,14 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
         final connected = _client.phase == RemoteLinkPhase.connected;
         final state = connected ? _client.state : null;
         if (state != null && state.hasItem) _lastState = state;
-        if (_display) {
+        _watchCoverAccent();
+        if (_fullScreen) {
           return PopScope(
             canPop: false,
             onPopInvokedWithResult: (didPop, _) {
-              if (!didPop) _setDisplay(false);
+              if (!didPop) _setFullScreen(false);
             },
-            child: _displayMode(context, state),
+            child: _withLook(context, _fullScreenScaffold(context, state)),
           );
         }
         final l = AppLocalizations.of(context)!;
@@ -279,76 +322,278 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
             onPopInvokedWithResult: (didPop, _) {
               if (!didPop) setState(() => _editing = false);
             },
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text(l.remoteCustomizeTitle),
-                actions: [
-                  TextButton(
-                    key: const Key('remote-customize-done'),
-                    onPressed: () => setState(() => _editing = false),
-                    child: Text(l.done),
+            child: _withLook(
+              context,
+              Scaffold(
+                appBar: AppBar(
+                  title: Text(l.remoteCustomizeTitle),
+                  actions: [
+                    TextButton(
+                      key: const Key('remote-customize-done'),
+                      onPressed: () => setState(() => _editing = false),
+                      child: Text(l.done),
+                    ),
+                  ],
+                ),
+                body: SafeArea(
+                  child: _editor(
+                    context,
+                    state != null && state.hasItem
+                        ? state
+                        : _lastState ?? RemotePlayerState.empty,
                   ),
-                ],
-              ),
-              body: SafeArea(
-                child: _editor(
-                  context,
-                  state != null && state.hasItem
-                      ? state
-                      : _lastState ?? RemotePlayerState.empty,
                 ),
               ),
             ),
           );
         }
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              _client.hostName.isEmpty ? widget.host.address : _client.hostName,
-            ),
-            actions: [
-              IconButton(
-                key: const Key('remote-customize'),
-                tooltip: l.remoteCustomize,
-                onPressed: () => setState(() => _editing = true),
-                icon: const Icon(Icons.tune_rounded),
+        return _withLook(
+          context,
+          Scaffold(
+            appBar: AppBar(
+              title: Text(
+                _client.hostName.isEmpty
+                    ? widget.host.address
+                    : _client.hostName,
               ),
-              IconButton(
-                key: const Key('remote-continue'),
-                tooltip: l.remoteContinueListening,
-                onPressed: state != null ? _showContinue : null,
-                icon: const Icon(Icons.history_rounded),
-              ),
-              IconButton(
-                key: const Key('remote-display-mode'),
-                tooltip: l.remoteDisplayMode,
-                onPressed: state != null && state.hasItem
-                    ? () => _setDisplay(true)
-                    : null,
-                icon: const Icon(Icons.fit_screen_rounded),
-              ),
-              if (_mediaSession.isAvailable)
-                PopupMenuButton<String>(
-                  key: const Key('remote-menu'),
-                  tooltip: l.remoteMoreOptions,
-                  onSelected: (v) {
-                    if (v == 'lockScreen') _setLockScreen(!_lockScreen);
+              actions: [
+                IconButton(
+                  key: const Key('remote-customize'),
+                  tooltip: l.remoteCustomize,
+                  onPressed: () {
+                    if (!_fullScreen) setState(() => _editing = true);
                   },
-                  itemBuilder: (_) => [
-                    CheckedPopupMenuItem(
-                      key: const Key('remote-lock-screen'),
-                      value: 'lockScreen',
-                      checked: _lockScreen,
-                      child: Text(l.remoteLockScreenControls),
-                    ),
-                  ],
+                  icon: const Icon(Icons.tune_rounded),
                 ),
-            ],
+                IconButton(
+                  key: const Key('remote-continue'),
+                  tooltip: l.remoteContinueListening,
+                  onPressed: state != null ? _showContinue : null,
+                  icon: const Icon(Icons.history_rounded),
+                ),
+                IconButton(
+                  key: const Key('remote-full-screen-button'),
+                  tooltip: l.remoteFullScreen,
+                  onPressed: state != null && state.hasItem
+                      ? () => _setFullScreen(true)
+                      : null,
+                  icon: const Icon(Icons.fullscreen_rounded),
+                ),
+                if (_mediaSession.isAvailable)
+                  PopupMenuButton<String>(
+                    key: const Key('remote-menu'),
+                    tooltip: l.remoteMoreOptions,
+                    onSelected: (v) {
+                      if (v == 'lockScreen') _setLockScreen(!_lockScreen);
+                    },
+                    itemBuilder: (_) => [
+                      CheckedPopupMenuItem(
+                        key: const Key('remote-lock-screen'),
+                        value: 'lockScreen',
+                        checked: _lockScreen,
+                        child: Text(l.remoteLockScreenControls),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+            body: SafeArea(child: _body(context, state)),
           ),
-          body: SafeArea(child: _body(context, state)),
         );
       },
     );
+  }
+
+  /// Full screen: the same body, no app bar; a tap on empty space (or Back)
+  /// leaves. A dim layer covers it after the Look's minutes; the first tap
+  /// only wakes it.
+  Widget _fullScreenScaffold(BuildContext context, RemotePlayerState? state) {
+    return Scaffold(
+      body: Listener(
+        onPointerDown: (_) => _onFullScreenTouch(),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            GestureDetector(
+              key: const Key('remote-full-screen'),
+              behavior: HitTestBehavior.opaque,
+              onTap: () => _setFullScreen(false),
+              child: SafeArea(child: _body(context, state)),
+            ),
+            if (_dimmed)
+              GestureDetector(
+                key: const Key('remote-full-screen-dim'),
+                behavior: HitTestBehavior.opaque,
+                onTap: _wake,
+                child: ColoredBox(color: Colors.black.withValues(alpha: 0.8)),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Look ──────────────────────────────────────────────────────────
+
+  /// Works out the cover's colour when the Look uses it (once per cover).
+  void _watchCoverAccent() {
+    final bytes = _client.cover;
+    if (!_look.usesCoverColor || bytes == null) return;
+    if (identical(bytes, _accentFor)) return;
+    _accentFor = bytes;
+    unawaited(_loadCoverAccent(bytes));
+  }
+
+  Future<void> _loadCoverAccent(Uint8List bytes) async {
+    try {
+      final palette = await PaletteGenerator.fromImageProvider(
+        paletteSource(MemoryImage(bytes)),
+        maximumColorCount: 16,
+      );
+      if (!mounted || !identical(bytes, _accentFor)) return;
+      setState(() => _coverAccent = accentFromCoverPalette(palette));
+    } catch (e) {
+      swallow('RemoteLook', e);
+    }
+  }
+
+  /// The Look's accent, or null for the app theme's.
+  Color? get _accent => switch (_look.accent) {
+    RemoteLook.accentTheme => null,
+    RemoteLook.accentCover => _client.cover == null ? null : _coverAccent,
+    _ => _look.swatch,
+  };
+
+  /// The Look around [child]: its theme (accent, light text on a dark
+  /// background, sharp buttons), background and text size. The default
+  /// Look changes nothing.
+  Widget _withLook(BuildContext context, Widget child) {
+    final look = _look;
+    final base = Theme.of(context);
+    var cs = base.colorScheme;
+    final accent = _accent;
+    final dark = look.darkBackground;
+    final hasBackground = look.background != RemoteLookBackground.theme;
+    final gradientColor = look.background == RemoteLookBackground.gradient
+        ? _coverAccent ?? accent
+        : null;
+    if (accent == null &&
+        !hasBackground &&
+        look.corners != RemoteCorners.sharp &&
+        look.textSize == RemoteTextSize.normal) {
+      return child;
+    }
+    if (dark) {
+      cs = cs.copyWith(
+        brightness: Brightness.dark,
+        surface: Colors.black,
+        onSurface: Colors.white,
+        onSurfaceVariant: Colors.white70,
+        surfaceContainerHighest: const Color(0xFF2A2A2A),
+        outlineVariant: Colors.white24,
+      );
+    }
+    if (accent != null) {
+      cs = cs.copyWith(
+        primary: accent,
+        onPrimary:
+            ThemeData.estimateBrightnessForColor(accent) == Brightness.dark
+            ? Colors.white
+            : Colors.black,
+      );
+    }
+    var theme = base.copyWith(colorScheme: cs);
+    if (dark) {
+      theme = theme.copyWith(
+        textTheme: base.textTheme.apply(
+          bodyColor: Colors.white,
+          displayColor: Colors.white,
+        ),
+        iconTheme: base.iconTheme.copyWith(color: Colors.white),
+      );
+    }
+    if (hasBackground) {
+      theme = theme.copyWith(
+        scaffoldBackgroundColor: Colors.transparent,
+        appBarTheme: base.appBarTheme.copyWith(
+          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          foregroundColor: cs.onSurface,
+          iconTheme: IconThemeData(color: cs.onSurface),
+          actionsIconTheme: IconThemeData(color: cs.onSurface),
+          titleTextStyle:
+              (base.appBarTheme.titleTextStyle ?? base.textTheme.titleLarge)
+                  ?.copyWith(color: cs.onSurface),
+        ),
+      );
+    }
+    if (look.corners == RemoteCorners.sharp) {
+      const shape = RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(4)),
+      );
+      theme = theme.copyWith(
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            shape: shape,
+          ).merge(base.textButtonTheme.style),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            shape: shape,
+          ).merge(base.outlinedButtonTheme.style),
+        ),
+      );
+    }
+    Widget out = Theme(data: theme, child: child);
+    if (look.textSize != RemoteTextSize.normal) {
+      final mq = MediaQuery.of(context);
+      out = MediaQuery(
+        data: mq.copyWith(
+          textScaler: TextScaler.linear(
+            mq.textScaler.scale(1) * look.textSize.scale,
+          ),
+        ),
+        child: out,
+      );
+    }
+    if (!hasBackground) return out;
+    final bytes = _client.cover;
+    final Widget background = switch (look.background) {
+      RemoteLookBackground.black => const ColoredBox(color: Colors.black),
+      RemoteLookBackground.cover => Stack(
+        fit: StackFit.expand,
+        children: [
+          const ColoredBox(color: Colors.black),
+          if (bytes != null)
+            ImageFiltered(
+              key: const Key('remote-look-blur'),
+              imageFilter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+              child: Image.memory(
+                bytes,
+                fit: BoxFit.cover,
+                gaplessPlayback: true,
+                errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+              ),
+            ),
+          ColoredBox(color: Colors.black.withValues(alpha: 0.55)),
+        ],
+      ),
+      _ => DecoratedBox(
+        key: const Key('remote-look-gradient'),
+        decoration: BoxDecoration(
+          color: cs.surface,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              (gradientColor ?? cs.primary).withValues(alpha: 0.45),
+              cs.surface,
+            ],
+          ),
+        ),
+      ),
+    };
+    return Stack(fit: StackFit.expand, children: [background, out]);
   }
 
   Widget _body(BuildContext context, RemotePlayerState? state) {
@@ -540,22 +785,47 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
     });
   }
 
-  Widget _cover(BuildContext context, {double radius = 16}) {
+  /// The cover: its corners ([RemoteOptions.corners]; `auto` follows the
+  /// Look) and an optional shadow.
+  Widget _cover(BuildContext context, RemoteBlockEntry e) {
     final cs = Theme.of(context).colorScheme;
     final bytes = _client.cover;
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(radius),
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: bytes != null
-            ? Image.memory(
-                bytes,
-                fit: BoxFit.cover,
-                gaplessPlayback: true,
-                errorBuilder: (_, __, ___) => _coverPlaceholder(cs),
-              )
-            : _coverPlaceholder(cs),
+    final corners = e.choice('corners');
+    final circle = corners == 'circle';
+    final radius = switch (corners) {
+      'square' => 0.0,
+      'rounded' => 16.0,
+      _ => _look.corners.coverRadius,
+    };
+    final image = AspectRatio(
+      aspectRatio: 1,
+      child: bytes != null
+          ? Image.memory(
+              bytes,
+              fit: BoxFit.cover,
+              gaplessPlayback: true,
+              errorBuilder: (_, __, ___) => _coverPlaceholder(cs),
+            )
+          : _coverPlaceholder(cs),
+    );
+    final Widget clipped = circle
+        ? ClipOval(child: image)
+        : ClipRRect(borderRadius: BorderRadius.circular(radius), child: image);
+    if (!e.flag('shadow')) return clipped;
+    return DecoratedBox(
+      key: const Key('remote-cover-shadow'),
+      decoration: BoxDecoration(
+        shape: circle ? BoxShape.circle : BoxShape.rectangle,
+        borderRadius: circle ? null : BorderRadius.circular(radius),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x66000000),
+            blurRadius: 24,
+            offset: Offset(0, 8),
+          ),
+        ],
       ),
+      child: clipped,
     );
   }
 
@@ -590,12 +860,22 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
         AppLocalizations.of(context)!.remoteCustomizeEmpty,
       );
     }
-    return RemoteLayoutView(
+    final view = RemoteLayoutView(
       layout: _layout,
       landscape: landscape,
       editing: editing,
+      gapScale: _look.spacing.gapScale,
       onChanged: _setLayout,
       buildBlock: (context, entry, slot) => _block(context, s, entry, slot),
+    );
+    if (editing) return view;
+    // A tap that no control takes (empty space, text) enters or leaves
+    // full screen; controls win the tap themselves.
+    return GestureDetector(
+      key: const Key('remote-tap-area'),
+      behavior: HitTestBehavior.opaque,
+      onTap: _toggleFullScreen,
+      child: view,
     );
   }
 
@@ -643,9 +923,7 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
                   for (final p in RemotePreset.values)
                     MenuItemButton(
                       key: Key('remote-preset-${p.name}'),
-                      onPressed: () => _setLayout(
-                        _layout.applyPreset(p, landscape: landscape),
-                      ),
+                      onPressed: () => _applyPreset(p, landscape),
                       child: Text(remotePresetName(l, p)),
                     ),
                 ],
@@ -658,14 +936,10 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
                 label: Text(l.remoteCustomizeReset),
               ),
               TextButton.icon(
-                key: const Key('remote-customize-display'),
-                onPressed: () => showRemoteDisplayOptionsSheet(
-                  context,
-                  _displayOptions,
-                  _setDisplayOptions,
-                ),
-                icon: const Icon(Icons.fit_screen_rounded),
-                label: Text(l.remoteDisplayMode),
+                key: const Key('remote-customize-look'),
+                onPressed: () => showRemoteLookSheet(context, _look, _setLook),
+                icon: const Icon(Icons.palette_outlined),
+                label: Text(l.remoteLook),
               ),
             ],
           ),
@@ -708,9 +982,9 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
   // ── Blocks ────────────────────────────────────────────────────────
 
   /// The part of the book the bar and times cover: the chapter, or the
-  /// whole book without chapters.
-  ({double start, double end}) _span(RemotePlayerState s) {
-    final chapter = s.hasChapter;
+  /// whole book without chapters or when [book] is asked for.
+  ({double start, double end}) _span(RemotePlayerState s, {bool book = false}) {
+    final chapter = s.hasChapter && !book;
     return (
       start: chapter ? s.chapterStart : 0.0,
       end: chapter ? s.chapterEnd : (s.duration > 0 ? s.duration : 1.0),
@@ -742,7 +1016,9 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
     };
   }
 
-  /// One block of the layout, or null when it has nothing to show.
+  /// One block of the layout, or null when it has nothing to show. Its
+  /// options ([RemoteBlockInfo.options]) at their defaults draw it as it
+  /// always looked.
   Widget? _block(
     BuildContext context,
     RemotePlayerState s,
@@ -753,51 +1029,89 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
     final compact = e.size == RemoteBlockSize.compact;
-    Widget action(Key key, IconData icon, String label, VoidCallback? onTap) =>
-        compact
-        ? IconButton(
-            key: key,
-            tooltip: label,
-            onPressed: onTap,
-            icon: Icon(icon),
-          )
-        : TextButton.icon(
-            key: key,
-            onPressed: onTap,
-            icon: Icon(icon),
-            label: Text(label),
-          );
+    final large = e.size == RemoteBlockSize.large;
+    final textAlign = switch (e.choice('align')) {
+      'left' => TextAlign.left,
+      'right' => TextAlign.right,
+      _ => TextAlign.center,
+    };
+    final crossAlign = switch (e.choice('align')) {
+      'left' => CrossAxisAlignment.start,
+      'right' => CrossAxisAlignment.end,
+      _ => CrossAxisAlignment.center,
+    };
+    final lines = int.tryParse(e.choice('lines')) ?? 1;
+    final outlined = _look.buttons == RemoteButtonStyle.outlined;
+    Widget action(Key key, IconData icon, String label, VoidCallback? onTap) {
+      if (compact) {
+        return outlined
+            ? IconButton.outlined(
+                key: key,
+                tooltip: label,
+                onPressed: onTap,
+                icon: Icon(icon),
+              )
+            : IconButton(
+                key: key,
+                tooltip: label,
+                onPressed: onTap,
+                icon: Icon(icon),
+              );
+      }
+      return outlined
+          ? OutlinedButton.icon(
+              key: key,
+              onPressed: onTap,
+              icon: Icon(icon),
+              label: Text(label),
+            )
+          : TextButton.icon(
+              key: key,
+              onPressed: onTap,
+              icon: Icon(icon),
+              label: Text(label),
+            );
+    }
 
     switch (e.block) {
       case RemoteBlock.cover:
         return SizedBox(
           width: _coverSize(e.size, slot),
-          child: _cover(context),
+          child: _cover(context, e),
         );
       case RemoteBlock.titleAuthor:
         if (s.title.isEmpty && s.author.isEmpty) return null;
         return Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: crossAlign,
           children: [
             Text(
               s.title,
-              textAlign: TextAlign.center,
-              maxLines: compact ? 1 : 2,
+              textAlign: textAlign,
+              maxLines: lines,
               overflow: TextOverflow.ellipsis,
-              style: (compact ? tt.titleMedium : tt.titleLarge)?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              style:
+                  (compact
+                          ? tt.titleMedium
+                          : large
+                          ? tt.headlineSmall
+                          : tt.titleLarge)
+                      ?.copyWith(fontWeight: FontWeight.w600),
             ),
             if (s.author.isNotEmpty) ...[
               SizedBox(height: compact ? 2 : 4),
               Text(
                 s.author,
-                textAlign: TextAlign.center,
+                textAlign: textAlign,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: (compact ? tt.bodySmall : tt.bodyMedium)?.copyWith(
-                  color: cs.onSurfaceVariant,
-                ),
+                style:
+                    (compact
+                            ? tt.bodySmall
+                            : large
+                            ? tt.bodyLarge
+                            : tt.bodyMedium)
+                        ?.copyWith(color: cs.onSurfaceVariant),
               ),
             ],
           ],
@@ -807,13 +1121,19 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
         return Text(
           s.chapterTitle,
           key: const Key('remote-chapter-title'),
-          textAlign: TextAlign.center,
-          maxLines: 1,
+          textAlign: textAlign,
+          maxLines: lines,
           overflow: TextOverflow.ellipsis,
-          style: tt.bodySmall?.copyWith(color: cs.primary),
+          style:
+              (compact
+                      ? tt.labelSmall
+                      : large
+                      ? tt.titleSmall
+                      : tt.bodySmall)
+                  ?.copyWith(color: cs.primary),
         );
       case RemoteBlock.progress:
-        final (:start, :end) = _span(s);
+        final (:start, :end) = _span(s, book: e.choice('span') == 'book');
         final position = (_drag ?? _position(s)).clamp(start, end);
         final slider = AbsorbSlider(
           value: position,
@@ -830,6 +1150,7 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
           },
         );
         if (compact) return slider;
+        final small = tt.bodySmall?.copyWith(color: cs.onSurfaceVariant);
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -839,13 +1160,13 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Text(fmtTime(position - start), style: small),
                   Text(
-                    fmtTime(position - start),
-                    style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
-                  ),
-                  Text(
-                    '-${fmtTime(end - position)}',
-                    style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+                    e.choice('time') == 'total'
+                        ? fmtTime(end - start)
+                        : '-${fmtTime(end - position)}',
+                    key: const Key('remote-progress-right'),
+                    style: small,
                   ),
                 ],
               ),
@@ -854,28 +1175,41 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
         );
       case RemoteBlock.timeLeft:
         return Text(
-          _timeLeftText(l, s),
+          _timeLeftText(l, s, book: e.choice('span') == 'book'),
           key: const Key('remote-time-left'),
-          textAlign: TextAlign.center,
+          textAlign: textAlign,
           style: (compact ? tt.bodySmall : tt.bodyLarge)?.copyWith(
             color: cs.onSurfaceVariant,
           ),
         );
       case RemoteBlock.transport:
-        return _buttons(context, s, compact: compact);
+        return _buttons(context, s, e);
       case RemoteBlock.volume:
-        final volume = _volume(context, s);
+        final volume = e.choice('style') == 'buttons'
+            ? _volumeButtons(context, s)
+            : _volume(context, s);
         return compact
             ? SizedBox(width: math.min(240.0, slot.maxWidth), child: volume)
             : volume;
       case RemoteBlock.speed:
         final speed = _speed(s);
-        final picker = TextButton.icon(
-          key: const Key('remote-speed'),
-          onPressed: () => _pickSpeed(s),
-          icon: const Icon(Icons.speed_rounded),
-          label: Text('${_speedLabel(speed)}x'),
-        );
+        final presets = [
+          for (final v in e.picked('presets'))
+            if (double.tryParse(v) case final d?) d,
+        ];
+        final picker = outlined
+            ? OutlinedButton.icon(
+                key: const Key('remote-speed'),
+                onPressed: () => _pickSpeed(s, presets),
+                icon: const Icon(Icons.speed_rounded),
+                label: Text('${_speedLabel(speed)}x'),
+              )
+            : TextButton.icon(
+                key: const Key('remote-speed'),
+                onPressed: () => _pickSpeed(s, presets),
+                icon: const Icon(Icons.speed_rounded),
+                label: Text('${_speedLabel(speed)}x'),
+              );
         if (compact) return picker;
         return Row(
           mainAxisSize: MainAxisSize.min,
@@ -904,7 +1238,7 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
           const Key('remote-sleep'),
           s.sleep.isActive ? Icons.bedtime_rounded : Icons.bedtime_outlined,
           _sleepLabel(l, s.sleep),
-          () => _pickSleep(s),
+          () => _pickSleep(s, e.picked('presets')),
         );
       case RemoteBlock.chapters:
         return action(
@@ -935,13 +1269,30 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
           () => _send(const StopCommand()),
         );
       case RemoteBlock.clock:
-        return RemoteClockText(
+        final clock = RemoteClockText(
           key: const Key('remote-clock'),
-          use24Hour: _displayOptions.use24Hour,
-          textAlign: TextAlign.center,
+          hours: e.choice('hours'),
+          showDate: e.flag('date'),
+          textAlign: textAlign,
           style: compact
               ? tt.titleLarge
+              : large
+              ? tt.displayLarge?.copyWith(fontWeight: FontWeight.w300)
               : tt.displaySmall?.copyWith(fontWeight: FontWeight.w300),
+          dateStyle: (large ? tt.titleMedium : tt.bodyMedium)?.copyWith(
+            color: cs.onSurfaceVariant,
+          ),
+        );
+        if (!large) return clock;
+        // The big clock shrinks rather than overflow a narrow column.
+        return FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: switch (textAlign) {
+            TextAlign.left => Alignment.centerLeft,
+            TextAlign.right => Alignment.centerRight,
+            _ => Alignment.center,
+          },
+          child: clock,
         );
       case RemoteBlock.spacer:
         return SizedBox(height: compact ? 12 : 32);
@@ -949,33 +1300,42 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
   }
 
   /// "12:34 left in the chapter" (or in the book), at the current speed.
-  String _timeLeftText(AppLocalizations l, RemotePlayerState s) {
-    final chapter = s.hasChapter;
+  String _timeLeftText(
+    AppLocalizations l,
+    RemotePlayerState s, {
+    bool book = false,
+  }) {
+    final chapter = s.hasChapter && !book;
     final end = chapter ? s.chapterEnd : s.duration;
     final speed = s.speed > 0 ? s.speed : 1.0;
     final left = fmtTime((end - s.position).clamp(0, double.infinity) / speed);
     return chapter ? l.remoteChapterTimeLeft(left) : l.remoteTimeLeft(left);
   }
 
-  Widget _volume(BuildContext context, RemotePlayerState s) {
+  Widget _muteButton(BuildContext context, RemotePlayerState s, double shown) {
     final l = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
+    return IconButton(
+      key: const Key('remote-mute'),
+      tooltip: s.muted ? l.remoteUnmute : l.remoteMute,
+      onPressed: () => _send(MuteCommand(!s.muted)),
+      icon: Icon(
+        s.muted || shown == 0
+            ? Icons.volume_off_rounded
+            : shown < 0.5
+            ? Icons.volume_down_rounded
+            : Icons.volume_up_rounded,
+        color: cs.onSurfaceVariant,
+      ),
+    );
+  }
+
+  Widget _volume(BuildContext context, RemotePlayerState s) {
+    final l = AppLocalizations.of(context)!;
     final shown = s.muted ? 0.0 : (_volumeDrag ?? s.volume);
     return Row(
       children: [
-        IconButton(
-          key: const Key('remote-mute'),
-          tooltip: s.muted ? l.remoteUnmute : l.remoteMute,
-          onPressed: () => _send(MuteCommand(!s.muted)),
-          icon: Icon(
-            s.muted || shown == 0
-                ? Icons.volume_off_rounded
-                : shown < 0.5
-                ? Icons.volume_down_rounded
-                : Icons.volume_up_rounded,
-            color: cs.onSurfaceVariant,
-          ),
-        ),
+        _muteButton(context, s, shown),
         Expanded(
           child: Semantics(
             label: l.remoteVolume,
@@ -994,15 +1354,79 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
     );
   }
 
-  /// Previous chapter, back, play/pause, forward, next chapter; [compact]
-  /// draws them smaller.
+  /// The volume the last − or + tap asked for, until the host shows it (so
+  /// quick taps add up).
+  double _volumeNow(RemotePlayerState s) {
+    final target = _volumeTarget;
+    final at = _volumeAt;
+    if (target != null && at != null) {
+      final recent = DateTime.now().difference(at) < const Duration(seconds: 2);
+      if (recent && (s.volume - target).abs() > 0.001) return target;
+      _volumeTarget = null;
+      _volumeAt = null;
+    }
+    return s.volume;
+  }
+
+  /// The volume as − and + buttons (10% steps) around the percentage.
+  Widget _volumeButtons(BuildContext context, RemotePlayerState s) {
+    final l = AppLocalizations.of(context)!;
+    final volume = _volumeNow(s);
+    final shown = s.muted ? 0.0 : volume;
+    void step(int direction) {
+      final next = double.parse(
+        (((volume * 10).round() + direction) / 10)
+            .clamp(0.0, 1.0)
+            .toStringAsFixed(1),
+      );
+      _send(VolumeCommand(next));
+      setState(() {
+        _volumeTarget = next;
+        _volumeAt = DateTime.now();
+      });
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _muteButton(context, s, shown),
+        IconButton(
+          key: const Key('remote-volume-down'),
+          tooltip: l.remoteVolumeDown,
+          onPressed: volume > 0.001 ? () => step(-1) : null,
+          icon: const Icon(Icons.remove_rounded),
+        ),
+        Flexible(
+          child: Text(
+            '${(shown * 100).round()}%',
+            key: const Key('remote-volume-value'),
+            maxLines: 1,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+        IconButton(
+          key: const Key('remote-volume-up'),
+          tooltip: l.remoteVolumeUp,
+          onPressed: volume < 0.999 ? () => step(1) : null,
+          icon: const Icon(Icons.add_rounded),
+        ),
+      ],
+    );
+  }
+
+  /// Previous chapter, back, play/pause, forward, next chapter (those the
+  /// block shows); compact draws them smaller. The play button follows the
+  /// Look's button style.
   Widget _buttons(
     BuildContext context,
-    RemotePlayerState s, {
-    bool compact = false,
-  }) {
+    RemotePlayerState s,
+    RemoteBlockEntry e,
+  ) {
     final l = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
+    final compact = e.size == RemoteBlockSize.compact;
+    final shown = e.picked('buttons');
+    final seconds = e.flag('skipSeconds');
     final size = compact ? 44.0 : 56.0;
     final play = compact ? 52.0 : 68.0;
     final glyph = compact ? 28.0 : 34.0;
@@ -1023,9 +1447,27 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
             ),
           ),
         );
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
+    final style = _look.buttons;
+    final playIcon = s.buffering && !s.playing
+        ? Center(
+            child: SizedBox(
+              width: 26,
+              height: 26,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: cs.primary,
+              ),
+            ),
+          )
+        : Icon(
+            s.playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
+            size: style == RemoteButtonStyle.plain ? glyph * 1.4 : glyph,
+            color: style == RemoteButtonStyle.filled
+                ? cs.surface
+                : cs.onSurface,
+          );
+    final children = <Widget>[
+      if (shown.contains('prev'))
         button(
           l.remotePreviousChapter,
           const Key('remote-prev-chapter'),
@@ -1036,12 +1478,20 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
           ),
           () => _send(const ChapterCommand(-1)),
         ),
+      if (shown.contains('back'))
         button(
           l.remoteSkipBack(s.skipBack),
           const Key('remote-skip-back'),
-          _skipIcon(context, s.skipBack, forward: false, compact: compact),
+          _skipIcon(
+            context,
+            s.skipBack,
+            forward: false,
+            compact: compact,
+            showSeconds: seconds,
+          ),
           () => _send(SkipCommand(-s.skipBack)),
         ),
+      if (shown.contains('play'))
         Flexible(
           child: Semantics(
             button: true,
@@ -1053,45 +1503,43 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
               child: Container(
                 width: play,
                 height: play,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: cs.onSurface,
-                  boxShadow: [
-                    BoxShadow(
-                      color: cs.primary.withValues(alpha: 0.4),
-                      blurRadius: 25,
-                      spreadRadius: -5,
-                    ),
-                  ],
-                ),
-                child: s.buffering && !s.playing
-                    ? Center(
-                        child: SizedBox(
-                          width: 26,
-                          height: 26,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: cs.primary,
-                          ),
-                        ),
-                      )
-                    : Icon(
-                        s.playing
-                            ? Icons.pause_rounded
-                            : Icons.play_arrow_rounded,
-                        size: glyph,
-                        color: cs.surface,
+                decoration: switch (style) {
+                  RemoteButtonStyle.filled => BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: cs.onSurface,
+                    boxShadow: [
+                      BoxShadow(
+                        color: cs.primary.withValues(alpha: 0.4),
+                        blurRadius: 25,
+                        spreadRadius: -5,
                       ),
+                    ],
+                  ),
+                  RemoteButtonStyle.outlined => BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: cs.onSurface, width: 2),
+                  ),
+                  RemoteButtonStyle.plain => null,
+                },
+                child: playIcon,
               ),
             ),
           ),
         ),
+      if (shown.contains('forward'))
         button(
           l.remoteSkipForward(s.skipForward),
           const Key('remote-skip-forward'),
-          _skipIcon(context, s.skipForward, forward: true, compact: compact),
+          _skipIcon(
+            context,
+            s.skipForward,
+            forward: true,
+            compact: compact,
+            showSeconds: seconds,
+          ),
           () => _send(SkipCommand(s.skipForward)),
         ),
+      if (shown.contains('next'))
         button(
           l.remoteNextChapter,
           const Key('remote-next-chapter'),
@@ -1102,21 +1550,36 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
           ),
           () => _send(const ChapterCommand(1)),
         ),
-      ],
+    ];
+    return Row(
+      // All five spread edge to edge as always; fewer sit evenly.
+      mainAxisAlignment: children.length == 5
+          ? MainAxisAlignment.spaceBetween
+          : MainAxisAlignment.spaceEvenly,
+      children: children,
     );
   }
 
   /// The player's skip glyphs: the built-in 5/10/30 icons, otherwise the
-  /// rotate arrow with the number (as on the Absorbing card).
+  /// rotate arrow with the number (as on the Absorbing card); without
+  /// [showSeconds], the arrow alone.
   Widget _skipIcon(
     BuildContext context,
     int seconds, {
     required bool forward,
     bool compact = false,
+    bool showSeconds = true,
   }) {
     final cs = Theme.of(context).colorScheme;
     final color = cs.onSurface.withValues(alpha: 0.7);
     final size = compact ? 34.0 : 42.0;
+    if (!showSeconds) {
+      return Icon(
+        forward ? Icons.rotate_right_rounded : Icons.rotate_left_rounded,
+        size: size,
+        color: color,
+      );
+    }
     if (seconds == 5 || seconds == 10 || seconds == 30) {
       final icon = forward
           ? (seconds == 5
@@ -1189,7 +1652,8 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
     );
   }
 
-  Future<void> _pickSpeed(RemotePlayerState s) async {
+  /// The speed picker with the block's [presets].
+  Future<void> _pickSpeed(RemotePlayerState s, List<double> presets) async {
     final l = AppLocalizations.of(context)!;
     final picked = await showAdaptiveActionMenu<double>(
       context: context,
@@ -1212,8 +1676,9 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  for (final v in _speeds)
+                  for (final v in presets)
                     ChoiceChip(
+                      key: Key('remote-speed-preset-${_speedLabel(v)}'),
                       label: Text('${_speedLabel(v)}x'),
                       selected: (s.speed - v).abs() < 0.001,
                       onSelected: (_) => Navigator.pop(ctx, v),
@@ -1228,7 +1693,9 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
     if (picked != null) _send(SpeedCommand(picked));
   }
 
-  Future<void> _pickSleep(RemotePlayerState s) async {
+  /// The sleep timer picker with the block's [presets] (minutes, and
+  /// `chapter` for the end of the chapter).
+  Future<void> _pickSleep(RemotePlayerState s, List<String> presets) async {
     final l = AppLocalizations.of(context)!;
     final picked = await showAdaptiveActionMenu<SleepCommand>(
       context: context,
@@ -1245,18 +1712,22 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
                   style: Theme.of(ctx).textTheme.titleMedium,
                 ),
               ),
-              for (final m in _sleepMinutes)
+              for (final p in presets)
+                if (int.tryParse(p) case final m?)
+                  ListTile(
+                    key: Key('remote-sleep-preset-$p'),
+                    leading: const Icon(Icons.timer_outlined),
+                    title: Text(l.remoteSleepMinutes(m)),
+                    onTap: () => Navigator.pop(ctx, SleepCommand.minutes(m)),
+                  ),
+              if (presets.contains('chapter'))
                 ListTile(
-                  leading: const Icon(Icons.timer_outlined),
-                  title: Text(l.remoteSleepMinutes(m)),
-                  onTap: () => Navigator.pop(ctx, SleepCommand.minutes(m)),
+                  key: const Key('remote-sleep-preset-chapter'),
+                  leading: const Icon(Icons.bookmark_outline_rounded),
+                  title: Text(l.remoteSleepEndOfChapter),
+                  onTap: () =>
+                      Navigator.pop(ctx, const SleepCommand.endOfChapter()),
                 ),
-              ListTile(
-                leading: const Icon(Icons.bookmark_outline_rounded),
-                title: Text(l.remoteSleepEndOfChapter),
-                onTap: () =>
-                    Navigator.pop(ctx, const SleepCommand.endOfChapter()),
-              ),
               if (s.sleep.isActive)
                 ListTile(
                   leading: const Icon(Icons.timer_off_outlined),
@@ -1428,216 +1899,6 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
         ],
       ),
       onTap: onTap ?? () => _send(PlayItemCommand(item.id)),
-    );
-  }
-
-  // ── Display mode ──────────────────────────────────────────────────
-
-  /// The display mode: a clock, what's playing and how long is left, big
-  /// and readable from across the room; two columns in landscape. Its
-  /// options ([RemoteDisplayOptions]) are set in Customize.
-  Widget _displayMode(BuildContext context, RemotePlayerState? s) {
-    final o = _displayOptions;
-    final base = Theme.of(context);
-    final dark = o.background != RemoteDisplayBackground.theme;
-    // Light text on the black or blurred background, whatever the theme.
-    final theme = dark
-        ? base.copyWith(
-            colorScheme: base.colorScheme.copyWith(
-              surface: Colors.black,
-              onSurface: Colors.white,
-              onSurfaceVariant: Colors.white70,
-            ),
-            textTheme: base.textTheme.apply(
-              bodyColor: Colors.white,
-              displayColor: Colors.white,
-            ),
-          )
-        : base;
-    final mq = MediaQuery.of(context);
-    final bytes = _client.cover;
-    return Theme(
-      data: theme,
-      child: Scaffold(
-        backgroundColor: dark ? Colors.black : null,
-        body: GestureDetector(
-          key: const Key('remote-display'),
-          behavior: HitTestBehavior.opaque,
-          onTap: _onDisplayTap,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              if (o.background == RemoteDisplayBackground.cover &&
-                  bytes != null) ...[
-                ImageFiltered(
-                  key: const Key('remote-display-blur'),
-                  imageFilter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-                  child: Image.memory(
-                    bytes,
-                    fit: BoxFit.cover,
-                    gaplessPlayback: true,
-                    errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-                  ),
-                ),
-                ColoredBox(color: Colors.black.withValues(alpha: 0.55)),
-              ],
-              SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: MediaQuery(
-                    data: mq.copyWith(
-                      textScaler: TextScaler.linear(
-                        mq.textScaler.scale(1) * o.textSize.scale,
-                      ),
-                    ),
-                    child: Builder(
-                      builder: (context) => _displayBody(context, s),
-                    ),
-                  ),
-                ),
-              ),
-              if (_dimmed)
-                IgnorePointer(
-                  child: ColoredBox(
-                    key: const Key('remote-display-dim'),
-                    color: Colors.black.withValues(alpha: 0.8),
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _displayBody(BuildContext context, RemotePlayerState? s) {
-    final l = AppLocalizations.of(context)!;
-    final cs = Theme.of(context).colorScheme;
-    final tt = Theme.of(context).textTheme;
-    final o = _displayOptions;
-    final List<Widget> details;
-    if (_client.phase != RemoteLinkPhase.connected) {
-      details = [
-        Text(
-          l.remoteReconnecting,
-          style: tt.titleLarge?.copyWith(color: cs.onSurfaceVariant),
-        ),
-      ];
-    } else if (s == null || !s.hasItem) {
-      details = [
-        Text(
-          l.remoteNothingPlaying(_client.hostName),
-          style: tt.titleLarge?.copyWith(color: cs.onSurfaceVariant),
-        ),
-      ];
-    } else {
-      final chapter = s.hasChapter;
-      final start = chapter ? s.chapterStart : 0.0;
-      final end = chapter ? s.chapterEnd : s.duration;
-      final span = end - start;
-      final progress = span > 0
-          ? ((s.position - start) / span).clamp(0.0, 1.0)
-          : 0.0;
-      details = [
-        Text(
-          chapter && s.chapterTitle.isNotEmpty ? s.chapterTitle : s.title,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: tt.headlineSmall?.copyWith(fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          chapter ? s.title : s.author,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: tt.bodyLarge?.copyWith(color: cs.onSurfaceVariant),
-        ),
-        const SizedBox(height: 20),
-        LinearProgressIndicator(
-          value: progress,
-          minHeight: 6,
-          borderRadius: BorderRadius.circular(3),
-          backgroundColor: cs.primary.withValues(alpha: 0.15),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          _timeLeftText(l, s),
-          style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
-        ),
-      ];
-    }
-    return LayoutBuilder(
-      builder: (context, c) {
-        final wide = c.maxWidth > c.maxHeight;
-        final info = Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: wide
-              ? CrossAxisAlignment.start
-              : CrossAxisAlignment.stretch,
-          children: [
-            if (o.showClock) ...[
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: wide ? Alignment.centerLeft : Alignment.center,
-                child: RemoteClockText(
-                  key: const Key('remote-display-clock'),
-                  use24Hour: o.use24Hour,
-                  style: tt.displayLarge?.copyWith(fontWeight: FontWeight.w300),
-                ),
-              ),
-              const SizedBox(height: 16),
-            ],
-            ...details,
-            const SizedBox(height: 24),
-            Text(
-              l.remoteDisplayExit,
-              textAlign: wide ? TextAlign.start : TextAlign.center,
-              style: tt.bodySmall?.copyWith(
-                color: cs.onSurfaceVariant.withValues(alpha: 0.6),
-              ),
-            ),
-          ],
-        );
-        if (wide) {
-          // Cover sized to the height on the left, the rest beside it.
-          final side = math.min(c.maxHeight, c.maxWidth * 0.45);
-          return Row(
-            children: [
-              SizedBox(width: side, child: _cover(context, radius: 20)),
-              const SizedBox(width: 32),
-              Expanded(
-                child: LayoutBuilder(
-                  builder: (context, inner) => SingleChildScrollView(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(minHeight: inner.maxHeight),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: info,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          );
-        }
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Flexible(
-              child: SizedBox(
-                width: math.min(c.maxWidth, 520.0) * 0.85,
-                child: _cover(context, radius: 20),
-              ),
-            ),
-            const SizedBox(height: 24),
-            ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: c.maxHeight * 0.6),
-              child: SingleChildScrollView(child: info),
-            ),
-          ],
-        );
-      },
     );
   }
 }

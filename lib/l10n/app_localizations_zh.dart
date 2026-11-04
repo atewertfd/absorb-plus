@@ -14884,12 +14884,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get remoteConnectAgain => '重新连接';
 
   @override
-  String get remoteDisplayMode => '显示模式';
-
-  @override
-  String get remoteDisplayExit => '点击退出显示模式';
-
-  @override
   String get remotePlay => '播放';
 
   @override
@@ -15110,9 +15104,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get remoteDisplayTextHuge => '超大';
 
   @override
-  String get remoteDisplayShowClock => '显示时钟';
-
-  @override
   String get remoteDisplay24Hour => '24 小时制';
 
   @override
@@ -15120,6 +15111,164 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get remoteDisplayDimNever => '从不';
+
+  @override
+  String get remoteFullScreen => 'Full screen';
+
+  @override
+  String get remoteFullScreenHint => 'Tap empty space to exit full screen';
+
+  @override
+  String get remoteBlockOptions => 'Options';
+
+  @override
+  String get remoteOptSize => 'Size';
+
+  @override
+  String get remoteOptAlign => 'Alignment';
+
+  @override
+  String get remoteOptAlignLeft => 'Left';
+
+  @override
+  String get remoteOptAlignCenter => 'Center';
+
+  @override
+  String get remoteOptAlignRight => 'Right';
+
+  @override
+  String get remoteOptGap => 'Space above';
+
+  @override
+  String get remoteOptDefault => 'Default';
+
+  @override
+  String get remoteOptNone => 'None';
+
+  @override
+  String get remoteOptCorners => 'Corners';
+
+  @override
+  String get remoteOptCornersSquare => 'Square';
+
+  @override
+  String get remoteOptCornersRounded => 'Rounded';
+
+  @override
+  String get remoteOptCornersCircle => 'Circle';
+
+  @override
+  String get remoteOptShadow => 'Shadow';
+
+  @override
+  String get remoteOptLines => 'Lines';
+
+  @override
+  String get remoteOptTime => 'Time on the right';
+
+  @override
+  String get remoteOptTimeTotal => 'Total length';
+
+  @override
+  String get remoteOptSpan => 'Range';
+
+  @override
+  String get remoteOptSpanChapter => 'Chapter';
+
+  @override
+  String get remoteOptSpanBook => 'Whole book';
+
+  @override
+  String get remoteOptButtons => 'Buttons';
+
+  @override
+  String get remoteOptButtonBack => 'Skip back';
+
+  @override
+  String get remoteOptButtonPlay => 'Play/pause';
+
+  @override
+  String get remoteOptButtonForward => 'Skip forward';
+
+  @override
+  String get remoteOptSkipSeconds => 'Show the skip seconds';
+
+  @override
+  String get remoteOptStyle => 'Style';
+
+  @override
+  String get remoteOptStyleSlider => 'Slider';
+
+  @override
+  String get remoteOptStyleButtons => '− and + buttons';
+
+  @override
+  String get remoteOptPresets => 'Choices';
+
+  @override
+  String get remoteOptHours => 'Clock format';
+
+  @override
+  String get remoteOptHoursPhone => 'Phone setting';
+
+  @override
+  String get remoteOpt12Hour => '12-hour clock';
+
+  @override
+  String get remoteOptDate => 'Show the date';
+
+  @override
+  String get remoteVolumeDown => 'Volume down';
+
+  @override
+  String get remoteVolumeUp => 'Volume up';
+
+  @override
+  String get remoteLook => 'Look';
+
+  @override
+  String get remoteLookAccent => 'Accent color';
+
+  @override
+  String get remoteLookAccentCover => 'From cover';
+
+  @override
+  String get remoteLookAccentTheme => 'App theme';
+
+  @override
+  String remoteLookSwatch(int number) {
+    return 'Color $number';
+  }
+
+  @override
+  String get remoteLookBackgroundGradient => 'Soft gradient';
+
+  @override
+  String get remoteLookButtons => 'Button style';
+
+  @override
+  String get remoteLookButtonsFilled => 'Filled';
+
+  @override
+  String get remoteLookButtonsOutlined => 'Outlined';
+
+  @override
+  String get remoteLookButtonsPlain => 'Plain';
+
+  @override
+  String get remoteLookCornersSharp => 'Sharp';
+
+  @override
+  String get remoteLookCornersExtra => 'Extra round';
+
+  @override
+  String get remoteLookSpacing => 'Spacing';
+
+  @override
+  String get remoteLookSpacingComfortable => 'Comfortable';
+
+  @override
+  String get remoteLookReset => 'Reset look';
 
   @override
   String get quickSwitcherKeywordsRemote =>

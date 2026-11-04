@@ -25977,18 +25977,6 @@ abstract class AppLocalizations {
   /// **'Connect again'**
   String get remoteConnectAgain;
 
-  /// No description provided for @remoteDisplayMode.
-  ///
-  /// In en, this message translates to:
-  /// **'Display mode'**
-  String get remoteDisplayMode;
-
-  /// No description provided for @remoteDisplayExit.
-  ///
-  /// In en, this message translates to:
-  /// **'Tap to leave display mode'**
-  String get remoteDisplayExit;
-
   /// No description provided for @remotePlay.
   ///
   /// In en, this message translates to:
@@ -26385,12 +26373,6 @@ abstract class AppLocalizations {
   /// **'Huge'**
   String get remoteDisplayTextHuge;
 
-  /// Phone remote display mode option.
-  ///
-  /// In en, this message translates to:
-  /// **'Show the clock'**
-  String get remoteDisplayShowClock;
-
   /// Phone remote display mode option; off follows the phone's setting.
   ///
   /// In en, this message translates to:
@@ -26408,6 +26390,318 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Never'**
   String get remoteDisplayDimNever;
+
+  /// Phone remote: shows the same layout without the app bar and system bars, keeping the screen on.
+  ///
+  /// In en, this message translates to:
+  /// **'Full screen'**
+  String get remoteFullScreen;
+
+  /// No description provided for @remoteFullScreenHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap empty space to exit full screen'**
+  String get remoteFullScreenHint;
+
+  /// Phone remote edit mode: opens a block's own options.
+  ///
+  /// In en, this message translates to:
+  /// **'Options'**
+  String get remoteBlockOptions;
+
+  /// No description provided for @remoteOptSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get remoteOptSize;
+
+  /// No description provided for @remoteOptAlign.
+  ///
+  /// In en, this message translates to:
+  /// **'Alignment'**
+  String get remoteOptAlign;
+
+  /// No description provided for @remoteOptAlignLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get remoteOptAlignLeft;
+
+  /// No description provided for @remoteOptAlignCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Center'**
+  String get remoteOptAlignCenter;
+
+  /// No description provided for @remoteOptAlignRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Right'**
+  String get remoteOptAlignRight;
+
+  /// No description provided for @remoteOptGap.
+  ///
+  /// In en, this message translates to:
+  /// **'Space above'**
+  String get remoteOptGap;
+
+  /// No description provided for @remoteOptDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get remoteOptDefault;
+
+  /// No description provided for @remoteOptNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get remoteOptNone;
+
+  /// No description provided for @remoteOptCorners.
+  ///
+  /// In en, this message translates to:
+  /// **'Corners'**
+  String get remoteOptCorners;
+
+  /// No description provided for @remoteOptCornersSquare.
+  ///
+  /// In en, this message translates to:
+  /// **'Square'**
+  String get remoteOptCornersSquare;
+
+  /// No description provided for @remoteOptCornersRounded.
+  ///
+  /// In en, this message translates to:
+  /// **'Rounded'**
+  String get remoteOptCornersRounded;
+
+  /// No description provided for @remoteOptCornersCircle.
+  ///
+  /// In en, this message translates to:
+  /// **'Circle'**
+  String get remoteOptCornersCircle;
+
+  /// No description provided for @remoteOptShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Shadow'**
+  String get remoteOptShadow;
+
+  /// No description provided for @remoteOptLines.
+  ///
+  /// In en, this message translates to:
+  /// **'Lines'**
+  String get remoteOptLines;
+
+  /// Phone remote progress bar option: show the time left or the total length on the right.
+  ///
+  /// In en, this message translates to:
+  /// **'Time on the right'**
+  String get remoteOptTime;
+
+  /// No description provided for @remoteOptTimeTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total length'**
+  String get remoteOptTimeTotal;
+
+  /// Phone remote option: whether the bar or time counts the chapter or the whole book.
+  ///
+  /// In en, this message translates to:
+  /// **'Range'**
+  String get remoteOptSpan;
+
+  /// No description provided for @remoteOptSpanChapter.
+  ///
+  /// In en, this message translates to:
+  /// **'Chapter'**
+  String get remoteOptSpanChapter;
+
+  /// No description provided for @remoteOptSpanBook.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole book'**
+  String get remoteOptSpanBook;
+
+  /// No description provided for @remoteOptButtons.
+  ///
+  /// In en, this message translates to:
+  /// **'Buttons'**
+  String get remoteOptButtons;
+
+  /// No description provided for @remoteOptButtonBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip back'**
+  String get remoteOptButtonBack;
+
+  /// No description provided for @remoteOptButtonPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play/pause'**
+  String get remoteOptButtonPlay;
+
+  /// No description provided for @remoteOptButtonForward.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip forward'**
+  String get remoteOptButtonForward;
+
+  /// No description provided for @remoteOptSkipSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the skip seconds'**
+  String get remoteOptSkipSeconds;
+
+  /// No description provided for @remoteOptStyle.
+  ///
+  /// In en, this message translates to:
+  /// **'Style'**
+  String get remoteOptStyle;
+
+  /// No description provided for @remoteOptStyleSlider.
+  ///
+  /// In en, this message translates to:
+  /// **'Slider'**
+  String get remoteOptStyleSlider;
+
+  /// No description provided for @remoteOptStyleButtons.
+  ///
+  /// In en, this message translates to:
+  /// **'− and + buttons'**
+  String get remoteOptStyleButtons;
+
+  /// Phone remote speed or sleep timer option: which choices its picker shows.
+  ///
+  /// In en, this message translates to:
+  /// **'Choices'**
+  String get remoteOptPresets;
+
+  /// No description provided for @remoteOptHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Clock format'**
+  String get remoteOptHours;
+
+  /// No description provided for @remoteOptHoursPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone setting'**
+  String get remoteOptHoursPhone;
+
+  /// No description provided for @remoteOpt12Hour.
+  ///
+  /// In en, this message translates to:
+  /// **'12-hour clock'**
+  String get remoteOpt12Hour;
+
+  /// No description provided for @remoteOptDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the date'**
+  String get remoteOptDate;
+
+  /// No description provided for @remoteVolumeDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume down'**
+  String get remoteVolumeDown;
+
+  /// No description provided for @remoteVolumeUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume up'**
+  String get remoteVolumeUp;
+
+  /// Phone remote edit mode: the whole remote's colours, background, buttons and text size.
+  ///
+  /// In en, this message translates to:
+  /// **'Look'**
+  String get remoteLook;
+
+  /// No description provided for @remoteLookAccent.
+  ///
+  /// In en, this message translates to:
+  /// **'Accent color'**
+  String get remoteLookAccent;
+
+  /// No description provided for @remoteLookAccentCover.
+  ///
+  /// In en, this message translates to:
+  /// **'From cover'**
+  String get remoteLookAccentCover;
+
+  /// No description provided for @remoteLookAccentTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'App theme'**
+  String get remoteLookAccentTheme;
+
+  /// No description provided for @remoteLookSwatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Color {number}'**
+  String remoteLookSwatch(int number);
+
+  /// No description provided for @remoteLookBackgroundGradient.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft gradient'**
+  String get remoteLookBackgroundGradient;
+
+  /// No description provided for @remoteLookButtons.
+  ///
+  /// In en, this message translates to:
+  /// **'Button style'**
+  String get remoteLookButtons;
+
+  /// No description provided for @remoteLookButtonsFilled.
+  ///
+  /// In en, this message translates to:
+  /// **'Filled'**
+  String get remoteLookButtonsFilled;
+
+  /// No description provided for @remoteLookButtonsOutlined.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlined'**
+  String get remoteLookButtonsOutlined;
+
+  /// No description provided for @remoteLookButtonsPlain.
+  ///
+  /// In en, this message translates to:
+  /// **'Plain'**
+  String get remoteLookButtonsPlain;
+
+  /// No description provided for @remoteLookCornersSharp.
+  ///
+  /// In en, this message translates to:
+  /// **'Sharp'**
+  String get remoteLookCornersSharp;
+
+  /// No description provided for @remoteLookCornersExtra.
+  ///
+  /// In en, this message translates to:
+  /// **'Extra round'**
+  String get remoteLookCornersExtra;
+
+  /// No description provided for @remoteLookSpacing.
+  ///
+  /// In en, this message translates to:
+  /// **'Spacing'**
+  String get remoteLookSpacing;
+
+  /// No description provided for @remoteLookSpacingComfortable.
+  ///
+  /// In en, this message translates to:
+  /// **'Comfortable'**
+  String get remoteLookSpacingComfortable;
+
+  /// No description provided for @remoteLookReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset look'**
+  String get remoteLookReset;
 
   /// No description provided for @quickSwitcherKeywordsRemote.
   ///

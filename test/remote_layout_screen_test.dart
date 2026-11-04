@@ -11,8 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/remote_link_fakes.dart';
 
-/// The phone remote's customizable layout, edit mode, landscape and
-/// display-mode options, against a fake link.
+/// The phone remote's customizable layout, block options, edit mode,
+/// landscape, full screen and the Look, against a fake link.
 
 Future<RemoteLayout> _saved() async {
   final prefs = await SharedPreferences.getInstance();
@@ -20,14 +20,15 @@ Future<RemoteLayout> _saved() async {
   return RemoteLayout.fromJson(raw == null ? null : jsonDecode(raw));
 }
 
-Future<RemoteDisplayOptions> _savedDisplay() async {
+Future<RemoteLook> _savedLook() async {
   final prefs = await SharedPreferences.getInstance();
-  final raw = prefs.getString(RemoteLayoutStore.displayKey);
-  return RemoteDisplayOptions.fromJson(raw == null ? null : jsonDecode(raw));
+  final raw = prefs.getString(RemoteLayoutStore.lookKey);
+  return RemoteLook.fromJson(raw == null ? null : jsonDecode(raw));
 }
 
 const _phone = Size(1080, 2400);
 const _landscape = Size(1600, 900); // 640 x 360 at 2.5x
+const _small = Size(900, 1600); // 360 x 640 at 2.5x
 
 Future<FakeClient> _open(
   WidgetTester tester, {
@@ -129,7 +130,15 @@ void main() {
         await tester.ensureVisible(find.byKey(Key(k)));
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(Key(k)), warnIfMissed: false);
-        await tester.pump();
+        await tester.pumpAndSettle();
+        // The tap opened the block's options instead.
+        expect(
+          find.byType(SwitchListTile).evaluate().isNotEmpty ||
+              find.byType(ChoiceChip).evaluate().isNotEmpty,
+          isTrue,
+        );
+        await tester.binding.handlePopRoute();
+        await tester.pumpAndSettle();
       }
       expect(client.sent, isEmpty);
 
@@ -266,7 +275,7 @@ void main() {
         });
       }
 
-      testWidgets('two columns and display mode at ${scale}x text', (
+      testWidgets('two columns, also in full screen, at ${scale}x text', (
         tester,
       ) async {
         await _open(tester, size: _landscape, textScale: scale);
@@ -279,11 +288,12 @@ void main() {
         expect(play.dx, greaterThan(640 * 0.45));
         expect(tester.takeException(), isNull);
 
-        await tester.tap(find.byKey(const Key('remote-display-mode')));
+        await tester.tap(find.byKey(const Key('remote-full-screen-button')));
         await tester.pump();
         expect(tester.takeException(), isNull);
+        expect(find.byType(AppBar), findsNothing);
         expect(
-          tester.getCenter(find.byKey(const Key('remote-display-clock'))).dx,
+          tester.getCenter(find.byKey(const Key('remote-play-pause'))).dx,
           greaterThan(640 * 0.45),
         );
         await tester.pumpWidget(const SizedBox());
@@ -291,70 +301,436 @@ void main() {
     }
   });
 
-  group('display mode options', () {
-    testWidgets('set in Customize: no clock, black, dims after 5 min', (
+  group('block options', () {
+    Future<void> edit(WidgetTester tester) async {
+      await tester.tap(find.byKey(const Key('remote-customize')));
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> openOptions(WidgetTester tester, String block) async {
+      final gear = find.byKey(Key('remote-block-options-$block'));
+      await tester.ensureVisible(gear);
+      await tester.pumpAndSettle();
+      await tester.tap(gear);
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> tapOption(WidgetTester tester, String key) async {
+      final f = find.byKey(Key(key));
+      await tester.ensureVisible(f);
+      await tester.pumpAndSettle();
+      await tester.tap(f);
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> closeSheetAndFinish(WidgetTester tester) async {
+      Navigator.of(tester.element(find.byType(ListView).last)).pop();
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('remote-customize-done')));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('hidden playback buttons are not drawn; saved live', (
+      tester,
+    ) async {
+      final client = await _open(tester);
+      await edit(tester);
+      await openOptions(tester, 'transport');
+      await tapOption(tester, 'remote-opt-buttons-prev');
+      await tapOption(tester, 'remote-opt-buttons-next');
+      // Applied at once, behind the sheet, and saved.
+      final transport = (await _saved()).portrait.firstWhere(
+        (e) => e.block == RemoteBlock.transport,
+      );
+      expect(transport.picked('buttons'), ['back', 'play', 'forward']);
+      await tapOption(tester, 'remote-opt-skipSeconds');
+      await closeSheetAndFinish(tester);
+
+      expect(find.byKey(const Key('remote-prev-chapter')), findsNothing);
+      expect(find.byKey(const Key('remote-next-chapter')), findsNothing);
+      expect(find.byKey(const Key('remote-skip-back')), findsOneWidget);
+      await tester.tap(find.byKey(const Key('remote-play-pause')));
+      expect(client.sent.single, isA<ToggleCommand>());
+    });
+
+    testWidgets('the last shown button cannot be hidden', (tester) async {
+      SharedPreferences.setMockInitialValues({
+        RemoteLayoutStore.layoutKey: jsonEncode({
+          'version': 2,
+          'portrait': [
+            {
+              'block': 'transport',
+              'options': {
+                'buttons': ['play'],
+              },
+            },
+          ],
+        }),
+      });
+      await _open(tester);
+      await edit(tester);
+      await openOptions(tester, 'transport');
+      final chip = tester.widget<FilterChip>(
+        find.byKey(const Key('remote-opt-buttons-play')),
+      );
+      expect(chip.onSelected, isNull);
+    });
+
+    testWidgets('tapping a block opens its options: total time, book span', (
+      tester,
+    ) async {
+      await _open(tester);
+      await edit(tester);
+      final body = find.byKey(const Key('remote-block-body-progress'));
+      await tester.ensureVisible(body);
+      await tester.pumpAndSettle();
+      await tester.tap(body);
+      await tester.pumpAndSettle();
+      await tapOption(tester, 'remote-opt-time-total');
+      await closeSheetAndFinish(tester);
+      // The chapter runs 100-400 s.
+      expect(
+        tester
+            .widget<Text>(find.byKey(const Key('remote-progress-right')))
+            .data,
+        '05:00',
+      );
+    });
+
+    testWidgets('saved options: cover, title, speed and sleep choices', (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({
+        RemoteLayoutStore.layoutKey: jsonEncode({
+          'version': 2,
+          'portrait': [
+            {
+              'block': 'cover',
+              'options': {'corners': 'circle', 'shadow': true},
+            },
+            {
+              'block': 'titleAuthor',
+              'options': {'align': 'left'},
+            },
+            {
+              'block': 'timeLeft',
+              'options': {'span': 'book'},
+            },
+            {
+              'block': 'speed',
+              'options': {
+                'presets': ['1', '2'],
+              },
+            },
+            {
+              'block': 'sleep',
+              'options': {
+                'presets': ['5', 'chapter'],
+              },
+            },
+            {
+              'block': 'volume',
+              'options': {'style': 'buttons'},
+            },
+          ],
+        }),
+      });
+      final client = await _open(tester);
+      expect(find.byType(ClipOval), findsOneWidget);
+      expect(find.byKey(const Key('remote-cover-shadow')), findsOneWidget);
+      // Left-aligned title: it starts at the left padding.
+      expect(tester.getTopLeft(find.text('The Book')).dx, lessThan(40));
+      // (3600 - 150) s at 1.25x.
+      expect(find.text('46:00 left'), findsOneWidget);
+
+      await tester.tap(find.byKey(const Key('remote-speed')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('remote-speed-preset-1')), findsOneWidget);
+      expect(find.byKey(const Key('remote-speed-preset-2')), findsOneWidget);
+      expect(find.byKey(const Key('remote-speed-preset-1.5')), findsNothing);
+      await tester.tap(find.byKey(const Key('remote-speed-preset-2')));
+      await tester.pumpAndSettle();
+      expect(client.sent.last, isA<SpeedCommand>());
+
+      await tester.tap(find.byKey(const Key('remote-sleep')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('remote-sleep-preset-5')), findsOneWidget);
+      expect(find.byKey(const Key('remote-sleep-preset-15')), findsNothing);
+      expect(
+        find.byKey(const Key('remote-sleep-preset-chapter')),
+        findsOneWidget,
+      );
+      await tester.tap(find.byKey(const Key('remote-sleep-preset-5')));
+      await tester.pumpAndSettle();
+      expect(client.sent.last, isA<SleepCommand>());
+
+      // − and + volume buttons: 80% -> 90%.
+      expect(find.byKey(const Key('remote-volume')), findsNothing);
+      expect(find.text('80%'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('remote-volume-up')));
+      await tester.pump();
+      expect((client.sent.last as VolumeCommand).value, closeTo(0.9, 1e-9));
+      expect(find.text('90%'), findsOneWidget);
+    });
+  });
+
+  group('full screen', () {
+    // Left padding of the layout: empty space, no control.
+    const empty = Offset(4, 300);
+
+    testWidgets('the same layout without the app bar; a tap on empty space '
+        'enters and leaves, a tap on a control does not', (tester) async {
+      final client = await _open(tester);
+      expect(find.byType(AppBar), findsOneWidget);
+      await tester.tapAt(empty);
+      await tester.pump();
+      expect(find.byType(AppBar), findsNothing);
+      expect(find.byKey(const Key('remote-full-screen')), findsOneWidget);
+      // Same blocks as the normal screen.
+      expect(find.text('The Book'), findsOneWidget);
+      expect(find.byKey(const Key('remote-volume')), findsOneWidget);
+      // The first time, a hint says how to leave; it's remembered.
+      expect(find.text('Tap empty space to exit full screen'), findsOneWidget);
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getBool(RemoteLayoutStore.hintKey), isTrue);
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(seconds: 4));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('remote-play-pause')));
+      await tester.pump();
+      expect(client.sent.single, isA<ToggleCommand>());
+      expect(find.byType(AppBar), findsNothing);
+
+      await tester.tapAt(empty);
+      await tester.pumpAndSettle();
+      expect(find.byType(AppBar), findsOneWidget);
+
+      // The button enters too; no hint the second time.
+      await tester.tap(find.byKey(const Key('remote-full-screen-button')));
+      await tester.pump();
+      expect(find.byType(AppBar), findsNothing);
+      expect(find.text('Tap empty space to exit full screen'), findsNothing);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('Back leaves full screen, not the screen', (tester) async {
+      await _open(tester);
+      await tester.tap(find.byKey(const Key('remote-full-screen-button')));
+      await tester.pump();
+      expect(find.byType(AppBar), findsNothing);
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(find.byType(AppBar), findsOneWidget);
+      expect(find.byType(RemoteControlScreen), findsOneWidget);
+    });
+
+    testWidgets('no edit mode in full screen; a tap in edit mode stays', (
+      tester,
+    ) async {
+      await _open(tester);
+      await tester.tap(find.byKey(const Key('remote-full-screen-button')));
+      await tester.pump();
+      expect(find.byKey(const Key('remote-customize')), findsNothing);
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('remote-customize')));
+      await tester.pumpAndSettle();
+      await tester.tapAt(const Offset(4, 400));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('remote-customize-done')), findsOneWidget);
+      expect(find.byKey(const Key('remote-full-screen')), findsNothing);
+    });
+
+    testWidgets('dims after the Look\'s minutes; the first tap only wakes', (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({
+        RemoteLayoutStore.lookKey: jsonEncode(
+          const RemoteLook(dimAfterMinutes: 5).toJson(),
+        ),
+      });
+      await _open(tester);
+      await tester.tap(find.byKey(const Key('remote-full-screen-button')));
+      await tester.pump();
+      const dim = Key('remote-full-screen-dim');
+      expect(find.byKey(dim), findsNothing);
+      await tester.pump(const Duration(minutes: 5));
+      expect(find.byKey(dim), findsOneWidget);
+      await tester.tap(find.byKey(dim));
+      await tester.pump();
+      expect(find.byKey(dim), findsNothing);
+      expect(find.byKey(const Key('remote-full-screen')), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    });
+  });
+
+  group('look', () {
+    testWidgets('set from the edit toolbar, applied live, reset', (
       tester,
     ) async {
       await _open(tester);
       await tester.tap(find.byKey(const Key('remote-customize')));
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('remote-customize-display')));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('remote-display-show-clock')));
-      await tester.pumpAndSettle();
-      await tester.tap(
-        find.byKey(Key('remote-display-bg-${RemoteDisplayBackground.black}')),
-      );
-      await tester.pumpAndSettle();
-      await tester.ensureVisible(find.byKey(const Key('remote-display-dim-5')));
-      await tester.tap(find.byKey(const Key('remote-display-dim-5')));
-      await tester.pumpAndSettle();
-      expect(
-        await _savedDisplay(),
-        const RemoteDisplayOptions(
-          background: RemoteDisplayBackground.black,
-          showClock: false,
-          dimAfterMinutes: 5,
-        ),
-      );
-      Navigator.of(tester.element(find.text('Background'))).pop();
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('remote-customize-done')));
+      await tester.tap(find.byKey(const Key('remote-customize-look')));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byKey(const Key('remote-display-mode')));
-      await tester.pump();
-      expect(find.byKey(const Key('remote-display-clock')), findsNothing);
-      expect(find.byKey(const Key('remote-display-dim')), findsNothing);
-      await tester.pump(const Duration(minutes: 5));
-      expect(find.byKey(const Key('remote-display-dim')), findsOneWidget);
-      // The first tap only wakes it.
-      await tester.tap(find.byKey(const Key('remote-display')));
-      await tester.pump();
-      expect(find.byKey(const Key('remote-display-dim')), findsNothing);
-      expect(find.byKey(const Key('remote-display')), findsOneWidget);
-      await tester.tap(find.byKey(const Key('remote-display')));
-      await tester.pump();
-      expect(find.byKey(const Key('remote-display')), findsNothing);
-      await tester.pumpWidget(const SizedBox());
+      Future<void> pick(String key) async {
+        final f = find.byKey(Key(key));
+        await tester.ensureVisible(f);
+        await tester.pumpAndSettle();
+        await tester.tap(f);
+        await tester.pumpAndSettle();
+      }
+
+      await pick('remote-look-accent-p2');
+      await pick('remote-look-bg-black');
+      await pick('remote-look-buttons-outlined');
+      await pick('remote-look-text-huge');
+      await pick('remote-look-dim-10');
+      expect(
+        await _savedLook(),
+        const RemoteLook(
+          accent: 'p2',
+          background: RemoteLookBackground.black,
+          buttons: RemoteButtonStyle.outlined,
+          textSize: RemoteTextSize.huge,
+          dimAfterMinutes: 10,
+        ),
+      );
+      // Live behind the sheet: the edited layout uses the look.
+      final play = find.byKey(const Key('remote-play-pause'));
+      final cs = Theme.of(tester.element(play)).colorScheme;
+      expect(cs.primary, RemoteLook.palette[2]);
+      expect(cs.surface, Colors.black);
+      expect(MediaQuery.textScalerOf(tester.element(play)).scale(10), 15);
+
+      await pick('remote-look-reset');
+      expect(await _savedLook(), const RemoteLook());
+      expect(
+        Theme.of(tester.element(play)).colorScheme.primary,
+        isNot(RemoteLook.palette[2]),
+      );
     });
 
-    testWidgets('huge text in portrait has no overflow', (tester) async {
+    testWidgets('outlined buttons and no circle behind plain play', (
+      tester,
+    ) async {
       SharedPreferences.setMockInitialValues({
-        RemoteLayoutStore.displayKey: jsonEncode(
-          const RemoteDisplayOptions(
-            textSize: RemoteDisplayTextSize.huge,
-            use24Hour: true,
-            background: RemoteDisplayBackground.cover,
-          ).toJson(),
+        RemoteLayoutStore.lookKey: jsonEncode(
+          const RemoteLook(buttons: RemoteButtonStyle.outlined).toJson(),
         ),
       });
-      await _open(tester, textScale: 1.3);
-      await tester.tap(find.byKey(const Key('remote-display-mode')));
-      await tester.pump();
-      expect(tester.takeException(), isNull);
-      expect(find.byKey(const Key('remote-display-clock')), findsOneWidget);
+      await _open(tester);
+      expect(find.byWidgetPredicate((w) => w is OutlinedButton), findsWidgets);
       await tester.pumpWidget(const SizedBox());
+
+      SharedPreferences.setMockInitialValues({
+        RemoteLayoutStore.lookKey: jsonEncode(
+          const RemoteLook(buttons: RemoteButtonStyle.plain).toJson(),
+        ),
+      });
+      await _open(tester);
+      final box = tester.widget<Container>(
+        find
+            .descendant(
+              of: find.byKey(const Key('remote-play-pause')),
+              matching: find.byType(Container),
+            )
+            .first,
+      );
+      expect(box.decoration, isNull);
+    });
+
+    testWidgets('Nightstand also darkens and dims the look', (tester) async {
+      await _open(tester);
+      await tester.tap(find.byKey(const Key('remote-customize')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('remote-customize-presets')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('remote-preset-nightstand')));
+      await tester.pumpAndSettle();
+      final look = await _savedLook();
+      expect(look.background, RemoteLookBackground.black);
+      expect(look.dimAfterMinutes, 10);
+    });
+  });
+
+  group('no overflow with 1.3x text', () {
+    for (final (name, size) in [
+      ('360 x 640', _small),
+      ('640 x 360', _landscape),
+    ]) {
+      for (final preset in RemotePreset.values) {
+        testWidgets('$name ${preset.name}: full screen and edit mode', (
+          tester,
+        ) async {
+          SharedPreferences.setMockInitialValues({
+            RemoteLayoutStore.layoutKey: jsonEncode(
+              RemoteLayout.preset(preset).toJson(),
+            ),
+          });
+          await _open(tester, size: size, textScale: 1.3);
+          expect(tester.takeException(), isNull);
+          await tester.tap(find.byKey(const Key('remote-full-screen-button')));
+          await tester.pump(const Duration(milliseconds: 500));
+          await tester.pump(const Duration(seconds: 4));
+          await tester.pumpAndSettle();
+          expect(tester.takeException(), isNull);
+          await tester.binding.handlePopRoute();
+          await tester.pumpAndSettle();
+          await tester.tap(find.byKey(const Key('remote-customize')));
+          await tester.pumpAndSettle();
+          expect(tester.takeException(), isNull);
+          // The options and look sheets fit too.
+          final gear = find.byKey(
+            Key(
+              'remote-block-options-${RemoteLayout.preset(preset).shown(landscape: size.width > size.height).first.block.name}',
+            ),
+          );
+          if (gear.evaluate().isNotEmpty) {
+            await tester.ensureVisible(gear.first);
+            await tester.pumpAndSettle();
+            await tester.tap(gear.first);
+            await tester.pumpAndSettle();
+            expect(tester.takeException(), isNull);
+            expect(find.byType(ChoiceChip), findsWidgets);
+            Navigator.of(tester.element(find.byType(ListView).last)).pop();
+            await tester.pumpAndSettle();
+          }
+          final look = find.byKey(const Key('remote-customize-look'));
+          await tester.ensureVisible(look);
+          await tester.pumpAndSettle();
+          await tester.tap(look);
+          await tester.pumpAndSettle();
+          expect(tester.takeException(), isNull);
+          expect(find.byKey(const Key('remote-look-accent-theme')), findsOneWidget);
+          await tester.pumpWidget(const SizedBox());
+        });
+      }
+    }
+
+    testWidgets('huge look text in full screen, both orientations', (
+      tester,
+    ) async {
+      for (final size in [_small, _landscape]) {
+        SharedPreferences.setMockInitialValues({
+          RemoteLayoutStore.lookKey: jsonEncode(
+            const RemoteLook(
+              textSize: RemoteTextSize.huge,
+              background: RemoteLookBackground.cover,
+            ).toJson(),
+          ),
+        });
+        await _open(tester, size: size, textScale: 1.3);
+        await tester.tap(find.byKey(const Key('remote-full-screen-button')));
+        await tester.pump(const Duration(milliseconds: 500));
+        await tester.pump(const Duration(seconds: 4));
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox());
+      }
     });
   });
 }
