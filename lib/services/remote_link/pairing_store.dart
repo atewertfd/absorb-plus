@@ -161,6 +161,7 @@ class PairedDevice {
     required this.tokenHash,
     required this.pairedAt,
     required this.lastSeen,
+    this.browser = false,
   });
 
   final String id;
@@ -172,12 +173,16 @@ class PairedDevice {
   final DateTime pairedAt;
   final DateTime lastSeen;
 
+  /// Paired from the browser remote the host serves (not the app).
+  final bool browser;
+
   PairedDevice copyWith({DateTime? lastSeen}) => PairedDevice(
     id: id,
     name: name,
     tokenHash: tokenHash,
     pairedAt: pairedAt,
     lastSeen: lastSeen ?? this.lastSeen,
+    browser: browser,
   );
 
   Map<String, Object?> toJson() => {
@@ -186,6 +191,7 @@ class PairedDevice {
     'tokenHash': tokenHash,
     'pairedAt': pairedAt.millisecondsSinceEpoch,
     'lastSeen': lastSeen.millisecondsSinceEpoch,
+    if (browser) 'browser': true,
   };
 
   static PairedDevice? fromJson(Object? json) {
@@ -203,6 +209,7 @@ class PairedDevice {
       tokenHash: hash,
       pairedAt: time(json['pairedAt']),
       lastSeen: time(json['lastSeen']),
+      browser: json['browser'] == true,
     );
   }
 }
@@ -266,7 +273,11 @@ class PairedDeviceStore extends ChangeNotifier {
 
   /// Pairs a new device whose token hashes to [tokenHash]. Null when
   /// [maxDevices] are already paired.
-  Future<PairedDevice?> add(String name, {required String tokenHash}) async {
+  Future<PairedDevice?> add(
+    String name, {
+    required String tokenHash,
+    bool browser = false,
+  }) async {
     await load();
     if (isFull) return null;
     final now = _now();
@@ -277,6 +288,7 @@ class PairedDeviceStore extends ChangeNotifier {
       tokenHash: tokenHash,
       pairedAt: now,
       lastSeen: now,
+      browser: browser,
     );
     await _save([..._devices, device]);
     return device;

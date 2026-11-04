@@ -114,6 +114,7 @@ class RemoteConnectionInfo {
     required this.deviceName,
     required this.address,
     required this.since,
+    this.browser = false,
   });
 
   final int id;
@@ -121,6 +122,9 @@ class RemoteConnectionInfo {
   final String deviceName;
   final String address;
   final DateTime since;
+
+  /// The browser remote the host serves, not the app.
+  final bool browser;
 }
 
 /// A device typed the right code; the PC's user allows or denies it.

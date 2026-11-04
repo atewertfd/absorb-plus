@@ -12,15 +12,16 @@ a small local link that the phone connects to directly.
 
 1. **Remote and display (this document's scope).** Pairing, a remote screen,
    display mode, connected-device list on the PC.
-2. Phone lock screen, notification and earbud buttons control the PC; phone
+2. Phone lock screen, notification and earbud buttons control the PC (done,
+   with a browser remote: see "Stage 2" at the end); phone
    volume buttons set the PC volume; start a book on the PC from the phone;
    bookmark and sleep timer from the phone.
 3. Handoff both ways at the exact second; zero-code discovery; the PC
    controlling a phone.
 
 Out of scope for now:
-- the web app as a remote (browsers block https pages from reaching plain
-  LAN addresses);
+- the Pages web app as a remote (browsers block https pages from reaching
+  plain LAN addresses; stage 2 serves a browser remote from the PC instead);
 - in-sync playback on two devices.
 
 ## Stage 1 design
@@ -339,3 +340,103 @@ end to end (needs the Pages deploy), the Windows firewall prompt, Linux.
   `remote_layout_screen_test.dart` (default order and rows, saved layout,
   edit mode disables controls, add/remove/size/preset/reset saved, drag in
   a column and between columns, landscape overflow, display options).
+
+## Stage 2 (2026-11-03, branch `claude/remote-stage2`)
+
+### Lock screen, notification and earbuds control the PC (Android)
+- While the remote screen is connected and the PC has a book loaded, the
+  phone's media notification shows the PC: title, chapter (or author),
+  cover, the chapter's progress (the whole book without chapters), play /
+  pause, back / forward with the PC's skip amounts, and previous / next
+  chapter. The lock screen, notification shade, headset and earbud buttons
+  and Wear OS use the same media session, so they all control the PC.
+  Commands: play, pause, toggle (headset click), skip, seek (chapter start
+  plus the bar's position), chapter; the system's "stop" only pauses the PC.
+- **One media session, lent.** audio_service allows one handler, so
+  `AudioPlayerHandler` gained a small lend/return block
+  (`lendSession`/`showGuest`/`returnSession`, interface
+  `services/media_session_guest.dart`). It only lends while the local
+  player isn't playing or loading. While lent, the handler's transport
+  callbacks go to the guest (one guard line each) and local pushes are
+  held (`refreshPlaybackState`, the playback-event listener and the
+  service's `mediaItem` push, now `pushMediaItem`). The moment local
+  playback starts or a book starts loading, the handler takes the session
+  back, re-pushes the local item and state, and tells the guest. Nothing
+  changes for local playback while nothing is lent. A paused local book's
+  notification is replaced while lent and comes back after.
+- **`RemoteMediaMirror`** (`services/remote_link/remote_media_mirror.dart`)
+  drives it from the remote screen: lends on connect (only with the app in
+  front: Android limits foreground services started from the background),
+  pushes a playing blip first when the PC is paused so the notification
+  appears, then only pushes changes (Android moves the bar itself; a
+  position more than 1.5 s off the expected one is pushed). The cover is
+  written to the temp folder (`remote_cover/<item>-<version>.img`, one file
+  at a time) because the notification loads art by URI.
+- **When it goes:** leaving the remote screen, turning the setting off, or
+  the link (or the PC's book) gone for more than 15 s; a quicker reconnect
+  keeps it. Giving back re-pushes the local state; with nothing loaded
+  locally that is idle, which removes the notification like any finished
+  playback. After local playback takes the session, the PC's notification
+  returns only when the remote screen comes back to the front.
+- **Setting:** the remote screen's menu (Android only), "Show controls on
+  the lock screen", pref `fork_remote_lock_screen`, default on.
+- Not verified on a phone yet: Android's notification and lock-screen
+  rendering, earbud routing to the borrowed session, Wear OS.
+
+### Browser remote
+- The PC host serves a page at `http://<pc-ip>:<port>/` (the same port as
+  the WebSocket, 47390 by default). The PC sheet shows "Or open
+  http://192.168.x.x:47390 in any browser on the same Wi-Fi…". Any phone,
+  tablet or laptop browser, iPhone included, can control the PC with
+  nothing installed.
+- **Plain HTTP on the LAN only.** The page, its frames and covers travel
+  unencrypted, like the app's link (frames are MAC-sealed, not encrypted).
+  No TLS: a self-signed certificate would only add warnings.
+- **Same security as the app remote.** The page pairs with the 6-digit code
+  inside an open pairing window, the PC asks "Allow ‘Safari on iPhone
+  (browser)’…?" (the host appends "(browser)"), and the token comes from
+  the same Diffie-Hellman exchange (JS BigInt). The browser keeps it in
+  localStorage for that address (`absorbRemote.v2`), then logs in with the
+  v2 challenge-response and seals every frame with HMAC-SHA256, exactly as
+  the app does. It counts toward the 5-device limit, shows in the PC's
+  device list with a globe icon (`PairedDevice.browser`, also on the
+  connection) and Forget revokes it at once.
+- **HMAC in the page, not Web Crypto:** `crypto.subtle` exists only on
+  https or localhost, so the page carries a small SHA-256/HMAC
+  (`crypto.getRandomValues` works on http). The page's crypto was checked
+  against the Dart functions with node (proofs, session key, cover ticket,
+  a sealed frame, the DH public key and the pairing token all equal), and
+  the whole flow was run in a real browser against a test host (pair,
+  Allow, login, play/pause, next chapter, sleep, speed, reload logs in
+  with the saved token).
+- **Origins.** The host still refuses every request with an Origin header,
+  except from its own page: Origin must equal `http://<Host>` and the Host
+  must be an IP address, `localhost`, or this PC's name (optionally with a
+  suffix like `.local`) on the host's port. A page reached through any
+  other name (DNS rebinding) gets 403, and so does the page itself. Other
+  sites can't open the socket; a rebinding page couldn't read the token
+  anyway (localStorage is per origin).
+- **The page:** `services/remote_link/web_remote_page.dart`, one inline
+  HTML/CSS/JS string, Absorb's colours (as `web/pair.html`), no external
+  resources. CSP: `default-src 'none'`, inline script and style, `img-src
+  blob:`, `connect-src 'self' ws://<host>`, `frame-ancestors 'none'`; also
+  `X-Frame-Options: DENY`, `no-store`, `no-referrer`. Controls: cover,
+  title, author, chapter, progress bar (seek; the chapter when there are
+  chapters), play/pause, back/forward (the PC's amounts), previous/next
+  chapter, volume and mute, speed -0.05/+0.05/1x, sleep 15/30/45/60/end of
+  chapter/off. Portrait stacks; landscape (600 px and wider) puts the cover
+  left. It pings every 2 s, treats 8 s of silence as a dead link,
+  reconnects with backoff (1, 2, 4, 8, then 10 s) and at once when the tab
+  becomes visible, and shows "Reconnecting…" instead of stale controls.
+  Forgotten or unknown: back to pairing. "Unpair this browser" clears the
+  saved token (Forget on the PC removes it there).
+- Tests: `remote_web_remote_test` (page and headers, protocol constants,
+  rebinding refused, cross-origin socket refused, browser pairing with
+  Allow and Deny, v2 login and commands, wrong token, limit with
+  browsers), `remote_media_mirror_test` (fake media session: mirror on
+  connect, paused blip, foreground only, throttling, cover, commands,
+  grace, dispose, local playback reclaims, setting),
+  `remote_lock_screen_setting_test` (menu switch, saved off, no menu
+  without a media session).
+- Not verified yet: Safari on a real iPhone, a real phone and PC over
+  Wi-Fi, the Windows firewall prompt for the page.

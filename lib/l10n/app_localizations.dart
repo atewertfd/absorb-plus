@@ -26163,6 +26163,30 @@ abstract class AppLocalizations {
   /// **'{time} left in the chapter'**
   String remoteChapterTimeLeft(String time);
 
+  /// Phone remote: menu switch. While connected and the phone itself isn't playing, the notification, lock screen and earbud buttons control the PC.
+  ///
+  /// In en, this message translates to:
+  /// **'Show controls on the lock screen'**
+  String get remoteLockScreenControls;
+
+  /// Phone remote: tooltip of the app bar menu.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get remoteMoreOptions;
+
+  /// Phone remote, PC sheet: the address of the browser remote the PC serves (plain http on the local network).
+  ///
+  /// In en, this message translates to:
+  /// **'Or open {url} in any browser on the same Wi-Fi (iPhone, tablet, laptop) and type the code there.'**
+  String remoteHostBrowserAddress(String url);
+
+  /// Phone remote, PC sheet: tooltip of the icon for a device that paired from a web browser.
+  ///
+  /// In en, this message translates to:
+  /// **'Web browser'**
+  String get remoteHostBrowserDevice;
+
   /// Phone remote: app bar button that opens edit mode for the screen's layout.
   ///
   /// In en, this message translates to:

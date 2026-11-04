@@ -13,6 +13,7 @@ import 'protocol.dart';
 import 'remote_channel_io.dart';
 import 'remote_crypto.dart';
 import 'remote_link_types.dart';
+import 'web_remote_page.dart';
 
 bool get remoteHostSupported => RemoteHost.instance.isSupported;
 
@@ -27,8 +28,10 @@ RemoteHostController get remoteHost => RemoteHost.instance;
 /// exchange and never crosses the network. Logins are a mutual
 /// challenge-response, and every later frame is sealed with a per-connection
 /// key and a sequence number (`remote_crypto.dart`). Failures are
-/// rate-limited per address; requests from browsers (an Origin header) are
-/// refused; nothing about the Audiobookshelf server is ever sent.
+/// rate-limited per address; browser requests (an Origin header) are refused
+/// unless they come from the browser remote this host serves at `/`, which
+/// pairs and logs in the same way; nothing about the Audiobookshelf server is
+/// ever sent.
 class RemoteHost implements RemoteHostController {
   RemoteHost({
     RemotePlayerFacade Function()? player,
@@ -282,8 +285,11 @@ class RemoteHost implements RemoteHostController {
 
   /// Tests: one incoming link from [address].
   @visibleForTesting
-  void acceptForTest(RemoteChannel channel, String address) =>
-      _accept(channel, address);
+  void acceptForTest(
+    RemoteChannel channel,
+    String address, {
+    bool browser = false,
+  }) => _accept(channel, address, browser: browser);
 
   // ── Open / close ──────────────────────────────────────────────────
 
@@ -484,13 +490,23 @@ class RemoteHost implements RemoteHostController {
     final address = request.connectionInfo?.remoteAddress.address ?? '';
     final response = request.response;
     try {
-      // Native remotes never send Origin; a web page always does. Refusing it
-      // keeps a site open in a browser on the LAN from talking to the host.
-      if (request.headers.value('origin') != null) {
+      // Native remotes never send Origin; a web page always does. Only the
+      // browser remote this host serves itself (same origin, opened by an IP
+      // address or this PC's name) may talk to it, so another site open in a
+      // browser on the LAN can't.
+      final origin = request.headers.value('origin');
+      final ownPage = origin != null && _isOwnPage(request, origin);
+      if (origin != null && !ownPage) {
         await _refuse(response, HttpStatus.forbidden);
         return;
       }
       final path = request.uri.path;
+      if (path == kRemoteWebPagePath &&
+          request.method == 'GET' &&
+          !WebSocketTransformer.isUpgradeRequest(request)) {
+        await _servePage(request);
+        return;
+      }
       if (path == kRemoteSocketPath &&
           WebSocketTransformer.isUpgradeRequest(request)) {
         // A blocked address is still upgraded, so it can be told why
@@ -511,7 +527,7 @@ class RemoteHost implements RemoteHostController {
           unawaited(ws.close(RemoteCloseCode.hostStopped));
           return;
         }
-        _accept(WebSocketRemoteChannel(ws), address);
+        _accept(WebSocketRemoteChannel(ws), address, browser: ownPage);
         return;
       }
       if (path == kRemoteCoverPath && request.method == 'GET') {
@@ -531,6 +547,53 @@ class RemoteHost implements RemoteHostController {
 
   Future<void> _refuse(HttpResponse response, int status) async {
     response.statusCode = status;
+    await response.close();
+  }
+
+  static final _hostHeaderChars = RegExp(r'^[A-Za-z0-9.\-:\[\]]{1,255}$');
+
+  /// The Host header names this PC: an IP address, `localhost`, or its own
+  /// name (plus a local suffix such as `.local`), on the port it listens
+  /// on. A page reached through any other name (DNS rebinding) is refused.
+  bool _trustedHost(String? host) {
+    if (host == null || !_hostHeaderChars.hasMatch(host)) return false;
+    final uri = Uri.tryParse('http://$host');
+    if (uri == null || uri.host.isEmpty) return false;
+    if ((uri.hasPort ? uri.port : 80) != _server?.port) return false;
+    final name = uri.host.toLowerCase();
+    if (name == 'localhost' || InternetAddress.tryParse(name) != null) {
+      return true;
+    }
+    String own;
+    try {
+      own = (_hostNameOverride ?? Platform.localHostname).toLowerCase();
+    } catch (_) {
+      return false; // No machine name: addresses only.
+    }
+    return own.isNotEmpty && (name == own || name.startsWith('$own.'));
+  }
+
+  /// A request from the browser remote this host served.
+  bool _isOwnPage(HttpRequest request, String origin) {
+    final host = request.headers.value(HttpHeaders.hostHeader);
+    if (!_trustedHost(host)) return false;
+    return origin.toLowerCase() == 'http://${host!.toLowerCase()}';
+  }
+
+  /// The browser remote (`web_remote_page.dart`): one self-contained page,
+  /// nothing secret in it; pairing and login work as in the app.
+  Future<void> _servePage(HttpRequest request) async {
+    final response = request.response;
+    final host = request.headers.value(HttpHeaders.hostHeader);
+    if (!_trustedHost(host)) {
+      await _refuse(response, HttpStatus.forbidden);
+      return;
+    }
+    final bytes = utf8.encode(kWebRemotePage);
+    response.headers.contentType = ContentType.html;
+    webRemotePageHeaders(host!).forEach(response.headers.set);
+    response.contentLength = bytes.length;
+    response.add(bytes);
     await response.close();
   }
 
@@ -611,8 +674,9 @@ class RemoteHost implements RemoteHostController {
 
   // ── Connections ───────────────────────────────────────────────────
 
-  void _accept(RemoteChannel channel, String address) {
-    final conn = _Connection(_nextConnId++, channel, address, DateTime.now());
+  void _accept(RemoteChannel channel, String address, {bool browser = false}) {
+    final conn = _Connection(_nextConnId++, channel, address, DateTime.now())
+      ..browser = browser;
     _conns.add(conn);
     conn.authTimer = Timer(authTimeout, () {
       if (conn.device == null && !conn.pairing) {
@@ -659,6 +723,7 @@ class RemoteHost implements RemoteHostController {
             deviceName: c.device!.name,
             address: c.address,
             since: c.since,
+            browser: c.device!.browser,
           ),
     ]);
     _syncTick();
@@ -819,7 +884,9 @@ class RemoteHost implements RemoteHostController {
     conn.pairing = true;
     conn.authTimer?.cancel();
     _send(conn, const PairWaitMessage());
-    final name = deviceName.isEmpty ? 'Remote' : deviceName;
+    final name = conn.browser
+        ? browserDeviceName(deviceName)
+        : (deviceName.isEmpty ? 'Remote' : deviceName);
     final allowed = await _ask(conn, name);
     if (conn.closed) return;
     if (!allowed) {
@@ -840,7 +907,11 @@ class RemoteHost implements RemoteHostController {
       exchange.publicKey,
       _hostId,
     );
-    final device = await devices.add(name, tokenHash: hashRemoteToken(token));
+    final device = await devices.add(
+      name,
+      tokenHash: hashRemoteToken(token),
+      browser: conn.browser,
+    );
     if (device == null) {
       _send(conn, const ErrorMessage(RemoteErrorCode.tooManyDevices));
       _drop(conn, RemoteCloseCode.unauthorized, 'Too many devices');
@@ -1034,6 +1105,9 @@ class _Connection {
   final RemoteChannel channel;
   final String address;
   final DateTime since;
+
+  /// Opened by the browser remote this host serves.
+  bool browser = false;
   PairedDevice? device;
   Timer? authTimer;
   StreamSubscription<Object?>? sub;

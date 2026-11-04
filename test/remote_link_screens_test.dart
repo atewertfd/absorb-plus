@@ -428,6 +428,14 @@ void main() {
         findsOneWidget,
       );
       expect(find.byKey(const Key('remote-host-qr')), findsOneWidget);
+      // The browser remote's address: the home-network one.
+      expect(
+        find.text(
+          'Or open http://192.168.1.5:47390 in any browser on the same '
+          'Wi-Fi (iPhone, tablet, laptop) and type the code there.',
+        ),
+        findsOneWidget,
+      );
       expect(
         find.text("This PC's address: 100.64.0.3:47390, 192.168.1.5:47390"),
         findsOneWidget,
