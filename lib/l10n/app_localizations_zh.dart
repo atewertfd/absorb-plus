@@ -2397,8 +2397,8 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count 本书',
+      one: '1 本书',
     );
     return '$_temp0';
   }
@@ -4194,23 +4194,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get resetProgressQuestion => '重置进度？';
 
   @override
-  String get resetProgressListeningAndReading =>
-      'Your listening and reading progress will both go back to 0%.';
+  String get resetProgressListeningAndReading => '你的收听进度和阅读进度都将回到 0%。';
 
   @override
-  String get resetProgressListening =>
-      'Your listening progress will go back to 0%.';
+  String get resetProgressListening => '你的收听进度将回到 0%。';
 
   @override
-  String get resetProgressReading =>
-      'Your reading progress will go back to 0%.';
+  String get resetProgressReading => '你的阅读进度将回到 0%。';
 
   @override
-  String get resetProgressMarksUnread =>
-      'The book will also be marked as unread.';
+  String get resetProgressMarksUnread => '这本书也会被标记为未读。';
 
   @override
-  String get resetProgressCantUndo => 'This can\'t be undone.';
+  String get resetProgressCantUndo => '此操作无法撤销。';
 
   @override
   String get progressResetFreshStart => '进度已重置 - 全新开始！';
@@ -12365,86 +12361,73 @@ class AppLocalizationsZh extends AppLocalizations {
   String get achievementsSwitchFailed => '无法更改 BookOrbit 上的成就设置';
 
   @override
-  String get boNotifyReadAlong => 'Read alongs';
+  String get boNotifyReadAlong => '跟读';
 
   @override
-  String get boNotifyReadAlongDesc =>
-      'When a read along you started is ready, needs a look, or fails.';
+  String get boNotifyReadAlongDesc => '当你发起的跟读制作完成、需要查看或失败时通知你。';
 
   @override
-  String get readAlongCreate => 'Create read along';
+  String get readAlongCreate => '创建跟读';
 
   @override
-  String get readAlongLoadFailed =>
-      'Couldn\'t check whether a read along can be made for this book.';
+  String get readAlongLoadFailed => '无法检查这本书能否制作跟读。';
 
   @override
-  String get readAlongCheckAgain => 'Check again';
+  String get readAlongCheckAgain => '重新检查';
 
   @override
-  String get readAlongWhyWorkerOffline =>
-      'BookOrbit\'s read along worker is offline right now.';
+  String get readAlongWhyWorkerOffline => 'BookOrbit 的跟读处理器目前离线。';
 
   @override
-  String get readAlongWhyWorkerOutdated =>
-      'BookOrbit\'s read along worker needs an update to work with this server.';
+  String get readAlongWhyWorkerOutdated => 'BookOrbit 的跟读处理器需要更新才能配合此服务器使用。';
 
   @override
-  String get readAlongWhyFilesMissing =>
-      'Restore this book\'s missing files to make a read along.';
+  String get readAlongWhyFilesMissing => '请先恢复这本书缺失的文件，再制作跟读。';
 
   @override
-  String get readAlongWhyNoEpub =>
-      'Add a plain EPUB to this book to make a read along.';
+  String get readAlongWhyNoEpub => '请先为这本书添加普通 EPUB，再制作跟读。';
 
   @override
-  String get readAlongWhyNoEpubHasOne =>
-      'This book already has a read along and no plain EPUB to make another from.';
+  String get readAlongWhyNoEpubHasOne => '这本书已有跟读，且没有可用于再制作的普通 EPUB。';
 
   @override
-  String get readAlongWhyTooManyTracks =>
-      'This audiobook has more files than a read along can be made from.';
+  String get readAlongWhyTooManyTracks => '这本有声书的文件数量超出了跟读的制作上限。';
 
   @override
-  String get readAlongWhyEpubNotAllowed =>
-      'This library doesn\'t take EPUB files, so a read along can\'t be added.';
+  String get readAlongWhyEpubNotAllowed => '此媒体库不接受 EPUB 文件，因此无法添加跟读。';
 
   @override
-  String get readAlongWhyNotMounted =>
-      'BookOrbit\'s read along worker can\'t reach this library\'s folder.';
+  String get readAlongWhyNotMounted => 'BookOrbit 的跟读处理器无法访问此媒体库的文件夹。';
 
   @override
-  String get readAlongWhyRunning =>
-      'A read along is already being made for this book.';
+  String get readAlongWhyRunning => '这本书的跟读正在制作中。';
 
   @override
-  String get readAlongWhyUnknown =>
-      'A read along can\'t be made for this book right now.';
+  String get readAlongWhyUnknown => '目前无法为这本书制作跟读。';
 
   @override
-  String get readAlongSheetTitle => 'Create a read along';
+  String get readAlongSheetTitle => '创建跟读';
 
   @override
   String get readAlongSheetIntro =>
-      'BookOrbit matches the narration to the ebook text and adds an EPUB that highlights along with the audio.';
+      'BookOrbit 会将朗读内容与电子书文本匹配，并添加一个可随音频高亮的 EPUB。';
 
   @override
-  String get readAlongEbook => 'Ebook';
+  String get readAlongEbook => '电子书';
 
   @override
-  String get readAlongEbookHint =>
-      'Pick the plain EPUB that matches the narration.';
+  String get readAlongEbookHint => '选择与朗读内容对应的普通 EPUB。';
 
   @override
-  String get readAlongAudio => 'Audiobook';
+  String get readAlongAudio => '有声书';
 
   @override
   String readAlongTracks(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count tracks',
-      one: '1 track',
+      other: '$count 个音轨',
+      one: '1 个音轨',
     );
     return '$_temp0';
   }
@@ -12454,15 +12437,15 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'This book already has $count read alongs',
-      one: 'This book already has a read along',
+      other: '这本书已有 $count 个跟读',
+      one: '这本书已有跟读',
     );
     return '$_temp0';
   }
 
   @override
   String readAlongReplace(String name) {
-    return 'Replace $name';
+    return '替换 $name';
   }
 
   @override
@@ -12470,278 +12453,266 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Keep all of them',
-      one: 'Keep both',
+      other: '全部保留',
+      one: '两者都保留',
     );
     return '$_temp0';
   }
 
   @override
-  String get readAlongKeepHint =>
-      'The new read along is added as another file.';
+  String get readAlongKeepHint => '新的跟读将作为另一个文件添加。';
 
   @override
-  String get readAlongReplaceHint =>
-      'The old file is only replaced once the new one passes its checks, and reading spots carry over.';
+  String get readAlongReplaceHint => '新文件通过检查后才会替换旧文件，阅读位置会保留。';
 
   @override
-  String get readAlongReplaceNotAllowed =>
-      'Replacing a read along needs permission to delete books, so the new one is added as another file.';
+  String get readAlongReplaceNotAllowed => '替换跟读需要删除书籍的权限，因此新跟读将作为另一个文件添加。';
 
   @override
-  String get readAlongMadeByBookOrbit => 'Made by BookOrbit';
+  String get readAlongMadeByBookOrbit => '由 BookOrbit 制作';
 
   @override
-  String get readAlongImported => 'Imported';
+  String get readAlongImported => '已导入';
 
   @override
-  String get readAlongLanguage => 'Narration language';
+  String get readAlongLanguage => '朗读语言';
 
   @override
-  String get readAlongPickLanguage => 'Choose a language';
+  String get readAlongPickLanguage => '选择语言';
 
   @override
   String readAlongLanguageUnsupported(String language) {
-    return 'The speech model doesn\'t know this book\'s language ($language).';
+    return '语音模型不支持这本书的语言（$language）。';
   }
 
   @override
-  String get readAlongLanguageFromBook => 'From this book\'s details.';
+  String get readAlongLanguageFromBook => '来自这本书的详情。';
 
   @override
-  String get readAlongLanguageIsDefault => 'Your default language.';
+  String get readAlongLanguageIsDefault => '你的默认语言。';
 
   @override
-  String get readAlongLanguageSaved => 'Saved as your default language.';
+  String get readAlongLanguageSaved => '已保存为你的默认语言。';
 
   @override
-  String get readAlongSetDefault => 'Set as default';
+  String get readAlongSetDefault => '设为默认';
 
   @override
-  String get readAlongDefaultFailed => 'Couldn\'t save your default language.';
+  String get readAlongDefaultFailed => '无法保存你的默认语言。';
 
   @override
-  String get readAlongHighlighting => 'Highlighting';
+  String get readAlongHighlighting => '高亮方式';
 
   @override
-  String get readAlongSentence => 'Sentence';
+  String get readAlongSentence => '句';
 
   @override
-  String get readAlongSentenceHint =>
-      'Highlights one sentence at a time. Recommended.';
+  String get readAlongSentenceHint => '一次高亮一句。推荐。';
 
   @override
-  String get readAlongWord => 'Word';
+  String get readAlongWord => '词';
 
   @override
-  String get readAlongWordHint =>
-      'Highlights each word. Takes longer and makes a bigger file. Still experimental.';
+  String get readAlongWordHint => '高亮每个词。耗时更长，文件更大。仍为实验性功能。';
 
   @override
   String readAlongEstimatedSize(String size) {
-    return 'Estimated size: $size';
+    return '预计大小：$size';
   }
 
   @override
   String get readAlongBackgroundNote =>
-      'Runs on the server, so you can close this. Long audiobooks can take hours, and the first run for a language downloads its speech model.';
+      '在服务器上运行，因此可以关闭此窗口。较长的有声书可能需要数小时，某种语言首次运行时还会下载其语音模型。';
 
   @override
   String readAlongLowDisk(String needed, String free) {
-    return 'Low disk space: this needs about $needed of working space on the worker, which has $free free.';
+    return '磁盘空间不足：这需要处理器上约 $needed 的工作空间，而目前只剩 $free。';
   }
 
   @override
-  String get readAlongStart => 'Start';
+  String get readAlongStart => '开始';
 
   @override
-  String get readAlongStartFailed =>
-      'The read along couldn\'t be started. Try again.';
+  String get readAlongStartFailed => '无法开始制作跟读。请重试。';
 
   @override
-  String get readAlongStartInvalid =>
-      'Some of the picked files are no longer on this book. Check them and try again.';
+  String get readAlongStartInvalid => '所选的部分文件已不在这本书中。请检查后重试。';
 
   @override
-  String get readAlongStartOffline =>
-      'BookOrbit\'s read along worker is offline. Try again later.';
+  String get readAlongStartOffline => 'BookOrbit 的跟读处理器已离线。请稍后再试。';
 
   @override
-  String get readAlongNotAllowed => 'You don\'t have permission to do that.';
+  String get readAlongNotAllowed => '你没有执行此操作的权限。';
 
   @override
-  String get readAlongGone => 'This read along job is gone.';
+  String get readAlongGone => '此跟读任务已不存在。';
 
   @override
-  String get readAlongMovedOn =>
-      'This job had already moved on. It now shows where it is.';
+  String get readAlongMovedOn => '此任务已进入下一阶段，现已显示其当前状态。';
 
   @override
-  String get readAlongActionFailed => 'That didn\'t go through. Try again.';
+  String get readAlongActionFailed => '操作未成功。请重试。';
 
   @override
   String readAlongStartedBy(String name) {
-    return 'Started by $name';
+    return '由 $name 发起';
   }
 
   @override
-  String get readAlongStartedByOther => 'Started by another user';
+  String get readAlongStartedByOther => '由其他用户发起';
 
   @override
-  String get readAlongWaiting => 'Waiting to start';
+  String get readAlongWaiting => '等待开始';
 
   @override
-  String get readAlongNextInLine => 'Next in line';
+  String get readAlongNextInLine => '下一个';
 
   @override
   String readAlongJobsAhead(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count jobs ahead',
-      one: '1 job ahead',
+      other: '前面还有 $count 个任务',
+      one: '前面还有 1 个任务',
     );
     return '$_temp0';
   }
 
   @override
-  String get readAlongStopping => 'Stopping';
+  String get readAlongStopping => '正在停止';
 
   @override
-  String get readAlongStoppingHint =>
-      'Finishing the current step, then it stops. Nothing will be added to this book.';
+  String get readAlongStoppingHint => '完成当前步骤后停止。不会向这本书添加任何内容。';
 
   @override
-  String get readAlongStagePreparingAudio => 'Preparing the audio';
+  String get readAlongStagePreparingAudio => '正在准备音频';
 
   @override
-  String get readAlongStageDownloadingModel => 'Downloading the speech model';
+  String get readAlongStageDownloadingModel => '正在下载语音模型';
 
   @override
-  String get readAlongStageListening => 'Listening to the narration';
+  String get readAlongStageListening => '正在识别朗读内容';
 
   @override
-  String get readAlongStageMarkingUp => 'Marking up the ebook text';
+  String get readAlongStageMarkingUp => '正在标记电子书文本';
 
   @override
-  String get readAlongStageAligning => 'Matching the text to the narration';
+  String get readAlongStageAligning => '正在将文本与朗读匹配';
 
   @override
-  String get readAlongStageChecking => 'Checking the result';
+  String get readAlongStageChecking => '正在检查结果';
 
   @override
-  String get readAlongStagePublishing => 'Adding the read along to this book';
+  String get readAlongStagePublishing => '正在将跟读添加到这本书';
 
   @override
-  String get readAlongStageWorking => 'Working';
+  String get readAlongStageWorking => '处理中';
 
   @override
   String readAlongFileOf(int current, int total) {
-    return 'File $current of $total';
+    return '文件 $current/$total';
   }
 
   @override
   String readAlongTrackOf(int current, int total) {
-    return 'Track $current of $total';
+    return '音轨 $current/$total';
   }
 
   @override
   String readAlongChapterOf(int current, int total) {
-    return 'Chapter $current of $total';
+    return '章节 $current/$total';
   }
 
   @override
   String readAlongStepOf(int current, int total) {
-    return 'Step $current of $total';
+    return '步骤 $current/$total';
   }
 
   @override
-  String get readAlongFirstRun => 'First run for this language';
+  String get readAlongFirstRun => '此语言的首次运行';
 
   @override
-  String get readAlongJustStarted => 'Just started';
+  String get readAlongJustStarted => '刚刚开始';
 
   @override
   String readAlongRunningFor(String duration) {
-    return 'Running for $duration';
+    return '已运行 $duration';
   }
 
   @override
-  String get readAlongStepAudio => 'Audio';
+  String get readAlongStepAudio => '音频';
 
   @override
-  String get readAlongStepSpeech => 'Speech';
+  String get readAlongStepSpeech => '语音';
 
   @override
-  String get readAlongStepText => 'Text';
+  String get readAlongStepText => '文本';
 
   @override
-  String get readAlongStepAlign => 'Align';
+  String get readAlongStepAlign => '对齐';
 
   @override
-  String get readAlongStepCheck => 'Check';
+  String get readAlongStepCheck => '检查';
 
   @override
-  String get readAlongStepAdd => 'Add';
+  String get readAlongStepAdd => '添加';
 
   @override
-  String get readAlongReviewTitle => 'Ready for review';
+  String get readAlongReviewTitle => '等待审核';
 
   @override
   String readAlongReviewMatched(String percent) {
-    return '$percent of the text matched the narration. Check it before adding it to the book.';
+    return '$percent 的文本已与朗读匹配。添加到书中之前请先检查。';
   }
 
   @override
-  String get readAlongReviewPlain => 'Check it before adding it to the book.';
+  String get readAlongReviewPlain => '添加到书中之前请先检查。';
 
   @override
-  String get readAlongReviewWeb =>
-      'To leave chapters out and match again, open this book in BookOrbit on the web.';
+  String get readAlongReviewWeb => '若要排除某些章节并重新匹配，请在网页版 BookOrbit 中打开这本书。';
 
   @override
   String readAlongReviewExpires(String date) {
-    return 'Thrown away on its own on $date unless you review it.';
+    return '若不审核，将于 $date 自动丢弃。';
   }
 
   @override
-  String get readAlongAddAnyway => 'Add it anyway';
+  String get readAlongAddAnyway => '仍然添加';
 
   @override
-  String get readAlongDiscard => 'Discard';
+  String get readAlongDiscard => '丢弃';
 
   @override
-  String get readAlongDiscardPrompt => 'Discard this read along?';
+  String get readAlongDiscardPrompt => '丢弃此跟读？';
 
   @override
-  String get readAlongKeepIt => 'Keep it';
+  String get readAlongKeepIt => '保留';
 
   @override
-  String get readAlongReady => 'Read along ready';
+  String get readAlongReady => '跟读已就绪';
 
   @override
-  String get readAlongReadyWarnings => 'Read along ready, with warnings';
+  String get readAlongReadyWarnings => '跟读已就绪，但有警告';
 
   @override
-  String get readAlongAdded => 'Added to this book as a new EPUB.';
+  String get readAlongAdded => '已作为新的 EPUB 添加到这本书。';
 
   @override
-  String get readAlongReplaced =>
-      'Replaced the old read along. Reading spots carry over.';
+  String get readAlongReplaced => '已替换旧的跟读。阅读位置已保留。';
 
   @override
   String readAlongMatchedSentences(String matched, String total) {
-    return '$matched of $total sentences matched the narration';
+    return '共 $total 句，已匹配 $matched 句朗读内容';
   }
 
   @override
   String readAlongAudioUsed(String percent) {
-    return '$percent of the audio used';
+    return '已使用 $percent 的音频';
   }
 
   @override
   String readAlongOutside(String chapters) {
-    return 'Not in the narration, so left without audio: $chapters.';
+    return '不在朗读内容中，因此没有音频：$chapters。';
   }
 
   @override
@@ -12749,386 +12720,364 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count more chapters',
-      one: '1 more chapter',
+      other: '另外 $count 个章节',
+      one: '另外 1 个章节',
     );
     return '$_temp0';
   }
 
   @override
-  String get readAlongWarnUnaligned =>
-      'One or more audio tracks couldn\'t be matched.';
+  String get readAlongWarnUnaligned => '有一个或多个音轨无法匹配。';
 
   @override
-  String get readAlongWarnUnmatched =>
-      'A noticeable amount of the ebook text wasn\'t matched to the narration.';
+  String get readAlongWarnUnmatched => '有相当一部分电子书文本未能与朗读内容匹配。';
 
   @override
-  String get readAlongWarnInterpolated =>
-      'Some text timing was estimated between confident matches.';
+  String get readAlongWarnInterpolated => '部分文本的时间点是根据可信匹配之间的位置估算的。';
 
   @override
-  String get readAlongWarnDropped =>
-      'Some ebook text was left out of the highlighting.';
+  String get readAlongWarnDropped => '部分电子书文本未包含在高亮中。';
 
   @override
-  String get readAlongFailed => 'Read along failed';
+  String get readAlongFailed => '跟读制作失败';
 
   @override
-  String get readAlongCancelled => 'Read along cancelled';
+  String get readAlongCancelled => '跟读已取消';
 
   @override
-  String get readAlongDiscarded => 'Read along thrown away';
+  String get readAlongDiscarded => '跟读已丢弃';
 
   @override
-  String get readAlongNothingAdded => 'Nothing was added to this book.';
+  String get readAlongNothingAdded => '未向这本书添加任何内容。';
 
   @override
-  String get readAlongExpired =>
-      'It wasn\'t reviewed within 14 days, so nothing was added to this book.';
+  String get readAlongExpired => '14 天内未审核，因此未向这本书添加任何内容。';
 
   @override
   String readAlongRetryUntil(String date) {
-    return 'Retry picks up from the last finished step until $date.';
+    return '重试将从上次完成的步骤继续，截止 $date。';
   }
 
   @override
-  String get readAlongStartOver => 'Start over';
+  String get readAlongStartOver => '重新开始';
 
   @override
-  String get readAlongCancel => 'Cancel read along';
+  String get readAlongCancel => '取消跟读';
 
   @override
-  String get readAlongCancelPrompt => 'Cancel this read along?';
+  String get readAlongCancelPrompt => '取消此跟读？';
 
   @override
-  String get readAlongKeepRunning => 'Keep running';
+  String get readAlongKeepRunning => '继续运行';
 
   @override
-  String get readAlongErrorWorkerOffline =>
-      'BookOrbit couldn\'t reach its read along worker.';
+  String get readAlongErrorWorkerOffline => 'BookOrbit 无法连接其跟读处理器。';
 
   @override
-  String get readAlongErrorWorkerCrashed =>
-      'The read along worker stopped unexpectedly.';
+  String get readAlongErrorWorkerCrashed => '跟读处理器意外停止。';
 
   @override
-  String get readAlongErrorSourceMissing => 'A picked file is no longer there.';
+  String get readAlongErrorSourceMissing => '所选的某个文件已不存在。';
 
   @override
-  String get readAlongErrorSourceChanged =>
-      'A picked file changed after the job started.';
+  String get readAlongErrorSourceChanged => '任务开始后，所选的某个文件发生了变化。';
 
   @override
-  String get readAlongErrorInvalidSource =>
-      'The EPUB or audiobook couldn\'t be read.';
+  String get readAlongErrorInvalidSource => '无法读取该 EPUB 或有声书。';
 
   @override
-  String get readAlongErrorLanguage =>
-      'The speech model doesn\'t know the picked language.';
+  String get readAlongErrorLanguage => '语音模型不支持所选语言。';
 
   @override
-  String get readAlongErrorStorage =>
-      'There isn\'t enough free disk space on the worker to finish.';
+  String get readAlongErrorStorage => '处理器上的可用磁盘空间不足，无法完成。';
 
   @override
-  String get readAlongErrorAudio => 'The audiobook couldn\'t be prepared.';
+  String get readAlongErrorAudio => '无法准备有声书。';
 
   @override
-  String get readAlongErrorModel => 'The speech model couldn\'t be downloaded.';
+  String get readAlongErrorModel => '无法下载语音模型。';
 
   @override
-  String get readAlongErrorListening =>
-      'Speech recognition failed while listening to the narration.';
+  String get readAlongErrorListening => '识别朗读内容时语音识别失败。';
 
   @override
-  String get readAlongErrorMarkup =>
-      'The ebook text couldn\'t be prepared for matching.';
+  String get readAlongErrorMarkup => '无法为匹配准备电子书文本。';
 
   @override
-  String get readAlongErrorAlignment =>
-      'The text couldn\'t be matched to the narration.';
+  String get readAlongErrorAlignment => '无法将文本与朗读内容匹配。';
 
   @override
-  String get readAlongErrorOutput => 'The new EPUB failed its checks.';
+  String get readAlongErrorOutput => '新的 EPUB 未通过检查。';
 
   @override
-  String get readAlongErrorPublish =>
-      'The new EPUB couldn\'t be added to this book.';
+  String get readAlongErrorPublish => '无法将新的 EPUB 添加到这本书。';
 
   @override
-  String get readAlongErrorDiscarded => 'It was thrown away at review.';
+  String get readAlongErrorDiscarded => '已在审核时被丢弃。';
 
   @override
-  String get readAlongErrorCancelled => 'It was cancelled.';
+  String get readAlongErrorCancelled => '已被取消。';
 
   @override
-  String get readAlongErrorUnknown =>
-      'Something went wrong while making the read along.';
+  String get readAlongErrorUnknown => '制作跟读时出了问题。';
 
   @override
-  String get fileInfoNoAudiobook => 'No audiobook yet';
+  String get fileInfoNoAudiobook => '还没有有声书';
 
   @override
-  String get fileInfoNoEbook => 'No e-book yet';
+  String get fileInfoNoEbook => '还没有电子书';
 
   @override
-  String get fileInfoRequestedBySomeone => 'Requested by someone else';
+  String get fileInfoRequestedBySomeone => '已由其他人请求';
 
   @override
-  String get fileInfoOwnedSeparately => 'In your library as a separate book';
+  String get fileInfoOwnedSeparately => '已作为另一本书在你的媒体库中';
 
   @override
-  String get fileInfoCopyPath => 'Copy path';
+  String get fileInfoCopyPath => '复制路径';
 
   @override
-  String get fileInfoDeleteTitle => 'Delete file?';
+  String get fileInfoDeleteTitle => '删除文件？';
 
   @override
   String fileInfoDeletePrompt(String name) {
-    return '\"$name\" will be deleted from the server. This can\'t be undone.';
+    return '“$name”将从服务器中删除。此操作无法撤销。';
   }
 
   @override
-  String get fileInfoDeleteLast =>
-      'It\'s the book\'s last audio or e-book file, so the book will show as missing.';
+  String get fileInfoDeleteLast => '这是这本书的最后一个音频或电子书文件，删除后这本书将显示为缺失。';
 
   @override
-  String get fileInfoDeleteNotAllowed =>
-      'You don\'t have permission to delete files';
+  String get fileInfoDeleteNotAllowed => '你没有删除文件的权限';
 
   @override
-  String get chapterSourceEmbedded => 'Read from the audio files';
+  String get chapterSourceEmbedded => '读取自音频文件';
 
   @override
-  String get chapterSourceTracks => 'One chapter per audio file, not saved';
+  String get chapterSourceTracks => '每个音频文件一章，未保存';
 
   @override
-  String get chapterSourceProvider => 'From fetched metadata';
+  String get chapterSourceProvider => '来自获取的元数据';
 
   @override
-  String get chapterSourceMigration => 'Imported from Audiobookshelf';
+  String get chapterSourceMigration => '从 Audiobookshelf 导入';
 
   @override
-  String get chapterSourceManual => 'Edited in BookOrbit';
+  String get chapterSourceManual => '在 BookOrbit 中编辑';
 
   @override
   String chapterSourceManualBy(String name) {
-    return 'Edited by $name';
+    return '由 $name 编辑';
   }
 
   @override
-  String get chapterSourceNone => 'No chapters yet';
+  String get chapterSourceNone => '还没有章节';
 
   @override
-  String get chapterProtected => 'Protected from rescans';
+  String get chapterProtected => '不会被重新扫描覆盖';
 
   @override
-  String get chapterNotProtected => 'A rescan can replace these';
+  String get chapterNotProtected => '重新扫描可能会替换这些章节';
 
   @override
-  String get chapterProtectOnSave => 'Protect from rescans';
+  String get chapterProtectOnSave => '防止被重新扫描覆盖';
 
   @override
-  String get chapterGetFrom => 'Get Chapters From';
+  String get chapterGetFrom => '获取章节来源';
 
   @override
-  String get chapterFromFiles => 'The audio files';
+  String get chapterFromFiles => '音频文件';
 
   @override
-  String get chapterFromEbookToc => 'The e-book\'s contents';
+  String get chapterFromEbookToc => '电子书目录';
 
   @override
-  String get chapterFromReadAlong => 'The read along';
+  String get chapterFromReadAlong => '跟读';
 
   @override
-  String get chapterFromHistory => 'Earlier versions';
+  String get chapterFromHistory => '早期版本';
 
   @override
-  String get chapterHistoryTitle => 'Earlier versions';
+  String get chapterHistoryTitle => '早期版本';
 
   @override
-  String get chapterHistoryEmpty => 'Saved versions show up here.';
+  String get chapterHistoryEmpty => '已保存的版本会显示在这里。';
 
   @override
   String chapterHistoryBy(String source, String name) {
-    return '$source by $name';
+    return '$source，$name';
   }
 
   @override
-  String get chapterReadingFiles => 'Reading the audio files...';
+  String get chapterReadingFiles => '正在读取音频文件...';
 
   @override
-  String get chapterRevertToFiles => 'Revert to Files';
+  String get chapterRevertToFiles => '恢复为文件中的章节';
 
   @override
-  String get chapterRevertTitle => 'Go back to the chapters in the files?';
+  String get chapterRevertTitle => '恢复为文件中的章节？';
 
   @override
   String get chapterRevertMessage =>
-      'BookOrbit reads the chapters in the audio files again and stops protecting them from rescans. Unsaved edits are lost. The current list stays in the earlier versions.';
+      'BookOrbit 将重新读取音频文件中的章节，并不再保护这些章节免受重新扫描覆盖。未保存的编辑将丢失。当前列表会保留在早期版本中。';
 
   @override
-  String get chapterReverted => 'Chapters set back to the audio files';
+  String get chapterReverted => '章节已恢复为音频文件中的章节';
 
   @override
-  String get chapterWriteFiles => 'Write to Files';
+  String get chapterWriteFiles => '写入文件';
 
   @override
-  String get chapterWriteTitle => 'Write the chapters into the audio files?';
+  String get chapterWriteTitle => '将章节写入音频文件？';
 
   @override
   String chapterWriteMessage(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other:
-          'This rewrites the book\'s $count audio files with these chapters.',
-      one: 'This rewrites the book\'s audio file with these chapters.',
+      other: '这会用这些章节重写这本书的 $count 个音频文件。',
+      one: '这会用这些章节重写这本书的音频文件。',
     );
-    return '$_temp0 The audio itself is copied unchanged. Phones that already downloaded the book keep their copy until it\'s downloaded again.';
+    return '$_temp0音频本身会原样复制。已下载这本书的手机在重新下载之前仍保留原来的副本。';
   }
 
   @override
-  String get chapterWriteConfirm => 'Write';
+  String get chapterWriteConfirm => '写入';
 
   @override
-  String get chapterWriting => 'Writing the chapters into the audio files...';
+  String get chapterWriting => '正在将章节写入音频文件...';
 
   @override
   String chapterWritten(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Chapters written into all $count audio files',
-      one: 'Chapters written into the audio file',
+      other: '章节已写入全部 $count 个音频文件',
+      one: '章节已写入音频文件',
     );
     return '$_temp0';
   }
 
   @override
   String chapterWrittenPartly(int written, int total) {
-    return 'Chapters written into $written of $total files. The rest were left as they were.';
+    return '章节已写入 $total 个文件中的 $written 个，其余文件保持原样。';
   }
 
   @override
-  String get chapterStaleTitle => 'These chapters changed';
+  String get chapterStaleTitle => '这些章节已发生变化';
 
   @override
   String get chapterStaleMessage =>
-      'Someone else saved these chapters after you opened them. Reload to see their version. Your edits stay until you do.';
+      '你打开这些章节之后，其他人保存了更改。请重新加载以查看他们的版本。在此之前你的编辑会保留。';
 
   @override
-  String get chapterReload => 'Reload';
+  String get chapterReload => '重新加载';
 
   @override
-  String get chapterKeepEditing => 'Keep editing';
+  String get chapterKeepEditing => '继续编辑';
 
   @override
-  String get matchExplicitYes => 'Marked explicit';
+  String get matchExplicitYes => '已标记为限制级';
 
   @override
-  String get matchExplicitNo => 'Not explicit';
+  String get matchExplicitNo => '非限制级';
 
   @override
-  String get matchAbridgedYes => 'Abridged';
+  String get matchAbridgedYes => '节选版';
 
   @override
-  String get matchAbridgedNo => 'Unabridged';
+  String get matchAbridgedNo => '完整版';
 
   @override
   String boQuickMatchBody(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'these $count books',
-      one: 'this book',
+      other: '这 $count 本书',
+      one: '这本书',
     );
-    return 'BookOrbit looks up $_temp0 and fills in what it finds, following its metadata settings.';
+    return 'BookOrbit 将查找$_temp0，并按其元数据设置填入找到的信息。';
   }
 
   @override
-  String get boQuickMatchIgnoreCache => 'Ask every source again';
+  String get boQuickMatchIgnoreCache => '重新询问所有来源';
 
   @override
-  String get boQuickMatchIgnoreCacheHint =>
-      'Skips saved answers. Slower, and uses more of each source\'s request limit.';
+  String get boQuickMatchIgnoreCacheHint => '跳过已保存的结果。速度较慢，并会占用各来源更多的请求额度。';
 
   @override
   String boAdminServerCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count mail servers',
-      one: '1 mail server',
-      zero: 'None yet',
+      other: '$count 个邮件服务器',
+      one: '1 个邮件服务器',
+      zero: '暂无',
     );
     return '$_temp0';
   }
 
   @override
-  String get boEmailTitle => 'Send by email';
+  String get boEmailTitle => '通过电子邮件发送';
 
   @override
-  String get boEmailSubtitle =>
-      'Devices, mail servers and templates for sending books';
+  String get boEmailSubtitle => '用于发送书籍的设备、邮件服务器和模板';
 
   @override
-  String get boEmailTabDevices => 'Devices';
+  String get boEmailTabDevices => '设备';
 
   @override
-  String get boEmailTabServers => 'Mail servers';
+  String get boEmailTabServers => '邮件服务器';
 
   @override
-  String get boEmailTabTemplates => 'Templates';
+  String get boEmailTabTemplates => '模板';
 
   @override
-  String get boEmailTabHistory => 'History';
+  String get boEmailTabHistory => '历史记录';
 
   @override
-  String get boEmailName => 'Name';
+  String get boEmailName => '名称';
 
   @override
   String boEmailDeleteTitle(String name) {
-    return 'Delete $name?';
+    return '删除 $name？';
   }
 
   @override
-  String get boEmailMakeDefault => 'Make default';
+  String get boEmailMakeDefault => '设为默认';
 
   @override
-  String get boEmailBadgeDefault => 'Default';
+  String get boEmailBadgeDefault => '默认';
 
   @override
-  String get boEmailBadgeShared => 'Shared';
+  String get boEmailBadgeShared => '共享';
 
   @override
-  String get boEmailBadgeSystem => 'Password resets';
+  String get boEmailBadgeSystem => '密码重置';
 
   @override
-  String get boEmailBadgeBuiltIn => 'Built in';
+  String get boEmailBadgeBuiltIn => '内置';
 
   @override
-  String get boEmailDevicesEmpty =>
-      'No devices yet. Add your e-reader\'s email address to send it books.';
+  String get boEmailDevicesEmpty => '还没有设备。添加你的电子阅读器的电子邮件地址，即可向它发送书籍。';
 
   @override
-  String get boEmailAddDevice => 'Add device';
+  String get boEmailAddDevice => '添加设备';
 
   @override
-  String get boEmailNewDevice => 'New device';
+  String get boEmailNewDevice => '新设备';
 
   @override
-  String get boEmailDeviceNameHint => 'My Kindle';
+  String get boEmailDeviceNameHint => '我的 Kindle';
 
   @override
-  String get boEmailDeviceAddress => 'Email address';
+  String get boEmailDeviceAddress => '电子邮件地址';
 
   @override
-  String get boEmailDeviceType => 'Device';
+  String get boEmailDeviceType => '设备';
 
   @override
-  String get boEmailDeviceNone => 'Person or inbox';
+  String get boEmailDeviceNone => '个人或收件箱';
 
   @override
   String get boEmailDeviceKindle => 'Kindle';
@@ -13137,438 +13086,415 @@ class AppLocalizationsZh extends AppLocalizations {
   String get boEmailDeviceKobo => 'Kobo';
 
   @override
-  String get boEmailDeviceOther => 'Other e-reader';
+  String get boEmailDeviceOther => '其他电子阅读器';
 
   @override
   String get boEmailKindleHint =>
-      'Kindle gets the subject \"convert\" and only takes EPUB and PDF by email.';
+      'Kindle 的邮件主题为“convert”，并且通过电子邮件只接受 EPUB 和 PDF。';
 
   @override
   String boEmailKindleApprove(String address) {
-    return 'Kindle drops mail from addresses it doesn\'t know. In Amazon\'s Personal Document Settings, add $address to the approved list.';
+    return 'Kindle 会丢弃来自未知地址的邮件。请在亚马逊的“个人文档设置”中，将 $address 加入已认可列表。';
   }
 
   @override
-  String get boEmailKindleApproveNoServer =>
-      'Add a mail server first to see the address Kindle needs to approve.';
+  String get boEmailKindleApproveNoServer => '请先添加邮件服务器，才能看到 Kindle 需要认可的地址。';
 
   @override
-  String get boEmailFormat => 'Format';
+  String get boEmailFormat => '格式';
 
   @override
-  String get boEmailFormatPrimary => 'Book\'s main file';
+  String get boEmailFormatPrimary => '书籍的主文件';
 
   @override
-  String get boEmailFormatHint =>
-      'A book without this format gets its main file.';
+  String get boEmailFormatHint => '没有此格式的书籍将发送其主文件。';
 
   @override
-  String get boEmailReadAlong => 'Read along books';
+  String get boEmailReadAlong => '跟读书籍';
 
   @override
-  String get boEmailReadAlongAuto => 'Automatic';
+  String get boEmailReadAlongAuto => '自动';
 
   @override
-  String get boEmailReadAlongAutoHint =>
-      'Text only when a copy can be made, otherwise the original.';
+  String get boEmailReadAlongAutoHint => '能制作副本时只发送文本，否则发送原件。';
 
   @override
-  String get boEmailReadAlongText => 'Text only';
+  String get boEmailReadAlongText => '仅文本';
 
   @override
-  String get boEmailReadAlongTextHint =>
-      'Narration removed. Small enough for email.';
+  String get boEmailReadAlongTextHint => '不含朗读音频。大小适合通过电子邮件发送。';
 
   @override
-  String get boEmailReadAlongOriginal => 'With narration';
+  String get boEmailReadAlongOriginal => '含朗读音频';
 
   @override
   String get boEmailReadAlongOriginalHint =>
-      'Keeps the narration. Often 100 MB or more, over most mail servers\' limits.';
+      '保留朗读音频。通常达 100 MB 或更大，超出大多数邮件服务器的限制。';
 
   @override
-  String get boEmailTemplate => 'Template';
+  String get boEmailTemplate => '模板';
 
   @override
-  String get boEmailTemplateYourDefault => 'Your default';
+  String get boEmailTemplateYourDefault => '你的默认模板';
 
   @override
-  String get boEmailTemplateKindleHint =>
-      'Kindle never shows the message, so it skips the template.';
+  String get boEmailTemplateKindleHint => 'Kindle 从不显示邮件内容，因此会跳过模板。';
 
   @override
-  String get boEmailDefaultDevice => 'Default device';
+  String get boEmailDefaultDevice => '默认设备';
 
   @override
-  String get boEmailDefaultDeviceHint => 'Picked first when you send a book.';
+  String get boEmailDefaultDeviceHint => '发送书籍时优先选中。';
 
   @override
-  String get boEmailSendTest => 'Send a test email';
+  String get boEmailSendTest => '发送测试邮件';
 
   @override
-  String get boEmailTestSubject => 'Test email from Absorb';
+  String get boEmailTestSubject => '来自 Absorb 的测试邮件';
 
   @override
   String boEmailTestBody(String name) {
-    return 'This is a test from Absorb. If you can read it, books sent to $name will arrive here too.';
+    return '这是来自 Absorb 的测试邮件。如果你能看到它，发送给 $name 的书籍也能送达这里。';
   }
 
   @override
   String boEmailTestSent(String name) {
-    return 'Test email sent to $name';
+    return '测试邮件已发送到 $name';
   }
 
   @override
   String boEmailTestFailed(String error) {
-    return 'The test email didn\'t go out: $error';
+    return '测试邮件未能发出：$error';
   }
 
   @override
-  String get boEmailDeleteDevice => 'Delete device';
+  String get boEmailDeleteDevice => '删除设备';
 
   @override
-  String get boEmailDeleteDeviceBody => 'Its send history stays.';
+  String get boEmailDeleteDeviceBody => '其发送历史会保留。';
 
   @override
-  String get boEmailDeviceRequired => 'Enter a name and an email address';
+  String get boEmailDeviceRequired => '请输入名称和电子邮件地址';
 
   @override
-  String get boEmailLastSendFailed => 'Last send failed';
+  String get boEmailLastSendFailed => '上次发送失败';
 
   @override
-  String get boEmailGroups => 'Groups';
+  String get boEmailGroups => '分组';
 
   @override
-  String get boEmailGroupsHint => 'Send to several devices at once.';
+  String get boEmailGroupsHint => '同时发送到多台设备。';
 
   @override
-  String get boEmailNewGroup => 'New group';
+  String get boEmailNewGroup => '新建分组';
 
   @override
-  String get boEmailGroupNameHint => 'Book club';
+  String get boEmailGroupNameHint => '读书会';
 
   @override
-  String get boEmailGroupMembers => 'Devices in this group';
+  String get boEmailGroupMembers => '此分组中的设备';
 
   @override
-  String get boEmailGroupMembersEmpty => 'Add a device first.';
+  String get boEmailGroupMembersEmpty => '请先添加设备。';
 
   @override
   String boEmailGroupMemberCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count devices',
-      one: '1 device',
-      zero: 'No devices',
+      other: '$count 台设备',
+      one: '1 台设备',
+      zero: '没有设备',
     );
     return '$_temp0';
   }
 
   @override
-  String get boEmailDeleteGroup => 'Delete group';
+  String get boEmailDeleteGroup => '删除分组';
 
   @override
-  String get boEmailDeleteGroupBody => 'The devices in it stay.';
+  String get boEmailDeleteGroupBody => '其中的设备会保留。';
 
   @override
-  String get boEmailGroupRequired => 'Enter a group name';
+  String get boEmailGroupRequired => '请输入分组名称';
 
   @override
-  String get boEmailServersEmptyManage =>
-      'No mail servers yet. Add one to start sending books.';
+  String get boEmailServersEmptyManage => '还没有邮件服务器。添加一个即可开始发送书籍。';
 
   @override
-  String get boEmailServersEmpty =>
-      'No mail servers yet. Ask an admin to add one.';
+  String get boEmailServersEmpty => '还没有邮件服务器。请让管理员添加一个。';
 
   @override
-  String get boEmailAddServer => 'Add mail server';
+  String get boEmailAddServer => '添加邮件服务器';
 
   @override
-  String get boEmailNewServer => 'New mail server';
+  String get boEmailNewServer => '新邮件服务器';
 
   @override
-  String get boEmailServerPresetOther => 'Other';
+  String get boEmailServerPresetOther => '其他';
 
   @override
-  String get boEmailServerPresetHint =>
-      'A preset fills in the host, port and security. You can still change them.';
+  String get boEmailServerPresetHint => '预设会填入主机、端口和安全设置，你仍可修改。';
 
   @override
-  String get boEmailServerHost => 'Host';
+  String get boEmailServerHost => '主机';
 
   @override
-  String get boEmailServerPort => 'Port';
+  String get boEmailServerPort => '端口';
 
   @override
-  String get boEmailServerSecurity => 'Security';
+  String get boEmailServerSecurity => '安全';
 
   @override
-  String get boEmailServerSecurityNone => 'None';
+  String get boEmailServerSecurityNone => '无';
 
   @override
-  String get boEmailServerSecurityHint =>
-      'STARTTLS on port 587, SSL/TLS on 465.';
+  String get boEmailServerSecurityHint => '587 端口用 STARTTLS，465 端口用 SSL/TLS。';
 
   @override
-  String get boEmailServerNeedsPassword => 'Signs in with a password';
+  String get boEmailServerNeedsPassword => '使用密码登录';
 
   @override
-  String get boEmailServerUsername => 'Username';
+  String get boEmailServerUsername => '用户名';
 
   @override
-  String get boEmailServerPassword => 'Password';
+  String get boEmailServerPassword => '密码';
 
   @override
-  String get boEmailServerAppPassword => 'App password';
+  String get boEmailServerAppPassword => '应用专用密码';
 
   @override
-  String get boEmailServerPasswordKeep => 'Saved. Type to replace it';
+  String get boEmailServerPasswordKeep => '已保存。输入以替换';
 
   @override
-  String get boEmailServerAppPasswordHint =>
-      'Gmail and iCloud need an app password, not your account password.';
+  String get boEmailServerAppPasswordHint => 'Gmail 和 iCloud 需要应用专用密码，而不是账户密码。';
 
   @override
-  String get boEmailServerFromName => 'From name';
+  String get boEmailServerFromName => '发件人名称';
 
   @override
-  String get boEmailServerFromAddress => 'From address';
+  String get boEmailServerFromAddress => '发件人地址';
 
   @override
-  String get boEmailServerFromAddressHint =>
-      'Kindle owners need to approve this address.';
+  String get boEmailServerFromAddressHint => 'Kindle 用户需要认可此地址。';
 
   @override
-  String get boEmailServerShare => 'Share with everyone';
+  String get boEmailServerShare => '与所有人共享';
 
   @override
-  String get boEmailServerShareHint =>
-      'Other people can send books through this server without seeing the password.';
+  String get boEmailServerShareHint => '其他人可以通过此服务器发送书籍，但看不到密码。';
 
   @override
-  String get boEmailServerSystem => 'Send password resets and sign-in links';
+  String get boEmailServerSystem => '发送密码重置和登录链接';
 
   @override
-  String get boEmailServerSystemHint =>
-      'The server BookOrbit uses for its own mail.';
+  String get boEmailServerSystemHint => 'BookOrbit 自身发送邮件所用的服务器。';
 
   @override
-  String get boEmailServerVerifyTls => 'Check the server\'s certificate';
+  String get boEmailServerVerifyTls => '检查服务器证书';
 
   @override
-  String get boEmailServerVerifyTlsHint =>
-      'Turn this off only for a server on your own network with a self-signed certificate.';
+  String get boEmailServerVerifyTlsHint => '仅当服务器位于你自己的网络中且使用自签名证书时才关闭。';
 
   @override
-  String get boEmailServerTest => 'Test connection';
+  String get boEmailServerTest => '测试连接';
 
   @override
-  String get boEmailServerTestSaveFirst => 'Save first, then test';
+  String get boEmailServerTestSaveFirst => '请先保存，再测试';
 
   @override
-  String get boEmailServerTestOk => 'Connected';
+  String get boEmailServerTestOk => '已连接';
 
   @override
   String boEmailServerTestFailed(String error) {
-    return 'Can\'t connect: $error';
+    return '无法连接：$error';
   }
 
   @override
-  String get boEmailServerDelete => 'Delete mail server';
+  String get boEmailServerDelete => '删除邮件服务器';
 
   @override
-  String get boEmailServerDeleteBody => 'Everyone it\'s shared with loses it.';
+  String get boEmailServerDeleteBody => '所有与之共享的人都将无法再使用它。';
 
   @override
-  String get boEmailServerSystemFirst =>
-      'Turn off password resets on this server before deleting it.';
+  String get boEmailServerSystemFirst => '删除此服务器之前，请先关闭它的密码重置功能。';
 
   @override
-  String get boEmailServerRequired => 'Enter a name and a host';
+  String get boEmailServerRequired => '请输入名称和主机';
 
   @override
-  String get boEmailServerNotYours =>
-      'Someone else added this server. Only they can change it.';
+  String get boEmailServerNotYours => '此服务器由其他人添加，只有他们可以修改。';
 
   @override
-  String get boEmailTemplatesEmpty => 'No templates yet.';
+  String get boEmailTemplatesEmpty => '还没有模板。';
 
   @override
-  String get boEmailNewTemplate => 'New template';
+  String get boEmailNewTemplate => '新模板';
 
   @override
-  String get boEmailTemplateSubject => 'Subject';
+  String get boEmailTemplateSubject => '主题';
 
   @override
-  String get boEmailTemplateMessage => 'Message';
+  String get boEmailTemplateMessage => '内容';
 
   @override
-  String get boEmailTemplateInsert => 'Insert';
+  String get boEmailTemplateInsert => '插入';
 
   @override
-  String get boEmailTemplateInsertHint =>
-      'Goes in where the cursor is. Details a book doesn\'t have print nothing.';
+  String get boEmailTemplateInsertHint => '插入到光标所在位置。书籍没有的详情将不输出任何内容。';
 
   @override
-  String get boEmailVarBook => 'Book';
+  String get boEmailVarBook => '书籍';
 
   @override
-  String get boEmailVarFile => 'File';
+  String get boEmailVarFile => '文件';
 
   @override
-  String get boEmailVarOther => 'Other';
+  String get boEmailVarOther => '其他';
 
   @override
-  String get boEmailTemplatePreview => 'Preview';
+  String get boEmailTemplatePreview => '预览';
 
   @override
-  String get boEmailTemplatePreviewNone =>
-      'Send a book once to preview a template with it.';
+  String get boEmailTemplatePreviewNone => '先发送一次书籍，即可用它预览模板。';
 
   @override
   String boEmailTemplateAttached(String name) {
-    return 'Attached: $name';
+    return '附件：$name';
   }
 
   @override
-  String get boEmailTemplateBuiltIn => 'Built in. Only an admin can change it.';
+  String get boEmailTemplateBuiltIn => '内置模板，只有管理员可以修改。';
 
   @override
-  String get boEmailTemplateKindleNote =>
-      'Kindle never shows a template. It always gets the subject \"convert\".';
+  String get boEmailTemplateKindleNote => 'Kindle 从不显示模板，邮件主题始终为“convert”。';
 
   @override
-  String get boEmailTemplateDelete => 'Delete template';
+  String get boEmailTemplateDelete => '删除模板';
 
   @override
-  String get boEmailTemplateDeleteBody =>
-      'Devices that use it go back to your default template.';
+  String get boEmailTemplateDeleteBody => '使用它的设备将改用你的默认模板。';
 
   @override
-  String get boEmailTemplateRequired => 'Enter a name and a subject';
+  String get boEmailTemplateRequired => '请输入名称和主题';
 
   @override
-  String get boEmailHistoryEmpty => 'Nothing sent yet.';
+  String get boEmailHistoryEmpty => '还没有发送过任何内容。';
 
   @override
-  String get boEmailHistoryAll => 'All';
+  String get boEmailHistoryAll => '全部';
 
   @override
-  String get boEmailHistoryEveryone => 'Everyone';
+  String get boEmailHistoryEveryone => '所有人';
 
   @override
-  String get boEmailStatusSent => 'Sent';
+  String get boEmailStatusSent => '已发送';
 
   @override
-  String get boEmailStatusSending => 'Sending';
+  String get boEmailStatusSending => '发送中';
 
   @override
   String boEmailStatusRetrying(int attempt) {
-    return 'Trying again ($attempt)';
+    return '正在重试（$attempt）';
   }
 
   @override
-  String get boEmailStatusFailed => 'Failed';
+  String get boEmailStatusFailed => '失败';
 
   @override
   String boEmailTo(String name) {
-    return 'To $name';
+    return '发给 $name';
   }
 
   @override
-  String get boEmailResend => 'Send again';
+  String get boEmailResend => '再次发送';
 
   @override
-  String get boEmailResent => 'Sending again';
+  String get boEmailResent => '正在重新发送';
 
   @override
-  String get boEmailForget => 'Remove from history';
+  String get boEmailForget => '从历史记录中移除';
 
   @override
-  String get boEmailLoadMore => 'Load more';
+  String get boEmailLoadMore => '加载更多';
 
   @override
-  String get boEmailUnknownBook => 'Deleted book';
+  String get boEmailUnknownBook => '已删除的书籍';
 
   @override
-  String get boEmailSendNoServer =>
-      'No mail server is set up on this server yet.';
+  String get boEmailSendNoServer => '此服务器上还没有设置邮件服务器。';
 
   @override
-  String get boEmailSendAskAdmin => 'Ask an admin to add one.';
+  String get boEmailSendAskAdmin => '请让管理员添加一个。';
 
   @override
-  String get boEmailSendNoDevices => 'Add a device to send this book to.';
+  String get boEmailSendNoDevices => '请先添加一台设备，再发送这本书。';
 
   @override
-  String get boEmailSendOptions => 'Options';
+  String get boEmailSendOptions => '选项';
 
   @override
-  String get boEmailSendFormatEach => 'Each device\'s own';
+  String get boEmailSendFormatEach => '各设备自己的格式';
 
   @override
-  String get boEmailSendServer => 'Mail server';
+  String get boEmailSendServer => '邮件服务器';
 
   @override
-  String get boEmailSendButton => 'Send';
+  String get boEmailSendButton => '发送';
 
   @override
   String boEmailSendGets(String format, String size) {
-    return 'Gets $format · $size';
+    return '将收到 $format · $size';
   }
 
   @override
   String boEmailSendMissing(String format, String got) {
-    return 'No $format, gets the $got';
+    return '没有 $format，将收到$got';
   }
 
   @override
   String boEmailSendKindleRejects(String format) {
-    return 'Kindle doesn\'t take $format by email';
+    return 'Kindle 不接受通过电子邮件发送 $format';
   }
 
   @override
   String boEmailSendOverKindle(String size) {
-    return '$size, over Kindle\'s 50 MB limit';
+    return '$size，超出 Kindle 的 50 MB 限制';
   }
 
   @override
   String boEmailSendOverGmail(String size) {
-    return '$size, over Gmail\'s 25 MB limit';
+    return '$size，超出 Gmail 的 25 MB 限制';
   }
 
   @override
   String boEmailSendNarrated(String size) {
-    return 'Gets the narrated copy · $size';
+    return '将收到含朗读音频的副本 · $size';
   }
 
   @override
   String boEmailSendHanding(String server) {
-    return 'Sending through $server';
+    return '正在通过 $server 发送';
   }
 
   @override
   String boEmailSendAccepted(String server) {
-    return 'Sent through $server';
+    return '已通过 $server 发送';
   }
 
   @override
   String boEmailSendFailedLine(String error) {
-    return 'Didn\'t send: $error';
+    return '未能发送：$error';
   }
 
   @override
-  String get boEmailSendStillGoing =>
-      'Still sending. You\'ll get a notification when it\'s done.';
+  String get boEmailSendStillGoing => '仍在发送中。完成后你会收到通知。';
 
   @override
-  String get boEmailKindleOriginal =>
-      'A Kindle can\'t take the narrated copy. Set it to text only.';
+  String get boEmailKindleOriginal => 'Kindle 无法接收含朗读音频的副本。请将其设为仅文本。';
 
   @override
-  String get boEmailNoCopy => 'Couldn\'t make a copy without the narration.';
+  String get boEmailNoCopy => '无法制作不含朗读音频的副本。';
 
   @override
   String get recentSearchesTitle => '最近搜索';
@@ -14467,8 +14393,7 @@ class AppLocalizationsZh extends AppLocalizations {
       '跳过 Windows 音效，可修复爆音或音量忽大忽小的问题。Absorb 播放时其他应用会被静音。重启 Absorb 后生效。';
 
   @override
-  String get exclusiveAudioFallback =>
-      'Your sound device refused exclusive audio, so Absorb is playing in normal mode';
+  String get exclusiveAudioFallback => '你的声音设备拒绝了独占音频，因此 Absorb 正以普通模式播放';
 
   @override
   String homeRecentlyAddedNewBadge(int count) {
@@ -14481,55 +14406,52 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get goToTime => 'Go to time';
+  String get goToTime => '跳转到时间';
 
   @override
-  String get goToTimeLabel => 'Time';
+  String get goToTimeLabel => '时间';
 
   @override
-  String get goToTimeHint => 'h:mm:ss, mm:ss or minutes';
+  String get goToTimeHint => 'h:mm:ss、mm:ss 或分钟数';
 
   @override
-  String get goToTimeGo => 'Go';
+  String get goToTimeGo => '跳转';
 
   @override
   String goToTimeLength(String time) {
-    return 'Length $time';
+    return '总长 $time';
   }
 
   @override
-  String get goToTimeInvalid => 'Type a time like 1:23:45, 23:45 or 90';
+  String get goToTimeInvalid => '请输入类似 1:23:45、23:45 或 90 的时间';
 
   @override
   String goToTimePastEnd(String time) {
-    return 'That\'s past the end ($time)';
+    return '已超出结尾（$time）';
   }
 
   @override
-  String get desktopShortcutGoToTime => 'Go to a time in the open player';
+  String get desktopShortcutGoToTime => '跳转到已打开播放器中的某个时间';
 
   @override
   String fellAsleepJumpBack(String time) {
-    return 'Fell asleep around $time · Jump back';
+    return '大约在 $time 睡着 · 跳回';
   }
 
   @override
-  String get surpriseMe => 'Surprise me';
+  String get surpriseMe => '随机一本';
 
   @override
-  String get surpriseMeNoneLeft =>
-      'You\'ve finished every book in this library';
+  String get surpriseMeNoneLeft => '你已听完此媒体库中的每一本书';
 
   @override
-  String get surpriseMeFailed => 'Couldn\'t pick a book. Try again.';
+  String get surpriseMeFailed => '无法选出书籍。请重试。';
 
   @override
-  String get surpriseMeOffline =>
-      'Surprise me needs a connection to the server';
+  String get surpriseMeOffline => '“随机一本”需要连接到服务器';
 
   @override
-  String get surpriseMeBooksOnly =>
-      'Surprise me picks books. Switch to a book library.';
+  String get surpriseMeBooksOnly => '“随机一本”只会选择书籍。请切换到书籍媒体库。';
 
   @override
   String get autoDownloadNextInSeries => '自动下载系列中的下一本书';
@@ -14587,22 +14509,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get quickSwitcherSleepTimer => '睡眠定时器';
 
   @override
-  String get quickSwitcherKeywordsAbsorbing => 'now playing player';
+  String get quickSwitcherKeywordsAbsorbing =>
+      '正在收听 正在播放 播放器 now playing player';
 
   @override
-  String get quickSwitcherKeywordsSettings => 'preferences options';
+  String get quickSwitcherKeywordsSettings => '设置 偏好 选项 preferences options';
 
   @override
-  String get quickSwitcherKeywordsDownloads => 'offline';
+  String get quickSwitcherKeywordsDownloads => '下载 离线 offline';
 
   @override
-  String get quickSwitcherKeywordsPlayPause => 'resume pause';
+  String get quickSwitcherKeywordsPlayPause => '播放 暂停 继续 resume pause';
 
   @override
-  String get quickSwitcherKeywordsSleepTimer => 'timer';
+  String get quickSwitcherKeywordsSleepTimer => '睡眠 定时 定时器 timer';
 
   @override
-  String get quickSwitcherKeywordsShortcuts => 'keys help hotkeys keyboard';
+  String get quickSwitcherKeywordsShortcuts =>
+      '快捷键 按键 帮助 键盘 keys help hotkeys keyboard';
 
   @override
   String get quickSwitcherKindAction => '操作';
@@ -14694,696 +14618,666 @@ class AppLocalizationsZh extends AppLocalizations {
   String get bookmarksExportFailed => '无法导出书签';
 
   @override
-  String get chapterSearchHint => 'Search chapters or type a time (1:23:00)';
+  String get chapterSearchHint => '搜索章节或输入时间（1:23:00）';
 
   @override
-  String get chapterSearchNoResults => 'No chapters match';
+  String get chapterSearchNoResults => '没有匹配的章节';
 
   @override
-  String get dropUploadNotAllowed =>
-      'Your account can\'t upload to this server';
+  String get dropUploadNotAllowed => '你的账户无法上传到此服务器';
 
   @override
-  String get dropUploadNothingUsable =>
-      'None of the dropped files can be uploaded';
+  String get dropUploadNothingUsable => '拖入的文件都无法上传';
 
   @override
-  String get dropUploadAlreadyOpen => 'Finish or close the open upload first';
+  String get dropUploadAlreadyOpen => '请先完成或关闭已打开的上传';
 
   @override
-  String get remoteHostTitle => 'Control from your phone';
+  String get remoteHostTitle => '用手机控制';
 
   @override
-  String get remoteHostSubtitleOff =>
-      'Use your phone as a remote for Absorb on this PC';
+  String get remoteHostSubtitleOff => '把手机当作这台电脑上 Absorb 的遥控器';
 
   @override
   String remoteHostSubtitleOn(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count phones connected',
-      one: '1 phone connected',
-      zero: 'no phones connected',
+      other: '$count 部手机已连接',
+      one: '1 部手机已连接',
+      zero: '没有手机连接',
     );
-    return 'On · $_temp0';
+    return '已开启 · $_temp0';
   }
 
   @override
   String get remoteHostSheetBody =>
-      'Use your phone as a remote for this PC. The audio keeps playing here on the PC, and your phone shows what\'s playing with the buttons. Your phone and this PC need to be on the same Wi-Fi.';
+      '把手机当作这台电脑的遥控器。音频仍在电脑上播放，手机会显示正在播放的内容并提供控制按钮。手机和这台电脑需要连接同一个 Wi-Fi。';
 
   @override
-  String get remoteHostSwitch => 'Turn on';
+  String get remoteHostSwitch => '开启';
 
   @override
   String get remoteHostSwitchSubtitle =>
-      'Windows may ask to let Absorb Plus through the firewall the first time. Allow it.';
+      '首次使用时，Windows 可能会询问是否允许 Absorb Plus 通过防火墙。请选择允许。';
 
   @override
-  String get remoteHostKeepOn => 'Keep on when Absorb starts';
+  String get remoteHostKeepOn => 'Absorb 启动时保持开启';
 
   @override
-  String get remoteHostKeepOnSubtitle =>
-      'When this is off, it turns off each time you close Absorb.';
+  String get remoteHostKeepOnSubtitle => '关闭后，每次退出 Absorb 都会随之关闭。';
 
   @override
   String remoteHostPortsBusy(int first, int last) {
-    return 'Couldn\'t start: ports $first to $last are all in use.';
+    return '无法启动：$first 到 $last 的端口都已被占用。';
   }
 
   @override
-  String get remoteHostPairTitle => 'Pair your phone';
+  String get remoteHostPairTitle => '配对你的手机';
 
   @override
-  String get remoteHostStep1 => '1. Turn it on here.';
+  String get remoteHostStep1 => '1. 先在这里开启。';
 
   @override
-  String get remoteHostStep2 =>
-      '2. Scan the code with your phone\'s camera, or open Absorb on the phone and go to Settings > Control your computer.';
+  String get remoteHostStep2 => '2. 用手机相机扫描二维码，或在手机上打开 Absorb，进入设置 > 控制你的电脑。';
 
   @override
-  String get remoteHostStep3 =>
-      '3. Enter the code on the phone, then choose Allow here.';
+  String get remoteHostStep3 => '3. 在手机上输入验证码，然后在这里选择允许。';
 
   @override
-  String get remoteHostCodeLabel => 'Code';
+  String get remoteHostCodeLabel => '验证码';
 
   @override
   String remoteHostCodeExpires(String time) {
-    return 'Works for $time';
+    return '有效期 $time';
   }
 
   @override
-  String get remoteHostPairFirst => 'Pair a phone';
+  String get remoteHostPairFirst => '配对手机';
 
   @override
-  String get remoteHostPairAnother => 'Pair another device';
+  String get remoteHostPairAnother => '配对其他设备';
 
   @override
   String get remoteHostPairingClosed =>
-      'Pairing is closed. Tap the button for a new code; it works for 2 minutes and for one device.';
+      '配对已关闭。点击按钮获取新验证码；验证码 2 分钟内有效，且仅限一台设备使用。';
 
   @override
-  String get remoteHostFull =>
-      '5 devices are paired, the most allowed. Forget one to pair another.';
+  String get remoteHostFull => '已配对 5 台设备，已达上限。请先忘记一台再配对其他设备。';
 
   @override
   String remoteHostAddresses(String addresses) {
-    return 'This PC\'s address: $addresses';
+    return '这台电脑的地址：$addresses';
   }
 
   @override
-  String get remoteHostNoAddress => 'This PC has no network address right now.';
+  String get remoteHostNoAddress => '这台电脑目前没有网络地址。';
 
   @override
-  String get remoteHostNoDiscovery =>
-      'Your phone may not find this PC by itself; type this PC\'s address on the phone instead.';
+  String get remoteHostNoDiscovery => '你的手机可能无法自动找到这台电脑，请改为在手机上输入这台电脑的地址。';
 
   @override
-  String get remoteHostConnectedTitle => 'Connected now';
+  String get remoteHostConnectedTitle => '当前已连接';
 
   @override
-  String get remoteHostPairedTitle => 'Paired devices';
+  String get remoteHostPairedTitle => '已配对的设备';
 
   @override
-  String get remoteHostNoDevices => 'No paired devices yet';
+  String get remoteHostNoDevices => '还没有已配对的设备';
 
   @override
-  String get remoteHostUnusedNote =>
-      'A device not used for 90 days is forgotten.';
+  String get remoteHostUnusedNote => '90 天未使用的设备将被忘记。';
 
   @override
   String remoteHostLastUsed(String date) {
-    return 'Last used $date';
+    return '上次使用：$date';
   }
 
   @override
   String remoteHostConnectedFrom(String address, String time) {
-    return '$address, connected since $time';
+    return '$address，自 $time 起已连接';
   }
 
   @override
-  String get remoteHostForget => 'Forget';
+  String get remoteHostForget => '忘记';
 
   @override
-  String get remoteHostForgetAll => 'Forget all';
+  String get remoteHostForgetAll => '全部忘记';
 
   @override
-  String get remoteHostForgetAllConfirm =>
-      'Forget all paired devices? Each one has to pair again to control this PC.';
+  String get remoteHostForgetAllConfirm => '忘记所有已配对的设备？每台设备都需要重新配对才能控制这台电脑。';
 
   @override
-  String get remoteHostDisconnect => 'Disconnect';
+  String get remoteHostDisconnect => '断开连接';
 
   @override
   String remoteHostAllowTitle(String name) {
-    return 'Allow ‘$name’ to control Absorb on this PC?';
+    return '允许“$name”控制这台电脑上的 Absorb？';
   }
 
   @override
-  String get remoteHostAllowBody =>
-      'Only allow a device you know. It can play, pause and change what plays here. No answer means no.';
+  String get remoteHostAllowBody => '只允许你认识的设备。它可以播放、暂停并更改这里播放的内容。不回应则视为拒绝。';
 
   @override
-  String get remoteHostAllow => 'Allow';
+  String get remoteHostAllow => '允许';
 
   @override
-  String get remoteHostDeny => 'Deny';
+  String get remoteHostDeny => '拒绝';
 
   @override
-  String get remoteControlAnother => 'Control your computer';
+  String get remoteControlAnother => '控制你的电脑';
 
   @override
-  String get remoteControlAnotherSubtitle =>
-      'Use this phone as a remote for Absorb on your PC';
+  String get remoteControlAnotherSubtitle => '把这部手机当作电脑上 Absorb 的遥控器';
 
   @override
   String get remoteConnectIntro =>
-      'Use this phone as a remote for Absorb on your PC. The audio keeps playing on the PC. Your phone and PC need to be on the same Wi-Fi. On the PC, open Settings > Control from your phone and turn it on.';
+      '把这部手机当作电脑上 Absorb 的遥控器。音频仍在电脑上播放。手机和电脑需要连接同一个 Wi-Fi。请在电脑上打开设置 > 用手机控制并将其开启。';
 
   @override
-  String get remoteConnectSearching => 'Looking for computers on your Wi-Fi…';
+  String get remoteConnectSearching => '正在查找 Wi-Fi 上的电脑…';
 
   @override
-  String get remoteConnectNoneFound =>
-      'No computers found. On the PC, open Settings > Control from your phone and turn it on, or enter its address.';
+  String get remoteConnectNoneFound => '未找到电脑。请在电脑上打开设置 > 用手机控制并将其开启，或手动输入其地址。';
 
   @override
-  String get remoteConnectSearchAgain => 'Search again';
+  String get remoteConnectSearchAgain => '重新搜索';
 
   @override
-  String get remoteConnectPaired => 'Paired';
+  String get remoteConnectPaired => '已配对';
 
   @override
-  String get remoteConnectFound => 'On your Wi-Fi';
+  String get remoteConnectFound => '在你的 Wi-Fi 上';
 
   @override
-  String get remoteConnectEnterAddress => 'Enter an address';
+  String get remoteConnectEnterAddress => '输入地址';
 
   @override
   String get remoteConnectAddressHint => '192.168.1.20:47390';
 
   @override
   String get remoteConnectAddressInvalid =>
-      'Enter an address like 192.168.1.20 or 192.168.1.20:47390';
+      '请输入类似 192.168.1.20 或 192.168.1.20:47390 的地址';
 
   @override
-  String get remoteConnectNext => 'Next';
+  String get remoteConnectNext => '下一步';
 
   @override
   String remoteConnectCodeTitle(String name) {
-    return 'Pair with $name';
+    return '与 $name 配对';
   }
 
   @override
-  String get remoteConnectCodeHelp =>
-      'Enter the 6-digit code shown on the PC under Control from your phone.';
+  String get remoteConnectCodeHelp => '请输入电脑上“用手机控制”下显示的 6 位验证码。';
 
   @override
-  String get remoteConnectWaiting => 'Now choose Allow on the PC…';
+  String get remoteConnectWaiting => '现在请在电脑上选择允许…';
 
   @override
-  String get remoteConnectPair => 'Pair';
+  String get remoteConnectPair => '配对';
 
   @override
-  String get remoteConnectForget => 'Forget this computer';
+  String get remoteConnectForget => '忘记这台电脑';
 
   @override
-  String get remotePairBadCode =>
-      'That code isn\'t right. Check the PC and try again.';
+  String get remotePairBadCode => '验证码不正确。请查看电脑后重试。';
 
   @override
-  String get remotePairExpired =>
-      'The code expired. Get a new one on the PC with Pair another device.';
+  String get remotePairExpired => '验证码已过期。请在电脑上点击“配对其他设备”获取新验证码。';
 
   @override
-  String get remotePairClosed =>
-      'Pairing isn\'t open on the PC. On the PC, tap Pair another device for a new code.';
+  String get remotePairClosed => '电脑上尚未开放配对。请在电脑上点击“配对其他设备”获取新验证码。';
 
   @override
-  String get remotePairDenied =>
-      'The PC didn\'t allow this phone. Try again and choose Allow on the PC.';
+  String get remotePairDenied => '电脑未允许这部手机。请重试，并在电脑上选择允许。';
 
   @override
-  String get remotePairTooManyDevices =>
-      'That PC already has 5 paired devices. Forget one on the PC first.';
+  String get remotePairTooManyDevices => '那台电脑已配对 5 台设备。请先在电脑上忘记一台。';
 
   @override
-  String get remotePairTooMany =>
-      'Too many tries. Wait a minute and try again.';
+  String get remotePairTooMany => '尝试次数过多。请等待一分钟后重试。';
 
   @override
   String get remotePairUnreachable =>
-      'Your phone and PC aren\'t on the same Wi-Fi, or the PC hasn\'t turned it on. Check both and try again.';
+      '你的手机和电脑不在同一个 Wi-Fi 上，或电脑尚未开启该功能。请检查两者后重试。';
 
   @override
-  String get remotePairFailed => 'Pairing didn\'t work. Try again.';
+  String get remotePairFailed => '配对未成功。请重试。';
 
   @override
-  String get remoteVersionMismatch =>
-      'Update Absorb Plus on both devices to use the remote.';
+  String get remoteVersionMismatch => '请在两台设备上都更新 Absorb Plus，才能使用遥控。';
 
   @override
-  String get remoteConnecting => 'Connecting…';
+  String get remoteConnecting => '正在连接…';
 
   @override
-  String get remoteReconnecting => 'Reconnecting…';
+  String get remoteReconnecting => '正在重新连接…';
 
   @override
   String get remoteUnreachableHint =>
-      'Can\'t reach the PC. Check that it\'s awake, Absorb is open, and both are on the same Wi-Fi.';
+      '无法连接电脑。请确认电脑未休眠、Absorb 已打开，且两者在同一个 Wi-Fi 上。';
 
   @override
   String remoteNothingPlaying(String name) {
-    return 'Nothing is playing on $name';
+    return '$name 上没有正在播放的内容';
   }
 
   @override
-  String get remoteNothingLoaded => 'Start something on the PC first.';
+  String get remoteNothingLoaded => '请先在电脑上开始播放。';
 
   @override
-  String get remoteCommandFailed => 'The PC couldn\'t do that.';
+  String get remoteCommandFailed => '电脑无法执行该操作。';
 
   @override
-  String get remoteNotOnList => 'That book isn\'t on the PC\'s list any more.';
+  String get remoteNotOnList => '这本书已不在电脑的列表中。';
 
   @override
-  String get remoteDisconnectedByHost => 'The PC disconnected this device.';
+  String get remoteDisconnectedByHost => '电脑已断开这台设备。';
 
   @override
-  String get remoteUnauthorized =>
-      'The PC doesn\'t know this device any more. Pair it again.';
+  String get remoteUnauthorized => '电脑已不认识这台设备。请重新配对。';
 
   @override
-  String get remotePairAgain => 'Pair again';
+  String get remotePairAgain => '重新配对';
 
   @override
-  String get remoteConnectAgain => 'Connect again';
+  String get remoteConnectAgain => '重新连接';
 
   @override
-  String get remoteDisplayMode => 'Display mode';
+  String get remoteDisplayMode => '显示模式';
 
   @override
-  String get remoteDisplayExit => 'Tap to leave display mode';
+  String get remoteDisplayExit => '点击退出显示模式';
 
   @override
-  String get remotePlay => 'Play';
+  String get remotePlay => '播放';
 
   @override
-  String get remotePause => 'Pause';
+  String get remotePause => '暂停';
 
   @override
-  String get remoteStop => 'Stop';
+  String get remoteStop => '停止';
 
   @override
-  String get remotePreviousChapter => 'Previous chapter';
+  String get remotePreviousChapter => '上一章';
 
   @override
-  String get remoteNextChapter => 'Next chapter';
+  String get remoteNextChapter => '下一章';
 
   @override
   String remoteSkipBack(int seconds) {
-    return 'Back $seconds seconds';
+    return '后退 $seconds 秒';
   }
 
   @override
   String remoteSkipForward(int seconds) {
-    return 'Forward $seconds seconds';
+    return '前进 $seconds 秒';
   }
 
   @override
-  String get remoteSpeed => 'Speed';
+  String get remoteSpeed => '速度';
 
   @override
-  String get remoteSpeedSlower => 'Slower';
+  String get remoteSpeedSlower => '更慢';
 
   @override
-  String get remoteSpeedFaster => 'Faster';
+  String get remoteSpeedFaster => '更快';
 
   @override
-  String get remoteSleepTimer => 'Sleep timer';
+  String get remoteSleepTimer => '睡眠定时器';
 
   @override
   String remoteSleepMinutes(int minutes) {
-    return '$minutes minutes';
+    return '$minutes 分钟';
   }
 
   @override
-  String get remoteSleepEndOfChapter => 'End of chapter';
+  String get remoteSleepEndOfChapter => '章节结束时';
 
   @override
-  String get remoteSleepEndOfEpisode => 'End of episode';
+  String get remoteSleepEndOfEpisode => '单集结束时';
 
   @override
   String remoteSleepChapters(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count chapters',
-      one: '1 chapter',
+      other: '$count 章',
+      one: '1 章',
     );
     return '$_temp0';
   }
 
   @override
-  String get remoteSleepCancel => 'Turn off the sleep timer';
+  String get remoteSleepCancel => '关闭睡眠定时器';
 
   @override
-  String get remoteVolume => 'Volume';
+  String get remoteVolume => '音量';
 
   @override
-  String get remoteMute => 'Mute';
+  String get remoteMute => '静音';
 
   @override
-  String get remoteUnmute => 'Unmute';
+  String get remoteUnmute => '取消静音';
 
   @override
-  String get remoteChapters => 'Chapters';
+  String get remoteChapters => '章节';
 
   @override
-  String get remoteBookmark => 'Bookmark';
+  String get remoteBookmark => '书签';
 
   @override
-  String get remoteBookmarkTitle => 'Add a bookmark here';
+  String get remoteBookmarkTitle => '在此处添加书签';
 
   @override
-  String get remoteBookmarkNoteHint => 'Note (optional)';
+  String get remoteBookmarkNoteHint => '备注（可选）';
 
   @override
-  String get remoteBookmarkAdd => 'Add';
+  String get remoteBookmarkAdd => '添加';
 
   @override
-  String get remoteBookmarkAdded => 'Bookmark added on the PC';
+  String get remoteBookmarkAdded => '已在电脑上添加书签';
 
   @override
-  String get remoteContinueListening => 'Continue listening';
+  String get remoteContinueListening => '继续收听';
 
   @override
-  String get remoteContinueEmpty => 'Nothing in progress on the PC.';
+  String get remoteContinueEmpty => '电脑上没有进行中的内容。';
 
   @override
   String remoteTimeLeft(String time) {
-    return '$time left';
+    return '剩余 $time';
   }
 
   @override
   String remoteChapterTimeLeft(String time) {
-    return '$time left in the chapter';
+    return '本章剩余 $time';
   }
 
   @override
-  String get remoteCustomize => 'Customize';
+  String get remoteCustomize => '自定义';
 
   @override
-  String get remoteCustomizeTitle => 'Customize the remote';
+  String get remoteCustomizeTitle => '自定义遥控器';
 
   @override
   String get remoteCustomizeHintPortrait =>
-      'Editing the portrait layout. Drag a block by its handle, or hold it, to move it. Turn the phone to edit landscape.';
+      '正在编辑竖屏布局。拖动模块的手柄或长按模块即可移动。旋转手机可编辑横屏布局。';
 
   @override
   String get remoteCustomizeHintLandscape =>
-      'Editing the landscape layout. Drag blocks within or between the two columns. Turn the phone to edit portrait.';
+      '正在编辑横屏布局。可在两列之内或之间拖动模块。旋转手机可编辑竖屏布局。';
 
   @override
-  String get remoteCustomizeReset => 'Reset to default';
+  String get remoteCustomizeReset => '恢复默认';
 
   @override
-  String get remoteCustomizePresets => 'Presets';
+  String get remoteCustomizePresets => '预设';
 
   @override
-  String get remoteCustomizeAddTitle => 'Add to the screen';
+  String get remoteCustomizeAddTitle => '添加到屏幕';
 
   @override
-  String get remoteCustomizeDropHere => 'Drop blocks here';
+  String get remoteCustomizeDropHere => '将模块拖到这里';
 
   @override
-  String get remoteCustomizeMove => 'Drag to move';
+  String get remoteCustomizeMove => '拖动以移动';
 
   @override
-  String get remoteCustomizeEmpty =>
-      'Nothing on this screen. Tap Customize to add controls.';
+  String get remoteCustomizeEmpty => '此屏幕上没有内容。点击“自定义”添加控件。';
 
   @override
-  String get remotePresetDefault => 'Default';
+  String get remotePresetDefault => '默认';
 
   @override
-  String get remotePresetMinimal => 'Minimal';
+  String get remotePresetMinimal => '精简';
 
   @override
-  String get remotePresetNightstand => 'Nightstand';
+  String get remotePresetNightstand => '床头';
 
   @override
-  String get remotePresetFull => 'Full';
+  String get remotePresetFull => '完整';
 
   @override
-  String get remoteBlockCover => 'Cover';
+  String get remoteBlockCover => '封面';
 
   @override
-  String get remoteBlockTitle => 'Title and author';
+  String get remoteBlockTitle => '标题和作者';
 
   @override
-  String get remoteBlockChapterTitle => 'Chapter title';
+  String get remoteBlockChapterTitle => '章节标题';
 
   @override
-  String get remoteBlockProgress => 'Progress bar';
+  String get remoteBlockProgress => '进度条';
 
   @override
-  String get remoteBlockTimeLeft => 'Time left';
+  String get remoteBlockTimeLeft => '剩余时间';
 
   @override
-  String get remoteBlockTransport => 'Playback buttons';
+  String get remoteBlockTransport => '播放按钮';
 
   @override
-  String get remoteBlockClock => 'Clock';
+  String get remoteBlockClock => '时钟';
 
   @override
-  String get remoteBlockSpacer => 'Space';
+  String get remoteBlockSpacer => '空白';
 
   @override
-  String get remoteSizeSmall => 'Small';
+  String get remoteSizeSmall => '小';
 
   @override
-  String get remoteSizeMedium => 'Medium';
+  String get remoteSizeMedium => '中';
 
   @override
-  String get remoteSizeLarge => 'Large';
+  String get remoteSizeLarge => '大';
 
   @override
-  String get remoteSizeCompact => 'Compact';
+  String get remoteSizeCompact => '紧凑';
 
   @override
-  String get remoteSizeNormal => 'Normal';
+  String get remoteSizeNormal => '标准';
 
   @override
-  String get remoteDisplayBackground => 'Background';
+  String get remoteDisplayBackground => '背景';
 
   @override
-  String get remoteDisplayBackgroundTheme => 'Theme';
+  String get remoteDisplayBackgroundTheme => '主题';
 
   @override
-  String get remoteDisplayBackgroundCover => 'Blurred cover';
+  String get remoteDisplayBackgroundCover => '模糊封面';
 
   @override
-  String get remoteDisplayBackgroundBlack => 'Black';
+  String get remoteDisplayBackgroundBlack => '黑色';
 
   @override
-  String get remoteDisplayTextSize => 'Text size';
+  String get remoteDisplayTextSize => '文字大小';
 
   @override
-  String get remoteDisplayTextHuge => 'Huge';
+  String get remoteDisplayTextHuge => '超大';
 
   @override
-  String get remoteDisplayShowClock => 'Show the clock';
+  String get remoteDisplayShowClock => '显示时钟';
 
   @override
-  String get remoteDisplay24Hour => '24-hour clock';
+  String get remoteDisplay24Hour => '24 小时制';
 
   @override
-  String get remoteDisplayDim => 'Dim the screen after';
+  String get remoteDisplayDim => '多久后调暗屏幕';
 
   @override
-  String get remoteDisplayDimNever => 'Never';
+  String get remoteDisplayDimNever => '从不';
 
   @override
-  String get quickSwitcherKeywordsRemote => 'remote phone control pc link pair';
+  String get quickSwitcherKeywordsRemote =>
+      '遥控 手机 控制 电脑 配对 remote phone control pc link pair';
 
   @override
-  String get quickSwitcherKeywordsSurprise => 'random pick shuffle';
+  String get quickSwitcherKeywordsSurprise => '随机 随便 惊喜 random pick shuffle';
 
   @override
-  String get developerModeOn => 'Developer mode on';
+  String get developerModeOn => '开发者模式已开启';
 
   @override
-  String get developerModeAlreadyOn => 'Developer mode is already on';
+  String get developerModeAlreadyOn => '开发者模式已经开启';
 
   @override
-  String get developerTitle => 'Developer';
+  String get developerTitle => '开发者';
 
   @override
-  String get developerSubtitle => 'Test builds and tools for development';
+  String get developerSubtitle => '测试版本和开发工具';
 
   @override
-  String get developerModeSwitch => 'Developer mode';
+  String get developerModeSwitch => '开发者模式';
 
   @override
-  String get developerModeSwitchSubtitle =>
-      'Turning it off hides this page. Tap the version 7 times to bring it back.';
+  String get developerModeSwitchSubtitle => '关闭后将隐藏此页面。点击版本号 7 次可重新显示。';
 
   @override
-  String get testChannelTitle => 'Test channel';
+  String get testChannelTitle => '测试通道';
 
   @override
-  String get testChannelSubtitle => 'Install the newest test build';
+  String get testChannelSubtitle => '安装最新的测试版本';
 
   @override
-  String get testChannelUnavailable =>
-      'Test builds are only for the Android GitHub version.';
+  String get testChannelUnavailable => '测试版本仅适用于 Android GitHub 版。';
 
   @override
-  String get testChannelCodeLabel => 'Test channel code';
+  String get testChannelCodeLabel => '测试通道代码';
 
   @override
-  String get testChannelUnlock => 'Unlock';
+  String get testChannelUnlock => '解锁';
 
   @override
-  String get testChannelUnlocked => 'Test channel unlocked';
+  String get testChannelUnlocked => '测试通道已解锁';
 
   @override
-  String get testChannelWrongCode => 'That code isn\'t right';
+  String get testChannelWrongCode => '代码不正确';
 
   @override
-  String get testChannelLaunchCheck => 'Check for test builds on launch';
+  String get testChannelLaunchCheck => '启动时检查测试版本';
 
   @override
-  String get testChannelLaunchCheckSubtitle =>
-      'Asks to install a newer test build when the app starts';
+  String get testChannelLaunchCheckSubtitle => '应用启动时，如有较新的测试版本会询问是否安装';
 
   @override
-  String get testChannelWarning =>
-      'Test builds are unfinished and can break things. They replace the installed app and keep your data.';
+  String get testChannelWarning => '测试版本尚未完成，可能出现问题。它们会替换已安装的应用，并保留你的数据。';
 
   @override
   String testChannelInstalled(String version) {
-    return 'Installed: $version';
+    return '已安装：$version';
   }
 
   @override
   String testChannelNewest(String version) {
-    return 'Newest test build: $version';
+    return '最新测试版本：$version';
   }
 
   @override
-  String get testChannelNone => 'No test build is up yet';
+  String get testChannelNone => '暂无测试版本';
 
   @override
-  String get testChannelUpToDate => 'Up to date';
+  String get testChannelUpToDate => '已是最新';
 
   @override
-  String get testChannelInstall => 'Install';
+  String get testChannelInstall => '安装';
 
   @override
-  String get testChannelCheckNow => 'Check now';
+  String get testChannelCheckNow => '立即检查';
 
   @override
-  String get testChannelNotes => 'What\'s in it';
+  String get testChannelNotes => '更新内容';
 
   @override
-  String get testBuildAvailable => 'Test build available';
+  String get testBuildAvailable => '有可用的测试版本';
 
   @override
   String testBuildDialogContent(String latest, String current) {
-    return 'Test build $latest is out.\n\nYou are on $current.';
+    return '测试版本 $latest 已发布。\n\n你当前使用的是 $current。';
   }
 
   @override
   String testBuildPackageLabel(int build) {
-    return 'Test build $build';
+    return '测试版本 $build';
   }
 
   @override
-  String get githubSignIn => 'Sign in with GitHub';
+  String get githubSignIn => '使用 GitHub 登录';
 
   @override
-  String get githubSignInSubtitle =>
-      'Test builds are private: sign in to get them';
+  String get githubSignInSubtitle => '测试版本不公开：请登录后获取';
 
   @override
-  String get githubSignInNotSetUp =>
-      'GitHub sign-in isn\'t set up in this build yet';
+  String get githubSignInNotSetUp => '此版本尚未设置 GitHub 登录';
 
   @override
-  String get githubSignInAgain => 'Sign in again';
+  String get githubSignInAgain => '重新登录';
 
   @override
-  String get githubSignInExpired => 'Your GitHub sign-in ran out';
+  String get githubSignInExpired => '你的 GitHub 登录已失效';
 
   @override
   String githubSignedInAs(String login) {
-    return 'Signed in to GitHub as $login';
+    return '已以 $login 的身份登录 GitHub';
   }
 
   @override
-  String get githubSignedIn => 'Signed in to GitHub';
+  String get githubSignedIn => '已登录 GitHub';
 
   @override
-  String get githubSignOut => 'Sign out';
+  String get githubSignOut => '退出登录';
 
   @override
-  String get githubSignInEnterCode => 'Enter this code on GitHub:';
+  String get githubSignInEnterCode => '请在 GitHub 上输入此验证码：';
 
   @override
-  String get githubSignInOpen => 'Open github.com/login/device';
+  String get githubSignInOpen => '打开 github.com/login/device';
 
   @override
-  String get githubSignInCopyCode => 'Copy code';
+  String get githubSignInCopyCode => '复制验证码';
 
   @override
-  String get githubSignInCodeCopied => 'Code copied';
+  String get githubSignInCodeCopied => '验证码已复制';
 
   @override
-  String get githubSignInWaiting =>
-      'Waiting for you to approve it on GitHub...';
+  String get githubSignInWaiting => '正在等待你在 GitHub 上批准...';
 
   @override
-  String get githubSignInDenied => 'Sign-in was cancelled on GitHub.';
+  String get githubSignInDenied => '已在 GitHub 上取消登录。';
 
   @override
-  String get githubSignInCodeExpired => 'The code ran out. Try again.';
+  String get githubSignInCodeExpired => '验证码已失效。请重试。';
 
   @override
-  String get githubSignInFailed => 'Couldn\'t sign in to GitHub. Try again.';
+  String get githubSignInFailed => '无法登录 GitHub。请重试。';
 
   @override
-  String get githubSignInTryAgain => 'Try again';
+  String get githubSignInTryAgain => '重试';
 
   @override
-  String get testChannelSignInNeeded =>
-      'Sign in with GitHub to get test builds';
+  String get testChannelSignInNeeded => '请使用 GitHub 登录以获取测试版本';
 
   @override
-  String get downloadEtaUnderMinute => '<1 min left';
+  String get downloadEtaUnderMinute => '剩余不到 1 分钟';
 
   @override
   String downloadEtaMinutes(int minutes) {
-    return '$minutes min left';
+    return '剩余 $minutes 分钟';
   }
 
   @override
   String downloadEtaHours(int hours) {
-    return '$hours hr left';
+    return '剩余 $hours 小时';
   }
 
   @override
   String downloadEtaHoursMinutes(int hours, int minutes) {
-    return '$hours hr $minutes min left';
+    return '剩余 $hours 小时 $minutes 分钟';
   }
 
   @override
-  String get sameSpeedAllBooksTitle => 'Same speed for every book';
+  String get sameSpeedAllBooksTitle => '所有书籍使用相同速度';
 
   @override
   String get sameSpeedAllBooksSubtitle =>
-      'Every book plays at the default speed, and changing the speed in the player changes it for all books. Off: each book (or its series) keeps its own speed.';
+      '每本书都以默认速度播放，在播放器中更改速度会应用于所有书籍。关闭时：每本书（或其系列）保留各自的速度。';
 }
