@@ -371,7 +371,9 @@ class RemoteHost implements RemoteHostController {
     ).encode();
     try {
       udp.send(utf8.encode(reply), dg.address, dg.port);
-    } catch (_) {}
+    } catch (_) {
+      // Best effort: the phone asks again if no reply arrives.
+    }
   }
 
   // ── HTTP ──────────────────────────────────────────────────────────
@@ -419,7 +421,9 @@ class RemoteHost implements RemoteHostController {
       debugPrint('[RemoteHost] Request failed: ${e.runtimeType}');
       try {
         await response.close();
-      } catch (_) {}
+      } catch (_) {
+        // The request already failed (logged above); the response may be gone.
+      }
     }
   }
 
@@ -504,6 +508,7 @@ class RemoteHost implements RemoteHostController {
 
   void _forgetConnection(_Connection conn) {
     conn.authTimer?.cancel();
+    unawaited(conn.cancelListener());
     conn.closed = true;
     if (_conns.remove(conn)) _publishConnections();
   }
@@ -537,7 +542,9 @@ class RemoteHost implements RemoteHostController {
     if (conn.closed) return;
     try {
       conn.ws.add(message.encode());
-    } catch (_) {}
+    } catch (_) {
+      // The connection is closing; its done handler forgets it.
+    }
   }
 
   Future<void> _onFrame(_Connection conn, dynamic data) async {
@@ -688,7 +695,9 @@ class RemoteHost implements RemoteHostController {
     if (conn.closed) return;
     try {
       conn.ws.add(text);
-    } catch (_) {}
+    } catch (_) {
+      // The connection is closing; its done handler forgets it.
+    }
   }
 
   void _scheduleState() {
@@ -710,7 +719,9 @@ class RemoteHost implements RemoteHostController {
       if (c.closed) continue;
       try {
         c.ws.add(text);
-      } catch (_) {}
+      } catch (_) {
+        // The connection is closing; its done handler forgets it.
+      }
     }
   }
 
@@ -740,4 +751,7 @@ class _Connection {
   String? lastState;
   bool closed = false;
   Future<void> queue = Future.value();
+
+  /// Ends the socket listener (a no-op once the socket is done).
+  Future<void>? cancelListener() => sub?.cancel();
 }

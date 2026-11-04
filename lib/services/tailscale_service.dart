@@ -305,8 +305,8 @@ class TailscaleService extends ChangeNotifier {
     if (next.magicDnsSuffix.isNotEmpty && next.magicDnsSuffix != _dnsSuffix) {
       _dnsSuffix = next.magicDnsSuffix;
       _rebuildRouting();
-      SharedPreferences.getInstance()
-          .then((p) => p.setString(prefDnsSuffix, _dnsSuffix));
+      unawaited(SharedPreferences.getInstance()
+          .then((p) => p.setString(prefDnsSuffix, _dnsSuffix)));
     }
     if (next.isRunning != wasRunning) {
       debugPrint('[Tailscale] state: ${next.state}');
@@ -321,7 +321,9 @@ class TailscaleService extends ChangeNotifier {
     try {
       final existing = (await file.readAsString()).trim();
       if (existing.length >= 32) return existing;
-    } catch (_) {}
+    } catch (_) {
+      // No saved key yet (or unreadable): a new one is made below.
+    }
     final rnd = Random.secure();
     final secret = List.generate(16, (_) => rnd.nextInt(256))
         .map((b) => b.toRadixString(16).padLeft(2, '0'))
@@ -345,7 +347,9 @@ class TailscaleService extends ChangeNotifier {
     String local = '';
     try {
       local = Platform.localHostname;
-    } catch (_) {}
+    } catch (_) {
+      // No host name on this platform: the name is built without it.
+    }
     return tailscaleHostname(platform, local);
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +35,7 @@ class _WindowsSettingsTilesState extends State<WindowsSettingsTiles> {
   @override
   void initState() {
     super.initState();
-    _shell.refresh().catchError((Object _) => null);
+    unawaited(_shell.refresh().catchError((Object _) => null));
   }
 
   Future<void> _change(

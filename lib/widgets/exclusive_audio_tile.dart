@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -42,9 +43,9 @@ class _ExclusiveAudioTileState extends State<ExclusiveAudioTile> {
   @override
   void initState() {
     super.initState();
-    desktopExclusiveAudio().then((on) {
+    unawaited(desktopExclusiveAudio().then((on) {
       if (mounted) setState(() => _enabled = on);
-    });
+    }));
   }
 
   @override
@@ -63,7 +64,7 @@ class _ExclusiveAudioTileState extends State<ExclusiveAudioTile> {
           ? null
           : (v) {
               setState(() => _enabled = v);
-              setDesktopExclusiveAudio(v);
+              unawaited(setDesktopExclusiveAudio(v));
             },
     );
   }

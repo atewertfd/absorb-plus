@@ -22,7 +22,9 @@ Set<int> finishedTracks(List<String> paths, List<int?> sizes) {
     try {
       final file = File(paths[i]);
       if (file.existsSync() && file.lengthSync() == size) done.add(i);
-    } catch (_) {}
+    } catch (_) {
+      // A file we can't read counts as not done, so it is downloaded again.
+    }
   }
   return done;
 }
@@ -38,7 +40,9 @@ List<int> wrongSizeTracks(List<String> paths, List<int?> sizes) {
     try {
       final file = File(paths[i]);
       if (file.existsSync() && file.lengthSync() != size) wrong.add(i);
-    } catch (_) {}
+    } catch (_) {
+      // A file we can't read is left for the done check above to fetch again.
+    }
   }
   return wrong;
 }

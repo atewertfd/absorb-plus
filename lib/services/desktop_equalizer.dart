@@ -126,8 +126,8 @@ class DesktopEqualizerBinding {
     if (af == _applied) return;
     _applied = af;
     debugPrint('[EQ] Desktop filter ${af.isEmpty ? 'off' : 'on: $af'}');
-    _apply(af).catchError((Object e) {
+    unawaited(_apply(af).catchError((Object e) {
       debugPrint('[EQ] Desktop filter not applied: $e');
-    });
+    }));
   }
 }

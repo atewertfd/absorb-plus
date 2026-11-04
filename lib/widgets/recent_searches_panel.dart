@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -61,7 +62,7 @@ class _RecentSearchesAnchorState extends State<RecentSearchesAnchor> {
     w.focusNode?.addListener(_onFocus);
     w.controller.addListener(_sync);
     _hadFocus = w.focusNode?.hasFocus ?? false;
-    if (_hadFocus) _reload();
+    if (_hadFocus) unawaited(_reload());
   }
 
   void _unlisten(RecentSearchesAnchor w) {
@@ -73,7 +74,7 @@ class _RecentSearchesAnchorState extends State<RecentSearchesAnchor> {
     final has = widget.focusNode?.hasFocus ?? false;
     // Reload on every focus gain: the list may have grown since, or the
     // account may have changed.
-    if (has && !_hadFocus) _reload();
+    if (has && !_hadFocus) unawaited(_reload());
     _hadFocus = has;
     _sync();
   }

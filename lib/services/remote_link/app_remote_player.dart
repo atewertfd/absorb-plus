@@ -51,7 +51,7 @@ class AppRemotePlayer extends ChangeNotifier implements RemotePlayerFacade {
   void _loadSkips() {
     final library = _player.currentLibraryId;
     _skipLibrary = library;
-    Future.wait([
+    unawaited(Future.wait([
           PlayerSettings.getEffectiveBackSkip(libraryId: library),
           PlayerSettings.getEffectiveForwardSkip(libraryId: library),
         ])
@@ -61,7 +61,7 @@ class AppRemotePlayer extends ChangeNotifier implements RemotePlayerFacade {
           _skipForward = v[1];
           notifyListeners();
         })
-        .catchError((Object _) {});
+        .catchError((Object _) {}));
   }
 
   @override

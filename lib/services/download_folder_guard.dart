@@ -101,7 +101,9 @@ abstract final class DownloadFolderGuard {
           parent.listSync().isEmpty) {
         parent.deleteSync();
       }
-    } catch (_) {}
+    } catch (_) {
+      // Best effort: an empty folder left behind is harmless.
+    }
     return true;
   }
 }

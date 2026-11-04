@@ -317,7 +317,7 @@ class WindowsShell {
     final progress =
         state == TaskbarPlayback.none ? 0.0 : _playback.progress.clamp(0.0, 1.0);
     if (_throttle.shouldSend(state, progress)) {
-      _invoke('setPlayback', {'state': state.name, 'progress': progress});
+      unawaited(_invoke('setPlayback', {'state': state.name, 'progress': progress}));
     }
     // Progress moves without notifications while playing: poll gently then.
     if (state == TaskbarPlayback.playing) {
@@ -351,7 +351,7 @@ class WindowsShell {
     final busy = _playback.isPlaying || _downloading;
     if (busy == _busySent) return;
     _busySent = busy;
-    _invoke('setBusy', {'busy': busy});
+    unawaited(_invoke('setBusy', {'busy': busy}));
   }
 
   // ── Labels for the tray menu and taskbar buttons ───────────────────

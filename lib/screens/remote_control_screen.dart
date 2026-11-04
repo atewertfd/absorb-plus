@@ -125,12 +125,12 @@ class _RemoteControlScreenState extends State<RemoteControlScreen> {
     unawaited(ScreenWake.hold(_wakeOwner, on));
     if (ForkPlatform.isAndroid) {
       if (on) {
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+        unawaited(SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky));
       } else {
-        SystemChrome.setEnabledSystemUIMode(
+        unawaited(SystemChrome.setEnabledSystemUIMode(
           SystemUiMode.manual,
           overlays: SystemUiOverlay.values,
-        );
+        ));
       }
     }
   }

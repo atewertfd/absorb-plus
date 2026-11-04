@@ -57,15 +57,51 @@ class MachineOutputTests(unittest.TestCase):
         self.assertEqual([d["path"] for d in fork], ["lib/fork_only.dart"])
         self.assertEqual([d["path"] for d in up], ["lib/upstream.dart"])
 
+    def test_lib_only_lints_ignore_fork_tests(self):
+        diags = [
+            {"code": "discarded_futures", "path": "lib/fork_only.dart"},
+            {"code": "discarded_futures", "path": "test/fork_test.dart"},
+            {"code": LINT, "path": "test/fork_test.dart"},
+        ]
+        fork, _ = fl.classify(diags, set())
+        self.assertEqual([(d["code"], d["path"]) for d in fork],
+                         [("discarded_futures", "lib/fork_only.dart"), (LINT, "test/fork_test.dart")])
+
+
+class EmptyCatchTests(unittest.TestCase):
+    def test_flags_only_truly_empty_handlers_in_fork_lib_files(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            write(tmp, "lib/fork.dart",
+                  "void a() {\n  try { x(); } catch (_) {}\n"
+                  "  try { x(); } catch (e, s) {\n  }\n"
+                  "  try { x(); } catch (_) {\n    // best effort: the file may be gone\n  }\n"
+                  "  f().catchError((_) {});\n"
+                  "  s.listen(null, onError: (e) {});\n"
+                  "  try { x(); } catch (e) { swallow('Tag', e); }\n}\n")
+            write(tmp, "lib/upstream.dart", "void b() { try { x(); } catch (_) {} }\n")
+            write(tmp, "lib/l10n/app_localizations.dart", "void c() { try {} catch (_) {} }\n")
+            hits = fl.empty_catches(Path(tmp), {"lib/upstream.dart"})
+        self.assertEqual([(h["path"], h["line"]) for h in hits],
+                         [("lib/fork.dart", 2), ("lib/fork.dart", 3), ("lib/fork.dart", 8),
+                          ("lib/fork.dart", 9)])
+        self.assertTrue(all(h["code"] == "empty_catch" for h in hits))
+
 
 class MirrorTests(unittest.TestCase):
     def test_enable_lints_flips_only_the_listed_rule(self):
         text = ("linter:\n  rules:\n    use_build_context_synchronously: false\n"
                 "    prefer_const_constructors: false\n")
-        out = fl.enable_lints(text)
+        out = fl.enable_lints(text, (LINT,))
         self.assertIn("use_build_context_synchronously: true", out)
         self.assertIn("prefer_const_constructors: false", out)
-        self.assertEqual(fl.enable_lints("include: x\n"), "include: x\n")
+
+    def test_enable_lints_adds_rules_the_file_does_not_list(self):
+        text = "include: x\nlinter:\n  rules:\n    prefer_const_constructors: false\n"
+        out = fl.enable_lints(text, ("unawaited_futures", "discarded_futures"))
+        self.assertEqual(out, "include: x\nlinter:\n  rules:\n    unawaited_futures: true\n"
+                              "    discarded_futures: true\n    prefer_const_constructors: false\n")
+        self.assertEqual(fl.enable_lints("include: x\n", ("unawaited_futures",)),
+                         "include: x\nlinter:\n  rules:\n    unawaited_futures: true\n")
 
     def test_package_config_points_back_at_the_checkout(self):
         real = Path(tempfile.gettempdir()) / "proj" / ".dart_tool"

@@ -117,7 +117,9 @@ class IoRemoteLinkConnector implements RemoteLinkConnector {
           if (parts.length == 4) targets.add('${parts.take(3).join('.')}.255');
         }
       }
-    } catch (_) {}
+    } catch (_) {
+      // No interface list here: only the targets added above are tried.
+    }
     return [for (final t in targets) InternetAddress(t)];
   }
 
@@ -453,7 +455,9 @@ class RemoteClient extends ChangeNotifier implements RemoteLinkClient {
     if (ws == null || _phase != RemoteLinkPhase.connected) return;
     try {
       ws.add(command.encode());
-    } catch (_) {}
+    } catch (_) {
+      // The socket is closing; the reconnect logic takes over.
+    }
   }
 
   @override

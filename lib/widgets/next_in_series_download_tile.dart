@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
@@ -26,9 +27,9 @@ class _NextInSeriesDownloadTileState extends State<NextInSeriesDownloadTile> {
   @override
   void initState() {
     super.initState();
-    widget.load().then((v) {
+    unawaited(widget.load().then((v) {
       if (mounted) setState(() => _value = v);
-    });
+    }));
   }
 
   @override
@@ -45,7 +46,7 @@ class _NextInSeriesDownloadTileState extends State<NextInSeriesDownloadTile> {
           ? null
           : (v) {
               setState(() => _value = v);
-              widget.save(v);
+              unawaited(widget.save(v));
             },
     );
   }

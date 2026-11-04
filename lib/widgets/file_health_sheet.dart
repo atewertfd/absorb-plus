@@ -2,6 +2,7 @@
 // FileHealthCheck finds in the server's data (and the local download), and
 // its only action is re-downloading a damaged local copy after a confirm.
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
@@ -81,7 +82,7 @@ class _FileHealthSheetState extends State<FileHealthSheet> {
   @override
   void initState() {
     super.initState();
-    _checkLocal();
+    unawaited(_checkLocal());
   }
 
   Future<void> _checkLocal() async {

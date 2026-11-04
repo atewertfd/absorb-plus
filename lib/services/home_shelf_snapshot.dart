@@ -121,7 +121,9 @@ class HomeShelfSnapshot {
           if (now.difference(await entity.lastModified()) > maxAge) {
             await entity.delete();
           }
-        } catch (_) {}
+        } catch (_) {
+          // Best effort: an old snapshot that can't go now is tried next start.
+        }
       }
     } catch (e) {
       debugPrint('[HomeSnapshot] prune failed: ${e.runtimeType}');

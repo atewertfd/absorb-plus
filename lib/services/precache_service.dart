@@ -151,7 +151,9 @@ class PrecacheService {
             (_onItem ?? itemSink)?.call(id, item);
             items++;
           }
-        } catch (_) {}
+        } catch (_) {
+          // One unreadable item is skipped; the rest still precache.
+        }
         await Future<void>.delayed(_gap);
       }
 

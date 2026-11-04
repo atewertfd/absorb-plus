@@ -116,7 +116,9 @@ abstract final class DesktopDownloadFolder {
       if (dir.existsSync() && dir.listSync().isNotEmpty) {
         return '$path (${folderIdSuffix(itemId)})';
       }
-    } catch (_) {}
+    } catch (_) {
+      // Unreadable folder: use the plain name; the write probe reports real problems.
+    }
     return path;
   }
 
@@ -170,7 +172,9 @@ abstract final class DesktopDownloadFolder {
       debugPrint('[DesktopDownloadFolder] folder is not writable: $e');
       try {
         if (await probe.exists()) await probe.delete();
-      } catch (_) {}
+      } catch (_) {
+        // Best effort: the failure above is what gets reported.
+      }
       return false;
     }
   }

@@ -112,7 +112,9 @@ class JsonFileStore {
       _lastPersisted = null;
       try {
         await main.copy('${main.path}.corrupt');
-      } catch (_) {}
+      } catch (_) {
+        // The copy is only kept for diagnosis; loading goes on without it.
+      }
       debugPrint('[JsonFileStore] $fileName is unreadable - trying the backup');
     }
     final backupResult = await _tryRead(File('${main.path}.bak'));
@@ -272,7 +274,9 @@ class JsonFileStore {
       );
       try {
         if (tmp != null && await tmp.exists()) await tmp.delete();
-      } catch (_) {}
+      } catch (_) {
+        // Best effort: a stale .tmp is cleaned up by the sweep below later.
+      }
       _failed = data;
       _timer ??= Timer(_retryDelay, () => unawaited(flush()));
       final next = _retryDelay * 2;
@@ -308,9 +312,13 @@ class JsonFileStore {
           if ((await entity.lastModified()).isBefore(cutoff)) {
             await entity.delete();
           }
-        } catch (_) {}
+        } catch (_) {
+          // Best effort: a leftover .tmp file is tried again next time.
+        }
       }
-    } catch (_) {}
+    } catch (_) {
+      // The folder can't be listed: nothing to sweep this time.
+    }
   }
 
   /// Stops flushing this store on exit (tests).

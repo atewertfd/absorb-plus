@@ -6,6 +6,7 @@
 // "last seen" mark is the newest addedAt the user saw (server time, so the
 // device clock doesn't matter), kept per account (ScopedPrefs) per library.
 // It moves forward when the user scrolls the shelf or taps anything on it.
+import 'dart:async';
 import 'package:flutter/gestures.dart' show kTouchSlop;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -107,7 +108,7 @@ class _RecentlyAddedScopeState extends State<RecentlyAddedScope> {
     _libraryId = id;
     _loaded = false;
     _seen = null;
-    _load(id);
+    unawaited(_load(id));
   }
 
   Future<void> _load(String id) async {
@@ -127,7 +128,7 @@ class _RecentlyAddedScopeState extends State<RecentlyAddedScope> {
     final newest = RecentlyAddedSeen.newest(widget.entities);
     if (id == null || newest == null) return;
     _seen = newest;
-    RecentlyAddedSeen.save(id, newest);
+    unawaited(RecentlyAddedSeen.save(id, newest));
   }
 
   void _markSeen() {
@@ -136,7 +137,7 @@ class _RecentlyAddedScopeState extends State<RecentlyAddedScope> {
     if (id == null || newest == null || !_loaded) return;
     if (_seen != null && newest <= _seen!) return;
     setState(() => _seen = newest);
-    RecentlyAddedSeen.save(id, newest);
+    unawaited(RecentlyAddedSeen.save(id, newest));
   }
 
   @override
@@ -147,7 +148,7 @@ class _RecentlyAddedScopeState extends State<RecentlyAddedScope> {
     final newest = RecentlyAddedSeen.newest(widget.entities);
     if (_active && _loaded && id != null && newest != null &&
         (_seen == null || newest > _seen!)) {
-      RecentlyAddedSeen.save(id, newest);
+      unawaited(RecentlyAddedSeen.save(id, newest));
     }
     super.dispose();
   }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
@@ -27,7 +28,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
   @override
   void initState() {
     super.initState();
-    _load();
+    unawaited(_load());
   }
 
   @override
@@ -90,7 +91,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
             subtitle: Text(l.developerModeSwitchSubtitle, style: subtitleStyle),
             value: true,
             onChanged: (v) {
-              if (!v) _turnOff();
+              if (!v) unawaited(_turnOff());
             },
           ),
           const Divider(height: 1, indent: 16, endIndent: 16),

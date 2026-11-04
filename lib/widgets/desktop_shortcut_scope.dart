@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -183,14 +184,14 @@ class _NavigationAction extends Action<DesktopNavigationIntent> {
       case DesktopNavigationAction.refresh:
         final refresh = _refresh;
         _refresh = null;
-        if (refresh != null && refresh.mounted) refresh.show();
+        if (refresh != null && refresh.mounted) unawaited(refresh.show());
       case DesktopNavigationAction.previousCard:
         DesktopShortcutScope.handlers?.switchCard(-1);
       case DesktopNavigationAction.nextCard:
         DesktopShortcutScope.handlers?.switchCard(1);
       case DesktopNavigationAction.goToTime:
         final nav = _rootNavigator(scopeContext);
-        if (nav != null) showGoToTimeDialog(nav.context);
+        if (nav != null) unawaited(showGoToTimeDialog(nav.context));
     }
     return null;
   }

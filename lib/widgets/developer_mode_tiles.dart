@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
@@ -36,7 +37,7 @@ class _DeveloperSettingsTileState extends State<DeveloperSettingsTile> {
   @override
   void initState() {
     super.initState();
-    DeveloperMode.load();
+    unawaited(DeveloperMode.load());
   }
 
   @override

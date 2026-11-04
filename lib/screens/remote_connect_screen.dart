@@ -52,7 +52,7 @@ class _RemoteConnectScreenState extends State<RemoteConnectScreen> {
 
   @override
   void dispose() {
-    _search?.cancel();
+    unawaited(_search?.cancel());
     super.dispose();
   }
 
@@ -62,7 +62,7 @@ class _RemoteConnectScreenState extends State<RemoteConnectScreen> {
   }
 
   void _startSearch() {
-    _search?.cancel();
+    unawaited(_search?.cancel());
     setState(() {
       _found.clear();
       _searching = true;
@@ -80,7 +80,7 @@ class _RemoteConnectScreenState extends State<RemoteConnectScreen> {
   }
 
   Future<void> _openRemote(SavedRemoteHost host) async {
-    _search?.cancel();
+    unawaited(_search?.cancel());
     final result = await Navigator.of(context).push<RemoteControlExit>(
       MaterialPageRoute(
         builder: (_) =>

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 // Absorb Plus (B10): shared in-flight requests and a short cache for
 // `GET /api/items/:id`.
 //
@@ -82,10 +84,10 @@ class LibraryItemRequestCache {
     });
     _inFlight[key] = future;
     void done() {
-      if (identical(_inFlight[key], future)) _inFlight.remove(key);
+      if (identical(_inFlight[key], future)) unawaited(_inFlight.remove(key));
     }
 
-    future.then((_) => done(), onError: (Object _) => done());
+    unawaited(future.then((_) => done(), onError: (Object _) => done()));
     return future;
   }
 

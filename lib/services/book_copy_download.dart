@@ -72,7 +72,9 @@ class BookCopyDownload {
           i++) {
         final location = response.headers['location'];
         if (location == null) break;
-        await response.stream.drain<void>().catchError((_) {});
+        await response.stream.drain<void>().catchError((_) {
+          // The redirect's body is thrown away; only the next hop matters.
+        });
         target = redirectTarget(url, target, location);
         response = await _send(
             target, sameOrigin(url, target) ? headers : const {});

@@ -2,8 +2,11 @@
 
 `use_build_context_synchronously` stays off in analysis_options.yaml, because
 upstream code has many hits we don't want as noise (or as merge-conflict
-fodder). This script turns it on for one analyzer run and fails only for hits
-in files the fork added, i.e. paths that don't exist in upstream's tree.
+fodder); the future/subscription/dynamic-call lints in LINTS aren't on there
+at all. This script turns them on for one analyzer run and fails only for hits
+in files the fork added, i.e. paths that don't exist in upstream's tree (the
+LIB_ONLY_LINTS only under lib/). It also fails on truly empty catch blocks in
+fork files under lib/ (EMPTY_CATCH), which the analyzer lets through.
 
 How it works, in one extra analyzer run:
   1. Mirror lib/ and test/ into build/fork_lints/ (plain file copies, no
@@ -31,8 +34,20 @@ ROOT = Path(__file__).resolve().parents[1]
 MIRROR = ROOT / "build" / "fork_lints"
 UPSTREAM_URL = "https://github.com/pounat/absorb.git"
 UPSTREAM_FETCH_REF = "refs/fork-lints/upstream"
-LINTS = ("use_build_context_synchronously",)
+LINTS = ("use_build_context_synchronously", "unawaited_futures", "discarded_futures",
+         "cancel_subscriptions", "avoid_dynamic_calls")
+# Enforced for fork files under lib/ only; tests may fire and forget.
+LIB_ONLY_LINTS = {"unawaited_futures", "discarded_futures", "cancel_subscriptions",
+                  "avoid_dynamic_calls"}
 MIRRORED_DIRS = ("lib", "test")
+# The analyzer's empty_catches lint accepts `catch (_) {}`; fork code must say
+# why an error is ignored (a comment) or log it (lib/utils/fork_errors.dart).
+EMPTY_CATCH = re.compile(
+    r"\bcatch\s*\(\s*\w+(?:\s*,\s*\w+)?\s*\)\s*\{\s*\}"
+    r"|\.catchError\(\s*\(\s*\w*(?:\s*,\s*\w*)?\s*\)\s*\{\s*\}\s*\)"
+    r"|\bonError:\s*\(\s*\w*(?:\s*,\s*\w*)?\s*\)\s*\{\s*\}")
+EMPTY_CATCH_MESSAGE = ("Empty catch: add a comment saying why the error is ignored, or call "
+                       "swallow(tag, e) from lib/utils/fork_errors.dart.")
 
 
 # ---------------------------------------------------------------- upstream
@@ -74,12 +89,26 @@ def upstream_files(ref: str, cwd=ROOT) -> set[str]:
 
 
 def enable_lints(options_text: str, lints=LINTS) -> str:
-    """Flip `lint: false` to true. A lint that isn't listed is already on
-    (flutter_lints enables it)."""
+    """Turn the lints on: flip a listed `lint: false` to true, and add the
+    ones the file doesn't list (flutter_lints doesn't enable them)."""
+    missing = []
     for lint in lints:
-        options_text = re.sub(rf"(^\s*{lint}\s*:\s*)false\b", r"\1true", options_text,
-                              flags=re.M)
-    return options_text
+        if re.search(rf"^\s*{lint}\s*:", options_text, re.M):
+            options_text = re.sub(rf"(^\s*{lint}\s*:\s*)false\b", r"\1true", options_text,
+                                  flags=re.M)
+        else:
+            missing.append(lint)
+    if not missing:
+        return options_text
+    m = re.search(r"^linter:[ \t]*\n([ \t]+)rules:[ \t]*\n(?:([ \t]+)\S)?", options_text, re.M)
+    if m:
+        indent = m.group(2) or m.group(1) * 2
+        at = m.end() - (len(indent) + 1 if m.group(2) else 0)
+        block = "".join(f"{indent}{lint}: true\n" for lint in missing)
+        return options_text[:at] + block + options_text[at:]
+    if options_text and not options_text.endswith("\n"):
+        options_text += "\n"
+    return options_text + "linter:\n  rules:\n" + "".join(f"    {l}: true\n" for l in missing)
 
 
 def mirror_package_config(config: dict, real_dart_tool: Path, package_name: str) -> dict:
@@ -201,9 +230,31 @@ def parse_machine(output: str, mirror: Path) -> list[dict]:
 def classify(diags: list[dict], upstream: set[str], lints=LINTS):
     fork, up = [], []
     for d in diags:
-        if d["code"] in lints:
-            (up if d["path"] in upstream else fork).append(d)
+        if d["code"] not in lints:
+            continue
+        if d["path"] in upstream:
+            up.append(d)
+        elif d["code"] in LIB_ONLY_LINTS and not d["path"].startswith("lib/"):
+            continue
+        else:
+            fork.append(d)
     return fork, up
+
+
+def empty_catches(root: Path, upstream: set[str]) -> list[dict]:
+    """Truly empty catch blocks (no code, no comment) in fork files under lib/."""
+    hits = []
+    for p in sorted((root / "lib").rglob("*.dart")):
+        rel = p.relative_to(root).as_posix()
+        if rel in upstream or rel.startswith("lib/l10n/"):
+            continue
+        text = p.read_text(encoding="utf-8", errors="replace")
+        for m in EMPTY_CATCH.finditer(text):
+            line = text.count("\n", 0, m.start()) + 1
+            col = m.start() - (text.rfind("\n", 0, m.start()) + 1) + 1
+            hits.append({"severity": "INFO", "code": "empty_catch", "path": rel, "line": line,
+                         "col": col, "message": EMPTY_CATCH_MESSAGE})
+    return hits
 
 
 def find_dart(explicit: str | None = None) -> str:
@@ -254,6 +305,7 @@ def main(argv=None) -> int:
               f"(run `flutter analyze` first)")
         return 1
     fork, up = classify(diags, upstream)
+    fork += empty_catches(ROOT, upstream)
     shown = [(d, "") for d in fork] + ([(d, " (upstream)") for d in up] if args.all else [])
     for d, tag in shown:
         print(f"  {d['path']}:{d['line']}:{d['col']} {d['code']}{tag}: {d['message']}")

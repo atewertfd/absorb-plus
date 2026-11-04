@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:just_audio_media_kit/just_audio_media_kit.dart';
@@ -26,9 +27,9 @@ void initializeDesktopAudio() {
   _applyMpvProperties(exclusive: false);
   // The saved choice lands long before the first book opens; mpv reads
   // these properties when the player is created.
-  desktopExclusiveAudio()
+  unawaited(desktopExclusiveAudio()
       .then((on) => _applyMpvProperties(exclusive: on))
-      .catchError((Object _) {});
+      .catchError((Object _) {}));
   // A device that refuses exclusive mode falls back to shared mode, so there
   // is always sound (lib/services/exclusive_audio_fallback.dart).
   final fallback = ExclusiveAudioFallback.instance;

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
@@ -129,12 +130,12 @@ class _WhatsNewSheetState extends State<WhatsNewSheet> {
   @override
   void initState() {
     super.initState();
-    _service.load(_tag).then((r) {
+    unawaited(_service.load(_tag).then((r) {
       if (mounted) setState(() => _result = r);
-    });
-    WhatsNewPrompt.isEnabled().then((on) {
+    }));
+    unawaited(WhatsNewPrompt.isEnabled().then((on) {
       if (mounted) setState(() => _keepShowing = on);
-    });
+    }));
   }
 
   void _open(Uri url) => WhatsNewSheet.openExternal(url);
@@ -202,7 +203,7 @@ class _WhatsNewSheetState extends State<WhatsNewSheet> {
       keepShowing: kIsWeb ? null : _keepShowing,
       onKeepShowing: (v) {
         setState(() => _keepShowing = v);
-        WhatsNewPrompt.setEnabled(v);
+        unawaited(WhatsNewPrompt.setEnabled(v));
       },
     );
     final textScale = MediaQuery.textScalerOf(context).scale(10) / 10;

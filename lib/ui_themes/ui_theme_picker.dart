@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -687,9 +688,9 @@ class UiThemeSettingsTile extends StatelessWidget {
           subtitle: Text(sub, style: subtitle),
           value: value,
           onChanged: (v) {
-            saveDetails(change(v)).catchError((Object e) {
+            unawaited(saveDetails(change(v)).catchError((Object e) {
               debugPrint('[UiTheme] saving look details failed: $e');
-            });
+            }));
           },
         );
         return Column(
@@ -728,9 +729,9 @@ class UiThemeSettingsTile extends StatelessWidget {
                   key: const ValueKey('ui-settings-glass'),
                   value: savedGlassStrength,
                   onChanged: (glass) {
-                    UiThemeStore.chooseGlass(glass).catchError((Object e) {
+                    unawaited(UiThemeStore.chooseGlass(glass).catchError((Object e) {
                       debugPrint('[UiTheme] saving glass failed: $e');
-                    });
+                    }));
                   },
                 ),
               ),
@@ -785,9 +786,9 @@ class UiThemeSettingsTile extends StatelessWidget {
                 value: plain,
                 onChanged: (v) {
                   classicWordingNotifier.value = v;
-                  savePlainWording(v).catchError((Object e) {
+                  unawaited(savePlainWording(v).catchError((Object e) {
                     debugPrint('[UiTheme] saving plain wording failed: $e');
-                  });
+                  }));
                 },
               ),
             ),

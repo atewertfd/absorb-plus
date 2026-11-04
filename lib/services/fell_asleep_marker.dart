@@ -134,7 +134,9 @@ class FellAsleepStore extends ChangeNotifier {
     final previous = _queue;
     final next = previous == null ? step() : previous.then((_) => step());
     late final Future<void> tail;
-    tail = next.catchError((_) {}).whenComplete(() {
+    tail = next.catchError((_) {
+      // The caller gets this error from `next`; the queue only has to move on.
+    }).whenComplete(() {
       if (identical(_queue, tail)) _queue = null;
     });
     _queue = tail;
