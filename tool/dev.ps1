@@ -460,6 +460,15 @@ switch ($Command) {
       Copy-Item $apk.FullName (Join-Path $dest 'Absorb Plus Test.apk') -Force
       Write-BetaNotes -AndroidRun 'local'
       Write-Host "APK ready: $(Join-Path $dest 'Absorb Plus Test.apk')" -ForegroundColor Green
+      # The owner's phone on USB debugging (owner OK, 2026-11-03): install the
+      # test app on it right away. Skipped when no authorized device is attached.
+      $adb = Join-Path $env:LOCALAPPDATA 'Android\Sdk\platform-tools\adb.exe'
+      if (Test-Path $adb) {
+        $devices = @(& $adb devices 2>$null | Select-String "`tdevice$")
+        if ($devices.Count -eq 1) {
+          Invoke-Step -Name 'apk-install-usb' -Run { & $adb install -r $apk.FullName }
+        }
+      }
       if (-not $NoPublish) {
         $headSha = (git rev-parse HEAD).Trim()
         Publish-TestChannel -ApkPath $apk.FullName -Version (Get-PubspecVersion) -Commit $headSha
