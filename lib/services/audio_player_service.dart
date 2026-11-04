@@ -46,6 +46,7 @@ import 'book_settings_service.dart';
 import 'windows_media_cover.dart';
 import 'tailscale_cover_route.dart';
 import 'seek_undo.dart';
+import 'media_session_guest.dart';
 export 'player_settings.dart';
 
 part '_stream_recovery.dart';
@@ -197,6 +198,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   /// Force-push current PlaybackState so the notification picks up
   /// new chapter-relative position immediately (e.g. on chapter change).
   void refreshPlaybackState() {
+    if (_guest != null) return; // Absorb Plus: lent to the phone remote.
     try {
       playbackState.add(_transformEvent(_player.playbackEvent));
       _lastPlaybackStateUpdate = DateTime.now();
@@ -294,6 +296,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
         final processingChanged =
             _player.processingState != _lastProcessingState;
         final elapsed = now.difference(_lastPlaybackStateUpdate);
+        if (_guest != null) return; // Absorb Plus: lent to the phone remote.
 
         if (playingChanged || processingChanged || elapsed.inSeconds >= 5) {
           playbackState.add(_transformEvent(event));
@@ -517,6 +520,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> play() async {
+    if (_guest != null) return _guest!.play(); // Absorb Plus: phone remote.
     debugPrint(
       '[Handler] play() called - routing to service (state=${_player.processingState.name})',
     );
@@ -551,6 +555,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> pause() async {
+    if (_guest != null) return _guest!.pause(); // Absorb Plus: phone remote.
     _service?._markPauseRequested();
     debugPrint('[Handler] pause() called - routing to service');
     await _logAbsorbDiag('pause');
@@ -593,6 +598,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> seek(Duration position) async {
+    if (_guest != null) return _guest!.seek(position); // Absorb Plus.
     debugPrint('[Handler] seek(${position.inSeconds}s)');
     if (_service != null) {
       final speed = _player.speed;
@@ -619,6 +625,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     // Alpha: stack trace tells us who is calling stop() so we can decide if
     // any caller deserves a true teardown. Strip [Handler] stop trace before
     // beta.
+    if (_guest != null) return _guest!.stop(); // Absorb Plus: phone remote.
     debugPrint(
       '[Handler] stop() - keeping MediaSession alive '
       '(playing=${_player.playing}, processingState=${_player.processingState.name}, '
@@ -655,6 +662,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> fastForward() async {
+    if (_guest != null) return _guest!.fastForward(); // Absorb Plus.
     debugPrint('[Handler] fastForward() - seeking forward');
     final skipAmount = await PlayerSettings.getEffectiveForwardSkip(
       libraryId: _service?.currentLibraryId,
@@ -672,6 +680,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> rewind() async {
+    if (_guest != null) return _guest!.rewind(); // Absorb Plus: phone remote.
     debugPrint('[Handler] rewind() - seeking back');
     final skipAmount = await PlayerSettings.getEffectiveBackSkip(
       libraryId: _service?.currentLibraryId,
@@ -787,6 +796,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> click([MediaButton button = MediaButton.media]) async {
+    if (_guest != null) return _guest!.click(button); // Absorb Plus.
     debugPrint(
       '[Handler] click(button=$button) count=${_clickCount + 1} playing=${_player.playing}',
     );
@@ -1063,6 +1073,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     String name, [
     Map<String, dynamic>? extras,
   ]) async {
+    if (_guest != null) return _guest!.customAction(name); // Absorb Plus.
     debugPrint('[Handler] customAction($name)');
     switch (name) {
       case 'nextChapter':
@@ -1155,11 +1166,72 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   @override
   Future<void> skipToQueueItem(int index) async {
     debugPrint('[Handler] skipToQueueItem($index)');
-    if (_service == null) return;
+    if (_service == null || _guest != null) return;
     final chapters = _service!.chapters;
     if (index < 0 || index >= chapters.length) return;
     final start = (chapters[index]['start'] as num?)?.toDouble() ?? 0;
     await _service!.seekTo(Duration(milliseconds: (start * 1000).round()));
+  }
+
+  // ─── Absorb Plus: lending the media session (phone remote) ────────
+
+  MediaSessionGuest? _guest;
+  MediaItem? _heldMediaItem;
+  StreamSubscription<dynamic>? _guestWatch;
+
+  /// Whether the phone remote is showing the PC on the media session.
+  bool get sessionLent => _guest != null;
+
+  /// Lends the media session to [guest] while nothing plays here. False
+  /// (and nothing changes) while the local player is playing or loading.
+  /// Local playback starting takes it back at once.
+  bool lendSession(MediaSessionGuest guest) {
+    if (identical(_guest, guest)) return true;
+    if (_guest != null || _player.playing) return false;
+    final ps = _player.processingState;
+    if (ps == ProcessingState.loading || ps == ProcessingState.buffering) {
+      return false;
+    }
+    _guest = guest;
+    _heldMediaItem = mediaItem.value;
+    _guestWatch = _player.playerStateStream.listen((s) {
+      if (s.playing || s.processingState == ProcessingState.loading) {
+        final g = _guest;
+        _endLend();
+        g?.sessionReclaimed();
+      }
+    });
+    return true;
+  }
+
+  /// Shows [guest]'s item and state (ignored unless the session is lent to it).
+  void showGuest(MediaSessionGuest guest, MediaItem? item, PlaybackState state) {
+    if (!identical(_guest, guest)) return;
+    if (item != null) mediaItem.add(item);
+    playbackState.add(state);
+  }
+
+  /// Gives the session back: local state (or idle) shows again.
+  void returnSession(MediaSessionGuest guest) {
+    if (identical(_guest, guest)) _endLend();
+  }
+
+  /// Local now-playing metadata: held while the session is lent.
+  void pushMediaItem(MediaItem item) {
+    if (_guest != null) {
+      _heldMediaItem = item;
+      return;
+    }
+    mediaItem.add(item);
+  }
+
+  void _endLend() {
+    unawaited(_guestWatch?.cancel());
+    _guestWatch = null;
+    _guest = null;
+    mediaItem.add(_heldMediaItem);
+    _heldMediaItem = null;
+    refreshPlaybackState();
   }
 
   // ─── Android Auto browse tree ──────────────────────────────────────
@@ -5868,7 +5940,7 @@ class AudioPlayerService extends ChangeNotifier {
     debugPrint(
       '[Handler] mediaItem.add: item=$itemId title="${labels.title}" artist="${labels.subtitle}" dur=${displayDuration.round()}s chapter=$chapter hasHandler=${_handler != null} art=${coverUrl == null ? 'none' : coverUrl.startsWith('content:') ? 'content' : coverUrl.startsWith('file:') ? 'file' : coverUrl.startsWith('http') ? 'http' : 'other'}',
     );
-    _handler!.mediaItem.add(
+    _handler!.pushMediaItem(
       MediaItem(
         id: itemId,
         title: labels.title,

@@ -15674,6 +15674,20 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get remoteLockScreenControls => 'Show controls on the lock screen';
+
+  @override
+  String get remoteMoreOptions => 'More options';
+
+  @override
+  String remoteHostBrowserAddress(String url) {
+    return 'Or open $url in any browser on the same Wi-Fi (iPhone, tablet, laptop) and type the code there.';
+  }
+
+  @override
+  String get remoteHostBrowserDevice => 'Web browser';
+
+  @override
   String get remoteCustomize => 'Customize';
 
   @override

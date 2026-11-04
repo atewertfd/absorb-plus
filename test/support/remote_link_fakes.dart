@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:absorb/services/media_session_guest.dart';
 import 'package:absorb/services/remote_link/pairing_store.dart';
 import 'package:absorb/services/remote_link/player_facade.dart';
 import 'package:absorb/services/remote_link/protocol.dart';
 import 'package:absorb/services/remote_link/remote_link_types.dart';
+import 'package:absorb/services/remote_link/remote_media_mirror.dart';
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 
 /// Shared fakes for the phone-remote tests: an in-memory link, a fake player
@@ -386,4 +389,67 @@ class FakeHost implements RemoteHostController {
   }
 
   void connect(RemoteConnectionInfo info) => _connections.value = [info];
+}
+
+/// The phone's media session for the lock-screen mirror: behaves like
+/// [AudioPlayerHandler.lendSession] (refused while the phone plays; local
+/// playback takes it back) and records what was shown.
+class FakeMediaSession implements RemoteMediaSessionPort {
+  FakeMediaSession({this.isAvailable = true});
+
+  @override
+  bool isAvailable;
+
+  /// The phone itself is playing: lending is refused.
+  bool localPlaying = false;
+  MediaSessionGuest? guest;
+  final shown = <(MediaItem?, PlaybackState)>[];
+  int lends = 0;
+  int giveBacks = 0;
+  final coverKeys = <String>[];
+
+  bool get lent => guest != null;
+  PlaybackState? get lastState => shown.isEmpty ? null : shown.last.$2;
+  MediaItem? get lastItem {
+    for (final s in shown.reversed) {
+      if (s.$1 != null) return s.$1;
+    }
+    return null;
+  }
+
+  @override
+  bool lend(MediaSessionGuest g) {
+    if (identical(guest, g)) return true;
+    if (guest != null || localPlaying) return false;
+    guest = g;
+    lends++;
+    return true;
+  }
+
+  @override
+  void show(MediaSessionGuest g, MediaItem? item, PlaybackState state) {
+    if (!identical(guest, g)) return;
+    shown.add((item, state));
+  }
+
+  @override
+  void giveBack(MediaSessionGuest g) {
+    if (!identical(guest, g)) return;
+    guest = null;
+    giveBacks++;
+  }
+
+  /// A book starts on the phone: the handler takes the session back.
+  void startLocalPlayback() {
+    localPlaying = true;
+    final g = guest;
+    guest = null;
+    g?.sessionReclaimed();
+  }
+
+  @override
+  Future<Uri?> coverUri(Uint8List bytes, String key) async {
+    coverKeys.add(key);
+    return Uri.file('/tmp/remote_cover/$key.img');
+  }
 }

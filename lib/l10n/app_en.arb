@@ -8329,6 +8329,21 @@
       }
     }
   },
+  "remoteLockScreenControls": "Show controls on the lock screen",
+  "@remoteLockScreenControls": {"description": "Phone remote: menu switch. While connected and the phone itself isn't playing, the notification, lock screen and earbud buttons control the PC."},
+  "remoteMoreOptions": "More options",
+  "@remoteMoreOptions": {"description": "Phone remote: tooltip of the app bar menu."},
+  "remoteHostBrowserAddress": "Or open {url} in any browser on the same Wi-Fi (iPhone, tablet, laptop) and type the code there.",
+  "@remoteHostBrowserAddress": {
+    "description": "Phone remote, PC sheet: the address of the browser remote the PC serves (plain http on the local network).",
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "remoteHostBrowserDevice": "Web browser",
+  "@remoteHostBrowserDevice": {"description": "Phone remote, PC sheet: tooltip of the icon for a device that paired from a web browser."},
   "remoteCustomize": "Customize",
   "@remoteCustomize": {"description": "Phone remote: app bar button that opens edit mode for the screen's layout."},
   "remoteCustomizeTitle": "Customize the remote",

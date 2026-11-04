@@ -8,6 +8,9 @@ import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import '../services/remote_link/remote_layout.dart';
 import '../services/remote_link/remote_link.dart';
+import '../services/remote_link/remote_media_mirror.dart';
+import '../services/remote_link/remote_media_session_stub.dart'
+    if (dart.library.io) '../services/remote_link/remote_media_session_io.dart';
 import '../services/screen_wake.dart';
 import '../utils/fork_errors.dart';
 import '../utils/fork_platform.dart';
@@ -29,9 +32,13 @@ class RemoteControlScreen extends StatefulWidget {
     required this.host,
     this.connector,
     this.client,
+    this.mediaSession,
   });
 
   final SavedRemoteHost host;
+
+  /// Tests: a fake media session for the lock-screen controls.
+  final RemoteMediaSessionPort? mediaSession;
 
   /// Injected in tests; the app uses [remoteLinkConnector].
   final RemoteLinkConnector? connector;
@@ -71,6 +78,10 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
   double? _speedTarget;
   bool _recentAsked = false;
   DateTime? _speedAt;
+  late final RemoteMediaSessionPort _mediaSession =
+      widget.mediaSession ?? appRemoteMediaSession();
+  RemoteMediaMirror? _mirror;
+  bool _lockScreen = true;
 
   @override
   void initState() {
@@ -78,6 +89,24 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
     WidgetsBinding.instance.addObserver(this);
     _attach(widget.client ?? _connector.open(widget.host));
     unawaited(_loadLayout());
+    if (_mediaSession.isAvailable) unawaited(_loadLockScreen());
+  }
+
+  Future<void> _loadLockScreen() async {
+    try {
+      final on = await RemoteMediaMirror.loadEnabled();
+      if (!mounted) return;
+      setState(() => _lockScreen = on);
+      _mirror?.enabled = on;
+    } catch (e) {
+      swallow('RemoteMirror', e);
+    }
+  }
+
+  void _setLockScreen(bool on) {
+    setState(() => _lockScreen = on);
+    _mirror?.enabled = on;
+    fireAndLog(RemoteMediaMirror.saveEnabled(on), 'RemoteMirror');
   }
 
   Future<void> _loadLayout() async {
@@ -112,12 +141,21 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
   void _attach(RemoteLinkClient client) {
     _client = client;
     _events = client.events.listen(_onEvent);
+    if (_mediaSession.isAvailable) {
+      _mirror = RemoteMediaMirror(
+        client: client,
+        session: _mediaSession,
+        enabled: _lockScreen,
+      );
+    }
     unawaited(client.connect());
   }
 
   void _detach() {
     unawaited(_events?.cancel());
     _events = null;
+    _mirror?.dispose();
+    _mirror = null;
     _client.dispose();
   }
 
@@ -134,7 +172,10 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
   /// once instead of waiting for the next retry.
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) _client.reconnectNow();
+    if (state == AppLifecycleState.resumed) {
+      _client.reconnectNow();
+      _mirror?.resume();
+    }
   }
 
   void _connectAgain() {
@@ -286,6 +327,22 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
                     : null,
                 icon: const Icon(Icons.fit_screen_rounded),
               ),
+              if (_mediaSession.isAvailable)
+                PopupMenuButton<String>(
+                  key: const Key('remote-menu'),
+                  tooltip: l.remoteMoreOptions,
+                  onSelected: (v) {
+                    if (v == 'lockScreen') _setLockScreen(!_lockScreen);
+                  },
+                  itemBuilder: (_) => [
+                    CheckedPopupMenuItem(
+                      key: const Key('remote-lock-screen'),
+                      value: 'lockScreen',
+                      checked: _lockScreen,
+                      child: Text(l.remoteLockScreenControls),
+                    ),
+                  ],
+                ),
             ],
           ),
           body: SafeArea(child: _body(context, state)),
