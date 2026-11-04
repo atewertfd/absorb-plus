@@ -34,6 +34,9 @@ import 'package:absorb/ui_themes/ui_theme_picker.dart';
 import 'package:absorb/widgets/absorbing_card.dart';
 import 'package:absorb/widgets/book_detail_sheet.dart';
 import 'package:absorb/widgets/collapsible_section.dart';
+import 'package:absorb/screens/login_screen.dart';
+import 'package:absorb/screens/setup/setup_flow_screen.dart';
+import 'package:absorb/screens/setup/setup_flow_store.dart';
 import 'package:absorb/widgets/welcome_sheet.dart';
 import 'package:absorb/widgets/whats_new_sheet.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +49,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/fakes.dart';
+import 'support/setup_fakes.dart';
 
 // ── Window sizes, scales, brightness ─────────────────────────────────────
 
@@ -445,6 +449,13 @@ Future<http.Response> _fakeServer(http.Request request) async {
 }
 
 // ── Fakes ────────────────────────────────────────────────────────────────
+
+class _SignedOutAuth extends _FakeAuth {
+  @override
+  bool get isAuthenticated => false;
+  @override
+  bool get isSignedOut => false;
+}
 
 class _FakeAuth extends AuthProvider {
   final ApiService _api = mockApi(_fakeServer);
@@ -892,6 +903,7 @@ void main() {
     Widget screen, {
     LibraryProvider? library,
     bool welcomeSeen = true,
+    AuthProvider? auth,
   }) async {
     // Fresh settings each time: screens persist things like the open tab.
     // Launch prompts already seen, so they don't cover the screen.
@@ -900,9 +912,10 @@ void main() {
       UiThemeStore.prefKey: (uiThemeNotifier.value ?? AppUiTheme.plus).id,
       'whats_new_last_build': 318,
     });
-    final auth = _FakeAuth();
     final lib = library ?? _FakeLibrary();
-    await tester.pumpWidget(_app(combo, screen, auth: auth, library: lib));
+    await tester.pumpWidget(
+      _app(combo, screen, auth: auth ?? _FakeAuth(), library: lib),
+    );
     await _settle(tester);
   }
 
@@ -1113,6 +1126,44 @@ void main() {
       await _settle(tester);
       expect(find.byType(AlertDialog), findsOneWidget);
       await _scrollAll(tester);
+    });
+    sweep.expectClean();
+  });
+
+  testWidgets('First-run setup, every page', (tester) async {
+    await sweep.run(tester, 'Setup', _compactMatrix(), (c) async {
+      final settings = FakeSetupSettings()
+        ..location = r'C:\Users\maximilian.alexander\Music\Audiobooks\Absorb';
+      // The Connect page as a fresh install sees it: the real sign-in.
+      await pumpScreen(
+        tester,
+        c,
+        auth: _SignedOutAuth(),
+        SetupFlowScreen(
+          steps: const [SetupStep.connect, SetupStep.done],
+          settings: settings,
+          complete: () async {},
+        ),
+      );
+      expect(find.byType(LoginScreen), findsOneWidget);
+      await _scrollAll(tester);
+      // Every page, signed in.
+      await pumpScreen(
+        tester,
+        c,
+        SetupFlowScreen(
+          steps: setupStepsFor(web: false, android: true),
+          settings: settings,
+          complete: () async {},
+        ),
+      );
+      for (var page = 0; page < 7; page++) {
+        await _scrollAll(tester);
+        if (page == 6) break;
+        await tester.tap(find.byKey(const ValueKey('setup-next')));
+        await _settle(tester);
+      }
+      expect(find.text("You're all set"), findsOneWidget);
     });
     sweep.expectClean();
   });
