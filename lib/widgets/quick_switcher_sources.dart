@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../providers/library_provider.dart';
+import '../screens/login_designs/login_design_preview_screen.dart';
 import '../screens/remote_connect_screen.dart';
 import '../services/desktop_shortcuts.dart';
 import '../services/remote_link/remote_link.dart'
@@ -82,6 +83,9 @@ List<QuickSwitcherEntry> quickSwitcherAppActions(
     action(l.desktopShortcutsTitle, Icons.keyboard_rounded,
         () => unawaited(showDesktopShortcutsDialog(context)),
         l.quickSwitcherKeywordsShortcuts),
+    action(l.loginDesignPreviewTitle, Icons.login_rounded,
+        () => unawaited(openLoginDesignPreview(context)),
+        l.quickSwitcherKeywordsLoginDesign),
     if (remoteHostSupported)
       action(l.remoteHostTitle, Icons.phonelink_rounded,
           () => unawaited(RemoteHostSheet.show(context)),

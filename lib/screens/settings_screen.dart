@@ -86,6 +86,7 @@ import '../ui_themes/ui_theme_hooks.dart';
 import '../widgets/rmab_search_results_sheet.dart';
 import '../services/tailscale_service.dart'; // fork
 import 'tailscale_settings_screen.dart'; // fork
+import 'login_designs/login_design_preview_screen.dart'; // fork
 import '../widgets/next_in_series_download_tile.dart'; // fork
 import '../widgets/remote_link_settings_tiles.dart'; // fork
 import '../widgets/developer_mode_tiles.dart'; // fork
@@ -2148,6 +2149,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     const Divider(height: 1, indent: 16, endIndent: 16),
                     UiThemeSettingsTile(onChanged: _loadSettings),
+                    const Divider(height: 1, indent: 16, endIndent: 16), // fork: sign-in designs
+                    const LoginDesignSettingsTile(),
                     const Divider(height: 1, indent: 16, endIndent: 16),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),

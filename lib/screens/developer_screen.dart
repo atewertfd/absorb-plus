@@ -7,6 +7,7 @@ import '../services/github_device_auth.dart';
 import '../services/test_channel_service.dart';
 import '../widgets/github_sign_in.dart';
 import '../widgets/overlay_toast.dart';
+import 'login_designs/login_design_preview_screen.dart';
 import 'test_build_patch_notes_screen.dart';
 import 'test_channel_screen.dart';
 
@@ -118,6 +119,18 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                 builder: (_) => const TestBuildPatchNotesScreen(),
               ),
             ),
+          ),
+          const Divider(height: 1, indent: 16, endIndent: 16),
+          ListTile(
+            key: const Key('developer-login-designs'),
+            leading: Icon(Icons.login_rounded, color: cs.primary),
+            title: Text(l.loginDesignPreviewTitle),
+            subtitle: Text(l.loginDesignTitle, style: subtitleStyle),
+            trailing: Icon(
+              Icons.chevron_right_rounded,
+              color: cs.onSurfaceVariant.withValues(alpha: 0.5),
+            ),
+            onTap: () => unawaited(openLoginDesignPreview(context)),
           ),
           const Divider(height: 1, indent: 16, endIndent: 16),
           Padding(

@@ -426,8 +426,11 @@ void main() {
       if (remoteHostSupported) l.remoteHostTitle,
       if (remoteLinkConnector.isSupported) l.remoteControlAnother,
     ];
-    expect(actions.skip(10).map((a) => a.title), remoteTitles);
-    expect(actions.skip(10).map((a) => a.keywords),
+    // The sign-in design preview, on every platform.
+    expect(actions[10].title, l.loginDesignPreviewTitle);
+    expect(actions[10].keywords, l.quickSwitcherKeywordsLoginDesign);
+    expect(actions.skip(11).map((a) => a.title), remoteTitles);
+    expect(actions.skip(11).map((a) => a.keywords),
         [for (final _ in remoteTitles) l.quickSwitcherKeywordsRemote]);
     actions = actions.take(10).toList();
     expect(actions.map((a) => a.title), [
