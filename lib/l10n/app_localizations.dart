@@ -26553,6 +26553,114 @@ abstract class AppLocalizations {
   /// **'Test build {build}'**
   String testBuildPackageLabel(int build);
 
+  /// No description provided for @githubSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with GitHub'**
+  String get githubSignIn;
+
+  /// No description provided for @githubSignInSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Test builds are private: sign in to get them'**
+  String get githubSignInSubtitle;
+
+  /// No description provided for @githubSignInNotSetUp.
+  ///
+  /// In en, this message translates to:
+  /// **'GitHub sign-in isn\'t set up in this build yet'**
+  String get githubSignInNotSetUp;
+
+  /// No description provided for @githubSignInAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in again'**
+  String get githubSignInAgain;
+
+  /// No description provided for @githubSignInExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Your GitHub sign-in ran out'**
+  String get githubSignInExpired;
+
+  /// No description provided for @githubSignedInAs.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in to GitHub as {login}'**
+  String githubSignedInAs(String login);
+
+  /// No description provided for @githubSignedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in to GitHub'**
+  String get githubSignedIn;
+
+  /// No description provided for @githubSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get githubSignOut;
+
+  /// No description provided for @githubSignInEnterCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter this code on GitHub:'**
+  String get githubSignInEnterCode;
+
+  /// No description provided for @githubSignInOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open github.com/login/device'**
+  String get githubSignInOpen;
+
+  /// No description provided for @githubSignInCopyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy code'**
+  String get githubSignInCopyCode;
+
+  /// No description provided for @githubSignInCodeCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Code copied'**
+  String get githubSignInCodeCopied;
+
+  /// No description provided for @githubSignInWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for you to approve it on GitHub...'**
+  String get githubSignInWaiting;
+
+  /// No description provided for @githubSignInDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in was cancelled on GitHub.'**
+  String get githubSignInDenied;
+
+  /// No description provided for @githubSignInCodeExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'The code ran out. Try again.'**
+  String get githubSignInCodeExpired;
+
+  /// No description provided for @githubSignInFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t sign in to GitHub. Try again.'**
+  String get githubSignInFailed;
+
+  /// No description provided for @githubSignInTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get githubSignInTryAgain;
+
+  /// No description provided for @testChannelSignInNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with GitHub to get test builds'**
+  String get testChannelSignInNeeded;
+
   /// No description provided for @downloadEtaUnderMinute.
   ///
   /// In en, this message translates to:

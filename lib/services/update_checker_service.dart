@@ -24,6 +24,11 @@ class UpdateInfo {
   final bool isDirectApk;
   final bool isWindowsInstaller;
   final String? packageLabel;
+  // Absorb Plus: the test channel's private assets download in-app from
+  // this API URL with these headers (a token); [downloadUrl] stays the
+  // browser URL and names the file.
+  final String? authDownloadUrl;
+  final Map<String, String> downloadHeaders;
 
   UpdateInfo({
     required this.latestVersion,
@@ -34,6 +39,8 @@ class UpdateInfo {
     this.isDirectApk = true,
     this.isWindowsInstaller = false,
     this. packageLabel,
+    this.authDownloadUrl,
+    this.downloadHeaders = const {},
   });
 
   bool get hasUpdate =>
@@ -419,7 +426,7 @@ class ApkUpdater {
     final dir = await getTemporaryDirectory();
     final filename = Uri.parse(info.downloadUrl).pathSegments.last;
     final file = File('${dir.path}/$filename');
-      return await download.run(Uri.parse(info.downloadUrl), file, onProgress);
+      return await download.run(Uri.parse(info.authDownloadUrl ?? info.downloadUrl), file, onProgress, headers: info.downloadHeaders);
     } finally {
       if (identical(_active, download)) _active = null;
       download.close();
@@ -547,13 +554,16 @@ class UpdateDownload {
   Future<File> run(
     Uri url,
     File file,
-    void Function(int received, int total) onProgress,
-  ) async {
+    void Function(int received, int total) onProgress, {
+    Map<String, String> headers = const {},
+  }) async {
     try {
       if (_cancelled) throw const _CancelledException();
       if (await file.exists()) await file.delete();
 
-    final response = await _client.send(http.Request('GET', url));
+    final response = headers.isEmpty
+        ? await _client.send(http.Request('GET', url))
+        : await sendWithoutForwardingAuth(_client, url, headers);
       if (response.statusCode != 200) {
         throw HttpException('HTTP ${response.statusCode}');
       }
@@ -587,6 +597,33 @@ class UpdateDownload {
     } finally {
       _client.close();
     }
+  }
+}
+
+/// Absorb Plus: GETs [url] with [headers], following redirects by hand so
+/// the headers (a GitHub token) go only to [url]'s host, never to the
+/// signed download URL GitHub redirects private assets to.
+@visibleForTesting
+Future<http.StreamedResponse> sendWithoutForwardingAuth(
+  http.Client client,
+  Uri url,
+  Map<String, String> headers, {
+  int maxRedirects = 5,
+}) async {
+  var current = url;
+  for (var hop = 0; ; hop++) {
+    final request = http.Request('GET', current)..followRedirects = false;
+    if (current.host == url.host && current.scheme == url.scheme) {
+      request.headers.addAll(headers);
+    }
+    final response = await client.send(request);
+    final location = response.headers['location'];
+    if (response.statusCode < 300 || response.statusCode >= 400 || location == null) {
+      return response;
+    }
+    await response.stream.drain<void>();
+    if (hop >= maxRedirects) throw const HttpException('Too many redirects');
+    current = current.resolve(location);
   }
 }
 

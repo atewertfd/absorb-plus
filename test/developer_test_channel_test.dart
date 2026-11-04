@@ -37,9 +37,11 @@ Map<String, dynamic> _release({
 TestChannelService _service(
   http.Response Function(http.Request) answer, {
   String installed = '1.12.1+345',
+  String? token,
 }) => TestChannelService(
   clientFactory: () => MockClient((request) async => answer(request)),
   installedVersion: () async => installed,
+  accessToken: () async => token,
 );
 
 Widget _app(Widget home) => MaterialApp(
@@ -244,8 +246,13 @@ void main() {
     });
 
     test('no channel yet, an error and a wrong tag', () async {
+      // Signed in, 404 means no release; signed out it may be the private
+      // repo (see github_device_auth_test.dart).
       expect(
-        (await _service((_) => http.Response('{}', 404)).check()).status,
+        (await _service(
+          (_) => http.Response('{}', 404),
+          token: 't',
+        ).check()).status,
         TestChannelStatus.empty,
       );
       expect(
