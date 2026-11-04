@@ -42,6 +42,7 @@ class RemoteLayoutView extends StatefulWidget {
     required this.buildBlock,
     this.editing = false,
     this.onChanged,
+    this.gapScale = 1.0,
   });
 
   final RemoteLayout layout;
@@ -50,21 +51,46 @@ class RemoteLayoutView extends StatefulWidget {
   final RemoteBlockBuilder buildBlock;
   final ValueChanged<RemoteLayout>? onChanged;
 
-  /// The space above a block, so the default layout keeps the screen's
-  /// original spacing.
-  static double gapBefore(RemoteBlockEntry? previous, RemoteBlockEntry e) {
+  /// The Look's spacing: scales the screen's own gaps between blocks.
+  final double gapScale;
+
+  /// The space above a block: its own choice, or the screen's original
+  /// spacing (scaled by [scale]) so the default layout looks as it always
+  /// did.
+  static double gapBefore(
+    RemoteBlockEntry? previous,
+    RemoteBlockEntry e, {
+    double scale = 1.0,
+  }) {
+    switch (e.choice('gap')) {
+      case 'none':
+        return 0;
+      case 'small':
+        return 8;
+      case 'large':
+        return 32;
+    }
     if (previous == null) return 0;
     if (e.block.isInline && previous.block.isInline) return 0;
-    return switch (e.block) {
-      RemoteBlock.cover || RemoteBlock.titleAuthor => 20,
-      RemoteBlock.chapterTitle => 4,
-      RemoteBlock.progress => 16,
-      RemoteBlock.timeLeft || RemoteBlock.volume => 8,
-      RemoteBlock.transport || RemoteBlock.clock => 12,
-      RemoteBlock.spacer => 0,
-      _ => 16,
-    };
+    return scale *
+        switch (e.block) {
+          RemoteBlock.cover || RemoteBlock.titleAuthor => 20,
+          RemoteBlock.chapterTitle => 4,
+          RemoteBlock.progress => 16,
+          RemoteBlock.timeLeft || RemoteBlock.volume => 8,
+          RemoteBlock.transport || RemoteBlock.clock => 12,
+          RemoteBlock.spacer => 0,
+          _ => 16,
+        };
   }
+
+  /// Where a block sits across its column; null keeps it centred.
+  static Alignment? alignmentOf(RemoteBlockEntry e) =>
+      switch (e.choice('align')) {
+        'left' => Alignment.centerLeft,
+        'right' => Alignment.centerRight,
+        _ => null,
+      };
 
   @override
   State<RemoteLayoutView> createState() => _RemoteLayoutViewState();
@@ -311,13 +337,20 @@ class _RemoteLayoutViewState extends State<RemoteLayoutView> {
         continue;
       }
       endRow();
-      final gap = RemoteLayoutView.gapBefore(previous, e);
+      final gap = RemoteLayoutView.gapBefore(
+        previous,
+        e,
+        scale: widget.gapScale,
+      );
       if (gap > 0) children.add(SizedBox(height: gap));
       if (group != null) {
         row = [child];
         rowGroup = group;
       } else {
-        children.add(child);
+        final align = RemoteLayoutView.alignmentOf(e);
+        children.add(
+          align == null ? child : Align(alignment: align, child: child),
+        );
       }
       previous = e;
     }
@@ -395,15 +428,29 @@ class _RemoteLayoutViewState extends State<RemoteLayoutView> {
     final tt = Theme.of(context).textTheme;
     final ref = (column: column, index: index);
     final name = remoteBlockName(l, entry.block);
-    final content =
-        widget.buildBlock(context, entry, slot) ??
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Icon(
-            remoteBlockIcon(entry.block),
-            color: cs.onSurfaceVariant.withValues(alpha: 0.6),
-          ),
-        );
+    final built = widget.buildBlock(context, entry, slot);
+    final align = RemoteLayoutView.alignmentOf(entry);
+    final content = built == null
+        ? Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Icon(
+              remoteBlockIcon(entry.block),
+              color: cs.onSurfaceVariant.withValues(alpha: 0.6),
+            ),
+          )
+        : align == null
+        ? built
+        : Align(alignment: align, child: built);
+    final hasOptions =
+        entry.block.sizes.length > 1 || entry.block.options.isNotEmpty;
+    // The sheet is modal, so the block stays at [index] while it is open;
+    // `widget.layout` is read when an option changes (the latest layout).
+    void openOptions() => showRemoteBlockOptionsSheet(
+      context,
+      entry,
+      (changed) =>
+          widget.onChanged?.call(widget.layout.replace(column, index, changed)),
+    );
 
     Widget box(Widget handle) => Container(
       decoration: BoxDecoration(
@@ -440,6 +487,14 @@ class _RemoteLayoutViewState extends State<RemoteLayoutView> {
                     ),
                   ),
                 ),
+              if (hasOptions)
+                IconButton(
+                  key: Key('remote-block-options-${entry.block.name}'),
+                  tooltip: l.remoteBlockOptions,
+                  visualDensity: VisualDensity.compact,
+                  onPressed: openOptions,
+                  icon: const Icon(Icons.settings_outlined, size: 20),
+                ),
               IconButton(
                 key: Key('remote-block-remove-${entry.block.name}'),
                 tooltip: l.remove,
@@ -450,8 +505,13 @@ class _RemoteLayoutViewState extends State<RemoteLayoutView> {
               ),
             ],
           ),
-          // Controls don't work while editing.
-          IgnorePointer(child: content),
+          // Controls don't work while editing; a tap opens the options.
+          GestureDetector(
+            key: Key('remote-block-body-${entry.block.name}'),
+            behavior: HitTestBehavior.opaque,
+            onTap: hasOptions ? openOptions : null,
+            child: IgnorePointer(child: content),
+          ),
         ],
       ),
     );
@@ -503,14 +563,39 @@ class _RemoteLayoutViewState extends State<RemoteLayoutView> {
 class RemoteClockText extends StatefulWidget {
   const RemoteClockText({
     super.key,
-    required this.use24Hour,
+    this.hours = 'phone',
+    this.showDate = false,
     this.style,
+    this.dateStyle,
     this.textAlign,
   });
 
-  final bool use24Hour;
+  /// `phone` (the phone's setting), `12` or `24` ([RemoteOptions.hours]).
+  final String hours;
+  final bool showDate;
   final TextStyle? style;
+  final TextStyle? dateStyle;
   final TextAlign? textAlign;
+
+  /// The time as the clock shows it.
+  static String format(BuildContext context, DateTime now, String hours) {
+    final ml = MaterialLocalizations.of(context);
+    final time = TimeOfDay.fromDateTime(now);
+    if (hours == '12') {
+      // Always 12-hour, even where the language's own format is 24-hour.
+      final h = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
+      final m = time.minute.toString().padLeft(2, '0');
+      final period = time.period == DayPeriod.am
+          ? ml.anteMeridiemAbbreviation
+          : ml.postMeridiemAbbreviation;
+      return '$h:$m $period';
+    }
+    return ml.formatTimeOfDay(
+      time,
+      alwaysUse24HourFormat:
+          hours == '24' || MediaQuery.alwaysUse24HourFormatOf(context),
+    );
+  }
 
   @override
   State<RemoteClockText> createState() => _RemoteClockTextState();
@@ -549,12 +634,33 @@ class _RemoteClockTextState extends State<RemoteClockText> {
 
   @override
   Widget build(BuildContext context) {
-    final text = MaterialLocalizations.of(context).formatTimeOfDay(
-      TimeOfDay.now(),
-      alwaysUse24HourFormat:
-          widget.use24Hour || MediaQuery.alwaysUse24HourFormatOf(context),
+    final now = DateTime.now();
+    final time = Text(
+      RemoteClockText.format(context, now, widget.hours),
+      textAlign: widget.textAlign,
+      style: widget.style,
     );
-    return Text(text, textAlign: widget.textAlign, style: widget.style);
+    if (!widget.showDate) return time;
+    final align = switch (widget.textAlign) {
+      TextAlign.left || TextAlign.start => CrossAxisAlignment.start,
+      TextAlign.right || TextAlign.end => CrossAxisAlignment.end,
+      _ => CrossAxisAlignment.center,
+    };
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: align,
+      children: [
+        time,
+        Text(
+          MaterialLocalizations.of(context).formatFullDate(now),
+          key: const Key('remote-clock-date'),
+          textAlign: widget.textAlign,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: widget.dateStyle,
+        ),
+      ],
+    );
   }
 }
 
@@ -641,13 +747,109 @@ Future<RemoteBlock?> showRemoteAddBlockSheet(
   );
 }
 
-/// The display mode's options, saved as they change through [onChanged].
-Future<void> showRemoteDisplayOptionsSheet(
+String remoteOptionName(AppLocalizations l, RemoteOptionSpec s) =>
+    switch (s.key) {
+      'align' => l.remoteOptAlign,
+      'gap' => l.remoteOptGap,
+      'corners' => l.remoteOptCorners,
+      'shadow' => l.remoteOptShadow,
+      'lines' => l.remoteOptLines,
+      'time' => l.remoteOptTime,
+      'span' => l.remoteOptSpan,
+      'buttons' => l.remoteOptButtons,
+      'skipSeconds' => l.remoteOptSkipSeconds,
+      'style' => l.remoteOptStyle,
+      'presets' => l.remoteOptPresets,
+      'hours' => l.remoteOptHours,
+      'date' => l.remoteOptDate,
+      _ => s.key,
+    };
+
+String remoteOptionValueName(
+  AppLocalizations l,
+  RemoteBlock block,
+  RemoteOptionSpec s,
+  String v,
+) => switch (s.key) {
+  'align' => switch (v) {
+    'left' => l.remoteOptAlignLeft,
+    'right' => l.remoteOptAlignRight,
+    _ => l.remoteOptAlignCenter,
+  },
+  'gap' => switch (v) {
+    'none' => l.remoteOptNone,
+    'small' => l.remoteSizeSmall,
+    'large' => l.remoteSizeLarge,
+    _ => l.remoteOptDefault,
+  },
+  'corners' => switch (v) {
+    'square' => l.remoteOptCornersSquare,
+    'rounded' => l.remoteOptCornersRounded,
+    'circle' => l.remoteOptCornersCircle,
+    _ => l.remoteOptDefault,
+  },
+  'time' => v == 'total' ? l.remoteOptTimeTotal : l.remoteBlockTimeLeft,
+  'span' => v == 'book' ? l.remoteOptSpanBook : l.remoteOptSpanChapter,
+  'buttons' => switch (v) {
+    'prev' => l.remotePreviousChapter,
+    'back' => l.remoteOptButtonBack,
+    'play' => l.remoteOptButtonPlay,
+    'forward' => l.remoteOptButtonForward,
+    _ => l.remoteNextChapter,
+  },
+  'style' => v == 'buttons' ? l.remoteOptStyleButtons : l.remoteOptStyleSlider,
+  'presets' when block == RemoteBlock.speed => '${v}x',
+  'presets' =>
+    v == 'chapter'
+        ? l.remoteSleepEndOfChapter
+        : l.remoteSleepMinutes(int.tryParse(v) ?? 0),
+  'hours' => switch (v) {
+    '12' => l.remoteOpt12Hour,
+    '24' => l.remoteDisplay24Hour,
+    _ => l.remoteOptHoursPhone,
+  },
+  _ => v,
+};
+
+Widget _sheetLabel(BuildContext context, String text) => Padding(
+  padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+  child: Text(text, style: Theme.of(context).textTheme.labelLarge),
+);
+
+/// One choice of a few, as chips.
+Widget _sheetChoices<T>(
+  List<T> values,
+  T selected,
+  String Function(T) name,
+  void Function(T) pick,
+  String keyPrefix, {
+  Widget? Function(T)? avatar,
+}) => Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 16),
+  child: Wrap(
+    spacing: 8,
+    runSpacing: 8,
+    children: [
+      for (final v in values)
+        ChoiceChip(
+          key: Key('$keyPrefix-${v is Enum ? v.name : v}'),
+          avatar: avatar?.call(v),
+          label: Text(name(v)),
+          selected: v == selected,
+          onSelected: (_) => pick(v),
+        ),
+    ],
+  ),
+);
+
+/// A block's own options (its size, then [RemoteBlockInfo.options]),
+/// applied live through [onChanged].
+Future<void> showRemoteBlockOptionsSheet(
   BuildContext context,
-  RemoteDisplayOptions options,
-  ValueChanged<RemoteDisplayOptions> onChanged,
+  RemoteBlockEntry entry,
+  ValueChanged<RemoteBlockEntry> onChanged,
 ) {
-  var current = options;
+  var current = entry;
   return showAdaptiveSheetDialog<void>(
     context: context,
     showDragHandle: true,
@@ -655,87 +857,237 @@ Future<void> showRemoteDisplayOptionsSheet(
       builder: (ctx, setSheet) {
         final l = AppLocalizations.of(ctx)!;
         final tt = Theme.of(ctx).textTheme;
-        void set(RemoteDisplayOptions o) {
+        final block = current.block;
+        void set(RemoteBlockEntry e) {
+          setSheet(() => current = e);
+          onChanged(e);
+        }
+
+        final children = <Widget>[
+          ListTile(
+            leading: Icon(remoteBlockIcon(block)),
+            title: Text(remoteBlockName(l, block), style: tt.titleMedium),
+          ),
+          if (block.sizes.length > 1) ...[
+            _sheetLabel(ctx, l.remoteOptSize),
+            _sheetChoices(
+              block.sizes,
+              current.size,
+              (s) => remoteSizeName(l, s),
+              (s) => set(current.withSize(s)),
+              'remote-opt-size',
+            ),
+          ],
+        ];
+        for (final spec in block.options) {
+          final name = remoteOptionName(l, spec);
+          String valueName(String v) =>
+              remoteOptionValueName(l, block, spec, v);
+          switch (spec.type) {
+            case RemoteOptionType.toggle:
+              children.add(
+                SwitchListTile(
+                  key: Key('remote-opt-${spec.key}'),
+                  title: Text(name),
+                  value: current.flag(spec.key),
+                  onChanged: (v) => set(current.withOption(spec.key, v)),
+                ),
+              );
+            case RemoteOptionType.choice:
+              children
+                ..add(_sheetLabel(ctx, name))
+                ..add(
+                  _sheetChoices(
+                    spec.values,
+                    current.choice(spec.key),
+                    valueName,
+                    (v) => set(current.withOption(spec.key, v)),
+                    'remote-opt-${spec.key}',
+                  ),
+                );
+            case RemoteOptionType.multi:
+              final picked = current.picked(spec.key);
+              children
+                ..add(_sheetLabel(ctx, name))
+                ..add(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final v in spec.values)
+                          FilterChip(
+                            key: Key('remote-opt-${spec.key}-$v'),
+                            label: Text(valueName(v)),
+                            selected: picked.contains(v),
+                            // At least one stays picked.
+                            onSelected: picked.contains(v) && picked.length == 1
+                                ? null
+                                : (on) => set(
+                                    current.withOption(spec.key, [
+                                      for (final p in spec.values)
+                                        if (p == v ? on : picked.contains(p)) p,
+                                    ]),
+                                  ),
+                          ),
+                      ],
+                    ),
+                  ),
+                );
+          }
+        }
+        return ListView(
+          controller: controller,
+          padding: const EdgeInsets.only(bottom: 16),
+          children: children,
+        );
+      },
+    ),
+  );
+}
+
+/// The whole remote's look, applied live and saved through [onChanged].
+Future<void> showRemoteLookSheet(
+  BuildContext context,
+  RemoteLook look,
+  ValueChanged<RemoteLook> onChanged,
+) {
+  var current = look;
+  return showAdaptiveSheetDialog<void>(
+    context: context,
+    showDragHandle: true,
+    builder: (ctx, controller) => StatefulBuilder(
+      builder: (ctx, setSheet) {
+        final l = AppLocalizations.of(ctx)!;
+        final cs = Theme.of(ctx).colorScheme;
+        final tt = Theme.of(ctx).textTheme;
+        void set(RemoteLook o) {
           setSheet(() => current = o);
           onChanged(o);
         }
-
-        Widget label(String text) => Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-          child: Text(text, style: tt.labelLarge),
-        );
-        Widget choices<T>(
-          List<T> values,
-          T selected,
-          String Function(T) name,
-          void Function(T) pick,
-          String keyPrefix,
-        ) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final v in values)
-                ChoiceChip(
-                  key: Key('$keyPrefix-$v'),
-                  label: Text(name(v)),
-                  selected: v == selected,
-                  onSelected: (_) => pick(v),
-                ),
-            ],
-          ),
-        );
 
         return ListView(
           controller: controller,
           padding: const EdgeInsets.only(bottom: 16),
           children: [
-            ListTile(title: Text(l.remoteDisplayMode, style: tt.titleMedium)),
-            label(l.remoteDisplayBackground),
-            choices(
-              RemoteDisplayBackground.values,
+            ListTile(title: Text(l.remoteLook, style: tt.titleMedium)),
+            _sheetLabel(ctx, l.remoteLookAccent),
+            _sheetChoices(
+              const [RemoteLook.accentTheme, RemoteLook.accentCover],
+              current.accent,
+              (a) => a == RemoteLook.accentCover
+                  ? l.remoteLookAccentCover
+                  : l.remoteLookAccentTheme,
+              (a) => set(current.copyWith(accent: a)),
+              'remote-look-accent',
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+              child: Wrap(
+                children: [
+                  for (var i = 0; i < RemoteLook.palette.length; i++)
+                    IconButton(
+                      key: Key('remote-look-accent-p$i'),
+                      tooltip: l.remoteLookSwatch(i + 1),
+                      isSelected: current.accent == 'p$i',
+                      onPressed: () => set(current.copyWith(accent: 'p$i')),
+                      icon: Container(
+                        width: 28,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: RemoteLook.palette[i],
+                          shape: BoxShape.circle,
+                          border: current.accent == 'p$i'
+                              ? Border.all(color: cs.onSurface, width: 3)
+                              : null,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            _sheetLabel(ctx, l.remoteDisplayBackground),
+            _sheetChoices(
+              RemoteLookBackground.values,
               current.background,
               (b) => switch (b) {
-                RemoteDisplayBackground.theme => l.remoteDisplayBackgroundTheme,
-                RemoteDisplayBackground.cover => l.remoteDisplayBackgroundCover,
-                RemoteDisplayBackground.black => l.remoteDisplayBackgroundBlack,
+                RemoteLookBackground.theme => l.remoteDisplayBackgroundTheme,
+                RemoteLookBackground.cover => l.remoteDisplayBackgroundCover,
+                RemoteLookBackground.black => l.remoteDisplayBackgroundBlack,
+                RemoteLookBackground.gradient => l.remoteLookBackgroundGradient,
               },
               (b) => set(current.copyWith(background: b)),
-              'remote-display-bg',
+              'remote-look-bg',
             ),
-            label(l.remoteDisplayTextSize),
-            choices(
-              RemoteDisplayTextSize.values,
+            _sheetLabel(ctx, l.remoteLookButtons),
+            _sheetChoices(
+              RemoteButtonStyle.values,
+              current.buttons,
+              (b) => switch (b) {
+                RemoteButtonStyle.filled => l.remoteLookButtonsFilled,
+                RemoteButtonStyle.outlined => l.remoteLookButtonsOutlined,
+                RemoteButtonStyle.plain => l.remoteLookButtonsPlain,
+              },
+              (b) => set(current.copyWith(buttons: b)),
+              'remote-look-buttons',
+            ),
+            _sheetLabel(ctx, l.remoteOptCorners),
+            _sheetChoices(
+              RemoteCorners.values,
+              current.corners,
+              (c) => switch (c) {
+                RemoteCorners.sharp => l.remoteLookCornersSharp,
+                RemoteCorners.rounded => l.remoteOptCornersRounded,
+                RemoteCorners.extraRound => l.remoteLookCornersExtra,
+              },
+              (c) => set(current.copyWith(corners: c)),
+              'remote-look-corners',
+            ),
+            _sheetLabel(ctx, l.remoteLookSpacing),
+            _sheetChoices(
+              RemoteSpacing.values,
+              current.spacing,
+              (s) => s == RemoteSpacing.compact
+                  ? l.remoteSizeCompact
+                  : l.remoteLookSpacingComfortable,
+              (s) => set(current.copyWith(spacing: s)),
+              'remote-look-spacing',
+            ),
+            _sheetLabel(ctx, l.remoteDisplayTextSize),
+            _sheetChoices(
+              RemoteTextSize.values,
               current.textSize,
               (s) => switch (s) {
-                RemoteDisplayTextSize.normal => l.remoteSizeNormal,
-                RemoteDisplayTextSize.large => l.remoteSizeLarge,
-                RemoteDisplayTextSize.huge => l.remoteDisplayTextHuge,
+                RemoteTextSize.normal => l.remoteSizeNormal,
+                RemoteTextSize.large => l.remoteSizeLarge,
+                RemoteTextSize.huge => l.remoteDisplayTextHuge,
               },
               (s) => set(current.copyWith(textSize: s)),
-              'remote-display-text',
+              'remote-look-text',
             ),
-            const SizedBox(height: 8),
-            SwitchListTile(
-              key: const Key('remote-display-show-clock'),
-              title: Text(l.remoteDisplayShowClock),
-              value: current.showClock,
-              onChanged: (v) => set(current.copyWith(showClock: v)),
-            ),
-            SwitchListTile(
-              key: const Key('remote-display-24h'),
-              title: Text(l.remoteDisplay24Hour),
-              value: current.use24Hour,
-              onChanged: (v) => set(current.copyWith(use24Hour: v)),
-            ),
-            label(l.remoteDisplayDim),
-            choices(
-              RemoteDisplayOptions.dimChoices,
+            _sheetLabel(ctx, l.remoteDisplayDim),
+            _sheetChoices(
+              RemoteLook.dimChoices,
               current.dimAfterMinutes,
               (m) => m == 0 ? l.remoteDisplayDimNever : l.remoteSleepMinutes(m),
               (m) => set(current.copyWith(dimAfterMinutes: m)),
-              'remote-display-dim',
+              'remote-look-dim',
+            ),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: TextButton.icon(
+                  key: const Key('remote-look-reset'),
+                  onPressed: current == const RemoteLook()
+                      ? null
+                      : () => set(const RemoteLook()),
+                  icon: const Icon(Icons.restart_alt_rounded),
+                  label: Text(l.remoteLookReset),
+                ),
+              ),
             ),
           ],
         );

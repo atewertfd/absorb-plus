@@ -235,22 +235,22 @@ void main() {
       expect(client.disposed, isTrue);
     });
 
-    testWidgets('display mode shows a clock and leaves on tap', (tester) async {
+    testWidgets('full screen keeps the layout, survives a reconnect and '
+        'leaves on tap', (tester) async {
       final client = await open(tester);
-      await tester.tap(find.byKey(const Key('remote-display-mode')));
+      await tester.tap(find.byKey(const Key('remote-full-screen-button')));
       await tester.pump();
-      expect(find.byKey(const Key('remote-display-clock')), findsOneWidget);
+      expect(find.byType(AppBar), findsNothing);
       expect(find.text('Chapter 2'), findsOneWidget);
-      // 250 s left in the chapter at 1.25x.
-      expect(find.text('03:20 left in the chapter'), findsOneWidget);
+      expect(find.byKey(const Key('remote-play-pause')), findsOneWidget);
 
       client.update((c) => c.phase = RemoteLinkPhase.reconnecting);
       await tester.pump();
       expect(find.text('Reconnecting…'), findsOneWidget);
 
-      await tester.tap(find.byKey(const Key('remote-display')));
+      await tester.tap(find.byKey(const Key('remote-full-screen')));
       await tester.pump();
-      expect(find.byKey(const Key('remote-display-clock')), findsNothing);
+      expect(find.byType(AppBar), findsOneWidget);
       await tester.pumpWidget(const SizedBox());
     });
   });

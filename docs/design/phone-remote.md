@@ -340,6 +340,75 @@ end to end (needs the Pages deploy), the Windows firewall prompt, Linux.
   `remote_layout_screen_test.dart` (default order and rows, saved layout,
   edit mode disables controls, add/remove/size/preset/reset saved, drag in
   a column and between columns, landscape overflow, display options).
+- *Superseded 2026-11-04:* the display mode and its options sheet are gone;
+  see "More control" below.
+
+### More control (2026-11-04, branch `claude/remote-custom2`)
+Owner feedback: simple to use, but more control; full screen should not be
+a different screen.
+- **Per-block options.** In edit mode each block header has a gear, and a
+  tap on the block opens the same sheet: the block's size, then 2-5 of its
+  own options, applied and saved live. Defaults draw everything exactly as
+  before.
+  - Cover: corners (default = the Look's / square / rounded / circle),
+    shadow, alignment, space above.
+  - Title and author, chapter title: size is now the text size (normal /
+    compact / large), alignment, lines (1-3; the compact title keeps 1).
+  - Progress bar: time on the right (time left / total length), range
+    (chapter / whole book), space above. Time left: range, alignment.
+  - Playback buttons: which of the five show (at least one; fewer than five
+    sit evenly), show the skip seconds, space above.
+  - Volume: slider or − / + buttons (10 % steps, shows the percentage).
+    Speed and sleep timer: which choices their pickers list (speed: the 12
+    old values; sleep: 5-90 min and end of chapter, default 15/30/45/60 and
+    end of chapter).
+  - Clock: size (large = the old display mode's big clock, shrinks to fit),
+    format (phone / 12-hour / 24-hour), show the date, alignment.
+  - Space above: default (the screen's own gaps) / none / small 8 / large
+    32. Small buttons sharing a row (speed, sleep, actions) have no
+    alignment or spacing.
+- **Saved** in `fork_remote_layout` version 2: an entry is
+  `{block, size, options?}`, `options` holding only what the user set.
+  Version 1 saves load with every option at its default; unknown or bad
+  options are dropped (`RemoteOptionSpec.read`). Specs live in
+  `RemoteOptions` (`remote_layout.dart`); keys and values are saved, never
+  rename them.
+- **Full screen** (app bar button, or a single tap on empty space: a spot
+  no control takes, text included): the same layout with the app bar and
+  the system bars hidden (Android immersive sticky) and the screen kept on
+  (`ScreenWake` owner `remoteDisplay`). A tap on empty space or Back leaves.
+  The first time, a snack bar says "Tap empty space to exit full screen"
+  (pref `fork_remote_full_screen_hint`). Edit mode can't be opened from
+  full screen (no app bar, and `_setFullScreen` refuses while editing).
+  Works in landscape (same two columns). A dropped link shows
+  "Reconnecting…" in full screen; a tap still leaves. Disabled buttons
+  don't take taps, so a tap on one counts as empty space.
+- **Look** (edit toolbar, "Look"; pref `fork_remote_look`, all computers):
+  accent (app theme / from cover / 8 swatches), background (theme /
+  blurred cover / black / soft gradient from the cover's colour), button
+  style (filled = as always / outlined / plain: the play button's circle
+  and the small buttons), corners (sharp / rounded / extra round: the
+  cover's "default" corners and sharp button shapes), spacing (compact
+  halves the screen's own gaps / comfortable), text size (normal / large
+  / huge, on top of the phone's), dim after (never / 5 / 10 / 30 min;
+  full screen only, the first tap only wakes). Applied live behind the
+  sheet; "Reset look". The default Look adds no theme or layer at all.
+  The cover's colour comes from `PaletteGenerator` on a 112 px decode
+  (`cover_palette.dart`, `accentFromCoverPalette`), once per cover.
+- **Migration.** Without a saved Look, the old `fork_remote_display` seeds
+  it (background, text size, dimming), and its 24-hour switch becomes
+  `hours: 24` on the clocks. The Nightstand preset now uses the large clock
+  and, if the Look still has the theme background / no dimming, sets black
+  and 10 minutes.
+- Tests: `remote_layout_test.dart` (v1 to v2 with defaults, option
+  round-trip and cleanup, look JSON, old display options seed the look) and
+  `remote_layout_screen_test.dart` (hidden transport buttons not drawn, the
+  last one can't be hidden, tap on a block opens options, saved cover /
+  title / speed / sleep / volume options, full screen by tap on empty space
+  vs a control, button, Back, no edit in full screen, dimming, Look sheet
+  applied live and reset, outlined / plain buttons, Nightstand look, no
+  overflow at 360x640 and 640x360 with 1.3x text in full screen, edit mode
+  and both sheets, huge Look text in full screen).
 
 ## Stage 2 (2026-11-03, branch `claude/remote-stage2`)
 
