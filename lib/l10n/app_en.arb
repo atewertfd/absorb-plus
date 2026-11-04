@@ -8458,6 +8458,25 @@
   "testChannelInstall": "Install",
   "testChannelCheckNow": "Check now",
   "testChannelNotes": "What's in it",
+  "testBuildNotesTitle": "What's new in build {build}",
+  "@testBuildNotesTitle": {
+    "placeholders": {
+      "build": {
+        "type": "int"
+      }
+    }
+  },
+  "patchNotesTitle": "Patch notes",
+  "patchNotesSubtitle": "What changed in each test build on this phone",
+  "patchNotesEmpty": "No patch notes yet. They show up here after the next test build is installed.",
+  "patchNotesBuild": "Build {build}",
+  "@patchNotesBuild": {
+    "placeholders": {
+      "build": {
+        "type": "int"
+      }
+    }
+  },
   "testBuildAvailable": "Test build available",
   "testBuildDialogContent": "Test build {latest} is out.\n\nYou are on {current}.",
   "@testBuildDialogContent": {

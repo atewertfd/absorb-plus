@@ -15907,6 +15907,27 @@ class AppLocalizationsPt extends AppLocalizations {
   String get testChannelNotes => 'O que há nela';
 
   @override
+  String testBuildNotesTitle(int build) {
+    return 'What\'s new in build $build';
+  }
+
+  @override
+  String get patchNotesTitle => 'Patch notes';
+
+  @override
+  String get patchNotesSubtitle =>
+      'What changed in each test build on this phone';
+
+  @override
+  String get patchNotesEmpty =>
+      'No patch notes yet. They show up here after the next test build is installed.';
+
+  @override
+  String patchNotesBuild(int build) {
+    return 'Build $build';
+  }
+
+  @override
   String get testBuildAvailable => 'Versão de teste disponível';
 
   @override

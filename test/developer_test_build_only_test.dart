@@ -20,19 +20,23 @@ import 'support/fakes.dart';
 /// Files that are the Developer / test channel feature itself.
 const _featureFiles = {
   'lib/screens/developer_screen.dart',
+  'lib/screens/test_build_patch_notes_screen.dart',
   'lib/screens/test_channel_screen.dart',
   'lib/services/developer_mode.dart',
   'lib/services/github_device_auth.dart',
+  'lib/services/test_build_notes.dart',
   'lib/services/test_channel_service.dart',
   'lib/widgets/developer_mode_tiles.dart',
   'lib/widgets/github_sign_in.dart',
+  'lib/widgets/test_build_notes_sheet.dart',
 };
 
 /// What the rest of the app may only reach behind `kTestBuild`.
 final _entryPoint = RegExp(
   r'\b(DeveloperSettingsTile|onVersionLineTapped|TestChannelLaunchPrompt|'
   r'DeveloperScreen|TestChannelScreen|TestChannelService|DeveloperMode|'
-  r'GitHubSignInTile|showGitHubSignInDialog|GitHubDeviceAuth)\b',
+  r'GitHubSignInTile|showGitHubSignInDialog|GitHubDeviceAuth|'
+  r'TestBuildNotesPrompt|TestBuildNotesStore|TestBuildPatchNotesScreen)\b',
 );
 
 void main() {

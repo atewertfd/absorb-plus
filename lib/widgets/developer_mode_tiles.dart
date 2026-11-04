@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../screens/developer_screen.dart';
 import '../services/developer_mode.dart';
+import '../services/test_build_notes.dart';
 import '../services/test_channel_service.dart';
 import 'overlay_toast.dart';
+import 'test_build_notes_sheet.dart';
 import 'update_dialog.dart';
 
 /// Settings' version line calls this on every tap (Absorb Plus). The
@@ -113,11 +115,24 @@ abstract final class TestChannelLaunchPrompt {
     String? accessToken,
   ) async {
     final l = AppLocalizations.of(context)!;
+    final bullets = splitReleaseNotes(build.notes).bullets;
     final go = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(l.testBuildAvailable),
-        content: Text(l.testBuildDialogContent(build.fullVersion, installed)),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l.testBuildDialogContent(build.fullVersion, installed)),
+              if (bullets.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                TestBuildNoteList(notes: bullets),
+              ],
+            ],
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),

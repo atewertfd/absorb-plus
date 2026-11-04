@@ -26559,6 +26559,36 @@ abstract class AppLocalizations {
   /// **'What\'s in it'**
   String get testChannelNotes;
 
+  /// No description provided for @testBuildNotesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new in build {build}'**
+  String testBuildNotesTitle(int build);
+
+  /// No description provided for @patchNotesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Patch notes'**
+  String get patchNotesTitle;
+
+  /// No description provided for @patchNotesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What changed in each test build on this phone'**
+  String get patchNotesSubtitle;
+
+  /// No description provided for @patchNotesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No patch notes yet. They show up here after the next test build is installed.'**
+  String get patchNotesEmpty;
+
+  /// No description provided for @patchNotesBuild.
+  ///
+  /// In en, this message translates to:
+  /// **'Build {build}'**
+  String patchNotesBuild(int build);
+
   /// No description provided for @testBuildAvailable.
   ///
   /// In en, this message translates to:

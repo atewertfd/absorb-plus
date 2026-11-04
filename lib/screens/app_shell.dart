@@ -93,6 +93,7 @@ import '../utils/test_build.dart'; // Absorb Plus
 import '../widgets/quick_switcher_sources.dart'; // Absorb Plus
 import '../widgets/desktop_shortcut_help.dart'; // Absorb Plus
 import '../widgets/developer_mode_tiles.dart'; // Absorb Plus
+import '../widgets/test_build_notes_sheet.dart'; // Absorb Plus
 import '../fork/remote_link_hooks.dart'; // Absorb Plus
 
 
@@ -465,7 +466,7 @@ class _AppShellState extends State<AppShell>
 
   /// One after another, so they never land on top of each other.
   Future<void> _showLaunchPrompts() async {
-    await WhatsNewPrompt.showIfUpdated(context);
+    await (kTestBuild ? TestBuildNotesPrompt.showIfNew(context) : WhatsNewPrompt.showIfUpdated(context)); // Absorb Plus: the test app's own notes
     if (!mounted) return;
     await WelcomeSheet.showIfNeeded(context);
     if (!mounted) return;

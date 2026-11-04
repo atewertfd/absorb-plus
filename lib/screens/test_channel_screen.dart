@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../services/github_device_auth.dart';
+import '../services/test_build_notes.dart';
 import '../services/test_channel_service.dart';
 import '../widgets/github_sign_in.dart';
+import '../widgets/test_build_notes_sheet.dart';
 import '../widgets/overlay_toast.dart';
 import '../widgets/update_dialog.dart';
 
@@ -181,10 +183,16 @@ class _TestChannelScreenState extends State<TestChannelScreen> {
             const SizedBox(height: 24),
             Text(l.testChannelNotes, style: tt.titleSmall),
             const SizedBox(height: 8),
-            SelectableText(
-              build.notes.trim(),
-              style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
-            ),
+            // The release body is a version line and "- " bullets; show the
+            // bullets as a list, or the text as it is when it has none.
+            if (splitReleaseNotes(build.notes).bullets case final bullets
+                when bullets.isNotEmpty)
+              TestBuildNoteList(notes: bullets)
+            else
+              SelectableText(
+                build.notes.trim(),
+                style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+              ),
           ],
         ],
       ),
