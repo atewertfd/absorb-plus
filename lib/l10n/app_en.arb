@@ -8490,7 +8490,7 @@
   "developerModeSwitchSubtitle": "Turning it off hides this page. Tap the version 7 times to bring it back.",
   "testChannelTitle": "Test channel",
   "testChannelSubtitle": "Install the newest test build",
-  "testChannelUnavailable": "Test builds are only for the Android GitHub version.",
+  "testChannelUnavailable": "This test copy is updated directly with every new build, so there's nothing to install here. The test channel is for the Android test app.",
   "testChannelCodeLabel": "Test channel code",
   "testChannelUnlock": "Unlock",
   "testChannelUnlocked": "Test channel unlocked",

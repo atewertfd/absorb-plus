@@ -15817,7 +15817,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get testChannelUnavailable =>
-      'Test builds are only for the Android GitHub version.';
+      'This test copy is updated directly with every new build, so there\'s nothing to install here. The test channel is for the Android test app.';
 
   @override
   String get testChannelCodeLabel => 'Test channel code';

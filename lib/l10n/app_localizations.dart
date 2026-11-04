@@ -26766,7 +26766,7 @@ abstract class AppLocalizations {
   /// No description provided for @testChannelUnavailable.
   ///
   /// In en, this message translates to:
-  /// **'Test builds are only for the Android GitHub version.'**
+  /// **'This test copy is updated directly with every new build, so there\'s nothing to install here. The test channel is for the Android test app.'**
   String get testChannelUnavailable;
 
   /// No description provided for @testChannelCodeLabel.

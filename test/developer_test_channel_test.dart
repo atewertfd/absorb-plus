@@ -323,7 +323,7 @@ void main() {
       await tester.pumpWidget(_app(const DeveloperScreen()));
       await tester.pumpAndSettle();
       expect(
-        find.text('Test builds are only for the Android GitHub version.'),
+        find.textContaining('The test channel is for the Android test app.'),
         findsOneWidget,
       );
       expect(find.byType(TextField), findsNothing);

@@ -426,7 +426,10 @@ switch ($Command) {
       throw 'NuGet CLI not found. Install it with: winget install Microsoft.NuGet'
     }
     Invoke-Flutter pub get
-    Invoke-Flutter build windows --release --no-pub --dart-define=GITHUB_BUILD=true
+    # The owner's Windows test copy is a test build too (owner, 2026-11-04):
+    # Developer mode, sign-in design previews and the like. Public Windows
+    # releases are built by release.yml without ABSORB_TEST_BUILD.
+    Invoke-Flutter build windows --release --no-pub --dart-define=GITHUB_BUILD=true --dart-define=ABSORB_TEST_BUILD=true
     $expected = Get-PubspecVersion
     $actual = (Get-Item $exe).VersionInfo.ProductVersion
     if ($actual -ne $expected) { throw "absorb.exe reports $actual but pubspec.yaml says $expected" }
