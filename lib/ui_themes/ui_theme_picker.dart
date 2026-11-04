@@ -467,6 +467,158 @@ class _UiThemePickerDialogState extends State<UiThemePickerDialog> {
   }
 }
 
+Future<void> _chooseLook(AppUiTheme theme, GlassStrength glass) =>
+    UiThemeStore.choose(theme, glass: glass);
+
+/// The picker's look cards, Frosted's glass and the color choices on one
+/// page, for the first-run setup. Unlike the dialog, every tap is saved and
+/// applied right away (the app around it changes with it).
+class UiThemeInlinePicker extends StatefulWidget {
+  const UiThemeInlinePicker({
+    super.key,
+    this.appearance = const AppUiThemeAppearance(),
+    this.chooseLook = _chooseLook,
+  });
+
+  final UiThemeAppearance appearance;
+
+  /// Saves and applies a look with its glass strength (tests inject a fake).
+  final Future<void> Function(AppUiTheme theme, GlassStrength glass)
+  chooseLook;
+
+  @override
+  State<UiThemeInlinePicker> createState() => _UiThemeInlinePickerState();
+}
+
+class _UiThemeInlinePickerState extends State<UiThemeInlinePicker> {
+  late AppUiTheme _theme = savedUiTheme;
+  late GlassStrength _glass = savedGlassStrength;
+  late AppColorChoice _color = widget.appearance.currentColor;
+
+  late final List<ThemePreset> _presets = [
+    for (final id in kUiThemePickerPresetIds)
+      ...kThemePresets.where((p) => p.id == id),
+  ];
+
+  late final ({List<UiThemePreviewCover> covers, Map<String, String> headers})
+  _covers = previewCoversFrom(
+    Provider.of<LibraryProvider?>(context, listen: false),
+  );
+
+  void _saveLook(AppUiTheme theme, GlassStrength glass) {
+    setState(() {
+      _theme = theme;
+      _glass = glass;
+    });
+    unawaited(widget.chooseLook(theme, glass).catchError((Object e) {
+      debugPrint('[UiTheme] saving the look failed: $e');
+    }));
+  }
+
+  void _saveColor(AppColorChoice color) {
+    setState(() => _color = color);
+    unawaited(widget.appearance.saveColor(color).catchError((Object e) {
+      debugPrint('[UiTheme] saving the color failed: $e');
+    }));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final cs = Theme.of(context).colorScheme;
+    final tt = Theme.of(context).textTheme;
+    final base = Theme.of(context).colorScheme;
+    final scheme = previewScheme(
+      base,
+      _color.seed ?? widget.appearance.coverSeed,
+    );
+    final swatches = [for (final p in _presets) p.color];
+    final own = widget.appearance.currentColor.seed;
+    if (own != null &&
+        !swatches.any((c) => c.toARGB32() == own.toARGB32())) {
+      swatches.insert(0, own);
+    }
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final theme in AppUiTheme.values) ...[
+              if (theme != AppUiTheme.values.first) const SizedBox(width: 10),
+              Expanded(
+                child: _LookOption(
+                  key: ValueKey('ui-look-${theme.id}'),
+                  name: uiThemeName(l, theme),
+                  preview: UiThemePreview(
+                    look: theme.lookFor(
+                      Theme.of(context).brightness,
+                      eink: widget.appearance.eink,
+                      glass: _glass,
+                      details: lookDetailsNotifier.value,
+                    ),
+                    scheme: scheme,
+                    glow: widget.appearance.userGlow,
+                    flat: widget.appearance.flat,
+                    covers: _covers.covers,
+                    coverHeaders: _covers.headers,
+                  ),
+                  selected: theme == _theme,
+                  onTap: () => _saveLook(theme, _glass),
+                ),
+              ),
+            ],
+          ],
+        ),
+        if (_theme == AppUiTheme.frosted) ...[
+          const SizedBox(height: 12),
+          GlassStrengthControl(
+            key: const ValueKey('ui-picker-glass'),
+            value: _glass,
+            onChanged: (glass) => _saveLook(_theme, glass),
+          ),
+        ],
+        const SizedBox(height: 12),
+        Text(
+          uiThemeDescription(l, _theme),
+          style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
+        ),
+        const SizedBox(height: 20),
+        Text(l.uiThemeColorTitle, style: tt.titleSmall),
+        const SizedBox(height: 10),
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 10,
+          runSpacing: 10,
+          children: [
+            ChoiceChip(
+              key: const ValueKey('ui-color-cover'),
+              avatar: const Icon(Icons.auto_awesome_rounded, size: 18),
+              label: Text(l.uiThemeColorFromCover),
+              selected: _color.fromCover,
+              onSelected: (_) => _saveColor(const AppColorChoice.fromCover()),
+            ),
+            for (final color in swatches)
+              _ColorSwatch(
+                key: ValueKey('ui-color-${color.toARGB32()}'),
+                color: color,
+                label: _presets
+                    .where((p) => p.color.toARGB32() == color.toARGB32())
+                    .map((p) => p.name)
+                    .firstOrNull,
+                selected: _color.seed?.toARGB32() == color.toARGB32(),
+                outline: cs.outlineVariant,
+                ring: cs.onSurface,
+                onTap: () => _saveColor(AppColorChoice.fixed(color)),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 class _LookOption extends StatelessWidget {
   const _LookOption({
     super.key,
