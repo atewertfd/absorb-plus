@@ -185,3 +185,105 @@ design above:
 Not verified yet: a real phone, the Windows firewall prompt, discovery on
 networks with client isolation (manual address entry is the fallback), and
 Linux beyond CI builds.
+
+## v2 (2026-11-03, branch `claude/remote-v3`)
+
+Supersedes the stage-1 notes above where they differ. Protocol version 2;
+a v1 app on either side is told to update.
+
+### Names and wording
+- PC: **Control from your phone** (Settings row, sheet title). Phone:
+  **Control your computer**. Both screens open with a short plain intro (the
+  audio keeps playing on the PC; both on the same Wi-Fi).
+- The PC sheet shows numbered steps: 1. Turn it on here. 2. Scan the code
+  with your phone's camera, or open Absorb > Control your computer. 3. Enter
+  the code (then choose Allow on the PC).
+- Errors say what to do: "Your phone and PC aren't on the same Wi-Fi…",
+  "The code expired. Get a new one on the PC…", "The PC didn't allow this
+  phone…", "That PC already has 5 paired devices…".
+
+### Pairing
+- **A pairing window**, not a standing code. Turning the host on opens one
+  (2 minutes); "Pair a phone" / "Pair another device" opens a new one. It
+  closes when one device gets the code right, after 5 wrong tries, when it
+  runs out, when the sheet closes, or when the host stops. No window, no
+  pairing (`pairingClosed`).
+- **The PC user decides.** A right code gets `pairWait`, and the PC asks
+  "Allow ‘<device>’ to control Absorb on this PC?" (Allow / Deny). Deny, no
+  answer in 60 s, or the phone giving up is a refusal (`pairDenied`).
+- **The token never crosses the network.** `pair` carries the phone's half
+  of a Diffie-Hellman exchange (RFC 3526 group 14); `paired` carries the
+  PC's half. Both derive the token; the PC stores only its SHA-256, which is
+  also the login key. The connection then closes and the phone signs in.
+  Unauthenticated DH means someone actively in the middle during those
+  two minutes could pair instead; the code, the Allow question and the
+  short window are the guard.
+- **Limits:** 5 paired devices (`tooManyDevices`; the sheet says so), last
+  used shown, forgotten after 90 days unused, "Forget all" (confirmed).
+
+### Login and frames
+- `hello {nonce}` → `challenge {hostId, nonce}` → `auth {proof}` →
+  `welcome {hostId, hostName, proof}`. Proofs are HMAC-SHA256 over a label,
+  the host id and both nonces with the device key; the host tries each
+  paired device's key (at most 5). The phone checks the PC's proof, so a
+  fake computer learns nothing and gets no commands.
+- After `welcome` every frame is **sealed**: `{type: sealed, s, m, a}` with
+  `a` = HMAC(session key, direction, sequence, message). The session key is
+  derived from the device key and both nonces, so it is new per connection.
+  Tampered, replayed, reordered or bounced-back frames drop the connection.
+- **Not encrypted.** Frames carry playback state, titles, chapter names and
+  commands in the clear; anyone on the Wi-Fi can read them, but can't forge
+  or replay them, and never sees the token or key.
+- Covers: `GET /cover` (or `/cover?item=<id>` for a Continue listening book
+  offered to that connection) with `Authorization: Bearer <ticket>`, where
+  the ticket is derived from the session key and dies with the connection.
+- Because the PC proves itself, the phone **follows a paired PC to a new
+  address**: discovery by host id (every other failed retry, a scanned code,
+  or a discovery hit on the connect screen) updates the saved address.
+
+### Stability
+- Heartbeat: the phone pings every 2 s and treats 8 s of silence as a dead
+  link; the PC drops a signed-in remote after 10 s of silence (close 4008).
+- Reconnect with backoff (1, 2, 4, 8, then every 10 s), at once when the
+  app comes back to the front (`reconnectNow`). After every (re)connect the
+  PC sends full state and chapters. While disconnected the phone holds no
+  state, so no stale controls are shown.
+- The host is off after every quit unless **Keep on when Absorb starts**
+  (pref `fork_remote_link_keep_on`, default off); starting by itself opens
+  no pairing window. Quitting never waits for the host.
+- Tests run the pairing, login, heartbeat, reconnect, tamper and follow
+  cases on a fake clock over in-memory links (`remote_link_session_test`).
+
+### More controls
+PC volume slider and mute (mute remembers the level), chapter list (tap to
+jump: a `seek`), bookmark at the current spot with an optional note (the
+car-mode bookmark; the phone shows "Bookmark added on the PC"), sleep
+presets 15/30/45/60 min, end of chapter, cancel; speed presets plus
+-0.05/+0.05; Stop; Continue listening (the PC's Continue Listening shelf, or
+its Absorbing cards; up to 8; id, title, author, progress, cover; tapping
+one starts it on the PC like its own front-card play). New commands:
+`stop`, `volume`, `mute`, `bookmark`, `getRecent`, `playItem`; host frames
+`chapters`, `recent`, `notice`.
+
+### QR code and pair page
+- The QR holds
+  `https://atewertfd.github.io/absorb-plus/pair.html#h=<ip>&p=<port>&c=<code>&id=<hostId>`
+  (the Pages base path is `/absorb-plus/`, from `ci.yml`). Everything is in
+  the fragment, which never reaches a server; the page makes no requests.
+- `web/pair.html` (plain HTML, inline JS and CSS, Absorb colours) shows a
+  big "Open in Absorb": on Android
+  `intent://remote-pair?...#Intent;scheme=absorb;package=com.barnabas.absorb.plus;...`
+  with a second button for "Absorb Plus Test" (`.dev`), elsewhere
+  `absorb://remote-pair?...`; "Or type this code in Absorb", and "Get Absorb
+  Plus" (releases).
+- The app takes `absorb://remote-pair` through `main.dart`'s link handler
+  (`RemoteLinkHooks.offerLink`, Android intent filter on MainActivity) and
+  opens Control your computer with the code filled in; the user still taps
+  Pair, and the PC still asks Allow. A computer already paired just opens
+  at the scanned address.
+- **The page goes live only when `main` next deploys to Pages.** Until
+  then the phone's camera opens a 404; typing the code still works. Windows
+  has no `absorb://` handler, so the page shows the code there.
+
+Not verified yet: a real phone and PC on the same Wi-Fi, the camera flow
+end to end (needs the Pages deploy), the Windows firewall prompt, Linux.
