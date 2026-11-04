@@ -16286,6 +16286,24 @@ class AppLocalizationsIt extends AppLocalizations {
   String get loginDesignSplit => 'C · Split';
 
   @override
+  String get loginDesignStepsGlass => 'B2 · Glass steps';
+
+  @override
+  String get loginDesignStepsDesktop => 'B3 · Desktop steps';
+
+  @override
+  String get loginDesignStepsHero => 'B4 · Hero steps';
+
+  @override
+  String get loginStepLibrary => 'Your library';
+
+  @override
+  String get loginStepSignIn => 'Sign in';
+
+  @override
+  String get loginStepsKeyboardHint => 'Enter to continue, Esc to go back';
+
+  @override
   String get loginDesignUse => 'Use this design';
 
   @override

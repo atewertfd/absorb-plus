@@ -19,41 +19,82 @@ class StepsLoginDesign extends StatefulWidget {
   State<StepsLoginDesign> createState() => _StepsLoginDesignState();
 }
 
-class _StepsLoginDesignState extends State<StepsLoginDesign> {
-  bool _signInPage = false;
-  bool _checking = false;
-
+class _StepsLoginDesignState extends State<StepsLoginDesign>
+    with LoginStepsFlow<StepsLoginDesign> {
+  @override
   LoginForm get form => widget.form;
-
-  Future<void> _continue() async {
-    if (_checking) return;
-    if (!form.serverValid) {
-      setState(() => _checking = true);
-      await form.checkServer();
-      if (!mounted) return;
-      setState(() => _checking = false);
-      if (!form.serverValid) return;
-    }
-    setState(() => _signInPage = true);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && _signInPage) form.usernameFocus.requestFocus();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return LoginDesignBackdrop(
       child: LoginScrollBody(
         maxWidth: 520,
-        child: Form(
-          key: form.formKey,
-          child: _signInPage ? _signIn(context) : _server(context),
-        ),
+        child: Form(key: form.formKey, child: buildStepPage()),
       ),
     );
   }
+}
 
-  Widget _title(BuildContext context, String title, String intro) {
+/// The two-step flow's state, shared by the B designs: which page shows,
+/// and going on to the sign-in once the address checks out.
+mixin LoginStepsFlow<T extends StatefulWidget> on State<T> {
+  LoginForm get form;
+
+  /// The sign-in page shows (else the server address page).
+  bool signInPage = false;
+
+  /// The address is being checked after Continue.
+  bool checking = false;
+
+  /// Checks the address if needed, then shows the sign-in page with the
+  /// username focused.
+  Future<void> continueToSignIn() async {
+    if (checking) return;
+    if (!form.serverValid) {
+      setState(() => checking = true);
+      await form.checkServer();
+      if (!mounted) return;
+      setState(() => checking = false);
+      if (!form.serverValid) return;
+    }
+    setState(() => signInPage = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && signInPage) form.usernameFocus.requestFocus();
+    });
+  }
+
+  /// Back to the address page (not while signing in).
+  void backToServer() {
+    if (form.busy || !signInPage) return;
+    setState(() => signInPage = false);
+  }
+
+  /// The current page, as design B lays it out.
+  Widget buildStepPage({
+    bool showBadge = true,
+    FocusNode? serverFocus,
+    double buttonHeight = 52,
+  }) => signInPage
+      ? LoginStepsSignInPage(form: form, onBack: backToServer)
+      : LoginStepsServerPage(
+          form: form,
+          checking: checking,
+          onContinue: () => unawaited(continueToSignIn()),
+          showBadge: showBadge,
+          serverFocus: serverFocus,
+          buttonHeight: buttonHeight,
+        );
+}
+
+/// A step's heading and one-line intro.
+class LoginStepTitle extends StatelessWidget {
+  const LoginStepTitle({super.key, required this.title, required this.intro});
+
+  final String title;
+  final String intro;
+
+  @override
+  Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
     return Padding(
@@ -74,24 +115,54 @@ class _StepsLoginDesignState extends State<StepsLoginDesign> {
       ),
     );
   }
+}
 
-  Widget _server(BuildContext context) {
+/// Step 1: "Where is your library?", the address and Continue.
+class LoginStepsServerPage extends StatelessWidget {
+  const LoginStepsServerPage({
+    super.key,
+    required this.form,
+    required this.checking,
+    required this.onContinue,
+    this.showBadge = true,
+    this.serverFocus,
+    this.buttonHeight = 52,
+  });
+
+  final LoginForm form;
+  final bool checking;
+  final VoidCallback onContinue;
+  final bool showBadge;
+  final FocusNode? serverFocus;
+  final double buttonHeight;
+
+  @override
+  Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final canContinue =
-        form.server.text.trim().isNotEmpty && !form.busy && !_checking;
+        form.server.text.trim().isNotEmpty && !form.busy && !checking;
     return Column(
       key: const Key('login-design-steps-server'),
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Align(
-          alignment: AlignmentDirectional.centerStart,
-          child: LoginWaveBadge(size: 56),
+        if (showBadge) ...[
+          const Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: LoginWaveBadge(size: 56),
+          ),
+          const SizedBox(height: 16),
+        ],
+        LoginStepTitle(
+          title: l.loginWhereIsLibrary,
+          intro: l.loginWhereIsLibraryIntro,
         ),
-        const SizedBox(height: 16),
-        _title(context, l.loginWhereIsLibrary, l.loginWhereIsLibraryIntro),
         ...spacedLoginWidgets(form.notices(context)),
-        form.serverField(context, onSubmitted: () => unawaited(_continue())),
+        form.serverField(
+          context,
+          onSubmitted: onContinue,
+          focusNode: serverFocus,
+        ),
         LoginRecentServers(form: form),
         if (TailscaleService.platformSupported) ...[
           const SizedBox(height: 12),
@@ -107,16 +178,16 @@ class _StepsLoginDesignState extends State<StepsLoginDesign> {
         ],
         const SizedBox(height: 24),
         SizedBox(
-          height: 52,
+          height: buttonHeight,
           child: FilledButton(
             key: const Key('login-steps-continue'),
-            onPressed: canContinue ? () => unawaited(_continue()) : null,
+            onPressed: canContinue ? onContinue : null,
             style: FilledButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(14),
               ),
             ),
-            child: _checking
+            child: checking
                 ? const SizedBox(
                     width: 22,
                     height: 22,
@@ -139,8 +210,21 @@ class _StepsLoginDesignState extends State<StepsLoginDesign> {
       ],
     );
   }
+}
 
-  Widget _signIn(BuildContext context) {
+/// Step 2: "Sign in to <server>", the credentials and saved accounts.
+class LoginStepsSignInPage extends StatelessWidget {
+  const LoginStepsSignInPage({
+    super.key,
+    required this.form,
+    required this.onBack,
+  });
+
+  final LoginForm form;
+  final VoidCallback onBack;
+
+  @override
+  Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     return Column(
       key: const Key('login-design-steps-sign-in'),
@@ -151,18 +235,15 @@ class _StepsLoginDesignState extends State<StepsLoginDesign> {
           alignment: AlignmentDirectional.centerStart,
           child: TextButton.icon(
             key: const Key('login-steps-back'),
-            onPressed: form.busy
-                ? null
-                : () => setState(() => _signInPage = false),
+            onPressed: form.busy ? null : onBack,
             icon: const Icon(Icons.arrow_back_rounded, size: 18),
             label: Text(l.loginChangeServer),
           ),
         ),
         const SizedBox(height: 8),
-        _title(
-          context,
-          l.loginSignInToNamed(form.serverHost),
-          l.loginSignInToNamedIntro,
+        LoginStepTitle(
+          title: l.loginSignInToNamed(form.serverHost),
+          intro: l.loginSignInToNamedIntro,
         ),
         form.credentialFields(context),
         const SizedBox(height: 16),

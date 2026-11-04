@@ -60,8 +60,12 @@ abstract class LoginForm {
   Future<void> openFullSignIn();
 
   /// The classic screen's server address field (protocol picker, check
-  /// status, error and its detail).
-  Widget serverField(BuildContext context, {VoidCallback? onSubmitted});
+  /// status, error and its detail). [focusNode] lets a design focus it.
+  Widget serverField(
+    BuildContext context, {
+    VoidCallback? onSubmitted,
+    FocusNode? focusNode,
+  });
 
   /// The classic screen's Audiobookshelf / BookOrbit picker.
   Widget backendPicker(BuildContext context);

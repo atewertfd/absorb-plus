@@ -27231,6 +27231,42 @@ abstract class AppLocalizations {
   /// **'C · Split'**
   String get loginDesignSplit;
 
+  /// Sign-in design B2: the two steps on a see-through frosted panel.
+  ///
+  /// In en, this message translates to:
+  /// **'B2 · Glass steps'**
+  String get loginDesignStepsGlass;
+
+  /// Sign-in design B3: the two steps in a wide panel with a step list, for big windows.
+  ///
+  /// In en, this message translates to:
+  /// **'B3 · Desktop steps'**
+  String get loginDesignStepsDesktop;
+
+  /// Sign-in design B4: design C's hero panel beside the two steps.
+  ///
+  /// In en, this message translates to:
+  /// **'B4 · Hero steps'**
+  String get loginDesignStepsHero;
+
+  /// Sign-in step list, step 1: entering the server address.
+  ///
+  /// In en, this message translates to:
+  /// **'Your library'**
+  String get loginStepLibrary;
+
+  /// Sign-in step list, step 2: username and password.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get loginStepSignIn;
+
+  /// Keyboard hint under the sign-in step list on desktop.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter to continue, Esc to go back'**
+  String get loginStepsKeyboardHint;
+
   /// Sign-in design preview: makes this design the one the app shows.
   ///
   /// In en, this message translates to:

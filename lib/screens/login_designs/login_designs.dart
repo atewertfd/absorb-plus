@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../services/login_design_store.dart';
 import 'card_login_design.dart';
+import 'glass_steps_login_design.dart';
 import 'login_form.dart';
 import 'split_login_design.dart';
 import 'steps_login_design.dart';
@@ -15,5 +16,8 @@ Widget? buildLoginDesign(LoginDesign design, LoginForm form) =>
       LoginDesign.classic => null,
       LoginDesign.card => CardLoginDesign(form: form),
       LoginDesign.steps => StepsLoginDesign(form: form),
+      LoginDesign.stepsGlass => GlassStepsLoginDesign(form: form),
+      LoginDesign.stepsDesktop => DesktopStepsLoginDesign(form: form),
+      LoginDesign.stepsHero => HeroStepsLoginDesign(form: form),
       LoginDesign.split => SplitLoginDesign(form: form),
     };

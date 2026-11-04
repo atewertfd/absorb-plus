@@ -32,7 +32,7 @@ class SplitLoginDesign extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const _Hero(compact: true),
+                  const LoginHero(compact: true),
                   const SizedBox(height: 20),
                   _FormSide(form: form),
                 ],
@@ -46,7 +46,7 @@ class SplitLoginDesign extends StatelessWidget {
               const Expanded(
                 child: Padding(
                   padding: EdgeInsets.all(16),
-                  child: _Hero(compact: false),
+                  child: LoginHero(compact: false),
                 ),
               ),
               Expanded(
@@ -63,9 +63,10 @@ class SplitLoginDesign extends StatelessWidget {
   }
 }
 
-/// The logo, name and tagline on a soft gradient of the theme's accent.
-class _Hero extends StatelessWidget {
-  const _Hero({required this.compact});
+/// The logo, name and tagline on a soft gradient of the theme's accent (also
+/// design B4's hero).
+class LoginHero extends StatelessWidget {
+  const LoginHero({super.key, required this.compact});
 
   final bool compact;
 

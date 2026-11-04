@@ -15,6 +15,17 @@ enum LoginDesign {
   /// B · server address first, then the sign-in on a second page.
   steps('steps'),
 
+  /// B2 · B's two steps on a see-through frosted panel over a soft
+  /// background (recent covers, blurred, or the accent's gradient).
+  stepsGlass('steps_glass'),
+
+  /// B3 · B's two steps in a wide glass panel with a step list, for big
+  /// windows and the keyboard; B2's layout on phones.
+  stepsDesktop('steps_desktop'),
+
+  /// B4 · C's hero panel beside B's two steps (above them on phones).
+  stepsHero('steps_hero'),
+
   /// C · a hero panel beside the form on wide windows, above it on phones.
   split('split');
 
@@ -34,6 +45,9 @@ enum LoginDesign {
     LoginDesign.classic => l.loginDesignClassic,
     LoginDesign.card => l.loginDesignCard,
     LoginDesign.steps => l.loginDesignSteps,
+    LoginDesign.stepsGlass => l.loginDesignStepsGlass,
+    LoginDesign.stepsDesktop => l.loginDesignStepsDesktop,
+    LoginDesign.stepsHero => l.loginDesignStepsHero,
     LoginDesign.split => l.loginDesignSplit,
   };
 }

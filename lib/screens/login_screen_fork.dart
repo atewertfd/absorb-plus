@@ -188,7 +188,11 @@ class _ForkLoginForm implements LoginForm {
   }
 
   @override
-  Widget serverField(BuildContext context, {VoidCallback? onSubmitted}) {
+  Widget serverField(
+    BuildContext context, {
+    VoidCallback? onSubmitted,
+    FocusNode? focusNode,
+  }) {
     final l = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
     return Column(
@@ -197,6 +201,7 @@ class _ForkLoginForm implements LoginForm {
       children: [
         _s._buildInputField(
           controller: _s._serverController,
+          focusNode: focusNode,
           label: l.loginServerAddress,
           hint: l.loginServerHint,
           helperText: l.loginServerHelper,

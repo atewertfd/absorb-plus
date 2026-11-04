@@ -3,17 +3,20 @@
 // AuthProvider calls as the classic screen, and the preview never signs in.
 // No server is contacted: pings go to an in-memory MockClient.
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:absorb/l10n/app_localizations.dart';
 import 'package:absorb/l10n/app_localizations_en.dart';
 import 'package:absorb/providers/auth_provider.dart';
 import 'package:absorb/screens/login_designs/login_design_preview_screen.dart';
 import 'package:absorb/screens/login_designs/login_designs.dart';
+import 'package:absorb/screens/login_designs/login_glass_parts.dart';
 import 'package:absorb/screens/login_screen.dart';
 import 'package:absorb/screens/setup/setup_flow_screen.dart';
 import 'package:absorb/screens/setup/setup_flow_store.dart';
 import 'package:absorb/services/login_design_store.dart';
 import 'package:absorb/services/server_backend.dart';
+import 'package:absorb/ui_themes/frosted.dart' show debugFrostIsWebOverride;
 import 'package:absorb/ui_themes/ui_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -108,6 +111,15 @@ const _combos = [
   _Combo(Size(640, 360), 1.3, Brightness.light),
   _Combo(Size(1280, 800), 1.0, Brightness.light),
   _Combo(Size(1280, 800), 1.3, Brightness.dark),
+  _Combo(Size(1920, 1080), 1.0, Brightness.dark),
+  _Combo(Size(1920, 1080), 1.3, Brightness.light),
+];
+
+/// The designs added in round 2 (B's steps on glass, desktop, hero).
+const _bVariants = [
+  LoginDesign.stepsGlass,
+  LoginDesign.stepsDesktop,
+  LoginDesign.stepsHero,
 ];
 
 AbsorbLook _look(int i, Brightness b) => switch (i % 3) {
@@ -177,6 +189,18 @@ Future<void> _tapVisible(WidgetTester tester, Finder finder) async {
   await tester.pump();
 }
 
+/// A small solid PNG standing in for a cached cover.
+Future<Uint8List> _pngCover() async {
+  final recorder = ui.PictureRecorder();
+  Canvas(
+    recorder,
+  ).drawRect(const Rect.fromLTWH(0, 0, 40, 60), Paint()..color = Colors.orange);
+  final image = await recorder.endRecording().toImage(40, 60);
+  final data = await image.toByteData(format: ui.ImageByteFormat.png);
+  image.dispose();
+  return data!.buffer.asUint8List();
+}
+
 /// On the two-step design, goes on to the sign-in page.
 Future<void> _toSignInPage(WidgetTester tester) async {
   final next = find.byKey(const Key('login-steps-continue'));
@@ -194,14 +218,22 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     LoginDesignStore.design.value = LoginDesign.classic;
     fakePackageInfo();
+    LoginCoverCollage.debugReset();
+    LoginCoverCollage.readCovers = () async => const [];
   });
 
-  tearDown(clearFakePackageInfo);
+  tearDown(() {
+    clearFakePackageInfo();
+    LoginCoverCollage.debugReset();
+    debugFrostIsWebOverride = null;
+  });
 
   group('every design lays out in preview mode', () {
     for (final design in LoginDesign.values) {
       testWidgets(design.id, (tester) async {
         for (final (i, combo) in _combos.indexed) {
+          // A fresh screen each time, so every combo starts on page 1.
+          await tester.pumpWidget(const SizedBox());
           await _pump(
             tester,
             _screen(design, preview: true),
@@ -241,6 +273,234 @@ void main() {
       combo: const _Combo(Size(360, 640), 1.0, Brightness.dark),
     );
     expect(find.byKey(const Key('login-design-split-narrow')), findsOneWidget);
+  });
+
+  testWidgets('B2-B4 lay out in every look, light and dark, blurred or not', (
+    tester,
+  ) async {
+    for (final design in _bVariants) {
+      for (final blur in [true, false]) {
+        debugFrostIsWebOverride = !blur;
+        for (final b in Brightness.values) {
+          for (final look in [
+            AbsorbLook.plus,
+            AbsorbLook.midnight(b),
+            if (b == Brightness.dark)
+              AbsorbLook.frostedDark
+            else
+              AbsorbLook.frostedLight,
+          ]) {
+            for (final size in const [Size(360, 640), Size(1280, 800)]) {
+              final combo = _Combo(size, 1.0, b);
+              final why = '${design.id} blur=$blur $look $combo';
+              await tester.pumpWidget(const SizedBox());
+              await _pump(
+                tester,
+                _screen(design, preview: true),
+                combo: combo,
+                look: look,
+              );
+              expect(tester.takeException(), isNull, reason: why);
+              if (design != LoginDesign.stepsHero) {
+                expect(
+                  find.byKey(const Key('login-glass-panel')),
+                  findsOneWidget,
+                  reason: why,
+                );
+                final filter = tester.widget<BackdropFilter>(
+                  find.descendant(
+                    of: find.byKey(const Key('login-glass-panel')),
+                    matching: find.byType(BackdropFilter),
+                  ),
+                );
+                expect(filter.enabled, blur, reason: why);
+              }
+              await _toSignInPage(tester);
+              expect(tester.takeException(), isNull, reason: 'page 2, $why');
+              expect(_signInButton, findsOneWidget, reason: why);
+            }
+          }
+        }
+      }
+    }
+  });
+
+  testWidgets('B3 is wide on big windows and B2-like on phones; B4 like C', (
+    tester,
+  ) async {
+    Future<void> at(LoginDesign design, Size size, String key) async {
+      // A fresh screen: the design scope is read once, not watched.
+      await tester.pumpWidget(const SizedBox());
+      await _pump(
+        tester,
+        _screen(design, preview: true),
+        combo: _Combo(size, 1.0, Brightness.dark),
+      );
+      expect(find.byKey(Key(key)), findsOneWidget, reason: '$design $size');
+    }
+
+    await at(
+      LoginDesign.stepsDesktop,
+      const Size(1280, 800),
+      'login-design-steps-desktop-wide',
+    );
+    expect(find.byKey(const Key('login-steps-rail')), findsOneWidget);
+    expect(find.text(_l.loginStepLibrary), findsOneWidget);
+    await at(
+      LoginDesign.stepsDesktop,
+      const Size(1920, 1080),
+      'login-design-steps-desktop-wide',
+    );
+    await at(
+      LoginDesign.stepsDesktop,
+      const Size(360, 640),
+      'login-design-steps-desktop-narrow',
+    );
+    expect(find.byKey(const Key('login-steps-rail')), findsNothing);
+    await at(
+      LoginDesign.stepsDesktop,
+      const Size(640, 360),
+      'login-design-steps-desktop-narrow',
+    );
+    await at(
+      LoginDesign.stepsHero,
+      const Size(1280, 800),
+      'login-design-hero-wide',
+    );
+    expect(find.byKey(const Key('login-split-hero')), findsOneWidget);
+    await at(
+      LoginDesign.stepsHero,
+      const Size(640, 360),
+      'login-design-hero-wide',
+    );
+    await at(
+      LoginDesign.stepsHero,
+      const Size(360, 640),
+      'login-design-hero-narrow',
+    );
+    expect(find.byKey(const Key('login-split-hero')), findsOneWidget);
+  });
+
+  testWidgets('B3 starts in the address, Enter continues, Esc and Alt+Left '
+      'go back', (tester) async {
+    bool focused(Finder field) => tester
+        .widget<EditableText>(
+          find.descendant(of: field, matching: find.byType(EditableText)),
+        )
+        .focusNode
+        .hasFocus;
+    final signInPage = find.byKey(const Key('login-design-steps-sign-in'));
+    final serverPage = find.byKey(const Key('login-design-steps-server'));
+
+    Future<void> enter() async {
+      await tester.testTextInput.receiveAction(TextInputAction.next);
+      await tester.pump();
+      await tester.pump();
+    }
+
+    final auth = _RecordingAuth();
+    await _pump(
+      tester,
+      _screen(LoginDesign.stepsDesktop, preview: true),
+      auth: auth,
+      combo: const _Combo(Size(1920, 1080), 1.0, Brightness.dark),
+    );
+    await tester.pump();
+    expect(focused(_serverField), isTrue);
+
+    await enter();
+    expect(signInPage, findsOneWidget);
+    expect(focused(_usernameField), isTrue);
+    final rail1 = find.byKey(const Key('login-steps-rail-1'));
+    expect(
+      find.descendant(of: rail1, matching: find.byIcon(Icons.check_rounded)),
+      findsOneWidget,
+    );
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pump();
+    await tester.pump();
+    expect(serverPage, findsOneWidget);
+    expect(focused(_serverField), isTrue);
+
+    await enter();
+    expect(signInPage, findsOneWidget);
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.altLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.altLeft);
+    await tester.pump();
+    expect(serverPage, findsOneWidget);
+
+    // The step list works with the mouse too.
+    await tester.tap(find.byKey(const Key('login-steps-rail-2')));
+    await tester.pump();
+    await tester.pump();
+    expect(signInPage, findsOneWidget);
+    await tester.tap(rail1);
+    await tester.pump();
+    expect(serverPage, findsOneWidget);
+    expect(auth.calls, isEmpty);
+  });
+
+  testWidgets('B2 shows recent cached covers, else the accent gradient', (
+    tester,
+  ) async {
+    Future<void> show() async {
+      await tester.pumpWidget(const SizedBox());
+      await _pump(tester, _screen(LoginDesign.stepsGlass, preview: true));
+      // The collage future completed in the real zone (runAsync below); let
+      // its listeners run there.
+      await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+      await tester.pump();
+    }
+
+    await show();
+    expect(find.byKey(const Key('login-glass-gradient')), findsOneWidget);
+
+    final cover = (await tester.runAsync(_pngCover))!;
+    var reads = 0;
+    LoginCoverCollage.debugReset();
+    LoginCoverCollage.readCovers = () async {
+      reads++;
+      // A broken file is skipped, not fatal.
+      return [
+        cover,
+        Uint8List.fromList([1, 2, 3]),
+        cover,
+      ];
+    };
+    expect(await tester.runAsync(LoginCoverCollage.image), isNotNull);
+    await show();
+    expect(find.byKey(const Key('login-glass-covers')), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    // Built once per run.
+    await show();
+    expect(reads, 1);
+
+    LoginCoverCollage.debugReset();
+    LoginCoverCollage.readCovers = () async => throw StateError('no cache');
+    await tester.runAsync(LoginCoverCollage.image);
+    await show();
+    expect(find.byKey(const Key('login-glass-gradient')), findsOneWidget);
+  });
+
+  test('B2-B4 save under their own ids', () async {
+    const ids = {
+      LoginDesign.stepsGlass: 'steps_glass',
+      LoginDesign.stepsDesktop: 'steps_desktop',
+      LoginDesign.stepsHero: 'steps_hero',
+    };
+    expect(
+      LoginDesign.values.map((d) => d.id).toSet(),
+      hasLength(LoginDesign.values.length),
+    );
+    for (final MapEntry(key: design, value: id) in ids.entries) {
+      expect(design.id, id);
+      SharedPreferences.setMockInitialValues({LoginDesignStore.key: id});
+      await LoginDesignStore.load();
+      expect(LoginDesignStore.design.value, design);
+      expect(design.label(_l), isNotEmpty);
+    }
   });
 
   testWidgets('the saved design picks the layout, and changes follow', (
@@ -293,10 +553,14 @@ void main() {
       return http.Response('not found', 404);
     });
 
-    Future<List<String>> signIn(WidgetTester tester, LoginDesign design) async {
+    Future<List<String>> signIn(
+      WidgetTester tester,
+      LoginDesign design, {
+      _Combo combo = const _Combo(Size(390, 844), 1.0, Brightness.dark),
+    }) async {
       final auth = _RecordingAuth();
       await http.runWithClient(() async {
-        await _pump(tester, _screen(design), auth: auth);
+        await _pump(tester, _screen(design), auth: auth, combo: combo);
         await tester.enterText(_serverField, 'abs.test');
         await tester.pump(const Duration(seconds: 1));
         await tester.pump();
@@ -329,6 +593,17 @@ void main() {
     for (final design in LoginDesign.values.skip(1)) {
       testWidgets(design.id, (tester) async {
         expect(await signIn(tester, design), classic);
+      });
+    }
+
+    for (final design in _bVariants) {
+      testWidgets('${design.id}, wide window', (tester) async {
+        final wide = await signIn(
+          tester,
+          design,
+          combo: const _Combo(Size(1920, 1080), 1.0, Brightness.light),
+        );
+        expect(wide, classic);
       });
     }
   });
