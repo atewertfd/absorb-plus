@@ -151,7 +151,13 @@ class _RemoteHostSheetState extends State<RemoteHostSheet> {
               _header(context, l.remoteHostConnectedTitle),
               for (final c in connections)
                 ListTile(
-                  leading: Icon(Icons.phone_android_rounded, color: cs.primary),
+                  leading: Icon(
+                    c.browser
+                        ? Icons.language_rounded
+                        : Icons.phone_android_rounded,
+                    color: cs.primary,
+                    semanticLabel: c.browser ? l.remoteHostBrowserDevice : null,
+                  ),
                   title: Text(c.deviceName),
                   subtitle: Text(
                     l.remoteHostConnectedFrom(
@@ -185,8 +191,9 @@ class _RemoteHostSheetState extends State<RemoteHostSheet> {
               for (final d in paired)
                 ListTile(
                   leading: Icon(
-                    Icons.devices_rounded,
+                    d.browser ? Icons.language_rounded : Icons.devices_rounded,
                     color: cs.onSurfaceVariant,
+                    semanticLabel: d.browser ? l.remoteHostBrowserDevice : null,
                   ),
                   title: Text(d.name),
                   subtitle: Text(
@@ -262,6 +269,15 @@ class _RemoteHostSheetState extends State<RemoteHostSheet> {
                 ),
           selectable: true,
         ),
+        if (address != null && status.port != null)
+          KeyedSubtree(
+            key: const Key('remote-host-browser-url'),
+            child: _note(
+              context,
+              l.remoteHostBrowserAddress('http://$address:${status.port}'),
+              selectable: true,
+            ),
+          ),
         if (!status.discovery) _note(context, l.remoteHostNoDiscovery),
       ],
     ];

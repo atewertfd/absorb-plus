@@ -378,7 +378,7 @@ void main() {
         await r2.drain<void>();
         expect(r2.statusCode, HttpStatus.unauthorized);
 
-        final other = await http.get('127.0.0.1', host.boundPort!, '/');
+        final other = await http.get('127.0.0.1', host.boundPort!, '/other');
         final r3 = await other.close();
         await r3.drain<void>();
         expect(r3.statusCode, HttpStatus.notFound);
