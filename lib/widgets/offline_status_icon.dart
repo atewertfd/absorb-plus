@@ -4,8 +4,9 @@ import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../providers/library_provider.dart';
 import 'overlay_toast.dart';
-import 'accessible_header_action.dart';
 import 'sign_in_again.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'accessible_header_action.dart';
 
 /// Cloud icon in page headers showing online/offline state.
 ///

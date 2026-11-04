@@ -1,5 +1,4 @@
 import 'dart:async';
-import '../utils/web_safe_platform.dart'; // web-safe Platform
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
@@ -15,6 +14,8 @@ import '../services/download_service.dart';
 import '../services/remote_audio_slice.dart';
 import '../services/transcription_service.dart';
 import '../widgets/overlay_toast.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart'; // web-safe Platform
 
 /// Mutable working copy of one chapter. [uid] is a stable identity that
 /// survives reindexing/add/remove (used for controllers + locks); [id] is the

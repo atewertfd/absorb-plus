@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../screens/settings_search_index.dart';
 import 'collapsible_section.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'empty_state.dart';
 
 /// Filter and rank the search index for [query]. Every whitespace-separated

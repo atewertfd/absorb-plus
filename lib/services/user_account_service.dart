@@ -1,13 +1,14 @@
-import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/server_url.dart';
-import 'account_epoch.dart';
 import 'api_service.dart';
 import 'auth_tokens.dart';
-import 'home_shelf_snapshot.dart';
 import 'server_backend.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'dart:async';
+import 'account_epoch.dart';
+import 'home_shelf_snapshot.dart';
 
 /// Represents a saved user account (server + credentials).
 class SavedAccount {

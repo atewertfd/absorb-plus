@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' hide Platform; // web-safe Platform below
-import '../utils/web_safe_platform.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +19,8 @@ import 'scoped_prefs.dart';
 import 'user_account_service.dart';
 import 'wear_player_service.dart';
 import 'sleep_timer_service.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart';
 
 const String _androidWidgetName = 'NowPlayingWidget';
 const String _androidWidgetCompactName = 'NowPlayingWidgetCompact';

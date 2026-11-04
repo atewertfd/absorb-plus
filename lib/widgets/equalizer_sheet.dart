@@ -1,7 +1,8 @@
-import '../utils/web_safe_platform.dart'; // web-safe Platform
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../services/equalizer_service.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart'; // web-safe Platform
 
 /// Show the equalizer & audio enhancements bottom sheet.
 ///

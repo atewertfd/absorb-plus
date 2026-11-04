@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' hide Platform; // web-safe Platform below
-import '../utils/web_safe_platform.dart';
 import 'dart:math' show max, min;
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
@@ -62,6 +61,8 @@ import 'card_chapters_sheet.dart';
 import 'chromecast_button.dart';
 import 'equalizer_sheet.dart';
 import 'sleep_timer_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart';
 import 'desktop_input.dart';
 
 typedef _ReaderAction = ({

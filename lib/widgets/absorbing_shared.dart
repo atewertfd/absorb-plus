@@ -7,8 +7,9 @@ import '../providers/library_provider.dart';
 import '../services/download_service.dart';
 import '../services/playback_history_service.dart';
 import '../services/player_settings.dart';
-import 'absorb_plus_logo.dart';
 import 'overlay_toast.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'absorb_plus_logo.dart';
 import 'text_scale_room.dart';
 
 String dateLabel(DateTime dt, [AppLocalizations? l]) {

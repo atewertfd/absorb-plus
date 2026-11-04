@@ -15,6 +15,7 @@ import '../widgets/card_buttons.dart' show showErrorToast;
 import 'app_shell.dart';
 import '../widgets/overlay_toast.dart';
 import '../l10n/app_localizations.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 import '../widgets/desktop_input.dart';
 import '../utils/fork_format.dart';

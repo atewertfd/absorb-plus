@@ -2,13 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'api_service.dart';
 import 'download_service.dart';
-import 'offline_listening_upload.dart';
 import 'scoped_prefs.dart';
-import 'streaming_pending_ledger.dart';
 import 'sync_logic.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'package:shared_preferences/shared_preferences.dart';
+import 'offline_listening_upload.dart';
+import 'streaming_pending_ledger.dart';
 import 'user_account_service.dart';
 
 /// Manages local progress storage and server sync.

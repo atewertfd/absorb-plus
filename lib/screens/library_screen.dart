@@ -17,10 +17,8 @@ import '../services/audio_player_service.dart';
 import '../widgets/absorb_page_header.dart';
 import '../widgets/library_picker_sheet.dart';
 import '../widgets/library_search_results.dart';
-import '../widgets/alphabet_scroller.dart'; // Absorb Plus
 import '../widgets/podcast_episode_feed.dart';
 import '../main.dart' show flatNotifier, gradientIntensityNotifier;
-import '../ui_themes/ui_theme_hooks.dart';
 import '../widgets/library_sort_filter_sheet.dart';
 import '../widgets/desktop_batch_actions.dart';
 import '../widgets/overlay_toast.dart';
@@ -42,13 +40,16 @@ import '../widgets/rmab_config_sheet.dart'
     show kRmabBaseUrlKey, kRmabApiTokenKey;
 import '../widgets/rmab_search_results_sheet.dart';
 import '../widgets/scroll_reveal.dart';
-import '../utils/performance_policy.dart';
 import '../services/scoped_prefs.dart';
 import '../services/server_backend.dart';
 import '../services/user_account_service.dart';
 import '../l10n/app_localizations.dart';
 import 'smart_scope_editor_screen.dart';
 import '../widgets/new_list_flow.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../widgets/alphabet_scroller.dart'; // Absorb Plus
+import '../ui_themes/ui_theme_hooks.dart';
+import '../utils/performance_policy.dart';
 import '../widgets/text_scale_room.dart';
 import '../widgets/recent_searches_panel.dart';
 import '../services/recent_searches.dart';

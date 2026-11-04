@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' hide Platform; // web-safe Platform below
-import '../utils/web_safe_platform.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 import '_audio_player.dart';
-import 'desktop_audio.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,9 +27,7 @@ import 'chapter_lookup.dart';
 import 'now_playing_layout.dart';
 import 'cold_start_play_policy.dart';
 import 'playback_error_policy.dart';
-import 'playback_recovery.dart';
 import 'player_settings.dart';
-import 'book_settings_service.dart';
 import 'session_cache.dart';
 import 'home_widget_service.dart';
 import 'bookmark_service.dart';
@@ -42,6 +37,12 @@ import '../utils/duration_format.dart';
 import '../l10n/app_localizations.dart';
 import '../main.dart' show rootNavigatorKey;
 import '../widgets/overlay_toast.dart' show showNavigatorOverlayToast;
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'desktop_audio.dart';
+import 'playback_recovery.dart';
+import 'book_settings_service.dart';
 import 'windows_media_cover.dart';
 import 'tailscale_cover_route.dart';
 import 'seek_undo.dart';

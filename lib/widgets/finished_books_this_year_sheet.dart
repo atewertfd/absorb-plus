@@ -12,6 +12,7 @@ import 'book_detail_sheet.dart';
 import 'books_sheet_shared.dart' show coverGridCount;
 import 'overlay_toast.dart';
 import 'stackable_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 
 /// Show a modal sheet listing every book the user has finished in the

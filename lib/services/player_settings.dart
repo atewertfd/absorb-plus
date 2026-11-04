@@ -3,11 +3,12 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'book_settings_service.dart';
 import 'narrated_books.dart';
 import 'scoped_prefs.dart';
-import 'update_check_policy.dart';
 import '../widgets/card_button_config.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'book_settings_service.dart';
+import 'update_check_policy.dart';
 import '../utils/fork_platform.dart';
 
 typedef QueueModeSnapshot = ({

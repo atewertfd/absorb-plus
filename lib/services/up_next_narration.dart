@@ -1,4 +1,3 @@
-import '../utils/web_safe_platform.dart'; // web-safe Platform
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -13,6 +12,8 @@ import '../widgets/overlay_toast.dart';
 import 'audio_player_service.dart';
 import 'download_service.dart';
 import 'narrated_books.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart'; // web-safe Platform
 
 /// An Audiobookshelf EPUB that reads itself aloud streams from the server,
 /// so offline it plays only once its narration is downloaded, and a queue

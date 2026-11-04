@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../ui_themes/ui_theme_hooks.dart';
 
 class CollapsibleSection extends StatefulWidget {

@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../services/api_service.dart';
 import '../services/backup_service.dart';
-import '../widgets/support_actions.dart';
 import '../services/oidc_service.dart';
 import '../services/server_backend.dart';
 import '../services/settings_sync_service.dart';
@@ -24,6 +23,8 @@ import '../services/audio_player_service.dart';
 import '../main.dart' show applyTrustAllCerts, flatNotifier;
 import '../l10n/app_localizations.dart';
 import '../services/wording.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../widgets/support_actions.dart';
 import '../services/tailscale_service.dart'; // fork
 import 'tailscale_settings_screen.dart'; // fork
 import '../widgets/tailscale_login_panel.dart'; // fork

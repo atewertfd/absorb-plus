@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io' hide Platform; // web-safe Platform below
-import '../utils/web_safe_platform.dart';
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
@@ -14,6 +13,8 @@ import '../services/backup_service.dart';
 import '../services/settings_sync_service.dart';
 import '../widgets/overlay_toast.dart';
 import 'sync_connection_screen.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart';
 
 /// Backup and sync in one place. They were separate screens, but a backup taken
 /// with login info is what sets sync up on a second phone - a relationship

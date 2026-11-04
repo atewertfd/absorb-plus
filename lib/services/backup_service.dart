@@ -5,11 +5,12 @@ import '../utils/episode_key.dart';
 import '../widgets/nav_hold_options.dart'
     show navHoldTabs, navHoldPrefKey, navHoldMenuPrefKey;
 import 'audio_player_service.dart';
-import 'imported_settings_reload.dart';
 import 'reader_font_service.dart';
 import 'scoped_prefs.dart';
 import 'sleep_timer_service.dart';
 import 'user_account_service.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'imported_settings_reload.dart';
 
 class BackupService {
   /// [includeRmabSecrets] is for settings sync's opt-in RMAB sharing; a

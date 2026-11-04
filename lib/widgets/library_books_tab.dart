@@ -3,6 +3,7 @@ import '../l10n/app_localizations.dart';
 import '../screens/library_screen.dart';
 import 'books_sheet_shared.dart';
 import 'library_grid_tiles.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'text_scale_room.dart';
 import 'empty_state.dart'; // Absorb Plus
 import 'loading_placeholders.dart'; // Absorb Plus

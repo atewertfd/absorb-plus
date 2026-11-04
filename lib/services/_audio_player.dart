@@ -1,8 +1,9 @@
 import 'dart:async';
-import '../utils/web_safe_platform.dart'; // web-safe Platform
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:just_audio/just_audio.dart' as ja;
 import 'native_ios_audio_player.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart'; // web-safe Platform
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'position_tick_throttle.dart';
 
 // Re-export just_audio's data types so consumers don't need a second import.

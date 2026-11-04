@@ -22,6 +22,7 @@ import 'stackable_sheet.dart';
 import 'swipe_action.dart';
 import '../screens/app_shell.dart';
 import '../screens/smart_scope_editor_screen.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 
 class CollectionDetailSheet extends StatefulWidget {

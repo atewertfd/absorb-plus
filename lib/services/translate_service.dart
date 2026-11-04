@@ -1,5 +1,4 @@
 import 'dart:async';
-import '../utils/web_safe_platform.dart'; // web-safe Platform
 import 'dart:ui' show Locale, PlatformDispatcher;
 
 import 'package:flutter/foundation.dart';
@@ -7,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'player_settings.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart'; // web-safe Platform
 
 enum TranslatorKind { app, apple, web }
 

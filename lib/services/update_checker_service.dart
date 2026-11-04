@@ -10,8 +10,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'update_check_policy.dart';
 import 'update_policy.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'update_check_policy.dart';
 import 'windows_shell.dart';
 
 class UpdateInfo {

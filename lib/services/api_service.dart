@@ -25,10 +25,11 @@ import 'scoped_prefs.dart';
 import 'server_notifications.dart';
 import 'server_backend.dart';
 import 'socket_service.dart';
-import 'tailscale_service.dart';
 import '../models/auth_session.dart';
 import '../utils/server_url.dart';
 import '../utils/percent_escapes.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'tailscale_service.dart';
 import '../utils/keep_alive_client.dart';
 import '../utils/json_body.dart';
 import 'library_item_request_cache.dart';

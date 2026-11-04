@@ -24,6 +24,7 @@ import 'admin_server_settings_screen.dart';
 import 'admin_server_logs_screen.dart';
 import 'admin_stats_screen.dart';
 import 'admin_sessions_screen.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'admin_dashboard_screen.dart';
 
 class _AdminNavigatorObserver extends NavigatorObserver {

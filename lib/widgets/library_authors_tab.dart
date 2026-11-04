@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../screens/library_screen.dart';
 import 'library_grid_tiles.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'text_scale_room.dart';
 
 class LibraryAuthorsTab extends StatelessWidget {

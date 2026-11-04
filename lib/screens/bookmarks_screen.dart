@@ -24,6 +24,7 @@ import '../widgets/ebook_router.dart';
 import '../widgets/quote_share_sheet.dart';
 import '../widgets/overlay_toast.dart';
 import '../l10n/app_localizations.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 import '../widgets/desktop_input.dart';
 import '../utils/bookmark_list_tools.dart';

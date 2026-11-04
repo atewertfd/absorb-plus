@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'session_cache_prune.dart';
 import 'user_account_service.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'session_cache_prune.dart';
 
 /// Caches playback session metadata (track URLs, chapters, duration) per item
 /// so the app can start playback immediately on cold start without waiting for

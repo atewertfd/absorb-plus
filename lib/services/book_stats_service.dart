@@ -4,9 +4,10 @@ import 'package:flutter/foundation.dart';
 
 import 'api_service.dart';
 import 'bookorbit_mapper.dart';
-import 'item_listening_scan.dart';
 import 'narrated_books.dart';
 import 'scoped_prefs.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'item_listening_scan.dart';
 
 /// One session as the book's activity card lists it.
 class BookActivityRow {

@@ -9,6 +9,7 @@ import '../providers/library_provider.dart';
 import '../services/book_search_index.dart';
 import 'overlay_toast.dart';
 import 'stackable_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 
 /// A stay-open search picker for bulk-adding books to a target (collection or

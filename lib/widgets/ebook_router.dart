@@ -9,12 +9,13 @@ import '../services/ebook_cache.dart';
 import '../services/image_epub.dart';
 import '../services/narration_service.dart';
 import '../services/server_backend.dart';
-import '../utils/fork_platform.dart';
 import 'comic_reader_view.dart';
 import 'ebook_reader_view.dart';
 import 'pdf_reader_view.dart';
 import 'foliate_reader_view.dart';
 import 'overlay_toast.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/fork_platform.dart';
 
 /// Lower-cased ebook format (no dot) for an ABS ebookFile. Shares the cache's
 /// format-first derivation so the router, cache and readers can never disagree

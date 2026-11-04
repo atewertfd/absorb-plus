@@ -13,6 +13,7 @@ import '../utils/desktop_workspace.dart';
 import 'adaptive_modal.dart';
 import 'rmab_request_status_chip.dart';
 import 'stackable_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/fork_platform.dart';
 
 /// ScopedPrefs keys used by the RMAB integration.

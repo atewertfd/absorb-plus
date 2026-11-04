@@ -1,4 +1,3 @@
-import '../utils/web_safe_platform.dart'; // web-safe Platform
 
 import 'package:flutter/material.dart';
 import 'package:quick_actions/quick_actions.dart';
@@ -9,6 +8,8 @@ import '../screens/bookmarks_screen.dart';
 import '../screens/downloads_screen.dart';
 import 'audio_player_service.dart';
 import 'home_widget_service.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart'; // web-safe Platform
 
 /// Wires up Android / iOS app-icon long-press shortcuts:
 /// - "Play" resumes the last-played item (same cold-start path used by the

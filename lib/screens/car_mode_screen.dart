@@ -14,6 +14,7 @@ import '../widgets/card_buttons.dart';
 import '../services/screen_wake.dart';
 import '../widgets/overlay_toast.dart';
 import '../l10n/app_localizations.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 
 class CarModeScreen extends StatefulWidget {

@@ -14,6 +14,7 @@ import 'episode_detail_sheet.dart';
 import 'absorb_placement.dart';
 import 'swipe_action.dart';
 import 'stackable_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 
 /// Open the right detail sheet for a section entity: episode detail for

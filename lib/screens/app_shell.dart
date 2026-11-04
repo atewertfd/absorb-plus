@@ -13,12 +13,9 @@ import '../services/chromecast_service.dart';
 import '../services/home_widget_service.dart';
 import '../services/sleep_timer_service.dart';
 import 'dart:io' hide Platform; // web-safe Platform below
-import '../utils/web_safe_platform.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:palette_generator/palette_generator.dart';
 import '../utils/cover_accent.dart';
-import '../utils/memory_policy.dart';
-import '../utils/performance_policy.dart';
 import '../main.dart'
     show snappyTransitionsNotifier, einkModeNotifier, coverSchemeNotifier, rootNavigatorKey, applyOrientationLock, applyEinkModeTheme;
 import '../services/scoped_prefs.dart';
@@ -51,9 +48,7 @@ import '../services/bookorbit_notification_socket.dart';
 import '../services/server_notifications.dart';
 import '../services/ebook_cache.dart';
 import '../widgets/action_pill.dart';
-import '../widgets/absorbing_nav_icon.dart';
 import '../widgets/book_detail_sheet.dart' show showBookDetailSheet;
-import '../widgets/windows_jump_list_opener.dart'; // Absorb Plus
 import '../widgets/ebook_router.dart';
 import '../widgets/nav_hold_options.dart';
 import '../widgets/sleep_timer_sheet.dart';
@@ -72,17 +67,22 @@ import '../widgets/library_picker_sheet.dart';
 import '../widgets/beta_logging_notice.dart';
 import '../widgets/welcome_sheet.dart';
 import '../widgets/whats_new_prompt.dart';
-import '../ui_themes/ui_theme_picker.dart';
-import '../ui_themes/frosted.dart';
 import '../services/review_service.dart';
 import '../services/settings_sync_service.dart';
 import '../services/update_checker_service.dart';
+import '../widgets/update_dialog.dart';
+import '../widgets/overlay_toast.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart';
+import '../utils/memory_policy.dart';
+import '../utils/performance_policy.dart';
+import '../widgets/absorbing_nav_icon.dart';
+import '../widgets/windows_jump_list_opener.dart'; // Absorb Plus
+import '../ui_themes/ui_theme_picker.dart';
+import '../ui_themes/frosted.dart';
 import '../services/desktop_shortcuts.dart';
 import '../widgets/desktop_shortcut_scope.dart';
 import '../services/windows_shell.dart';
-import '../widgets/update_dialog.dart';
-import '../widgets/overlay_toast.dart';
-
 import '../utils/app_motion.dart';
 import '../utils/local_path.dart';
 import '../utils/fork_platform.dart';
@@ -94,6 +94,7 @@ import '../widgets/quick_switcher_sources.dart'; // Absorb Plus
 import '../widgets/desktop_shortcut_help.dart'; // Absorb Plus
 import '../widgets/developer_mode_tiles.dart'; // Absorb Plus
 import '../services/remote_link/remote_link.dart' show remoteHost; // Absorb Plus
+
 
 class AppShell extends StatefulWidget {
   final bool startOnAbsorbing;

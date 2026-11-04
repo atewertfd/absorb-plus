@@ -1,9 +1,4 @@
 import 'dart:async';
-import '../utils/web_safe_platform.dart';
-import '../utils/fork_branding.dart';
-import '../utils/fork_platform.dart';
-import 'rebuild_snapshots.dart';
-import '../widgets/support_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +22,6 @@ import '../screens/login_screen.dart';
 import '../screens/app_shell.dart';
 import '../build_info.dart';
 import '../services/update_checker_service.dart';
-import '../services/update_check_policy.dart';
 import '../services/audiobookshelf_update_service.dart';
 import '../widgets/update_dialog.dart';
 import '../widgets/nav_hold_options.dart';
@@ -51,36 +45,43 @@ import '../screens/transcription_settings_screen.dart';
 import '../main.dart' show applyThemeMode, applyTrustAllCerts, applyFlatBackground, applyColorSource, applyManualSeed, applyGradientIntensity, applyUseColorEverywhere, applyEinkModeTheme, applyOrientationLock, localeNotifier, flatNotifier, gradientIntensityNotifier, snappyTransitionsNotifier;
 import '../services/wording.dart';
 import '../utils/share_origin.dart';
-import '../utils/test_build.dart'; // Absorb Plus
 import '../widgets/settings_search.dart';
 import 'settings_search_index.dart';
-import 'settings_search_extras.dart'; // fork
-import 'server_health_screen.dart';
 import '../widgets/absorb_page_header.dart';
 import '../widgets/theme_presets.dart';
 import '../widgets/color_wheel_picker.dart';
 import '../widgets/absorb_slider.dart';
 import '../widgets/card_scrubber_mode_selector.dart';
 import '../widgets/collapsible_section.dart';
-import '../widgets/windows_settings_tiles.dart';
-import '../widgets/desktop_download_folder_sheet.dart';
-import '../widgets/desktop_shortcut_help.dart';
-import '../widgets/precache_setting_tile.dart';
-import '../widgets/exclusive_audio_tile.dart';
 import '../widgets/overlay_toast.dart';
 import '../widgets/tips_sheet.dart';
 import '../widgets/feature_hint.dart';
 import '../widgets/welcome_sheet.dart';
 import '../widgets/whats_new_prompt.dart';
-import '../widgets/whats_new_sheet.dart';
-import '../ui_themes/ui_theme_picker.dart';
-import '../ui_themes/ui_theme_hooks.dart';
 import '../widgets/rmab_config_sheet.dart';
-import '../widgets/rmab_search_results_sheet.dart';
 import '../widgets/server_connection_editor.dart';
 import '../widgets/server_admin_status_badges.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/sign_in_again.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart';
+import '../utils/fork_branding.dart';
+import '../utils/fork_platform.dart';
+import 'rebuild_snapshots.dart';
+import '../widgets/support_actions.dart';
+import '../services/update_check_policy.dart';
+import '../utils/test_build.dart'; // Absorb Plus
+import 'settings_search_extras.dart'; // fork
+import 'server_health_screen.dart';
+import '../widgets/windows_settings_tiles.dart';
+import '../widgets/desktop_download_folder_sheet.dart';
+import '../widgets/desktop_shortcut_help.dart';
+import '../widgets/precache_setting_tile.dart';
+import '../widgets/exclusive_audio_tile.dart';
+import '../widgets/whats_new_sheet.dart';
+import '../ui_themes/ui_theme_picker.dart';
+import '../ui_themes/ui_theme_hooks.dart';
+import '../widgets/rmab_search_results_sheet.dart';
 import '../services/tailscale_service.dart'; // fork
 import 'tailscale_settings_screen.dart'; // fork
 import '../widgets/next_in_series_download_tile.dart'; // fork

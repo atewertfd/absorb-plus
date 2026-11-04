@@ -1,15 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show File; // web-safe Platform below
-import '../utils/web_safe_platform.dart';
-import '../utils/fork_platform.dart';
 import 'package:audio_service/audio_service.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api_service.dart';
-import 'tailscale_cover_route.dart';
 import 'server_backend.dart';
 import 'audio_player_service.dart';
 import 'book_search_index.dart';
@@ -19,6 +16,10 @@ import 'scoped_prefs.dart';
 import 'user_account_service.dart';
 import '../l10n/app_localizations.dart';
 import '../main.dart' show rootNavigatorKey;
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart';
+import '../utils/fork_platform.dart';
+import 'tailscale_cover_route.dart';
 
 // ─── Media ID scheme ─────────────────────────────────────────────────
 //

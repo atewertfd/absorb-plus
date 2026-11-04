@@ -3,9 +3,6 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../services/account_scoped_caches.dart';
-import '../services/startup_timing.dart';
-import '../services/startup_overlap.dart';
 import '../services/api_service.dart';
 import '../services/bookorbit_admin.dart';
 import '../services/auth_tokens.dart';
@@ -13,21 +10,25 @@ import '../services/android_auto_service.dart';
 import '../services/book_search_index.dart';
 import '../services/carplay_service.dart';
 import '../services/audio_player_service.dart';
-import '../services/remote_link/remote_link.dart' show remoteHost; // fork
 import '../services/equalizer_service.dart';
 import '../services/session_cache.dart';
 import '../services/socket_service.dart';
-import '../services/tailscale_service.dart';
 import '../services/server_backend.dart';
 import '../services/signed_out_playback.dart';
 import '../services/user_account_service.dart';
 import '../services/home_widget_service.dart';
 import '../services/wear_auth_service.dart';
-import '../services/library_item_request_cache.dart';
 import '../l10n/app_localizations.dart';
 import '../main.dart' show rootNavigatorKey;
 import '../widgets/overlay_toast.dart';
 import '../utils/server_url.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../services/account_scoped_caches.dart';
+import '../services/startup_timing.dart';
+import '../services/startup_overlap.dart';
+import '../services/remote_link/remote_link.dart' show remoteHost; // fork
+import '../services/tailscale_service.dart';
+import '../services/library_item_request_cache.dart';
 import '../utils/unmetered_network.dart';
 
 class AuthProvider extends ChangeNotifier {

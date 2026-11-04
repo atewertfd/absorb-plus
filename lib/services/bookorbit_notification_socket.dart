@@ -5,6 +5,7 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import 'api_service.dart';
 import 'server_notifications.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'user_account_service.dart';
 
 /// BookOrbit's live notification feed, its `/notifications` socket. It runs

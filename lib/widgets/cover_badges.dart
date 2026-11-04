@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../ui_themes/ui_theme_hooks.dart';
 
 /// State banner across the bottom of cover art: a finished check + "Finished"

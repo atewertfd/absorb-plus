@@ -12,6 +12,7 @@ import '../services/download_service.dart';
 import 'absorbing_shared.dart';
 import 'book_detail_sheet.dart';
 import 'episode_list_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'cover_decode.dart';
 import 'library_item_snapshot.dart';
 import '../ui_themes/ui_theme_hooks.dart';

@@ -3,9 +3,10 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'api_service.dart';
 import 'download_service.dart';
-import 'local_session_queue.dart';
 import 'progress_sync_service.dart';
 import 'scoped_prefs.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'local_session_queue.dart';
 
 /// Owns client-built LOCAL playback sessions for downloaded/offline plays.
 ///

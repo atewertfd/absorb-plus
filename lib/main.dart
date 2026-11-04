@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:io' hide Platform; // web-safe Platform below
-import 'utils/web_safe_platform.dart';
-import 'utils/platform_appearance.dart'; // fork (C16)
 import 'dart:ui';
 // Flutter 3.44 moved CupertinoPageTransitionsBuilder from material.dart to
 // cupertino.dart. Older SDKs (incl. local) still re-export it from material,
@@ -40,29 +38,25 @@ import 'services/home_widget_service.dart';
 import 'services/siri_service.dart';
 import 'services/narrated_books.dart';
 import 'services/read_listen_sync.dart';
-import 'services/next_in_series_download.dart'; // fork
 import 'services/log_service.dart';
 import 'services/quick_actions_service.dart';
-import 'services/startup_task_coordinator.dart';
 import 'services/setup_link_service.dart';
 import 'services/wording.dart';
-import 'services/startup_timing.dart';
 import 'screens/login_screen.dart';
 import 'screens/app_shell.dart';
 import 'widgets/auth_loading_screen.dart';
 import 'widgets/beta_logging_notice.dart';
-import 'widgets/exclusive_audio_tile.dart'; // fork
 import 'widgets/setup_link_login.dart';
-import 'widgets/book_detail_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'fork/fork_startup.dart';
+import 'services/startup_task_coordinator.dart';
+import 'services/startup_timing.dart';
 import 'utils/app_motion.dart';
-import 'utils/scroll_diagnostics.dart';
-import 'utils/smooth_wheel_scroll.dart';
-import 'utils/memory_policy.dart';
 import 'ui_themes/ui_theme.dart';
 import 'ui_themes/frosted.dart';
 import 'services/tailscale_service.dart';
-import 'services/precache_service.dart';
-import 'services/pending_writes.dart';
+import 'utils/web_safe_platform.dart';
+import 'utils/platform_appearance.dart'; // fork (C16)
 
 /// Global notifier so any widget (e.g. settings) can change the theme instantly.
 final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.dark);
@@ -263,21 +257,15 @@ Future<void> applyOrientationLock() async {
 }
 
 void main() async {
-  StartupTiming.markMain();
-  PrecacheService.itemSink = primeBookDetailItem;
+  ForkStartup.beforeBinding(); // Absorb Plus (lib/fork/fork_startup.dart)
   HttpOverrides.global = _CertOverrides();
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  bool smoothWheel() =>
-      !einkModeNotifier.value && !snappyTransitionsNotifier.value;
-  installSmoothWheelScroll(enabled: smoothWheel);
-  installScrollDiagnostics(smoothingEnabled: smoothWheel); // ABSORB_SCROLL_DIAG=1
-  configureImageCache(PaintingBinding.instance.imageCache);
-  PendingWrites.installLifecycleFlush(); // fork: flush held-back writes on background
+  ForkStartup.afterBinding(
+    smoothWheel: () => !einkModeNotifier.value && !snappyTransitionsNotifier.value,
+    trustSelfSigned: () => trustAllCerts,
+    navigatorKey: rootNavigatorKey,
+  );
   ReadListenSync.instance.start();
-  NextInSeriesDownloader.start(); // fork; does nothing until turned on
-  TailscaleService.trustSelfSigned = () => trustAllCerts; // fork
-  installExclusiveAudioFallbackNotice(rootNavigatorKey); // fork; Windows only
-  unawaited(TailscaleService.instance.init()); // fork; no-op unless turned on
   BookOrbitApiService.placeReadingSpot = NarrationService.readingSpotSeconds;
   BookOrbitApiService.keptNarration = NarrationService.instance.localOverlay;
   ApiService.pageReadElsewhere = NarrationService.pageReadElsewhere;

@@ -7,8 +7,9 @@ import 'package:vibration/vibration.dart';
 import 'scoped_prefs.dart';
 import 'audio_player_service.dart';
 import 'chromecast_service.dart';
-import 'fell_asleep_marker.dart'; // Absorb Plus
 import 'sleep_timer_tick_policy.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'fell_asleep_marker.dart'; // Absorb Plus
 
 enum SleepTimerMode { off, time, chapters, episodes }
 

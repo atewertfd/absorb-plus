@@ -1,5 +1,6 @@
 import 'dart:math' as dart_math;
 import 'package:flutter/material.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../services/wording.dart';
 import 'absorb_plus_logo.dart';
 

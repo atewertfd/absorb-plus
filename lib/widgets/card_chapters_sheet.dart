@@ -7,6 +7,7 @@ import '../screens/app_shell.dart';
 import '../services/audio_player_service.dart';
 import '../services/chromecast_service.dart';
 import 'absorbing_shared.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'chapter_search_list.dart';
 
 void showChaptersSheet({

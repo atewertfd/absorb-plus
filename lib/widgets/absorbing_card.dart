@@ -4,7 +4,6 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../ui_themes/ui_theme_hooks.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/cover_accent.dart';
 import '../providers/auth_provider.dart';
@@ -27,6 +26,8 @@ import '../services/chromecast_service.dart';
 import 'expanded_card.dart';
 import '../main.dart' show colorSourceNotifier, useColorEverywhereNotifier, manualSeedNotifier, manualColorScheme;
 import 'stable_cached_network_image.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../ui_themes/ui_theme_hooks.dart';
 import 'text_scale_room.dart';
 import '../utils/local_path.dart';
 import 'item_download_watch.dart';

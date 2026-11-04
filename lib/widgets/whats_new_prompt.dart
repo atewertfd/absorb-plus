@@ -4,8 +4,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../build_info.dart';
-import '../services/whats_new_notes.dart';
 import 'welcome_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../services/whats_new_notes.dart';
 import 'whats_new_sheet.dart';
 
 /// The release tag of a build. Fork releases, stable ones included, are

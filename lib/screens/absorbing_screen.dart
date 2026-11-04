@@ -11,10 +11,8 @@ import '../services/queue_download_policy.dart';
 import '../services/scoped_prefs.dart';
 import '../widgets/absorb_page_header.dart';
 import '../main.dart' show flatNotifier, gradientIntensityNotifier, rootNavigatorKey;
-import '../ui_themes/ui_theme_hooks.dart';
 import '../widgets/absorbing_card.dart';
 import '../widgets/offline_status_icon.dart';
-import '../widgets/accessible_header_action.dart';
 import '../widgets/overlay_toast.dart';
 import '../widgets/series_books_sheet.dart';
 import '../widgets/playlist_detail_sheet.dart';
@@ -22,6 +20,9 @@ import '../widgets/collection_detail_sheet.dart';
 import '../widgets/episode_list_sheet.dart';
 import '../l10n/app_localizations.dart';
 import '../services/wording.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../ui_themes/ui_theme_hooks.dart';
+import '../widgets/accessible_header_action.dart';
 import '../widgets/desktop_input.dart';
 
 class AbsorbingScreen extends StatefulWidget {

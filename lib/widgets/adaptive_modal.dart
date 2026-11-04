@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/desktop_workspace.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../ui_themes/frosted.dart';
 
 enum DialogWidthClass {

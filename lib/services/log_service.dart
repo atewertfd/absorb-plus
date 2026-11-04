@@ -6,6 +6,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../build_info.dart';
 import 'api_service.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'log_redaction.dart';
 
 class LogService {

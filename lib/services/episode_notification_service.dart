@@ -1,5 +1,4 @@
 import 'dart:convert';
-import '../utils/web_safe_platform.dart'; // web-safe Platform
 
 import 'dart:async';
 
@@ -21,6 +20,8 @@ import 'player_settings.dart';
 import 'scoped_prefs.dart';
 import 'user_account_service.dart';
 import 'package:provider/provider.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart'; // web-safe Platform
 
 /// Background new-episode notifications. On Android a WorkManager periodic job
 /// polls the subscribed shows and notifies about episodes it hasn't notified

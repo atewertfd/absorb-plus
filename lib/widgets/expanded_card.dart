@@ -22,6 +22,7 @@ import 'overlay_toast.dart';
 import '../services/ebook_cache.dart';
 import '../services/find_in_ebook.dart';
 import '../main.dart' show colorSourceNotifier, useColorEverywhereNotifier, manualSeedNotifier, manualColorScheme;
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 import 'fell_asleep_chip.dart'; // Absorb Plus
 

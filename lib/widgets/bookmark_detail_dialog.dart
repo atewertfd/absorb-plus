@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io' hide Platform; // web-safe Platform below
-import '../utils/web_safe_platform.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +23,8 @@ import 'clip_editor_sheet.dart';
 import 'overlay_toast.dart';
 import 'progress_dialog.dart';
 import 'quote_share_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart';
 import '../utils/fork_platform.dart';
 
 /// Result of [BookmarkDetailSheet]. [action] is 'jump' (caller should seek

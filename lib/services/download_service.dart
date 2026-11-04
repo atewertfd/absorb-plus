@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' hide Platform; // web-safe Platform below
-import '../utils/web_safe_platform.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,22 +15,24 @@ import '../main.dart' show rootNavigatorKey;
 import '../widgets/overlay_toast.dart';
 import 'api_service.dart';
 import 'audio_player_service.dart';
+import 'ebook_cache.dart';
+import 'narrated_books.dart';
+import 'narration_service.dart';
+import 'offline_source.dart';
+import 'server_backend.dart';
+import '../utils/percent_escapes.dart';
+import 'user_account_service.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart';
 import 'desktop_download_folder.dart';
 import 'download_folder_guard.dart';
 import 'download_index_store.dart';
 import 'download_key.dart';
 import 'download_resume.dart';
 import 'download_track_names.dart';
-import 'ebook_cache.dart';
-import 'narrated_books.dart';
-import 'narration_service.dart';
-import 'offline_source.dart';
-import 'server_backend.dart';
 import 'tailscale_service.dart'; // fork
-import '../utils/percent_escapes.dart';
 import '../utils/fork_platform.dart';
 import '../utils/unmetered_network.dart';
-import 'user_account_service.dart';
 
 enum DownloadStatus { none, downloading, downloaded, error }
 

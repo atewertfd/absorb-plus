@@ -9,7 +9,6 @@ import '../providers/auth_provider.dart';
 import '../providers/library_provider.dart';
 import '../services/audio_player_service.dart';
 import '../services/device_time_zone.dart';
-import '../services/stats_cache_store.dart';
 import '../services/user_account_service.dart';
 import '../widgets/absorb_page_header.dart';
 import '../widgets/finished_books_this_year_sheet.dart';
@@ -18,9 +17,11 @@ import '../widgets/day_sessions_sheet.dart';
 import '../widgets/listening_session_card.dart';
 import '../widgets/overlay_toast.dart';
 import '../main.dart' show flatNotifier, gradientIntensityNotifier;
-import '../ui_themes/ui_theme_hooks.dart';
 import 'app_shell.dart';
 import '../l10n/app_localizations.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../services/stats_cache_store.dart';
+import '../ui_themes/ui_theme_hooks.dart';
 import 'stats_tab_refresh.dart';
 import '../widgets/empty_state.dart'; // Absorb Plus
 import '../services/listening_streaks.dart'; // Absorb Plus

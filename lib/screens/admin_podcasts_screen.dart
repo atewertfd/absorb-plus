@@ -11,11 +11,12 @@ import '../widgets/adaptive_modal.dart';
 import '../widgets/desktop_page_body.dart';
 import '../widgets/delete_confirm_dialog.dart';
 import '../widgets/html_description.dart';
-import '../widgets/opml_export_button.dart';
 import '../widgets/overlay_toast.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/desktop_workspace.dart';
 import '../utils/duration_format.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../widgets/opml_export_button.dart';
 
 /// Opens the podcast lookup used by the admin podcast manager.
 ///

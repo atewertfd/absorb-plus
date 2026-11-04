@@ -1,9 +1,10 @@
 import 'dart:convert';
-import '../utils/web_safe_platform.dart'; // web-safe Platform
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart'; // web-safe Platform
 
 /// iOS only: present the system dictionary (UIReferenceLibraryViewController -
 /// offline, the user's own downloaded dictionaries, any language). Android has

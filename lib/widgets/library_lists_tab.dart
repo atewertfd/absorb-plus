@@ -3,6 +3,7 @@ import '../l10n/app_localizations.dart';
 import '../screens/library_screen.dart';
 import '../services/server_backend.dart';
 import 'library_grid_tiles.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'text_scale_room.dart';
 
 /// Library "Lists" tab: a stacked-cover grid of all collections and playlists

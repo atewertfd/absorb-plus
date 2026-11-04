@@ -23,7 +23,6 @@ import '../widgets/desktop_batch_actions.dart';
 import '../widgets/home_section.dart';
 import '../widgets/absorb_page_header.dart';
 import '../widgets/library_picker_sheet.dart';
-import '../widgets/loading_placeholders.dart'; // Absorb Plus (replaces shimmer.dart)
 import '../widgets/book_detail_sheet.dart';
 import '../widgets/card_buttons.dart';
 import '../widgets/episode_list_sheet.dart';
@@ -39,6 +38,8 @@ import '../widgets/section_labels.dart';
 import 'app_shell.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/duration_format.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../widgets/loading_placeholders.dart'; // Absorb Plus (replaces shimmer.dart)
 import '../ui_themes/ui_theme_hooks.dart';
 import '../widgets/text_scale_room.dart';
 import '../utils/local_path.dart';

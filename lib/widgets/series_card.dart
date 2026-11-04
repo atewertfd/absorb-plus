@@ -7,6 +7,7 @@ import 'cover_badges.dart';
 import '../providers/auth_provider.dart';
 import '../providers/library_provider.dart';
 import 'series_books_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 
 class SeriesCard extends StatelessWidget {

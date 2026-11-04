@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../services/audio_player_service.dart';
 import '../services/chapter_lookup.dart';
 import '../services/chromecast_service.dart';
 import 'absorb_slider.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'package:flutter/foundation.dart';
 import 'chapter_end_tooltip.dart';
 import 'text_scale_room.dart';
 

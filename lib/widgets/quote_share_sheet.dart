@@ -15,6 +15,7 @@ import '../providers/library_provider.dart';
 import 'adaptive_modal.dart';
 import 'overlay_toast.dart';
 import '../utils/share_origin.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 
 /// Card shapes offered for a shared quote, as width/height.

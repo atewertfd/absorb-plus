@@ -40,6 +40,7 @@ import 'notes_sheet.dart';
 import 'overlay_toast.dart';
 import 'sleep_timer_sheet.dart';
 import 'transcription_download_prompt.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'desktop_input.dart';
 import 'go_to_time_dialog.dart'; // Absorb Plus
 

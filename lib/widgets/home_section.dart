@@ -10,6 +10,7 @@ import 'author_card.dart';
 import 'series_card.dart';
 import 'episode_list_sheet.dart';
 import 'books_sheet_shared.dart' show coverSizeScale;
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../ui_themes/ui_theme_hooks.dart';
 import '../utils/local_path.dart';
 import 'desktop_input.dart';

@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:ui';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../services/audio_player_service.dart';
 import '../services/chromecast_service.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'package:flutter/foundation.dart';
 
 // ─── EDGE PROGRESS BAR (thin strip at card top) ───────────────────────
 //
