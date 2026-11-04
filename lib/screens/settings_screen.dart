@@ -64,6 +64,7 @@ import '../widgets/server_admin_status_badges.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/sign_in_again.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
+import 'setup/run_setup_again_tile.dart';
 import '../utils/web_safe_platform.dart';
 import '../utils/fork_branding.dart';
 import '../utils/fork_platform.dart';
@@ -4518,6 +4519,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         WelcomeSheet.showIfNeeded(context);
                       },
                     ),
+                    const Divider(height: 1, indent: 16, endIndent: 16),
+                    const RunSetupAgainTile(), // Absorb Plus
                     const Divider(height: 1, indent: 16, endIndent: 16),
                     ListTile(
                       leading: Icon(Icons.auto_awesome_outlined, color: cs.onSurfaceVariant),
