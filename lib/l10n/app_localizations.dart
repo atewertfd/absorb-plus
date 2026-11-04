@@ -26163,6 +26163,228 @@ abstract class AppLocalizations {
   /// **'{time} left in the chapter'**
   String remoteChapterTimeLeft(String time);
 
+  /// Phone remote: app bar button that opens edit mode for the screen's layout.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize'**
+  String get remoteCustomize;
+
+  /// Phone remote: app bar title while editing the layout.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize the remote'**
+  String get remoteCustomizeTitle;
+
+  /// No description provided for @remoteCustomizeHintPortrait.
+  ///
+  /// In en, this message translates to:
+  /// **'Editing the portrait layout. Drag a block by its handle, or hold it, to move it. Turn the phone to edit landscape.'**
+  String get remoteCustomizeHintPortrait;
+
+  /// No description provided for @remoteCustomizeHintLandscape.
+  ///
+  /// In en, this message translates to:
+  /// **'Editing the landscape layout. Drag blocks within or between the two columns. Turn the phone to edit portrait.'**
+  String get remoteCustomizeHintLandscape;
+
+  /// Phone remote edit mode: puts back the default layout for the orientation being edited.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to default'**
+  String get remoteCustomizeReset;
+
+  /// Phone remote edit mode: menu of ready-made layouts.
+  ///
+  /// In en, this message translates to:
+  /// **'Presets'**
+  String get remoteCustomizePresets;
+
+  /// Phone remote edit mode: title of the sheet listing blocks that are not on the screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to the screen'**
+  String get remoteCustomizeAddTitle;
+
+  /// Phone remote edit mode: an empty landscape column.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop blocks here'**
+  String get remoteCustomizeDropHere;
+
+  /// Tooltip on a block's drag handle in the phone remote's edit mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to move'**
+  String get remoteCustomizeMove;
+
+  /// Phone remote: the layout has no blocks.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing on this screen. Tap Customize to add controls.'**
+  String get remoteCustomizeEmpty;
+
+  /// Phone remote layout preset: the standard screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get remotePresetDefault;
+
+  /// Phone remote layout preset: title, progress and playback buttons.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimal'**
+  String get remotePresetMinimal;
+
+  /// Phone remote layout preset: big cover, clock and time left.
+  ///
+  /// In en, this message translates to:
+  /// **'Nightstand'**
+  String get remotePresetNightstand;
+
+  /// Phone remote layout preset: every control.
+  ///
+  /// In en, this message translates to:
+  /// **'Full'**
+  String get remotePresetFull;
+
+  /// Phone remote layout block name.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover'**
+  String get remoteBlockCover;
+
+  /// Phone remote layout block name.
+  ///
+  /// In en, this message translates to:
+  /// **'Title and author'**
+  String get remoteBlockTitle;
+
+  /// Phone remote layout block name.
+  ///
+  /// In en, this message translates to:
+  /// **'Chapter title'**
+  String get remoteBlockChapterTitle;
+
+  /// Phone remote layout block name.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress bar'**
+  String get remoteBlockProgress;
+
+  /// Phone remote layout block name.
+  ///
+  /// In en, this message translates to:
+  /// **'Time left'**
+  String get remoteBlockTimeLeft;
+
+  /// Phone remote layout block name: previous/next chapter, skip back/forward, play/pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Playback buttons'**
+  String get remoteBlockTransport;
+
+  /// Phone remote layout block name.
+  ///
+  /// In en, this message translates to:
+  /// **'Clock'**
+  String get remoteBlockClock;
+
+  /// Phone remote layout block name: empty space between blocks.
+  ///
+  /// In en, this message translates to:
+  /// **'Space'**
+  String get remoteBlockSpacer;
+
+  /// Phone remote block size.
+  ///
+  /// In en, this message translates to:
+  /// **'Small'**
+  String get remoteSizeSmall;
+
+  /// Phone remote block size.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get remoteSizeMedium;
+
+  /// Phone remote block size; also a display mode text size.
+  ///
+  /// In en, this message translates to:
+  /// **'Large'**
+  String get remoteSizeLarge;
+
+  /// Phone remote block size.
+  ///
+  /// In en, this message translates to:
+  /// **'Compact'**
+  String get remoteSizeCompact;
+
+  /// Phone remote block size; also a display mode text size.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get remoteSizeNormal;
+
+  /// Phone remote display mode option.
+  ///
+  /// In en, this message translates to:
+  /// **'Background'**
+  String get remoteDisplayBackground;
+
+  /// Display mode background: the app's normal background.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get remoteDisplayBackgroundTheme;
+
+  /// Display mode background choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Blurred cover'**
+  String get remoteDisplayBackgroundCover;
+
+  /// Display mode background choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Black'**
+  String get remoteDisplayBackgroundBlack;
+
+  /// Phone remote display mode option.
+  ///
+  /// In en, this message translates to:
+  /// **'Text size'**
+  String get remoteDisplayTextSize;
+
+  /// Display mode text size choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Huge'**
+  String get remoteDisplayTextHuge;
+
+  /// Phone remote display mode option.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the clock'**
+  String get remoteDisplayShowClock;
+
+  /// Phone remote display mode option; off follows the phone's setting.
+  ///
+  /// In en, this message translates to:
+  /// **'24-hour clock'**
+  String get remoteDisplay24Hour;
+
+  /// Phone remote display mode option, followed by Never / 5 minutes / ...
+  ///
+  /// In en, this message translates to:
+  /// **'Dim the screen after'**
+  String get remoteDisplayDim;
+
+  /// Display mode dim choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get remoteDisplayDimNever;
+
   /// No description provided for @quickSwitcherKeywordsRemote.
   ///
   /// In en, this message translates to:

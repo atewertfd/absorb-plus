@@ -1,16 +1,21 @@
 import 'dart:async';
+import 'dart:math' as math;
+import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../l10n/app_localizations.dart';
+import '../services/remote_link/remote_layout.dart';
 import '../services/remote_link/remote_link.dart';
 import '../services/screen_wake.dart';
+import '../utils/fork_errors.dart';
 import '../utils/fork_platform.dart';
 import '../widgets/absorb_slider.dart';
 import '../widgets/absorbing_shared.dart' show fmtTime;
 import '../widgets/adaptive_modal.dart';
 import '../widgets/card_buttons.dart' show Pressable;
+import '../widgets/remote_layout_view.dart';
 
 /// How the remote screen was left, for the connect screen.
 enum RemoteControlExit { pairAgain }
@@ -52,7 +57,13 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
   late RemoteLinkClient _client;
   StreamSubscription<RemoteLinkEvent>? _events;
   bool _display = false;
-  Timer? _clock;
+  Timer? _dimTimer;
+  bool _dimmed = false;
+  bool _editing = false;
+  RemoteLayout _layout = RemoteLayout.defaults();
+  RemoteDisplayOptions _displayOptions = const RemoteDisplayOptions();
+  bool _layoutTouched = false;
+  RemotePlayerState? _lastState;
   double? _drag;
   double? _seekTarget;
   DateTime? _seekAt;
@@ -66,6 +77,36 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _attach(widget.client ?? _connector.open(widget.host));
+    unawaited(_loadLayout());
+  }
+
+  Future<void> _loadLayout() async {
+    try {
+      final (layout, display) = await RemoteLayoutStore.load();
+      if (!mounted || _layoutTouched) return;
+      setState(() {
+        _layout = layout;
+        _displayOptions = display;
+      });
+    } catch (e) {
+      swallow('RemoteLayout', e);
+    }
+  }
+
+  void _setLayout(RemoteLayout layout) {
+    setState(() {
+      _layout = layout;
+      _layoutTouched = true;
+    });
+    fireAndLog(RemoteLayoutStore.saveLayout(layout), 'RemoteLayout');
+  }
+
+  void _setDisplayOptions(RemoteDisplayOptions options) {
+    setState(() {
+      _displayOptions = options;
+      _layoutTouched = true;
+    });
+    fireAndLog(RemoteLayoutStore.saveDisplay(options), 'RemoteLayout');
   }
 
   void _attach(RemoteLinkClient client) {
@@ -83,7 +124,7 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _clock?.cancel();
+    _dimTimer?.cancel();
     if (_display) _applyDisplay(false);
     _detach();
     super.dispose();
@@ -122,14 +163,33 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
 
   void _setDisplay(bool on) {
     if (_display == on) return;
-    setState(() => _display = on);
+    setState(() {
+      _display = on;
+      _dimmed = false;
+    });
     _applyDisplay(on);
-    _clock?.cancel();
-    _clock = on
-        ? Timer.periodic(const Duration(seconds: 1), (_) {
-            if (mounted) setState(() {});
-          })
-        : null;
+    _armDim();
+  }
+
+  /// Dims the display mode after the chosen minutes without a touch.
+  void _armDim() {
+    _dimTimer?.cancel();
+    _dimTimer = null;
+    final minutes = _displayOptions.dimAfterMinutes;
+    if (!_display || minutes <= 0) return;
+    _dimTimer = Timer(Duration(minutes: minutes), () {
+      if (mounted) setState(() => _dimmed = true);
+    });
+  }
+
+  /// A tap wakes a dimmed display; otherwise it leaves display mode.
+  void _onDisplayTap() {
+    if (_dimmed) {
+      setState(() => _dimmed = false);
+      _armDim();
+      return;
+    }
+    _setDisplay(false);
   }
 
   /// Keeps the screen on (Android flag / Windows runner, the app's own
@@ -161,6 +221,7 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
       builder: (context, _) {
         final connected = _client.phase == RemoteLinkPhase.connected;
         final state = connected ? _client.state : null;
+        if (state != null && state.hasItem) _lastState = state;
         if (_display) {
           return PopScope(
             canPop: false,
@@ -171,12 +232,46 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
           );
         }
         final l = AppLocalizations.of(context)!;
+        if (_editing) {
+          return PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didPop, _) {
+              if (!didPop) setState(() => _editing = false);
+            },
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text(l.remoteCustomizeTitle),
+                actions: [
+                  TextButton(
+                    key: const Key('remote-customize-done'),
+                    onPressed: () => setState(() => _editing = false),
+                    child: Text(l.done),
+                  ),
+                ],
+              ),
+              body: SafeArea(
+                child: _editor(
+                  context,
+                  state != null && state.hasItem
+                      ? state
+                      : _lastState ?? RemotePlayerState.empty,
+                ),
+              ),
+            ),
+          );
+        }
         return Scaffold(
           appBar: AppBar(
             title: Text(
               _client.hostName.isEmpty ? widget.host.address : _client.hostName,
             ),
             actions: [
+              IconButton(
+                key: const Key('remote-customize'),
+                tooltip: l.remoteCustomize,
+                onPressed: () => setState(() => _editing = true),
+                icon: const Icon(Icons.tune_rounded),
+              ),
               IconButton(
                 key: const Key('remote-continue'),
                 tooltip: l.remoteContinueListening,
@@ -417,178 +512,392 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
     ),
   );
 
-  Widget _controls(BuildContext context, RemotePlayerState s) {
+  bool _isLandscape(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    return size.width > size.height;
+  }
+
+  // ── Layout and edit mode ──────────────────────────────────────────
+
+  /// The blocks of the current orientation's layout ([RemoteLayoutView]).
+  Widget _controls(
+    BuildContext context,
+    RemotePlayerState s, {
+    bool editing = false,
+  }) {
+    final landscape = _isLandscape(context);
+    if (!editing && _layout.shown(landscape: landscape).isEmpty) {
+      return _message(
+        context,
+        Icons.tune_rounded,
+        AppLocalizations.of(context)!.remoteCustomizeEmpty,
+      );
+    }
+    return RemoteLayoutView(
+      layout: _layout,
+      landscape: landscape,
+      editing: editing,
+      onChanged: _setLayout,
+      buildBlock: (context, entry, slot) => _block(context, s, entry, slot),
+    );
+  }
+
+  /// Edit mode: a hint saying which orientation is being edited, the
+  /// toolbar, and the live layout with handles (its controls don't work).
+  Widget _editor(BuildContext context, RemotePlayerState s) {
+    final l = AppLocalizations.of(context)!;
+    final cs = Theme.of(context).colorScheme;
+    final landscape = _isLandscape(context);
+    final toolbar = Padding(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            landscape
+                ? l.remoteCustomizeHintLandscape
+                : l.remoteCustomizeHintPortrait,
+            key: const Key('remote-customize-hint'),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+          ),
+          Wrap(
+            spacing: 4,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              TextButton.icon(
+                key: const Key('remote-customize-add'),
+                onPressed: () => _addBlock(landscape),
+                icon: const Icon(Icons.add_rounded),
+                label: Text(l.add),
+              ),
+              MenuAnchor(
+                builder: (context, controller, _) => TextButton.icon(
+                  key: const Key('remote-customize-presets'),
+                  onPressed: () => controller.isOpen
+                      ? controller.close()
+                      : controller.open(),
+                  icon: const Icon(Icons.dashboard_customize_outlined),
+                  label: Text(l.remoteCustomizePresets),
+                ),
+                menuChildren: [
+                  for (final p in RemotePreset.values)
+                    MenuItemButton(
+                      key: Key('remote-preset-${p.name}'),
+                      onPressed: () => _setLayout(
+                        _layout.applyPreset(p, landscape: landscape),
+                      ),
+                      child: Text(remotePresetName(l, p)),
+                    ),
+                ],
+              ),
+              TextButton.icon(
+                key: const Key('remote-customize-reset'),
+                onPressed: () =>
+                    _setLayout(_layout.reset(landscape: landscape)),
+                icon: const Icon(Icons.restart_alt_rounded),
+                label: Text(l.remoteCustomizeReset),
+              ),
+              TextButton.icon(
+                key: const Key('remote-customize-display'),
+                onPressed: () => showRemoteDisplayOptionsSheet(
+                  context,
+                  _displayOptions,
+                  _setDisplayOptions,
+                ),
+                icon: const Icon(Icons.fit_screen_rounded),
+                label: Text(l.remoteDisplayMode),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+    return LayoutBuilder(
+      builder: (context, c) => Column(
+        children: [
+          // Big text on a short screen: the toolbar scrolls rather than
+          // pushing the layout off the screen.
+          ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: c.maxHeight * 0.45),
+            child: SingleChildScrollView(child: toolbar),
+          ),
+          const Divider(height: 1),
+          Expanded(child: _controls(context, s, editing: true)),
+        ],
+      ),
+    );
+  }
+
+  /// Adds a block the user picked: in landscape the cover goes left,
+  /// everything else right.
+  Future<void> _addBlock(bool landscape) async {
+    final block = await showRemoteAddBlockSheet(
+      context,
+      _layout,
+      landscape: landscape,
+    );
+    if (block == null || !mounted) return;
+    final column = !landscape
+        ? RemoteColumn.portrait
+        : block == RemoteBlock.cover
+        ? RemoteColumn.left
+        : RemoteColumn.right;
+    _setLayout(_layout.add(column, block));
+  }
+
+  // ── Blocks ────────────────────────────────────────────────────────
+
+  /// The part of the book the bar and times cover: the chapter, or the
+  /// whole book without chapters.
+  ({double start, double end}) _span(RemotePlayerState s) {
+    final chapter = s.hasChapter;
+    return (
+      start: chapter ? s.chapterStart : 0.0,
+      end: chapter ? s.chapterEnd : (s.duration > 0 ? s.duration : 1.0),
+    );
+  }
+
+  static double _coverSize(RemoteBlockSize size, RemoteBlockSlot slot) {
+    if (slot.landscape) {
+      // Sized to the column's height (or width, if narrower).
+      final side = math.max(48.0, math.min(slot.maxWidth, slot.maxHeight));
+      return side *
+          switch (size) {
+            RemoteBlockSize.large => 1.0,
+            RemoteBlockSize.medium => 0.8,
+            _ => 0.55,
+          };
+    }
+    final medium = math.min(
+      (slot.maxWidth - 64).clamp(120.0, 340.0).toDouble(),
+      math.max(120.0, slot.maxHeight * 0.38),
+    );
+    return switch (size) {
+      RemoteBlockSize.small => math.max(80.0, medium * 0.6),
+      RemoteBlockSize.large => math.min(
+        (slot.maxWidth - 48).clamp(120.0, 480.0).toDouble(),
+        math.max(120.0, slot.maxHeight * 0.55),
+      ),
+      _ => medium,
+    };
+  }
+
+  /// One block of the layout, or null when it has nothing to show.
+  Widget? _block(
+    BuildContext context,
+    RemotePlayerState s,
+    RemoteBlockEntry e,
+    RemoteBlockSlot slot,
+  ) {
     final l = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
-    final chapter = s.hasChapter;
-    final start = chapter ? s.chapterStart : 0.0;
-    final end = chapter ? s.chapterEnd : (s.duration > 0 ? s.duration : 1.0);
-    final position = (_drag ?? _position(s)).clamp(start, end);
-    final speed = _speed(s);
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final coverSize = (constraints.maxWidth - 64)
-            .clamp(120.0, 340.0)
-            .toDouble()
-            .clamp(120.0, constraints.maxHeight * 0.38)
-            .toDouble();
-        return SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 480),
-              child: Column(
+    final compact = e.size == RemoteBlockSize.compact;
+    Widget action(Key key, IconData icon, String label, VoidCallback? onTap) =>
+        compact
+        ? IconButton(
+            key: key,
+            tooltip: label,
+            onPressed: onTap,
+            icon: Icon(icon),
+          )
+        : TextButton.icon(
+            key: key,
+            onPressed: onTap,
+            icon: Icon(icon),
+            label: Text(label),
+          );
+
+    switch (e.block) {
+      case RemoteBlock.cover:
+        return SizedBox(
+          width: _coverSize(e.size, slot),
+          child: _cover(context),
+        );
+      case RemoteBlock.titleAuthor:
+        if (s.title.isEmpty && s.author.isEmpty) return null;
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              s.title,
+              textAlign: TextAlign.center,
+              maxLines: compact ? 1 : 2,
+              overflow: TextOverflow.ellipsis,
+              style: (compact ? tt.titleMedium : tt.titleLarge)?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            if (s.author.isNotEmpty) ...[
+              SizedBox(height: compact ? 2 : 4),
+              Text(
+                s.author,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: (compact ? tt.bodySmall : tt.bodyMedium)?.copyWith(
+                  color: cs.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ],
+        );
+      case RemoteBlock.chapterTitle:
+        if (s.chapterTitle.isEmpty) return null;
+        return Text(
+          s.chapterTitle,
+          key: const Key('remote-chapter-title'),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: tt.bodySmall?.copyWith(color: cs.primary),
+        );
+      case RemoteBlock.progress:
+        final (:start, :end) = _span(s);
+        final position = (_drag ?? _position(s)).clamp(start, end);
+        final slider = AbsorbSlider(
+          value: position,
+          min: start,
+          max: end > start ? end : start + 1,
+          onChanged: (v) => setState(() => _drag = v),
+          onChangeEnd: (v) {
+            _send(SeekCommand(v));
+            setState(() {
+              _drag = null;
+              _seekTarget = v;
+              _seekAt = DateTime.now();
+            });
+          },
+        );
+        if (compact) return slider;
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            slider,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(width: coverSize, child: _cover(context)),
-                  const SizedBox(height: 20),
                   Text(
-                    s.title,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: tt.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+                    fmtTime(position - start),
+                    style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                   ),
-                  if (s.author.isNotEmpty) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      s.author,
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: tt.bodyMedium?.copyWith(
-                        color: cs.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                  if (s.chapterTitle.isNotEmpty) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      s.chapterTitle,
-                      key: const Key('remote-chapter-title'),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: tt.bodySmall?.copyWith(color: cs.primary),
-                    ),
-                  ],
-                  const SizedBox(height: 16),
-                  AbsorbSlider(
-                    value: position,
-                    min: start,
-                    max: end > start ? end : start + 1,
-                    onChanged: (v) => setState(() => _drag = v),
-                    onChangeEnd: (v) {
-                      _send(SeekCommand(v));
-                      setState(() {
-                        _drag = null;
-                        _seekTarget = v;
-                        _seekAt = DateTime.now();
-                      });
-                    },
+                  Text(
+                    '-${fmtTime(end - position)}',
+                    style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          fmtTime(position - start),
-                          style: tt.bodySmall?.copyWith(
-                            color: cs.onSurfaceVariant,
-                          ),
-                        ),
-                        Text(
-                          '-${fmtTime(end - position)}',
-                          style: tt.bodySmall?.copyWith(
-                            color: cs.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  _buttons(context, s),
-                  const SizedBox(height: 16),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: 8,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            key: const Key('remote-speed-down'),
-                            tooltip: l.remoteSpeedSlower,
-                            onPressed: speed > SpeedCommand.min + 0.001
-                                ? () => _stepSpeed(s, -1)
-                                : null,
-                            icon: const Icon(Icons.remove_rounded),
-                          ),
-                          TextButton.icon(
-                            key: const Key('remote-speed'),
-                            onPressed: () => _pickSpeed(s),
-                            icon: const Icon(Icons.speed_rounded),
-                            label: Text('${_speedLabel(speed)}x'),
-                          ),
-                          IconButton(
-                            key: const Key('remote-speed-up'),
-                            tooltip: l.remoteSpeedFaster,
-                            onPressed: speed < SpeedCommand.max - 0.001
-                                ? () => _stepSpeed(s, 1)
-                                : null,
-                            icon: const Icon(Icons.add_rounded),
-                          ),
-                        ],
-                      ),
-                      TextButton.icon(
-                        key: const Key('remote-sleep'),
-                        onPressed: () => _pickSleep(s),
-                        icon: Icon(
-                          s.sleep.isActive
-                              ? Icons.bedtime_rounded
-                              : Icons.bedtime_outlined,
-                        ),
-                        label: Text(_sleepLabel(l, s.sleep)),
-                      ),
-                    ],
-                  ),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 8,
-                    children: [
-                      TextButton.icon(
-                        key: const Key('remote-chapters'),
-                        onPressed: _client.chapters.isEmpty
-                            ? null
-                            : () => _showChapters(s),
-                        icon: const Icon(Icons.format_list_numbered_rounded),
-                        label: Text(l.remoteChapters),
-                      ),
-                      TextButton.icon(
-                        key: const Key('remote-bookmark'),
-                        onPressed: _addBookmark,
-                        icon: const Icon(Icons.bookmark_add_outlined),
-                        label: Text(l.remoteBookmark),
-                      ),
-                      TextButton.icon(
-                        key: const Key('remote-stop'),
-                        onPressed: () => _send(const StopCommand()),
-                        icon: const Icon(Icons.stop_rounded),
-                        label: Text(l.remoteStop),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  _volume(context, s),
                 ],
               ),
             ),
+          ],
+        );
+      case RemoteBlock.timeLeft:
+        return Text(
+          _timeLeftText(l, s),
+          key: const Key('remote-time-left'),
+          textAlign: TextAlign.center,
+          style: (compact ? tt.bodySmall : tt.bodyLarge)?.copyWith(
+            color: cs.onSurfaceVariant,
           ),
         );
-      },
-    );
+      case RemoteBlock.transport:
+        return _buttons(context, s, compact: compact);
+      case RemoteBlock.volume:
+        final volume = _volume(context, s);
+        return compact
+            ? SizedBox(width: math.min(240.0, slot.maxWidth), child: volume)
+            : volume;
+      case RemoteBlock.speed:
+        final speed = _speed(s);
+        final picker = TextButton.icon(
+          key: const Key('remote-speed'),
+          onPressed: () => _pickSpeed(s),
+          icon: const Icon(Icons.speed_rounded),
+          label: Text('${_speedLabel(speed)}x'),
+        );
+        if (compact) return picker;
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              key: const Key('remote-speed-down'),
+              tooltip: l.remoteSpeedSlower,
+              onPressed: speed > SpeedCommand.min + 0.001
+                  ? () => _stepSpeed(s, -1)
+                  : null,
+              icon: const Icon(Icons.remove_rounded),
+            ),
+            picker,
+            IconButton(
+              key: const Key('remote-speed-up'),
+              tooltip: l.remoteSpeedFaster,
+              onPressed: speed < SpeedCommand.max - 0.001
+                  ? () => _stepSpeed(s, 1)
+                  : null,
+              icon: const Icon(Icons.add_rounded),
+            ),
+          ],
+        );
+      case RemoteBlock.sleep:
+        return action(
+          const Key('remote-sleep'),
+          s.sleep.isActive ? Icons.bedtime_rounded : Icons.bedtime_outlined,
+          _sleepLabel(l, s.sleep),
+          () => _pickSleep(s),
+        );
+      case RemoteBlock.chapters:
+        return action(
+          const Key('remote-chapters'),
+          Icons.format_list_numbered_rounded,
+          l.remoteChapters,
+          _client.chapters.isEmpty ? null : () => _showChapters(s),
+        );
+      case RemoteBlock.bookmark:
+        return action(
+          const Key('remote-bookmark'),
+          Icons.bookmark_add_outlined,
+          l.remoteBookmark,
+          _addBookmark,
+        );
+      case RemoteBlock.continueListening:
+        return action(
+          const Key('remote-continue-block'),
+          Icons.history_rounded,
+          l.remoteContinueListening,
+          _showContinue,
+        );
+      case RemoteBlock.stop:
+        return action(
+          const Key('remote-stop'),
+          Icons.stop_rounded,
+          l.remoteStop,
+          () => _send(const StopCommand()),
+        );
+      case RemoteBlock.clock:
+        return RemoteClockText(
+          key: const Key('remote-clock'),
+          use24Hour: _displayOptions.use24Hour,
+          textAlign: TextAlign.center,
+          style: compact
+              ? tt.titleLarge
+              : tt.displaySmall?.copyWith(fontWeight: FontWeight.w300),
+        );
+      case RemoteBlock.spacer:
+        return SizedBox(height: compact ? 12 : 32);
+    }
+  }
+
+  /// "12:34 left in the chapter" (or in the book), at the current speed.
+  String _timeLeftText(AppLocalizations l, RemotePlayerState s) {
+    final chapter = s.hasChapter;
+    final end = chapter ? s.chapterEnd : s.duration;
+    final speed = s.speed > 0 ? s.speed : 1.0;
+    final left = fmtTime((end - s.position).clamp(0, double.infinity) / speed);
+    return chapter ? l.remoteChapterTimeLeft(left) : l.remoteTimeLeft(left);
   }
 
   Widget _volume(BuildContext context, RemotePlayerState s) {
@@ -628,31 +937,35 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
     );
   }
 
-  Widget _buttons(BuildContext context, RemotePlayerState s) {
+  /// Previous chapter, back, play/pause, forward, next chapter; [compact]
+  /// draws them smaller.
+  Widget _buttons(
+    BuildContext context,
+    RemotePlayerState s, {
+    bool compact = false,
+  }) {
     final l = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
-    Widget button(
-      String tooltip,
-      Key key,
-      Widget child,
-      VoidCallback onTap, {
-      double size = 56,
-    }) => Flexible(
-      child: Semantics(
-        button: true,
-        label: tooltip,
-        child: Pressable(
-          key: key,
-          tooltip: tooltip,
-          onTap: onTap,
-          child: SizedBox(
-            width: size,
-            height: size,
-            child: Center(child: child),
+    final size = compact ? 44.0 : 56.0;
+    final play = compact ? 52.0 : 68.0;
+    final glyph = compact ? 28.0 : 34.0;
+    Widget button(String tooltip, Key key, Widget child, VoidCallback onTap) =>
+        Flexible(
+          child: Semantics(
+            button: true,
+            label: tooltip,
+            child: Pressable(
+              key: key,
+              tooltip: tooltip,
+              onTap: onTap,
+              child: SizedBox(
+                width: size,
+                height: size,
+                child: Center(child: child),
+              ),
+            ),
           ),
-        ),
-      ),
-    );
+        );
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -661,7 +974,7 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
           const Key('remote-prev-chapter'),
           Icon(
             Icons.skip_previous_rounded,
-            size: 34,
+            size: glyph,
             color: cs.onSurfaceVariant,
           ),
           () => _send(const ChapterCommand(-1)),
@@ -669,7 +982,7 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
         button(
           l.remoteSkipBack(s.skipBack),
           const Key('remote-skip-back'),
-          _skipIcon(context, s.skipBack, forward: false),
+          _skipIcon(context, s.skipBack, forward: false, compact: compact),
           () => _send(SkipCommand(-s.skipBack)),
         ),
         Flexible(
@@ -681,8 +994,8 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
               tooltip: s.playing ? l.remotePause : l.remotePlay,
               onTap: () => _send(const ToggleCommand()),
               child: Container(
-                width: 68,
-                height: 68,
+                width: play,
+                height: play,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: cs.onSurface,
@@ -709,7 +1022,7 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
                         s.playing
                             ? Icons.pause_rounded
                             : Icons.play_arrow_rounded,
-                        size: 34,
+                        size: glyph,
                         color: cs.surface,
                       ),
               ),
@@ -719,13 +1032,17 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
         button(
           l.remoteSkipForward(s.skipForward),
           const Key('remote-skip-forward'),
-          _skipIcon(context, s.skipForward, forward: true),
+          _skipIcon(context, s.skipForward, forward: true, compact: compact),
           () => _send(SkipCommand(s.skipForward)),
         ),
         button(
           l.remoteNextChapter,
           const Key('remote-next-chapter'),
-          Icon(Icons.skip_next_rounded, size: 34, color: cs.onSurfaceVariant),
+          Icon(
+            Icons.skip_next_rounded,
+            size: glyph,
+            color: cs.onSurfaceVariant,
+          ),
           () => _send(const ChapterCommand(1)),
         ),
       ],
@@ -734,10 +1051,15 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
 
   /// The player's skip glyphs: the built-in 5/10/30 icons, otherwise the
   /// rotate arrow with the number (as on the Absorbing card).
-  Widget _skipIcon(BuildContext context, int seconds, {required bool forward}) {
+  Widget _skipIcon(
+    BuildContext context,
+    int seconds, {
+    required bool forward,
+    bool compact = false,
+  }) {
     final cs = Theme.of(context).colorScheme;
     final color = cs.onSurface.withValues(alpha: 0.7);
-    const size = 42.0;
+    final size = compact ? 34.0 : 42.0;
     if (seconds == 5 || seconds == 10 || seconds == 30) {
       final icon = forward
           ? (seconds == 5
@@ -1054,14 +1376,88 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
 
   // ── Display mode ──────────────────────────────────────────────────
 
+  /// The display mode: a clock, what's playing and how long is left, big
+  /// and readable from across the room; two columns in landscape. Its
+  /// options ([RemoteDisplayOptions]) are set in Customize.
   Widget _displayMode(BuildContext context, RemotePlayerState? s) {
+    final o = _displayOptions;
+    final base = Theme.of(context);
+    final dark = o.background != RemoteDisplayBackground.theme;
+    // Light text on the black or blurred background, whatever the theme.
+    final theme = dark
+        ? base.copyWith(
+            colorScheme: base.colorScheme.copyWith(
+              surface: Colors.black,
+              onSurface: Colors.white,
+              onSurfaceVariant: Colors.white70,
+            ),
+            textTheme: base.textTheme.apply(
+              bodyColor: Colors.white,
+              displayColor: Colors.white,
+            ),
+          )
+        : base;
+    final mq = MediaQuery.of(context);
+    final bytes = _client.cover;
+    return Theme(
+      data: theme,
+      child: Scaffold(
+        backgroundColor: dark ? Colors.black : null,
+        body: GestureDetector(
+          key: const Key('remote-display'),
+          behavior: HitTestBehavior.opaque,
+          onTap: _onDisplayTap,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              if (o.background == RemoteDisplayBackground.cover &&
+                  bytes != null) ...[
+                ImageFiltered(
+                  key: const Key('remote-display-blur'),
+                  imageFilter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+                  child: Image.memory(
+                    bytes,
+                    fit: BoxFit.cover,
+                    gaplessPlayback: true,
+                    errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                  ),
+                ),
+                ColoredBox(color: Colors.black.withValues(alpha: 0.55)),
+              ],
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: MediaQuery(
+                    data: mq.copyWith(
+                      textScaler: TextScaler.linear(
+                        mq.textScaler.scale(1) * o.textSize.scale,
+                      ),
+                    ),
+                    child: Builder(
+                      builder: (context) => _displayBody(context, s),
+                    ),
+                  ),
+                ),
+              ),
+              if (_dimmed)
+                IgnorePointer(
+                  child: ColoredBox(
+                    key: const Key('remote-display-dim'),
+                    color: Colors.black.withValues(alpha: 0.8),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _displayBody(BuildContext context, RemotePlayerState? s) {
     final l = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
-    final clock = MaterialLocalizations.of(context).formatTimeOfDay(
-      TimeOfDay.now(),
-      alwaysUse24HourFormat: MediaQuery.alwaysUse24HourFormatOf(context),
-    );
+    final o = _displayOptions;
     final List<Widget> details;
     if (_client.phase != RemoteLinkPhase.connected) {
       details = [
@@ -1085,10 +1481,6 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
       final progress = span > 0
           ? ((s.position - start) / span).clamp(0.0, 1.0)
           : 0.0;
-      final speed = s.speed > 0 ? s.speed : 1.0;
-      final left = fmtTime(
-        (end - s.position).clamp(0, double.infinity) / speed,
-      );
       details = [
         Text(
           chapter && s.chapterTitle.isNotEmpty ? s.chapterTitle : s.title,
@@ -1112,77 +1504,83 @@ class _RemoteControlScreenState extends State<RemoteControlScreen>
         ),
         const SizedBox(height: 8),
         Text(
-          chapter ? l.remoteChapterTimeLeft(left) : l.remoteTimeLeft(left),
+          _timeLeftText(l, s),
           style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
         ),
       ];
     }
-    return Scaffold(
-      body: GestureDetector(
-        key: const Key('remote-display'),
-        behavior: HitTestBehavior.opaque,
-        onTap: () => _setDisplay(false),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: LayoutBuilder(
-              builder: (context, c) {
-                final wide = c.maxWidth > c.maxHeight;
-                final info = Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: wide
-                      ? CrossAxisAlignment.start
-                      : CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      clock,
-                      key: const Key('remote-display-clock'),
-                      textAlign: wide ? TextAlign.start : TextAlign.center,
-                      style: tt.displayLarge?.copyWith(
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ...details,
-                    const SizedBox(height: 24),
-                    Text(
-                      l.remoteDisplayExit,
-                      textAlign: wide ? TextAlign.start : TextAlign.center,
-                      style: tt.bodySmall?.copyWith(
-                        color: cs.onSurfaceVariant.withValues(alpha: 0.6),
-                      ),
-                    ),
-                  ],
-                );
-                final coverSide = (wide ? c.maxHeight : c.maxWidth).clamp(
-                  0.0,
-                  520.0,
-                );
-                final cover = SizedBox(
-                  width: coverSide * (wide ? 0.9 : 0.85),
-                  child: _cover(context, radius: 20),
-                );
-                return wide
-                    ? Row(
-                        children: [
-                          cover,
-                          const SizedBox(width: 32),
-                          Expanded(child: info),
-                        ],
-                      )
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Flexible(child: cover),
-                          const SizedBox(height: 24),
-                          info,
-                        ],
-                      );
-              },
+    return LayoutBuilder(
+      builder: (context, c) {
+        final wide = c.maxWidth > c.maxHeight;
+        final info = Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: wide
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.stretch,
+          children: [
+            if (o.showClock) ...[
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: wide ? Alignment.centerLeft : Alignment.center,
+                child: RemoteClockText(
+                  key: const Key('remote-display-clock'),
+                  use24Hour: o.use24Hour,
+                  style: tt.displayLarge?.copyWith(fontWeight: FontWeight.w300),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+            ...details,
+            const SizedBox(height: 24),
+            Text(
+              l.remoteDisplayExit,
+              textAlign: wide ? TextAlign.start : TextAlign.center,
+              style: tt.bodySmall?.copyWith(
+                color: cs.onSurfaceVariant.withValues(alpha: 0.6),
+              ),
             ),
-          ),
-        ),
-      ),
+          ],
+        );
+        if (wide) {
+          // Cover sized to the height on the left, the rest beside it.
+          final side = math.min(c.maxHeight, c.maxWidth * 0.45);
+          return Row(
+            children: [
+              SizedBox(width: side, child: _cover(context, radius: 20)),
+              const SizedBox(width: 32),
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, inner) => SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minHeight: inner.maxHeight),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: info,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(
+              child: SizedBox(
+                width: math.min(c.maxWidth, 520.0) * 0.85,
+                child: _cover(context, radius: 20),
+              ),
+            ),
+            const SizedBox(height: 24),
+            ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: c.maxHeight * 0.6),
+              child: SingleChildScrollView(child: info),
+            ),
+          ],
+        );
+      },
     );
   }
 }

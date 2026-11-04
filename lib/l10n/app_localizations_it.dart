@@ -15673,6 +15673,120 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get remoteCustomize => 'Customize';
+
+  @override
+  String get remoteCustomizeTitle => 'Customize the remote';
+
+  @override
+  String get remoteCustomizeHintPortrait =>
+      'Editing the portrait layout. Drag a block by its handle, or hold it, to move it. Turn the phone to edit landscape.';
+
+  @override
+  String get remoteCustomizeHintLandscape =>
+      'Editing the landscape layout. Drag blocks within or between the two columns. Turn the phone to edit portrait.';
+
+  @override
+  String get remoteCustomizeReset => 'Reset to default';
+
+  @override
+  String get remoteCustomizePresets => 'Presets';
+
+  @override
+  String get remoteCustomizeAddTitle => 'Add to the screen';
+
+  @override
+  String get remoteCustomizeDropHere => 'Drop blocks here';
+
+  @override
+  String get remoteCustomizeMove => 'Drag to move';
+
+  @override
+  String get remoteCustomizeEmpty =>
+      'Nothing on this screen. Tap Customize to add controls.';
+
+  @override
+  String get remotePresetDefault => 'Default';
+
+  @override
+  String get remotePresetMinimal => 'Minimal';
+
+  @override
+  String get remotePresetNightstand => 'Nightstand';
+
+  @override
+  String get remotePresetFull => 'Full';
+
+  @override
+  String get remoteBlockCover => 'Cover';
+
+  @override
+  String get remoteBlockTitle => 'Title and author';
+
+  @override
+  String get remoteBlockChapterTitle => 'Chapter title';
+
+  @override
+  String get remoteBlockProgress => 'Progress bar';
+
+  @override
+  String get remoteBlockTimeLeft => 'Time left';
+
+  @override
+  String get remoteBlockTransport => 'Playback buttons';
+
+  @override
+  String get remoteBlockClock => 'Clock';
+
+  @override
+  String get remoteBlockSpacer => 'Space';
+
+  @override
+  String get remoteSizeSmall => 'Small';
+
+  @override
+  String get remoteSizeMedium => 'Medium';
+
+  @override
+  String get remoteSizeLarge => 'Large';
+
+  @override
+  String get remoteSizeCompact => 'Compact';
+
+  @override
+  String get remoteSizeNormal => 'Normal';
+
+  @override
+  String get remoteDisplayBackground => 'Background';
+
+  @override
+  String get remoteDisplayBackgroundTheme => 'Theme';
+
+  @override
+  String get remoteDisplayBackgroundCover => 'Blurred cover';
+
+  @override
+  String get remoteDisplayBackgroundBlack => 'Black';
+
+  @override
+  String get remoteDisplayTextSize => 'Text size';
+
+  @override
+  String get remoteDisplayTextHuge => 'Huge';
+
+  @override
+  String get remoteDisplayShowClock => 'Show the clock';
+
+  @override
+  String get remoteDisplay24Hour => '24-hour clock';
+
+  @override
+  String get remoteDisplayDim => 'Dim the screen after';
+
+  @override
+  String get remoteDisplayDimNever => 'Never';
+
+  @override
   String get quickSwitcherKeywordsRemote => 'remote phone control pc link pair';
 
   @override
