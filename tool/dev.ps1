@@ -4,7 +4,8 @@
 
 .DESCRIPTION
   check      pub get, analyze, full test suite, tool tests, removed-paths check,
-             fork-only lints (tool/fork_lints.py)
+             settings-key naming (tool/pref_keys.py --check), fork-only lints
+             (tool/fork_lints.py)
              check -Quick: for iterating. Analyze, then only the tests that
              import a changed lib/ file (changed vs claude/slim, committed or
              not) plus changed tests; skips fork lints, and pub get unless
@@ -368,6 +369,8 @@ switch ($Command) {
         -SummaryPattern '^Ran \d+ tests'
     }
     Invoke-Step -Name 'removed-paths' -Run { python tool/check_fork_removed.py } -SummaryPattern '^OK'
+    # New fork settings keys are fork_snake_case (tool/pref_keys.py).
+    Invoke-Step -Name 'pref-keys' -Run { python tool/pref_keys.py --check } -SummaryPattern '^(OK|FAIL)'
     # Lints only fork-added files must pass (one extra analyzer run).
     $env:FLUTTER = $flutter
     Invoke-Step -Name 'fork-lints' -Run { python tool/fork_lints.py } -SummaryPattern '^(OK|FAIL)'
