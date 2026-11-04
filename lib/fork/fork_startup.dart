@@ -7,6 +7,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../services/login_design_store.dart';
 import '../services/next_in_series_download.dart';
 import '../services/pending_writes.dart';
 import '../services/precache_service.dart';
@@ -43,5 +44,6 @@ abstract final class ForkStartup {
     TailscaleService.trustSelfSigned = trustSelfSigned;
     installExclusiveAudioFallbackNotice(navigatorKey); // Windows only
     unawaited(TailscaleService.instance.init()); // no-op unless turned on
+    unawaited(LoginDesignStore.load()); // the chosen sign-in screen design
   }
 }

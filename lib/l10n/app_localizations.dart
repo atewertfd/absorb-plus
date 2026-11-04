@@ -27188,6 +27188,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The look, playback basics and more, step by step'**
   String get setupRunAgainSubtitle;
+
+  /// Settings > Appearance: opens the sign-in design preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in screen design'**
+  String get loginDesignTitle;
+
+  /// Title of the sign-in design preview; also a quick switcher action.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview sign-in designs'**
+  String get loginDesignPreviewTitle;
+
+  /// Sign-in design preview: label of the current (classic) design's page.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get loginDesignClassic;
+
+  /// Settings > Appearance: the classic sign-in design is in use.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic'**
+  String get loginDesignClassicName;
+
+  /// Sign-in design A: one centered card.
+  ///
+  /// In en, this message translates to:
+  /// **'A · Clean card'**
+  String get loginDesignCard;
+
+  /// Sign-in design B: server first, then the sign-in.
+  ///
+  /// In en, this message translates to:
+  /// **'B · Two steps'**
+  String get loginDesignSteps;
+
+  /// Sign-in design C: a hero panel beside the form.
+  ///
+  /// In en, this message translates to:
+  /// **'C · Split'**
+  String get loginDesignSplit;
+
+  /// Sign-in design preview: makes this design the one the app shows.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this design'**
+  String get loginDesignUse;
+
+  /// Sign-in design preview: this design is the one the app shows.
+  ///
+  /// In en, this message translates to:
+  /// **'In use'**
+  String get loginDesignInUse;
+
+  /// Toast in the sign-in design preview instead of signing in.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview: this design would sign you in here'**
+  String get loginDesignPreviewNote;
+
+  /// Sign-in, More ways to sign in: the row that opens the full sign-in screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom headers, API key and certificates'**
+  String get loginDesignAdvancedSubtitle;
+
+  /// Sign-in: expander holding the secondary options.
+  ///
+  /// In en, this message translates to:
+  /// **'More ways to sign in'**
+  String get loginMoreWays;
+
+  /// Sign-in: label above the saved server addresses.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent servers'**
+  String get loginRecentServers;
+
+  /// Two-step sign-in, first page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Where is your library?'**
+  String get loginWhereIsLibrary;
+
+  /// Two-step sign-in, under the first page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your server\'s address, the same one you open in a browser.'**
+  String get loginWhereIsLibraryIntro;
+
+  /// Two-step sign-in: checks the server and goes to the sign-in page.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get loginContinue;
+
+  /// Two-step sign-in: back to the server address page.
+  ///
+  /// In en, this message translates to:
+  /// **'Change server'**
+  String get loginChangeServer;
+
+  /// Two-step sign-in, second page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to {server}'**
+  String loginSignInToNamed(String server);
+
+  /// Two-step sign-in, under the second page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the account you have on this server.'**
+  String get loginSignInToNamedIntro;
+
+  /// Split sign-in design: short line on the hero panel.
+  ///
+  /// In en, this message translates to:
+  /// **'Your audiobooks, podcasts and ebooks from your own server, on every device.'**
+  String get loginSplitPitch;
+
+  /// Quick switcher: extra search words for Preview sign-in designs.
+  ///
+  /// In en, this message translates to:
+  /// **'login sign in screen design layout preview'**
+  String get quickSwitcherKeywordsLoginDesign;
 }
 
 class _AppLocalizationsDelegate

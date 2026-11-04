@@ -29,6 +29,10 @@ import '../services/tailscale_service.dart'; // fork
 import 'tailscale_settings_screen.dart'; // fork
 import '../widgets/tailscale_login_panel.dart'; // fork
 import '../utils/fork_branding.dart'; // fork
+import '../services/login_design_store.dart'; // fork
+import 'login_designs/login_designs.dart'; // fork
+
+part 'login_screen_fork.dart'; // fork: alternative sign-in designs
 
 class LoginScreen extends StatefulWidget {
   final SavedAccount? prefillAccount;
@@ -83,6 +87,8 @@ class _LoginScreenState extends State<LoginScreen>
   // App version
   String _appVersion = '';
 
+  late final _forkForm = _ForkLoginForm(this); // fork: sign-in designs
+
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
   late Animation<double> _slideAnim;
@@ -107,6 +113,7 @@ class _LoginScreenState extends State<LoginScreen>
     _loadVersion();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
+      if (_forkForm.prefillPreview()) return; // fork: design preview
       final auth = context.read<AuthProvider>();
       final account = widget.prefillAccount;
       if (account != null) {
@@ -179,6 +186,7 @@ class _LoginScreenState extends State<LoginScreen>
     _usernameFocus.dispose();
     for (final (k, v) in _headerControllers) { k.dispose(); v.dispose(); }
     OidcService().cancel();
+    _forkForm.dispose(); // fork
     super.dispose();
   }
 
@@ -243,6 +251,7 @@ class _LoginScreenState extends State<LoginScreen>
 
     final cleanUrl = text.replaceAll(RegExp(r'^https?://'), '');
     final fullUrl = '$_protocol$cleanUrl';
+    if (_forkForm.previewServerCheck(fullUrl)) return; // fork: design preview
 
     try {
       final headers = _collectHeaders();
@@ -295,6 +304,7 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Future<void> _handleLogin() async {
+    if (_forkForm.blockedInPreview()) return; // fork: design preview
     final apiKey = _apiKeyController.text.trim();
 
     if (_backend.isBookOrbit && BookOrbitApiService.passwordLink(apiKey) != null) {
@@ -407,6 +417,7 @@ class _LoginScreenState extends State<LoginScreen>
 
   Future<void> _handleOidcLogin() async {
     if (!_serverValid) return;
+    if (_forkForm.blockedInPreview()) return; // fork: design preview
 
     setState(() {
       _isOidcLoading = true;
@@ -510,6 +521,8 @@ class _LoginScreenState extends State<LoginScreen>
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
     final l = AppLocalizations.of(context)!;
+    final forkDesign = _forkForm.build(context); // fork: sign-in designs
+    if (forkDesign != null) return forkDesign;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -916,6 +929,7 @@ class _LoginScreenState extends State<LoginScreen>
                           ),
                         ),
                         onPressed: () {
+                          if (_forkForm.blockedInPreview()) return; // fork: design preview
                           final account = SignedOutPlayback.expiredAccount();
                           if (account != null) {
                             context.read<AuthProvider>().continueSignedOut(account);
@@ -1177,6 +1191,7 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Future<void> _restoreFromBackup() async {
+    if (_forkForm.blockedInPreview()) return; // fork: design preview
     try {
       final result = await FilePicker.platform.pickFiles(type: FileType.any);
       if (result == null || result.files.isEmpty) return;
@@ -1269,6 +1284,7 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Future<void> _pasteLoginLink() async {
+    if (_forkForm.blockedInPreview()) return; // fork: design preview
     final l = AppLocalizations.of(context)!;
     final controller = TextEditingController();
     String? errorText;
@@ -1339,6 +1355,7 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Future<void> _quickSwitch(SavedAccount account) async {
+    if (_forkForm.blockedInPreview()) return; // fork: design preview
     if (account.token.isEmpty) {
       _setInitialHeaders(account.customHeaders);
       setState(() => _backend = account.backend);
