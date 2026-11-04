@@ -18,6 +18,9 @@
              owner gets. The beta number (lib/build_info.dart) names the
              next beta to be published and stays put; after publishing one,
              run bump -NextBeta (or -Beta N to set it).
+  clean      free build\ and .dart_tool\ safely (unlinks the Pub-cache
+             junctions first, then flutter clean + pub get); the next
+             build is a full one
   footprint  how far the fork's lib/ code differs from upstream
   merge      merge upstream origin/main with the fork's rules
              (tool/upstream_merge.py); never commits
@@ -40,7 +43,7 @@
 #>
 param(
   [Parameter(Mandatory = $true, Position = 0)]
-  [ValidateSet('check', 'build', 'beta-sync', 'apk', 'bump', 'footprint', 'merge', 'server', 'itest')]
+  [ValidateSet('check', 'build', 'beta-sync', 'apk', 'bump', 'clean', 'footprint', 'merge', 'server', 'itest')]
   [string]$Command,
   [Parameter(Position = 1)]
   [string]$Action = '',
@@ -314,11 +317,43 @@ switch ($Command) {
     Invoke-Flutter test --no-pub --reporter expanded
     Invoke-Step -Name 'tool-tests' -Run { python -m unittest discover -s tool/tests } `
       -SummaryPattern '^Ran \d+ tests'
+    # The maintainer's hooks live in the private .claude repo (git-ignored here).
+    if (Test-Path (Join-Path $root '.claude\hooks\tests')) {
+      Invoke-Step -Name 'hook-tests' -Run { python -m unittest discover -s .claude/hooks/tests } `
+        -SummaryPattern '^Ran \d+ tests'
+    }
     Invoke-Step -Name 'removed-paths' -Run { python tool/check_fork_removed.py } -SummaryPattern '^OK'
     # Lints only fork-added files must pass (one extra analyzer run).
     $env:FLUTTER = $flutter
     Invoke-Step -Name 'fork-lints' -Run { python tool/fork_lints.py } -SummaryPattern '^(OK|FAIL)'
     Write-Host 'check passed' -ForegroundColor Green
+  }
+
+  'clean' {
+    # Frees build\ and .dart_tool\ (often 10+ GB). */flutter/ephemeral/.plugin_symlinks
+    # hold junctions into the shared Pub cache, and a recursive delete through
+    # them once emptied cached packages. So each link is removed by itself
+    # first (a non-recursive Directory.Delete never follows a junction), then
+    # flutter clean removes the rest. Never use Remove-Item -Recurse here.
+    $exe = Join-Path $root 'build\windows\x64\runner\Release\absorb.exe'
+    if (Get-Process absorb -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq $exe }) {
+      throw 'The Release absorb.exe is running from build\. Close it first.'
+    }
+    foreach ($os in 'windows', 'linux') {
+      $links = Join-Path $root "$os\flutter\ephemeral\.plugin_symlinks"
+      if (-not (Test-Path -LiteralPath $links)) { continue }
+      $kids = @(Get-ChildItem -LiteralPath $links -Force)
+      $real = @($kids | Where-Object { -not ($_.Attributes -band [IO.FileAttributes]::ReparsePoint) })
+      if ($real.Count) { throw "$links holds real folders, not links; stopping so nothing is deleted through them." }
+      foreach ($k in $kids) { [IO.Directory]::Delete($k.FullName, $false) }
+      [IO.Directory]::Delete($links, $false)
+    }
+    # Not through Invoke-Step: its log lives in build\, which this deletes.
+    & $flutter clean *> $null
+    if ($LASTEXITCODE -ne 0) { throw "flutter clean failed (exit $LASTEXITCODE)" }
+    New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+    Invoke-Flutter pub get
+    Write-Host 'clean done: build output removed; the next build is a full one' -ForegroundColor Green
   }
 
   'merge' {

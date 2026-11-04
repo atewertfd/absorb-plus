@@ -1,3 +1,7 @@
 packages/** linguist-vendored
 assets/foliate/** linguist-vendored
 lib/l10n/app_localizations*.dart linguist-generated
+# flutter pub get writes these with LF; matching that keeps them from showing
+# as modified after every build when core.autocrlf is on.
+windows/flutter/generated_plugin* text eol=lf
+linux/flutter/generated_plugin* text eol=lf
