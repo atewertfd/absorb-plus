@@ -95,7 +95,12 @@ abstract final class TestChannelLaunchPrompt {
       if (result.status != TestChannelStatus.newer || build == null) return;
       if (await DeveloperMode.dismissedTestBuild() == build.build) return;
       if (!context.mounted) return;
-      await _show(context, build, result.installedVersion ?? '');
+      await _show(
+        context,
+        build,
+        result.installedVersion ?? '',
+        result.accessToken,
+      );
     } catch (error) {
       debugPrint('[TestChannel] Launch check failed: $error');
     }
@@ -105,6 +110,7 @@ abstract final class TestChannelLaunchPrompt {
     BuildContext context,
     TestChannelBuild build,
     String installed,
+    String? accessToken,
   ) async {
     final l = AppLocalizations.of(context)!;
     final go = await showDialog<bool>(
@@ -136,6 +142,7 @@ abstract final class TestChannelLaunchPrompt {
         build,
         installedVersion: installed,
         packageLabel: l.testBuildPackageLabel(build.build),
+        accessToken: accessToken,
       ),
     );
   }

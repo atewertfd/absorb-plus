@@ -2,17 +2,23 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
+import '../services/github_device_auth.dart';
 import '../services/test_channel_service.dart';
+import '../widgets/github_sign_in.dart';
+import '../widgets/overlay_toast.dart';
 import '../widgets/update_dialog.dart';
 
 /// Developer mode > Test channel (Absorb Plus, Android GitHub build only):
 /// the installed build, the newest test build and its notes, and Install,
 /// which reuses the normal updater's download, progress and installer.
 class TestChannelScreen extends StatefulWidget {
-  const TestChannelScreen({super.key, this.service});
+  const TestChannelScreen({super.key, this.service, this.gitHubAuth});
 
   /// Tests pass a service with a fake HTTP client.
   final TestChannelService? service;
+
+  /// Tests pass a GitHub sign-in with fake HTTP.
+  final GitHubDeviceAuth? gitHubAuth;
 
   @override
   State<TestChannelScreen> createState() => _TestChannelScreenState();
@@ -50,8 +56,25 @@ class _TestChannelScreenState extends State<TestChannelScreen> {
       build,
       installedVersion: _result?.installedVersion ?? '',
       packageLabel: l.testBuildPackageLabel(build.build),
+      accessToken: _result?.accessToken,
     );
     await UpdateDialog.install(context, info);
+  }
+
+  Future<void> _signIn() async {
+    final auth = widget.gitHubAuth ?? GitHubDeviceAuth();
+    if (!auth.isConfigured) {
+      final l = AppLocalizations.of(context)!;
+      showOverlayToast(
+        context,
+        l.githubSignInNotSetUp,
+        icon: Icons.info_outline_rounded,
+      );
+      return;
+    }
+    if (await showGitHubSignInDialog(context, auth: auth) && mounted) {
+      await _check();
+    }
   }
 
   @override
@@ -96,6 +119,8 @@ class _TestChannelScreenState extends State<TestChannelScreen> {
                     Text(l.updateCheckFailed, style: TextStyle(color: cs.error))
                   else if (status == TestChannelStatus.empty)
                     Text(l.testChannelNone)
+                  else if (status == TestChannelStatus.signInRequired)
+                    Text(l.testChannelSignInNeeded)
                   else if (build != null) ...[
                     Text(
                       l.testChannelNewest(build.fullVersion),
@@ -123,6 +148,14 @@ class _TestChannelScreenState extends State<TestChannelScreen> {
           const SizedBox(height: 16),
           Row(
             children: [
+              if (status == TestChannelStatus.signInRequired) ...[
+                FilledButton.icon(
+                  onPressed: _checking ? null : _signIn,
+                  icon: const Icon(Icons.login_rounded),
+                  label: Text(l.githubSignIn),
+                ),
+                const SizedBox(width: 12),
+              ],
               if (status == TestChannelStatus.newer && build != null) ...[
                 FilledButton.icon(
                   onPressed: _checking ? null : () => _install(build),

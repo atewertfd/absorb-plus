@@ -16034,6 +16034,66 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get githubSignIn => 'Sign in with GitHub';
+
+  @override
+  String get githubSignInSubtitle =>
+      'Test builds are private: sign in to get them';
+
+  @override
+  String get githubSignInNotSetUp =>
+      'GitHub sign-in isn\'t set up in this build yet';
+
+  @override
+  String get githubSignInAgain => 'Sign in again';
+
+  @override
+  String get githubSignInExpired => 'Your GitHub sign-in ran out';
+
+  @override
+  String githubSignedInAs(String login) {
+    return 'Signed in to GitHub as $login';
+  }
+
+  @override
+  String get githubSignedIn => 'Signed in to GitHub';
+
+  @override
+  String get githubSignOut => 'Sign out';
+
+  @override
+  String get githubSignInEnterCode => 'Enter this code on GitHub:';
+
+  @override
+  String get githubSignInOpen => 'Open github.com/login/device';
+
+  @override
+  String get githubSignInCopyCode => 'Copy code';
+
+  @override
+  String get githubSignInCodeCopied => 'Code copied';
+
+  @override
+  String get githubSignInWaiting =>
+      'Waiting for you to approve it on GitHub...';
+
+  @override
+  String get githubSignInDenied => 'Sign-in was cancelled on GitHub.';
+
+  @override
+  String get githubSignInCodeExpired => 'The code ran out. Try again.';
+
+  @override
+  String get githubSignInFailed => 'Couldn\'t sign in to GitHub. Try again.';
+
+  @override
+  String get githubSignInTryAgain => 'Try again';
+
+  @override
+  String get testChannelSignInNeeded =>
+      'Sign in with GitHub to get test builds';
+
+  @override
   String get downloadEtaUnderMinute => '<1 min left';
 
   @override

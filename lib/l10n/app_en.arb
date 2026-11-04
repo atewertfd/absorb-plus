@@ -8463,6 +8463,31 @@
       }
     }
   },
+  "githubSignIn": "Sign in with GitHub",
+  "githubSignInSubtitle": "Test builds are private: sign in to get them",
+  "githubSignInNotSetUp": "GitHub sign-in isn't set up in this build yet",
+  "githubSignInAgain": "Sign in again",
+  "githubSignInExpired": "Your GitHub sign-in ran out",
+  "githubSignedInAs": "Signed in to GitHub as {login}",
+  "@githubSignedInAs": {
+    "placeholders": {
+      "login": {
+        "type": "String"
+      }
+    }
+  },
+  "githubSignedIn": "Signed in to GitHub",
+  "githubSignOut": "Sign out",
+  "githubSignInEnterCode": "Enter this code on GitHub:",
+  "githubSignInOpen": "Open github.com/login/device",
+  "githubSignInCopyCode": "Copy code",
+  "githubSignInCodeCopied": "Code copied",
+  "githubSignInWaiting": "Waiting for you to approve it on GitHub...",
+  "githubSignInDenied": "Sign-in was cancelled on GitHub.",
+  "githubSignInCodeExpired": "The code ran out. Try again.",
+  "githubSignInFailed": "Couldn't sign in to GitHub. Try again.",
+  "githubSignInTryAgain": "Try again",
+  "testChannelSignInNeeded": "Sign in with GitHub to get test builds",
   "downloadEtaUnderMinute": "<1 min left",
   "downloadEtaMinutes": "{minutes} min left",
   "@downloadEtaMinutes": {
