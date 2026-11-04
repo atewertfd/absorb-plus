@@ -8,6 +8,7 @@ import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../providers/library_provider.dart';
 import 'audio_player_service.dart';
+import '../utils/fork_platform.dart';
 
 /// Item ids go on a command line: letters, digits, '.', '_' and '-' only.
 /// The runner checks the same rule (windows/runner/jump_list.cpp).
@@ -140,7 +141,7 @@ class JumpListContent {
 class WindowsJumpList {
   WindowsJumpList._()
       : _channel = const MethodChannel('absorb/windows_jump_list'),
-        _enabled = !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,
+        _enabled = ForkPlatform.isWindows,
         debounce = defaultDebounce,
         _localizations = null;
 

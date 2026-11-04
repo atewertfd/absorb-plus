@@ -43,6 +43,7 @@ class Player extends ChangeNotifier {
 
   // ─── Helpers ───
   void _init() {}
+  static Future<T> _retry<T>(Future<T> Function() op) => op();
 }
 
 enum Mode { a, b; bool get isA => this == Mode.a; }
@@ -74,7 +75,7 @@ class ParseTests(unittest.TestCase):
         expect = {
             "Player": "ctor", "Player.empty": "ctor", "name": "field", "_count": "field",
             "_cache": "field", "onDone": "field", "writer": "field", "play": "method",
-            "operator ==": "op", "_init": "method",
+            "operator ==": "op", "_init": "method", "_retry": "method",
         }
         for name, kind in expect.items():
             self.assertIn(name, self.by_name, name)

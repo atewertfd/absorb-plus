@@ -68,7 +68,7 @@ class DesktopShortcutDefinition {
 /// The shortcuts for this platform; F11 full screen is Windows-only.
 List<DesktopShortcutDefinition> get desktopShortcutDefinitions => [
       ..._sharedShortcutDefinitions,
-      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows)
+      if (ForkPlatform.isWindows)
         _fullScreenShortcut,
     ];
 

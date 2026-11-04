@@ -13,6 +13,7 @@ import '../services/file_health_check.dart';
 import '../utils/duration_format.dart';
 import 'adaptive_modal.dart';
 import 'overlay_toast.dart';
+import '../utils/fork_format.dart';
 
 /// Opens "Check files" for [item] (the library item JSON). [api] is null
 /// when offline, which leaves re-downloading unavailable.
@@ -345,9 +346,4 @@ String fileHealthDuration(double seconds) {
   return formatHm(s);
 }
 
-String fileHealthSize(int bytes) {
-  if (bytes < 1024) return '$bytes B';
-  if (bytes < 1048576) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-  if (bytes < 1073741824) return '${(bytes / 1048576).toStringAsFixed(1)} MB';
-  return '${(bytes / 1073741824).toStringAsFixed(2)} GB';
-}
+String fileHealthSize(int bytes) => formatBytesFine(bytes);

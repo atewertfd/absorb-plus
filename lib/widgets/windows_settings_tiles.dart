@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../services/windows_global_hotkeys.dart';
 import '../services/windows_shell.dart';
+import '../utils/fork_platform.dart';
 
 /// Windows-only switches kept by the runner (fork-owned): close to tray,
 /// start with Windows, start minimized, always on top and keep awake, plus the
@@ -20,7 +20,7 @@ class WindowsSettingsTiles extends StatefulWidget {
 
   /// Whether Settings shows the Windows section at all.
   static bool get isAvailable =>
-      !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
+      ForkPlatform.isWindows;
 
   @override
   State<WindowsSettingsTiles> createState() => _WindowsSettingsTilesState();

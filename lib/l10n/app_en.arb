@@ -7712,7 +7712,6 @@
       }
     }
   },
-  "supportContactSubtitle": "Ask a question on the Absorb Plus GitHub",
   "githubProjectTitle": "Absorb Plus on GitHub",
   "precacheTitle": "Pre-load covers and book pages",
   "precacheSubtitle": "Fetches them in the background on Wi-Fi or a wired connection, so screens open instantly. Uses a little disk space, not memory.",
@@ -8083,7 +8082,6 @@
   "statsDailyGoalSheetTitle": "Daily listening goal",
   "statsDailyGoalSheetBody": "A ring on the streak card fills as you listen today.",
   "statsDailyGoalSet": "Set a daily goal",
-  "statsDailyGoalEdit": "Change daily goal",
   "statsMonthListened": "Listened",
   "statsMonthTime": "Time",
   "statsMonthTopBook": "Top book",

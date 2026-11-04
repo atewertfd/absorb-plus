@@ -11,6 +11,7 @@ import 'download_service.dart';
 import 'pending_writes.dart';
 import 'remote_link/remote_link.dart' show remoteHost;
 import 'windows_global_hotkeys.dart';
+import '../utils/fork_platform.dart';
 
 /// What the taskbar button shows for the current book.
 enum TaskbarPlayback { none, playing, paused }
@@ -124,7 +125,7 @@ abstract class WindowsShellDownloads implements Listenable {
 class WindowsShell {
   WindowsShell._()
       : _channel = const MethodChannel('absorb/windows_shell'),
-        _enabled = !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,
+        _enabled = ForkPlatform.isWindows,
         _playbackOverride = null,
         _downloadsOverride = null,
         _throttle = TaskbarProgressThrottle();

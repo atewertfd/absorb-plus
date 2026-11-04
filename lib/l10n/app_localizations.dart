@@ -24507,12 +24507,6 @@ abstract class AppLocalizations {
   /// **'Resume {title}'**
   String windowsJumpListResume(String title);
 
-  /// No description provided for @supportContactSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Ask a question on the Absorb Plus GitHub'**
-  String get supportContactSubtitle;
-
   /// No description provided for @githubProjectTitle.
   ///
   /// In en, this message translates to:
@@ -25436,12 +25430,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Set a daily goal'**
   String get statsDailyGoalSet;
-
-  /// No description provided for @statsDailyGoalEdit.
-  ///
-  /// In en, this message translates to:
-  /// **'Change daily goal'**
-  String get statsDailyGoalEdit;
 
   /// No description provided for @statsMonthListened.
   ///

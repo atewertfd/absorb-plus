@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'audio_player_service.dart';
+import '../utils/fork_platform.dart';
 
 /// What a global hotkey does.
 enum GlobalHotkeyAction { playPause, back, forward, volumeUp, volumeDown, bookmark }
@@ -152,7 +153,7 @@ class _AppPlayback implements GlobalHotkeyPlayback {
 class WindowsGlobalHotkeys {
   WindowsGlobalHotkeys._()
       : _channel = const MethodChannel(channelName),
-        _enabled = !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,
+        _enabled = ForkPlatform.isWindows,
         _playbackOverride = null;
 
   /// Tests: a fake channel and player.

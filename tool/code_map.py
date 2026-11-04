@@ -229,7 +229,7 @@ def classify(header: str, container: str | None) -> tuple[str, str] | None:
         m = re.search(r"\bset\s+(" + IDENT + r")$", before)
         if m:
             return "set", m.group(1)
-        m = re.search(r"(" + IDENT + r"(?:\." + IDENT + r")?)\s*(?:<[^()]*>)?$", before)
+        m = re.search(r"(" + IDENT + r"(?:\." + IDENT + r")?)\s*(?:<[^<>()]*(?:<[^<>()]*>[^<>()]*)*>)?$", before)
         if not m:
             return None
         name = m.group(1)

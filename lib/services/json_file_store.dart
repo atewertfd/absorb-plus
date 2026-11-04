@@ -189,8 +189,6 @@ class JsonFileStore {
     _timer ??= Timer(debounce, () => unawaited(flush()));
   }
 
-  /// Whether a scheduled write has not started yet.
-  bool get hasPendingWrite => _pendingSnapshot != null;
 
   /// Writes any scheduled snapshot now and waits for every write in flight.
   Future<void> flush() async {
@@ -286,18 +284,8 @@ class JsonFileStore {
   }
 
   /// Antivirus and indexers can hold a file for a moment on Windows.
-  static Future<T> _retry<T>(Future<T> Function() op, {int attempts = 5}) async {
-    var delay = const Duration(milliseconds: 20);
-    for (var attempt = 1; ; attempt++) {
-      try {
-        return await op();
-      } on FileSystemException {
-        if (attempt >= attempts) rethrow;
-        await Future<void>.delayed(delay);
-        delay *= 2;
-      }
-    }
-  }
+  static Future<T> _retry<T>(Future<T> Function() op, {int attempts = 5}) =>
+      retryFileOp(op, attempts: attempts);
 
   /// Temp files left by a write that never finished (the app was killed).
   /// Only old ones: another isolate may be mid-write right now.
@@ -327,5 +315,21 @@ class JsonFileStore {
     _timer?.cancel();
     _timer = null;
     PendingWrites.unregister(this);
+  }
+}
+
+/// Runs a file operation, retrying a [FileSystemException] a few times with
+/// growing pauses (20 ms, doubling): antivirus and indexers can hold a file
+/// for a moment on Windows. The last failure is rethrown.
+Future<T> retryFileOp<T>(Future<T> Function() op, {int attempts = 5}) async {
+  var delay = const Duration(milliseconds: 20);
+  for (var attempt = 1; ; attempt++) {
+    try {
+      return await op();
+    } on FileSystemException {
+      if (attempt >= attempts) rethrow;
+      await Future<void>.delayed(delay);
+      delay *= 2;
+    }
   }
 }

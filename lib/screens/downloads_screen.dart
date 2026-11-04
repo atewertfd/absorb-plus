@@ -17,6 +17,7 @@ import '../widgets/overlay_toast.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/local_path.dart';
 import '../widgets/desktop_input.dart';
+import '../utils/fork_format.dart';
 import '../widgets/empty_state.dart'; // Absorb Plus
 
 String _downloadRate(double? bytesPerSecond) {
@@ -34,15 +35,6 @@ String _downloadEta(int? seconds) {
   final hours = minutes ~/ 60;
   final remainder = minutes % 60;
   return remainder == 0 ? '$hours hr left' : '$hours hr $remainder min left';
-}
-
-String _formatDownloadBytes(int bytes) {
-  if (bytes < 1024) return '$bytes B';
-  if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-  if (bytes < 1024 * 1024 * 1024) {
-    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
-  }
-  return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
 }
 
 class DownloadsScreen extends StatefulWidget {
@@ -909,7 +901,7 @@ class _ActiveDownloadCard extends StatelessWidget {
                                   'Download progress for ${info.title ?? l.unknown}',
                               value:
                                   '$pct percent complete'
-                                  '${info.bytesDone != null && info.bytesTotal != null ? ', ${_formatDownloadBytes(info.bytesDone!)} of ${_formatDownloadBytes(info.bytesTotal!)}' : ''}'
+                                  '${info.bytesDone != null && info.bytesTotal != null ? ', ${formatBytesFine(info.bytesDone!)} of ${formatBytesFine(info.bytesTotal!)}' : ''}'
                                   '${_downloadRate(info.speedBytesPerSecond).isEmpty ? '' : ', ${_downloadRate(info.speedBytesPerSecond)}'}'
                                   '${_downloadEta(info.etaSeconds).isEmpty ? '' : ', ${_downloadEta(info.etaSeconds)} remaining'}',
                               child: ClipRRect(
@@ -934,7 +926,7 @@ class _ActiveDownloadCard extends StatelessWidget {
                           info.bytesTotal != null) ...[
                         const SizedBox(height: 4),
                         Text(
-                          '${_formatDownloadBytes(info.bytesDone!)} of ${_formatDownloadBytes(info.bytesTotal!)}'
+                          '${formatBytesFine(info.bytesDone!)} of ${formatBytesFine(info.bytesTotal!)}'
                           '${_downloadRate(info.speedBytesPerSecond).isEmpty ? '' : ' · ${_downloadRate(info.speedBytesPerSecond)}'}'
                           '${_downloadEta(info.etaSeconds).isEmpty ? '' : ' · ${_downloadEta(info.etaSeconds)}'}',
                           style: tt.labelSmall?.copyWith(

@@ -14109,9 +14109,6 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get supportContactSubtitle => '在 Absorb Plus 的 GitHub 上提问';
-
-  @override
   String get githubProjectTitle => 'GitHub 上的 Absorb Plus';
 
   @override
@@ -14645,9 +14642,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get statsDailyGoalSet => '设置每日目标';
-
-  @override
-  String get statsDailyGoalEdit => '更改每日目标';
 
   @override
   String get statsMonthListened => '已收听';

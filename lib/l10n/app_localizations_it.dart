@@ -14664,10 +14664,6 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get supportContactSubtitle =>
-      'Fai una domanda su GitHub di Absorb Plus';
-
-  @override
   String get githubProjectTitle => 'Absorb Plus su GitHub';
 
   @override
@@ -15226,9 +15222,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get statsDailyGoalSet => 'Imposta un obiettivo giornaliero';
-
-  @override
-  String get statsDailyGoalEdit => 'Cambia obiettivo giornaliero';
 
   @override
   String get statsMonthListened => 'Ascoltato';

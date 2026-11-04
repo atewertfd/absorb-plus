@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../services/desktop_audio.dart';
 import '../services/exclusive_audio_fallback.dart';
 import 'overlay_toast.dart';
+import '../utils/fork_platform.dart';
 
 /// Shows a toast once when exclusive audio fell back to shared mode
 /// (ExclusiveAudioFallback). Called once from main.dart with the app's
@@ -31,7 +31,7 @@ class ExclusiveAudioTile extends StatefulWidget {
   const ExclusiveAudioTile({super.key});
 
   static bool get supported =>
-      !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
+      ForkPlatform.isWindows;
 
   @override
   State<ExclusiveAudioTile> createState() => _ExclusiveAudioTileState();

@@ -51,8 +51,6 @@ abstract final class ForkPlatform {
   /// Chromecast is wired up only on Android.
   static bool get supportsCast => isAndroid;
 
-  /// Home-screen widgets and Android Auto exist only on Android.
-  static bool get hasHomeWidgets => isAndroid;
 
   /// A car or media browser can ask for the Android Auto browse tree.
   /// Windows, Linux and web have none, so the tree isn't kept up to date

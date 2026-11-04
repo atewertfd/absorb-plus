@@ -4,13 +4,14 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/fork_branding.dart';
 
 /// In-app release notes ("What's new"): fetching a fork release's notes from
 /// GitHub, caching them for offline reopening, and parsing their Markdown into
 /// a small model the What's new sheet renders.
 
 /// The fork's GitHub repo. Same repo as [UpdateCheckerService] uses.
-const whatsNewRepo = 'atewertfd/absorb-plus';
+const whatsNewRepo = ForkBranding.repo;
 
 /// The release page for [tag], for "Full notes on GitHub".
 Uri whatsNewReleasePage(String tag) =>

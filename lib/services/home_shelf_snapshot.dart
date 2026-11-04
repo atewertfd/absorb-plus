@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'json_file_store.dart';
 
 /// The home shelves (Audiobookshelf's personalized view) from the last
 /// successful load, kept on disk per account and library so a cold start
@@ -86,7 +87,7 @@ class HomeShelfSnapshot {
       // Write then rename, so a crash mid-write never leaves half a file.
       final tmp = File('${file.path}.tmp');
       await tmp.writeAsString(text, flush: true);
-      await tmp.rename(file.path);
+      await retryFileOp(() => tmp.rename(file.path));
       final legacy = await _legacyFile(scope, libraryId);
       if (await legacy.exists()) await legacy.delete();
     } catch (e) {
