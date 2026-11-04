@@ -1979,8 +1979,18 @@ class DownloadService extends ChangeNotifier {
   /// download_index_store.dart). Unchanged data is not rewritten.
   Future<void> _save() => _indexStore.save(_indexSnapshot);
 
+  /// Absorb Plus: index entries this build could not read, kept as stored
+  /// and written back on save so the record (and its files) is not lost. A
+  /// readable entry for the same id replaces one.
+  final Map<String, dynamic> _unreadableDownloads = {};
+  final Map<String, dynamic> _unreadableKeptEbooks = {};
+
   DownloadIndex _indexSnapshot() {
     final map = <String, dynamic>{};
+    // Absorb Plus: unreadable entries first; a readable one replaces them.
+    _unreadableDownloads.removeWhere((k, _) => _downloads.containsKey(k));
+    _unreadableKeptEbooks.removeWhere((k, _) => _keptEbooks.containsKey(k));
+    map.addAll(_unreadableDownloads);
     for (final entry in _downloads.entries) {
       if (entry.value.status == DownloadStatus.downloaded ||
           entry.value.status == DownloadStatus.error) {
@@ -1989,7 +1999,10 @@ class DownloadService extends ChangeNotifier {
     }
     return DownloadIndex(
       downloads: map,
-      keptEbooks: {for (final e in _keptEbooks.entries) e.key: e.value.toJson()},
+      keptEbooks: {
+        ..._unreadableKeptEbooks, // Absorb Plus
+        for (final e in _keptEbooks.entries) e.key: e.value.toJson(),
+      },
       origins: Map<String, dynamic>.of(_origins),
     );
   }
@@ -2007,7 +2020,8 @@ class DownloadService extends ChangeNotifier {
         _keptEbooks[entry.key] =
             DownloadInfo.fromJson(entry.value as Map<String, dynamic>);
       } catch (e) {
-        debugPrint('[Download] kept ebooks init error: $e');
+        _unreadableKeptEbooks[entry.key] = entry.value; // Absorb Plus
+        debugPrint('[Download] kept ebooks init error, entry kept as is: ${entry.key}: $e');
       }
     }
     for (final entry in index.downloads.entries) {
@@ -2023,7 +2037,8 @@ class DownloadService extends ChangeNotifier {
           debugPrint('[Download] Skipping stale ${info.status} entry: ${entry.key}');
         }
       } catch (e) {
-        debugPrint('[Download] Init error: $e');
+        _unreadableDownloads[entry.key] = entry.value; // Absorb Plus
+        debugPrint('[Download] Init error, entry kept as is: ${entry.key}: $e');
       }
     }
     debugPrint('[Download] Loaded ${_downloads.length} download record(s)');
@@ -3433,9 +3448,12 @@ class DownloadService extends ChangeNotifier {
     _updatesSub = null;
     _downloads.clear();
     _keptEbooks.clear();
+    _unreadableDownloads.clear(); // Absorb Plus
+    _unreadableKeptEbooks.clear(); // Absorb Plus
     _activeDownloadIds.clear();
     _cancelledIds.clear();
     _pending.clear();
+    _unreadablePending.clear(); // Absorb Plus
     _queue.clear();
     _persistedPendingKeys = {};
     _adoptChecked.clear();
@@ -4031,13 +4049,15 @@ class DownloadService extends ChangeNotifier {
       foreign.forEach(_adoptPending);
       foreign.clear();
     }
-    _persistedPendingKeys = _pending.keys.toSet();
-    if (_pending.isEmpty && foreign.isEmpty) {
+    _unreadablePending.removeWhere((k, _) => _pending.containsKey(k)); // Absorb Plus
+    _persistedPendingKeys = {..._pending.keys, ..._unreadablePending.keys};
+    if (_pending.isEmpty && foreign.isEmpty && _unreadablePending.isEmpty) {
       await prefs.remove('pending_downloads');
       return;
     }
     final map = {
       ...foreign,
+      ..._unreadablePending, // Absorb Plus
       for (final e in _pending.entries) e.key: e.value.toJson(),
     };
     await prefs.setString('pending_downloads', jsonEncode(map));
@@ -4048,6 +4068,10 @@ class DownloadService extends ChangeNotifier {
   /// the other engine; one inside it that is gone from [_pending] was
   /// finished or dropped here.
   Set<String> _persistedPendingKeys = {};
+
+  /// Absorb Plus: pending entries this build could not read, written back
+  /// as stored so a later version can resume or clean them up.
+  final Map<String, dynamic> _unreadablePending = {};
 
   /// Item ids already checked for a pending entry the other engine wrote.
   final Set<String> _adoptChecked = {};
@@ -4086,6 +4110,7 @@ class DownloadService extends ChangeNotifier {
       );
       debugPrint('[Download] took over "${p.title}" ($itemId) from the background job');
     } catch (e) {
+      _unreadablePending[itemId] = json; // Absorb Plus
       debugPrint('[Download] could not take over pending $itemId: $e');
     }
   }
@@ -4115,7 +4140,15 @@ class DownloadService extends ChangeNotifier {
       }
       _persistedPendingKeys = map.keys.toSet();
       for (final e in map.entries) {
-        final p = _PendingBook.fromJson(e.value as Map<String, dynamic>);
+        // Absorb Plus: one unreadable entry no longer stops the rest.
+        final _PendingBook p;
+        try {
+          p = _PendingBook.fromJson(e.value as Map<String, dynamic>);
+        } catch (err) {
+          _unreadablePending[e.key] = e.value;
+          debugPrint('[Download] pending entry kept as is: ${e.key}: $err');
+          continue;
+        }
         _pending[e.key] = p;
         _activeDownloadIds.add(e.key);
         _downloads[e.key] = DownloadInfo(

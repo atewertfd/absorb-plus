@@ -130,23 +130,50 @@ void main() {
       // A non-list value under the key makes getStringList throw.
       SharedPreferences.setMockInitialValues({'bad': 'not a list'});
       final b = make();
-      b.add('bad', 'lost');
+      b.add('bad', 'held1');
       b.add('good', 'kept');
+      b.add('bad', 'held2');
 
       await b.flush();
 
       expect(await stored('good'), ['kept']);
       expect((await SharedPreferences.getInstance()).get('bad'), 'not a list');
-      // Current behavior: the failed key's lines are not put back.
-      expect(b.peek('bad'), isEmpty);
+      // The failed key's lines are put back, in order, for the next write.
+      expect(b.peek('bad'), ['held1', 'held2']);
+      expect(b.peek('good'), isEmpty);
     });
 
-    test('a preferences failure rejects flush and drops the batch', () async {
-      final b = make(prefs: () => Future.error(StateError('no prefs')));
-      b.add('k', 'line');
+    test('a preferences failure rejects flush and keeps the batch', () async {
+      var fail = true;
+      final b = make(
+        prefs: () => fail
+            ? Future.error(StateError('no prefs'))
+            : SharedPreferences.getInstance(),
+      );
+      b.add('k', 'one');
+      b.add('k', 'two');
 
       await expectLater(b.flush(), throwsStateError);
-      // Current behavior: the lines were taken out before the prefs opened.
+      // Put back ahead of lines added since.
+      b.add('k', 'three');
+      expect(b.peek('k'), ['one', 'two', 'three']);
+
+      fail = false;
+      await b.flush();
+      expect(await stored('k'), ['one', 'two', 'three']);
+      expect(b.peek('k'), isEmpty);
+    });
+
+    test('lines the preferences cache already took are not put back', () async {
+      // shared_preferences updates its cache before saving, so a failed
+      // save can still leave the lines readable (and written later).
+      final prefs = _CachedThenFailingPrefs();
+      final b = make(prefs: () async => prefs);
+      b.add('k', 'one');
+
+      await b.flush();
+
+      expect(prefs.lists['k'], ['one']);
       expect(b.peek('k'), isEmpty);
     });
   });
@@ -313,6 +340,23 @@ void main() {
       expect(PendingWrites.registeredCount, before);
     });
   });
+}
+
+/// Takes every list into its cache, then fails to save it.
+class _CachedThenFailingPrefs implements SharedPreferences {
+  final Map<String, List<String>> lists = {};
+
+  @override
+  List<String>? getStringList(String key) => lists[key];
+
+  @override
+  Future<bool> setStringList(String key, List<String> value) async {
+    lists[key] = List.of(value);
+    throw StateError('save failed');
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 Future<void> pumpEventQueueUntil(bool Function() done) async {

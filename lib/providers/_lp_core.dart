@@ -498,7 +498,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       Map<String, dynamic>? ebookFile;
       if (dl.sessionData != null) {
         try {
-          final session = jsonDecode(dl.sessionData!) as Map<String, dynamic>;
+          final session = sessionJsonCache[dl.sessionData]!; // Absorb Plus: decoded once (null = bad JSON, caught below)
           duration = (session['duration'] as num?)?.toDouble() ?? 0;
           chapters = session['chapters'] as List<dynamic>? ?? [];
           episodeTitle = session['episodeTitle'] as String? ??
@@ -560,7 +560,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     for (final kept in keptEbooks) {
       Map<String, dynamic>? item;
       try {
-        item = (jsonDecode(kept.sessionData ?? '{}')
+        item = (sessionJsonCache[kept.sessionData ?? '{}'] // Absorb Plus: decoded once
             as Map<String, dynamic>)['libraryItem'] as Map<String, dynamic>?;
       } catch (_) {}
       final ebookFile = resolveEbookFile(item);
@@ -661,7 +661,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       Map<String, dynamic>? ebookFile;
       if (dl.sessionData != null) {
         try {
-          final session = jsonDecode(dl.sessionData!) as Map<String, dynamic>;
+          final session = sessionJsonCache[dl.sessionData]!; // Absorb Plus: decoded once (null = bad JSON, caught below)
           duration = (session['duration'] as num?)?.toDouble() ?? 0;
           chapters = session['chapters'] as List<dynamic>? ?? [];
           episodeTitle = session['episodeTitle'] as String? ??

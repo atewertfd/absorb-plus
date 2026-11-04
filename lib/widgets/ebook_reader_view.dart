@@ -1078,6 +1078,13 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     PlayerSettings.settingsChanged.removeListener(_loadSkipSettings);
     _pendingTapAction?.cancel();
     _curlShotTimer?.cancel();
+    // Absorb Plus: the curl layer goes with this widget, so nothing draws these now.
+    _curlShot?.dispose();
+    _curlShot = null;
+    for (final image in _curlShotsToFree) {
+      image.dispose();
+    }
+    _curlShotsToFree.clear();
     _controlsHideTimer?.cancel();
     // Restore system UI when leaving
     _setFullscreen(false);
@@ -1228,6 +1235,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     _curling = false;
     _curlDragReady = false;
     _curl.hide();
+    _freeCurlShots(); // Absorb Plus: pictures replaced during the turn
     _queueCurlShot();
     if (_pendingTurns.isNotEmpty) unawaited(_turnPage(_pendingTurns.removeAt(0), fresh: true));
   }
@@ -1285,8 +1293,11 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
       if (!mounted || _curling || !_curlOn) return;
       final cfi = _currentCfi;
       final shot = await _pictureOfPage();
-      if (shot == null || !mounted || _curling || _currentCfi != cfi) return;
-      _curlShot = shot;
+      if (shot == null || !mounted || _curling || _currentCfi != cfi) {
+        shot?.dispose(); // Absorb Plus: never shown, nothing else holds it
+        return;
+      }
+      _setCurlShot(shot); // Absorb Plus: frees the one it replaces
       _curlShotCfi = cfi;
     });
   }
@@ -1294,8 +1305,31 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
   /// The page looks different now (a highlight, the theme, the font).
   void _refreshCurlShot() {
     _curlShotCfi = null;
-    _curlShot = null;
+    _setCurlShot(null); // Absorb Plus: frees the old picture
     _queueCurlShot();
+  }
+
+  // Absorb Plus: page pictures are big; a replaced one is freed once the curl
+  // layer can't be drawing it (no turn running, layer hidden) and a frame has
+  // been drawn since. One a running turn still shows waits for _endCurl.
+  final List<ui.Image> _curlShotsToFree = [];
+
+  void _setCurlShot(ui.Image? shot) {
+    final old = _curlShot;
+    _curlShot = shot;
+    if (old != null && !identical(old, shot)) _curlShotsToFree.add(old);
+    _freeCurlShots();
+  }
+
+  void _freeCurlShots() {
+    if (_curlShotsToFree.isEmpty || _curling || _curl.showing) return;
+    final done = List.of(_curlShotsToFree);
+    _curlShotsToFree.clear();
+    WidgetsBinding.instance.endOfFrame.then((_) {
+      for (final image in done) {
+        image.dispose();
+      }
+    });
   }
 
   void _curlDragDown(PointerDownEvent e) {

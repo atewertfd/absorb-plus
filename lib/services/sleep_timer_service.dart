@@ -709,11 +709,9 @@ class SleepTimerService extends ChangeNotifier {
       chime.play();
       // Restore the main volume when the chime ends - or fails, never ends,
       // or is replaced - so the book can't stay at 15%.
-      chime.playerStateStream
-          .where((s) => s.processingState == ja.ProcessingState.completed)
-          .first
-          .timeout(const Duration(seconds: 10))
-          .then<void>((_) {}, onError: (Object e) {
+      chime.playerStateStream.where((s) => s.processingState == ja.ProcessingState.completed).first.timeout(const Duration(seconds: 10))
+          .then<void>((_) {
+        }, onError: (Object e) {
         debugPrint('[SleepTimer] Chime did not finish (${e.runtimeType}) - restoring volume');
       }).whenComplete(() {
         player.setVolume(prevVol);
@@ -839,6 +837,7 @@ class SleepTimerService extends ChangeNotifier {
           debugPrint('[SleepTimer] Auto sleep: in window ${settings.startLabel}–${settings.endLabel}, '
               'starting end-of-chapter timer');
           setChapterSleep(1);
+          if (!isActive) return; // Absorb Plus: didn't arm (no chapters yet) - no toast, not auto-started
           onToast?.call('Auto sleep: end of chapter timer started');
         } else {
           debugPrint('[SleepTimer] Auto sleep: in window ${settings.startLabel}–${settings.endLabel}, '
@@ -872,6 +871,7 @@ class SleepTimerService extends ChangeNotifier {
         if (settings.useEndOfChapter) {
           debugPrint('[SleepTimer] Window boundary hit — starting end-of-chapter timer');
           setChapterSleep(1);
+          if (!isActive) return; // Absorb Plus: didn't arm (no chapters yet) - no toast, not auto-started
           onToast?.call('Auto sleep: end of chapter timer started');
         } else {
           debugPrint('[SleepTimer] Window boundary hit — starting ${settings.durationMinutes}m timer');

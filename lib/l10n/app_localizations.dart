@@ -26126,6 +26126,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Test build {build}'**
   String testBuildPackageLabel(int build);
+
+  /// No description provided for @downloadEtaUnderMinute.
+  ///
+  /// In en, this message translates to:
+  /// **'<1 min left'**
+  String get downloadEtaUnderMinute;
+
+  /// No description provided for @downloadEtaMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min left'**
+  String downloadEtaMinutes(int minutes);
+
+  /// No description provided for @downloadEtaHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} hr left'**
+  String downloadEtaHours(int hours);
+
+  /// No description provided for @downloadEtaHoursMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} hr {minutes} min left'**
+  String downloadEtaHoursMinutes(int hours, int minutes);
 }
 
 class _AppLocalizationsDelegate

@@ -15675,4 +15675,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String testBuildPackageLabel(int build) {
     return 'Test build $build';
   }
+
+  @override
+  String get downloadEtaUnderMinute => '<1 min left';
+
+  @override
+  String downloadEtaMinutes(int minutes) {
+    return '$minutes min left';
+  }
+
+  @override
+  String downloadEtaHours(int hours) {
+    return '$hours hr left';
+  }
+
+  @override
+  String downloadEtaHoursMinutes(int hours, int minutes) {
+    return '$hours hr $minutes min left';
+  }
 }

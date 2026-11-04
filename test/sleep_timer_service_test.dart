@@ -483,8 +483,8 @@ void main() {
       });
     });
 
-    test('end-of-chapter auto sleep with no chapters stays off, but still '
-        'announces that it started (current behavior)', () {
+    test('end-of-chapter auto sleep with no chapters stays off and does not '
+        'announce that it started', () {
       fakeAsync((async) {
         timer.updateAutoSleepSettings(
           _windowAroundNow(-60, 60, useEndOfChapter: true),
@@ -492,9 +492,15 @@ void main() {
         async.flushMicrotasks();
 
         expect(timer.isActive, isFalse);
-        // setChapterSleep refuses to arm without chapters, but checkAutoSleep
-        // toasts unconditionally afterwards.
-        expect(toasts, ['Auto sleep: end of chapter timer started']);
+        // setChapterSleep refuses to arm without chapters; the toast only
+        // follows a timer that actually armed.
+        expect(toasts, isEmpty);
+
+        // A later check (resume, foreground) tries again, still quietly.
+        timer.checkAutoSleep();
+        async.flushMicrotasks();
+        expect(timer.isActive, isFalse);
+        expect(toasts, isEmpty);
       });
     });
   });

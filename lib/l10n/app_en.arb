@@ -8349,5 +8349,33 @@
         "type": "int"
       }
     }
+  },
+  "downloadEtaUnderMinute": "<1 min left",
+  "downloadEtaMinutes": "{minutes} min left",
+  "@downloadEtaMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadEtaHours": "{hours} hr left",
+  "@downloadEtaHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadEtaHoursMinutes": "{hours} hr {minutes} min left",
+  "@downloadEtaHoursMinutes": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
   }
 }

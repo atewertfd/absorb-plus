@@ -1277,7 +1277,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
         }
         Map<String, dynamic>? session;
         try {
-          session = jsonDecode(info.sessionData ?? '') as Map<String, dynamic>;
+          session = sessionJsonCache[info.sessionData]!; // Absorb Plus: decoded once (null = no/bad JSON)
         } catch (_) {
           continue;
         }

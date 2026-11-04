@@ -45,6 +45,7 @@ import '../utils/unmetered_network.dart';
 import '../utils/lru_cache.dart';
 import '../services/startup_overlap.dart';
 import '../services/account_epoch.dart';
+import '../utils/session_json.dart';
 
 part '_lp_state.dart';
 part '_lp_core.dart';
@@ -236,6 +237,7 @@ class LibraryProvider extends ChangeNotifier
         _itemUpdatedAt.clear();
         _seriesBooksCache.clear();
         _seriesTabCache.clear();
+        sessionJsonCache.clear(); // Absorb Plus
         _personalizedInFlight = null;
         _rssHydrationInFlight = false;
         _lastRssHydrationAt = null;
@@ -333,8 +335,7 @@ class LibraryProvider extends ChangeNotifier
           };
           // Fork: manual offline keeps the details but opens no connection.
           if (_manualOffline) _socketSoftDisconnected = true;
-          socket.connect(auth.serverUrl!, auth.token!,
-              customHeaders: auth.customHeaders, open: !_manualOffline);
+          socket.connect(auth.serverUrl!, auth.token!, customHeaders: auth.customHeaders, open: !_manualOffline);
           _startBookOrbitPoll();
         }
         debugPrint('[Library] Calling loadLibraries()');
@@ -413,6 +414,7 @@ class LibraryProvider extends ChangeNotifier
       _sectionsByLibrary.clear();
       _sectionsFetchedAt.clear();
       _locallyFinishedItems.clear();
+      sessionJsonCache.clear(); // Absorb Plus
       _personalizedInFlight = null;
       _rssHydrationInFlight = false;
       _lastRssHydrationAt = null;
@@ -472,8 +474,8 @@ class LibraryProvider extends ChangeNotifier
             _sectionsFetchedAt.remove(_selectedLibraryId);
           }
           await _loadSectionPrefs();
-          await loadPersonalizedView(force: true);
-        }
+        await loadPersonalizedView(force: true);
+      }
       } else {
         await early?.settle();
         if (gen != _accountLoadGeneration) return;

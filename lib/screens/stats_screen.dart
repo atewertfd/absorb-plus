@@ -407,6 +407,13 @@ class _StatsScreenState extends State<StatsScreen>
       return;
     }
 
+    // Absorb Plus: ask for the sessions now too; they are still applied after
+    // the stats, below.
+    final sessionsRequest =
+        api.getListeningSessions(page: 0, itemsPerPage: _sessionsPerPage);
+    // An early return below leaves it unawaited; this keeps a failure from
+    // being unhandled. (The awaited result still sees any error.)
+    unawaited(sessionsRequest.then((_) {}, onError: (Object _) {}));
     // Phase 1: load core stats from network and cache them.
     final stats = await api.getListeningStats();
     if (!mounted || !isActiveAccount()) return;
@@ -439,8 +446,7 @@ class _StatsScreenState extends State<StatsScreen>
     }
 
     // Phase 2: load heavier sessions list in background and cache.
-    final sessionsData =
-        await api.getListeningSessions(page: 0, itemsPerPage: _sessionsPerPage);
+    final sessionsData = await sessionsRequest; // Absorb Plus
     if (!mounted || !isActiveAccount()) return;
     final sessions = sessionsData?['sessions'] as List<dynamic>? ?? [];
     if (sessions.isNotEmpty) {

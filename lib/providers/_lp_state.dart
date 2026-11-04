@@ -368,7 +368,7 @@ mixin _StateMixin on ChangeNotifier {
     final dl = DownloadService().getInfo(itemId);
     if (dl.sessionData == null) return cached;
     try {
-      final session = jsonDecode(dl.sessionData!) as Map<String, dynamic>;
+      final session = sessionJsonCache[dl.sessionData]!; // Absorb Plus: decoded once (null = bad JSON, caught below)
       final libItem = session['libraryItem'] as Map<String, dynamic>?;
       if (libItem != null) {
         final (sid, _) = _extractSeries(libItem);

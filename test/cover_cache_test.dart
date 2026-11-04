@@ -78,15 +78,19 @@ void main() {
       expect(stableCoverCacheKey(base, updatedAt: 9), '$base?ts=9');
     });
 
-    test('a cover URL with only a token keeps it (current behavior)', () {
-      // uri.replace(queryParameters: null) keeps the old query, so the
-      // token survives when nothing else is left. getCoverUrl(width: null)
-      // without updatedAt builds exactly this URL (edit_metadata_sheet).
-      expect(stableCoverCacheKey('$base?token=t'), '$base?token=t');
+    test('a cover URL with only a token drops it too', () {
+      // getCoverUrl(width: null) without updatedAt builds exactly this URL
+      // (edit_metadata_sheet); the key must not change when the token
+      // rotates.
+      expect(stableCoverCacheKey('$base?token=t'), base);
       expect(
         stableCoverCacheKey('$base?token=a'),
-        isNot(stableCoverCacheKey('$base?token=b')),
+        stableCoverCacheKey('$base?token=b'),
       );
+    });
+
+    test('a cover URL without a query is left as it was', () {
+      expect(stableCoverCacheKey(base), base);
     });
 
     test('URLs that are not item covers are left alone', () {

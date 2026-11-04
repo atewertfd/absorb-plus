@@ -28,14 +28,16 @@ String _downloadRate(double? bytesPerSecond) {
   return '${(bytesPerSecond / 1024).toStringAsFixed(0)} KB/s';
 }
 
-String _downloadEta(int? seconds) {
+String _downloadEta(AppLocalizations l, int? seconds) {
   if (seconds == null || seconds <= 0) return '';
-  if (seconds < 60) return '<1 min left';
+  if (seconds < 60) return l.downloadEtaUnderMinute;
   final minutes = (seconds / 60).ceil();
-  if (minutes < 60) return '$minutes min left';
+  if (minutes < 60) return l.downloadEtaMinutes(minutes);
   final hours = minutes ~/ 60;
   final remainder = minutes % 60;
-  return remainder == 0 ? '$hours hr left' : '$hours hr $remainder min left';
+  return remainder == 0
+      ? l.downloadEtaHours(hours)
+      : l.downloadEtaHoursMinutes(hours, remainder);
 }
 
 class DownloadsScreen extends StatefulWidget {
@@ -408,7 +410,9 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                             message: l.downloadsNoDownloads,
                             actionLabel: l.emptyStateBrowseLibrary,
                             actionIcon: Icons.library_books_rounded,
-                            onAction: () => browseLibraryFrom(context),
+                            onAction: (
+                                        ) => browseLibraryFrom(context
+                            ),
                           );
                         }
 
@@ -904,17 +908,17 @@ class _ActiveDownloadCard extends StatelessWidget {
                                   '$pct percent complete'
                                   '${info.bytesDone != null && info.bytesTotal != null ? ', ${formatBytesFine(info.bytesDone!)} of ${formatBytesFine(info.bytesTotal!)}' : ''}'
                                   '${_downloadRate(info.speedBytesPerSecond).isEmpty ? '' : ', ${_downloadRate(info.speedBytesPerSecond)}'}'
-                                  '${_downloadEta(info.etaSeconds).isEmpty ? '' : ', ${_downloadEta(info.etaSeconds)} remaining'}',
+                                  '${_downloadEta(l, info.etaSeconds).isEmpty ? '' : ', ${_downloadEta(l, info.etaSeconds)}'}',
                               child: ClipRRect(
                               borderRadius: BorderRadius.circular(4),
                               child: LinearProgressIndicator(
                                 value: progress,
                                 minHeight: 6,
                                 backgroundColor: cs.surfaceContainerHighest,
-                                valueColor: AlwaysStoppedAnimation(cs.primary,),
-                                ),
+                                valueColor: AlwaysStoppedAnimation(cs.primary),
                               ),
                             ),
+                          ),
                           ),
                           const SizedBox(width: 8),
                           Text('$pct%',
@@ -929,7 +933,7 @@ class _ActiveDownloadCard extends StatelessWidget {
                         Text(
                           '${formatBytesFine(info.bytesDone!)} of ${formatBytesFine(info.bytesTotal!)}'
                           '${_downloadRate(info.speedBytesPerSecond).isEmpty ? '' : ' · ${_downloadRate(info.speedBytesPerSecond)}'}'
-                          '${_downloadEta(info.etaSeconds).isEmpty ? '' : ' · ${_downloadEta(info.etaSeconds)}'}',
+                          '${_downloadEta(l, info.etaSeconds).isEmpty ? '' : ' · ${_downloadEta(l, info.etaSeconds)}'}',
                           style: tt.labelSmall?.copyWith(
                             color: cs.onSurfaceVariant,
                           ),

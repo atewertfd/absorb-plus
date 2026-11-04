@@ -851,20 +851,22 @@ class AuthProvider extends ChangeNotifier {
       return false;
     }
 
-    BookOrbitApiService.clearCaches();
-    _serverUrl = url;
-    // The old account's local address must not pair with the new
-    // tokens while the rest of the switch is still awaiting.
-    _useLocalServer = false;
-    _backend = backend;
     // Prefer the JWTs returned inside user by current servers, while accepting
     // the top-level shape and legacy token used by older servers.
+    // Absorb Plus: checked before any state changes, so a refusal leaves the previous session as it was.
     final tokens = AuthTokens.fromResponse(result);
     if (tokens.token == null) {
       _errorMessage =
           l?.authUnexpectedServerResponse ?? 'Unexpected server response';
       return false;
     }
+    final restore = await _captureSession(); // Absorb Plus: put back if the token can't be saved
+    BookOrbitApiService.clearCaches();
+    _serverUrl = url;
+    // The old account's local address must not pair with the new
+    // tokens while the rest of the switch is still awaiting.
+    _useLocalServer = false;
+    _backend = backend;
     _isLegacyToken = tokens.isLegacy;
     _accessToken = tokens.token;
     _refreshToken = tokens.refreshToken;
@@ -878,7 +880,7 @@ class AuthProvider extends ChangeNotifier {
       '[Auth] accessToken=${tokens.accessToken != null}, refreshToken=${tokens.refreshToken != null}, legacyToken=${tokens.legacyToken != null}, isLegacy=$_isLegacyToken',
     );
     debugPrint(
-      '[Auth] Token being used: ${_accessToken != null ? '${_accessToken!.substring(0, _accessToken!.length.clamp(0, 20))}... (${_accessToken!.length} chars)' : 'null'}',
+      '[Auth] Token being used: ${_accessToken != null ? 'present (${_accessToken!.length} chars)' : 'null'}', // Absorb Plus: never log the token
     );
     _username = user['username'] as String?;
     _userId = user['id'] as String?;
@@ -904,17 +906,22 @@ class AuthProvider extends ChangeNotifier {
 
     // Persist session
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('server_url', _serverUrl!);
-      await prefs.setString(ServerBackend.prefsKey, _backend.key);
+      final prefs = await debugSessionPrefs(); // Absorb Plus
+      await _mustWrite(prefs.setString('server_url', _serverUrl!)); // Absorb Plus
+      await _mustWrite(prefs.setString(ServerBackend.prefsKey, _backend.key)); // Absorb Plus
       // Refresh token first: a crash between the two writes then leaves the old
       // access token beside the NEW refresh token, which recovers itself. The
       // other order is the one that strands a spent refresh token.
       if (_refreshToken != null)
-        await prefs.setString('refresh_token', _refreshToken!);
-      if (_accessToken != null) await prefs.setString('token', _accessToken!);
-      if (_username != null) await prefs.setString('username', _username!);
-      if (_userId != null) await prefs.setString('user_id', _userId!);
+        await _mustWrite(prefs.setString('refresh_token', _refreshToken!)); // Absorb Plus
+      if (_accessToken != null) await _mustWrite(prefs.setString('token', _accessToken!)); // Absorb Plus
+      if (_username != null) await _mustWrite(prefs.setString('username', _username!)); // Absorb Plus
+      if (_userId != null) await _mustWrite(prefs.setString('user_id', _userId!)); // Absorb Plus
+    } catch (e) { // Absorb Plus: an unsaved token is a failed sign-in
+      return _sessionNotSaved(e, restore, l?.loginFailed ?? 'Login failed'); // Absorb Plus
+    }
+    try { // Absorb Plus: the rest is best-effort
+      final prefs = await debugSessionPrefs(); // Absorb Plus
       if (_defaultLibraryId != null) {
         await prefs.setString('default_library_id', _defaultLibraryId!);
       }
@@ -923,7 +930,9 @@ class AuthProvider extends ChangeNotifier {
       } else {
         await prefs.remove('custom_headers');
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('[Auth] Saving session extras failed: ${e.runtimeType}'); // Absorb Plus
+    }
 
     // Save to multi-account service
     try {
@@ -1032,6 +1041,7 @@ class AuthProvider extends ChangeNotifier {
       return false;
     }
 
+    final restore = await _captureSession(); // Absorb Plus: put back if the token can't be saved
     _serverUrl = url;
     _useLocalServer = false;
     _backend = backend;
@@ -1048,19 +1058,26 @@ class AuthProvider extends ChangeNotifier {
     _fetchServerVersion(url);
 
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('server_url', _serverUrl!);
-      await prefs.setString(ServerBackend.prefsKey, _backend.key);
-      await prefs.setString('token', _accessToken!);
-      await prefs.remove('refresh_token');
-      if (_username != null) await prefs.setString('username', _username!);
-      if (_userId != null) await prefs.setString('user_id', _userId!);
+      final prefs = await debugSessionPrefs(); // Absorb Plus
+      await _mustWrite(prefs.setString('server_url', _serverUrl!)); // Absorb Plus
+      await _mustWrite(prefs.setString(ServerBackend.prefsKey, _backend.key)); // Absorb Plus
+      await _mustWrite(prefs.setString('token', _accessToken!)); // Absorb Plus
+      await _mustWrite(prefs.remove('refresh_token')); // Absorb Plus
+      if (_username != null) await _mustWrite(prefs.setString('username', _username!)); // Absorb Plus
+      if (_userId != null) await _mustWrite(prefs.setString('user_id', _userId!)); // Absorb Plus
+    } catch (e) { // Absorb Plus: an unsaved token is a failed sign-in
+      return _sessionNotSaved(e, restore, l?.loginFailed ?? 'Login failed'); // Absorb Plus
+    }
+    try { // Absorb Plus: the rest is best-effort
+      final prefs = await debugSessionPrefs(); // Absorb Plus
       if (customHeaders.isNotEmpty) {
         await prefs.setString('custom_headers', jsonEncode(customHeaders));
       } else {
         await prefs.remove('custom_headers');
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('[Auth] Saving session extras failed: ${e.runtimeType}'); // Absorb Plus
+    }
 
     try {
       await UserAccountService().saveAccount(
@@ -1115,17 +1132,18 @@ class AuthProvider extends ChangeNotifier {
       return false;
     }
 
-    BookOrbitApiService.clearCaches();
-    _serverUrl = url;
-    _useLocalServer = false;
-    _backend = backend;
-    final tokens = AuthTokens.fromResponse(result);
+    final tokens = AuthTokens.fromResponse(result); // Absorb Plus: before any state changes
     if (tokens.token == null) {
       _errorMessage =
           l?.authSsoUnexpectedResponse ?? 'SSO returned an unexpected response';
       notifyListeners();
       return false;
     }
+    final restore = await _captureSession(); // Absorb Plus: put back if the token can't be saved
+    BookOrbitApiService.clearCaches();
+    _serverUrl = url;
+    _useLocalServer = false;
+    _backend = backend;
     _isLegacyToken = tokens.isLegacy;
     _accessToken = tokens.token;
     _refreshToken = tokens.refreshToken;
@@ -1135,7 +1153,7 @@ class AuthProvider extends ChangeNotifier {
       '[Auth] accessToken=${tokens.accessToken != null}, refreshToken=${tokens.refreshToken != null}, legacyToken=${tokens.legacyToken != null}, isLegacy=$_isLegacyToken',
     );
     debugPrint(
-      '[Auth] Token being used: ${_accessToken != null ? '${_accessToken!.substring(0, _accessToken!.length.clamp(0, 20))}... (${_accessToken!.length} chars)' : 'null'}',
+      '[Auth] Token being used: ${_accessToken != null ? 'present (${_accessToken!.length} chars)' : 'null'}', // Absorb Plus: never log the token
     );
     _username = user['username'] as String?;
     _userId = user['id'] as String?;
@@ -1161,17 +1179,22 @@ class AuthProvider extends ChangeNotifier {
 
     // Persist session
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('server_url', _serverUrl!);
-      await prefs.setString(ServerBackend.prefsKey, _backend.key);
+      final prefs = await debugSessionPrefs(); // Absorb Plus
+      await _mustWrite(prefs.setString('server_url', _serverUrl!)); // Absorb Plus
+      await _mustWrite(prefs.setString(ServerBackend.prefsKey, _backend.key)); // Absorb Plus
       // Refresh token first: a crash between the two writes then leaves the old
       // access token beside the NEW refresh token, which recovers itself. The
       // other order is the one that strands a spent refresh token.
       if (_refreshToken != null)
-        await prefs.setString('refresh_token', _refreshToken!);
-      if (_accessToken != null) await prefs.setString('token', _accessToken!);
-      if (_username != null) await prefs.setString('username', _username!);
-      if (_userId != null) await prefs.setString('user_id', _userId!);
+        await _mustWrite(prefs.setString('refresh_token', _refreshToken!)); // Absorb Plus
+      if (_accessToken != null) await _mustWrite(prefs.setString('token', _accessToken!)); // Absorb Plus
+      if (_username != null) await _mustWrite(prefs.setString('username', _username!)); // Absorb Plus
+      if (_userId != null) await _mustWrite(prefs.setString('user_id', _userId!)); // Absorb Plus
+    } catch (e) { // Absorb Plus: an unsaved token is a failed sign-in
+      return _sessionNotSaved(e, restore, l?.loginFailed ?? 'Login failed'); // Absorb Plus
+    }
+    try { // Absorb Plus: the rest is best-effort
+      final prefs = await debugSessionPrefs(); // Absorb Plus
       if (_defaultLibraryId != null) {
         await prefs.setString('default_library_id', _defaultLibraryId!);
       }
@@ -1180,7 +1203,9 @@ class AuthProvider extends ChangeNotifier {
       } else {
         await prefs.remove('custom_headers');
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('[Auth] Saving session extras failed: ${e.runtimeType}'); // Absorb Plus
+    }
 
     // Save to multi-account service
     try {
@@ -1524,7 +1549,7 @@ class AuthProvider extends ChangeNotifier {
           await UserAccountService().clearTokens(logoutServer, logoutUser);
         }
       }
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = await debugSessionPrefs(); // Absorb Plus
       if (forgetAccount) {
         if (keepServer && logoutServer != null) {
           await prefs.setString('server_url', logoutServer);
@@ -1532,12 +1557,22 @@ class AuthProvider extends ChangeNotifier {
           await prefs.remove('server_url');
         }
       }
-      await prefs.remove('token');
-      await prefs.remove('refresh_token');
+      await _mustWrite(prefs.remove('token')); // Absorb Plus
+      await _mustWrite(prefs.remove('refresh_token')); // Absorb Plus
       if (forgetAccount) await prefs.remove('username');
       await prefs.remove('user_id');
       await prefs.remove('default_library_id');
-    } catch (_) {}
+    } catch (e) {
+      // Absorb Plus: retry every key on its own; a token left on disk signs the app back in.
+      await _retryLogoutWrites(e, {
+        'token': null,
+        'refresh_token': null,
+        'user_id': null,
+        'default_library_id': null,
+        if (forgetAccount) 'username': null,
+        if (forgetAccount) 'server_url': keepServer ? logoutServer : null,
+      });
+    }
 
     // Sign the paired watch out too.
     WearAuthService.instance.clear();
@@ -1599,6 +1634,7 @@ class AuthProvider extends ChangeNotifier {
     // state and would write it back into the new scope on any change.
     await EqualizerService().reloadForActiveAccount();
 
+    final restore = await _captureSession(rescope: true); // Absorb Plus: put back if the token can't be saved
     // Set credentials
     _serverUrl = selected.serverUrl;
     _useLocalServer = false;
@@ -1618,29 +1654,36 @@ class AuthProvider extends ChangeNotifier {
 
     // Persist as the active session
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('server_url', _serverUrl!);
-      await prefs.setString(ServerBackend.prefsKey, _backend.key);
+      final prefs = await debugSessionPrefs(); // Absorb Plus
+      await _mustWrite(prefs.setString('server_url', _serverUrl!)); // Absorb Plus
+      await _mustWrite(prefs.setString(ServerBackend.prefsKey, _backend.key)); // Absorb Plus
       // Refresh token first, for the same reason as the other persist sites.
       if (_refreshToken != null) {
-        await prefs.setString('refresh_token', _refreshToken!);
+        await _mustWrite(prefs.setString('refresh_token', _refreshToken!)); // Absorb Plus
       } else {
-        await prefs.remove('refresh_token');
+        await _mustWrite(prefs.remove('refresh_token')); // Absorb Plus
       }
-      if (_accessToken != null) await prefs.setString('token', _accessToken!);
-      if (_username != null) await prefs.setString('username', _username!);
+      if (_accessToken != null) await _mustWrite(prefs.setString('token', _accessToken!)); // Absorb Plus
+      if (_username != null) await _mustWrite(prefs.setString('username', _username!)); // Absorb Plus
       if (_userId != null) {
-        await prefs.setString('user_id', _userId!);
+        await _mustWrite(prefs.setString('user_id', _userId!)); // Absorb Plus
       } else {
-        await prefs.remove('user_id');
+        await _mustWrite(prefs.remove('user_id')); // Absorb Plus
       }
+    } catch (e) { // Absorb Plus: an unsaved token is a failed switch
+      return _sessionNotSaved(e, restore, _l10n()?.loginFailed ?? 'Login failed'); // Absorb Plus
+    }
+    try { // Absorb Plus: the rest is best-effort
+      final prefs = await debugSessionPrefs(); // Absorb Plus
       await prefs.remove('default_library_id');
       if (_customHeaders.isNotEmpty) {
         await prefs.setString('custom_headers', jsonEncode(_customHeaders));
       } else {
         await prefs.remove('custom_headers');
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('[Auth] Saving session extras failed: ${e.runtimeType}'); // Absorb Plus
+    }
 
     // Clear the stats widget so the previous account's numbers don't linger
     // while the new user's data is fetched, then force a refresh.
@@ -1782,4 +1825,149 @@ class AuthProvider extends ChangeNotifier {
 
   /// Get all saved accounts (for the account switcher UI).
   List<SavedAccount> get savedAccounts => UserAccountService().accounts;
+
+  // Absorb Plus: where sign-in, switch and sign-out write the session, so a
+  // test can hand them prefs whose writes fail.
+  @visibleForTesting
+  static Future<SharedPreferences> Function() debugSessionPrefs =
+      SharedPreferences.getInstance;
+
+  // Absorb Plus: a prefs write that reports false failed as surely as one
+  // that throws.
+  static Future<void> _mustWrite(Future<bool> write) async {
+    if (!await write) throw StateError('prefs write reported failure');
+  }
+
+  // Absorb Plus: the prefs keys a sign-in writes before it counts as saved.
+  static const _sessionKeys = [
+    'server_url',
+    ServerBackend.prefsKey,
+    'refresh_token',
+    'token',
+    'username',
+    'user_id',
+  ];
+
+  // Absorb Plus: localized strings for paths that are not handed any.
+  static AppLocalizations? _l10n() {
+    final ctx = rootNavigatorKey.currentContext;
+    return ctx != null ? AppLocalizations.of(ctx) : null;
+  }
+
+  // Absorb Plus: the session as it is now, in memory and in prefs. Calling
+  // the result puts both back, so a sign-in whose token did not save leaves
+  // the previous session whole instead of half-overwritten. [rescope] also
+  // makes the previous account the active one again (account switch).
+  // Limit: prefs are read after the snapshot's await, and a failed read leaves disk as is.
+  Future<Future<void> Function()> _captureSession({bool rescope = false}) async {
+    final url = _serverUrl, local = _useLocalServer, backend = _backend;
+    final token = _accessToken, refresh = _refreshToken;
+    final legacy = _isLegacyToken, reachable = _serverReachable;
+    final user = _username, id = _userId, library = _defaultLibraryId;
+    final json = _userJson, settings = _serverSettings;
+    final version = _serverVersion, headers = _customHeaders;
+    final devices = _ereaderDevices;
+    Map<String, String?>? saved;
+    try {
+      final prefs = await debugSessionPrefs();
+      saved = {for (final key in _sessionKeys) key: prefs.getString(key)};
+    } catch (e) {
+      debugPrint('[Auth] Reading the saved session failed: ${e.runtimeType}');
+    }
+    return () async {
+      _accountGen++; // late answers for the failed sign-in are dropped
+      _serverUrl = url;
+      _useLocalServer = local;
+      _backend = backend;
+      _accessToken = token;
+      _refreshToken = refresh;
+      _isLegacyToken = legacy;
+      _username = user;
+      _userId = id;
+      _defaultLibraryId = library;
+      _userJson = json;
+      _serverSettings = settings;
+      _serverVersion = version;
+      _customHeaders = headers;
+      _ereaderDevices = devices;
+      _serverReachable = reachable;
+      await _persistEreaderDevices();
+      if (saved != null) await _writeEach(saved);
+      if (!rescope) return;
+      final accounts = UserAccountService();
+      final previous = accounts.accounts
+          .where((a) =>
+              a.serverUrl == url && a.username == user && a.token.isNotEmpty)
+          .firstOrNull;
+      // No previous account (signed out, or its row is gone): memory and disk
+      // are back to signed out, and the scope stays put, as after any sign-out
+      // (the account service has no "no account" scope to return to).
+      if (previous == null) return;
+      // Moving the scope back stops the attempted account's work, the same
+      // way the forward switch stopped the previous account's.
+      await accounts.prepareAccountChange(previous);
+      accounts.switchTo(previous.serverUrl, previous.username);
+      PlayerSettings.notifySettingsChanged();
+      await reloadAccountScopedCaches();
+      await EqualizerService().reloadForActiveAccount();
+    };
+  }
+
+  // Absorb Plus: an essential session write failed, so the next launch would
+  // be signed out or half switched. Put the previous session back and fail
+  // like a refused sign-in. Never logs the token.
+  Future<bool> _sessionNotSaved(
+      Object error, Future<void> Function() restore, String message) async {
+    debugPrint('[Auth] Saving the session failed: ${error.runtimeType}; '
+        'keeping the previous session');
+    try {
+      await restore();
+    } catch (e) {
+      debugPrint('[Auth] Restoring the previous session failed: ${e.runtimeType}');
+    }
+    _errorMessage = message;
+    // The account did not change, so the shell must not jump to Absorbing
+    // (beginAccountSwitch sets this before the switch is known to succeed).
+    _startOnAbsorbingAfterAccountChange = false;
+    _isLoading = false;
+    notifyListeners();
+    return false;
+  }
+
+  // Absorb Plus: writes (or, for null, removes) each key on its own so one
+  // failure does not skip the rest. Returns the keys that failed. Logs key
+  // names only, never values.
+  Future<Set<String>> _writeEach(Map<String, String?> values) async {
+    final failed = <String>{};
+    for (final entry in values.entries) {
+      try {
+        final prefs = await debugSessionPrefs();
+        final value = entry.value;
+        await _mustWrite(value == null
+            ? prefs.remove(entry.key)
+            : prefs.setString(entry.key, value));
+      } catch (e) {
+        debugPrint('[Auth] Writing ${entry.key} failed: ${e.runtimeType}');
+        failed.add(entry.key);
+      }
+    }
+    return failed;
+  }
+
+  // Absorb Plus: sign-out could not clear the saved session, and a token left
+  // on disk signs the app back in at the next launch. Retry every key on its
+  // own; if the token still won't go, keep the in-memory session cleared (a
+  // token refresh may have landed while sign-out awaited).
+  Future<void> _retryLogoutWrites(
+      Object error, Map<String, String?> values) async {
+    debugPrint('[Auth] Sign-out could not clear the session: '
+        '${error.runtimeType}; trying each key again');
+    final failed = await _writeEach(values);
+    if (failed.contains('token') || failed.contains('refresh_token')) {
+      debugPrint('[Auth] The saved token could not be removed');
+      _accessToken = null;
+      _refreshToken = null;
+      _isLegacyToken = false;
+    }
+  }
 }

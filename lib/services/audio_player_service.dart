@@ -1295,7 +1295,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
             final session = jsonDecode(dl.sessionData!) as Map<String, dynamic>;
             duration = (session['duration'] as num?)?.toDouble() ?? 0;
             chapters = session['chapters'] as List<dynamic>? ?? [];
-          } catch (_) {}
+          } catch (e) { debugPrint('[Player] Cached session decode failed (Android Auto start): ${e.runtimeType}'); } // Absorb Plus
         }
         entry = AutoBookEntry(
           id: absId,
@@ -1625,6 +1625,7 @@ class AudioPlayerService extends ChangeNotifier {
   // Fork: streamed playback recovers through this (see _stream_recovery.dart);
   // the counter below is the old retry, still used for downloaded files.
   late final _StreamRecovery _recovery = _StreamRecovery(this);
+  late final _SessionSyncGate _syncGate = _SessionSyncGate(this); // Absorb Plus
   int _streamRetryCount = 0;
   static const _maxStreamRetries = 3;
   bool _retryInProgress = false;
@@ -2044,7 +2045,7 @@ class AudioPlayerService extends ChangeNotifier {
           final serverFinished = server?['isFinished'] as bool? ?? false;
           if (!serverFinished) serverS = serverTime;
           if (serverS > startS) startS = serverS;
-        } catch (_) {}
+        } catch (e) { debugPrint('[Player] Server-ahead resume check failed: ${e.runtimeType}'); } // Absorb Plus
       }
       debugPrint(
         '[PreBuffer] Resume pick for $progressKey: '
@@ -2248,6 +2249,7 @@ class AudioPlayerService extends ChangeNotifier {
     _currentBookTrackCount = 1;
     _preloadedNextBook = null;
     _nextBookPreloading = false;
+    _startAutoAdvancedItem(next, startS); // Absorb Plus: per-item state, as a normal start sets it
 
     // Push new media item to update Now Playing / lock screen
     final initChapter = _initChapterInfo(startS);
@@ -3618,7 +3620,7 @@ class AudioPlayerService extends ChangeNotifier {
           .difference(service._lastServerSync)
           .inSeconds;
       if (sinceSync > 20) {
-        service._syncToServer(service.position);
+        service._syncToServerInBackground(service.position); // Absorb Plus
       }
     }
     // Re-activate audio session to get a fresh system token — but only while
@@ -4228,7 +4230,7 @@ class AudioPlayerService extends ChangeNotifier {
       try {
         final session = jsonDecode(cachedJson) as Map<String, dynamic>;
         audioTracks = session['audioTracks'] as List<dynamic>?;
-      } catch (_) {}
+      } catch (e) { debugPrint('[Player] Cached session decode failed (move to local files): ${e.runtimeType}'); } // Absorb Plus
     }
     if (audioTracks != null && audioTracks.length == localPaths.length) {
       _buildTrackOffsets(audioTracks);
@@ -4373,7 +4375,7 @@ class AudioPlayerService extends ChangeNotifier {
 
     try {
       await api.closePlaybackSession(streamingSessionId);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Player] Closing the streaming session failed (hot-swap): ${e.runtimeType}'); } // Absorb Plus
   }
 
   Future<String?> _playFromLocal(
@@ -5144,7 +5146,7 @@ class AudioPlayerService extends ChangeNotifier {
         if (ownSessionId != null) {
           try {
             await api.closePlaybackSession(ownSessionId);
-          } catch (_) {}
+          } catch (e) { debugPrint('[Player] Closing the session failed (Dolby transcode restart): ${e.runtimeType}'); } // Absorb Plus
         }
         if (_startSuperseded(gen)) {
           return _abandonStart(api, null, 'before the Dolby transcode retry');
@@ -5509,111 +5511,17 @@ class AudioPlayerService extends ChangeNotifier {
       if (failedSessionId != null) {
         try {
           await api.closePlaybackSession(failedSessionId);
-        } catch (_) {}
+        } catch (e) { debugPrint('[Player] Closing the failed session failed (transcode retry): ${e.runtimeType}'); } // Absorb Plus
       }
-      final retrySession = retryEpId != null
-          ? await api.startEpisodePlaybackSession(
-              itemId,
-              retryEpId,
-              forceTranscode: true,
-            )
-          : await api.startPlaybackSession(itemId, forceTranscode: true);
-      final ownSessionId = retrySession?['id'] as String?;
-      if (_startSuperseded(gen)) {
-        _abandonStart(api, ownSessionId, 'transcode retry, after the session request');
-        return;
-      }
-      if (retrySession == null) return;
-      _playbackSessionId = ownSessionId;
-      final retrySessionLibId = retrySession['libraryId'] as String?;
-      if ((_currentLibraryId == null || _currentLibraryId!.isEmpty) &&
-          retrySessionLibId != null &&
-          retrySessionLibId.isNotEmpty) {
-        _currentLibraryId = retrySessionLibId;
-        _syncNotifSkipCache();
-      }
-      _lastServerSync = DateTime.now();
-      final retryTracks = retrySession['audioTracks'] as List<dynamic>?;
-      final totalDuration =
-          (retrySession['duration'] as num?)?.toDouble() ?? _totalDuration;
-      final chapters = retrySession['chapters'] as List<dynamic>? ?? _chapters;
-      _chapters = chapters;
-      _totalDuration = totalDuration;
-      if (retryTracks == null || retryTracks.isEmpty) return;
-      _currentTrackIndex = 0;
-      _buildTrackOffsets(retryTracks);
-      AudioSource retrySource;
-      final audioHeaders = api.playbackSessionHeaders;
-      if (retryTracks.length == 1) {
-        final track = retryTracks.first as Map<String, dynamic>;
-        final contentUrl = track['contentUrl'] as String? ?? '';
-        retrySource = AudioSource.uri(
-          Uri.parse(api.buildTrackUrl(contentUrl)),
-          headers: audioHeaders,
-          options: mp3ExtractorOptions(),
-        );
-      } else {
-        final sources = <AudioSource>[];
-        for (final t in retryTracks) {
-          final track = t as Map<String, dynamic>;
-          final contentUrl = track['contentUrl'] as String? ?? '';
-          sources.add(
-            AudioSource.uri(
-              Uri.parse(api.buildTrackUrl(contentUrl)),
-              headers: audioHeaders,
-              options: mp3ExtractorOptions(),
-            ),
-          );
-        }
-        retrySource = ConcatenatingAudioSource(children: sources);
-      }
-      await _player!.setAudioSource(retrySource, itemId: itemId);
-      if (_startSuperseded(gen)) {
-        _abandonStart(api, ownSessionId, 'transcode retry, after loading the source');
-        return;
-      }
-      if (startTime > 0) await _seekForStart(startTime, gen);
-      clearSeekTarget();
-      _subscribeTrackIndex();
-      final initChapter = _initChapterInfo(startTime);
-      // Speed before _pushMediaItem - the pushed duration is speed-adjusted.
-      final bookSpeed = await PlayerSettings.getBookSpeed(itemId);
-      final speed = bookSpeed ?? await PlayerSettings.getDefaultSpeed();
-      await _player!.setSpeed(speed);
-      _pushMediaItem(
-        itemId,
-        retryTitle,
-        retryAuthor,
-        retryCover,
-        totalDuration,
-        chapter: initChapter,
-      );
-      await EqualizerService().switchItem(itemId);
-      debugPrint('[Player] Transcoded playback starting at ${speed}x');
-      try {
-        (await AudioSession.instance).setActive(true);
-      } catch (_) {}
-      if (_startSuperseded(gen)) {
-        _abandonStart(api, ownSessionId, 'transcode retry, before play');
-        return;
-      }
-      _player!.play();
-      _scheduleAudioDiagnostics('transcoded');
-      notifyListeners();
-      _setupSync();
-      Future.delayed(const Duration(milliseconds: 500), () {
-        _handler?.refreshPlaybackState();
-      });
-      final sleepTimer = SleepTimerService();
-      sleepTimer.resetDismiss();
-      sleepTimer.checkAutoSleep();
-      SessionCache.save(
-        itemId: itemId,
-        episodeId: retryEpId,
-        audioTracks: retryTracks,
-        chapters: chapters,
-        totalDuration: totalDuration,
-      );
+      // Absorb Plus: the normal streamed start, transcoded. The hand-rolled
+      // copy here returned bare on a missing session or tracks, leaving the
+      // failed source loaded with no sync and no message, and had drifted
+      // (pre-buffer state, stream URLs). A failure now ends cleared, stopped
+      // and reported, as a failed start does.
+      final error = await _playFromServer(api, itemId, retryTitle, retryAuthor,
+          retryCover, _totalDuration, _chapters, startTime,
+          forceStartTime: true, forceTranscode: true, generation: gen);
+      if (error != null && !_startSuperseded(gen)) _reportFailedRetry(error);
     } catch (e) {
       debugPrint('[Player] Transcode retry failed: $e');
     } finally {
@@ -6730,7 +6638,7 @@ class AudioPlayerService extends ChangeNotifier {
                 // Manual offline - local save only, no server sync
               } else if (!_isOfflineMode && _playbackSessionId != null) {
                 // Streaming/local with session: sync via session
-                _syncToServer(absolutePos);
+                _syncToServerInBackground(absolutePos); // Absorb Plus
               } else if (!_isOfflineMode &&
                   _api != null &&
                   _currentItemId != null) {
@@ -7058,7 +6966,7 @@ class AudioPlayerService extends ChangeNotifier {
         try {
           debugPrint('[Player] Closing session (book finished)');
           await api.closePlaybackSession(sessionId);
-        } catch (_) {}
+        } catch (e) { debugPrint('[Player] Closing the session failed (book finished): ${e.runtimeType}'); } // Absorb Plus
       }());
     }
 
@@ -7270,7 +7178,7 @@ class AudioPlayerService extends ChangeNotifier {
     }
   }
 
-  Future<void> _syncToServer(Duration pos, {int? timeListenedOverride}) async {
+  Future<void> _syncToServerNow(Duration pos, {int? timeListenedOverride}) async { // Absorb Plus: one at a time, via _syncToServer
     if (_api == null || _playbackSessionId == null) return;
     if (_isCachedStartReconcilePending) return;
     if (_recovery.policy.isRecovering) return; // fork: no listening while reconnecting
@@ -8139,7 +8047,7 @@ class AudioPlayerService extends ChangeNotifier {
           await _syncToServer(position, timeListenedOverride: 0);
           debugPrint('[Player] Closing session (pause timeout)');
           await _api!.closePlaybackSession(_playbackSessionId!);
-        } catch (_) {}
+        } catch (e) { debugPrint('[Player] Pause-timeout session sync/close failed: ${e.runtimeType}'); } // Absorb Plus
         _playbackSessionId = null;
       }
       // Cancel sleep timer

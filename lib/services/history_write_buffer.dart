@@ -64,7 +64,15 @@ class HistoryWriteBuffer {
     if (_lines.isEmpty) return;
     final batch = Map.of(_lines);
     _lines.clear();
-    final prefs = await _prefs();
+    final SharedPreferences prefs;
+    try {
+      prefs = await _prefs();
+    } catch (e) {
+      debugPrint('[History] opening preferences failed, lines kept: $e');
+      _putBack(batch);
+      rethrow;
+    }
+    final failed = <String, List<String>>{};
     for (final entry in batch.entries) {
       try {
         final list = List<String>.from(
@@ -73,8 +81,34 @@ class HistoryWriteBuffer {
         if (list.length > maxLines) list.removeRange(0, list.length - maxLines);
         await prefs.setStringList(entry.key, list);
       } catch (e) {
-        debugPrint('[History] writing held-back lines failed: $e');
+        // The preferences cache may already hold the lines even though
+        // saving failed; putting them back then would write them twice.
+        final putBack = !_holds(prefs, entry.key, entry.value);
+        if (putBack) failed[entry.key] = entry.value;
+        debugPrint(
+          '[History] writing held-back lines failed'
+          '${putBack ? ', lines kept' : ''}: $e',
+        );
       }
+    }
+    _putBack(failed);
+  }
+
+  /// Returns lines that could not be written to the buffer, ahead of any
+  /// added since. They go out with the next write.
+  void _putBack(Map<String, List<String>> lines) {
+    for (final entry in lines.entries) {
+      _lines[entry.key] = [...entry.value, ...?_lines[entry.key]];
+    }
+  }
+
+  static bool _holds(SharedPreferences prefs, String key, List<String> lines) {
+    try {
+      final stored = prefs.getStringList(key) ?? const <String>[];
+      return stored.length >= lines.length &&
+          listEquals(stored.sublist(stored.length - lines.length), lines);
+    } catch (_) {
+      return false;
     }
   }
 

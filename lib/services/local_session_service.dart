@@ -77,6 +77,15 @@ class LocalSessionService {
         debugPrint('[LocalSession] active session unreadable, dropped: ${e.runtimeType}');
         _active = null;
       }
+      // Absorb Plus: a record that decodes but lacks the numbers accrue
+      // reads would throw on every tick, losing the listening each time.
+      // Drop it once instead; the next start begins a fresh session.
+      if (_active != null &&
+          (_active!['updatedAt'] is! num || _active!['timeListening'] is! num)) {
+        debugPrint('[LocalSession] active session malformed, dropped');
+        _active = null;
+        await ScopedPrefs.remove(_kActive);
+      }
     }
     _loaded = true;
   }
@@ -412,7 +421,7 @@ class LocalSessionService {
         debugPrint('[LocalSession] Server lacks /api/session/local-all — falling back to /play');
         _localUnsupportedOn.add(api.baseUrl);
         await legacyAll();
-      } else {
+        } else {
         // Absorb Plus: settle each session on its own (local_session_queue.dart).
         await applyReplayOutcome(_kPending,
             settleReplay(sessionRaw, sessions, result, alsoDrop: done));
@@ -444,9 +453,10 @@ class LocalSessionService {
           : await api.startPlaybackSession(libId);
       final sid = data?['id'] as String?;
       if (sid == null) return false;
-      final ok = await api.syncPlaybackSession(sid,
-          currentTime: currentTime, duration: duration, timeListened: secs);
-      await api.closePlaybackSession(sid);
+      final ok =
+        await api.syncPlaybackSession(sid,
+            currentTime: currentTime, duration: duration, timeListened: secs);
+        await api.closePlaybackSession(sid);
       if (ok) s['legacySent'] = total;
       return ok;
     } catch (e) {

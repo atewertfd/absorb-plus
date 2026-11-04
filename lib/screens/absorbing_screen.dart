@@ -105,7 +105,7 @@ class _AbsorbingScreenState extends State<AbsorbingScreen> {
     _lastSeenIsPlaying = _player.isPlaying;
     _player.addListener(_rebuild);
     _cast.addListener(_rebuild);
-    PlayerSettings.settingsChanged.addListener(_loadQueueMode);
+    PlayerSettings.settingsChanged.addListener(_reloadPrefs); // Absorb Plus
     _restoreLastFinished();
     _loadMergeLibraries();
     _loadQueueMode();
@@ -120,7 +120,32 @@ class _AbsorbingScreenState extends State<AbsorbingScreen> {
 
   Future<void> _loadMergeLibraries() async {
     final v = await PlayerSettings.getMergeAbsorbingLibraries();
-    if (mounted && v != _mergeLibraries) setState(() => _mergeLibraries = v);
+    if (mounted && v != _mergeLibraries) {
+      setState(() => _mergeLibraries = v);
+      _loadQueueMode(); // Absorb Plus: the queue mode depends on the merge flag
+    }
+  }
+
+  // Absorb Plus: settings are read on the change notifications (settings,
+  // library, player), not on every build.
+  void _reloadPrefs() {
+    _loadMergeLibraries();
+    _loadQueueMode();
+  }
+
+  // Absorb Plus: the library watched in build changed (or theme/media did).
+  // Library switches reset the carousel after the frame, not inside build.
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _reloadPrefs();
+    final libId = context.read<LibraryProvider>().selectedLibraryId;
+    if (libId != _lastSeenLibraryId && _lastSeenLibraryId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _pageController.hasClients) _pageController.jumpToPage(0);
+      });
+    }
+    _lastSeenLibraryId = libId;
   }
 
   String _activePlaylistChipLabel(LibraryProvider lib, AppLocalizations l) {
@@ -210,7 +235,7 @@ class _AbsorbingScreenState extends State<AbsorbingScreen> {
   void dispose() {
     _player.removeListener(_rebuild);
     _cast.removeListener(_rebuild);
-    PlayerSettings.settingsChanged.removeListener(_loadQueueMode);
+    PlayerSettings.settingsChanged.removeListener(_reloadPrefs); // Absorb Plus
     _pageController.dispose();
     super.dispose();
   }
@@ -332,6 +357,7 @@ class _AbsorbingScreenState extends State<AbsorbingScreen> {
 
     if (shouldRebuild || castChanged) {
       setState(() {});
+      _reloadPrefs(); // Absorb Plus: the queue mode follows the playing item's type
     }
   }
 
@@ -600,8 +626,6 @@ class _AbsorbingScreenState extends State<AbsorbingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _loadMergeLibraries(); // refresh in case setting changed
-    _loadQueueMode(); // refresh for current library type
     _refreshUpNext(); // stamp short-circuits when nothing changed
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
@@ -628,13 +652,6 @@ class _AbsorbingScreenState extends State<AbsorbingScreen> {
     }
     _lastOrientation = mq.orientation;
 
-    // Reset carousel to first card when library changes
-    if (lib.selectedLibraryId != _lastSeenLibraryId && _lastSeenLibraryId != null) {
-      if (_pageController.hasClients) {
-        _pageController.jumpToPage(0);
-      }
-    }
-    _lastSeenLibraryId = lib.selectedLibraryId;
     final dl = DownloadService();
     var books = _getAbsorbingBooks(lib);
     
