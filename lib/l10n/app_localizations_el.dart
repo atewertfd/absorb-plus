@@ -2499,8 +2499,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count βιβλία',
+      one: '1 βιβλίο',
     );
     return '$_temp0';
   }
@@ -4411,22 +4411,21 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get resetProgressListeningAndReading =>
-      'Your listening and reading progress will both go back to 0%.';
+      'Η πρόοδος ακρόασης και ανάγνωσης θα επανέλθει και στις δύο στο 0%.';
 
   @override
   String get resetProgressListening =>
-      'Your listening progress will go back to 0%.';
+      'Η πρόοδος ακρόασης θα επανέλθει στο 0%.';
 
   @override
-  String get resetProgressReading =>
-      'Your reading progress will go back to 0%.';
+  String get resetProgressReading => 'Η πρόοδος ανάγνωσης θα επανέλθει στο 0%.';
 
   @override
   String get resetProgressMarksUnread =>
-      'The book will also be marked as unread.';
+      'Το βιβλίο θα επισημανθεί επίσης ως μη αναγνωσμένο.';
 
   @override
-  String get resetProgressCantUndo => 'This can\'t be undone.';
+  String get resetProgressCantUndo => 'Αυτή η ενέργεια δεν αναιρείται.';
 
   @override
   String get progressResetFreshStart => 'Η πρόοδος επαναφέρθηκε - νέα αρχή!';
@@ -12956,86 +12955,86 @@ class AppLocalizationsEl extends AppLocalizations {
       'Δεν ήταν δυνατή η αλλαγή των επιτευγμάτων στο BookOrbit';
 
   @override
-  String get boNotifyReadAlong => 'Read alongs';
+  String get boNotifyReadAlong => 'Αναγνώσεις με τον ήχο';
 
   @override
   String get boNotifyReadAlongDesc =>
-      'When a read along you started is ready, needs a look, or fails.';
+      'Όταν μια ανάγνωση με τον ήχο που ξεκινήσατε είναι έτοιμη, χρειάζεται έλεγχο ή αποτυγχάνει.';
 
   @override
-  String get readAlongCreate => 'Create read along';
+  String get readAlongCreate => 'Δημιουργία ανάγνωσης με τον ήχο';
 
   @override
   String get readAlongLoadFailed =>
-      'Couldn\'t check whether a read along can be made for this book.';
+      'Δεν ήταν δυνατός ο έλεγχος για το αν μπορεί να δημιουργηθεί ανάγνωση με τον ήχο για αυτό το βιβλίο.';
 
   @override
-  String get readAlongCheckAgain => 'Check again';
+  String get readAlongCheckAgain => 'Έλεγχος ξανά';
 
   @override
   String get readAlongWhyWorkerOffline =>
-      'BookOrbit\'s read along worker is offline right now.';
+      'Ο εργάτης ανάγνωσης με τον ήχο του BookOrbit είναι εκτός σύνδεσης αυτή τη στιγμή.';
 
   @override
   String get readAlongWhyWorkerOutdated =>
-      'BookOrbit\'s read along worker needs an update to work with this server.';
+      'Ο εργάτης ανάγνωσης με τον ήχο του BookOrbit χρειάζεται ενημέρωση για να λειτουργεί με αυτόν τον διακομιστή.';
 
   @override
   String get readAlongWhyFilesMissing =>
-      'Restore this book\'s missing files to make a read along.';
+      'Επαναφέρετε τα αρχεία που λείπουν από αυτό το βιβλίο για να δημιουργήσετε ανάγνωση με τον ήχο.';
 
   @override
   String get readAlongWhyNoEpub =>
-      'Add a plain EPUB to this book to make a read along.';
+      'Προσθέστε ένα απλό EPUB σε αυτό το βιβλίο για να δημιουργήσετε ανάγνωση με τον ήχο.';
 
   @override
   String get readAlongWhyNoEpubHasOne =>
-      'This book already has a read along and no plain EPUB to make another from.';
+      'Αυτό το βιβλίο έχει ήδη ανάγνωση με τον ήχο και δεν έχει απλό EPUB για να δημιουργηθεί άλλη.';
 
   @override
   String get readAlongWhyTooManyTracks =>
-      'This audiobook has more files than a read along can be made from.';
+      'Αυτό το ηχητικό βιβλίο έχει περισσότερα αρχεία από όσα επιτρέπει η δημιουργία ανάγνωσης με τον ήχο.';
 
   @override
   String get readAlongWhyEpubNotAllowed =>
-      'This library doesn\'t take EPUB files, so a read along can\'t be added.';
+      'Αυτή η βιβλιοθήκη δεν δέχεται αρχεία EPUB, οπότε δεν μπορεί να προστεθεί ανάγνωση με τον ήχο.';
 
   @override
   String get readAlongWhyNotMounted =>
-      'BookOrbit\'s read along worker can\'t reach this library\'s folder.';
+      'Ο εργάτης ανάγνωσης με τον ήχο του BookOrbit δεν έχει πρόσβαση στον φάκελο αυτής της βιβλιοθήκης.';
 
   @override
   String get readAlongWhyRunning =>
-      'A read along is already being made for this book.';
+      'Δημιουργείται ήδη ανάγνωση με τον ήχο για αυτό το βιβλίο.';
 
   @override
   String get readAlongWhyUnknown =>
-      'A read along can\'t be made for this book right now.';
+      'Δεν είναι δυνατή η δημιουργία ανάγνωσης με τον ήχο για αυτό το βιβλίο αυτή τη στιγμή.';
 
   @override
-  String get readAlongSheetTitle => 'Create a read along';
+  String get readAlongSheetTitle => 'Δημιουργία ανάγνωσης με τον ήχο';
 
   @override
   String get readAlongSheetIntro =>
-      'BookOrbit matches the narration to the ebook text and adds an EPUB that highlights along with the audio.';
+      'Το BookOrbit αντιστοιχίζει την αφήγηση με το κείμενο του ηλεκτρονικού βιβλίου και προσθέτει ένα EPUB που επισημαίνει το κείμενο ακολουθώντας τον ήχο.';
 
   @override
-  String get readAlongEbook => 'Ebook';
+  String get readAlongEbook => 'Ηλεκτρονικό βιβλίο';
 
   @override
   String get readAlongEbookHint =>
-      'Pick the plain EPUB that matches the narration.';
+      'Επιλέξτε το απλό EPUB που ταιριάζει με την αφήγηση.';
 
   @override
-  String get readAlongAudio => 'Audiobook';
+  String get readAlongAudio => 'Ηχητικό βιβλίο';
 
   @override
   String readAlongTracks(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count tracks',
-      one: '1 track',
+      other: '$count κομμάτια',
+      one: '1 κομμάτι',
     );
     return '$_temp0';
   }
@@ -13045,15 +13044,15 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'This book already has $count read alongs',
-      one: 'This book already has a read along',
+      other: 'Αυτό το βιβλίο έχει ήδη $count αναγνώσεις με τον ήχο',
+      one: 'Αυτό το βιβλίο έχει ήδη ανάγνωση με τον ήχο',
     );
     return '$_temp0';
   }
 
   @override
   String readAlongReplace(String name) {
-    return 'Replace $name';
+    return 'Αντικατάσταση του $name';
   }
 
   @override
@@ -13061,278 +13060,289 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Keep all of them',
-      one: 'Keep both',
+      other: 'Διατήρηση όλων',
+      one: 'Διατήρηση και των δύο',
     );
     return '$_temp0';
   }
 
   @override
   String get readAlongKeepHint =>
-      'The new read along is added as another file.';
+      'Η νέα ανάγνωση με τον ήχο προστίθεται ως ξεχωριστό αρχείο.';
 
   @override
   String get readAlongReplaceHint =>
-      'The old file is only replaced once the new one passes its checks, and reading spots carry over.';
+      'Το παλιό αρχείο αντικαθίσταται μόνο όταν το νέο περάσει τους ελέγχους του, και οι θέσεις ανάγνωσης μεταφέρονται.';
 
   @override
   String get readAlongReplaceNotAllowed =>
-      'Replacing a read along needs permission to delete books, so the new one is added as another file.';
+      'Η αντικατάσταση ανάγνωσης με τον ήχο απαιτεί άδεια διαγραφής βιβλίων, οπότε η νέα προστίθεται ως ξεχωριστό αρχείο.';
 
   @override
-  String get readAlongMadeByBookOrbit => 'Made by BookOrbit';
+  String get readAlongMadeByBookOrbit => 'Δημιουργήθηκε από το BookOrbit';
 
   @override
-  String get readAlongImported => 'Imported';
+  String get readAlongImported => 'Εισαγμένο';
 
   @override
-  String get readAlongLanguage => 'Narration language';
+  String get readAlongLanguage => 'Γλώσσα αφήγησης';
 
   @override
-  String get readAlongPickLanguage => 'Choose a language';
+  String get readAlongPickLanguage => 'Επιλέξτε γλώσσα';
 
   @override
   String readAlongLanguageUnsupported(String language) {
-    return 'The speech model doesn\'t know this book\'s language ($language).';
+    return 'Το μοντέλο ομιλίας δεν γνωρίζει τη γλώσσα αυτού του βιβλίου ($language).';
   }
 
   @override
-  String get readAlongLanguageFromBook => 'From this book\'s details.';
+  String get readAlongLanguageFromBook =>
+      'Από τις λεπτομέρειες αυτού του βιβλίου.';
 
   @override
-  String get readAlongLanguageIsDefault => 'Your default language.';
+  String get readAlongLanguageIsDefault => 'Η προεπιλεγμένη γλώσσα σας.';
 
   @override
-  String get readAlongLanguageSaved => 'Saved as your default language.';
+  String get readAlongLanguageSaved =>
+      'Αποθηκεύτηκε ως η προεπιλεγμένη γλώσσα σας.';
 
   @override
-  String get readAlongSetDefault => 'Set as default';
+  String get readAlongSetDefault => 'Ορισμός ως προεπιλογής';
 
   @override
-  String get readAlongDefaultFailed => 'Couldn\'t save your default language.';
+  String get readAlongDefaultFailed =>
+      'Δεν ήταν δυνατή η αποθήκευση της προεπιλεγμένης γλώσσας.';
 
   @override
-  String get readAlongHighlighting => 'Highlighting';
+  String get readAlongHighlighting => 'Επισήμανση';
 
   @override
-  String get readAlongSentence => 'Sentence';
+  String get readAlongSentence => 'Πρόταση';
 
   @override
   String get readAlongSentenceHint =>
-      'Highlights one sentence at a time. Recommended.';
+      'Επισημαίνει μία πρόταση τη φορά. Συνιστάται.';
 
   @override
-  String get readAlongWord => 'Word';
+  String get readAlongWord => 'Λέξη';
 
   @override
   String get readAlongWordHint =>
-      'Highlights each word. Takes longer and makes a bigger file. Still experimental.';
+      'Επισημαίνει κάθε λέξη. Διαρκεί περισσότερο και δημιουργεί μεγαλύτερο αρχείο. Ακόμη πειραματικό.';
 
   @override
   String readAlongEstimatedSize(String size) {
-    return 'Estimated size: $size';
+    return 'Εκτιμώμενο μέγεθος: $size';
   }
 
   @override
   String get readAlongBackgroundNote =>
-      'Runs on the server, so you can close this. Long audiobooks can take hours, and the first run for a language downloads its speech model.';
+      'Εκτελείται στον διακομιστή, οπότε μπορείτε να το κλείσετε. Τα μεγάλα ηχητικά βιβλία μπορεί να χρειαστούν ώρες, και την πρώτη φορά για μια γλώσσα γίνεται λήψη του μοντέλου ομιλίας της.';
 
   @override
   String readAlongLowDisk(String needed, String free) {
-    return 'Low disk space: this needs about $needed of working space on the worker, which has $free free.';
+    return 'Χαμηλός ελεύθερος χώρος: χρειάζονται περίπου $needed χώρου εργασίας στον εργάτη, που έχει $free ελεύθερα.';
   }
 
   @override
-  String get readAlongStart => 'Start';
+  String get readAlongStart => 'Έναρξη';
 
   @override
   String get readAlongStartFailed =>
-      'The read along couldn\'t be started. Try again.';
+      'Δεν ήταν δυνατή η έναρξη της ανάγνωσης με τον ήχο. Δοκιμάστε ξανά.';
 
   @override
   String get readAlongStartInvalid =>
-      'Some of the picked files are no longer on this book. Check them and try again.';
+      'Ορισμένα από τα επιλεγμένα αρχεία δεν βρίσκονται πια σε αυτό το βιβλίο. Ελέγξτε τα και δοκιμάστε ξανά.';
 
   @override
   String get readAlongStartOffline =>
-      'BookOrbit\'s read along worker is offline. Try again later.';
+      'Ο εργάτης ανάγνωσης με τον ήχο του BookOrbit είναι εκτός σύνδεσης. Δοκιμάστε ξανά αργότερα.';
 
   @override
-  String get readAlongNotAllowed => 'You don\'t have permission to do that.';
+  String get readAlongNotAllowed => 'Δεν έχετε άδεια για αυτή την ενέργεια.';
 
   @override
-  String get readAlongGone => 'This read along job is gone.';
+  String get readAlongGone =>
+      'Αυτή η εργασία ανάγνωσης με τον ήχο δεν υπάρχει πια.';
 
   @override
   String get readAlongMovedOn =>
-      'This job had already moved on. It now shows where it is.';
+      'Αυτή η εργασία είχε ήδη προχωρήσει. Τώρα εμφανίζεται η τρέχουσα κατάστασή της.';
 
   @override
-  String get readAlongActionFailed => 'That didn\'t go through. Try again.';
+  String get readAlongActionFailed =>
+      'Η ενέργεια δεν ολοκληρώθηκε. Δοκιμάστε ξανά.';
 
   @override
   String readAlongStartedBy(String name) {
-    return 'Started by $name';
+    return 'Ξεκίνησε από τον/την $name';
   }
 
   @override
-  String get readAlongStartedByOther => 'Started by another user';
+  String get readAlongStartedByOther => 'Ξεκίνησε από άλλον χρήστη';
 
   @override
-  String get readAlongWaiting => 'Waiting to start';
+  String get readAlongWaiting => 'Αναμονή έναρξης';
 
   @override
-  String get readAlongNextInLine => 'Next in line';
+  String get readAlongNextInLine => 'Επόμενη στη σειρά';
 
   @override
   String readAlongJobsAhead(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count jobs ahead',
-      one: '1 job ahead',
+      other: '$count εργασίες μπροστά',
+      one: '1 εργασία μπροστά',
     );
     return '$_temp0';
   }
 
   @override
-  String get readAlongStopping => 'Stopping';
+  String get readAlongStopping => 'Διακοπή';
 
   @override
   String get readAlongStoppingHint =>
-      'Finishing the current step, then it stops. Nothing will be added to this book.';
+      'Ολοκληρώνεται το τρέχον βήμα και μετά σταματά. Τίποτα δεν θα προστεθεί σε αυτό το βιβλίο.';
 
   @override
-  String get readAlongStagePreparingAudio => 'Preparing the audio';
+  String get readAlongStagePreparingAudio => 'Προετοιμασία του ήχου';
 
   @override
-  String get readAlongStageDownloadingModel => 'Downloading the speech model';
+  String get readAlongStageDownloadingModel => 'Λήψη του μοντέλου ομιλίας';
 
   @override
-  String get readAlongStageListening => 'Listening to the narration';
+  String get readAlongStageListening => 'Ακρόαση της αφήγησης';
 
   @override
-  String get readAlongStageMarkingUp => 'Marking up the ebook text';
+  String get readAlongStageMarkingUp =>
+      'Σήμανση του κειμένου του ηλεκτρονικού βιβλίου';
 
   @override
-  String get readAlongStageAligning => 'Matching the text to the narration';
+  String get readAlongStageAligning =>
+      'Αντιστοίχιση του κειμένου με την αφήγηση';
 
   @override
-  String get readAlongStageChecking => 'Checking the result';
+  String get readAlongStageChecking => 'Έλεγχος του αποτελέσματος';
 
   @override
-  String get readAlongStagePublishing => 'Adding the read along to this book';
+  String get readAlongStagePublishing =>
+      'Προσθήκη της ανάγνωσης με τον ήχο σε αυτό το βιβλίο';
 
   @override
-  String get readAlongStageWorking => 'Working';
+  String get readAlongStageWorking => 'Σε εξέλιξη';
 
   @override
   String readAlongFileOf(int current, int total) {
-    return 'File $current of $total';
+    return 'Αρχείο $current από $total';
   }
 
   @override
   String readAlongTrackOf(int current, int total) {
-    return 'Track $current of $total';
+    return 'Κομμάτι $current από $total';
   }
 
   @override
   String readAlongChapterOf(int current, int total) {
-    return 'Chapter $current of $total';
+    return 'Κεφάλαιο $current από $total';
   }
 
   @override
   String readAlongStepOf(int current, int total) {
-    return 'Step $current of $total';
+    return 'Βήμα $current από $total';
   }
 
   @override
-  String get readAlongFirstRun => 'First run for this language';
+  String get readAlongFirstRun => 'Πρώτη εκτέλεση για αυτή τη γλώσσα';
 
   @override
-  String get readAlongJustStarted => 'Just started';
+  String get readAlongJustStarted => 'Μόλις ξεκίνησε';
 
   @override
   String readAlongRunningFor(String duration) {
-    return 'Running for $duration';
+    return 'Εκτελείται εδώ και $duration';
   }
 
   @override
-  String get readAlongStepAudio => 'Audio';
+  String get readAlongStepAudio => 'Ήχος';
 
   @override
-  String get readAlongStepSpeech => 'Speech';
+  String get readAlongStepSpeech => 'Ομιλία';
 
   @override
-  String get readAlongStepText => 'Text';
+  String get readAlongStepText => 'Κείμενο';
 
   @override
-  String get readAlongStepAlign => 'Align';
+  String get readAlongStepAlign => 'Αντιστοίχιση';
 
   @override
-  String get readAlongStepCheck => 'Check';
+  String get readAlongStepCheck => 'Έλεγχος';
 
   @override
-  String get readAlongStepAdd => 'Add';
+  String get readAlongStepAdd => 'Προσθήκη';
 
   @override
-  String get readAlongReviewTitle => 'Ready for review';
+  String get readAlongReviewTitle => 'Έτοιμο για έλεγχο';
 
   @override
   String readAlongReviewMatched(String percent) {
-    return '$percent of the text matched the narration. Check it before adding it to the book.';
+    return 'Το $percent του κειμένου αντιστοιχίστηκε με την αφήγηση. Ελέγξτε το πριν το προσθέσετε στο βιβλίο.';
   }
 
   @override
-  String get readAlongReviewPlain => 'Check it before adding it to the book.';
+  String get readAlongReviewPlain =>
+      'Ελέγξτε το πριν το προσθέσετε στο βιβλίο.';
 
   @override
   String get readAlongReviewWeb =>
-      'To leave chapters out and match again, open this book in BookOrbit on the web.';
+      'Για να εξαιρέσετε κεφάλαια και να κάνετε νέα αντιστοίχιση, ανοίξτε αυτό το βιβλίο στο BookOrbit στον ιστό.';
 
   @override
   String readAlongReviewExpires(String date) {
-    return 'Thrown away on its own on $date unless you review it.';
+    return 'Θα απορριφθεί αυτόματα στις $date αν δεν το ελέγξετε.';
   }
 
   @override
-  String get readAlongAddAnyway => 'Add it anyway';
+  String get readAlongAddAnyway => 'Προσθήκη παρ\' όλα αυτά';
 
   @override
-  String get readAlongDiscard => 'Discard';
+  String get readAlongDiscard => 'Απόρριψη';
 
   @override
-  String get readAlongDiscardPrompt => 'Discard this read along?';
+  String get readAlongDiscardPrompt =>
+      'Απόρριψη αυτής της ανάγνωσης με τον ήχο;';
 
   @override
-  String get readAlongKeepIt => 'Keep it';
+  String get readAlongKeepIt => 'Διατήρηση';
 
   @override
-  String get readAlongReady => 'Read along ready';
+  String get readAlongReady => 'Η ανάγνωση με τον ήχο είναι έτοιμη';
 
   @override
-  String get readAlongReadyWarnings => 'Read along ready, with warnings';
+  String get readAlongReadyWarnings =>
+      'Η ανάγνωση με τον ήχο είναι έτοιμη, με προειδοποιήσεις';
 
   @override
-  String get readAlongAdded => 'Added to this book as a new EPUB.';
+  String get readAlongAdded => 'Προστέθηκε σε αυτό το βιβλίο ως νέο EPUB.';
 
   @override
   String get readAlongReplaced =>
-      'Replaced the old read along. Reading spots carry over.';
+      'Αντικαταστάθηκε η παλιά ανάγνωση με τον ήχο. Οι θέσεις ανάγνωσης μεταφέρονται.';
 
   @override
   String readAlongMatchedSentences(String matched, String total) {
-    return '$matched of $total sentences matched the narration';
+    return '$matched από $total προτάσεις αντιστοιχίστηκαν με την αφήγηση';
   }
 
   @override
   String readAlongAudioUsed(String percent) {
-    return '$percent of the audio used';
+    return 'Χρησιμοποιήθηκε το $percent του ήχου';
   }
 
   @override
   String readAlongOutside(String chapters) {
-    return 'Not in the narration, so left without audio: $chapters.';
+    return 'Δεν υπάρχουν στην αφήγηση, οπότε μένουν χωρίς ήχο: $chapters.';
   }
 
   @override
@@ -13340,233 +13350,239 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count more chapters',
-      one: '1 more chapter',
+      other: '$count ακόμη κεφάλαια',
+      one: '1 ακόμη κεφάλαιο',
     );
     return '$_temp0';
   }
 
   @override
   String get readAlongWarnUnaligned =>
-      'One or more audio tracks couldn\'t be matched.';
+      'Ένα ή περισσότερα κομμάτια ήχου δεν μπόρεσαν να αντιστοιχιστούν.';
 
   @override
   String get readAlongWarnUnmatched =>
-      'A noticeable amount of the ebook text wasn\'t matched to the narration.';
+      'Σημαντικό μέρος του κειμένου του ηλεκτρονικού βιβλίου δεν αντιστοιχίστηκε με την αφήγηση.';
 
   @override
   String get readAlongWarnInterpolated =>
-      'Some text timing was estimated between confident matches.';
+      'Ο χρονισμός ορισμένων τμημάτων του κειμένου εκτιμήθηκε ανάμεσα σε βέβαιες αντιστοιχίσεις.';
 
   @override
   String get readAlongWarnDropped =>
-      'Some ebook text was left out of the highlighting.';
+      'Ορισμένο κείμενο του ηλεκτρονικού βιβλίου παραλείφθηκε από την επισήμανση.';
 
   @override
-  String get readAlongFailed => 'Read along failed';
+  String get readAlongFailed => 'Η ανάγνωση με τον ήχο απέτυχε';
 
   @override
-  String get readAlongCancelled => 'Read along cancelled';
+  String get readAlongCancelled => 'Η ανάγνωση με τον ήχο ακυρώθηκε';
 
   @override
-  String get readAlongDiscarded => 'Read along thrown away';
+  String get readAlongDiscarded => 'Η ανάγνωση με τον ήχο απορρίφθηκε';
 
   @override
-  String get readAlongNothingAdded => 'Nothing was added to this book.';
+  String get readAlongNothingAdded =>
+      'Τίποτα δεν προστέθηκε σε αυτό το βιβλίο.';
 
   @override
   String get readAlongExpired =>
-      'It wasn\'t reviewed within 14 days, so nothing was added to this book.';
+      'Δεν ελέγχθηκε μέσα σε 14 ημέρες, οπότε τίποτα δεν προστέθηκε σε αυτό το βιβλίο.';
 
   @override
   String readAlongRetryUntil(String date) {
-    return 'Retry picks up from the last finished step until $date.';
+    return 'Η επανάληψη συνεχίζει από το τελευταίο ολοκληρωμένο βήμα έως τις $date.';
   }
 
   @override
-  String get readAlongStartOver => 'Start over';
+  String get readAlongStartOver => 'Έναρξη από την αρχή';
 
   @override
-  String get readAlongCancel => 'Cancel read along';
+  String get readAlongCancel => 'Ακύρωση ανάγνωσης με τον ήχο';
 
   @override
-  String get readAlongCancelPrompt => 'Cancel this read along?';
+  String get readAlongCancelPrompt => 'Ακύρωση αυτής της ανάγνωσης με τον ήχο;';
 
   @override
-  String get readAlongKeepRunning => 'Keep running';
+  String get readAlongKeepRunning => 'Συνέχιση εκτέλεσης';
 
   @override
   String get readAlongErrorWorkerOffline =>
-      'BookOrbit couldn\'t reach its read along worker.';
+      'Το BookOrbit δεν κατάφερε να επικοινωνήσει με τον εργάτη ανάγνωσης με τον ήχο.';
 
   @override
   String get readAlongErrorWorkerCrashed =>
-      'The read along worker stopped unexpectedly.';
+      'Ο εργάτης ανάγνωσης με τον ήχο σταμάτησε απροσδόκητα.';
 
   @override
-  String get readAlongErrorSourceMissing => 'A picked file is no longer there.';
+  String get readAlongErrorSourceMissing =>
+      'Ένα επιλεγμένο αρχείο δεν υπάρχει πια.';
 
   @override
   String get readAlongErrorSourceChanged =>
-      'A picked file changed after the job started.';
+      'Ένα επιλεγμένο αρχείο άλλαξε μετά την έναρξη της εργασίας.';
 
   @override
   String get readAlongErrorInvalidSource =>
-      'The EPUB or audiobook couldn\'t be read.';
+      'Το EPUB ή το ηχητικό βιβλίο δεν μπόρεσε να διαβαστεί.';
 
   @override
   String get readAlongErrorLanguage =>
-      'The speech model doesn\'t know the picked language.';
+      'Το μοντέλο ομιλίας δεν γνωρίζει την επιλεγμένη γλώσσα.';
 
   @override
   String get readAlongErrorStorage =>
-      'There isn\'t enough free disk space on the worker to finish.';
+      'Δεν υπάρχει αρκετός ελεύθερος χώρος στον δίσκο του εργάτη για να ολοκληρωθεί.';
 
   @override
-  String get readAlongErrorAudio => 'The audiobook couldn\'t be prepared.';
+  String get readAlongErrorAudio =>
+      'Το ηχητικό βιβλίο δεν μπόρεσε να προετοιμαστεί.';
 
   @override
-  String get readAlongErrorModel => 'The speech model couldn\'t be downloaded.';
+  String get readAlongErrorModel => 'Το μοντέλο ομιλίας δεν μπόρεσε να ληφθεί.';
 
   @override
   String get readAlongErrorListening =>
-      'Speech recognition failed while listening to the narration.';
+      'Η αναγνώριση ομιλίας απέτυχε κατά την ακρόαση της αφήγησης.';
 
   @override
   String get readAlongErrorMarkup =>
-      'The ebook text couldn\'t be prepared for matching.';
+      'Το κείμενο του ηλεκτρονικού βιβλίου δεν μπόρεσε να προετοιμαστεί για αντιστοίχιση.';
 
   @override
   String get readAlongErrorAlignment =>
-      'The text couldn\'t be matched to the narration.';
+      'Το κείμενο δεν μπόρεσε να αντιστοιχιστεί με την αφήγηση.';
 
   @override
-  String get readAlongErrorOutput => 'The new EPUB failed its checks.';
+  String get readAlongErrorOutput => 'Το νέο EPUB απέτυχε στους ελέγχους.';
 
   @override
   String get readAlongErrorPublish =>
-      'The new EPUB couldn\'t be added to this book.';
+      'Το νέο EPUB δεν μπόρεσε να προστεθεί σε αυτό το βιβλίο.';
 
   @override
-  String get readAlongErrorDiscarded => 'It was thrown away at review.';
+  String get readAlongErrorDiscarded => 'Απορρίφθηκε κατά τον έλεγχο.';
 
   @override
-  String get readAlongErrorCancelled => 'It was cancelled.';
+  String get readAlongErrorCancelled => 'Ακυρώθηκε.';
 
   @override
   String get readAlongErrorUnknown =>
-      'Something went wrong while making the read along.';
+      'Κάτι πήγε στραβά κατά τη δημιουργία της ανάγνωσης με τον ήχο.';
 
   @override
-  String get fileInfoNoAudiobook => 'No audiobook yet';
+  String get fileInfoNoAudiobook => 'Δεν υπάρχει ακόμη ηχητικό βιβλίο';
 
   @override
-  String get fileInfoNoEbook => 'No e-book yet';
+  String get fileInfoNoEbook => 'Δεν υπάρχει ακόμη ηλεκτρονικό βιβλίο';
 
   @override
-  String get fileInfoRequestedBySomeone => 'Requested by someone else';
+  String get fileInfoRequestedBySomeone => 'Ζητήθηκε από κάποιον άλλον';
 
   @override
-  String get fileInfoOwnedSeparately => 'In your library as a separate book';
+  String get fileInfoOwnedSeparately =>
+      'Στη βιβλιοθήκη σας ως ξεχωριστό βιβλίο';
 
   @override
-  String get fileInfoCopyPath => 'Copy path';
+  String get fileInfoCopyPath => 'Αντιγραφή διαδρομής';
 
   @override
-  String get fileInfoDeleteTitle => 'Delete file?';
+  String get fileInfoDeleteTitle => 'Διαγραφή αρχείου;';
 
   @override
   String fileInfoDeletePrompt(String name) {
-    return '\"$name\" will be deleted from the server. This can\'t be undone.';
+    return 'Το \"$name\" θα διαγραφεί από τον διακομιστή. Αυτή η ενέργεια δεν αναιρείται.';
   }
 
   @override
   String get fileInfoDeleteLast =>
-      'It\'s the book\'s last audio or e-book file, so the book will show as missing.';
+      'Είναι το τελευταίο αρχείο ήχου ή ηλεκτρονικού βιβλίου, οπότε το βιβλίο θα εμφανίζεται ως ελλιπές.';
 
   @override
-  String get fileInfoDeleteNotAllowed =>
-      'You don\'t have permission to delete files';
+  String get fileInfoDeleteNotAllowed => 'Δεν έχετε άδεια διαγραφής αρχείων';
 
   @override
-  String get chapterSourceEmbedded => 'Read from the audio files';
+  String get chapterSourceEmbedded => 'Ανάγνωση από τα αρχεία ήχου';
 
   @override
-  String get chapterSourceTracks => 'One chapter per audio file, not saved';
+  String get chapterSourceTracks =>
+      'Ένα κεφάλαιο ανά αρχείο ήχου, χωρίς αποθήκευση';
 
   @override
-  String get chapterSourceProvider => 'From fetched metadata';
+  String get chapterSourceProvider => 'Από ληφθέντα μεταδεδομένα';
 
   @override
-  String get chapterSourceMigration => 'Imported from Audiobookshelf';
+  String get chapterSourceMigration => 'Εισαγωγή από το Audiobookshelf';
 
   @override
-  String get chapterSourceManual => 'Edited in BookOrbit';
+  String get chapterSourceManual => 'Επεξεργασία στο BookOrbit';
 
   @override
   String chapterSourceManualBy(String name) {
-    return 'Edited by $name';
+    return 'Επεξεργασία από τον/την $name';
   }
 
   @override
-  String get chapterSourceNone => 'No chapters yet';
+  String get chapterSourceNone => 'Δεν υπάρχουν ακόμη κεφάλαια';
 
   @override
-  String get chapterProtected => 'Protected from rescans';
+  String get chapterProtected => 'Προστατευμένα από νέες σαρώσεις';
 
   @override
-  String get chapterNotProtected => 'A rescan can replace these';
+  String get chapterNotProtected =>
+      'Μια νέα σάρωση μπορεί να τα αντικαταστήσει';
 
   @override
-  String get chapterProtectOnSave => 'Protect from rescans';
+  String get chapterProtectOnSave => 'Προστασία από νέες σαρώσεις';
 
   @override
-  String get chapterGetFrom => 'Get Chapters From';
+  String get chapterGetFrom => 'Λήψη κεφαλαίων από';
 
   @override
-  String get chapterFromFiles => 'The audio files';
+  String get chapterFromFiles => 'Τα αρχεία ήχου';
 
   @override
-  String get chapterFromEbookToc => 'The e-book\'s contents';
+  String get chapterFromEbookToc => 'Τα περιεχόμενα του ηλεκτρονικού βιβλίου';
 
   @override
-  String get chapterFromReadAlong => 'The read along';
+  String get chapterFromReadAlong => 'Την ανάγνωση με τον ήχο';
 
   @override
-  String get chapterFromHistory => 'Earlier versions';
+  String get chapterFromHistory => 'Προηγούμενες εκδόσεις';
 
   @override
-  String get chapterHistoryTitle => 'Earlier versions';
+  String get chapterHistoryTitle => 'Προηγούμενες εκδόσεις';
 
   @override
-  String get chapterHistoryEmpty => 'Saved versions show up here.';
+  String get chapterHistoryEmpty =>
+      'Οι αποθηκευμένες εκδόσεις εμφανίζονται εδώ.';
 
   @override
   String chapterHistoryBy(String source, String name) {
-    return '$source by $name';
+    return '$source από τον/την $name';
   }
 
   @override
-  String get chapterReadingFiles => 'Reading the audio files...';
+  String get chapterReadingFiles => 'Ανάγνωση των αρχείων ήχου...';
 
   @override
-  String get chapterRevertToFiles => 'Revert to Files';
+  String get chapterRevertToFiles => 'Επαναφορά από τα αρχεία';
 
   @override
-  String get chapterRevertTitle => 'Go back to the chapters in the files?';
+  String get chapterRevertTitle => 'Επιστροφή στα κεφάλαια των αρχείων;';
 
   @override
   String get chapterRevertMessage =>
-      'BookOrbit reads the chapters in the audio files again and stops protecting them from rescans. Unsaved edits are lost. The current list stays in the earlier versions.';
+      'Το BookOrbit διαβάζει ξανά τα κεφάλαια από τα αρχεία ήχου και σταματά να τα προστατεύει από νέες σαρώσεις. Οι μη αποθηκευμένες αλλαγές χάνονται. Η τρέχουσα λίστα παραμένει στις προηγούμενες εκδόσεις.';
 
   @override
-  String get chapterReverted => 'Chapters set back to the audio files';
+  String get chapterReverted => 'Τα κεφάλαια επανήλθαν στα αρχεία ήχου';
 
   @override
-  String get chapterWriteFiles => 'Write to Files';
+  String get chapterWriteFiles => 'Εγγραφή στα αρχεία';
 
   @override
-  String get chapterWriteTitle => 'Write the chapters into the audio files?';
+  String get chapterWriteTitle => 'Εγγραφή των κεφαλαίων στα αρχεία ήχου;';
 
   @override
   String chapterWriteMessage(int count) {
@@ -13574,152 +13590,152 @@ class AppLocalizationsEl extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          'This rewrites the book\'s $count audio files with these chapters.',
-      one: 'This rewrites the book\'s audio file with these chapters.',
+          'Αυτό ξαναγράφει τα $count αρχεία ήχου του βιβλίου με αυτά τα κεφάλαια.',
+      one: 'Αυτό ξαναγράφει το αρχείο ήχου του βιβλίου με αυτά τα κεφάλαια.',
     );
-    return '$_temp0 The audio itself is copied unchanged. Phones that already downloaded the book keep their copy until it\'s downloaded again.';
+    return '$_temp0 Ο ίδιος ο ήχος αντιγράφεται αναλλοίωτος. Τα τηλέφωνα που έχουν ήδη κατεβάσει το βιβλίο κρατούν το αντίγραφό τους μέχρι να γίνει νέα λήψη.';
   }
 
   @override
-  String get chapterWriteConfirm => 'Write';
+  String get chapterWriteConfirm => 'Εγγραφή';
 
   @override
-  String get chapterWriting => 'Writing the chapters into the audio files...';
+  String get chapterWriting => 'Εγγραφή των κεφαλαίων στα αρχεία ήχου...';
 
   @override
   String chapterWritten(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Chapters written into all $count audio files',
-      one: 'Chapters written into the audio file',
+      other: 'Τα κεφάλαια γράφτηκαν και στα $count αρχεία ήχου',
+      one: 'Τα κεφάλαια γράφτηκαν στο αρχείο ήχου',
     );
     return '$_temp0';
   }
 
   @override
   String chapterWrittenPartly(int written, int total) {
-    return 'Chapters written into $written of $total files. The rest were left as they were.';
+    return 'Τα κεφάλαια γράφτηκαν σε $written από $total αρχεία. Τα υπόλοιπα έμειναν όπως ήταν.';
   }
 
   @override
-  String get chapterStaleTitle => 'These chapters changed';
+  String get chapterStaleTitle => 'Αυτά τα κεφάλαια άλλαξαν';
 
   @override
   String get chapterStaleMessage =>
-      'Someone else saved these chapters after you opened them. Reload to see their version. Your edits stay until you do.';
+      'Κάποιος άλλος αποθήκευσε αυτά τα κεφάλαια αφού τα ανοίξατε. Φορτώστε ξανά για να δείτε την έκδοσή του. Οι αλλαγές σας διατηρούνται μέχρι τότε.';
 
   @override
-  String get chapterReload => 'Reload';
+  String get chapterReload => 'Επαναφόρτωση';
 
   @override
-  String get chapterKeepEditing => 'Keep editing';
+  String get chapterKeepEditing => 'Συνέχιση επεξεργασίας';
 
   @override
-  String get matchExplicitYes => 'Marked explicit';
+  String get matchExplicitYes => 'Επισημασμένο ως ακατάλληλο';
 
   @override
-  String get matchExplicitNo => 'Not explicit';
+  String get matchExplicitNo => 'Όχι ακατάλληλο';
 
   @override
-  String get matchAbridgedYes => 'Abridged';
+  String get matchAbridgedYes => 'Συντομευμένο';
 
   @override
-  String get matchAbridgedNo => 'Unabridged';
+  String get matchAbridgedNo => 'Πλήρες';
 
   @override
   String boQuickMatchBody(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'these $count books',
-      one: 'this book',
+      other: 'αυτά τα $count βιβλία',
+      one: 'αυτό το βιβλίο',
     );
-    return 'BookOrbit looks up $_temp0 and fills in what it finds, following its metadata settings.';
+    return 'Το BookOrbit αναζητά $_temp0 και συμπληρώνει ό,τι βρει, σύμφωνα με τις ρυθμίσεις μεταδεδομένων του.';
   }
 
   @override
-  String get boQuickMatchIgnoreCache => 'Ask every source again';
+  String get boQuickMatchIgnoreCache => 'Νέα ερώτηση σε κάθε πηγή';
 
   @override
   String get boQuickMatchIgnoreCacheHint =>
-      'Skips saved answers. Slower, and uses more of each source\'s request limit.';
+      'Παραλείπει τις αποθηκευμένες απαντήσεις. Πιο αργό, και χρησιμοποιεί περισσότερο από το όριο αιτημάτων κάθε πηγής.';
 
   @override
   String boAdminServerCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count mail servers',
-      one: '1 mail server',
-      zero: 'None yet',
+      other: '$count διακομιστές αλληλογραφίας',
+      one: '1 διακομιστής αλληλογραφίας',
+      zero: 'Κανένας ακόμη',
     );
     return '$_temp0';
   }
 
   @override
-  String get boEmailTitle => 'Send by email';
+  String get boEmailTitle => 'Αποστολή με email';
 
   @override
   String get boEmailSubtitle =>
-      'Devices, mail servers and templates for sending books';
+      'Συσκευές, διακομιστές αλληλογραφίας και πρότυπα για την αποστολή βιβλίων';
 
   @override
-  String get boEmailTabDevices => 'Devices';
+  String get boEmailTabDevices => 'Συσκευές';
 
   @override
-  String get boEmailTabServers => 'Mail servers';
+  String get boEmailTabServers => 'Διακομιστές αλληλογραφίας';
 
   @override
-  String get boEmailTabTemplates => 'Templates';
+  String get boEmailTabTemplates => 'Πρότυπα';
 
   @override
-  String get boEmailTabHistory => 'History';
+  String get boEmailTabHistory => 'Ιστορικό';
 
   @override
-  String get boEmailName => 'Name';
+  String get boEmailName => 'Όνομα';
 
   @override
   String boEmailDeleteTitle(String name) {
-    return 'Delete $name?';
+    return 'Διαγραφή του $name;';
   }
 
   @override
-  String get boEmailMakeDefault => 'Make default';
+  String get boEmailMakeDefault => 'Ορισμός ως προεπιλογής';
 
   @override
-  String get boEmailBadgeDefault => 'Default';
+  String get boEmailBadgeDefault => 'Προεπιλογή';
 
   @override
-  String get boEmailBadgeShared => 'Shared';
+  String get boEmailBadgeShared => 'Κοινόχρηστο';
 
   @override
-  String get boEmailBadgeSystem => 'Password resets';
+  String get boEmailBadgeSystem => 'Επαναφορές κωδικού';
 
   @override
-  String get boEmailBadgeBuiltIn => 'Built in';
+  String get boEmailBadgeBuiltIn => 'Ενσωματωμένο';
 
   @override
   String get boEmailDevicesEmpty =>
-      'No devices yet. Add your e-reader\'s email address to send it books.';
+      'Δεν υπάρχουν συσκευές ακόμη. Προσθέστε τη διεύθυνση email του e-reader σας για να του στέλνετε βιβλία.';
 
   @override
-  String get boEmailAddDevice => 'Add device';
+  String get boEmailAddDevice => 'Προσθήκη συσκευής';
 
   @override
-  String get boEmailNewDevice => 'New device';
+  String get boEmailNewDevice => 'Νέα συσκευή';
 
   @override
-  String get boEmailDeviceNameHint => 'My Kindle';
+  String get boEmailDeviceNameHint => 'Το Kindle μου';
 
   @override
-  String get boEmailDeviceAddress => 'Email address';
+  String get boEmailDeviceAddress => 'Διεύθυνση email';
 
   @override
-  String get boEmailDeviceType => 'Device';
+  String get boEmailDeviceType => 'Συσκευή';
 
   @override
-  String get boEmailDeviceNone => 'Person or inbox';
+  String get boEmailDeviceNone => 'Άτομο ή γραμματοκιβώτιο';
 
   @override
   String get boEmailDeviceKindle => 'Kindle';
@@ -13728,438 +13744,448 @@ class AppLocalizationsEl extends AppLocalizations {
   String get boEmailDeviceKobo => 'Kobo';
 
   @override
-  String get boEmailDeviceOther => 'Other e-reader';
+  String get boEmailDeviceOther => 'Άλλο e-reader';
 
   @override
   String get boEmailKindleHint =>
-      'Kindle gets the subject \"convert\" and only takes EPUB and PDF by email.';
+      'Το Kindle λαμβάνει το θέμα \"convert\" και δέχεται μέσω email μόνο EPUB και PDF.';
 
   @override
   String boEmailKindleApprove(String address) {
-    return 'Kindle drops mail from addresses it doesn\'t know. In Amazon\'s Personal Document Settings, add $address to the approved list.';
+    return 'Το Kindle απορρίπτει αλληλογραφία από διευθύνσεις που δεν γνωρίζει. Στις Ρυθμίσεις προσωπικών εγγράφων της Amazon, προσθέστε το $address στη λίστα εγκεκριμένων.';
   }
 
   @override
   String get boEmailKindleApproveNoServer =>
-      'Add a mail server first to see the address Kindle needs to approve.';
+      'Προσθέστε πρώτα έναν διακομιστή αλληλογραφίας για να δείτε τη διεύθυνση που πρέπει να εγκρίνει το Kindle.';
 
   @override
-  String get boEmailFormat => 'Format';
+  String get boEmailFormat => 'Μορφή';
 
   @override
-  String get boEmailFormatPrimary => 'Book\'s main file';
+  String get boEmailFormatPrimary => 'Κύριο αρχείο του βιβλίου';
 
   @override
   String get boEmailFormatHint =>
-      'A book without this format gets its main file.';
+      'Ένα βιβλίο χωρίς αυτή τη μορφή αποστέλλεται με το κύριο αρχείο του.';
 
   @override
-  String get boEmailReadAlong => 'Read along books';
+  String get boEmailReadAlong => 'Βιβλία με ανάγνωση με τον ήχο';
 
   @override
-  String get boEmailReadAlongAuto => 'Automatic';
+  String get boEmailReadAlongAuto => 'Αυτόματα';
 
   @override
   String get boEmailReadAlongAutoHint =>
-      'Text only when a copy can be made, otherwise the original.';
+      'Μόνο κείμενο όταν μπορεί να γίνει αντίγραφο, αλλιώς το πρωτότυπο.';
 
   @override
-  String get boEmailReadAlongText => 'Text only';
+  String get boEmailReadAlongText => 'Μόνο κείμενο';
 
   @override
   String get boEmailReadAlongTextHint =>
-      'Narration removed. Small enough for email.';
+      'Χωρίς αφήγηση. Αρκετά μικρό για email.';
 
   @override
-  String get boEmailReadAlongOriginal => 'With narration';
+  String get boEmailReadAlongOriginal => 'Με αφήγηση';
 
   @override
   String get boEmailReadAlongOriginalHint =>
-      'Keeps the narration. Often 100 MB or more, over most mail servers\' limits.';
+      'Διατηρεί την αφήγηση. Συχνά 100 MB ή περισσότερο, πάνω από τα όρια των περισσότερων διακομιστών αλληλογραφίας.';
 
   @override
-  String get boEmailTemplate => 'Template';
+  String get boEmailTemplate => 'Πρότυπο';
 
   @override
-  String get boEmailTemplateYourDefault => 'Your default';
+  String get boEmailTemplateYourDefault => 'Η προεπιλογή σας';
 
   @override
   String get boEmailTemplateKindleHint =>
-      'Kindle never shows the message, so it skips the template.';
+      'Το Kindle δεν εμφανίζει ποτέ το μήνυμα, οπότε παραλείπει το πρότυπο.';
 
   @override
-  String get boEmailDefaultDevice => 'Default device';
+  String get boEmailDefaultDevice => 'Προεπιλεγμένη συσκευή';
 
   @override
-  String get boEmailDefaultDeviceHint => 'Picked first when you send a book.';
+  String get boEmailDefaultDeviceHint =>
+      'Επιλέγεται πρώτη όταν στέλνετε ένα βιβλίο.';
 
   @override
-  String get boEmailSendTest => 'Send a test email';
+  String get boEmailSendTest => 'Αποστολή δοκιμαστικού email';
 
   @override
-  String get boEmailTestSubject => 'Test email from Absorb';
+  String get boEmailTestSubject => 'Δοκιμαστικό email από το Absorb';
 
   @override
   String boEmailTestBody(String name) {
-    return 'This is a test from Absorb. If you can read it, books sent to $name will arrive here too.';
+    return 'Αυτό είναι μια δοκιμή από το Absorb. Αν μπορείτε να το διαβάσετε, τα βιβλία που στέλνονται στο $name θα φτάνουν κι εδώ.';
   }
 
   @override
   String boEmailTestSent(String name) {
-    return 'Test email sent to $name';
+    return 'Το δοκιμαστικό email στάλθηκε στο $name';
   }
 
   @override
   String boEmailTestFailed(String error) {
-    return 'The test email didn\'t go out: $error';
+    return 'Το δοκιμαστικό email δεν στάλθηκε: $error';
   }
 
   @override
-  String get boEmailDeleteDevice => 'Delete device';
+  String get boEmailDeleteDevice => 'Διαγραφή συσκευής';
 
   @override
-  String get boEmailDeleteDeviceBody => 'Its send history stays.';
+  String get boEmailDeleteDeviceBody => 'Το ιστορικό αποστολών της παραμένει.';
 
   @override
-  String get boEmailDeviceRequired => 'Enter a name and an email address';
+  String get boEmailDeviceRequired => 'Εισαγάγετε όνομα και διεύθυνση email';
 
   @override
-  String get boEmailLastSendFailed => 'Last send failed';
+  String get boEmailLastSendFailed => 'Η τελευταία αποστολή απέτυχε';
 
   @override
-  String get boEmailGroups => 'Groups';
+  String get boEmailGroups => 'Ομάδες';
 
   @override
-  String get boEmailGroupsHint => 'Send to several devices at once.';
+  String get boEmailGroupsHint => 'Αποστολή σε πολλές συσκευές ταυτόχρονα.';
 
   @override
-  String get boEmailNewGroup => 'New group';
+  String get boEmailNewGroup => 'Νέα ομάδα';
 
   @override
-  String get boEmailGroupNameHint => 'Book club';
+  String get boEmailGroupNameHint => 'Λέσχη ανάγνωσης';
 
   @override
-  String get boEmailGroupMembers => 'Devices in this group';
+  String get boEmailGroupMembers => 'Συσκευές σε αυτή την ομάδα';
 
   @override
-  String get boEmailGroupMembersEmpty => 'Add a device first.';
+  String get boEmailGroupMembersEmpty => 'Προσθέστε πρώτα μια συσκευή.';
 
   @override
   String boEmailGroupMemberCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count devices',
-      one: '1 device',
-      zero: 'No devices',
+      other: '$count συσκευές',
+      one: '1 συσκευή',
+      zero: 'Καμία συσκευή',
     );
     return '$_temp0';
   }
 
   @override
-  String get boEmailDeleteGroup => 'Delete group';
+  String get boEmailDeleteGroup => 'Διαγραφή ομάδας';
 
   @override
-  String get boEmailDeleteGroupBody => 'The devices in it stay.';
+  String get boEmailDeleteGroupBody => 'Οι συσκευές της παραμένουν.';
 
   @override
-  String get boEmailGroupRequired => 'Enter a group name';
+  String get boEmailGroupRequired => 'Εισαγάγετε όνομα ομάδας';
 
   @override
   String get boEmailServersEmptyManage =>
-      'No mail servers yet. Add one to start sending books.';
+      'Δεν υπάρχουν ακόμη διακομιστές αλληλογραφίας. Προσθέστε έναν για να ξεκινήσετε την αποστολή βιβλίων.';
 
   @override
   String get boEmailServersEmpty =>
-      'No mail servers yet. Ask an admin to add one.';
+      'Δεν υπάρχουν ακόμη διακομιστές αλληλογραφίας. Ζητήστε από έναν διαχειριστή να προσθέσει έναν.';
 
   @override
-  String get boEmailAddServer => 'Add mail server';
+  String get boEmailAddServer => 'Προσθήκη διακομιστή αλληλογραφίας';
 
   @override
-  String get boEmailNewServer => 'New mail server';
+  String get boEmailNewServer => 'Νέος διακομιστής αλληλογραφίας';
 
   @override
-  String get boEmailServerPresetOther => 'Other';
+  String get boEmailServerPresetOther => 'Άλλο';
 
   @override
   String get boEmailServerPresetHint =>
-      'A preset fills in the host, port and security. You can still change them.';
+      'Μια προεπιλογή συμπληρώνει τον κεντρικό υπολογιστή, τη θύρα και την ασφάλεια. Μπορείτε να τα αλλάξετε.';
 
   @override
-  String get boEmailServerHost => 'Host';
+  String get boEmailServerHost => 'Κεντρικός υπολογιστής';
 
   @override
-  String get boEmailServerPort => 'Port';
+  String get boEmailServerPort => 'Θύρα';
 
   @override
-  String get boEmailServerSecurity => 'Security';
+  String get boEmailServerSecurity => 'Ασφάλεια';
 
   @override
-  String get boEmailServerSecurityNone => 'None';
+  String get boEmailServerSecurityNone => 'Καμία';
 
   @override
   String get boEmailServerSecurityHint =>
-      'STARTTLS on port 587, SSL/TLS on 465.';
+      'STARTTLS στη θύρα 587, SSL/TLS στη 465.';
 
   @override
-  String get boEmailServerNeedsPassword => 'Signs in with a password';
+  String get boEmailServerNeedsPassword => 'Σύνδεση με κωδικό πρόσβασης';
 
   @override
-  String get boEmailServerUsername => 'Username';
+  String get boEmailServerUsername => 'Όνομα χρήστη';
 
   @override
-  String get boEmailServerPassword => 'Password';
+  String get boEmailServerPassword => 'Κωδικός πρόσβασης';
 
   @override
-  String get boEmailServerAppPassword => 'App password';
+  String get boEmailServerAppPassword => 'Κωδικός εφαρμογής';
 
   @override
-  String get boEmailServerPasswordKeep => 'Saved. Type to replace it';
+  String get boEmailServerPasswordKeep =>
+      'Αποθηκευμένος. Πληκτρολογήστε για αντικατάσταση';
 
   @override
   String get boEmailServerAppPasswordHint =>
-      'Gmail and iCloud need an app password, not your account password.';
+      'Το Gmail και το iCloud απαιτούν κωδικό εφαρμογής, όχι τον κωδικό του λογαριασμού σας.';
 
   @override
-  String get boEmailServerFromName => 'From name';
+  String get boEmailServerFromName => 'Όνομα αποστολέα';
 
   @override
-  String get boEmailServerFromAddress => 'From address';
+  String get boEmailServerFromAddress => 'Διεύθυνση αποστολέα';
 
   @override
   String get boEmailServerFromAddressHint =>
-      'Kindle owners need to approve this address.';
+      'Οι κάτοχοι Kindle πρέπει να εγκρίνουν αυτή τη διεύθυνση.';
 
   @override
-  String get boEmailServerShare => 'Share with everyone';
+  String get boEmailServerShare => 'Κοινή χρήση με όλους';
 
   @override
   String get boEmailServerShareHint =>
-      'Other people can send books through this server without seeing the password.';
+      'Άλλα άτομα μπορούν να στέλνουν βιβλία μέσω αυτού του διακομιστή χωρίς να βλέπουν τον κωδικό πρόσβασης.';
 
   @override
-  String get boEmailServerSystem => 'Send password resets and sign-in links';
+  String get boEmailServerSystem =>
+      'Αποστολή επαναφορών κωδικού και συνδέσμων σύνδεσης';
 
   @override
   String get boEmailServerSystemHint =>
-      'The server BookOrbit uses for its own mail.';
+      'Ο διακομιστής που χρησιμοποιεί το BookOrbit για τη δική του αλληλογραφία.';
 
   @override
-  String get boEmailServerVerifyTls => 'Check the server\'s certificate';
+  String get boEmailServerVerifyTls =>
+      'Έλεγχος του πιστοποιητικού του διακομιστή';
 
   @override
   String get boEmailServerVerifyTlsHint =>
-      'Turn this off only for a server on your own network with a self-signed certificate.';
+      'Απενεργοποιήστε το μόνο για διακομιστή στο δικό σας δίκτυο με αυτο-υπογεγραμμένο πιστοποιητικό.';
 
   @override
-  String get boEmailServerTest => 'Test connection';
+  String get boEmailServerTest => 'Δοκιμή σύνδεσης';
 
   @override
-  String get boEmailServerTestSaveFirst => 'Save first, then test';
+  String get boEmailServerTestSaveFirst =>
+      'Αποθηκεύστε πρώτα και μετά δοκιμάστε';
 
   @override
-  String get boEmailServerTestOk => 'Connected';
+  String get boEmailServerTestOk => 'Συνδέθηκε';
 
   @override
   String boEmailServerTestFailed(String error) {
-    return 'Can\'t connect: $error';
+    return 'Αδυναμία σύνδεσης: $error';
   }
 
   @override
-  String get boEmailServerDelete => 'Delete mail server';
+  String get boEmailServerDelete => 'Διαγραφή διακομιστή αλληλογραφίας';
 
   @override
-  String get boEmailServerDeleteBody => 'Everyone it\'s shared with loses it.';
+  String get boEmailServerDeleteBody => 'Όσοι τον μοιράζονται θα τον χάσουν.';
 
   @override
   String get boEmailServerSystemFirst =>
-      'Turn off password resets on this server before deleting it.';
+      'Απενεργοποιήστε τις επαναφορές κωδικού σε αυτόν τον διακομιστή πριν τον διαγράψετε.';
 
   @override
-  String get boEmailServerRequired => 'Enter a name and a host';
+  String get boEmailServerRequired =>
+      'Εισαγάγετε όνομα και κεντρικό υπολογιστή';
 
   @override
   String get boEmailServerNotYours =>
-      'Someone else added this server. Only they can change it.';
+      'Αυτόν τον διακομιστή τον πρόσθεσε κάποιος άλλος. Μόνο αυτός μπορεί να τον αλλάξει.';
 
   @override
-  String get boEmailTemplatesEmpty => 'No templates yet.';
+  String get boEmailTemplatesEmpty => 'Δεν υπάρχουν ακόμη πρότυπα.';
 
   @override
-  String get boEmailNewTemplate => 'New template';
+  String get boEmailNewTemplate => 'Νέο πρότυπο';
 
   @override
-  String get boEmailTemplateSubject => 'Subject';
+  String get boEmailTemplateSubject => 'Θέμα';
 
   @override
-  String get boEmailTemplateMessage => 'Message';
+  String get boEmailTemplateMessage => 'Μήνυμα';
 
   @override
-  String get boEmailTemplateInsert => 'Insert';
+  String get boEmailTemplateInsert => 'Εισαγωγή';
 
   @override
   String get boEmailTemplateInsertHint =>
-      'Goes in where the cursor is. Details a book doesn\'t have print nothing.';
+      'Μπαίνει στη θέση του δρομέα. Στοιχεία που δεν έχει ένα βιβλίο δεν εμφανίζουν τίποτα.';
 
   @override
-  String get boEmailVarBook => 'Book';
+  String get boEmailVarBook => 'Βιβλίο';
 
   @override
-  String get boEmailVarFile => 'File';
+  String get boEmailVarFile => 'Αρχείο';
 
   @override
-  String get boEmailVarOther => 'Other';
+  String get boEmailVarOther => 'Άλλο';
 
   @override
-  String get boEmailTemplatePreview => 'Preview';
+  String get boEmailTemplatePreview => 'Προεπισκόπηση';
 
   @override
   String get boEmailTemplatePreviewNone =>
-      'Send a book once to preview a template with it.';
+      'Στείλτε ένα βιβλίο μία φορά για να δείτε την προεπισκόπηση του προτύπου με αυτό.';
 
   @override
   String boEmailTemplateAttached(String name) {
-    return 'Attached: $name';
+    return 'Συνημμένο: $name';
   }
 
   @override
-  String get boEmailTemplateBuiltIn => 'Built in. Only an admin can change it.';
+  String get boEmailTemplateBuiltIn =>
+      'Ενσωματωμένο. Μόνο ένας διαχειριστής μπορεί να το αλλάξει.';
 
   @override
   String get boEmailTemplateKindleNote =>
-      'Kindle never shows a template. It always gets the subject \"convert\".';
+      'Το Kindle δεν εμφανίζει ποτέ πρότυπο. Λαμβάνει πάντα το θέμα \"convert\".';
 
   @override
-  String get boEmailTemplateDelete => 'Delete template';
+  String get boEmailTemplateDelete => 'Διαγραφή προτύπου';
 
   @override
   String get boEmailTemplateDeleteBody =>
-      'Devices that use it go back to your default template.';
+      'Οι συσκευές που το χρησιμοποιούν επιστρέφουν στο προεπιλεγμένο πρότυπό σας.';
 
   @override
-  String get boEmailTemplateRequired => 'Enter a name and a subject';
+  String get boEmailTemplateRequired => 'Εισαγάγετε όνομα και θέμα';
 
   @override
-  String get boEmailHistoryEmpty => 'Nothing sent yet.';
+  String get boEmailHistoryEmpty => 'Δεν έχει σταλεί τίποτα ακόμη.';
 
   @override
-  String get boEmailHistoryAll => 'All';
+  String get boEmailHistoryAll => 'Όλα';
 
   @override
-  String get boEmailHistoryEveryone => 'Everyone';
+  String get boEmailHistoryEveryone => 'Όλοι';
 
   @override
-  String get boEmailStatusSent => 'Sent';
+  String get boEmailStatusSent => 'Στάλθηκε';
 
   @override
-  String get boEmailStatusSending => 'Sending';
+  String get boEmailStatusSending => 'Αποστολή';
 
   @override
   String boEmailStatusRetrying(int attempt) {
-    return 'Trying again ($attempt)';
+    return 'Νέα προσπάθεια ($attempt)';
   }
 
   @override
-  String get boEmailStatusFailed => 'Failed';
+  String get boEmailStatusFailed => 'Απέτυχε';
 
   @override
   String boEmailTo(String name) {
-    return 'To $name';
+    return 'Προς $name';
   }
 
   @override
-  String get boEmailResend => 'Send again';
+  String get boEmailResend => 'Αποστολή ξανά';
 
   @override
-  String get boEmailResent => 'Sending again';
+  String get boEmailResent => 'Γίνεται νέα αποστολή';
 
   @override
-  String get boEmailForget => 'Remove from history';
+  String get boEmailForget => 'Αφαίρεση από το ιστορικό';
 
   @override
-  String get boEmailLoadMore => 'Load more';
+  String get boEmailLoadMore => 'Φόρτωση περισσότερων';
 
   @override
-  String get boEmailUnknownBook => 'Deleted book';
+  String get boEmailUnknownBook => 'Διαγραμμένο βιβλίο';
 
   @override
   String get boEmailSendNoServer =>
-      'No mail server is set up on this server yet.';
+      'Δεν έχει ρυθμιστεί ακόμη διακομιστής αλληλογραφίας σε αυτόν τον διακομιστή.';
 
   @override
-  String get boEmailSendAskAdmin => 'Ask an admin to add one.';
+  String get boEmailSendAskAdmin =>
+      'Ζητήστε από έναν διαχειριστή να προσθέσει έναν.';
 
   @override
-  String get boEmailSendNoDevices => 'Add a device to send this book to.';
+  String get boEmailSendNoDevices =>
+      'Προσθέστε μια συσκευή για να στείλετε αυτό το βιβλίο.';
 
   @override
-  String get boEmailSendOptions => 'Options';
+  String get boEmailSendOptions => 'Επιλογές';
 
   @override
-  String get boEmailSendFormatEach => 'Each device\'s own';
+  String get boEmailSendFormatEach => 'Η μορφή κάθε συσκευής';
 
   @override
-  String get boEmailSendServer => 'Mail server';
+  String get boEmailSendServer => 'Διακομιστής αλληλογραφίας';
 
   @override
-  String get boEmailSendButton => 'Send';
+  String get boEmailSendButton => 'Αποστολή';
 
   @override
   String boEmailSendGets(String format, String size) {
-    return 'Gets $format · $size';
+    return 'Λαμβάνει $format · $size';
   }
 
   @override
   String boEmailSendMissing(String format, String got) {
-    return 'No $format, gets the $got';
+    return 'Δεν υπάρχει $format, λαμβάνει $got';
   }
 
   @override
   String boEmailSendKindleRejects(String format) {
-    return 'Kindle doesn\'t take $format by email';
+    return 'Το Kindle δεν δέχεται $format μέσω email';
   }
 
   @override
   String boEmailSendOverKindle(String size) {
-    return '$size, over Kindle\'s 50 MB limit';
+    return '$size, πάνω από το όριο των 50 MB του Kindle';
   }
 
   @override
   String boEmailSendOverGmail(String size) {
-    return '$size, over Gmail\'s 25 MB limit';
+    return '$size, πάνω από το όριο των 25 MB του Gmail';
   }
 
   @override
   String boEmailSendNarrated(String size) {
-    return 'Gets the narrated copy · $size';
+    return 'Λαμβάνει το αντίγραφο με αφήγηση · $size';
   }
 
   @override
   String boEmailSendHanding(String server) {
-    return 'Sending through $server';
+    return 'Αποστολή μέσω $server';
   }
 
   @override
   String boEmailSendAccepted(String server) {
-    return 'Sent through $server';
+    return 'Στάλθηκε μέσω $server';
   }
 
   @override
   String boEmailSendFailedLine(String error) {
-    return 'Didn\'t send: $error';
+    return 'Δεν στάλθηκε: $error';
   }
 
   @override
   String get boEmailSendStillGoing =>
-      'Still sending. You\'ll get a notification when it\'s done.';
+      'Η αποστολή συνεχίζεται. Θα λάβετε ειδοποίηση όταν ολοκληρωθεί.';
 
   @override
   String get boEmailKindleOriginal =>
-      'A Kindle can\'t take the narrated copy. Set it to text only.';
+      'Το Kindle δεν δέχεται το αντίγραφο με αφήγηση. Ορίστε το σε μόνο κείμενο.';
 
   @override
-  String get boEmailNoCopy => 'Couldn\'t make a copy without the narration.';
+  String get boEmailNoCopy =>
+      'Δεν ήταν δυνατή η δημιουργία αντιγράφου χωρίς την αφήγηση.';
 
   @override
   String get recentSearchesTitle => 'Πρόσφατες αναζητήσεις';
@@ -15120,7 +15146,7 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get exclusiveAudioFallback =>
-      'Your sound device refused exclusive audio, so Absorb is playing in normal mode';
+      'Η συσκευή ήχου σας απέρριψε τον αποκλειστικό ήχο, οπότε το Absorb παίζει σε κανονική λειτουργία';
 
   @override
   String homeRecentlyAddedNewBadge(int count) {
@@ -15133,55 +15159,57 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get goToTime => 'Go to time';
+  String get goToTime => 'Μετάβαση σε χρόνο';
 
   @override
-  String get goToTimeLabel => 'Time';
+  String get goToTimeLabel => 'Χρόνος';
 
   @override
-  String get goToTimeHint => 'h:mm:ss, mm:ss or minutes';
+  String get goToTimeHint => 'ω:λλ:δδ, λλ:δδ ή λεπτά';
 
   @override
-  String get goToTimeGo => 'Go';
+  String get goToTimeGo => 'Μετάβαση';
 
   @override
   String goToTimeLength(String time) {
-    return 'Length $time';
+    return 'Διάρκεια $time';
   }
 
   @override
-  String get goToTimeInvalid => 'Type a time like 1:23:45, 23:45 or 90';
+  String get goToTimeInvalid => 'Πληκτρολογήστε χρόνο όπως 1:23:45, 23:45 ή 90';
 
   @override
   String goToTimePastEnd(String time) {
-    return 'That\'s past the end ($time)';
+    return 'Ξεπερνά το τέλος ($time)';
   }
 
   @override
-  String get desktopShortcutGoToTime => 'Go to a time in the open player';
+  String get desktopShortcutGoToTime =>
+      'Μετάβαση σε χρόνο στο ανοιχτό πρόγραμμα αναπαραγωγής';
 
   @override
   String fellAsleepJumpBack(String time) {
-    return 'Fell asleep around $time · Jump back';
+    return 'Αποκοιμηθήκατε γύρω στις $time · Επιστροφή';
   }
 
   @override
-  String get surpriseMe => 'Surprise me';
+  String get surpriseMe => 'Έκπληξη';
 
   @override
   String get surpriseMeNoneLeft =>
-      'You\'ve finished every book in this library';
+      'Έχετε ολοκληρώσει όλα τα βιβλία αυτής της βιβλιοθήκης';
 
   @override
-  String get surpriseMeFailed => 'Couldn\'t pick a book. Try again.';
+  String get surpriseMeFailed =>
+      'Δεν ήταν δυνατή η επιλογή βιβλίου. Δοκιμάστε ξανά.';
 
   @override
   String get surpriseMeOffline =>
-      'Surprise me needs a connection to the server';
+      'Η Έκπληξη χρειάζεται σύνδεση με τον διακομιστή';
 
   @override
   String get surpriseMeBooksOnly =>
-      'Surprise me picks books. Switch to a book library.';
+      'Η Έκπληξη επιλέγει βιβλία. Μεταβείτε σε βιβλιοθήκη βιβλίων.';
 
   @override
   String get autoDownloadNextInSeries =>
@@ -15242,22 +15270,28 @@ class AppLocalizationsEl extends AppLocalizations {
   String get quickSwitcherSleepTimer => 'Χρονοδιακόπτης ύπνου';
 
   @override
-  String get quickSwitcherKeywordsAbsorbing => 'now playing player';
+  String get quickSwitcherKeywordsAbsorbing =>
+      'now playing player αναπαραγωγή ακρόαση τώρα αναπαράγεται';
 
   @override
-  String get quickSwitcherKeywordsSettings => 'preferences options';
+  String get quickSwitcherKeywordsSettings =>
+      'preferences options ρυθμίσεις προτιμήσεις επιλογές';
 
   @override
-  String get quickSwitcherKeywordsDownloads => 'offline';
+  String get quickSwitcherKeywordsDownloads =>
+      'offline λήψεις ληφθέντα εκτός σύνδεσης';
 
   @override
-  String get quickSwitcherKeywordsPlayPause => 'resume pause';
+  String get quickSwitcherKeywordsPlayPause =>
+      'resume pause αναπαραγωγή παύση συνέχιση';
 
   @override
-  String get quickSwitcherKeywordsSleepTimer => 'timer';
+  String get quickSwitcherKeywordsSleepTimer =>
+      'timer χρονοδιακόπτης ύπνος ύπνου';
 
   @override
-  String get quickSwitcherKeywordsShortcuts => 'keys help hotkeys keyboard';
+  String get quickSwitcherKeywordsShortcuts =>
+      'keys help hotkeys keyboard συντομεύσεις πλήκτρα βοήθεια πληκτρολόγιο';
 
   @override
   String get quickSwitcherKindAction => 'Ενέργεια';
@@ -15353,696 +15387,710 @@ class AppLocalizationsEl extends AppLocalizations {
       'Δεν ήταν δυνατή η εξαγωγή των σελιδοδεικτών';
 
   @override
-  String get chapterSearchHint => 'Search chapters or type a time (1:23:00)';
+  String get chapterSearchHint =>
+      'Αναζήτηση κεφαλαίων ή πληκτρολόγηση χρόνου (1:23:00)';
 
   @override
-  String get chapterSearchNoResults => 'No chapters match';
+  String get chapterSearchNoResults => 'Κανένα κεφάλαιο δεν ταιριάζει';
 
   @override
   String get dropUploadNotAllowed =>
-      'Your account can\'t upload to this server';
+      'Ο λογαριασμός σας δεν μπορεί να ανεβάζει αρχεία σε αυτόν τον διακομιστή';
 
   @override
   String get dropUploadNothingUsable =>
-      'None of the dropped files can be uploaded';
+      'Κανένα από τα αρχεία που αφέθηκαν δεν μπορεί να ανέβει';
 
   @override
-  String get dropUploadAlreadyOpen => 'Finish or close the open upload first';
+  String get dropUploadAlreadyOpen =>
+      'Ολοκληρώστε ή κλείστε πρώτα την ανοιχτή μεταφόρτωση';
 
   @override
-  String get remoteHostTitle => 'Control from your phone';
+  String get remoteHostTitle => 'Έλεγχος από το τηλέφωνό σας';
 
   @override
   String get remoteHostSubtitleOff =>
-      'Use your phone as a remote for Absorb on this PC';
+      'Χρησιμοποιήστε το τηλέφωνό σας ως τηλεχειριστήριο για το Absorb σε αυτόν τον υπολογιστή';
 
   @override
   String remoteHostSubtitleOn(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count phones connected',
-      one: '1 phone connected',
-      zero: 'no phones connected',
+      other: '$count συνδεδεμένα τηλέφωνα',
+      one: '1 συνδεδεμένο τηλέφωνο',
+      zero: 'κανένα συνδεδεμένο τηλέφωνο',
     );
-    return 'On · $_temp0';
+    return 'Ενεργό · $_temp0';
   }
 
   @override
   String get remoteHostSheetBody =>
-      'Use your phone as a remote for this PC. The audio keeps playing here on the PC, and your phone shows what\'s playing with the buttons. Your phone and this PC need to be on the same Wi-Fi.';
+      'Χρησιμοποιήστε το τηλέφωνό σας ως τηλεχειριστήριο για αυτόν τον υπολογιστή. Ο ήχος συνεχίζει να παίζει εδώ στον υπολογιστή και το τηλέφωνό σας δείχνει τι παίζει, με τα κουμπιά ελέγχου. Το τηλέφωνο και ο υπολογιστής πρέπει να είναι στο ίδιο Wi-Fi.';
 
   @override
-  String get remoteHostSwitch => 'Turn on';
+  String get remoteHostSwitch => 'Ενεργοποίηση';
 
   @override
   String get remoteHostSwitchSubtitle =>
-      'Windows may ask to let Absorb Plus through the firewall the first time. Allow it.';
+      'Τα Windows ίσως ζητήσουν να επιτρέψετε το Absorb Plus στο τείχος προστασίας την πρώτη φορά. Επιτρέψτε το.';
 
   @override
-  String get remoteHostKeepOn => 'Keep on when Absorb starts';
+  String get remoteHostKeepOn => 'Να μένει ενεργό όταν ξεκινά το Absorb';
 
   @override
   String get remoteHostKeepOnSubtitle =>
-      'When this is off, it turns off each time you close Absorb.';
+      'Όταν είναι ανενεργό, απενεργοποιείται κάθε φορά που κλείνετε το Absorb.';
 
   @override
   String remoteHostPortsBusy(int first, int last) {
-    return 'Couldn\'t start: ports $first to $last are all in use.';
+    return 'Δεν ήταν δυνατή η εκκίνηση: οι θύρες $first έως $last χρησιμοποιούνται όλες.';
   }
 
   @override
-  String get remoteHostPairTitle => 'Pair your phone';
+  String get remoteHostPairTitle => 'Σύζευξη του τηλεφώνου σας';
 
   @override
-  String get remoteHostStep1 => '1. Turn it on here.';
+  String get remoteHostStep1 => '1. Ενεργοποιήστε το εδώ.';
 
   @override
   String get remoteHostStep2 =>
-      '2. Scan the code with your phone\'s camera, or open Absorb on the phone and go to Settings > Control your computer.';
+      '2. Σαρώστε τον κωδικό με την κάμερα του τηλεφώνου σας ή ανοίξτε το Absorb στο τηλέφωνο και μεταβείτε στις Ρυθμίσεις > Έλεγχος του υπολογιστή σας.';
 
   @override
   String get remoteHostStep3 =>
-      '3. Enter the code on the phone, then choose Allow here.';
+      '3. Εισαγάγετε τον κωδικό στο τηλέφωνο και μετά επιλέξτε Να επιτρέπεται εδώ.';
 
   @override
-  String get remoteHostCodeLabel => 'Code';
+  String get remoteHostCodeLabel => 'Κωδικός';
 
   @override
   String remoteHostCodeExpires(String time) {
-    return 'Works for $time';
+    return 'Ισχύει για $time';
   }
 
   @override
-  String get remoteHostPairFirst => 'Pair a phone';
+  String get remoteHostPairFirst => 'Σύζευξη τηλεφώνου';
 
   @override
-  String get remoteHostPairAnother => 'Pair another device';
+  String get remoteHostPairAnother => 'Σύζευξη άλλης συσκευής';
 
   @override
   String get remoteHostPairingClosed =>
-      'Pairing is closed. Tap the button for a new code; it works for 2 minutes and for one device.';
+      'Η σύζευξη είναι κλειστή. Πατήστε το κουμπί για νέο κωδικό· ισχύει για 2 λεπτά και για μία συσκευή.';
 
   @override
   String get remoteHostFull =>
-      '5 devices are paired, the most allowed. Forget one to pair another.';
+      'Έχουν συζευχθεί 5 συσκευές, το μέγιστο επιτρεπτό. Αφαιρέστε μία για να συζεύξετε άλλη.';
 
   @override
   String remoteHostAddresses(String addresses) {
-    return 'This PC\'s address: $addresses';
+    return 'Διεύθυνση αυτού του υπολογιστή: $addresses';
   }
 
   @override
-  String get remoteHostNoAddress => 'This PC has no network address right now.';
+  String get remoteHostNoAddress =>
+      'Αυτός ο υπολογιστής δεν έχει διεύθυνση δικτύου αυτή τη στιγμή.';
 
   @override
   String get remoteHostNoDiscovery =>
-      'Your phone may not find this PC by itself; type this PC\'s address on the phone instead.';
+      'Το τηλέφωνό σας ίσως δεν βρει αυτόν τον υπολογιστή μόνο του· πληκτρολογήστε τη διεύθυνση του υπολογιστή στο τηλέφωνο.';
 
   @override
-  String get remoteHostConnectedTitle => 'Connected now';
+  String get remoteHostConnectedTitle => 'Συνδεδεμένες τώρα';
 
   @override
-  String get remoteHostPairedTitle => 'Paired devices';
+  String get remoteHostPairedTitle => 'Συζευγμένες συσκευές';
 
   @override
-  String get remoteHostNoDevices => 'No paired devices yet';
+  String get remoteHostNoDevices => 'Δεν υπάρχουν ακόμη συζευγμένες συσκευές';
 
   @override
   String get remoteHostUnusedNote =>
-      'A device not used for 90 days is forgotten.';
+      'Μια συσκευή που δεν χρησιμοποιείται για 90 ημέρες αφαιρείται.';
 
   @override
   String remoteHostLastUsed(String date) {
-    return 'Last used $date';
+    return 'Τελευταία χρήση $date';
   }
 
   @override
   String remoteHostConnectedFrom(String address, String time) {
-    return '$address, connected since $time';
+    return '$address, συνδεδεμένη από $time';
   }
 
   @override
-  String get remoteHostForget => 'Forget';
+  String get remoteHostForget => 'Αφαίρεση';
 
   @override
-  String get remoteHostForgetAll => 'Forget all';
+  String get remoteHostForgetAll => 'Αφαίρεση όλων';
 
   @override
   String get remoteHostForgetAllConfirm =>
-      'Forget all paired devices? Each one has to pair again to control this PC.';
+      'Αφαίρεση όλων των συζευγμένων συσκευών; Καθεμία πρέπει να συζευχθεί ξανά για να ελέγχει αυτόν τον υπολογιστή.';
 
   @override
-  String get remoteHostDisconnect => 'Disconnect';
+  String get remoteHostDisconnect => 'Αποσύνδεση';
 
   @override
   String remoteHostAllowTitle(String name) {
-    return 'Allow ‘$name’ to control Absorb on this PC?';
+    return 'Να επιτραπεί στη συσκευή ‘$name’ να ελέγχει το Absorb σε αυτόν τον υπολογιστή;';
   }
 
   @override
   String get remoteHostAllowBody =>
-      'Only allow a device you know. It can play, pause and change what plays here. No answer means no.';
+      'Επιτρέψτε μόνο συσκευή που γνωρίζετε. Μπορεί να παίξει, να κάνει παύση και να αλλάξει τι παίζει εδώ. Η μη απάντηση σημαίνει όχι.';
 
   @override
-  String get remoteHostAllow => 'Allow';
+  String get remoteHostAllow => 'Να επιτρέπεται';
 
   @override
-  String get remoteHostDeny => 'Deny';
+  String get remoteHostDeny => 'Άρνηση';
 
   @override
-  String get remoteControlAnother => 'Control your computer';
+  String get remoteControlAnother => 'Έλεγχος του υπολογιστή σας';
 
   @override
   String get remoteControlAnotherSubtitle =>
-      'Use this phone as a remote for Absorb on your PC';
+      'Χρησιμοποιήστε αυτό το τηλέφωνο ως τηλεχειριστήριο για το Absorb στον υπολογιστή σας';
 
   @override
   String get remoteConnectIntro =>
-      'Use this phone as a remote for Absorb on your PC. The audio keeps playing on the PC. Your phone and PC need to be on the same Wi-Fi. On the PC, open Settings > Control from your phone and turn it on.';
+      'Χρησιμοποιήστε αυτό το τηλέφωνο ως τηλεχειριστήριο για το Absorb στον υπολογιστή σας. Ο ήχος συνεχίζει να παίζει στον υπολογιστή. Το τηλέφωνο και ο υπολογιστής πρέπει να είναι στο ίδιο Wi-Fi. Στον υπολογιστή, ανοίξτε Ρυθμίσεις > Έλεγχος από το τηλέφωνό σας και ενεργοποιήστε το.';
 
   @override
-  String get remoteConnectSearching => 'Looking for computers on your Wi-Fi…';
+  String get remoteConnectSearching => 'Αναζήτηση υπολογιστών στο Wi-Fi σας…';
 
   @override
   String get remoteConnectNoneFound =>
-      'No computers found. On the PC, open Settings > Control from your phone and turn it on, or enter its address.';
+      'Δεν βρέθηκαν υπολογιστές. Στον υπολογιστή, ανοίξτε Ρυθμίσεις > Έλεγχος από το τηλέφωνό σας και ενεργοποιήστε το, ή εισαγάγετε τη διεύθυνσή του.';
 
   @override
-  String get remoteConnectSearchAgain => 'Search again';
+  String get remoteConnectSearchAgain => 'Αναζήτηση ξανά';
 
   @override
-  String get remoteConnectPaired => 'Paired';
+  String get remoteConnectPaired => 'Συζευγμένος';
 
   @override
-  String get remoteConnectFound => 'On your Wi-Fi';
+  String get remoteConnectFound => 'Στο Wi-Fi σας';
 
   @override
-  String get remoteConnectEnterAddress => 'Enter an address';
+  String get remoteConnectEnterAddress => 'Εισαγωγή διεύθυνσης';
 
   @override
   String get remoteConnectAddressHint => '192.168.1.20:47390';
 
   @override
   String get remoteConnectAddressInvalid =>
-      'Enter an address like 192.168.1.20 or 192.168.1.20:47390';
+      'Εισαγάγετε διεύθυνση όπως 192.168.1.20 ή 192.168.1.20:47390';
 
   @override
-  String get remoteConnectNext => 'Next';
+  String get remoteConnectNext => 'Επόμενο';
 
   @override
   String remoteConnectCodeTitle(String name) {
-    return 'Pair with $name';
+    return 'Σύζευξη με $name';
   }
 
   @override
   String get remoteConnectCodeHelp =>
-      'Enter the 6-digit code shown on the PC under Control from your phone.';
+      'Εισαγάγετε τον 6ψήφιο κωδικό που εμφανίζεται στον υπολογιστή στο Έλεγχος από το τηλέφωνό σας.';
 
   @override
-  String get remoteConnectWaiting => 'Now choose Allow on the PC…';
+  String get remoteConnectWaiting =>
+      'Τώρα επιλέξτε Να επιτρέπεται στον υπολογιστή…';
 
   @override
-  String get remoteConnectPair => 'Pair';
+  String get remoteConnectPair => 'Σύζευξη';
 
   @override
-  String get remoteConnectForget => 'Forget this computer';
+  String get remoteConnectForget => 'Αφαίρεση αυτού του υπολογιστή';
 
   @override
   String get remotePairBadCode =>
-      'That code isn\'t right. Check the PC and try again.';
+      'Ο κωδικός δεν είναι σωστός. Ελέγξτε τον υπολογιστή και δοκιμάστε ξανά.';
 
   @override
   String get remotePairExpired =>
-      'The code expired. Get a new one on the PC with Pair another device.';
+      'Ο κωδικός έληξε. Λάβετε νέο στον υπολογιστή με το Σύζευξη άλλης συσκευής.';
 
   @override
   String get remotePairClosed =>
-      'Pairing isn\'t open on the PC. On the PC, tap Pair another device for a new code.';
+      'Η σύζευξη δεν είναι ανοιχτή στον υπολογιστή. Στον υπολογιστή, πατήστε Σύζευξη άλλης συσκευής για νέο κωδικό.';
 
   @override
   String get remotePairDenied =>
-      'The PC didn\'t allow this phone. Try again and choose Allow on the PC.';
+      'Ο υπολογιστής δεν επέτρεψε αυτό το τηλέφωνο. Δοκιμάστε ξανά και επιλέξτε Να επιτρέπεται στον υπολογιστή.';
 
   @override
   String get remotePairTooManyDevices =>
-      'That PC already has 5 paired devices. Forget one on the PC first.';
+      'Αυτός ο υπολογιστής έχει ήδη 5 συζευγμένες συσκευές. Αφαιρέστε πρώτα μία στον υπολογιστή.';
 
   @override
   String get remotePairTooMany =>
-      'Too many tries. Wait a minute and try again.';
+      'Πάρα πολλές προσπάθειες. Περιμένετε ένα λεπτό και δοκιμάστε ξανά.';
 
   @override
   String get remotePairUnreachable =>
-      'Your phone and PC aren\'t on the same Wi-Fi, or the PC hasn\'t turned it on. Check both and try again.';
+      'Το τηλέφωνο και ο υπολογιστής δεν είναι στο ίδιο Wi-Fi, ή ο υπολογιστής δεν το έχει ενεργοποιήσει. Ελέγξτε και τα δύο και δοκιμάστε ξανά.';
 
   @override
-  String get remotePairFailed => 'Pairing didn\'t work. Try again.';
+  String get remotePairFailed => 'Η σύζευξη δεν λειτούργησε. Δοκιμάστε ξανά.';
 
   @override
   String get remoteVersionMismatch =>
-      'Update Absorb Plus on both devices to use the remote.';
+      'Ενημερώστε το Absorb Plus και στις δύο συσκευές για να χρησιμοποιήσετε το τηλεχειριστήριο.';
 
   @override
-  String get remoteConnecting => 'Connecting…';
+  String get remoteConnecting => 'Σύνδεση…';
 
   @override
-  String get remoteReconnecting => 'Reconnecting…';
+  String get remoteReconnecting => 'Επανασύνδεση…';
 
   @override
   String get remoteUnreachableHint =>
-      'Can\'t reach the PC. Check that it\'s awake, Absorb is open, and both are on the same Wi-Fi.';
+      'Δεν είναι δυνατή η επικοινωνία με τον υπολογιστή. Ελέγξτε ότι είναι ενεργός, ότι το Absorb είναι ανοιχτό και ότι και οι δύο συσκευές είναι στο ίδιο Wi-Fi.';
 
   @override
   String remoteNothingPlaying(String name) {
-    return 'Nothing is playing on $name';
+    return 'Δεν παίζει τίποτα στο $name';
   }
 
   @override
-  String get remoteNothingLoaded => 'Start something on the PC first.';
+  String get remoteNothingLoaded => 'Ξεκινήστε πρώτα κάτι στον υπολογιστή.';
 
   @override
-  String get remoteCommandFailed => 'The PC couldn\'t do that.';
+  String get remoteCommandFailed => 'Ο υπολογιστής δεν μπόρεσε να το κάνει.';
 
   @override
-  String get remoteNotOnList => 'That book isn\'t on the PC\'s list any more.';
+  String get remoteNotOnList =>
+      'Αυτό το βιβλίο δεν υπάρχει πια στη λίστα του υπολογιστή.';
 
   @override
-  String get remoteDisconnectedByHost => 'The PC disconnected this device.';
+  String get remoteDisconnectedByHost =>
+      'Ο υπολογιστής αποσύνδεσε αυτή τη συσκευή.';
 
   @override
   String get remoteUnauthorized =>
-      'The PC doesn\'t know this device any more. Pair it again.';
+      'Ο υπολογιστής δεν αναγνωρίζει πια αυτή τη συσκευή. Συζεύξτε την ξανά.';
 
   @override
-  String get remotePairAgain => 'Pair again';
+  String get remotePairAgain => 'Νέα σύζευξη';
 
   @override
-  String get remoteConnectAgain => 'Connect again';
+  String get remoteConnectAgain => 'Σύνδεση ξανά';
 
   @override
-  String get remoteDisplayMode => 'Display mode';
+  String get remoteDisplayMode => 'Λειτουργία οθόνης';
 
   @override
-  String get remoteDisplayExit => 'Tap to leave display mode';
+  String get remoteDisplayExit => 'Πατήστε για έξοδο από τη λειτουργία οθόνης';
 
   @override
-  String get remotePlay => 'Play';
+  String get remotePlay => 'Αναπαραγωγή';
 
   @override
-  String get remotePause => 'Pause';
+  String get remotePause => 'Παύση';
 
   @override
-  String get remoteStop => 'Stop';
+  String get remoteStop => 'Διακοπή';
 
   @override
-  String get remotePreviousChapter => 'Previous chapter';
+  String get remotePreviousChapter => 'Προηγούμενο κεφάλαιο';
 
   @override
-  String get remoteNextChapter => 'Next chapter';
+  String get remoteNextChapter => 'Επόμενο κεφάλαιο';
 
   @override
   String remoteSkipBack(int seconds) {
-    return 'Back $seconds seconds';
+    return 'Πίσω $seconds δευτερόλεπτα';
   }
 
   @override
   String remoteSkipForward(int seconds) {
-    return 'Forward $seconds seconds';
+    return 'Εμπρός $seconds δευτερόλεπτα';
   }
 
   @override
-  String get remoteSpeed => 'Speed';
+  String get remoteSpeed => 'Ταχύτητα';
 
   @override
-  String get remoteSpeedSlower => 'Slower';
+  String get remoteSpeedSlower => 'Πιο αργά';
 
   @override
-  String get remoteSpeedFaster => 'Faster';
+  String get remoteSpeedFaster => 'Πιο γρήγορα';
 
   @override
-  String get remoteSleepTimer => 'Sleep timer';
+  String get remoteSleepTimer => 'Χρονοδιακόπτης ύπνου';
 
   @override
   String remoteSleepMinutes(int minutes) {
-    return '$minutes minutes';
+    return '$minutes λεπτά';
   }
 
   @override
-  String get remoteSleepEndOfChapter => 'End of chapter';
+  String get remoteSleepEndOfChapter => 'Τέλος κεφαλαίου';
 
   @override
-  String get remoteSleepEndOfEpisode => 'End of episode';
+  String get remoteSleepEndOfEpisode => 'Τέλος επεισοδίου';
 
   @override
   String remoteSleepChapters(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count chapters',
-      one: '1 chapter',
+      other: '$count κεφάλαια',
+      one: '1 κεφάλαιο',
     );
     return '$_temp0';
   }
 
   @override
-  String get remoteSleepCancel => 'Turn off the sleep timer';
+  String get remoteSleepCancel => 'Απενεργοποίηση χρονοδιακόπτη ύπνου';
 
   @override
-  String get remoteVolume => 'Volume';
+  String get remoteVolume => 'Ένταση';
 
   @override
-  String get remoteMute => 'Mute';
+  String get remoteMute => 'Σίγαση';
 
   @override
-  String get remoteUnmute => 'Unmute';
+  String get remoteUnmute => 'Κατάργηση σίγασης';
 
   @override
-  String get remoteChapters => 'Chapters';
+  String get remoteChapters => 'Κεφάλαια';
 
   @override
-  String get remoteBookmark => 'Bookmark';
+  String get remoteBookmark => 'Σελιδοδείκτης';
 
   @override
-  String get remoteBookmarkTitle => 'Add a bookmark here';
+  String get remoteBookmarkTitle => 'Προσθήκη σελιδοδείκτη εδώ';
 
   @override
-  String get remoteBookmarkNoteHint => 'Note (optional)';
+  String get remoteBookmarkNoteHint => 'Σημείωση (προαιρετική)';
 
   @override
-  String get remoteBookmarkAdd => 'Add';
+  String get remoteBookmarkAdd => 'Προσθήκη';
 
   @override
-  String get remoteBookmarkAdded => 'Bookmark added on the PC';
+  String get remoteBookmarkAdded =>
+      'Ο σελιδοδείκτης προστέθηκε στον υπολογιστή';
 
   @override
-  String get remoteContinueListening => 'Continue listening';
+  String get remoteContinueListening => 'Συνέχεια ακρόασης';
 
   @override
-  String get remoteContinueEmpty => 'Nothing in progress on the PC.';
+  String get remoteContinueEmpty =>
+      'Δεν υπάρχει τίποτα σε εξέλιξη στον υπολογιστή.';
 
   @override
   String remoteTimeLeft(String time) {
-    return '$time left';
+    return 'απομένουν $time';
   }
 
   @override
   String remoteChapterTimeLeft(String time) {
-    return '$time left in the chapter';
+    return 'απομένουν $time στο κεφάλαιο';
   }
 
   @override
-  String get remoteCustomize => 'Customize';
+  String get remoteCustomize => 'Προσαρμογή';
 
   @override
-  String get remoteCustomizeTitle => 'Customize the remote';
+  String get remoteCustomizeTitle => 'Προσαρμογή του τηλεχειριστηρίου';
 
   @override
   String get remoteCustomizeHintPortrait =>
-      'Editing the portrait layout. Drag a block by its handle, or hold it, to move it. Turn the phone to edit landscape.';
+      'Επεξεργασία της κατακόρυφης διάταξης. Σύρετε ένα μπλοκ από τη λαβή του, ή κρατήστε το πατημένο, για να το μετακινήσετε. Γυρίστε το τηλέφωνο για επεξεργασία της οριζόντιας.';
 
   @override
   String get remoteCustomizeHintLandscape =>
-      'Editing the landscape layout. Drag blocks within or between the two columns. Turn the phone to edit portrait.';
+      'Επεξεργασία της οριζόντιας διάταξης. Σύρετε μπλοκ μέσα σε μία ή ανάμεσα στις δύο στήλες. Γυρίστε το τηλέφωνο για επεξεργασία της κατακόρυφης.';
 
   @override
-  String get remoteCustomizeReset => 'Reset to default';
+  String get remoteCustomizeReset => 'Επαναφορά προεπιλογής';
 
   @override
-  String get remoteCustomizePresets => 'Presets';
+  String get remoteCustomizePresets => 'Προεπιλογές';
 
   @override
-  String get remoteCustomizeAddTitle => 'Add to the screen';
+  String get remoteCustomizeAddTitle => 'Προσθήκη στην οθόνη';
 
   @override
-  String get remoteCustomizeDropHere => 'Drop blocks here';
+  String get remoteCustomizeDropHere => 'Αφήστε μπλοκ εδώ';
 
   @override
-  String get remoteCustomizeMove => 'Drag to move';
+  String get remoteCustomizeMove => 'Σύρετε για μετακίνηση';
 
   @override
   String get remoteCustomizeEmpty =>
-      'Nothing on this screen. Tap Customize to add controls.';
+      'Δεν υπάρχει τίποτα σε αυτή την οθόνη. Πατήστε Προσαρμογή για να προσθέσετε χειριστήρια.';
 
   @override
-  String get remotePresetDefault => 'Default';
+  String get remotePresetDefault => 'Προεπιλογή';
 
   @override
-  String get remotePresetMinimal => 'Minimal';
+  String get remotePresetMinimal => 'Ελάχιστη';
 
   @override
-  String get remotePresetNightstand => 'Nightstand';
+  String get remotePresetNightstand => 'Κομοδίνο';
 
   @override
-  String get remotePresetFull => 'Full';
+  String get remotePresetFull => 'Πλήρης';
 
   @override
-  String get remoteBlockCover => 'Cover';
+  String get remoteBlockCover => 'Εξώφυλλο';
 
   @override
-  String get remoteBlockTitle => 'Title and author';
+  String get remoteBlockTitle => 'Τίτλος και συγγραφέας';
 
   @override
-  String get remoteBlockChapterTitle => 'Chapter title';
+  String get remoteBlockChapterTitle => 'Τίτλος κεφαλαίου';
 
   @override
-  String get remoteBlockProgress => 'Progress bar';
+  String get remoteBlockProgress => 'Γραμμή προόδου';
 
   @override
-  String get remoteBlockTimeLeft => 'Time left';
+  String get remoteBlockTimeLeft => 'Χρόνος που απομένει';
 
   @override
-  String get remoteBlockTransport => 'Playback buttons';
+  String get remoteBlockTransport => 'Κουμπιά αναπαραγωγής';
 
   @override
-  String get remoteBlockClock => 'Clock';
+  String get remoteBlockClock => 'Ρολόι';
 
   @override
-  String get remoteBlockSpacer => 'Space';
+  String get remoteBlockSpacer => 'Κενό';
 
   @override
-  String get remoteSizeSmall => 'Small';
+  String get remoteSizeSmall => 'Μικρό';
 
   @override
-  String get remoteSizeMedium => 'Medium';
+  String get remoteSizeMedium => 'Μεσαίο';
 
   @override
-  String get remoteSizeLarge => 'Large';
+  String get remoteSizeLarge => 'Μεγάλο';
 
   @override
-  String get remoteSizeCompact => 'Compact';
+  String get remoteSizeCompact => 'Συμπαγές';
 
   @override
-  String get remoteSizeNormal => 'Normal';
+  String get remoteSizeNormal => 'Κανονικό';
 
   @override
-  String get remoteDisplayBackground => 'Background';
+  String get remoteDisplayBackground => 'Φόντο';
 
   @override
-  String get remoteDisplayBackgroundTheme => 'Theme';
+  String get remoteDisplayBackgroundTheme => 'Θέμα';
 
   @override
-  String get remoteDisplayBackgroundCover => 'Blurred cover';
+  String get remoteDisplayBackgroundCover => 'Θολωμένο εξώφυλλο';
 
   @override
-  String get remoteDisplayBackgroundBlack => 'Black';
+  String get remoteDisplayBackgroundBlack => 'Μαύρο';
 
   @override
-  String get remoteDisplayTextSize => 'Text size';
+  String get remoteDisplayTextSize => 'Μέγεθος κειμένου';
 
   @override
-  String get remoteDisplayTextHuge => 'Huge';
+  String get remoteDisplayTextHuge => 'Τεράστιο';
 
   @override
-  String get remoteDisplayShowClock => 'Show the clock';
+  String get remoteDisplayShowClock => 'Εμφάνιση ρολογιού';
 
   @override
-  String get remoteDisplay24Hour => '24-hour clock';
+  String get remoteDisplay24Hour => 'Ρολόι 24 ωρών';
 
   @override
-  String get remoteDisplayDim => 'Dim the screen after';
+  String get remoteDisplayDim => 'Μείωση φωτεινότητας οθόνης μετά από';
 
   @override
-  String get remoteDisplayDimNever => 'Never';
+  String get remoteDisplayDimNever => 'Ποτέ';
 
   @override
-  String get quickSwitcherKeywordsRemote => 'remote phone control pc link pair';
+  String get quickSwitcherKeywordsRemote =>
+      'remote phone control pc link pair τηλεχειριστήριο τηλέφωνο έλεγχος υπολογιστής σύζευξη';
 
   @override
-  String get quickSwitcherKeywordsSurprise => 'random pick shuffle';
+  String get quickSwitcherKeywordsSurprise =>
+      'random pick shuffle τυχαίο επιλογή έκπληξη';
 
   @override
-  String get developerModeOn => 'Developer mode on';
+  String get developerModeOn => 'Η λειτουργία προγραμματιστή είναι ενεργή';
 
   @override
-  String get developerModeAlreadyOn => 'Developer mode is already on';
+  String get developerModeAlreadyOn =>
+      'Η λειτουργία προγραμματιστή είναι ήδη ενεργή';
 
   @override
-  String get developerTitle => 'Developer';
+  String get developerTitle => 'Προγραμματιστής';
 
   @override
-  String get developerSubtitle => 'Test builds and tools for development';
+  String get developerSubtitle =>
+      'Δοκιμαστικές εκδόσεις και εργαλεία ανάπτυξης';
 
   @override
-  String get developerModeSwitch => 'Developer mode';
+  String get developerModeSwitch => 'Λειτουργία προγραμματιστή';
 
   @override
   String get developerModeSwitchSubtitle =>
-      'Turning it off hides this page. Tap the version 7 times to bring it back.';
+      'Η απενεργοποίηση κρύβει αυτή τη σελίδα. Πατήστε 7 φορές την έκδοση για να επανέλθει.';
 
   @override
-  String get testChannelTitle => 'Test channel';
+  String get testChannelTitle => 'Δοκιμαστικό κανάλι';
 
   @override
-  String get testChannelSubtitle => 'Install the newest test build';
+  String get testChannelSubtitle =>
+      'Εγκατάσταση της νεότερης δοκιμαστικής έκδοσης';
 
   @override
   String get testChannelUnavailable =>
-      'Test builds are only for the Android GitHub version.';
+      'Οι δοκιμαστικές εκδόσεις αφορούν μόνο την έκδοση GitHub για Android.';
 
   @override
-  String get testChannelCodeLabel => 'Test channel code';
+  String get testChannelCodeLabel => 'Κωδικός δοκιμαστικού καναλιού';
 
   @override
-  String get testChannelUnlock => 'Unlock';
+  String get testChannelUnlock => 'Ξεκλείδωμα';
 
   @override
-  String get testChannelUnlocked => 'Test channel unlocked';
+  String get testChannelUnlocked => 'Το δοκιμαστικό κανάλι ξεκλειδώθηκε';
 
   @override
-  String get testChannelWrongCode => 'That code isn\'t right';
+  String get testChannelWrongCode => 'Ο κωδικός δεν είναι σωστός';
 
   @override
-  String get testChannelLaunchCheck => 'Check for test builds on launch';
+  String get testChannelLaunchCheck =>
+      'Έλεγχος για δοκιμαστικές εκδόσεις κατά την εκκίνηση';
 
   @override
   String get testChannelLaunchCheckSubtitle =>
-      'Asks to install a newer test build when the app starts';
+      'Ζητά εγκατάσταση νεότερης δοκιμαστικής έκδοσης όταν ξεκινά η εφαρμογή';
 
   @override
   String get testChannelWarning =>
-      'Test builds are unfinished and can break things. They replace the installed app and keep your data.';
+      'Οι δοκιμαστικές εκδόσεις είναι ημιτελείς και μπορεί να προκαλέσουν προβλήματα. Αντικαθιστούν την εγκατεστημένη εφαρμογή και διατηρούν τα δεδομένα σας.';
 
   @override
   String testChannelInstalled(String version) {
-    return 'Installed: $version';
+    return 'Εγκατεστημένη: $version';
   }
 
   @override
   String testChannelNewest(String version) {
-    return 'Newest test build: $version';
+    return 'Νεότερη δοκιμαστική έκδοση: $version';
   }
 
   @override
-  String get testChannelNone => 'No test build is up yet';
+  String get testChannelNone => 'Δεν υπάρχει ακόμη δοκιμαστική έκδοση';
 
   @override
-  String get testChannelUpToDate => 'Up to date';
+  String get testChannelUpToDate => 'Ενημερωμένη';
 
   @override
-  String get testChannelInstall => 'Install';
+  String get testChannelInstall => 'Εγκατάσταση';
 
   @override
-  String get testChannelCheckNow => 'Check now';
+  String get testChannelCheckNow => 'Έλεγχος τώρα';
 
   @override
-  String get testChannelNotes => 'What\'s in it';
+  String get testChannelNotes => 'Τι περιλαμβάνει';
 
   @override
-  String get testBuildAvailable => 'Test build available';
+  String get testBuildAvailable => 'Διαθέσιμη δοκιμαστική έκδοση';
 
   @override
   String testBuildDialogContent(String latest, String current) {
-    return 'Test build $latest is out.\n\nYou are on $current.';
+    return 'Κυκλοφόρησε η δοκιμαστική έκδοση $latest.\n\nΕίστε στην $current.';
   }
 
   @override
   String testBuildPackageLabel(int build) {
-    return 'Test build $build';
+    return 'Δοκιμαστική έκδοση $build';
   }
 
   @override
-  String get githubSignIn => 'Sign in with GitHub';
+  String get githubSignIn => 'Σύνδεση με GitHub';
 
   @override
   String get githubSignInSubtitle =>
-      'Test builds are private: sign in to get them';
+      'Οι δοκιμαστικές εκδόσεις είναι ιδιωτικές: συνδεθείτε για να τις λάβετε';
 
   @override
   String get githubSignInNotSetUp =>
-      'GitHub sign-in isn\'t set up in this build yet';
+      'Η σύνδεση με GitHub δεν έχει ρυθμιστεί ακόμη σε αυτή την έκδοση';
 
   @override
-  String get githubSignInAgain => 'Sign in again';
+  String get githubSignInAgain => 'Σύνδεση ξανά';
 
   @override
-  String get githubSignInExpired => 'Your GitHub sign-in ran out';
+  String get githubSignInExpired => 'Η σύνδεσή σας στο GitHub έληξε';
 
   @override
   String githubSignedInAs(String login) {
-    return 'Signed in to GitHub as $login';
+    return 'Συνδεθήκατε στο GitHub ως $login';
   }
 
   @override
-  String get githubSignedIn => 'Signed in to GitHub';
+  String get githubSignedIn => 'Συνδεθήκατε στο GitHub';
 
   @override
-  String get githubSignOut => 'Sign out';
+  String get githubSignOut => 'Αποσύνδεση';
 
   @override
-  String get githubSignInEnterCode => 'Enter this code on GitHub:';
+  String get githubSignInEnterCode => 'Εισαγάγετε αυτόν τον κωδικό στο GitHub:';
 
   @override
-  String get githubSignInOpen => 'Open github.com/login/device';
+  String get githubSignInOpen => 'Άνοιγμα github.com/login/device';
 
   @override
-  String get githubSignInCopyCode => 'Copy code';
+  String get githubSignInCopyCode => 'Αντιγραφή κωδικού';
 
   @override
-  String get githubSignInCodeCopied => 'Code copied';
+  String get githubSignInCodeCopied => 'Ο κωδικός αντιγράφηκε';
 
   @override
-  String get githubSignInWaiting =>
-      'Waiting for you to approve it on GitHub...';
+  String get githubSignInWaiting => 'Αναμονή για την έγκρισή σας στο GitHub...';
 
   @override
-  String get githubSignInDenied => 'Sign-in was cancelled on GitHub.';
+  String get githubSignInDenied => 'Η σύνδεση ακυρώθηκε στο GitHub.';
 
   @override
-  String get githubSignInCodeExpired => 'The code ran out. Try again.';
+  String get githubSignInCodeExpired => 'Ο κωδικός έληξε. Δοκιμάστε ξανά.';
 
   @override
-  String get githubSignInFailed => 'Couldn\'t sign in to GitHub. Try again.';
+  String get githubSignInFailed =>
+      'Δεν ήταν δυνατή η σύνδεση στο GitHub. Δοκιμάστε ξανά.';
 
   @override
-  String get githubSignInTryAgain => 'Try again';
+  String get githubSignInTryAgain => 'Δοκιμάστε ξανά';
 
   @override
   String get testChannelSignInNeeded =>
-      'Sign in with GitHub to get test builds';
+      'Συνδεθείτε με GitHub για να λάβετε δοκιμαστικές εκδόσεις';
 
   @override
-  String get downloadEtaUnderMinute => '<1 min left';
+  String get downloadEtaUnderMinute => 'απομένει <1 λεπτό';
 
   @override
   String downloadEtaMinutes(int minutes) {
-    return '$minutes min left';
+    return 'απομένουν $minutes λεπτά';
   }
 
   @override
   String downloadEtaHours(int hours) {
-    return '$hours hr left';
+    return 'απομένουν $hours ώρες';
   }
 
   @override
   String downloadEtaHoursMinutes(int hours, int minutes) {
-    return '$hours hr $minutes min left';
+    return 'απομένουν $hours ώρ. $minutes λεπτά';
   }
 
   @override
-  String get sameSpeedAllBooksTitle => 'Same speed for every book';
+  String get sameSpeedAllBooksTitle => 'Ίδια ταχύτητα για κάθε βιβλίο';
 
   @override
   String get sameSpeedAllBooksSubtitle =>
-      'Every book plays at the default speed, and changing the speed in the player changes it for all books. Off: each book (or its series) keeps its own speed.';
+      'Κάθε βιβλίο παίζει με την προεπιλεγμένη ταχύτητα και η αλλαγή ταχύτητας στο πρόγραμμα αναπαραγωγής την αλλάζει για όλα τα βιβλία. Ανενεργό: κάθε βιβλίο (ή η σειρά του) κρατά τη δική του ταχύτητα.';
 }
