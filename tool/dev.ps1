@@ -452,7 +452,8 @@ switch ($Command) {
         # The GitHub App's client id (public, not a secret) turns on GitHub
         # sign-in for the private test-builds repo; empty means not set up.
         $clientIdFile = 'tool\test-channel-client-id.txt'
-        $clientId = if (Test-Path $clientIdFile) { (Get-Content $clientIdFile -Raw).Trim() } else { '' }
+        # An empty file reads as $null with -Raw, so wrap it before trimming.
+        $clientId = if (Test-Path $clientIdFile) { "$(Get-Content $clientIdFile -Raw)".Trim() } else { '' }
         & $flutter build apk --release --no-pub --flavor dev --target-platform android-arm64 --dart-define=GITHUB_BUILD=true --dart-define=ABSORB_TEST_BUILD=true "--dart-define=ABSORB_GH_CLIENT_ID=$clientId"
       }
       $apk = Get-ChildItem 'build\app\outputs\flutter-apk' -Filter '*dev-release*.apk' |
