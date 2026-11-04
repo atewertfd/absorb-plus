@@ -449,7 +449,11 @@ switch ($Command) {
       Invoke-Step -Name 'apk-local' -Run {
         # The "Absorb Plus Test" app: dev flavor (own app id, installs beside
         # the normal app) with Developer mode and the test channel compiled in.
-        & $flutter build apk --release --no-pub --flavor dev --target-platform android-arm64 --dart-define=GITHUB_BUILD=true --dart-define=ABSORB_TEST_BUILD=true
+        # The GitHub App's client id (public, not a secret) turns on GitHub
+        # sign-in for the private test-builds repo; empty means not set up.
+        $clientIdFile = 'tool\test-channel-client-id.txt'
+        $clientId = if (Test-Path $clientIdFile) { (Get-Content $clientIdFile -Raw).Trim() } else { '' }
+        & $flutter build apk --release --no-pub --flavor dev --target-platform android-arm64 --dart-define=GITHUB_BUILD=true --dart-define=ABSORB_TEST_BUILD=true "--dart-define=ABSORB_GH_CLIENT_ID=$clientId"
       }
       $apk = Get-ChildItem 'build\app\outputs\flutter-apk' -Filter '*dev-release*.apk' |
         Sort-Object LastWriteTime -Descending | Select-Object -First 1
