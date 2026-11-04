@@ -5057,6 +5057,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     label: Text(l.checkForUpdate),
                   )),
                 ],
+                RunSetupAgainTile.aboutButton(context), // Absorb Plus
 
                 const SizedBox(height: 100),
               ],

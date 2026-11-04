@@ -18,6 +18,20 @@ class RunSetupAgainTile extends StatelessWidget {
         ),
       );
 
+  /// The small button under the version line at the bottom of Settings,
+  /// where most apps keep "replay the intro" (owner, 2026-11-04).
+  static Widget aboutButton(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return Center(
+      child: TextButton.icon(
+        key: const ValueKey('run-setup-again-about'),
+        onPressed: () => open(context),
+        icon: const Icon(Icons.restart_alt_rounded, size: 16),
+        label: Text(l.setupRunAgain),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;

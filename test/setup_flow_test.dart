@@ -389,4 +389,18 @@ void main() {
     expect(find.byType(SetupFlowScreen), findsNothing);
     expect(find.byType(RunSetupAgainTile), findsOneWidget);
   });
+
+  testWidgets('the button under the version line opens the flow too', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _host(
+        SwitchableAuth(signedIn: true),
+        Scaffold(body: Builder(builder: RunSetupAgainTile.aboutButton)),
+      ),
+    );
+    await tester.tap(find.byKey(const ValueKey('run-setup-again-about')));
+    await tester.pumpAndSettle();
+    expect(find.byType(SetupFlowScreen), findsOneWidget);
+  });
 }
