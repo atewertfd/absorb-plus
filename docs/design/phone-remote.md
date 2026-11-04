@@ -188,7 +188,8 @@ Linux beyond CI builds.
 
 ## v2 (2026-11-03, branch `claude/remote-v3`)
 
-Supersedes the stage-1 notes above where they differ. Protocol version 2;
+Supersedes the stage-1 notes above where they differ (the screen's layout
+is now customizable: see "Customizable layout" at the end). Protocol version 2;
 a v1 app on either side is told to update.
 
 ### Names and wording
@@ -287,3 +288,54 @@ one starts it on the PC like its own front-card play). New commands:
 
 Not verified yet: a real phone and PC on the same Wi-Fi, the camera flow
 end to end (needs the Pages deploy), the Windows firewall prompt, Linux.
+
+### Customizable layout (2026-11-03, branch `claude/remote-layout`)
+- **Layout as data** (`services/remote_link/remote_layout.dart`). The
+  remote screen is a list of blocks: cover, title and author, chapter
+  title, progress bar with times, time left, playback buttons (previous
+  chapter / back / play-pause / forward / next chapter), volume, speed,
+  sleep timer, bookmark, chapters, Continue listening, stop, clock, space.
+  Sizes where they make sense: cover small/medium/large, playback buttons
+  compact/large, the rest normal/compact (compact buttons are icon only;
+  the chapter title has one size). Consecutive small buttons share a
+  wrapping row (speed + sleep, then the actions), so the default portrait
+  layout is pixel-identical to the old screen (checked against the old
+  code at three phone sizes).
+- **Portrait and landscape are separate.** Landscape has a left and a right
+  column (default: large cover left; title, chapter, progress, playback
+  buttons and the quick controls right). The cover is sized to the
+  column's height; each column scrolls and centres when short; if one
+  column is empty the other gets the whole width. No overflow at 640x360
+  with 1.3x text (tested for every preset, edit mode and display mode).
+- **Saved on the phone** for every computer: pref `fork_remote_layout`
+  (`{version, portrait, landscapeLeft, landscapeRight}`, entries
+  `{block, size}`) and `fork_remote_display`. Unknown blocks and duplicates
+  are dropped, unknown sizes fall back, missing blocks are not added back,
+  and a missing or unreadable orientation uses the default.
+- **Edit mode** (tune icon, "Customize", in the app bar): the live layout
+  with a header on each block (drag handle, name, size toggle, remove x).
+  Drag by the handle (or hold the block) to move it along its column or,
+  in landscape, to the other column; a bar shows the slot it will drop
+  into, and columns scroll near their edges. Toolbar: Add (sheet of blocks
+  not on screen; landscape adds the cover left, others right), Presets
+  (Default; Minimal = title, progress, playback; Nightstand = large cover,
+  clock, time left; Full = everything but the space), Reset to default,
+  Display mode, and Done. Presets and reset change only the orientation
+  being edited, which follows the phone's orientation (the hint says
+  which). Controls don't respond while editing (`IgnorePointer`); back
+  leaves edit mode. Works while disconnected, using the last known state.
+- **Display mode options** (Customize > Display mode): background (theme,
+  blurred cover, black), text size (normal, large, huge), show the clock,
+  24-hour clock (off follows the phone), dim after 5/10/30 min or never (a
+  dark overlay; the first tap only wakes it). Landscape stays two columns
+  (cover sized to the height left; clock, title, progress and time left
+  right, scrolling if the text is big). The clock (`RemoteClockText`)
+  ticks once a minute on its own instead of rebuilding the screen every
+  second.
+- Files: `widgets/remote_layout_view.dart` (columns, edit chrome, drag and
+  drop, the Add and Display mode sheets); block contents stay in
+  `screens/remote_control_screen.dart` (`_block`). Tests:
+  `remote_layout_test.dart` (JSON, migration, editing, presets, store) and
+  `remote_layout_screen_test.dart` (default order and rows, saved layout,
+  edit mode disables controls, add/remove/size/preset/reset saved, drag in
+  a column and between columns, landscape overflow, display options).
