@@ -10,6 +10,8 @@ import 'app_remote_player.dart';
 import 'pairing_store.dart';
 import 'player_facade.dart';
 import 'protocol.dart';
+import 'remote_channel_io.dart';
+import 'remote_crypto.dart';
 import 'remote_link_types.dart';
 
 bool get remoteHostSupported => RemoteHost.instance.isSupported;
@@ -20,11 +22,13 @@ RemoteHostController get remoteHost => RemoteHost.instance;
 /// that paired remotes connect to, plus a UDP responder for discovery. Off by
 /// default; see docs/design/phone-remote.md.
 ///
-/// Security: only paired devices (token checked against a SHA-256 hash) get
-/// state or send commands; pairing needs the 6-digit code shown while the
-/// host sheet is open; failures are rate-limited per address; requests from
-/// browsers (an Origin header) are refused; tokens are never logged; nothing
-/// about the Audiobookshelf server is ever sent.
+/// Security: pairing needs an open pairing window, its single-use 6-digit
+/// code and the PC user's "Allow"; the device token comes out of a key
+/// exchange and never crosses the network. Logins are a mutual
+/// challenge-response, and every later frame is sealed with a per-connection
+/// key and a sequence number (`remote_crypto.dart`). Failures are
+/// rate-limited per address; requests from browsers (an Origin header) are
+/// refused; nothing about the Audiobookshelf server is ever sent.
 class RemoteHost implements RemoteHostController {
   RemoteHost({
     RemotePlayerFacade Function()? player,
@@ -36,10 +40,15 @@ class RemoteHost implements RemoteHostController {
     this.portCount = kRemotePortCount,
     this.discoveryPort = kRemoteDefaultPort,
     String? hostName,
+    String? hostId,
     bool? supported,
+    this.approver,
     this.authTimeout = const Duration(seconds: 10),
+    this.approvalTimeout = const Duration(seconds: 60),
     this.stateDebounce = const Duration(milliseconds: 150),
     this.stateInterval = const Duration(seconds: 1),
+    this.heartbeat = const Duration(seconds: 2),
+    this.deadAfterBeats = 5,
     this.maxConnections = 8,
     this.maxConnectionsPerAddress = 3,
     this.listenOnAccountChange = true,
@@ -49,18 +58,22 @@ class RemoteHost implements RemoteHostController {
        _limiter = limiter ?? AuthFailureLimiter(),
        _bindAddress = bindAddress,
        _hostNameOverride = hostName,
+       _hostId = hostId ?? '',
        _supported =
            supported ?? (!kIsWeb && (Platform.isWindows || Platform.isLinux));
 
   static final RemoteHost instance = RemoteHost();
 
   static const prefEnabled = 'remote_link_host_enabled';
+  static const prefKeepOn = 'fork_remote_link_keep_on';
 
   final RemotePlayerFacade Function() _playerFactory;
   @override
   final PairedDeviceStore devices;
   @override
   final PairingCodeIssuer codes;
+  @override
+  RemotePairApprover? approver;
   final AuthFailureLimiter _limiter;
   final InternetAddress? _bindAddress;
   final String? _hostNameOverride;
@@ -71,8 +84,14 @@ class RemoteHost implements RemoteHostController {
   final int portCount;
   final int discoveryPort;
   final Duration authTimeout;
+  final Duration approvalTimeout;
   final Duration stateDebounce;
   final Duration stateInterval;
+
+  /// A signed-in remote that sends nothing for [deadAfterBeats] beats of
+  /// [heartbeat] is dropped (remotes ping every 2 s).
+  final Duration heartbeat;
+  final int deadAfterBeats;
   final int maxConnections;
   final int maxConnectionsPerAddress;
   final bool listenOnAccountChange;
@@ -94,13 +113,17 @@ class RemoteHost implements RemoteHostController {
   HttpServer? _server;
   RawDatagramSocket? _udp;
   RemotePlayerFacade? _player;
+  bool _running = false;
   final List<_Connection> _conns = [];
   int _nextConnId = 1;
   Timer? _stateTimer;
   Timer? _tick;
-  String _hostId = '';
+  Timer? _watchdog;
+  String _hostId;
+  String _hostName = '';
   int _coverFor = -1;
   Future<Uint8List?>? _coverLoad;
+  List<RemoteChapter>? _chaptersSent;
   int _discoveryReplies = 0;
   DateTime _discoveryWindow = DateTime.fromMillisecondsSinceEpoch(0);
   bool _started = false;
@@ -130,8 +153,14 @@ class RemoteHost implements RemoteHostController {
     if (listenOnAccountChange) AccountEpoch.addHandler(_onAccountChange);
     await _serial(() async {
       final prefs = await SharedPreferences.getInstance();
-      final on = prefs.getBool(prefEnabled) ?? false;
-      _status.value = RemoteHostStatus(enabled: on);
+      final keepOn = prefs.getBool(prefKeepOn) ?? false;
+      var on = prefs.getBool(prefEnabled) ?? false;
+      if (on && !keepOn) {
+        // Off after every quit unless the user asked to keep it on.
+        on = false;
+        await prefs.setBool(prefEnabled, false);
+      }
+      _status.value = RemoteHostStatus(enabled: on, keepOn: keepOn);
       if (on) await _openSafely();
     });
   }
@@ -142,24 +171,55 @@ class RemoteHost implements RemoteHostController {
     await _serial(() async {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(prefEnabled, enabled);
+      final keepOn = prefs.getBool(prefKeepOn) ?? false;
       if (enabled) {
-        _status.value = RemoteHostStatus(enabled: true, hostId: _hostId);
+        _status.value = RemoteHostStatus(
+          enabled: true,
+          hostId: _hostId,
+          keepOn: keepOn,
+        );
         await _openSafely();
+        if (_running && !devices.isFull) codes.open();
       } else {
+        codes.close();
         await _close();
-        _status.value = const RemoteHostStatus();
+        _status.value = RemoteHostStatus(keepOn: keepOn);
       }
     });
+  }
+
+  @override
+  Future<void> setKeepOn(bool keepOn) async {
+    if (!_supported) return;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(prefKeepOn, keepOn);
+    _status.value = _status.value.copyWith(keepOn: keepOn);
+  }
+
+  @override
+  void openPairing() {
+    if (!_running || devices.isFull) return;
+    codes.open();
+  }
+
+  @override
+  Future<void> refreshAddresses() async {
+    if (!_running) return;
+    final addresses = await _localAddresses();
+    if (_running) _status.value = _status.value.copyWith(addresses: addresses);
   }
 
   @override
   Future<void> signedOut() async {
     if (!_supported) return;
     await _serial(() async {
+      codes.close();
       await _close();
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(prefEnabled, false);
-      _status.value = const RemoteHostStatus();
+      _status.value = RemoteHostStatus(
+        keepOn: prefs.getBool(prefKeepOn) ?? false,
+      );
     });
   }
 
@@ -167,6 +227,7 @@ class RemoteHost implements RemoteHostController {
 
   @override
   void shutdownForExit() {
+    codes.close();
     if (_server == null && _udp == null) return;
     // Never awaited: quitting saves progress on its own clock.
     unawaited(_close().catchError((Object _) {}));
@@ -191,9 +252,38 @@ class RemoteHost implements RemoteHostController {
     }
   }
 
+  @override
+  Future<void> forgetAll() async {
+    await devices.forgetAll();
+    for (final c in List.of(_conns)) {
+      if (c.device != null) _drop(c, RemoteCloseCode.forgotten, 'Forgotten');
+    }
+  }
+
   /// Tests: closes everything without touching the saved switch.
   @visibleForTesting
   Future<void> stopForTest() => _serial(_close);
+
+  /// Tests: opens the host without sockets; [acceptForTest] feeds it links.
+  @visibleForTesting
+  Future<void> startWithoutSocketsForTest() => _serial(() async {
+    await devices.load();
+    if (_hostId.isEmpty) _hostId = await loadRemoteHostId();
+    _hostName = _hostNameOverride ?? 'Test';
+    _attachPlayer();
+    _running = true;
+    _status.value = RemoteHostStatus(
+      enabled: true,
+      running: true,
+      hostId: _hostId,
+      hostName: _hostName,
+    );
+  });
+
+  /// Tests: one incoming link from [address].
+  @visibleForTesting
+  void acceptForTest(RemoteChannel channel, String address) =>
+      _accept(channel, address);
 
   // ── Open / close ──────────────────────────────────────────────────
 
@@ -208,14 +298,22 @@ class RemoteHost implements RemoteHostController {
         enabled: true,
         hostId: _hostId,
         problem: RemoteHostProblem.failed,
+        keepOn: _status.value.keepOn,
       );
     }
+  }
+
+  void _attachPlayer() {
+    final player = _playerFactory();
+    _player = player;
+    player.addListener(_scheduleState);
   }
 
   Future<void> _open() async {
     if (_server != null) return;
     await devices.load();
     if (_hostId.isEmpty) _hostId = await loadRemoteHostId();
+    final keepOn = _status.value.keepOn;
     final address = _bindAddress ?? InternetAddress.anyIPv4;
     HttpServer? server;
     if (firstPort == 0) {
@@ -242,6 +340,7 @@ class RemoteHost implements RemoteHostController {
         enabled: true,
         hostId: _hostId,
         problem: RemoteHostProblem.portsBusy,
+        keepOn: keepOn,
       );
       return;
     }
@@ -258,24 +357,23 @@ class RemoteHost implements RemoteHostController {
       debugPrint('[RemoteHost] Discovery unavailable: ${e.osError?.message}');
     }
 
-    final player = _playerFactory();
-    _player = player;
-    player.addListener(_scheduleState);
-
-    final name = _hostNameOverride ?? _localName();
+    _attachPlayer();
+    _hostName = _hostNameOverride ?? _localName();
     final addresses = await _localAddresses();
     debugPrint(
       '[RemoteHost] Listening on port ${server.port}'
       '${discovery ? ' (discovery on)' : ''}',
     );
+    _running = true;
     _status.value = RemoteHostStatus(
       enabled: true,
       running: true,
       port: server.port,
       addresses: addresses,
       hostId: _hostId,
-      hostName: name,
+      hostName: _hostName,
       discovery: discovery,
+      keepOn: keepOn,
     );
     // Last, so the first hello already finds the player and the name.
     server.listen(
@@ -287,10 +385,13 @@ class RemoteHost implements RemoteHostController {
   }
 
   Future<void> _close() async {
+    _running = false;
     _stateTimer?.cancel();
     _stateTimer = null;
     _tick?.cancel();
     _tick = null;
+    _watchdog?.cancel();
+    _watchdog = null;
     for (final c in List.of(_conns)) {
       _drop(c, RemoteCloseCode.hostStopped, 'Host stopped');
     }
@@ -307,6 +408,7 @@ class RemoteHost implements RemoteHostController {
     }
     _coverFor = -1;
     _coverLoad = null;
+    _chaptersSent = null;
     final server = _server;
     _server = null;
     if (server != null) {
@@ -319,7 +421,7 @@ class RemoteHost implements RemoteHostController {
     try {
       return cleanRemoteName(Platform.localHostname);
     } catch (_) {
-      return 'Absorb';
+      return 'Absorb'; // No host name available: a plain fallback.
     }
   }
 
@@ -337,7 +439,7 @@ class RemoteHost implements RemoteHostController {
             if (!a.isLinkLocal && !a.isLoopback) a.address,
       ];
     } catch (_) {
-      return const [];
+      return const []; // The sheet says there is no address.
     }
   }
 
@@ -354,7 +456,7 @@ class RemoteHost implements RemoteHostController {
     try {
       text = utf8.decode(dg.data).trim();
     } catch (_) {
-      return;
+      return; // Not text: not a probe.
     }
     if (text != kRemoteDiscoverMessage) return;
     // A flood of probes gets a bounded number of answers.
@@ -366,7 +468,7 @@ class RemoteHost implements RemoteHostController {
     if (++_discoveryReplies > 20) return;
     final reply = RemoteHostAnnouncement(
       hostId: _hostId,
-      name: _status.value.hostName,
+      name: _hostName,
       port: server.port,
     ).encode();
     try {
@@ -409,7 +511,7 @@ class RemoteHost implements RemoteHostController {
           unawaited(ws.close(RemoteCloseCode.hostStopped));
           return;
         }
-        _accept(ws, address);
+        _accept(WebSocketRemoteChannel(ws), address);
         return;
       }
       if (path == kRemoteCoverPath && request.method == 'GET') {
@@ -432,6 +534,8 @@ class RemoteHost implements RemoteHostController {
     await response.close();
   }
 
+  /// Covers need the ticket of a signed-in connection (it dies with the
+  /// connection), never a token.
   Future<void> _serveCover(HttpRequest request, String address) async {
     final response = request.response;
     if (_limiter.isBlocked(address)) {
@@ -439,13 +543,34 @@ class RemoteHost implements RemoteHostController {
       return;
     }
     final auth = request.headers.value(HttpHeaders.authorizationHeader) ?? '';
-    final token = auth.startsWith('Bearer ') ? auth.substring(7).trim() : '';
-    if (token.isEmpty || devices.match(token) == null) {
+    final ticket = auth.startsWith('Bearer ') ? auth.substring(7).trim() : '';
+    _Connection? conn;
+    for (final c in _conns) {
+      final t = c.ticket;
+      if (t != null && ticket.isNotEmpty && constantTimeEquals(t, ticket)) {
+        conn = c;
+      }
+    }
+    if (conn == null) {
       _limiter.recordFailure(address);
       await _refuse(response, HttpStatus.unauthorized);
       return;
     }
-    final bytes = await _cover();
+    final item = request.uri.queryParameters['item'];
+    Uint8List? bytes;
+    if (item != null) {
+      // Only books this connection was offered.
+      if (!conn.recentIds.contains(item)) {
+        await _refuse(response, HttpStatus.notFound);
+        return;
+      }
+      bytes = await (_player?.loadCover(item) ?? Future.value(null)).then(
+        (b) => b,
+        onError: (Object _) => null,
+      );
+    } else {
+      bytes = await _cover();
+    }
     if (bytes == null) {
       await _refuse(response, HttpStatus.notFound);
       return;
@@ -484,43 +609,44 @@ class RemoteHost implements RemoteHostController {
     return ContentType('image', 'jpeg');
   }
 
-  // ── WebSocket ─────────────────────────────────────────────────────
+  // ── Connections ───────────────────────────────────────────────────
 
-  void _accept(WebSocket ws, String address) {
-    final conn = _Connection(_nextConnId++, ws, address, DateTime.now());
+  void _accept(RemoteChannel channel, String address) {
+    final conn = _Connection(_nextConnId++, channel, address, DateTime.now());
     _conns.add(conn);
-    ws.pingInterval = const Duration(seconds: 10);
     conn.authTimer = Timer(authTimeout, () {
-      if (conn.device == null) {
-        _drop(conn, RemoteCloseCode.badRequest, 'No hello');
+      if (conn.device == null && !conn.pairing) {
+        _drop(conn, RemoteCloseCode.badRequest, 'No login');
       }
     });
-    conn.sub = ws.listen(
-      // One frame at a time per connection (pairing awaits the store).
+    conn.sub = channel.frames.listen(
+      // One frame at a time per connection (pairing awaits the user).
       (data) => conn.queue = conn.queue
           .then((_) => _onFrame(conn, data))
-          .catchError((Object _) {}),
+          .catchError((Object e) {
+            debugPrint('[RemoteHost] Frame failed: ${e.runtimeType}');
+          }),
       onDone: () => _forgetConnection(conn),
       onError: (Object _) => _forgetConnection(conn),
       cancelOnError: true,
     );
+    _syncWatchdog();
   }
 
   void _forgetConnection(_Connection conn) {
     conn.authTimer?.cancel();
     unawaited(conn.cancelListener());
-    conn.closed = true;
+    conn.markClosed();
     if (_conns.remove(conn)) _publishConnections();
   }
 
-  /// Sends the close frame; dart:io destroys the socket if the peer hasn't
-  /// answered within 5 seconds.
+  /// Sends the close frame; the socket goes even if the peer never answers.
   void _drop(_Connection conn, int code, String reason) {
     conn.authTimer?.cancel();
-    conn.closed = true;
+    conn.markClosed();
     _conns.remove(conn);
     _publishConnections();
-    unawaited(conn.ws.close(code, reason).catchError((Object _) {}));
+    unawaited(conn.channel.close(code, reason).catchError((Object _) {}));
   }
 
   void _publishConnections() {
@@ -536,26 +662,37 @@ class RemoteHost implements RemoteHostController {
           ),
     ]);
     _syncTick();
+    _syncWatchdog();
   }
 
+  /// Plain before login, sealed after.
   void _send(_Connection conn, RemoteMessage message) {
     if (conn.closed) return;
-    try {
-      conn.ws.add(message.encode());
-    } catch (_) {
-      // The connection is closing; its done handler forgets it.
-    }
+    final sealer = conn.sealer;
+    conn.channel.send(sealer == null ? message.encode() : sealer.seal(message));
   }
 
-  Future<void> _onFrame(_Connection conn, dynamic data) async {
+  Future<void> _onFrame(_Connection conn, Object? data) async {
     if (conn.closed) return;
-    if (data is! String || data.length > kRemoteMaxFrameLength) {
+    conn.silentBeats = 0;
+    if (data is! String || data.length > kRemoteMaxFrameLength + 512) {
       _drop(conn, RemoteCloseCode.badRequest, 'Bad frame');
       return;
     }
-    final message = RemoteMessage.decode(data);
-    if (conn.device == null) {
-      await _onUnauthenticated(conn, message);
+    final sealer = conn.sealer;
+    if (sealer == null) {
+      await _onUnauthenticated(conn, RemoteMessage.decode(data));
+      return;
+    }
+    final message = sealer.open(data);
+    if (message == null) {
+      // Forged, replayed, reordered or damaged: nothing after it is trusted.
+      debugPrint('[RemoteHost] Dropped a connection: bad seal');
+      _drop(conn, RemoteCloseCode.badRequest, 'Bad seal');
+      return;
+    }
+    if (message is PingMessage) {
+      _send(conn, const PongMessage());
       return;
     }
     if (message is! RemoteCommand) {
@@ -575,80 +712,180 @@ class RemoteHost implements RemoteHostController {
       _drop(conn, RemoteCloseCode.tooManyAttempts, 'Too many attempts');
       return;
     }
+    final version = switch (message) {
+      HelloMessage(:final version) => version,
+      PairMessage(:final version) => version,
+      _ => kRemoteProtocolVersion,
+    };
+    if (version != kRemoteProtocolVersion) {
+      _send(conn, const ErrorMessage(RemoteErrorCode.unsupportedVersion));
+      _drop(conn, RemoteCloseCode.unsupportedVersion, 'Version');
+      return;
+    }
     switch (message) {
-      case HelloMessage(:final version, :final token):
-        if (version != kRemoteProtocolVersion) {
-          _send(conn, const ErrorMessage(RemoteErrorCode.unsupportedVersion));
-          _drop(conn, RemoteCloseCode.unsupportedVersion, 'Version');
+      case HelloMessage(:final nonce) when conn.hostNonce == null:
+        if (!isValidRemoteNonce(nonce)) {
+          _drop(conn, RemoteCloseCode.badRequest, 'Bad nonce');
           return;
         }
-        final device = devices.match(token);
-        if (device == null) {
-          _limiter.recordFailure(address);
-          debugPrint('[RemoteHost] Refused an unknown device');
-          _send(conn, const ErrorMessage(RemoteErrorCode.unauthorized));
-          _drop(conn, RemoteCloseCode.unauthorized, 'Unauthorized');
-          return;
-        }
-        _limiter.recordSuccess(address);
-        await _authenticated(conn, device);
-        _send(
-          conn,
-          WelcomeMessage(hostId: _hostId, hostName: _status.value.hostName),
-        );
-        _sendState(conn);
-      case PairMessage(:final version, :final code, :final deviceName):
-        if (version != kRemoteProtocolVersion) {
-          _send(conn, const ErrorMessage(RemoteErrorCode.unsupportedVersion));
-          _drop(conn, RemoteCloseCode.unsupportedVersion, 'Version');
-          return;
-        }
-        final check = codes.check(code);
-        if (check != PairCodeCheck.ok) {
-          _limiter.recordFailure(address);
-          final error = switch (check) {
-            PairCodeCheck.expired => RemoteErrorCode.codeExpired,
-            PairCodeCheck.closed => RemoteErrorCode.pairingClosed,
-            _ => RemoteErrorCode.badCode,
-          };
-          _send(conn, ErrorMessage(error));
-          _drop(conn, RemoteCloseCode.unauthorized, 'Pairing refused');
-          return;
-        }
-        _limiter.recordSuccess(address);
-        final added = await devices.add(deviceName);
-        if (conn.closed) {
-          // Gone before it got its token: don't keep a pairing nobody holds.
-          await devices.forget(added.device.id);
-          return;
-        }
-        debugPrint('[RemoteHost] Paired a new device');
-        await _authenticated(conn, added.device);
-        _send(
-          conn,
-          PairedMessage(
-            token: added.token,
-            hostId: _hostId,
-            hostName: _status.value.hostName,
-          ),
-        );
-        _sendState(conn);
+        conn.remoteNonce = nonce;
+        conn.hostNonce = newRemoteSecret();
+        _send(conn, ChallengeMessage(hostId: _hostId, nonce: conn.hostNonce!));
+      case AuthMessage(:final proof) when conn.hostNonce != null:
+        await _onAuth(conn, proof);
+      case PairMessage(:final code, :final deviceName, :final key)
+          when conn.hostNonce == null && !conn.pairing:
+        await _onPair(conn, code, deviceName, key);
       default:
-        _drop(conn, RemoteCloseCode.badRequest, 'Expected hello');
+        _drop(conn, RemoteCloseCode.badRequest, 'Expected login');
     }
   }
 
-  Future<void> _authenticated(_Connection conn, PairedDevice device) async {
+  Future<void> _onAuth(_Connection conn, String proof) async {
+    final nR = conn.remoteNonce!;
+    final nH = conn.hostNonce!;
+    PairedDevice? found;
+    List<int>? foundKey;
+    // Every paired device is tried in full (at most a handful), so timing
+    // doesn't tell which one matched.
+    for (final d in devices.devices) {
+      final key = remoteDeviceKeyFromHash(d.tokenHash);
+      if (key == null) continue;
+      if (constantTimeEquals(proof, remoteClientProof(key, _hostId, nR, nH))) {
+        found = d;
+        foundKey = key;
+      }
+    }
+    if (found == null || foundKey == null) {
+      _limiter.recordFailure(conn.address);
+      debugPrint('[RemoteHost] Refused an unknown device');
+      _send(conn, const ErrorMessage(RemoteErrorCode.unauthorized));
+      _drop(conn, RemoteCloseCode.unauthorized, 'Unauthorized');
+      return;
+    }
+    _limiter.recordSuccess(conn.address);
+    final sessionKey = remoteSessionKey(foundKey, _hostId, nR, nH);
+    _send(
+      conn,
+      WelcomeMessage(
+        hostId: _hostId,
+        hostName: _hostName,
+        proof: remoteHostProof(foundKey, _hostId, nR, nH),
+      ),
+    );
+    conn.sealer = RemoteSealer(
+      sessionKey,
+      outgoing: RemoteDirection.hostToRemote,
+    );
+    conn.ticket = remoteCoverTicket(sessionKey);
     conn.authTimer?.cancel();
-    conn.device = device;
+    conn.device = found;
     _publishConnections();
-    await devices.touch(device.id);
+    // Full state for a fresh (or returning) remote.
+    _sendState(conn);
+    _sendChapters(conn);
+    await devices.touch(found.id);
+  }
+
+  Future<void> _onPair(
+    _Connection conn,
+    String code,
+    String deviceName,
+    String remoteKey,
+  ) async {
+    final address = conn.address;
+    if (RemoteKeyExchange.parsePublic(remoteKey) == null) {
+      _drop(conn, RemoteCloseCode.badRequest, 'Bad key');
+      return;
+    }
+    if (devices.isFull) {
+      _send(conn, const ErrorMessage(RemoteErrorCode.tooManyDevices));
+      _drop(conn, RemoteCloseCode.unauthorized, 'Too many devices');
+      return;
+    }
+    final check = codes.check(code);
+    if (check != PairCodeCheck.ok) {
+      _limiter.recordFailure(address);
+      final error = switch (check) {
+        PairCodeCheck.expired => RemoteErrorCode.codeExpired,
+        PairCodeCheck.closed => RemoteErrorCode.pairingClosed,
+        _ => RemoteErrorCode.badCode,
+      };
+      _send(conn, ErrorMessage(error));
+      _drop(conn, RemoteCloseCode.unauthorized, 'Pairing refused');
+      return;
+    }
+    _limiter.recordSuccess(address);
+    conn.pairing = true;
+    conn.authTimer?.cancel();
+    _send(conn, const PairWaitMessage());
+    final name = deviceName.isEmpty ? 'Remote' : deviceName;
+    final allowed = await _ask(conn, name);
+    if (conn.closed) return;
+    if (!allowed) {
+      debugPrint('[RemoteHost] Pairing refused on the PC');
+      _send(conn, const ErrorMessage(RemoteErrorCode.pairDenied));
+      _drop(conn, RemoteCloseCode.unauthorized, 'Pairing refused');
+      return;
+    }
+    final exchange = RemoteKeyExchange();
+    final shared = exchange.sharedSecret(remoteKey);
+    if (shared == null) {
+      _drop(conn, RemoteCloseCode.badRequest, 'Bad key');
+      return;
+    }
+    final token = remotePairingToken(
+      shared,
+      remoteKey,
+      exchange.publicKey,
+      _hostId,
+    );
+    final device = await devices.add(name, tokenHash: hashRemoteToken(token));
+    if (device == null) {
+      _send(conn, const ErrorMessage(RemoteErrorCode.tooManyDevices));
+      _drop(conn, RemoteCloseCode.unauthorized, 'Too many devices');
+      return;
+    }
+    if (conn.closed) {
+      // Gone before it got its half: don't keep a pairing nobody holds.
+      await devices.forget(device.id);
+      return;
+    }
+    debugPrint('[RemoteHost] Paired a new device');
+    _send(
+      conn,
+      PairedMessage(
+        hostId: _hostId,
+        hostName: _hostName,
+        key: exchange.publicKey,
+      ),
+    );
+    // The remote signs in on a new connection with its new key.
+    _drop(conn, 1000, 'Paired');
+  }
+
+  /// Asks the PC's user; no answer within [approvalTimeout] is a no.
+  Future<bool> _ask(_Connection conn, String name) async {
+    final ask = approver;
+    if (ask == null) return false;
+    try {
+      return await ask(
+        RemotePairRequest(
+          deviceName: name,
+          timeout: approvalTimeout,
+          cancelled: conn.closedFuture,
+        ),
+      ).timeout(approvalTimeout, onTimeout: () => false);
+    } catch (e) {
+      debugPrint('[RemoteHost] Pairing question failed: ${e.runtimeType}');
+      return false;
+    }
   }
 
   Future<void> _run(_Connection conn, RemoteCommand command) async {
     final player = _player;
     if (player == null) return;
-    if (!player.state.hasItem) {
+    if (command.needsItem && !player.state.hasItem) {
       _send(conn, const ErrorMessage(RemoteErrorCode.nothingLoaded));
       return;
     }
@@ -660,6 +897,8 @@ class RemoteHost implements RemoteHostController {
           await player.pause();
         case ToggleCommand():
           await player.toggle();
+        case StopCommand():
+          await player.stop();
         case SeekCommand(:final position):
           await player.seek(position);
         case SkipCommand(:final seconds):
@@ -676,28 +915,56 @@ class RemoteHost implements RemoteHostController {
           } else if (minutes != null) {
             await player.sleepFor(minutes);
           }
+        case VolumeCommand(:final value):
+          await player.setVolume(value);
+        case MuteCommand(:final muted):
+          await player.setMuted(muted);
+        case BookmarkCommand(:final note):
+          final ok = await player.addBookmark(note);
+          _send(
+            conn,
+            ok
+                ? const NoticeMessage(RemoteNoticeCode.bookmarkAdded)
+                : const ErrorMessage(RemoteErrorCode.failed),
+          );
+        case RecentRequest():
+          final items = (await player.recentItems())
+              .take(RemoteRecentItem.maxCount)
+              .toList();
+          conn.recentIds = {for (final i in items) i.id};
+          _send(conn, RecentMessage(items));
+        case PlayItemCommand(:final itemId):
+          if (!conn.recentIds.contains(itemId)) {
+            _send(conn, const ErrorMessage(RemoteErrorCode.notFound));
+          } else if (!await player.playItem(itemId)) {
+            _send(conn, const ErrorMessage(RemoteErrorCode.failed));
+          }
       }
     } catch (e) {
       debugPrint('[RemoteHost] ${command.type} failed: ${e.runtimeType}');
       _send(conn, const ErrorMessage(RemoteErrorCode.failed));
     }
-    // Answer at once (positions move without notifications).
+    // Answer at once (positions and volume move without notifications).
     _broadcastState();
   }
 
   // ── State ─────────────────────────────────────────────────────────
 
   void _sendState(_Connection conn) {
-    final text = StateMessage(
-      _player?.state ?? RemotePlayerState.empty,
-    ).encode();
-    conn.lastState = text;
-    if (conn.closed) return;
-    try {
-      conn.ws.add(text);
-    } catch (_) {
-      // The connection is closing; its done handler forgets it.
-    }
+    final message = StateMessage(_player?.state ?? RemotePlayerState.empty);
+    conn.lastState = message.encode();
+    _send(conn, message);
+  }
+
+  void _sendChapters(_Connection conn) {
+    final player = _player;
+    if (player == null) return;
+    final chapters = player.chapters;
+    _chaptersSent ??= chapters;
+    _send(
+      conn,
+      ChaptersMessage(itemId: player.state.itemId, chapters: chapters),
+    );
   }
 
   void _scheduleState() {
@@ -711,17 +978,20 @@ class RemoteHost implements RemoteHostController {
   void _broadcastState() {
     final player = _player;
     if (player == null) return;
+    final chapters = player.chapters;
+    final newChapters = !identical(chapters, _chaptersSent);
+    _chaptersSent = chapters;
     final state = player.state;
-    final text = StateMessage(state).encode();
+    final message = StateMessage(state);
+    final text = message.encode();
     for (final c in List.of(_conns)) {
-      if (c.device == null || c.lastState == text) continue;
-      c.lastState = text;
-      if (c.closed) continue;
-      try {
-        c.ws.add(text);
-      } catch (_) {
-        // The connection is closing; its done handler forgets it.
+      if (c.device == null || c.closed) continue;
+      if (newChapters) {
+        _send(c, ChaptersMessage(itemId: state.itemId, chapters: chapters));
       }
+      if (c.lastState == text) continue;
+      c.lastState = text;
+      _send(c, message);
     }
   }
 
@@ -729,29 +999,67 @@ class RemoteHost implements RemoteHostController {
   /// someone is connected (only changes go out).
   void _syncTick() {
     final anyone = _conns.any((c) => c.device != null);
-    if (anyone && _tick == null && _server != null) {
+    if (anyone && _tick == null && _running) {
       _tick = Timer.periodic(stateInterval, (_) => _broadcastState());
     } else if (!anyone) {
       _tick?.cancel();
       _tick = null;
     }
   }
+
+  /// Drops signed-in remotes that went silent (sleep, Wi-Fi gone).
+  void _syncWatchdog() {
+    final anyone = _conns.any((c) => c.device != null);
+    if (anyone && _watchdog == null && _running) {
+      _watchdog = Timer.periodic(heartbeat, (_) {
+        for (final c in List.of(_conns)) {
+          if (c.device == null) continue;
+          if (++c.silentBeats >= deadAfterBeats) {
+            debugPrint('[RemoteHost] A remote went silent');
+            _drop(c, RemoteCloseCode.timedOut, 'Timed out');
+          }
+        }
+      });
+    } else if (!anyone) {
+      _watchdog?.cancel();
+      _watchdog = null;
+    }
+  }
 }
 
 class _Connection {
-  _Connection(this.id, this.ws, this.address, this.since);
+  _Connection(this.id, this.channel, this.address, this.since);
 
   final int id;
-  final WebSocket ws;
+  final RemoteChannel channel;
   final String address;
   final DateTime since;
   PairedDevice? device;
   Timer? authTimer;
-  StreamSubscription<dynamic>? sub;
+  StreamSubscription<Object?>? sub;
   String? lastState;
-  bool closed = false;
-  Future<void> queue = Future.value();
+  String? remoteNonce;
+  String? hostNonce;
+  RemoteSealer? sealer;
 
-  /// Ends the socket listener (a no-op once the socket is done).
+  /// What the remote shows to fetch covers while this connection lives.
+  String? ticket;
+
+  /// Ids of the books last offered to this remote (the only ones it may
+  /// start or fetch covers for).
+  Set<String> recentIds = const {};
+  bool pairing = false;
+  int silentBeats = 0;
+  Future<void> queue = Future.value();
+  final Completer<void> _closed = Completer<void>();
+
+  bool get closed => _closed.isCompleted;
+  Future<void> get closedFuture => _closed.future;
+
+  void markClosed() {
+    if (!_closed.isCompleted) _closed.complete();
+  }
+
+  /// Ends the frame listener (a no-op once the link is done).
   Future<void>? cancelListener() => sub?.cancel();
 }

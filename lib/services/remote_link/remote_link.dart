@@ -5,5 +5,6 @@ library;
 export 'pairing_store.dart';
 export 'protocol.dart';
 export 'remote_client_stub.dart' if (dart.library.io) 'remote_client.dart';
+export 'remote_crypto.dart';
 export 'remote_host_stub.dart' if (dart.library.io) 'remote_host.dart';
 export 'remote_link_types.dart';

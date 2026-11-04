@@ -2,71 +2,20 @@ import 'dart:io';
 
 import 'package:absorb/services/account_epoch.dart';
 import 'package:absorb/services/remote_link/pairing_store.dart';
-import 'package:absorb/services/remote_link/player_facade.dart';
 import 'package:absorb/services/remote_link/protocol.dart';
 import 'package:absorb/services/remote_link/remote_client.dart';
+import 'package:absorb/services/remote_link/remote_crypto.dart';
 import 'package:absorb/services/remote_link/remote_host.dart';
 import 'package:absorb/services/remote_link/remote_link_types.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'support/remote_link_fakes.dart';
+
 /// The host and a remote over a real socket on 127.0.0.1 (ephemeral ports,
-/// no other network), with a fake player behind the host.
-
-class FakePlayer extends ChangeNotifier implements RemotePlayerFacade {
-  RemotePlayerState _state = RemotePlayerState.empty;
-  Uint8List? coverBytes;
-  final commands = <String>[];
-
-  set current(RemotePlayerState value) {
-    _state = value;
-    notifyListeners();
-  }
-
-  @override
-  RemotePlayerState get state => _state;
-
-  @override
-  Future<Uint8List?> loadCover() async => coverBytes;
-
-  void _log(String c) => commands.add(c);
-
-  @override
-  Future<void> play() async => _log('play');
-  @override
-  Future<void> pause() async => _log('pause');
-  @override
-  Future<void> toggle() async => _log('toggle');
-  @override
-  Future<void> seek(double seconds) async => _log('seek $seconds');
-  @override
-  Future<void> skip(int seconds) async => _log('skip $seconds');
-  @override
-  Future<void> chapter(int delta) async => _log('chapter $delta');
-  @override
-  Future<void> setSpeed(double speed) async => _log('speed $speed');
-  @override
-  Future<void> sleepFor(int minutes) async => _log('sleep $minutes');
-  @override
-  Future<void> sleepAtEndOfChapter() async => _log('sleep chapter');
-  @override
-  Future<void> cancelSleep() async => _log('sleep cancel');
-}
-
-const _playing = RemotePlayerState(
-  itemId: 'li_1',
-  title: 'The Book',
-  author: 'Writer',
-  chapterTitle: 'Chapter 2',
-  position: 120,
-  duration: 3600,
-  chapterStart: 100,
-  chapterEnd: 400,
-  playing: true,
-  speed: 1.2,
-  coverVersion: 1,
-);
+/// no other network), with a fake player behind the host. The fake-clock
+/// cases (heartbeat, reconnect, tampering) are in remote_link_session_test.
 
 /// Waits for [condition] without a fixed sleep: checks after every event
 /// turn, giving up only after a generous safety timeout.
@@ -93,21 +42,22 @@ void main() {
     final c = RemoteClient(
       saved,
       backoff: (_) => const Duration(milliseconds: 20),
-      pingInterval: const Duration(seconds: 30),
     );
     clients.add(c);
     return c;
   }
 
+  Future<RemotePairResult> pair(String code, {String name = 'Phone'}) =>
+      connector.pair(
+        address: '127.0.0.1',
+        port: host.boundPort!,
+        code: code,
+        deviceName: name,
+      );
+
   Future<SavedRemoteHost> pairOk() async {
-    host.codes.open();
-    final result = await connector.pair(
-      address: '127.0.0.1',
-      port: host.boundPort!,
-      code: host.codes.code!,
-      deviceName: 'Test phone',
-    );
-    host.codes.close();
+    host.openPairing();
+    final result = await pair(host.codes.code!, name: 'Test phone');
     expect(result.error, isNull);
     return result.host!;
   }
@@ -124,6 +74,7 @@ void main() {
       supported: true,
       stateDebounce: Duration.zero,
       listenOnAccountChange: false,
+      approver: (_) async => true,
     );
     await host.setEnabled(true);
     expect(host.status.value.running, isTrue);
@@ -151,51 +102,40 @@ void main() {
     expect(found.address, '127.0.0.1');
   });
 
-  test('a wrong code is refused, the right one pairs', () async {
-    host.codes.open();
-    final code = host.codes.code!;
-    final wrong = code == '000000' ? '000001' : '000000';
-    final bad = await connector.pair(
-      address: '127.0.0.1',
-      port: host.boundPort!,
-      code: wrong,
-      deviceName: 'Phone',
-    );
-    expect(bad.error, RemoteErrorCode.badCode);
-    expect(host.devices.devices, isEmpty);
+  test(
+    'turning on opens a pairing window; the right code pairs once',
+    () async {
+      final code = host.codes.code!;
+      final wrong = code == '000000' ? '000001' : '000000';
+      expect((await pair(wrong)).error, RemoteErrorCode.badCode);
+      expect(host.devices.devices, isEmpty);
 
-    final good = await connector.pair(
-      address: '127.0.0.1',
-      port: host.boundPort!,
-      code: code,
-      deviceName: 'Phone',
-    );
-    expect(good.host, isNotNull);
-    expect(good.host!.hostId, host.status.value.hostId);
-    expect(good.host!.name, 'Test PC');
-    expect(host.devices.devices.single.name, 'Phone');
-    expect(
-      host.devices.devices.single.tokenHash,
-      hashRemoteToken(good.host!.token),
-    );
-    // One use only.
-    expect(host.codes.code, isNot(code));
+      final good = await pair(code);
+      expect(good.host, isNotNull);
+      expect(good.host!.hostId, host.status.value.hostId);
+      expect(good.host!.name, 'Test PC');
+      expect(host.devices.devices.single.name, 'Phone');
+      expect(
+        host.devices.devices.single.tokenHash,
+        hashRemoteToken(good.host!.token),
+      );
+      // Single use: the window closed.
+      expect(host.codes.isOpen, isFalse);
+      expect((await pair(code)).error, RemoteErrorCode.pairingClosed);
+    },
+  );
+
+  test('pairing is refused while no window is open', () async {
+    host.codes.close();
+    expect((await pair('123456')).error, RemoteErrorCode.pairingClosed);
   });
 
-  test('pairing is refused while the host sheet is closed', () async {
-    final result = await connector.pair(
-      address: '127.0.0.1',
-      port: host.boundPort!,
-      code: '123456',
-      deviceName: 'Phone',
-    );
-    expect(result.error, RemoteErrorCode.pairingClosed);
-  });
-
-  test('state, commands and the cover flow both ways', () async {
+  test('state, commands and covers flow both ways', () async {
     final saved = await pairOk();
     player.coverBytes = Uint8List.fromList([0x89, 0x50, 0x4E, 0x47, 1, 2, 3]);
-    player.current = _playing;
+    player.recentCovers['li_2'] = Uint8List.fromList([0xFF, 0xD8, 9]);
+    player.recent = const [RemoteRecentItem(id: 'li_2', title: 'Next')];
+    player.current = fakePlaying;
     final client = openClient(saved);
     await client.connect();
     await eventually(() => client.phase == RemoteLinkPhase.connected);
@@ -215,7 +155,8 @@ void main() {
     client.send(const SleepCommand.endOfChapter());
     client.send(const SleepCommand.cancel());
     client.send(const ToggleCommand());
-    await eventually(() => player.commands.length == 9);
+    client.send(const VolumeCommand(0.25));
+    await eventually(() => player.commands.length == 10);
     expect(player.commands, [
       'skip 30',
       'skip -10',
@@ -226,7 +167,14 @@ void main() {
       'sleep chapter',
       'sleep cancel',
       'toggle',
+      'volume 0.25',
     ]);
+
+    // A Continue listening cover comes only for a book that was offered.
+    expect(await client.recentCover('li_2'), isNull);
+    client.requestRecent();
+    await eventually(() => client.recent != null);
+    expect(await client.recentCover('li_2'), player.recentCovers['li_2']);
 
     player.current = const RemotePlayerState(
       itemId: 'li_1',
@@ -238,17 +186,23 @@ void main() {
     expect(client.state!.position, 130);
   });
 
-  test('commands are refused when nothing is loaded', () async {
-    final saved = await pairOk();
-    final client = openClient(saved);
-    await client.connect();
-    await eventually(() => client.state != null);
-    client.send(const PlayCommand());
-    await eventually(() => client.lastError == RemoteErrorCode.nothingLoaded);
-    expect(player.commands, isEmpty);
-  });
+  test(
+    'commands that need a book are refused when nothing is loaded',
+    () async {
+      final saved = await pairOk();
+      final client = openClient(saved);
+      await client.connect();
+      await eventually(() => client.state != null);
+      client.send(const PlayCommand());
+      await eventually(() => client.lastError == RemoteErrorCode.nothingLoaded);
+      expect(player.commands, isEmpty);
+      // Volume and Continue listening work without one.
+      client.send(const VolumeCommand(0.5));
+      await eventually(() => player.commands.length == 1);
+    },
+  );
 
-  test('an unknown token is refused and not retried', () async {
+  test('an unknown device is refused and not retried', () async {
     await pairOk();
     final client = openClient(
       SavedRemoteHost(
@@ -256,7 +210,7 @@ void main() {
         name: 'PC',
         address: '127.0.0.1',
         port: host.boundPort!,
-        token: newRemoteToken(),
+        token: newRemoteSecret(),
       ),
     );
     await client.connect();
@@ -265,7 +219,7 @@ void main() {
     expect(host.connections.value, isEmpty);
   });
 
-  test('forget drops the connection and revokes the token', () async {
+  test('forget drops the connection and revokes the key', () async {
     final saved = await pairOk();
     final client = openClient(saved);
     await client.connect();
@@ -304,7 +258,9 @@ void main() {
     expect(host.boundDiscoveryPort, isNull);
     expect(host.status.value.running, isFalse);
     expect(host.connections.value, isEmpty);
+    expect(host.codes.isOpen, isFalse);
     await eventually(() => client.phase == RemoteLinkPhase.reconnecting);
+    expect(client.state, isNull);
 
     // The port is free again: nothing is left listening.
     final probe = await ServerSocket.bind(InternetAddress.loopbackIPv4, port);
@@ -313,6 +269,60 @@ void main() {
       (await SharedPreferences.getInstance()).getBool(RemoteHost.prefEnabled),
       isFalse,
     );
+  });
+
+  group('after a restart', () {
+    Future<RemoteHost> restart(Map<String, Object> prefs) async {
+      SharedPreferences.setMockInitialValues(prefs);
+      final other = RemoteHost(
+        player: () => player,
+        bindAddress: InternetAddress.loopbackIPv4,
+        firstPort: 0,
+        discoveryPort: 0,
+        supported: true,
+        listenOnAccountChange: false,
+      );
+      await other.start();
+      return other;
+    }
+
+    test('it stays off unless "Keep on when Absorb starts"', () async {
+      final off = await restart({RemoteHost.prefEnabled: true});
+      try {
+        expect(off.status.value.enabled, isFalse);
+        expect(off.boundPort, isNull);
+        expect(
+          (await SharedPreferences.getInstance()).getBool(
+            RemoteHost.prefEnabled,
+          ),
+          isFalse,
+        );
+      } finally {
+        await off.stopForTest();
+      }
+
+      final kept = await restart({
+        RemoteHost.prefEnabled: true,
+        RemoteHost.prefKeepOn: true,
+      });
+      try {
+        expect(kept.status.value.running, isTrue);
+        expect(kept.status.value.keepOn, isTrue);
+        // Starting by itself opens no pairing window.
+        expect(kept.codes.isOpen, isFalse);
+      } finally {
+        await kept.stopForTest();
+      }
+    });
+
+    test('setKeepOn is remembered', () async {
+      await host.setKeepOn(true);
+      expect(host.status.value.keepOn, isTrue);
+      expect(
+        (await SharedPreferences.getInstance()).getBool(RemoteHost.prefKeepOn),
+        isTrue,
+      );
+    });
   });
 
   test('signing out closes the host and turns the switch off', () async {
@@ -331,53 +341,52 @@ void main() {
     await client.connect();
     await eventually(() => client.phase == RemoteLinkPhase.connected);
     host.shutdownForExit();
+    expect(host.codes.isOpen, isFalse);
     await eventually(() => host.boundPort == null);
     await eventually(() => client.phase != RemoteLinkPhase.connected);
   });
 
   test('repeated failures from one address are blocked', () async {
-    host.codes.open();
     for (var i = 0; i < 5; i++) {
-      final r = await connector.pair(
-        address: '127.0.0.1',
-        port: host.boundPort!,
-        code: 'nope$i',
-        deviceName: 'x',
-      );
-      expect(r.error, RemoteErrorCode.badCode);
+      host.openPairing();
+      expect((await pair('nope$i')).error, RemoteErrorCode.badCode);
     }
-    final blocked = await connector.pair(
-      address: '127.0.0.1',
-      port: host.boundPort!,
-      code: host.codes.code!,
-      deviceName: 'x',
-    );
+    host.openPairing();
+    final blocked = await pair(host.codes.code!);
     expect(blocked.error, RemoteErrorCode.tooManyAttempts);
     expect(host.devices.devices, isEmpty);
   });
 
-  test('browser requests and unknown paths are refused', () async {
-    final http = HttpClient();
-    try {
-      final withOrigin = await http.get('127.0.0.1', host.boundPort!, '/cover');
-      withOrigin.headers.set('origin', 'https://evil.example');
-      final r1 = await withOrigin.close();
-      await r1.drain<void>();
-      expect(r1.statusCode, HttpStatus.forbidden);
+  test(
+    'browser requests, unknown paths and stale tickets are refused',
+    () async {
+      final http = HttpClient();
+      try {
+        final withOrigin = await http.get(
+          '127.0.0.1',
+          host.boundPort!,
+          '/cover',
+        );
+        withOrigin.headers.set('origin', 'https://evil.example');
+        final r1 = await withOrigin.close();
+        await r1.drain<void>();
+        expect(r1.statusCode, HttpStatus.forbidden);
 
-      final noToken = await http.get('127.0.0.1', host.boundPort!, '/cover');
-      final r2 = await noToken.close();
-      await r2.drain<void>();
-      expect(r2.statusCode, HttpStatus.unauthorized);
+        final noTicket = await http.get('127.0.0.1', host.boundPort!, '/cover');
+        noTicket.headers.set(HttpHeaders.authorizationHeader, 'Bearer made-up');
+        final r2 = await noTicket.close();
+        await r2.drain<void>();
+        expect(r2.statusCode, HttpStatus.unauthorized);
 
-      final other = await http.get('127.0.0.1', host.boundPort!, '/');
-      final r3 = await other.close();
-      await r3.drain<void>();
-      expect(r3.statusCode, HttpStatus.notFound);
-    } finally {
-      http.close(force: true);
-    }
-  });
+        final other = await http.get('127.0.0.1', host.boundPort!, '/');
+        final r3 = await other.close();
+        await r3.drain<void>();
+        expect(r3.statusCode, HttpStatus.notFound);
+      } finally {
+        http.close(force: true);
+      }
+    },
+  );
 
   group('hardening', () {
     Future<WebSocket> raw() =>
@@ -386,7 +395,7 @@ void main() {
     test('an oversized first frame is dropped', () async {
       final ws = await raw();
       final done = ws.drain<void>();
-      ws.add('x' * (kRemoteMaxFrameLength + 1));
+      ws.add('x' * (kRemoteMaxFrameLength + 1000));
       await done;
       expect(ws.closeCode, RemoteCloseCode.badRequest);
     });
@@ -400,7 +409,16 @@ void main() {
       expect(player.commands, isEmpty);
     });
 
-    test('a silent connection is dropped after the auth window', () async {
+    test('an old remote is told to update', () async {
+      final ws = await raw();
+      final frames = <String>[];
+      final done = ws.listen((f) => frames.add(f as String)).asFuture<void>();
+      ws.add('{"type":"hello","version":1,"token":"x"}');
+      await done;
+      expect(ws.closeCode, RemoteCloseCode.unsupportedVersion);
+    });
+
+    test('a silent connection is dropped after the login window', () async {
       final quick = RemoteHost(
         player: () => player,
         bindAddress: InternetAddress.loopbackIPv4,
@@ -430,26 +448,12 @@ void main() {
       }
     });
 
-    test('a different computer at the saved address is not trusted', () async {
-      final saved = await pairOk();
-      final client = openClient(
-        SavedRemoteHost(
-          hostId: 'someone-else',
-          name: saved.name,
-          address: saved.address,
-          port: saved.port,
-          token: saved.token,
-        ),
-      );
-      await client.connect();
-      await eventually(() => client.phase == RemoteLinkPhase.closed);
-      expect(client.problem, RemoteLinkProblem.unauthorized);
-      expect(client.state, isNull);
-    });
-
     test('an account change closes the host and turns it off', () async {
       AccountEpoch.resetForTest();
-      SharedPreferences.setMockInitialValues({RemoteHost.prefEnabled: true});
+      SharedPreferences.setMockInitialValues({
+        RemoteHost.prefEnabled: true,
+        RemoteHost.prefKeepOn: true,
+      });
       final other = RemoteHost(
         player: () => player,
         bindAddress: InternetAddress.loopbackIPv4,

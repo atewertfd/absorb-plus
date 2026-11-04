@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'pairing_store.dart';
 import 'protocol.dart';
 import 'remote_link_types.dart';
@@ -23,6 +25,7 @@ class _StubConnector implements RemoteLinkConnector {
     required int port,
     required String code,
     required String deviceName,
+    VoidCallback? onWaiting,
   }) async => const RemotePairResult.failed(RemotePairResult.unreachable);
 
   @override

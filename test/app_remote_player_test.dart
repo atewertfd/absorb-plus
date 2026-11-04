@@ -1,9 +1,37 @@
+import 'dart:io';
+
 import 'package:absorb/services/audio_player_service.dart';
 import 'package:absorb/services/remote_link/app_remote_player.dart';
 import 'package:absorb/services/remote_link/protocol.dart';
+import 'package:absorb/services/remote_link/remote_library_access.dart';
 import 'package:absorb/services/sleep_timer_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+class _FakeLibrary implements RemoteLibraryAccess {
+  int? maxAsked;
+  String? localCover;
+  final played = <String>[];
+
+  @override
+  List<RemoteRecentItem> recentItems(int max) {
+    maxAsked = max;
+    return const [RemoteRecentItem(id: 'li_2', title: 'Next')];
+  }
+
+  @override
+  String? coverUrl(String itemId) => null;
+  @override
+  Map<String, String> get coverHeaders => const {};
+  @override
+  String? localCoverPath(String itemId) => localCover;
+  @override
+  Future<bool> play(String itemId) async {
+    if (itemId != 'li_2') return false;
+    played.add(itemId);
+    return true;
+  }
+}
 
 /// The phone-remote host's view of the app player. Runs on the real player
 /// and sleep timer singletons with no audio engine behind them.
@@ -201,6 +229,52 @@ void main() {
     test('an item with no download and no cover URL gives no cover', () async {
       AudioPlayerService().debugSetLoadedItem('li_1', null);
       expect(await make().loadCover(), isNull);
+    });
+  });
+
+  group('library (Continue listening)', () {
+    test('recent items and play go through the library', () async {
+      final library = _FakeLibrary();
+      final r = AppRemotePlayer(library: library);
+      remotes.add(r);
+      expect((await r.recentItems()).single.id, 'li_2');
+      expect(library.maxAsked, 8);
+      expect(await r.playItem('li_2'), isTrue);
+      expect(library.played, ['li_2']);
+      expect(await r.playItem('nope'), isFalse);
+    });
+
+    test('without a signed-in library there is nothing to offer', () async {
+      final r = make();
+      expect(await r.recentItems(), isEmpty);
+      expect(await r.playItem('li_2'), isFalse);
+    });
+
+    test('a book\'s cover comes from its downloaded file', () async {
+      final dir = await Directory.systemTemp.createTemp('remote_cover');
+      addTearDown(() => dir.delete(recursive: true));
+      final file = File('${dir.path}${Platform.pathSeparator}cover.jpg');
+      await file.writeAsBytes([0xFF, 0xD8, 1, 2]);
+      final library = _FakeLibrary()..localCover = file.path;
+      final r = AppRemotePlayer(library: library);
+      remotes.add(r);
+      expect(await r.loadCover('li_2'), [0xFF, 0xD8, 1, 2]);
+      library.localCover = null;
+      expect(await r.loadCover('li_2'), isNull);
+    });
+  });
+
+  group('more controls with no engine', () {
+    test('no chapters, no bookmark, volume calls are quiet', () async {
+      final r = make();
+      expect(r.chapters, isEmpty);
+      expect(identical(r.chapters, r.chapters), isTrue);
+      expect(await r.addBookmark('note'), isFalse);
+      await r.setVolume(0.3);
+      await r.setMuted(true);
+      await r.setMuted(false);
+      expect(r.state.volume, 1);
+      expect(r.state.muted, isFalse);
     });
   });
 

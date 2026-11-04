@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'protocol.dart';
+import 'remote_crypto.dart';
 
 /// Phone remote (fork): pairing codes, paired devices and the auth-failure
 /// limiter on the host, and the remote's saved hosts. Pure Dart (web-safe);
@@ -15,35 +15,16 @@ typedef RemoteClock = DateTime Function();
 
 DateTime _systemNow() => DateTime.now();
 
-/// A fresh random secret: 32 bytes, base64url without padding.
-String newRemoteToken([Random? random]) {
-  final r = random ?? Random.secure();
-  final bytes = List<int>.generate(32, (_) => r.nextInt(256));
-  return base64Url.encode(bytes).replaceAll('=', '');
-}
-
-/// What the host keeps instead of a token.
-String hashRemoteToken(String token) =>
-    sha256.convert(utf8.encode(token)).toString();
-
-/// Compares two strings in time that doesn't depend on where they differ.
-bool constantTimeEquals(String a, String b) {
-  if (a.length != b.length) return false;
-  var diff = 0;
-  for (var i = 0; i < a.length; i++) {
-    diff |= a.codeUnitAt(i) ^ b.codeUnitAt(i);
-  }
-  return diff == 0;
-}
-
-// ── Pairing code ────────────────────────────────────────────────────
+// ── Pairing window ──────────────────────────────────────────────────
 
 /// Result of checking a typed code.
 enum PairCodeCheck { ok, wrong, expired, closed }
 
-/// The host's 6-digit pairing code. It exists only while pairing is open
-/// (the host's Phone remote sheet is showing), expires after [lifetime], is
-/// replaced after [maxAttempts] wrong tries, and works once.
+/// The host's pairing window and its 6-digit code. Pairing is possible only
+/// while a window is open: turning the host on or "Pair another device"
+/// opens one for [lifetime]. The code works once: the window closes when a
+/// device gets in, after [maxAttempts] wrong tries, when it runs out, or
+/// when the host sheet closes.
 class PairingCodeIssuer extends ChangeNotifier {
   PairingCodeIssuer({
     Random? random,
@@ -61,79 +42,62 @@ class PairingCodeIssuer extends ChangeNotifier {
   String? _code;
   DateTime? _expiresAt;
   int _attempts = 0;
-  int _openCount = 0;
 
-  bool get isOpen => _openCount > 0;
+  bool get isOpen => _code != null && _now().isBefore(_expiresAt!);
 
   /// The current code, or null while pairing is closed.
   String? get code => isOpen ? _code : null;
 
   DateTime? get expiresAt => isOpen ? _expiresAt : null;
 
-  bool get isExpired => _expiresAt == null || !_now().isBefore(_expiresAt!);
-
-  /// Opens pairing (nested opens are counted) and issues a code if needed.
+  /// Opens a fresh window with a new code.
   void open() {
-    _openCount++;
-    if (_code == null || isExpired) {
-      _issue();
-    } else {
-      notifyListeners();
-    }
-  }
-
-  /// Closes one [open]; the code is dropped when the last one closes.
-  void close() {
-    if (_openCount == 0) return;
-    _openCount--;
-    if (_openCount == 0) {
-      _code = null;
-      _expiresAt = null;
-      _attempts = 0;
-      notifyListeners();
-    }
-  }
-
-  /// A new code (the Refresh button, an expired code, or after use).
-  void refresh() {
-    if (!isOpen) return;
-    _issue();
-  }
-
-  /// Issues a new code when the current one has run out.
-  void refreshIfExpired() {
-    if (isOpen && isExpired) _issue();
-  }
-
-  PairCodeCheck check(String typed) {
-    if (!isOpen || _code == null) return PairCodeCheck.closed;
-    if (isExpired) return PairCodeCheck.expired;
-    if (constantTimeEquals(typed.trim(), _code!)) {
-      // One use only.
-      _issue();
-      return PairCodeCheck.ok;
-    }
-    _attempts++;
-    if (_attempts >= maxAttempts) {
-      _issue();
-    } else {
-      notifyListeners();
-    }
-    return PairCodeCheck.wrong;
-  }
-
-  void _issue() {
     _code = _random.nextInt(1000000).toString().padLeft(6, '0');
     _expiresAt = _now().add(lifetime);
     _attempts = 0;
     notifyListeners();
+  }
+
+  /// Closes the window; the code is gone.
+  void close() {
+    if (_code == null) return;
+    _code = null;
+    _expiresAt = null;
+    _attempts = 0;
+    notifyListeners();
+  }
+
+  /// Drops a window that ran out (the host sheet's tick).
+  void closeIfExpired() {
+    if (_code != null && !isOpen) close();
+  }
+
+  PairCodeCheck check(String typed) {
+    final code = _code;
+    if (code == null) return PairCodeCheck.closed;
+    if (!isOpen) {
+      close();
+      return PairCodeCheck.expired;
+    }
+    if (constantTimeEquals(typed.trim(), code)) {
+      // One use only: the window closes.
+      close();
+      return PairCodeCheck.ok;
+    }
+    _attempts++;
+    if (_attempts >= maxAttempts) {
+      close();
+    } else {
+      notifyListeners();
+    }
+    return PairCodeCheck.wrong;
   }
 }
 
 // ── Auth failures ───────────────────────────────────────────────────
 
 /// Blocks an address for [blockFor] after [maxFailures] failed pairings or
-/// hellos within [window].
+/// logins within [window].
 class AuthFailureLimiter {
   AuthFailureLimiter({
     RemoteClock? now,
@@ -202,7 +166,8 @@ class PairedDevice {
   final String id;
   final String name;
 
-  /// SHA-256 of the token; the token itself is never stored on the host.
+  /// SHA-256 of the token, which is also the device's login key
+  /// (`remote_crypto.dart`); the token itself is never on the host.
   final String tokenHash;
   final DateTime pairedAt;
   final DateTime lastSeen;
@@ -243,73 +208,78 @@ class PairedDevice {
 }
 
 /// The host's paired devices, kept in SharedPreferences (device-wide, not per
-/// account). Tokens are stored only as hashes.
+/// account). Tokens are stored only as hashes. At most [maxDevices]; a
+/// device unused for [maxUnused] is forgotten.
 class PairedDeviceStore extends ChangeNotifier {
-  PairedDeviceStore({Random? random, RemoteClock? now, this.maxDevices = 20})
-    : _random = random ?? Random.secure(),
-      _now = now ?? _systemNow;
+  PairedDeviceStore({
+    Random? random,
+    RemoteClock? now,
+    this.maxDevices = 5,
+    this.maxUnused = const Duration(days: 90),
+  }) : _random = random ?? Random.secure(),
+       _now = now ?? _systemNow;
 
   static const prefKey = 'remote_link_paired_devices';
 
   final Random _random;
   final RemoteClock _now;
   final int maxDevices;
+  final Duration maxUnused;
 
   List<PairedDevice> _devices = const [];
   bool _loaded = false;
 
   List<PairedDevice> get devices => _devices;
 
+  bool get isFull => _devices.length >= maxDevices;
+
   Future<void> load() async {
-    if (_loaded) return;
+    if (_loaded) {
+      await pruneUnused();
+      return;
+    }
     _loaded = true;
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString(prefKey);
-    if (raw == null) return;
-    try {
-      final list = jsonDecode(raw);
-      if (list is List) {
-        _devices = List.unmodifiable(
-          list.map(PairedDevice.fromJson).whereType<PairedDevice>(),
-        );
-        notifyListeners();
+    if (raw != null) {
+      try {
+        final list = jsonDecode(raw);
+        if (list is List) {
+          _devices = List.unmodifiable(
+            list.map(PairedDevice.fromJson).whereType<PairedDevice>(),
+          );
+          notifyListeners();
+        }
+      } catch (_) {
+        // A damaged list pairs nothing; the user pairs again.
       }
-    } catch (_) {
-      // A damaged list pairs nothing; the user pairs again.
     }
+    await pruneUnused();
   }
 
-  /// Pairs a new device and returns it with its token (the only time the
-  /// token exists on the host).
-  Future<({PairedDevice device, String token})> add(String name) async {
+  /// Forgets devices not used for [maxUnused].
+  Future<void> pruneUnused() async {
+    final cutoff = _now().subtract(maxUnused);
+    final kept = _devices.where((d) => d.lastSeen.isAfter(cutoff)).toList();
+    if (kept.length != _devices.length) await _save(kept);
+  }
+
+  /// Pairs a new device whose token hashes to [tokenHash]. Null when
+  /// [maxDevices] are already paired.
+  Future<PairedDevice?> add(String name, {required String tokenHash}) async {
     await load();
-    final token = newRemoteToken(_random);
+    if (isFull) return null;
     final now = _now();
+    final clean = cleanRemoteName(name);
     final device = PairedDevice(
-      id: newRemoteToken(_random).substring(0, 16),
-      name: cleanRemoteName(name).isEmpty ? 'Remote' : cleanRemoteName(name),
-      tokenHash: hashRemoteToken(token),
+      id: newRemoteSecret(_random).substring(0, 16),
+      name: clean.isEmpty ? 'Remote' : clean,
+      tokenHash: tokenHash,
       pairedAt: now,
       lastSeen: now,
     );
-    final next = [..._devices, device];
-    // Over the limit: the one unused for longest goes.
-    while (next.length > maxDevices) {
-      next.sort((a, b) => a.lastSeen.compareTo(b.lastSeen));
-      next.removeAt(0);
-    }
-    await _save(next);
-    return (device: device, token: token);
-  }
-
-  /// The device holding [token], or null.
-  PairedDevice? match(String token) {
-    final hash = hashRemoteToken(token);
-    PairedDevice? found;
-    for (final d in _devices) {
-      if (constantTimeEquals(d.tokenHash, hash)) found = d;
-    }
-    return found;
+    await _save([..._devices, device]);
+    return device;
   }
 
   Future<void> touch(String id) async {
@@ -325,6 +295,12 @@ class PairedDeviceStore extends ChangeNotifier {
     if (next.length == _devices.length) return false;
     await _save(next);
     return true;
+  }
+
+  Future<void> forgetAll() async {
+    await load();
+    if (_devices.isEmpty) return;
+    await _save(const []);
   }
 
   Future<void> _save(List<PairedDevice> devices) async {
@@ -344,7 +320,7 @@ Future<String> loadRemoteHostId([Random? random]) async {
   final prefs = await SharedPreferences.getInstance();
   final existing = prefs.getString(key);
   if (existing != null && existing.isNotEmpty) return existing;
-  final id = newRemoteToken(random).substring(0, 22);
+  final id = newRemoteSecret(random).substring(0, 22);
   await prefs.setString(key, id);
   return id;
 }
@@ -366,7 +342,7 @@ class SavedRemoteHost {
   final String address;
   final int port;
 
-  /// Secret: never log it.
+  /// Secret: never log it or send it.
   final String token;
 
   SavedRemoteHost copyWith({String? name, String? address, int? port}) =>
@@ -427,7 +403,7 @@ class RemoteHostBook {
           .whereType<SavedRemoteHost>()
           .toList();
     } catch (_) {
-      return const [];
+      return const []; // A damaged list: the user pairs again.
     }
   }
 
@@ -439,10 +415,17 @@ class RemoteHostBook {
   }
 
   // Saves and forgets run one after another, so two can't lose each other.
+  // A fresh chain once idle, so a finished one is never resumed later
+  // (tests run each case in its own zone).
   static Future<void> _queue = Future.value();
+  static int _busy = 0;
   static Future<void> _serial(Future<void> Function() task) {
+    if (_busy == 0) _queue = Future<void>.value();
+    _busy++;
     final run = _queue.then((_) => task());
-    _queue = run.catchError((Object _) {});
+    _queue = run.then<void>((_) {}, onError: (Object _) {}).whenComplete(
+      () => _busy--,
+    );
     return run;
   }
 
@@ -452,6 +435,19 @@ class RemoteHostBook {
       ..insert(0, host);
     await _write(hosts);
   });
+
+  /// A paired computer answered from a new address: remember it there.
+  /// Only the address and port change (the token stays with the host id).
+  Future<void> moved(String hostId, String address, int port) =>
+      _serial(() async {
+        final hosts = (await load()).toList();
+        final i = hosts.indexWhere((h) => h.hostId == hostId);
+        if (i < 0) return;
+        final h = hosts[i];
+        if (h.address == address && h.port == port) return;
+        hosts[i] = h.copyWith(address: address, port: port);
+        await _write(hosts);
+      });
 
   Future<void> forget(String hostId) => _serial(() async {
     await _write((await load()).where((h) => h.hostId != hostId).toList());

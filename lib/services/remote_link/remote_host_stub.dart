@@ -28,9 +28,20 @@ class _StubRemoteHost implements RemoteHostController {
   final PairedDeviceStore devices = PairedDeviceStore();
 
   @override
+  RemotePairApprover? approver;
+
+  @override
   Future<void> start() async {}
   @override
   Future<void> setEnabled(bool enabled) async {}
+  @override
+  Future<void> setKeepOn(bool keepOn) async {}
+  @override
+  void openPairing() {}
+  @override
+  Future<void> refreshAddresses() async {}
+  @override
+  Future<void> forgetAll() async {}
   @override
   Future<void> signedOut() async {}
   @override
