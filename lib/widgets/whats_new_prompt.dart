@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../build_info.dart';
 import 'welcome_sheet.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
+import '../screens/setup/setup_flow_store.dart';
 import '../services/whats_new_notes.dart';
 import 'whats_new_sheet.dart';
 
@@ -32,7 +33,8 @@ class WhatsNewPrompt {
   static Future<void> showIfUpdated(BuildContext context) async {
     if (kIsWeb || _isDevBuild) return;
     final prefs = await SharedPreferences.getInstance();
-    final freshInstall = prefs.getBool(WelcomeSheet.prefKey) != true;
+    final freshInstall = prefs.getBool(WelcomeSheet.prefKey) != true ||
+        SetupFlowStore.finishedThisLaunch; // fork: the first-run setup marks welcome seen
     final info = await PackageInfo.fromPlatform();
     final build = int.tryParse(info.buildNumber);
     if (build == null) return;

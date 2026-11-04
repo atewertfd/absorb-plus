@@ -49,6 +49,8 @@ import 'widgets/beta_logging_notice.dart';
 import 'widgets/setup_link_login.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import 'fork/fork_startup.dart';
+import 'screens/setup/setup_flow_screen.dart';
+import 'screens/setup/setup_flow_store.dart';
 import 'fork/remote_link_hooks.dart';
 import 'services/startup_task_coordinator.dart';
 import 'services/startup_timing.dart';
@@ -840,6 +842,7 @@ class _AuthGateState extends State<AuthGate> {
     // correct scoped keys. Without this, settings read before init() would
     // fall back to un-scoped keys and appear as defaults.
     await UserAccountService().init();
+    await SetupFlowStore.decide(hasAccounts: UserAccountService().accounts.isNotEmpty); // Absorb Plus
 
     // One-time migration: copy any settings that were written under unscoped
     // keys (before scope was active) to the current user's scoped keys.
@@ -941,7 +944,7 @@ class _AuthGateState extends State<AuthGate> {
     debugPrint('[Init] AudioPlayerService done (${sw.elapsedMilliseconds}ms)');
 
     try {
-      await Permission.notification.request();
+      if (!SetupFlowStore.active) await Permission.notification.request(); // fork: the setup asks in place
     } catch (e) {
       debugPrint('[Init] Permission request failed: $e');
     }
@@ -1006,6 +1009,7 @@ class _AuthGateState extends State<AuthGate> {
     if (auth.isLoading) {
       return const AuthLoadingScreen();
     }
+    if (SetupFlowStore.active) return SetupFlowScreen(onFinished: () => setState(() {})); // Absorb Plus: first-run setup
 
     if (auth.isAuthenticated || auth.isSignedOut) {
       return AppShell(

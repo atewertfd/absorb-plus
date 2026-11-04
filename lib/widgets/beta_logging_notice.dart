@@ -52,4 +52,12 @@ class BetaLoggingNotice {
       ),
     );
   }
+
+  /// Absorb Plus: the first-run setup says this on its last page instead.
+  static Future<bool> isPending() async =>
+      (await SharedPreferences.getInstance()).getBool(_pendingKey) == true &&
+      await PlayerSettings.getLoggingEnabled();
+
+  static Future<void> dismiss() async =>
+      (await SharedPreferences.getInstance()).remove(_pendingKey);
 }

@@ -27044,6 +27044,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Every book plays at the default speed, and changing the speed in the player changes it for all books. Off: each book (or its series) keeps its own speed.'**
   String get sameSpeedAllBooksSubtitle;
+
+  /// First-run setup: progress above each page.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String setupStepOf(int current, int total);
+
+  /// First-run setup: go to the next page.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get setupNext;
+
+  /// First-run setup: go to the previous page.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get setupBack;
+
+  /// First-run setup: leave an optional page as it is and go on.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get setupSkip;
+
+  /// First-run setup: the one line on the Welcome page.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen to the audiobooks and podcasts on your own Audiobookshelf server. A few quick steps and you\'re in.'**
+  String get setupWelcomeBody;
+
+  /// First-run setup: title of the sign-in page once signed in.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to your server'**
+  String get setupConnectTitle;
+
+  /// First-run setup: the account in use.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as {user}'**
+  String setupSignedInAs(String user);
+
+  /// First-run setup: under the look page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a look or a color to use it right away.'**
+  String get setupLookIntro;
+
+  /// First-run setup: playback basics page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening'**
+  String get setupListeningTitle;
+
+  /// First-run setup: under the listening page title.
+  ///
+  /// In en, this message translates to:
+  /// **'The basics. Settings > Playback has the rest.'**
+  String get setupListeningIntro;
+
+  /// First-run setup: downloads page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads'**
+  String get setupDownloadsTitle;
+
+  /// First-run setup: under the downloads page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Download books to listen without a connection.'**
+  String get setupDownloadsIntro;
+
+  /// First-run setup: Android permissions page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions'**
+  String get setupPermissionsTitle;
+
+  /// First-run setup: under the permissions page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Android asks you before Absorb can do these.'**
+  String get setupPermissionsIntro;
+
+  /// First-run setup: asks Android for one permission.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get setupAllow;
+
+  /// First-run setup: a permission already granted.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed'**
+  String get setupAllowed;
+
+  /// First-run setup: last page title.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re all set'**
+  String get setupDoneTitle;
+
+  /// First-run setup: last page, under the summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Change any of this later in Settings.'**
+  String get setupDoneLater;
+
+  /// First-run setup: finishes the setup and opens the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Start listening'**
+  String get setupDoneStart;
+
+  /// First-run setup summary: the chosen look.
+  ///
+  /// In en, this message translates to:
+  /// **'Look: {name}'**
+  String setupSummaryLook(String name);
+
+  /// First-run setup summary: the default speed.
+  ///
+  /// In en, this message translates to:
+  /// **'Default speed: {speed}x'**
+  String setupSummarySpeed(String speed);
+
+  /// First-run setup summary: skip amounts in seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip back {back}s, forward {forward}s'**
+  String setupSummarySkip(int back, int forward);
+
+  /// Settings > Issues & Support: opens the first-run setup again.
+  ///
+  /// In en, this message translates to:
+  /// **'Run setup again'**
+  String get setupRunAgain;
+
+  /// Subtitle of Run setup again.
+  ///
+  /// In en, this message translates to:
+  /// **'The look, playback basics and more, step by step'**
+  String get setupRunAgainSubtitle;
 }
 
 class _AppLocalizationsDelegate
