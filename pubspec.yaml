@@ -152,6 +152,9 @@ flutter:
     - assets/foliate/
     - assets/foliate/foliate-js/
     - assets/foliate/foliate-js/vendor/
+    # Absorb Plus: patch notes, only in the Absorb Plus Test app (dev flavor).
+    - path: assets/test_build/
+      flavors: [dev]
   shaders:
     - shaders/page_ripple.frag
   fonts:

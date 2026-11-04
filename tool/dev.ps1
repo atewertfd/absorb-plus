@@ -223,8 +223,13 @@ function Get-PubspecVersion {
 # separate public repo atewertfd/absorb-plus-test-builds (owner, 2026-11-03),
 # so the main repo's Releases page only shows real betas and releases. Developer mode > Test channel in the Android app installs the
 # APK from it. Puts this APK there as absorb-plus-test-<version>+<build>.apk,
-# then removes older APKs and sets the notes to "What's new". Touches no other
-# release or tag and never marks anything Latest. Skip with -NoPublish.
+# then removes older APKs and sets the notes to this build's patch notes
+# (tool/test_build_notes.py). Touches no other release or tag and never marks
+# anything Latest. Skip with -NoPublish. After a successful publish, the commit
+# goes to build\test-channel-last.txt: the next build's notes start there.
+$TestNotesAsset = Join-Path $root 'assets\test_build\notes.json'
+$TestNotesBody = Join-Path $root 'build\test-channel-notes.md'
+$TestChannelLastFile = Join-Path $root 'build\test-channel-last.txt'
 function Publish-TestChannelCore {
   param([string]$ApkPath, [string]$Version, [string]$Commit)
   $repo = 'atewertfd/absorb-plus-test-builds'
@@ -235,18 +240,12 @@ function Publish-TestChannelCore {
   New-Item -ItemType Directory -Force -Path $work | Out-Null
   $asset = Join-Path $work $name
   Copy-Item -LiteralPath $ApkPath -Destination $asset -Force
-  # Notes: the change list from "What's new" (not its local folder lines).
-  $whatsNew = Join-Path $BetaDir "What's new.txt"
-  $lines = @(if (Test-Path -LiteralPath $whatsNew) { Get-Content -LiteralPath $whatsNew })
-  $start = 0
-  for ($i = 0; $i -lt $lines.Count; $i++) { if ($lines[$i] -like 'Changes since*') { $start = $i; break } }
+  # Notes: this build's patch notes (version line and bullets), written
+  # before the build by tool/test_build_notes.py.
   $short = if ($Commit.Length -ge 8) { $Commit.Substring(0, 8) } else { $Commit }
   $notesFile = Join-Path $work 'notes.md'
-  $notes = @(
-    "Test build $Version (commit $short). Not a release: install it from Developer mode > Test channel in the Android app."
-    ''
-    $(if ($lines.Count) { $lines[$start..($lines.Count - 1)] })
-  )
+  $notes = @(if (Test-Path -LiteralPath $TestNotesBody) { Get-Content -LiteralPath $TestNotesBody -Encoding utf8 }
+    else { "Test build $Version (commit $short). Not a release: install it from Developer > Test channel in the Absorb Plus Test app." })
   # No BOM (Windows PowerShell's utf8 adds one, which would show in the notes).
   [IO.File]::WriteAllLines($notesFile, [string[]]$notes, (New-Object Text.UTF8Encoding $false))
 
@@ -298,6 +297,7 @@ function Publish-TestChannelCore {
       Invoke-Step -Name 'test-channel-prune' -Run { gh release delete-asset $tag $old --repo $repo --yes }
     }
   }
+  Set-Content -LiteralPath $TestChannelLastFile -Value $Commit -Encoding ascii
   Write-Host "test channel: $name (https://github.com/$repo/releases/tag/$tag)" -ForegroundColor Green
 }
 # A failed publish only warns: the APK in the beta folder is already fine.
@@ -446,15 +446,31 @@ switch ($Command) {
         throw 'No signing setup on this PC: the owner runs tool\android-signing-setup.ps1 once.'
       }
       Invoke-Step -Name 'flutter-pub-get' -Run { & $flutter pub get }
-      Invoke-Step -Name 'apk-local' -Run {
-        # The "Absorb Plus Test" app: dev flavor (own app id, installs beside
-        # the normal app) with Developer mode and the test channel compiled in.
-        # The GitHub App's client id (public, not a secret) turns on GitHub
-        # sign-in for the private test-builds repo; empty means not set up.
-        $clientIdFile = 'tool\test-channel-client-id.txt'
-        # An empty file reads as $null with -Raw, so wrap it before trimming.
-        $clientId = if (Test-Path $clientIdFile) { "$(Get-Content $clientIdFile -Raw)".Trim() } else { '' }
-        & $flutter build apk --release --no-pub --flavor dev --target-platform android-arm64 --dart-define=GITHUB_BUILD=true --dart-define=ABSORB_TEST_BUILD=true "--dart-define=ABSORB_GH_CLIENT_ID=$clientId"
+      # Patch notes bundled in the test app (Developer > Patch notes, and a
+      # "What's new in build N" sheet after updating): the commits since the
+      # last published test build, or the last 15. Written to a git-ignored
+      # asset that only the dev flavor bundles, and removed after the build.
+      $headSha = (git rev-parse HEAD).Trim()
+      $notesArgs = @('tool/test_build_notes.py', '--version', (Get-PubspecVersion),
+        '--out', $TestNotesAsset, '--release-notes', $TestNotesBody, '--commit', $headSha)
+      if (Test-Path $TestChannelLastFile) {
+        $lastSha = "$(Get-Content $TestChannelLastFile -Raw)".Trim()
+        if ($lastSha) { $notesArgs += @('--since', $lastSha) }
+      }
+      Invoke-Step -Name 'test-build-notes' -Run { python @notesArgs } -SummaryPattern 'test build notes'
+      try {
+        Invoke-Step -Name 'apk-local' -Run {
+          # The "Absorb Plus Test" app: dev flavor (own app id, installs beside
+          # the normal app) with Developer mode and the test channel compiled in.
+          # The GitHub App's client id (public, not a secret) turns on GitHub
+          # sign-in for the private test-builds repo; empty means not set up.
+          $clientIdFile = 'tool\test-channel-client-id.txt'
+          # An empty file reads as $null with -Raw, so wrap it before trimming.
+          $clientId = if (Test-Path $clientIdFile) { "$(Get-Content $clientIdFile -Raw)".Trim() } else { '' }
+          & $flutter build apk --release --no-pub --flavor dev --target-platform android-arm64 --dart-define=GITHUB_BUILD=true --dart-define=ABSORB_TEST_BUILD=true "--dart-define=ABSORB_GH_CLIENT_ID=$clientId"
+        }
+      } finally {
+        Remove-Item -LiteralPath $TestNotesAsset -Force -ErrorAction SilentlyContinue
       }
       $apk = Get-ChildItem 'build\app\outputs\flutter-apk' -Filter '*dev-release*.apk' |
         Sort-Object LastWriteTime -Descending | Select-Object -First 1
@@ -475,7 +491,6 @@ switch ($Command) {
         }
       }
       if (-not $NoPublish) {
-        $headSha = (git rev-parse HEAD).Trim()
         Publish-TestChannel -ApkPath $apk.FullName -Version (Get-PubspecVersion) -Commit $headSha
       }
       break
