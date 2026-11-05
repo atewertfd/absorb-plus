@@ -163,37 +163,6 @@ class LoginWordmark extends StatelessWidget {
   }
 }
 
-/// A look-aware panel with padding (the Settings / setup panel style).
-class LoginPanel extends StatelessWidget {
-  const LoginPanel({
-    super.key,
-    required this.child,
-    this.padding = const EdgeInsets.all(20),
-  });
-
-  final Widget child;
-  final EdgeInsets padding;
-
-  @override
-  Widget build(BuildContext context) => SetupPanel(
-    children: [Padding(padding: padding, child: child)],
-  );
-}
-
-/// The server field's Enter: check the address, then go to the username.
-void submitLoginServer(LoginForm form, {VoidCallback? onValid}) {
-  final next = onValid ?? form.usernameFocus.requestFocus;
-  if (form.serverValid) {
-    next();
-  } else if (!form.serverChecking) {
-    unawaited(
-      form.checkServer().then((_) {
-        if (form.serverValid) next();
-      }),
-    );
-  }
-}
-
 /// One chip per saved server; tapping one fills in its address.
 class LoginRecentServers extends StatelessWidget {
   const LoginRecentServers({super.key, required this.form});

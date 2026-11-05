@@ -13,7 +13,7 @@ import '../../ui_themes/ui_theme_hooks.dart';
 import '../../utils/cover_cache.dart';
 import '../../utils/fork_errors.dart';
 
-// The glass pieces of the B2-B4 sign-in designs: a soft, static background
+// The glass pieces of the B2 and B3 sign-in designs: a soft, static background
 // (recent covers blurred once, or the accent's gradient) and a see-through
 // frosted panel over it.
 
@@ -137,7 +137,7 @@ abstract final class LoginCoverCollage {
 bool loginGlassBlurs() =>
     frostBlurSupported() && !einkModeNotifier.value && !flatNotifier.value;
 
-/// The B2-B4 sign-in screen: [child] over a static, soft background (see
+/// The B2 and B3 sign-in screen: [child] over a static, soft background (see
 /// [LoginAmbientBackground]); a plain background with Flat background on.
 class LoginGlassBackdrop extends StatelessWidget {
   const LoginGlassBackdrop({super.key, required this.child});

@@ -27213,23 +27213,11 @@ abstract class AppLocalizations {
   /// **'Classic'**
   String get loginDesignClassicName;
 
-  /// Sign-in design A: one centered card.
-  ///
-  /// In en, this message translates to:
-  /// **'A · Clean card'**
-  String get loginDesignCard;
-
   /// Sign-in design B: server first, then the sign-in.
   ///
   /// In en, this message translates to:
   /// **'B · Two steps'**
   String get loginDesignSteps;
-
-  /// Sign-in design C: a hero panel beside the form.
-  ///
-  /// In en, this message translates to:
-  /// **'C · Split'**
-  String get loginDesignSplit;
 
   /// Sign-in design B2: the two steps on a see-through frosted panel.
   ///
@@ -27242,12 +27230,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'B3 · Desktop steps'**
   String get loginDesignStepsDesktop;
-
-  /// Sign-in design B4: design C's hero panel beside the two steps.
-  ///
-  /// In en, this message translates to:
-  /// **'B4 · Hero steps'**
-  String get loginDesignStepsHero;
 
   /// Sign-in step list, step 1: entering the server address.
   ///
@@ -27338,12 +27320,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Use the account you have on this server.'**
   String get loginSignInToNamedIntro;
-
-  /// Split sign-in design: short line on the hero panel.
-  ///
-  /// In en, this message translates to:
-  /// **'Your audiobooks, podcasts and ebooks from your own server, on every device.'**
-  String get loginSplitPitch;
 
   /// Quick switcher: extra search words for Preview sign-in designs.
   ///

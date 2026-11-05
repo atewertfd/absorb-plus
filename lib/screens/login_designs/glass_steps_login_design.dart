@@ -7,12 +7,11 @@ import '../../l10n/app_localizations.dart';
 import 'login_design_parts.dart';
 import 'login_form.dart';
 import 'login_glass_parts.dart';
-import 'split_login_design.dart' show LoginHero, SplitLoginDesign;
 import 'steps_login_design.dart';
 
-// Design B's two steps in three more settings: on glass (B2), in a wide
-// glass panel with a step list (B3) and beside C's hero (B4). All of them go
-// through B's [LoginStepsFlow] and the screen's own [LoginForm].
+// Design B's two steps in two more settings: on glass (B2) and in a wide
+// glass panel with a step list (B3). Both go through B's [LoginStepsFlow]
+// and the screen's own [LoginForm].
 
 /// Esc and Alt+Left go back to the address while the sign-in page shows.
 Widget _stepShortcuts(LoginStepsFlow flow, Widget child) => CallbackShortcuts(
@@ -344,69 +343,6 @@ class _BigFields extends StatelessWidget {
         ),
       ),
       child: child,
-    );
-  }
-}
-
-/// Design B4 · Hero steps: C's hero panel on the left of wide windows with
-/// B's two steps on the right; on phones a compact hero header above them.
-class HeroStepsLoginDesign extends StatefulWidget {
-  const HeroStepsLoginDesign({super.key, required this.form});
-
-  final LoginForm form;
-
-  @override
-  State<HeroStepsLoginDesign> createState() => _HeroStepsLoginDesignState();
-}
-
-class _HeroStepsLoginDesignState extends State<HeroStepsLoginDesign>
-    with LoginStepsFlow<HeroStepsLoginDesign> {
-  @override
-  LoginForm get form => widget.form;
-
-  @override
-  Widget build(BuildContext context) {
-    return LoginDesignBackdrop(
-      child: _stepShortcuts(
-        this,
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final steps = Form(
-              key: form.formKey,
-              child: buildStepPage(showBadge: false),
-            );
-            if (!SplitLoginDesign.isWide(constraints.biggest)) {
-              return LoginScrollBody(
-                key: const Key('login-design-hero-narrow'),
-                maxWidth: 520,
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const LoginHero(compact: true),
-                    const SizedBox(height: 20),
-                    steps,
-                  ],
-                ),
-              );
-            }
-            return Row(
-              key: const Key('login-design-hero-wide'),
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: LoginHero(compact: false),
-                  ),
-                ),
-                Expanded(child: LoginScrollBody(maxWidth: 440, child: steps)),
-              ],
-            );
-          },
-        ),
-      ),
     );
   }
 }

@@ -115,12 +115,8 @@ const _combos = [
   _Combo(Size(1920, 1080), 1.3, Brightness.light),
 ];
 
-/// The designs added in round 2 (B's steps on glass, desktop, hero).
-const _bVariants = [
-  LoginDesign.stepsGlass,
-  LoginDesign.stepsDesktop,
-  LoginDesign.stepsHero,
-];
+/// The designs added in round 2 (B's steps on glass and desktop).
+const _bVariants = [LoginDesign.stepsGlass, LoginDesign.stepsDesktop];
 
 AbsorbLook _look(int i, Brightness b) => switch (i % 3) {
   0 => AbsorbLook.plus,
@@ -258,50 +254,32 @@ void main() {
     }
   });
 
-  testWidgets('the split design goes side by side on wide windows', (
-    tester,
-  ) async {
-    await _pump(
-      tester,
-      _screen(LoginDesign.split, preview: true),
-      combo: const _Combo(Size(1280, 800), 1.0, Brightness.dark),
-    );
-    expect(find.byKey(const Key('login-design-split-wide')), findsOneWidget);
-    await _pump(
-      tester,
-      _screen(LoginDesign.split, preview: true),
-      combo: const _Combo(Size(360, 640), 1.0, Brightness.dark),
-    );
-    expect(find.byKey(const Key('login-design-split-narrow')), findsOneWidget);
-  });
-
-  testWidgets('B2-B4 lay out in every look, light and dark, blurred or not', (
-    tester,
-  ) async {
-    for (final design in _bVariants) {
-      for (final blur in [true, false]) {
-        debugFrostIsWebOverride = !blur;
-        for (final b in Brightness.values) {
-          for (final look in [
-            AbsorbLook.plus,
-            AbsorbLook.midnight(b),
-            if (b == Brightness.dark)
-              AbsorbLook.frostedDark
-            else
-              AbsorbLook.frostedLight,
-          ]) {
-            for (final size in const [Size(360, 640), Size(1280, 800)]) {
-              final combo = _Combo(size, 1.0, b);
-              final why = '${design.id} blur=$blur $look $combo';
-              await tester.pumpWidget(const SizedBox());
-              await _pump(
-                tester,
-                _screen(design, preview: true),
-                combo: combo,
-                look: look,
-              );
-              expect(tester.takeException(), isNull, reason: why);
-              if (design != LoginDesign.stepsHero) {
+  testWidgets(
+    'B2 and B3 lay out in every look, light and dark, blurred or not',
+    (tester) async {
+      for (final design in _bVariants) {
+        for (final blur in [true, false]) {
+          debugFrostIsWebOverride = !blur;
+          for (final b in Brightness.values) {
+            for (final look in [
+              AbsorbLook.plus,
+              AbsorbLook.midnight(b),
+              if (b == Brightness.dark)
+                AbsorbLook.frostedDark
+              else
+                AbsorbLook.frostedLight,
+            ]) {
+              for (final size in const [Size(360, 640), Size(1280, 800)]) {
+                final combo = _Combo(size, 1.0, b);
+                final why = '${design.id} blur=$blur $look $combo';
+                await tester.pumpWidget(const SizedBox());
+                await _pump(
+                  tester,
+                  _screen(design, preview: true),
+                  combo: combo,
+                  look: look,
+                );
+                expect(tester.takeException(), isNull, reason: why);
                 expect(
                   find.byKey(const Key('login-glass-panel')),
                   findsOneWidget,
@@ -314,18 +292,18 @@ void main() {
                   ),
                 );
                 expect(filter.enabled, blur, reason: why);
+                await _toSignInPage(tester);
+                expect(tester.takeException(), isNull, reason: 'page 2, $why');
+                expect(_signInButton, findsOneWidget, reason: why);
               }
-              await _toSignInPage(tester);
-              expect(tester.takeException(), isNull, reason: 'page 2, $why');
-              expect(_signInButton, findsOneWidget, reason: why);
             }
           }
         }
       }
-    }
-  });
+    },
+  );
 
-  testWidgets('B3 is wide on big windows and B2-like on phones; B4 like C', (
+  testWidgets('B3 is wide on big windows and B2-like on phones', (
     tester,
   ) async {
     Future<void> at(LoginDesign design, Size size, String key) async {
@@ -362,23 +340,6 @@ void main() {
       const Size(640, 360),
       'login-design-steps-desktop-narrow',
     );
-    await at(
-      LoginDesign.stepsHero,
-      const Size(1280, 800),
-      'login-design-hero-wide',
-    );
-    expect(find.byKey(const Key('login-split-hero')), findsOneWidget);
-    await at(
-      LoginDesign.stepsHero,
-      const Size(640, 360),
-      'login-design-hero-wide',
-    );
-    await at(
-      LoginDesign.stepsHero,
-      const Size(360, 640),
-      'login-design-hero-narrow',
-    );
-    expect(find.byKey(const Key('login-split-hero')), findsOneWidget);
   });
 
   testWidgets('B3 starts in the address, Enter continues, Esc and Alt+Left '
@@ -484,11 +445,19 @@ void main() {
     expect(find.byKey(const Key('login-glass-gradient')), findsOneWidget);
   });
 
-  test('B2-B4 save under their own ids', () async {
+  test('the designs and their preview labels', () {
+    expect(LoginDesign.values.map((d) => d.label(_l)), [
+      'Current',
+      'B · Two steps',
+      'B2 · Glass steps',
+      'B3 · Desktop steps',
+    ]);
+  });
+
+  test('B2 and B3 save under their own ids', () async {
     const ids = {
       LoginDesign.stepsGlass: 'steps_glass',
       LoginDesign.stepsDesktop: 'steps_desktop',
-      LoginDesign.stepsHero: 'steps_hero',
     };
     expect(
       LoginDesign.values.map((d) => d.id).toSet(),
@@ -511,16 +480,25 @@ void main() {
     await _pump(tester, const LoginScreen());
     expect(find.byKey(const Key('login-design-steps-server')), findsOneWidget);
 
-    await LoginDesignStore.set(LoginDesign.card);
+    await LoginDesignStore.set(LoginDesign.stepsGlass);
     await tester.pump();
-    expect(find.byKey(const Key('login-design-card')), findsOneWidget);
+    expect(find.byKey(const Key('login-design-steps-glass')), findsOneWidget);
     final prefs = await SharedPreferences.getInstance();
-    expect(prefs.getString(LoginDesignStore.key), 'card');
+    expect(prefs.getString(LoginDesignStore.key), 'steps_glass');
 
     await LoginDesignStore.set(LoginDesign.classic);
     await tester.pump();
-    expect(find.byKey(const Key('login-design-card')), findsNothing);
+    expect(find.byKey(const Key('login-design-steps-glass')), findsNothing);
     expect(find.byKey(const Key('paste-login-link')), findsOneWidget);
+  });
+
+  test('a saved removed design (A, C, B4) loads as B', () async {
+    for (final id in ['card', 'split', 'steps_hero']) {
+      LoginDesignStore.design.value = LoginDesign.classic;
+      SharedPreferences.setMockInitialValues({LoginDesignStore.key: id});
+      await LoginDesignStore.load();
+      expect(LoginDesignStore.design.value, LoginDesign.steps, reason: id);
+    }
   });
 
   test('an unknown saved value falls back to classic', () async {
@@ -532,7 +510,7 @@ void main() {
   testWidgets("the setup flow's Connect page shows the chosen design", (
     tester,
   ) async {
-    LoginDesignStore.design.value = LoginDesign.split;
+    LoginDesignStore.design.value = LoginDesign.steps;
     addTearDown(() => SetupFlowStore.active = false);
     await _pump(
       tester,
@@ -542,7 +520,7 @@ void main() {
         complete: () async {},
       ),
     );
-    expect(find.byKey(const Key('login-design-split')), findsOneWidget);
+    expect(find.byKey(const Key('login-design-steps-server')), findsOneWidget);
   });
 
   group('every design signs in like the classic screen', () {
@@ -631,12 +609,12 @@ void main() {
     }
     expect(auth.calls, isEmpty);
 
-    // On the last page (split): use it.
+    // On the last page (B3): use it.
     await tester.tap(find.byKey(const Key('login-preview-use')));
     await tester.pump();
-    expect(LoginDesignStore.design.value, LoginDesign.split);
+    expect(LoginDesignStore.design.value, LoginDesign.stepsDesktop);
     expect(find.byKey(const Key('login-preview-in-use')), findsOneWidget);
     final prefs = await SharedPreferences.getInstance();
-    expect(prefs.getString(LoginDesignStore.key), 'split');
+    expect(prefs.getString(LoginDesignStore.key), 'steps_desktop');
   });
 }

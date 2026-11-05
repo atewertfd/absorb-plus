@@ -16309,22 +16309,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get loginDesignClassicName => 'Classic';
 
   @override
-  String get loginDesignCard => 'A · Clean card';
-
-  @override
   String get loginDesignSteps => 'B · Two steps';
-
-  @override
-  String get loginDesignSplit => 'C · Split';
 
   @override
   String get loginDesignStepsGlass => 'B2 · Glass steps';
 
   @override
   String get loginDesignStepsDesktop => 'B3 · Desktop steps';
-
-  @override
-  String get loginDesignStepsHero => 'B4 · Hero steps';
 
   @override
   String get loginStepLibrary => 'Your library';
@@ -16376,10 +16367,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get loginSignInToNamedIntro =>
       'Use the account you have on this server.';
-
-  @override
-  String get loginSplitPitch =>
-      'Your audiobooks, podcasts and ebooks from your own server, on every device.';
 
   @override
   String get quickSwitcherKeywordsLoginDesign =>
