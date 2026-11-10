@@ -62,10 +62,25 @@ def fork_members(base: str, path: str) -> set[str]:
     return members_touching(src, added_lines(git("diff", "-U0", "--no-color", base, "HEAD", "--", path)))
 
 
+class NoMergeBase(RuntimeError):
+    """`git merge-base HEAD <ref>` found nothing: the ref is missing or unfetched."""
+
+
+def ref_exists(ref: str) -> bool:
+    return bool(git("rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}").strip())
+
+
 def report(ref: str) -> list[tuple[str, str, str, list[str]]]:
+    """Unmerged upstream fix commits touching members the fork changed.
+
+    Raises NoMergeBase when there is no merge base, so a missing or unfetched
+    ref is never mistaken for "nothing to check".
+    """
     base = git("merge-base", "HEAD", ref).strip()
     if not base:
-        return []
+        hint = "" if ref_exists(ref) else (
+            f" '{ref}' doesn't exist here - it looks unfetched (run: git fetch origin).")
+        raise NoMergeBase(f"No merge base between HEAD and {ref}.{hint}")
     fork_files = set(git("diff", "--name-only", base, "HEAD", "--", "lib").split())
     cache: dict[str, set[str]] = {}
     hits = []
@@ -91,7 +106,11 @@ def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--ref", default="origin/main")
     args = parser.parse_args(argv[1:])
-    hits = report(args.ref)
+    try:
+        hits = report(args.ref)
+    except NoMergeBase as e:
+        print(f"ERROR: {e} Nothing was checked.", file=sys.stderr)
+        return 2
     if not hits:
         print("No unmerged upstream fix touches a member the fork changed.")
         return 0

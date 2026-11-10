@@ -96,7 +96,11 @@ def run(ref: str, fetch: bool, gen: bool, cwd: Path = ROOT) -> int:
     # IMP-006: upstream fixes in code the fork rewrote can be lost in the merge.
     if cwd == ROOT:
         import upstream_fix_check  # noqa: E402
-        hits = upstream_fix_check.report(ref)
+        try:
+            hits = upstream_fix_check.report(ref)
+        except upstream_fix_check.NoMergeBase as e:
+            print(f"ERROR: upstream fix check: {e}", file=sys.stderr)
+            return 1
         if hits:
             print(upstream_fix_check.format_hits(hits))
     print(f"Merging {behind} upstream commit(s) from {ref}...")
