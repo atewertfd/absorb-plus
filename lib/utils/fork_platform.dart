@@ -98,6 +98,32 @@ abstract final class ForkPlatform {
     return true;
   }
 
+  /// The page the web build was loaded from. Tests replace it.
+  @visibleForTesting
+  static Uri Function() webPageUri = _pageUri;
+
+  static Uri _pageUri() => Uri.base;
+
+  /// Whether the web build takes its server from the page's own address and
+  /// hides the server field (upstream: Absorb served by the Audiobookshelf
+  /// server itself). The fork's web build is published on GitHub Pages and
+  /// run on localhost while developing, where the page isn't the server, so
+  /// those keep the server field.
+  static bool get webUsesOriginServer =>
+      isWeb && webPageHostsServer(webPageUri());
+
+  /// Whether [page] could be the Audiobookshelf server serving the web app.
+  static bool webPageHostsServer(Uri page) {
+    final scheme = page.scheme.toLowerCase();
+    if (scheme != 'http' && scheme != 'https') return false;
+    final host = page.host.toLowerCase();
+    if (host.isEmpty) return false;
+    if (host == 'github.io' || host.endsWith('.github.io')) return false;
+    if (host == 'localhost' || host.endsWith('.localhost')) return false;
+    if (host == '127.0.0.1' || host == '::1') return false;
+    return true;
+  }
+
   /// The equalizer changes the sound on Android (audio effects) and on
   /// Windows and Linux (mpv filters, services/desktop_equalizer.dart). The
   /// browser player has no hook for it.

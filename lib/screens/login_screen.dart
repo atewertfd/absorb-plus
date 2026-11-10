@@ -32,6 +32,7 @@ import '../services/tailscale_service.dart'; // fork
 import 'tailscale_settings_screen.dart'; // fork
 import '../widgets/tailscale_login_panel.dart'; // fork
 import '../utils/fork_branding.dart'; // fork
+import '../utils/fork_platform.dart'; // fork
 import '../services/login_design_store.dart'; // fork
 import 'login_designs/login_designs.dart'; // fork
 import '../ui_themes/app_backdrop.dart'; // fork
@@ -120,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen>
       if (_forkForm.prefillPreview()) return; // fork: design preview
       final auth = context.read<AuthProvider>();
       final account = widget.prefillAccount;
-      if (AppPlatform.isWeb) {
+      if (ForkPlatform.webUsesOriginServer) { // fork: GitHub Pages keeps the field
         final serverUrl = serverUrlFromWebOrigin(Uri.base);
         if (serverUrl != null) {
           _setInitialHeaders(account?.customHeaders ?? auth.customHeaders);
@@ -150,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   void _prefillLogin(String serverUrl, String username) {
-    final resolvedServerUrl = AppPlatform.isWeb
+    final resolvedServerUrl = ForkPlatform.webUsesOriginServer // fork
         ? serverUrlFromWebOrigin(Uri.base) ?? serverUrl
         : serverUrl;
     final uri = Uri.tryParse(resolvedServerUrl);
@@ -211,7 +212,7 @@ class _LoginScreenState extends State<LoginScreen>
   String _lastValidatedServer = '';
 
   String get _resolvedServerUrl {
-    if (AppPlatform.isWeb) {
+    if (ForkPlatform.webUsesOriginServer) { // fork
       return serverUrlFromWebOrigin(Uri.base) ?? '';
     }
 
@@ -288,7 +289,7 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Future<void> _checkServer() async {
-    if (!AppPlatform.isWeb && _serverController.text.trim().isEmpty) return;
+    if (!ForkPlatform.webUsesOriginServer && _serverController.text.trim().isEmpty) return; // fork
     final fullUrl = _resolvedServerUrl;
     if (fullUrl.isEmpty) return;
     if (_forkForm.previewServerCheck(fullUrl)) return; // fork: design preview
@@ -693,7 +694,7 @@ class _LoginScreenState extends State<LoginScreen>
                                   Padding(
                                     padding: const EdgeInsets.only(left: 4, bottom: 16),
                                     child: Text(
-                                      AppPlatform.isWeb ? l.loginSignIn : l.loginConnectToServer,
+                                      ForkPlatform.webUsesOriginServer ? l.loginSignIn : l.loginConnectToServer, // fork
                                       style: tt.titleSmall?.copyWith(
                                         color: cs.onSurfaceVariant.withValues(alpha: 0.7),
                                         fontWeight: FontWeight.w500,
@@ -712,7 +713,7 @@ class _LoginScreenState extends State<LoginScreen>
                                   ],
                                   const SizedBox(height: 14),
 
-                                  if (!AppPlatform.isWeb) _buildInputField(
+                                  if (!ForkPlatform.webUsesOriginServer) _buildInputField( // fork
                                     controller: _serverController,
                                     label: l.loginServerAddress,
                                     hint: l.loginServerHint,
