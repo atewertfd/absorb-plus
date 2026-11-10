@@ -22,6 +22,7 @@ import '../utils/local_path.dart';
 import '../widgets/desktop_input.dart';
 import '../utils/fork_format.dart';
 import '../widgets/empty_state.dart'; // Absorb Plus
+import '../utils/episode_key.dart';
 
 String _downloadRate(double? bytesPerSecond) {
   if (bytesPerSecond == null || bytesPerSecond <= 0) return '';
@@ -258,9 +259,9 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
     if (api == null || info.localPaths.isEmpty) return;
     debugPrint(
         '[Downloads] Play ${info.itemId} from the downloads list (library=${info.libraryId})');
-    final isEpisode = info.itemId.length > 36;
-    final itemId = isEpisode ? info.itemId.substring(0, 36) : info.itemId;
-    final episodeId = isEpisode ? info.itemId.substring(37) : null;
+    final isEpisode = isEpisodeKey(info.itemId);
+    final itemId = isEpisode ? itemIdOfKey(info.itemId) : info.itemId;
+    final episodeId = isEpisode ? episodeIdOfKey(info.itemId)! : null;
     double duration = 0;
     List<dynamic> chapters = const [];
     final sessionJson = info.sessionData;

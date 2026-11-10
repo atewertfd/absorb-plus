@@ -61,6 +61,7 @@ import '../services/recent_searches.dart';
 import '../widgets/surprise_me_button.dart'; // Absorb Plus
 import '../ui_themes/app_backdrop.dart'; // Absorb Plus
 import 'library_paging.dart'; // Absorb Plus
+import '../utils/episode_key.dart';
 
 /// Responsive grid column count based on available width and the cover size
 /// setting; scales up on tablets/iPads.
@@ -1564,7 +1565,7 @@ class LibraryScreenState extends State<LibraryScreen>
       if (libraryId != null && libraryId.isNotEmpty && selectedId != null) {
         return libraryId == selectedId;
       }
-      return (dl.itemId.length > 36) == isPodcast;
+      return isEpisodeKey(dl.itemId) == isPodcast;
     }).toList();
 
     final items = <Map<String, dynamic>>[];

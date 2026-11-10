@@ -29,6 +29,7 @@ import '../ui_themes/ui_theme_hooks.dart';
 import '../widgets/accessible_header_action.dart';
 import '../widgets/desktop_input.dart';
 import '../ui_themes/app_backdrop.dart'; // Absorb Plus
+import '../utils/episode_key.dart';
 
 const double _kAbsorbingDesktopPanelRailWidth = 48;
 const double _kAbsorbingDesktopPanelDividerWidth = 1;
@@ -571,7 +572,7 @@ class _AbsorbingScreenState extends State<AbsorbingScreen> {
       if (cached != null) {
         final itemLibId = cached['libraryId'] as String?;
         final mediaType = cached['mediaType'] as String?;
-        final isPodItem = mediaType == 'podcast' || key.length > 36;
+        final isPodItem = mediaType == 'podcast' || isEpisodeKey(key);
         if (_mergeLibraries ||
             selectedLibraryId == null ||
             (itemLibId != null
@@ -689,7 +690,7 @@ class _AbsorbingScreenState extends State<AbsorbingScreen> {
         _lastFinishedId != null &&
         !removes.contains(_lastFinishedId)) {
       // Compound podcast keys are "uuid-uuid" (>36 chars); plain book UUIDs are 36.
-      final finishedIsPodcast = _lastFinishedId!.length > 36;
+      final finishedIsPodcast = isEpisodeKey(_lastFinishedId!);
       if (_mergeLibraries || finishedIsPodcast == isPod) {
         final finishedIdx = items.indexWhere(
           (b) => _absorbingKey(b) == _lastFinishedId,
@@ -1829,8 +1830,8 @@ class _AbsorbingQueuePanelState extends State<_AbsorbingQueuePanel> {
   // podcasts, so a length past 36 means an episode is playing.
   String? get _currentPodcastShowId {
     final id = _currentItemId;
-    if (id == null || id.length <= 36) return null;
-    return id.substring(0, 36);
+    if (id == null || !isEpisodeKey(id)) return null;
+    return itemIdOfKey(id);
   }
 
   bool get _currentIsPodcast =>
@@ -2805,10 +2806,10 @@ class _AbsorbingQueuePanelState extends State<_AbsorbingQueuePanel> {
           final api = context.read<AuthProvider>().apiService;
           if (api == null) return;
           late Future<String?> playback;
-          if (key.length > 36) {
+          if (isEpisodeKey(key)) {
             // podcast compound key
-            final showId = key.substring(0, 36);
-            final epId = key.substring(37);
+            final showId = itemIdOfKey(key);
+            final epId = episodeIdOfKey(key)!;
             playback = AudioPlayerService().playItem(
               api: api,
               itemId: showId,

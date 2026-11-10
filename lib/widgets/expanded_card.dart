@@ -29,6 +29,7 @@ import '../utils/app_platform.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 import 'fell_asleep_chip.dart'; // Absorb Plus
+import '../utils/episode_key.dart';
 
 // ─── Custom route: slide-up + fade ────────────────────────────
 
@@ -177,7 +178,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
     final re = _recentEpisode;
     if (re != null) return re['id'] as String?;
     final absKey = _item['_absorbingKey'] as String?;
-    if (absKey != null && absKey.length > 36) return absKey.substring(37);
+    if (absKey != null && isEpisodeKey(absKey)) return episodeIdOfKey(absKey)!;
     return null;
   }
   double get _effectiveDuration {

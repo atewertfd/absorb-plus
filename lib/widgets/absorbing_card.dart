@@ -37,6 +37,7 @@ import 'item_download_watch.dart';
 import '../utils/cover_cache.dart';
 import '../utils/cover_decode_size.dart';
 import 'fell_asleep_chip.dart'; // Absorb Plus
+import '../utils/episode_key.dart';
 
 enum AbsorbingCardPresentation { card, desktop }
 
@@ -257,7 +258,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
     if (re != null) return re['id'] as String?;
     // Compound absorbing keys are "showUUID-episodeId" (>36 chars)
     final absKey = widget.item['_absorbingKey'] as String?;
-    if (absKey != null && absKey.length > 36) return absKey.substring(37);
+    if (absKey != null && isEpisodeKey(absKey)) return episodeIdOfKey(absKey)!;
     return null;
   }
   // Use episode duration for inactive podcast show cards (show duration is aggregate/incorrect)
