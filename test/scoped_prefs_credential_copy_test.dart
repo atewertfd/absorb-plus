@@ -21,6 +21,11 @@ void main() {
       // A copy an earlier migration made for another account.
       'old.example_bob:refresh_token': 'fixture-old-refresh',
       'old.example_bob:other': 'kept',
+      // Absorb Plus: the test channel's GitHub sign-in.
+      'fork_test_channel_gh_access_token': 'fixture-gh-access',
+      'fork_test_channel_gh_refresh_token': 'fixture-gh-refresh',
+      'fork_test_channel_gh_login': 'fixture-login',
+      'old.example_bob:fork_test_channel_gh_access_token': 'fixture-old-gh',
     });
   });
 
@@ -43,5 +48,19 @@ void main() {
     expect(prefs.getString('old.example_bob:other'), 'kept');
     // The live global token is untouched.
     expect(prefs.getString('refresh_token'), 'fixture-refresh');
+    // The GitHub sign-in stays device-wide too.
+    for (final k in [
+      'fork_test_channel_gh_access_token',
+      'fork_test_channel_gh_refresh_token',
+      'fork_test_channel_gh_login',
+    ]) {
+      expect(prefs.containsKey('$scope:$k'), isFalse, reason: k);
+    }
+    expect(
+      prefs.containsKey('old.example_bob:fork_test_channel_gh_access_token'),
+      isFalse,
+    );
+    expect(prefs.getString('fork_test_channel_gh_access_token'),
+        'fixture-gh-access');
   });
 }

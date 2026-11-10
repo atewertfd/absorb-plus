@@ -38,11 +38,18 @@ class ScopedPrefs {
     // Absorb Plus: the refresh token is global; a scoped copy was never
     // read, rotated or deleted, so it outlived sign-out in plain prefs.
     'refresh_token', 'token_saved_at', 'wear_token_pair_pending',
+    // Absorb Plus: the test channel's GitHub sign-in is device-wide.
+    'fork_test_channel_gh_access_token', 'fork_test_channel_gh_refresh_token',
+    'fork_test_channel_gh_expires_at', 'fork_test_channel_gh_login',
   };
 
   /// Absorb Plus: the scope-suffixed copies earlier migrations made of the
   /// global keys holding a credential. Nothing reads them.
-  static const _strayCredentialCopies = <String>['refresh_token'];
+  static const _strayCredentialCopies = <String>[
+    'refresh_token',
+    'fork_test_channel_gh_access_token',
+    'fork_test_channel_gh_refresh_token',
+  ];
 
   /// One-time migration: copy unscoped settings to the active scope.
   /// This handles the case where settings were written before scope was
