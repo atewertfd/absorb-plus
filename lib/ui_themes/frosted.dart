@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/desktop_shortcut_scope.dart';
+import '../widgets/desktop_upload_drop_scope.dart';
+import 'app_backdrop.dart';
 import 'ui_theme.dart';
 import 'ui_theme_try.dart';
 
@@ -155,15 +157,26 @@ ThemeData frostedThemeData(ThemeData base) {
 /// bar ([UiThemeTryOutLayer]). The tree shape never changes with the look
 /// (no navigator remount when switching looks or starting a preview).
 /// Also hosts the desktop shortcuts ([DesktopShortcutScope]) above every
-/// route, so they work while the full-screen player or a reader is open.
+/// route, so they work while the full-screen player or a reader is open,
+/// and the desktop file drop ([DesktopUploadDropScope]). The app background
+/// ([appBackdropThemeData], [AppBackdropScope]) is set up here too: pages
+/// get transparent scaffolds over a backdrop drawn behind each page.
 Widget absorbLookBuilder(BuildContext context, Widget? child) {
   final app = Theme.of(context);
-  return Theme(
-    data: frostedThemeData(app),
-    child: _AppBaseTheme(
-      data: app,
-      child: UiThemeTryOutLayer(
-        child: DesktopShortcutScope(child: child ?? const SizedBox.shrink()),
+  final themed = frostedThemeData(app);
+  return AppBackdropScope(
+    plain: themed.scaffoldBackgroundColor,
+    child: Theme(
+      data: appBackdropThemeData(themed),
+      child: _AppBaseTheme(
+        data: app,
+        child: UiThemeTryOutLayer(
+          child: DesktopUploadDropScope(
+            child: DesktopShortcutScope(
+              child: child ?? const SizedBox.shrink(),
+            ),
+          ),
+        ),
       ),
     ),
   );

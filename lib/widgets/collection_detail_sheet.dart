@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'overlay_toast.dart';
 import 'absorb_placement.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import '../l10n/app_localizations.dart';
 import 'cover_badges.dart';
 import '../services/wording.dart';
@@ -22,7 +24,9 @@ import 'stackable_sheet.dart';
 import 'swipe_action.dart';
 import '../screens/app_shell.dart';
 import '../screens/smart_scope_editor_screen.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
+import 'list_order_save_feedback.dart';
 
 class CollectionDetailSheet extends StatefulWidget {
   final String collectionId;
@@ -214,7 +218,7 @@ class _CollectionDetailSheetState extends State<CollectionDetailSheet> {
           .toList();
       // Persist in the background so "Done" closes instantly instead of
       // hanging on the PATCH + collections reload.
-      unawaited(lib.reorderCollectionBooks(widget.collectionId, bookIds));
+      unawaited(lib.reorderCollectionBooks(widget.collectionId, bookIds).then(reportListOrderSave));
     }
     Navigator.pop(context);
   }
@@ -589,7 +593,7 @@ class _CollectionDetailSheetState extends State<CollectionDetailSheet> {
                             ? (isLocalCoverPath(coverUrl)
                                 ? Image.file(File(coverUrl), fit: BoxFit.cover,
                                     errorBuilder: (_, __, ___) => _placeholder(cs))
-                                : CachedNetworkImage(
+                                : CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                                     imageUrl: coverUrl, fit: BoxFit.cover,
                                     httpHeaders: lib.mediaHeaders,
                                     placeholder: (_, __) => _placeholder(cs),
@@ -726,7 +730,7 @@ class _CollectionDetailSheetState extends State<CollectionDetailSheet> {
                           ? (isLocalCoverPath(coverUrl)
                               ? Image.file(File(coverUrl), fit: BoxFit.cover,
                                   errorBuilder: (_, __, ___) => _placeholder(cs))
-                              : CachedNetworkImage(
+                              : CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                                   imageUrl: coverUrl, fit: BoxFit.cover,
                                   httpHeaders: lib.mediaHeaders,
                                   placeholder: (_, __) => _placeholder(cs),

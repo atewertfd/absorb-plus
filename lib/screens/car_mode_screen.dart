@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart' hide PlaybackEvent;
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import '../main.dart' show applyOrientationLock;
 import '../providers/auth_provider.dart';
 import '../providers/library_provider.dart';
@@ -14,6 +16,7 @@ import '../widgets/card_buttons.dart';
 import '../services/screen_wake.dart';
 import '../widgets/overlay_toast.dart';
 import '../l10n/app_localizations.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 
 class CarModeScreen extends StatefulWidget {
@@ -247,6 +250,7 @@ class _CarModeScreenState extends State<CarModeScreen>
                 child: Row(
                   children: [
                     IconButton(
+                      tooltip: MaterialLocalizations.of(context).closeButtonTooltip, // Absorb Plus
                       icon: Icon(Icons.close_rounded, color: Colors.white, size: closeSize),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
@@ -363,7 +367,7 @@ class _CarModeScreenState extends State<CarModeScreen>
                                         ? (_isLocalCover
                                             ? Image.file(File(coverUrl), fit: BoxFit.cover,
                                                 errorBuilder: (_, __, ___) => _placeholderCover(cs))
-                                            : CachedNetworkImage(
+                                            : CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                                                 imageUrl: coverUrl,
                                                 fit: BoxFit.cover,
                                                 httpHeaders: auth.apiService?.mediaHeaders ?? {},
@@ -486,6 +490,7 @@ class _CarModeScreenState extends State<CarModeScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
+                    tooltip: l.speed, // Absorb Plus
                     icon: Icon(Icons.speed_rounded, size: bottomIconSize),
                     color: Colors.white54,
                     onPressed: () {
@@ -497,12 +502,14 @@ class _CarModeScreenState extends State<CarModeScreen>
                           player: player,
                           accent: Colors.white,
                           itemId: player.currentItemId,
+                          libraryId: player.currentLibraryId,
                         ),
                       );
                     },
                   ),
                   SizedBox(width: ultra ? 16 : compact ? 24 : 40),
                   IconButton(
+                    tooltip: l.addBookmark, // Absorb Plus
                     icon: Icon(Icons.bookmark_add_outlined, size: bottomIconSize),
                     color: Colors.white54,
                     onPressed: player.hasBook ? () {

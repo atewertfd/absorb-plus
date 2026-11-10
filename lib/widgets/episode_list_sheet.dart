@@ -7,20 +7,27 @@ import 'swipe_action.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import '../l10n/app_localizations.dart';
 import '../services/wording.dart';
 import '../providers/library_provider.dart';
 import '../services/audio_player_service.dart';
 import '../services/download_service.dart';
+import '../services/progress_sync_service.dart';
 import '../services/chromecast_service.dart';
 import '../providers/auth_provider.dart';
 import '../screens/admin_podcasts_screen.dart';
 import '../services/socket_service.dart';
+import '../utils/app_platform.dart';
 import 'card_buttons.dart';
 import 'html_description.dart';
 import 'stackable_sheet.dart';
 import 'episode_row.dart';
 import 'action_pill.dart';
+import 'adaptive_modal.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../ui_themes/app_backdrop.dart'; // Absorb Plus
 export 'episode_detail_sheet.dart';
 
 /// Bottom sheet that shows a podcast's episode list.
@@ -434,12 +441,13 @@ class _EpisodeListSheetState extends State<EpisodeListSheet> {
       final key = '$_itemId-$epId';
 
       if (finished) {
-        await api.updateEpisodeProgress(
+        final pushed = await api.updateEpisodeProgress(
           _itemId, epId,
           currentTime: duration,
           duration: duration,
           isFinished: true,
         );
+        if (!pushed) await ProgressSyncService().saveFinishedOffline(key, duration);
         lib.markFinishedLocally(key, skipAutoAdvance: true);
       } else {
         final progressData = lib.getEpisodeProgressData(_itemId, epId);
@@ -497,6 +505,7 @@ class _EpisodeListSheetState extends State<EpisodeListSheet> {
         totalDuration: duration,
         chapters: chapters,
         episodeId: episodeId,
+        libraryId: _podcastItem['libraryId'] as String?,
       );
       if (mounted) Navigator.of(context, rootNavigator: true).popUntil((route) => route.isFirst);
       return;
@@ -535,6 +544,7 @@ class _EpisodeListSheetState extends State<EpisodeListSheet> {
   }
 
   Future<void> _downloadEpisode(Map<String, dynamic> episode) async {
+    if (AppPlatform.lacksPhonePlugins) return;
     final auth = context.read<AuthProvider>();
     final api = auth.apiService;
     if (api == null) return;
@@ -561,6 +571,7 @@ class _EpisodeListSheetState extends State<EpisodeListSheet> {
   }
 
   Future<void> _downloadAll() async {
+    if (AppPlatform.lacksPhonePlugins) return;
     final auth = context.read<AuthProvider>();
     final api = auth.apiService;
     if (api == null) return;
@@ -613,14 +624,16 @@ class _EpisodeListSheetState extends State<EpisodeListSheet> {
   }
 
   Widget _buildOverflowMenu(ColorScheme cs) {
-    final dl = DownloadService();
     int downloaded = 0;
-    for (final ep in _episodes) {
-      final eid = ep['id'] as String? ?? '';
-      final key = '$_itemId-$eid';
-      if (dl.isDownloaded(key)) downloaded++;
+    if (!AppPlatform.lacksPhonePlugins) {
+      final dl = DownloadService();
+      for (final ep in _episodes) {
+        final eid = ep['id'] as String? ?? '';
+        final key = '$_itemId-$eid';
+        if (dl.isDownloaded(key)) downloaded++;
+      }
     }
-    final allDownloaded = downloaded == _episodes.length;
+    final allDownloaded = !AppPlatform.lacksPhonePlugins && downloaded == _episodes.length;
 
     if (_isDownloadingAll) {
       return Padding(
@@ -641,7 +654,7 @@ class _EpisodeListSheetState extends State<EpisodeListSheet> {
   void _showPodcastMoreSheet(ColorScheme cs, bool allDownloaded, int downloaded) {
     final l = AppLocalizations.of(context)!;
     final isAdmin = context.read<AuthProvider>().isAdmin;
-    showModalBottomSheet(
+    showAdaptiveActionMenu(
       context: context,
       backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
       shape: const RoundedRectangleBorder(
@@ -655,12 +668,12 @@ class _EpisodeListSheetState extends State<EpisodeListSheet> {
               Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(color: cs.onSurface.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(2)))),
               ActionPillGrid(items: [
-                if (!allDownloaded)
+                if (!AppPlatform.lacksPhonePlugins && !allDownloaded)
                   ActionPillData(
                     icon: Icons.download_rounded,
                     label: downloaded > 0 ? l.downloadRemainingCount(_episodes.length - downloaded) : l.downloadAll,
                     onTap: () { Navigator.pop(ctx); _downloadAll(); }),
-                if (_itemId.isNotEmpty)
+                if (!AppPlatform.lacksPhonePlugins && _itemId.isNotEmpty)
                   ActionPillData(
                     icon: _autoDownloadEnabled ? Icons.downloading_rounded : Icons.download_outlined,
                     label: _autoDownloadEnabled ? l.turnAutoDownloadOff : l.turnAutoDownloadOn,
@@ -755,7 +768,7 @@ class _EpisodeListSheetState extends State<EpisodeListSheet> {
         subtitle: l.episodeListPositionNoneDesc
       ),
     };
-    showModalBottomSheet(
+    showAdaptiveActionMenu(
       context: context,
       backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
       shape: const RoundedRectangleBorder(
@@ -819,7 +832,7 @@ class _EpisodeListSheetState extends State<EpisodeListSheet> {
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: pageSurfaceColor(context),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Stack(children: [
@@ -827,7 +840,7 @@ class _EpisodeListSheetState extends State<EpisodeListSheet> {
         if (coverUrl != null)
           Positioned.fill(
             child: RepaintBoundary(
-              child: CachedNetworkImage(
+              child: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                 imageUrl: coverUrl, fit: BoxFit.cover,
                 httpHeaders: lib.mediaHeaders,
                 imageBuilder: (_, p) => ImageFiltered(
@@ -842,9 +855,9 @@ class _EpisodeListSheetState extends State<EpisodeListSheet> {
         Positioned.fill(child: DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(
           begin: Alignment.topCenter, end: Alignment.bottomCenter,
           colors: [
-            Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.6),
-            Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.85),
-            Theme.of(context).scaffoldBackgroundColor,
+            pageSurfaceColor(context).withValues(alpha: 0.6),
+            pageSurfaceColor(context).withValues(alpha: 0.85),
+            pageSurfaceColor(context),
           ],
         )))),
         // Content
@@ -904,7 +917,7 @@ class _EpisodeListSheetState extends State<EpisodeListSheet> {
                 return Wrap(spacing: 8, runSpacing: 8, alignment: WrapAlignment.center, children: [
                 if (!_isLoading) _chip(Icons.podcasts_rounded, l.episodeListEpisodeCount(_episodes.length)),
                 if (unfinishedCount > 0) _chip(Icons.fiber_new_rounded, l.episodeListUnfinishedCount(unfinishedCount), highlight: true),
-                if (_autoDownloadEnabled) _chip(Icons.downloading_rounded, l.episodeListAutoDownloadChip),
+                if (!AppPlatform.lacksPhonePlugins && _autoDownloadEnabled) _chip(Icons.downloading_rounded, l.episodeListAutoDownloadChip),
                 if (_subscribed) _chip(Icons.notifications_active_rounded, l.episodeListSubscribedChip, highlight: true),
                 ..._genres.take(3).map((g) => _chip(Icons.tag_rounded, g)),
                 ..._tags.take(5).map((t) => _chip(Icons.local_offer_outlined, t)),

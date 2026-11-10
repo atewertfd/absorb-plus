@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'scoped_prefs.dart';
 import 'user_account_service.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/episode_key.dart';
 
 /// Stores user-chosen metadata overrides locally per item.
 /// These override server metadata that is empty or wrong, without
@@ -27,8 +29,8 @@ class MetadataOverrideService {
   String? coverUrlFor(String itemId) {
     final direct = _coverCache[itemId];
     if (direct != null && direct.isNotEmpty) return direct;
-    if (itemId.length > 36) {
-      final base = _coverCache[itemId.substring(0, 36)];
+    if (isEpisodeKey(itemId)) {
+      final base = _coverCache[itemIdOfKey(itemId)];
       if (base != null && base.isNotEmpty) return base;
     }
     return null;
@@ -53,7 +55,7 @@ class MetadataOverrideService {
         if (cover != null && cover.toString().isNotEmpty) {
           _coverCache[itemId] = cover.toString();
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[MetadataOverride] loadAll failed: ${e.runtimeType}'); }
     }
     debugPrint(
         '[MetadataOverride] Loaded ${_coverCache.length} cover override(s) for scope "$scope"');

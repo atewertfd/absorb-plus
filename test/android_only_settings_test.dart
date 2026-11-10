@@ -6,10 +6,11 @@ import 'package:absorb/screens/settings_search_index.dart';
 import 'package:absorb/widgets/sleep_timer_sheet.dart';
 import 'package:absorb/widgets/welcome_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/fakes.dart';
 
 // Settings that only work on a phone (Android Auto, rotation lock, shake,
 // the headphone wind-down button, the media notification, Android
@@ -17,21 +18,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final l = lookupAppLocalizations(const Locale('en'));
-  const shell = MethodChannel('absorb/windows_shell');
-  final messenger =
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
   setUp(() {
     SharedPreferences.setMockInitialValues({WelcomeSheet.prefKey: true});
-    messenger.setMockMethodCallHandler(shell, (call) async {
-      if (call.method == 'getState') {
-        return <String, Object?>{'closeToTray': false, 'keepAwake': true};
-      }
-      return null;
-    });
+    fakeWindowsShell({'closeToTray': false, 'keepAwake': true});
   });
 
-  tearDown(() => messenger.setMockMethodCallHandler(shell, null));
+  tearDown(clearFakeWindowsShell);
 
   Future<List<SettingSearchEntry>> searchEntries(WidgetTester tester) async {
     late List<SettingSearchEntry> entries;

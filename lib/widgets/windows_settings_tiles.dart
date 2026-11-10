@@ -1,21 +1,26 @@
-import 'package:flutter/foundation.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
+import '../services/windows_global_hotkeys.dart';
 import '../services/windows_shell.dart';
+import '../utils/fork_platform.dart';
 
 /// Windows-only switches kept by the runner (fork-owned): close to tray,
-/// start with Windows, start minimized, always on top and keep awake. Sits in
-/// Settings → Windows Settings.
+/// start with Windows, start minimized, always on top and keep awake, plus the
+/// opt-in global hotkeys. Sits in Settings → Windows Settings.
 class WindowsSettingsTiles extends StatefulWidget {
-  const WindowsSettingsTiles({super.key, this.shell});
+  const WindowsSettingsTiles({super.key, this.shell, this.hotkeys});
 
   /// Injected in tests; the app uses [WindowsShell.instance].
   final WindowsShell? shell;
 
+  /// Injected in tests; the app uses [WindowsGlobalHotkeys.instance].
+  final WindowsGlobalHotkeys? hotkeys;
+
   /// Whether Settings shows the Windows section at all.
   static bool get isAvailable =>
-      !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
+      ForkPlatform.isWindows;
 
   @override
   State<WindowsSettingsTiles> createState() => _WindowsSettingsTilesState();
@@ -23,16 +28,18 @@ class WindowsSettingsTiles extends StatefulWidget {
 
 class _WindowsSettingsTilesState extends State<WindowsSettingsTiles> {
   WindowsShell get _shell => widget.shell ?? WindowsShell.instance;
+  WindowsGlobalHotkeys get _hotkeys =>
+      widget.hotkeys ?? WindowsGlobalHotkeys.instance;
   bool _busy = false;
 
   @override
   void initState() {
     super.initState();
-    _shell.refresh().catchError((Object _) => null);
+    unawaited(_shell.refresh().catchError((Object _) => null));
   }
 
   Future<void> _change(
-    Future<WindowsShellSettings?> Function() action,
+    Future<Object?> Function() action,
   ) async {
     if (_busy) return;
     setState(() => _busy = true);
@@ -118,6 +125,25 @@ class _WindowsSettingsTilesState extends State<WindowsSettingsTiles> {
               onChanged: enabled
                   ? (v) => _change(() => _shell.setKeepAwake(v))
                   : null,
+            ),
+            ValueListenableBuilder<GlobalHotkeysState>(
+              valueListenable: _hotkeys.state,
+              builder: (context, hotkeys, _) {
+                var subtitle = l.windowsGlobalHotkeysSubtitle;
+                if (hotkeys.enabled && hotkeys.unavailable.isNotEmpty) {
+                  final keys =
+                      hotkeys.unavailable.map((b) => b.label).join(', ');
+                  subtitle += '\n${l.windowsGlobalHotkeysUnavailable(keys)}';
+                }
+                return SwitchListTile(
+                  title: Text(l.windowsGlobalHotkeys),
+                  subtitle: Text(subtitle, style: small),
+                  value: hotkeys.enabled,
+                  onChanged: enabled
+                      ? (v) => _change(() => _hotkeys.setEnabled(v))
+                      : null,
+                );
+              },
             ),
           ],
         );

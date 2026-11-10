@@ -66,7 +66,7 @@ class EreaderVolumeNav with WidgetsBindingObserver {
     _watching = want;
     try {
       await _channel.invokeMethod(want ? 'watch' : 'clearWatch');
-    } catch (_) {}
+    } catch (e) { debugPrint('[VolumeKeys] _setWatching failed: ${e.runtimeType}'); }
   }
 
   /// Registers the channel handler app-wide so physical page keys work before

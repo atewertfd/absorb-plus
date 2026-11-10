@@ -200,12 +200,31 @@ class _TailscaleSettingsScreenState extends State<TailscaleSettingsScreen> {
 
   Future<void> _signIn(AppLocalizations l) async {
     setState(() => _busy = true);
-    final opened = await _svc.signIn();
-    if (!mounted) return;
-    setState(() => _busy = false);
-    if (!opened) {
-      showOverlayToast(context, l.tailscaleSignInNoLink,
-          icon: Icons.info_outline_rounded);
+    try {
+      final opened = await _svc.signIn();
+      if (mounted && !opened) {
+        showOverlayToast(context, l.tailscaleSignInNoLink,
+            icon: Icons.info_outline_rounded);
+      }
+    } catch (e) {
+      // The browser launch or the node's status call can throw.
+      debugPrint('[Tailscale] sign-in failed: $e');
+      if (mounted) {
+        showOverlayToast(context, l.tailscaleToggleFailed,
+            icon: Icons.error_outline_rounded);
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  void _signOut(AppLocalizations l) {
+    try {
+      _svc.signOut();
+    } catch (e) {
+      debugPrint('[Tailscale] sign-out failed: $e');
+      showOverlayToast(context, l.tailscaleToggleFailed,
+          icon: Icons.error_outline_rounded);
     }
   }
 
@@ -259,7 +278,7 @@ class _TailscaleSettingsScreenState extends State<TailscaleSettingsScreen> {
                   child: OutlinedButton.icon(
                     icon: const Icon(Icons.logout_rounded, size: 18),
                     label: Text(l.tailscaleSignOut),
-                    onPressed: _busy ? null : _svc.signOut,
+                    onPressed: _busy ? null : () => _signOut(l),
                   ),
                 ),
               if (server != null && server.isNotEmpty) ...[

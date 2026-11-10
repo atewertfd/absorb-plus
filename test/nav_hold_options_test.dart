@@ -5,13 +5,13 @@ import 'package:absorb/widgets/nav_hold_options.dart';
 void main() {
   test('ReadMeABook shortcuts stay out of the navigation hold menu', () {
     final available = navHoldAllIds(
-      isAdmin: true,
+      admin: NavHoldAdmin.forAccount(isAdmin: true),
       libraryIds: const ['library'],
       rmabConfigured: true,
       rmabWeb: true,
     );
     final defaults = navHoldDefaultMenu(
-      isAdmin: true,
+      admin: NavHoldAdmin.forAccount(isAdmin: true),
       rmabConfigured: true,
       rmabWeb: true,
     );

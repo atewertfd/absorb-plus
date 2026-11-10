@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'package:flutter/foundation.dart';
 
 /// Tiny loopback HTTP server that hosts the foliate-js reader. foliate-js needs
 /// a real HTTP origin (ES modules + fetch), so assets can't be loaded via
@@ -59,7 +61,7 @@ class FoliateBookServer {
       try {
         res.statusCode = HttpStatus.internalServerError;
         await res.close();
-      } catch (_) {}
+      } catch (e) { debugPrint('[Foliate] _handle failed: ${e.runtimeType}'); }
     }
   }
 

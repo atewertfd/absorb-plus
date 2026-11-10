@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/library_provider.dart';
+import 'adaptive_modal.dart';
 import 'overlay_toast.dart';
 
 class PlaylistPickerSheet extends StatefulWidget {
@@ -15,7 +16,7 @@ class PlaylistPickerSheet extends StatefulWidget {
   });
 
   static void show(BuildContext context, String libraryItemId, {String? episodeId}) {
-    showModalBottomSheet(
+    showAdaptiveActionMenu(
       context: context,
       backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
       shape: const RoundedRectangleBorder(
@@ -51,16 +52,17 @@ class _PlaylistPickerSheetState extends State<PlaylistPickerSheet> {
     final playlist = await lib.createPlaylist(name);
     if (playlist != null) {
       final playlistId = playlist['id'] as String;
-      await lib.addToPlaylist(
+      final ok = await lib.addToPlaylist( // Absorb Plus: a failed add says so
         playlistId, widget.libraryItemId, episodeId: widget.episodeId,
       );
       if (mounted) {
         final l = AppLocalizations.of(context)!;
-        showOverlayToast(context, l.addedToName(name), icon: Icons.playlist_add_check_rounded);
+        showOverlayToast(context, ok ? l.addedToName(name) : l.failedToAdd, icon: ok ? Icons.playlist_add_check_rounded : Icons.error_outline_rounded);
         Navigator.pop(context);
       }
-    } else {
+    } else if (mounted) {
       setState(() => _adding = false);
+      showOverlayToast(context, AppLocalizations.of(context)!.failedToAdd, icon: Icons.error_outline_rounded);
     }
   }
 
@@ -186,6 +188,7 @@ class _PlaylistPickerSheetState extends State<PlaylistPickerSheet> {
         enabled: enabled,
         label: label,
         onTap: enabled ? onTap : null,
+        excludeSemantics: true, // Absorb Plus: the row's text would repeat the label
         child: InkWell(
         onTap: enabled ? onTap : null,
         borderRadius: BorderRadius.circular(14),

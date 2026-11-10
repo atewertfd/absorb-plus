@@ -86,6 +86,24 @@ void main() {
       );
     });
 
+    test('trusting self-signed certificates routes https as https-insecure',
+        () {
+      expect(
+        on.mediaUrl('https://nas.tail1234.ts.net/abs/x', trustSelfSigned: true),
+        'http://127.0.0.1:41234/_ts/$secret/https-insecure/nas.tail1234.ts.net:443/abs/x',
+      );
+      // Plain http has no certificate to skip.
+      expect(
+        on.mediaUrl('http://100.64.0.1/x', trustSelfSigned: true),
+        'http://127.0.0.1:41234/_ts/$secret/http/100.64.0.1:80/x',
+      );
+      // Hosts outside the tailnet stay untouched either way.
+      expect(
+        on.mediaUrl('https://abs.example.com/x', trustSelfSigned: true),
+        'https://abs.example.com/x',
+      );
+    });
+
     test('leaves other URLs alone', () {
       for (final url in [
         'https://abs.example.com/api/items/1/file/2',

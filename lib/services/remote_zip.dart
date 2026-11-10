@@ -5,6 +5,8 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'package:flutter/foundation.dart';
 
 /// One file inside a [RemoteZip].
 class RemoteZipEntry {
@@ -62,7 +64,7 @@ class RemoteZip {
     final res = await client.send(req).timeout(const Duration(seconds: 30));
     if (res.statusCode != 206) {
       // Not a range: it may be the whole file coming, so hang up on it.
-      await res.stream.listen(null).cancel().catchError((_) {});
+      await res.stream.listen(null).cancel().catchError((e) { debugPrint('[RemoteZip] _range failed: ${e.runtimeType}'); });
       throw RemoteZipException('server answered ${res.statusCode} to a range request');
     }
     final total = int.tryParse((res.headers['content-range'] ?? '').split('/').last) ?? -1;
@@ -207,7 +209,7 @@ class RemoteZip {
       ..headers['Range'] = 'bytes=$start-${start + e.compressedSize - 1}';
     final res = await _client.send(req).timeout(const Duration(seconds: 30));
     if (res.statusCode != 206) {
-      await res.stream.drain<void>().catchError((_) {});
+      await res.stream.drain<void>().catchError((e) { debugPrint('[RemoteZip] download failed: ${e.runtimeType}'); });
       throw RemoteZipException('server answered ${res.statusCode} to a range request');
     }
     final part = File('${out.path}.part');

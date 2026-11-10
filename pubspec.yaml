@@ -1,7 +1,7 @@
 name: absorb
 description: Absorb Plus, an enhanced cross-platform Audiobookshelf client
 publish_to: 'none'
-version: 1.12.1+339
+version: 1.12.1+367
 
 environment:
   sdk: '>=3.10.0 <4.0.0'
@@ -26,6 +26,9 @@ dependencies:
   # Image caching
   cached_network_image: ^3.3.0
   flutter_cache_manager: ^3.4.1 # cover disk cache size (lib/utils/cover_cache.dart)
+  # For ImageRenderMethodForWeb: web covers decode through Flutter instead of
+  # borrowing <img> elements the browser can empty (they drew black).
+  cached_network_image_platform_interface: ^4.1.1
 
   # Audio playback
   just_audio:
@@ -132,12 +135,24 @@ dependencies:
   # viewer; pinned direct so the bridge API is a declared dependency)
   flutter_inappwebview: ^6.0.0
   flutter_svg: ^2.3.0
+  # Windows/Linux: drop audio files or a folder on the window to upload them
+  # (Absorb Plus). 0.9 needs a newer Flutter than this repo pins.
+  desktop_drop: ^0.8.4
 
 dev_dependencies:
   audio_service_platform_interface: ^0.1.3
+  fake_async: ^1.3.1
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
+
+dependency_overrides:
+  audio_service_web:
+    path: packages/audio_service_web
+  # Vendored for a null-pointer fix in its JavaScript handler reply, which
+  # crashed the Windows app whenever the reader loaded a book.
+  flutter_inappwebview_windows:
+    path: packages/flutter_inappwebview_windows
 
 flutter:
   generate: true
@@ -148,6 +163,9 @@ flutter:
     - assets/foliate/
     - assets/foliate/foliate-js/
     - assets/foliate/foliate-js/vendor/
+    # Absorb Plus: patch notes, only in the Absorb Plus Test app (dev flavor).
+    - path: assets/test_build/
+      flavors: [dev]
   shaders:
     - shaders/page_ripple.frag
   fonts:

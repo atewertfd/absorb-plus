@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/desktop_workspace.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../ui_themes/frosted.dart';
 
 enum DialogWidthClass {
@@ -335,6 +336,7 @@ class _DesktopDialogBodyState extends State<_DesktopDialogBody> {
                   clipBehavior: Clip.antiAlias,
                   child: IconButton(
                     key: const ValueKey('desktop-dialog-close-button'),
+                    tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
                     visualDensity: VisualDensity.compact,
                     icon: Icon(
                       Icons.close_rounded,

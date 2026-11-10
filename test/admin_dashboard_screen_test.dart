@@ -3,12 +3,12 @@ import 'package:absorb/screens/admin_dashboard_screen.dart';
 import 'dart:convert';
 
 import 'package:absorb/services/admin_dashboard_data.dart';
-import 'package:absorb/services/api_service.dart';
 import 'package:absorb/services/server_task_tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
+
+import 'support/fakes.dart';
 
 /// In-memory server for the dashboard. Records every call.
 class FakeAdminSource implements AdminDashboardSource {
@@ -292,12 +292,7 @@ void main() {
   testWidgets('a shared task tracker shows scans running on the server', (tester) async {
     final tracker = ServerTaskTracker();
     addTearDown(tracker.dispose);
-    final api = ApiService(
-      baseUrl: 'http://abs.test',
-      token: 'test-token',
-      networkRetryDelay: Duration.zero,
-      refreshRetryDelay: Duration.zero,
-      httpClient: MockClient((r) async => r.url.path == '/api/tasks'
+    final api = mockApi((r) async => r.url.path == '/api/tasks'
           ? http.Response(
               jsonEncode({
                 'tasks': [
@@ -313,8 +308,7 @@ void main() {
               }),
               200,
             )
-          : http.Response('Not Found', 404)),
-    );
+          : http.Response('Not Found', 404));
     await tracker.refresh(api);
     expect(tracker.isLibraryActionRunning('library-scan', 'lib1'), isTrue);
 

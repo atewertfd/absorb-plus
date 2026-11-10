@@ -9,19 +9,17 @@ import 'package:absorb/utils/fork_platform.dart';
 import 'package:absorb/widgets/support_actions.dart';
 import 'package:absorb/widgets/welcome_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/fakes.dart';
 
 // Owner decision (2026-10-30): support rows go to the Absorb Plus GitHub
 // issues, the project page replaces Contact, upstream's Discord is hidden, and "Send logs" saves a file on
 // desktop. Nothing here contacts a real server or browser.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  const shell = MethodChannel('absorb/windows_shell');
-  final messenger =
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
   final defaultLauncher = ForkPlatform.launcher;
   final defaultLogsDir = SupportActions.logsDirectory;
   final defaultPicker = SupportActions.pickSavePath;
@@ -29,12 +27,7 @@ void main() {
 
   setUp(() {
     SharedPreferences.setMockInitialValues({WelcomeSheet.prefKey: true});
-    messenger.setMockMethodCallHandler(shell, (call) async {
-      if (call.method == 'getState') {
-        return <String, Object?>{'closeToTray': false, 'keepAwake': false};
-      }
-      return null;
-    });
+    fakeWindowsShell({'closeToTray': false, 'keepAwake': false});
     opened = [];
     ForkPlatform.launcher = (uri) async {
       opened.add(uri);
@@ -43,7 +36,7 @@ void main() {
   });
 
   tearDown(() {
-    messenger.setMockMethodCallHandler(shell, null);
+    clearFakeWindowsShell();
     ForkPlatform.launcher = defaultLauncher;
     SupportActions.logsDirectory = defaultLogsDir;
     SupportActions.pickSavePath = defaultPicker;

@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import 'cover_badges.dart';
@@ -14,14 +16,20 @@ import 'absorbing_shared.dart';
 import 'book_detail_sheet.dart';
 import 'books_sheet_shared.dart' show coverGridTextScale, coverGridDecodeWidth;
 import 'episode_list_sheet.dart';
+import 'hover_cover_actions.dart';
 import '../services/upcoming_releases_service.dart';
 import 'series_books_sheet.dart';
 import 'author_books_sheet.dart';
+import '../utils/app_platform.dart';
+import '../utils/media_card_gesture_policy.dart';
+import '../utils/desktop_workspace.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'library_item_snapshot.dart';
 import '../utils/local_path.dart';
 import 'desktop_input.dart';
 import 'stable_cached_network_image.dart';
 import '../utils/cover_cache.dart';
+import 'item_download_watch.dart'; // Absorb Plus
 
 // ═══════════════════════════════════════════════════════════════
 // Grid book tile (cover + title + author)
@@ -52,6 +60,7 @@ class GridBookTile extends StatefulWidget {
 
 class _GridBookTileState extends State<GridBookTile> {
   final _dl = DownloadService();
+  late final _dlWatch = ItemDownloadWatch(() => widget.item['id'] as String? ?? ''); // Absorb Plus
 
   @override
   void initState() {
@@ -66,7 +75,7 @@ class _GridBookTileState extends State<GridBookTile> {
   }
 
   void _rebuild() {
-    if (mounted) setState(() {});
+    if (mounted && _dlWatch.changed()) setState(() {}); // Absorb Plus: only this item's download
   }
 
   @override
@@ -75,11 +84,19 @@ class _GridBookTileState extends State<GridBookTile> {
     final tt = Theme.of(context).textTheme;
     final l = AppLocalizations.of(context)!;
     final itemId = widget.item['id'] as String? ?? '';
+    _dlWatch.changed(); // Absorb Plus: remember what this build shows
     final lib = context.read<LibraryProvider>();
+    // The 400 thumbnail blurs on desktop and web tiles, and on any tile past
+    // 400 physical pixels: ask for the big cover there. Phones keep the
+    // thumbnail, which is sharp at their tile size and a fraction of the
+    // download.
+    final bigCover = AppPlatform.lacksPhonePlugins ||
+        AppPlatform.isDesktop || // Absorb Plus: desktop runs the phone paths
+        coverGridDecodeWidth(context) > 400;
     final snapshot = context.select<LibraryProvider, LibraryItemSnapshot>((lib) {
       final isPodcastLibrary = lib.isPodcastLibrary;
       return LibraryItemSnapshot(
-        coverUrl: lib.getCoverUrl(itemId),
+        coverUrl: lib.getCoverUrl(itemId, width: bigCover ? 800 : 400),
         progress: lib.getProgress(itemId),
         isFinished: lib.getProgressData(itemId)?['isFinished'] == true,
         isSkimmed: lib.getProgressData(itemId)?['skimmed'] == true,
@@ -107,7 +124,23 @@ class _GridBookTileState extends State<GridBookTile> {
     final isSubscribed = snapshot.isSubscribed;
     final unfinishedCount = snapshot.unfinishedCount;
 
-    return DesktopGestureDetector(
+    final gesturePolicy = MediaCardGesturePolicy(isWeb: AppPlatform.lacksPhonePlugins);
+    final canEdit = itemId.isNotEmpty &&
+        !snapshot.isPodcastLibrary &&
+        !lib.isOffline &&
+        isDesktopWorkspace(context) &&
+        (context.watch<AuthProvider?>()?.canUpdateMetadata ?? false);
+    // Desktop hover actions. Once select mode is on the tile draws its own
+    // check, so the hover circle is only the way in: clicking it starts
+    // select mode with this book picked, like the home rows.
+    return HoverCoverActions(
+      onMenu: (!widget.selectionMode && itemId.isNotEmpty && !snapshot.isPodcastLibrary)
+          ? () => showQuickActionsSheet(context, itemId, initialItem: widget.item)
+          : null,
+      editItemId: canEdit && !widget.selectionMode ? itemId : null,
+      selectionMode: widget.selectionMode,
+      onSelectionToggle: widget.selectionMode ? null : widget.onSelectionToggle,
+      child: DesktopGestureDetector(
       // opaque so taps on the blank space below the title (the tile's tall
       // aspect ratio leaves a gap when the Column children stop short)
       // still trigger the onTap. Without this, taps in that blank strip
@@ -130,7 +163,10 @@ class _GridBookTileState extends State<GridBookTile> {
       // Selection mode owns the gesture instead, so a long-press can't fire a
       // sheet over a grid the user is ticking through.
       onLongPress:
-          (!widget.selectionMode && itemId.isNotEmpty && !snapshot.isPodcastLibrary)
+          (!widget.selectionMode &&
+              gesturePolicy.allowsLongPressShortcuts &&
+              itemId.isNotEmpty &&
+              !snapshot.isPodcastLibrary)
           ? () => showQuickActionsSheet(context, itemId, initialItem: widget.item)
           : null,
       child: Column(
@@ -327,20 +363,35 @@ class _GridBookTileState extends State<GridBookTile> {
             ),
         ],
       ),
+      ),
     );
   }
 
-  Widget _blurCover(String coverUrl, Map<String, String> headers, ColorScheme cs, double aspectRatio, String title, String author) {
+  Widget _blurCover(
+    String coverUrl,
+    Map<String, String> headers,
+    ColorScheme cs,
+    double aspectRatio,
+    String title,
+    String author,
+  ) {
     final placeholder = CoverPlaceholder(title: title, author: author);
     final isSquare = (aspectRatio - 1.0).abs() < 0.01;
-    final decodeWidth = coverGridDecodeWidth(context);
+    // Decode at the width the grid actually gave the tile. The desktop grid
+    // sizes tiles by a zoomable extent, not the phone column count, so the
+    // phone estimate came out small and the cover was stretched to fit.
+    return LayoutBuilder(builder: (context, constraints) {
+    final tileWidth = constraints.maxWidth;
+    final decodeWidth = tileWidth.isFinite && tileWidth > 0
+        ? (tileWidth * MediaQuery.devicePixelRatioOf(context)).round()
+        : coverGridDecodeWidth(context);
     if (!isSquare) {
       if (isLocalCoverPath(coverUrl)) {
         return Image.file(File(coverUrl), fit: BoxFit.cover,
             cacheWidth: decodeWidth,
             errorBuilder: (_, __, ___) => placeholder);
       }
-      return CachedNetworkImage(imageUrl: coverUrl, cacheKey: stableCoverCacheKey(coverUrl), cacheManager: coverCacheManager, fit: BoxFit.cover,
+      return CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, imageUrl: coverUrl, cacheKey: stableCoverCacheKey(coverUrl), cacheManager: coverCacheManager, fit: BoxFit.cover,
           httpHeaders: headers, memCacheWidth: decodeWidth,
           placeholder: (_, __) => placeholder,
           errorWidget: (_, __, ___) => placeholder);
@@ -360,15 +411,16 @@ class _GridBookTileState extends State<GridBookTile> {
       ]);
     }
     return Stack(fit: StackFit.expand, children: [
-      CachedNetworkImage(imageUrl: coverUrl, cacheKey: stableCoverCacheKey(coverUrl), cacheManager: coverCacheManager, fit: BoxFit.cover,
+      CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, imageUrl: coverUrl, cacheKey: stableCoverCacheKey(coverUrl), cacheManager: coverCacheManager, fit: BoxFit.cover,
           httpHeaders: headers, memCacheWidth: 32,
           errorWidget: (_, __, ___) => const SizedBox.shrink()),
       Container(color: Colors.black.withValues(alpha: 0.15)),
-      CachedNetworkImage(imageUrl: coverUrl, cacheKey: stableCoverCacheKey(coverUrl), cacheManager: coverCacheManager, fit: BoxFit.contain,
+      CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, imageUrl: coverUrl, cacheKey: stableCoverCacheKey(coverUrl), cacheManager: coverCacheManager, fit: BoxFit.contain,
           httpHeaders: headers, memCacheWidth: decodeWidth,
           placeholder: (_, __) => placeholder,
           errorWidget: (_, __, ___) => placeholder),
     ]);
+    });
   }
 }
 
@@ -512,7 +564,7 @@ class _StackedCovers extends StatelessWidget {
           cacheWidth: decodeWidth,
           errorBuilder: (_, __, ___) => _placeholder());
     }
-    return CachedNetworkImage(imageUrl: url, cacheKey: stableCoverCacheKey(url), cacheManager: coverCacheManager, fit: BoxFit.cover,
+    return CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, imageUrl: url, cacheKey: stableCoverCacheKey(url), cacheManager: coverCacheManager, fit: BoxFit.cover,
         httpHeaders: mediaHeaders, memCacheWidth: decodeWidth,
         placeholder: (_, __) => _placeholder(),
         errorWidget: (_, __, ___) => _placeholder());
@@ -535,7 +587,11 @@ class _StackedCovers extends StatelessWidget {
 class GridSeriesTile extends StatelessWidget {
   final Map<String, dynamic> item;
   final double coverAspectRatio;
-  const GridSeriesTile({super.key, required this.item, this.coverAspectRatio = 1.0});
+  const GridSeriesTile({
+    super.key,
+    required this.item,
+    this.coverAspectRatio = 1.0,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -545,23 +601,24 @@ class GridSeriesTile extends StatelessWidget {
     final lib = context.watch<LibraryProvider>();
     final auth = context.read<AuthProvider>();
 
-    final collapsedSeries = item['collapsedSeries'] as Map<String, dynamic>? ?? {};
-    final seriesName = collapsedSeries['name'] as String? ?? l.libraryGridTilesUnknownSeries;
+    final collapsedSeries =
+        item['collapsedSeries'] as Map<String, dynamic>? ?? {};
+    final seriesName =
+        collapsedSeries['name'] as String? ?? l.libraryGridTilesUnknownSeries;
     final seriesId = collapsedSeries['id'] as String? ?? '';
     final media = item['media'] as Map<String, dynamic>? ?? {};
     final metadata = media['metadata'] as Map<String, dynamic>? ?? {};
     final author = metadata['authorName'] as String? ?? '';
 
     // Gather up to 4 cover URLs from libraryItemIds
-    final itemIds = (collapsedSeries['libraryItemIds'] as List<dynamic>?)
-        ?.map((e) => e as String)
-        .toList() ?? [item['id'] as String? ?? ''];
+    final itemIds =
+        (collapsedSeries['libraryItemIds'] as List<dynamic>?)
+            ?.map((e) => e as String)
+            .toList() ??
+        [item['id'] as String? ?? ''];
     final rawNumBooks = collapsedSeries['numBooks'] as int? ?? 0;
     final numBooks = rawNumBooks > 0 ? rawNumBooks : itemIds.length;
-    final coverUrls = itemIds
-        .take(4)
-        .map((id) => lib.getCoverUrl(id))
-        .toList();
+    final coverUrls = itemIds.take(4).map((id) => lib.getCoverUrl(id)).toList();
 
     // Calculate series progress
     double totalProgress = 0;
@@ -575,7 +632,9 @@ class GridSeriesTile extends StatelessWidget {
         totalProgress += lib.getProgress(id);
       }
     }
-    final seriesProgress = itemIds.isNotEmpty ? totalProgress / itemIds.length : 0.0;
+    final seriesProgress = itemIds.isNotEmpty
+        ? totalProgress / itemIds.length
+        : 0.0;
 
     return DesktopGestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -643,7 +702,12 @@ class GridSeriesTileDirect extends StatelessWidget {
   final Map<String, dynamic> series;
   final double coverAspectRatio;
   final String? parentSeriesId;
-  const GridSeriesTileDirect({super.key, required this.series, this.coverAspectRatio = 1.0, this.parentSeriesId});
+  const GridSeriesTileDirect({
+    super.key,
+    required this.series,
+    this.coverAspectRatio = 1.0,
+    this.parentSeriesId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -653,7 +717,8 @@ class GridSeriesTileDirect extends StatelessWidget {
     final lib = context.watch<LibraryProvider>();
     final auth = context.read<AuthProvider>();
 
-    final seriesName = series['name'] as String? ?? l.libraryGridTilesUnknownSeries;
+    final seriesName =
+        series['name'] as String? ?? l.libraryGridTilesUnknownSeries;
     final seriesId = series['id'] as String? ?? '';
     final books = series['books'] as List<dynamic>? ?? [];
     // Some servers send the series list without the books, carrying only
@@ -958,7 +1023,7 @@ class GridAuthorTile extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   child: imageUrl != null
                       ? ClipOval(
-                          child: CachedNetworkImage(
+                          child: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
                             imageUrl: imageUrl, cacheKey: stableCoverCacheKey(imageUrl), cacheManager: coverCacheManager,
                             fit: BoxFit.cover,
                             httpHeaders: headers,

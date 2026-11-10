@@ -1,4 +1,3 @@
-import '../utils/web_safe_platform.dart'; // web-safe Platform
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -13,6 +12,9 @@ import '../widgets/overlay_toast.dart';
 import 'audio_player_service.dart';
 import 'download_service.dart';
 import 'narrated_books.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart'; // web-safe Platform
+import '../utils/episode_key.dart';
 
 /// An Audiobookshelf EPUB that reads itself aloud streams from the server,
 /// so offline it plays only once its narration is downloaded, and a queue
@@ -32,7 +34,7 @@ class UpNextNarration {
   /// Whether [key] is a narrated EPUB on Audiobookshelf that can't play yet:
   /// [offline], so it can't stream, and not on the phone.
   bool needsDownload(String key, {required bool offline}) {
-    if (!offline || key.length > 36 || !NarratedBooks.contains(key)) return false;
+    if (!offline || isEpisodeKey(key) || !NarratedBooks.contains(key)) return false;
     final dl = DownloadService();
     return !dl.isDownloaded(key) && !dl.isDownloading(key);
   }

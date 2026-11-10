@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../utils/fork_branding.dart';
 import 'absorb_wave_icon.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/fork_branding.dart';
 
 class AuthLoadingScreen extends StatelessWidget {
   static const screenKey = Key('authLoadingScreen');

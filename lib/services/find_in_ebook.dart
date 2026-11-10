@@ -44,7 +44,7 @@ Future<({List<dynamic> chapters, double duration})> resolveAudioChapters(
       final chapters = session['chapters'] as List<dynamic>? ?? const [];
       final duration = (session['duration'] as num?)?.toDouble() ?? 0;
       if (chapters.isNotEmpty) return (chapters: chapters, duration: duration);
-    } catch (_) {}
+    } catch (e) { debugPrint('[FindEbook] resolveAudioChapters failed: ${e.runtimeType}'); }
   }
   if (api != null) {
     try {
@@ -53,7 +53,7 @@ Future<({List<dynamic> chapters, double duration})> resolveAudioChapters(
       final chapters = media['chapters'] as List<dynamic>? ?? const [];
       final duration = (media['duration'] as num?)?.toDouble() ?? 0;
       return (chapters: chapters, duration: duration);
-    } catch (_) {}
+    } catch (e) { debugPrint('[FindEbook] resolveAudioChapters failed: ${e.runtimeType}'); }
   }
   return (chapters: const [], duration: 0.0);
 }
@@ -75,10 +75,11 @@ Future<void> launchFindInEbook(
     return;
   }
 
-  // A book whose audio is its EPUB's narration knows the sentence at every
-  // moment: the reader opens on it, with nothing transcribed.
+  // A book whose audio is its EPUB's narration, or that has a read along
+  // EPUB matching its audiobook, knows the sentence at every moment: the
+  // reader opens on it, with nothing transcribed.
   final narration = await NarrationService.instance
-      .audioNarration(context.read<AuthProvider>().apiService, itemId);
+      .sentenceTimings(context.read<AuthProvider>().apiService, itemId);
   if (!context.mounted) return;
   if (narration != null) {
     final player = AudioPlayerService();
@@ -160,7 +161,7 @@ Future<void> launchFindInEbook(
     try {
       final f = File(result.audioPath);
       if (f.existsSync()) await f.delete();
-    } catch (_) {}
+    } catch (e) { debugPrint('[FindEbook] launchFindInEbook failed: ${e.runtimeType}'); }
   } on TranscriptionException catch (e) {
     error = switch (e.kind) {
       TranscriptionError.disabled => l.transcriptionDisabledHint,

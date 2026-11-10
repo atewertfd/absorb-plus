@@ -5,9 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../l10n/app_localizations.dart';
+import '../main.dart' show localeNotifier;
 import 'audio_player_service.dart';
 import 'download_service.dart';
 import 'pending_writes.dart';
+import 'remote_link/remote_link.dart' show remoteHost;
+import 'windows_global_hotkeys.dart';
+import '../utils/fork_platform.dart';
 
 /// What the taskbar button shows for the current book.
 enum TaskbarPlayback { none, playing, paused }
@@ -121,7 +125,7 @@ abstract class WindowsShellDownloads implements Listenable {
 class WindowsShell {
   WindowsShell._()
       : _channel = const MethodChannel('absorb/windows_shell'),
-        _enabled = !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,
+        _enabled = ForkPlatform.isWindows,
         _playbackOverride = null,
         _downloadsOverride = null,
         _throttle = TaskbarProgressThrottle();
@@ -141,8 +145,20 @@ class WindowsShell {
 
   static final WindowsShell instance = WindowsShell._();
 
-  /// How long saving before quit may take; the runner gives up after 4 s.
-  static const exitSaveTimeout = Duration(milliseconds: 3000);
+  /// How long saving before quit may take in total. The runner ends the
+  /// process after 4 s (kExitTimeoutMs in windows/runner/windows_shell.cpp),
+  /// so the save, the flush of held-back writes and the final pause must all
+  /// fit inside it.
+  static const exitBudget = Duration(milliseconds: 3300);
+
+  /// The part of [exitBudget] the (network-dependent) playback save may use.
+  /// Pausing saves the position locally first, so only its sync can be cut.
+  static const exitSaveTimeout = Duration(milliseconds: 2000);
+
+  static const exitSettle = Duration(milliseconds: 150);
+
+  /// The rest goes to the local flush of held-back writes.
+  static const exitFlushTimeout = Duration(milliseconds: 1150);
 
   final MethodChannel _channel;
   final bool _enabled;
@@ -173,6 +189,10 @@ class WindowsShell {
     _downloads.addListener(_scheduleBusyCheck);
     if (_playbackOverride == null) {
       PlayerSettings.settingsChanged.addListener(_onSettingsChanged);
+      // Changing the language doesn't notify settings, only the locale.
+      localeNotifier.addListener(_onSettingsChanged);
+      // Opt-in global hotkeys share the shell's lifetime.
+      unawaited(WindowsGlobalHotkeys.instance.start());
     }
     _syncPlayback();
     _checkBusy();
@@ -187,6 +207,7 @@ class WindowsShell {
     _downloads.removeListener(_scheduleBusyCheck);
     if (_playbackOverride == null) {
       PlayerSettings.settingsChanged.removeListener(_onSettingsChanged);
+      localeNotifier.removeListener(_onSettingsChanged);
     }
     _channel.setMethodCallHandler(null);
     _started = false;
@@ -268,6 +289,8 @@ class WindowsShell {
   @visibleForTesting
   Future<void> prepareToExit() async {
     _progressTimer?.cancel();
+    // The phone remote starts closing; never waited on.
+    remoteHost.shutdownForExit();
     if (_playback.hasBook && _playback.isPlaying) {
       try {
         await _playback.saveForExit().timeout(exitSaveTimeout);
@@ -277,9 +300,9 @@ class WindowsShell {
     }
     // Debounced files (the download list), buffered history and the
     // streaming listening counter go to disk now.
-    await PendingWrites.flushAll();
+    await PendingWrites.flushAll(timeout: exitFlushTimeout);
     // Let writes started just before (preferences, logs) reach the disk.
-    await Future<void>.delayed(const Duration(milliseconds: 150));
+    await Future<void>.delayed(exitSettle);
   }
 
   void _onSettingsChanged() => unawaited(_pushStrings());
@@ -295,7 +318,7 @@ class WindowsShell {
     final progress =
         state == TaskbarPlayback.none ? 0.0 : _playback.progress.clamp(0.0, 1.0);
     if (_throttle.shouldSend(state, progress)) {
-      _invoke('setPlayback', {'state': state.name, 'progress': progress});
+      unawaited(_invoke('setPlayback', {'state': state.name, 'progress': progress}));
     }
     // Progress moves without notifications while playing: poll gently then.
     if (state == TaskbarPlayback.playing) {
@@ -329,7 +352,7 @@ class WindowsShell {
     final busy = _playback.isPlaying || _downloading;
     if (busy == _busySent) return;
     _busySent = busy;
-    _invoke('setBusy', {'busy': busy});
+    unawaited(_invoke('setBusy', {'busy': busy}));
   }
 
   // ── Labels for the tray menu and taskbar buttons ───────────────────
@@ -354,6 +377,20 @@ class WindowsShell {
       'rewind': l.windowsTaskbarRewind,
       'forward': l.windowsTaskbarForward,
     });
+  }
+
+  /// Quits through the runner's normal exit (save progress, flush held-back
+  /// writes, then end the process without plugin teardown). Returns false
+  /// when there is no runner shell to ask, so the caller can exit itself.
+  Future<bool> requestQuit() async {
+    if (!_enabled) return false;
+    try {
+      await _channel.invokeMethod<void>('quit');
+      return true;
+    } catch (e) {
+      debugPrint('[WindowsShell] quit failed: $e');
+      return false;
+    }
   }
 
   Future<void> _invoke(String method, Object? arguments) async {

@@ -51,8 +51,11 @@ abstract final class ForkPlatform {
   /// Chromecast is wired up only on Android.
   static bool get supportsCast => isAndroid;
 
-  /// Home-screen widgets and Android Auto exist only on Android.
-  static bool get hasHomeWidgets => isAndroid;
+
+  /// A car or media browser can ask for the Android Auto browse tree.
+  /// Windows, Linux and web have none, so the tree isn't kept up to date
+  /// there (download progress used to rebuild its signature every tick).
+  static bool get hasMediaBrowser => !isWeb && !isWindows && !isLinux;
 
   // Settings that only do something on a phone. Settings and its search
   // index hide them elsewhere (owner decision, 2026-10-30).
@@ -80,6 +83,10 @@ abstract final class ForkPlatform {
   /// Android uses the system folder picker (SAF) instead.
   static bool get supportsDesktopDownloadFolder => isWindows || isLinux;
 
+  /// Files or a folder dropped on the window open the upload screen.
+  /// Android and web keep upstream behaviour (no drop target).
+  static bool get supportsDesktopFileDrop => isWindows || isLinux;
+
   /// Whether a reader for ebook format [ext] (lower-case, no dot) works here.
   /// - Web: no reader works (they need local files or a loopback server).
   /// - Linux: `flutter_inappwebview` has no Linux implementation, so the
@@ -91,11 +98,42 @@ abstract final class ForkPlatform {
     return true;
   }
 
+  /// The page the web build was loaded from. Tests replace it.
+  @visibleForTesting
+  static Uri Function() webPageUri = _pageUri;
+
+  static Uri _pageUri() => Uri.base;
+
+  /// Whether the web build takes its server from the page's own address and
+  /// hides the server field (upstream: Absorb served by the Audiobookshelf
+  /// server itself). The fork's web build is published on GitHub Pages and
+  /// run on localhost while developing, where the page isn't the server, so
+  /// those keep the server field.
+  static bool get webUsesOriginServer =>
+      isWeb && webPageHostsServer(webPageUri());
+
+  /// Whether [page] could be the Audiobookshelf server serving the web app.
+  static bool webPageHostsServer(Uri page) {
+    final scheme = page.scheme.toLowerCase();
+    if (scheme != 'http' && scheme != 'https') return false;
+    final host = page.host.toLowerCase();
+    if (host.isEmpty) return false;
+    if (host == 'github.io' || host.endsWith('.github.io')) return false;
+    if (host == 'localhost' || host.endsWith('.localhost')) return false;
+    if (host == '127.0.0.1' || host == '::1') return false;
+    return true;
+  }
+
+  /// The equalizer changes the sound on Android (audio effects) and on
+  /// Windows and Linux (mpv filters, services/desktop_equalizer.dart). The
+  /// browser player has no hook for it.
+  static bool get supportsEqualizer => !isWeb;
+
   /// Card button ids to hide on this platform, on top of upstream's list.
-  /// The equalizer stays: it gets a real Windows version later.
   static Set<String> hiddenCardButtons() => {
         if (!supportsCast) 'cast',
         if (!supportsTranscription) 'lyrics',
+        if (!supportsEqualizer) 'equalizer',
       };
 
   /// Opens a link in the system browser. Tests replace it.

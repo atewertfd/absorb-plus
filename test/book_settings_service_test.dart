@@ -408,4 +408,31 @@ void main() {
     expect(BookSkip.decode(null), isNull);
     expect(const BookSkip(intro: 5, outro: 0).encode(), '5,0');
   });
+
+  group('same speed for every book', () {
+    test('off: a book keeps its own speed', () async {
+      await PlayerSettings.setDefaultSpeed(1.0);
+      await BookSettingsService.saveBookSpeed('b1', 1.5);
+      await BookSettingsService.settle();
+      expect(await PlayerSettings.getBookSpeed('b1'), 1.5);
+      expect(await PlayerSettings.getDefaultSpeed(), 1.0);
+    });
+
+    test('on: changing a book sets the shared speed, every book uses it',
+        () async {
+      await PlayerSettings.setDefaultSpeed(1.0);
+      await BookSettingsService.saveBookSpeed('b1', 1.5);
+      await BookSettingsService.settle();
+      await BookSettingsService.setSameSpeedForAllBooks(true);
+      // The book's own saved speed is ignored while the switch is on.
+      expect(await PlayerSettings.getBookSpeed('b1'), isNull);
+      await BookSettingsService.saveBookSpeed('b2', 1.25);
+      await BookSettingsService.settle();
+      expect(await PlayerSettings.getDefaultSpeed(), 1.25);
+      expect(await PlayerSettings.getBookSpeed('b2'), isNull);
+      // Turning it off brings back each book's own speed.
+      await BookSettingsService.setSameSpeedForAllBooks(false);
+      expect(await PlayerSettings.getBookSpeed('b1'), 1.5);
+    });
+  });
 }

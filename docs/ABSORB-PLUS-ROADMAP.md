@@ -1,6 +1,6 @@
 # Absorb Plus implementation roadmap
 
-> Historical (2026-10). Current plans, decisions and release state live in `CLAUDE.md`, `docs/audit/README.md` (cleanup plan) and the release notes; this list is not kept up to date.
+> Historical (2026-10). Current plans and release state live in the release notes; this list is not kept up to date.
 
 This port keeps the upstream Absorb visual language and adds cross-platform behavior in small, testable pieces.
 

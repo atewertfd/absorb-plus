@@ -9,3 +9,18 @@ bool shouldRestoreBookLibrary({
       podcastsShown &&
       selectedLibraryId == podcastLibraryId;
 }
+
+/// Fork: after a settings change, re-check the Library page's library only
+/// on the first load or when the Podcasts tab settings themselves changed.
+/// Any other setting (skip lengths, speed presets, a settings-sync pull) used
+/// to pull the user out of Podcasts back to the book library.
+bool shouldRecheckLibraryAfterSettings({
+  required bool firstLoad,
+  required bool podcastTabChanged,
+}) =>
+    firstLoad || podcastTabChanged;
+
+bool shouldShowDesktopNowPlayingBar(
+  int pageIndex, {
+  bool paneRouteOpen = false,
+}) => pageIndex != 2 || paneRouteOpen;

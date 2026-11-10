@@ -31,6 +31,11 @@ class CoverContentProvider : ContentProvider() {
         private const val TAG = "CoverProvider"
         private val refreshLock = Any()
 
+        // Absorb Plus: one server fetch per cover at a time. Android Auto, the
+        // notification and widgets often ask for the same cover at once.
+        private val itemLocks = java.util.concurrent.ConcurrentHashMap<String, Any>()
+        private fun itemLock(itemId: String): Any = itemLocks.getOrPut(itemId) { Any() }
+
         // Per install: the dev flavor sits beside the stable app under its own
         // application id, and two apps can't share a provider authority.
         fun authority(context: android.content.Context): String =
@@ -55,7 +60,7 @@ class CoverContentProvider : ContentProvider() {
         }
 
         // Not available locally — try fetching from the server and caching
-        val cached = fetchAndCache(context, itemId) ?: return null
+        val cached = fetchOnce(context, itemId) ?: return null
         Log.d(TAG, "openFile $itemId ts=$ts fetched=${cached.path} mtime=${cached.lastModified()}")
         return ParcelFileDescriptor.open(cached, ParcelFileDescriptor.MODE_READ_ONLY)
     }
@@ -82,7 +87,7 @@ class CoverContentProvider : ContentProvider() {
         val context = context ?: return null
         invalidateStaleCacheIfNeeded(context, itemId, uri)
         val coverFile = findCoverFile(context, itemId)
-            ?: fetchAndCache(context, itemId)
+            ?: fetchOnce(context, itemId)
             ?: return null
 
         val cols = projection ?: arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE)
@@ -100,6 +105,24 @@ class CoverContentProvider : ContentProvider() {
 
     // ── Server fetch + cache ──
 
+    // Absorb Plus: a request that waited for another one fetching the same
+    // cover serves that result instead of downloading it again.
+    private fun fetchOnce(context: android.content.Context, itemId: String): File? =
+        synchronized(itemLock(itemId)) {
+            findCoverFile(context, itemId) ?: fetchAndCache(context, itemId)
+        }
+
+    // Absorb Plus: covers are written beside the final name and renamed into
+    // place, so no reader ever sees a half-written file, and a fetch cut off
+    // (process killed) never leaves a truncated cover that is served forever.
+    private fun partFileFor(cacheFile: File): File = File(cacheFile.path + ".part")
+
+    private fun publish(part: File, cacheFile: File): File? {
+        if (part.length() > 0 && part.renameTo(cacheFile)) return cacheFile
+        part.delete()
+        return null
+    }
+
     private fun fetchAndCache(context: android.content.Context, itemId: String): File? {
         try {
             val prefs = context.getSharedPreferences(
@@ -115,27 +138,28 @@ class CoverContentProvider : ContentProvider() {
                 return null
             }
 
-            val cleanUrl = serverUrl.trimEnd('/')
+            val cleanUrl = tailscaleBase(prefs, serverUrl) ?: serverUrl.trimEnd('/')
             val customHeaders = readCustomHeaders(prefs)
             val cacheDir = File(context.cacheDir, "aa_covers")
             if (!cacheDir.exists()) cacheDir.mkdirs()
             val cacheFile = File(cacheDir, "$itemId.jpg")
+            val partFile = partFileFor(cacheFile)
 
-            var result = fetchCover(cleanUrl, itemId, token, cacheFile, customHeaders)
+            var result = fetchCover(cleanUrl, itemId, token, partFile, customHeaders)
             if (result == 401) {
                 // Access token expired - try refreshing via the refresh token
                 val newToken = refreshAccessToken(cleanUrl, token, prefs, customHeaders)
                 if (newToken != null) {
                     token = newToken
-                    result = fetchCover(cleanUrl, itemId, token, cacheFile, customHeaders)
+                    result = fetchCover(cleanUrl, itemId, token, partFile, customHeaders)
                 }
             }
 
-            if (result == 200 && cacheFile.exists() && cacheFile.length() > 0) {
+            if (result == 200 && publish(partFile, cacheFile) != null) {
                 Log.d(TAG, "Cached cover for $itemId (${cacheFile.length()} bytes)")
                 return cacheFile
             }
-            cacheFile.delete()
+            partFile.delete()
             return null
         } catch (e: Exception) {
             Log.e(TAG, "Error fetching cover for $itemId", e)
@@ -164,6 +188,7 @@ class CoverContentProvider : ContentProvider() {
         val cacheDir = File(context.cacheDir, "aa_covers")
         if (!cacheDir.exists()) cacheDir.mkdirs()
         val cacheFile = File(cacheDir, "$itemId.jpg")
+        val partFile = partFileFor(cacheFile)
         val connection = URL("http://127.0.0.1:$port/$secret/api/v1/books/$itemId/cover?medium=audio")
             .openConnection() as HttpURLConnection
         connection.connectTimeout = 3000
@@ -174,16 +199,16 @@ class CoverContentProvider : ContentProvider() {
                 return null
             }
             connection.inputStream.use { input ->
-                cacheFile.outputStream().use { output -> input.copyTo(output) }
+                partFile.outputStream().use { output -> input.copyTo(output) }
             }
         } catch (e: Exception) {
             Log.w(TAG, "BookOrbit cover fetch error for $itemId: ${e.message}")
-            cacheFile.delete()
+            partFile.delete()
             return null
         } finally {
             connection.disconnect()
         }
-        return if (cacheFile.length() > 0) cacheFile else null
+        return publish(partFile, cacheFile)
     }
 
     private fun fetchCover(
@@ -268,6 +293,20 @@ class CoverContentProvider : ContentProvider() {
             Log.e(TAG, "Token refresh error", e)
         }
         null
+    }
+
+    // Absorb Plus: with built-in Tailscale on, Dart (tailscale_cover_route.dart)
+    // stores the node's loopback proxy base for the server it belongs to. Used
+    // only while that is still the current server; otherwise go direct.
+    private fun tailscaleBase(
+        prefs: android.content.SharedPreferences,
+        serverUrl: String,
+    ): String? {
+        val from = prefs.getString("flutter.fork_tailscale_cover_from", null)
+        val to = prefs.getString("flutter.fork_tailscale_cover_to", null)
+        if (from.isNullOrEmpty() || to.isNullOrEmpty()) return null
+        if (from.trimEnd('/') != serverUrl.trim().trimEnd('/')) return null
+        return to.trimEnd('/')
     }
 
     private fun readCustomHeaders(

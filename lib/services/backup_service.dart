@@ -9,6 +9,10 @@ import 'reader_font_service.dart';
 import 'scoped_prefs.dart';
 import 'sleep_timer_service.dart';
 import 'user_account_service.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'imported_settings_reload.dart';
+import 'fork_backup_settings.dart';
+import 'package:flutter/foundation.dart';
 
 class BackupService {
   /// [includeRmabSecrets] is for settings sync's opt-in RMAB sharing; a
@@ -163,6 +167,7 @@ class BackupService {
       'endHour': sleep.endHour,
       'endMinute': sleep.endMinute,
       'durationMinutes': sleep.durationMinutes,
+      'useEndOfChapter': sleep.useEndOfChapter,
     };
 
     // Equalizer (scoped)
@@ -281,13 +286,14 @@ class BackupService {
         if (!key.startsWith(fullPrefix)) continue;
         final libraryId = key.substring(fullPrefix.length);
         final value = prefs.get(key);
-        if (value is! String && value is! int) continue;
+        if (value is! String && value is! int && value is! double) continue;
         librarySettings.putIfAbsent(libraryId, () => {})[field] = value;
       }
     }
     collectLibrarySetting('rectangleCovers_', 'coverShape');
     collectLibrarySetting('skipOverrideForward_', 'skipForward');
     collectLibrarySetting('skipOverrideBack_', 'skipBack');
+    collectLibrarySetting('speedOverride_', 'speed');
 
     // Per-item metadata overrides (scoped, keyed by itemId)
     final metadataOverrides = <String, String>{};
@@ -409,7 +415,7 @@ class BackupService {
       if (headersJson != null) {
         try {
           customHeaders = Map<String, String>.from(jsonDecode(headersJson) as Map);
-        } catch (_) {}
+        } catch (e) { debugPrint('[Backup] exportSettings failed: ${e.runtimeType}'); }
       }
     }
 
@@ -460,6 +466,7 @@ class BackupService {
       if (settingsSync.isNotEmpty) 'settingsSync': settingsSync,
       'accounts': accounts,
       'customHeaders': customHeaders,
+      ForkBackupSettings.payloadSection: await ForkBackupSettings.export(), // fork
     };
   }
 
@@ -496,6 +503,7 @@ class BackupService {
 
   static Future<void> importSettings(Map<String, dynamic> data) async {
     final prefs = await SharedPreferences.getInstance();
+    final reload = await ImportedSettingsReload.capture(); // fork
 
     final customHeaders = data['customHeaders'] as Map<String, dynamic>?;
     final restoredCustomHeaders = customHeaders == null
@@ -513,7 +521,7 @@ class BackupService {
         await UserAccountService().saveAccount(SavedAccount.fromJson(
           map,
           legacyCustomHeaders: restoredCustomHeaders,
-        ));
+        ), restoring: true);
       }
     }
 
@@ -710,6 +718,9 @@ class BackupService {
         endHour: sl['endHour'] as int? ?? 6,
         endMinute: sl['endMinute'] as int? ?? 0,
         durationMinutes: sl['durationMinutes'] as int? ?? 30,
+        // Older payloads don't carry it: keep this device's mode.
+        useEndOfChapter: sl['useEndOfChapter'] as bool? ??
+            (await AutoSleepSettings.load()).useEndOfChapter,
       ).save();
     }
 
@@ -927,6 +938,7 @@ class BackupService {
         '${scopePrefix}rectangleCovers_',
         '${scopePrefix}skipOverrideForward_',
         '${scopePrefix}skipOverrideBack_',
+        '${scopePrefix}speedOverride_',
       ];
       final oldKeys = prefs
           .getKeys()
@@ -954,6 +966,8 @@ class BackupService {
             back: skipBack,
           );
         }
+        final speed = (settings['speed'] as num?)?.toDouble();
+        if (speed != null) await PlayerSettings.setSpeedOverride(libraryId, speed);
       }
     }
 
@@ -989,7 +1003,7 @@ class BackupService {
           try {
             final pos = (jsonDecode(raw) as Map<String, dynamic>)['pos'] as num?;
             if (pos != null) positions.add(pos.toDouble());
-          } catch (_) {}
+          } catch (e) { debugPrint('[Backup] importSettings failed: ${e.runtimeType}'); }
         }
         for (final raw in incoming) {
           double? pos;
@@ -1064,6 +1078,8 @@ class BackupService {
       await prefs.setString('custom_download_path', customDownloadPath);
     }
 
+    await ForkBackupSettings.import(data[ForkBackupSettings.payloadSection]); // fork
+    await reload.apply();
     PlayerSettings.notifySettingsChanged();
   }
 }

@@ -86,4 +86,32 @@ class SyncLogic {
     if (localTime - serverTime > localAheadSafetySeconds) return false;
     return serverTime >= localTime || !hasOfflineListening;
   }
+
+  /// Absorb Plus (IMP-002, BUG-006): where a start resumes, given this
+  /// device's saved spot and the server's progress row. The rules local
+  /// playback has always used, shared so cast starts pick the same way:
+  ///   - a server spot more than a second ahead wins;
+  ///   - a local spot wins while it has a pending sync, or when it is more
+  ///     than [localAheadSafetySeconds] ahead, or when the server row isn't
+  ///     newer than the local save;
+  ///   - with no local spot, the server's.
+  /// [serverLastUpdate] must be the progress row's `lastUpdate`, never a
+  /// playback session's own timestamp.
+  static double resumePosition({
+    required double local,
+    required int localTimestamp,
+    required bool hasPendingSync,
+    required double server,
+    required int serverLastUpdate,
+  }) {
+    if (server > local + 1.0) return server;
+    if (local > 0) {
+      final staleLocal = localTimestamp > 0 &&
+          !hasPendingSync &&
+          local - server <= localAheadSafetySeconds &&
+          serverLastUpdate > localTimestamp;
+      return staleLocal ? server : local;
+    }
+    return server > 0 ? server : local;
+  }
 }

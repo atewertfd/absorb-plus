@@ -6,6 +6,7 @@ import (
 	"bufio"
 	"context"
 	"crypto/subtle"
+	"crypto/tls"
 	"encoding/base64"
 	"errors"
 	"io"
@@ -30,6 +31,10 @@ type dialFunc func(ctx context.Context, network, address string) (net.Conn, erro
 //     URLs through findProxy): forwarded with the Host header intact.
 //   - Origin-form "/_ts/<secret>/<scheme>/<host:port>/<path>" (media players,
 //     which can't use a proxy): reverse-proxied to scheme://host:port/path.
+//     The scheme "https-insecure" is https without certificate checks, sent
+//     only while the user has "trust self-signed certificates" on (Dart's own
+//     requests skip the check then too, and inside the tailnet WireGuard
+//     still encrypts and authenticates the hop).
 //
 // The first two need "Proxy-Authorization: Basic absorb:<secret>", the third
 // carries the secret in its path, so other apps on the device can't use the
@@ -39,7 +44,13 @@ type tailnetProxy struct {
 	dial      dialFunc
 	transport *http.Transport
 	rp        *httputil.ReverseProxy
+	// The same for "https-insecure" routes.
+	insecureTransport *http.Transport
+	rpInsecure        *httputil.ReverseProxy
 }
+
+// insecureScheme marks a routed https target whose certificate isn't checked.
+const insecureScheme = "https-insecure"
 
 const pathPrefix = "/_ts/"
 
@@ -90,7 +101,15 @@ func newTailnetProxy(secret string, dial dialFunc) *tailnetProxy {
 		ResponseHeaderTimeout: 0, // long polls and streams
 		Proxy:                 nil,
 	}
-	p.rp = &httputil.ReverseProxy{
+	p.insecureTransport = p.transport.Clone()
+	p.insecureTransport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	p.rp = p.reverseProxy(p.transport)
+	p.rpInsecure = p.reverseProxy(p.insecureTransport)
+	return p
+}
+
+func (p *tailnetProxy) reverseProxy(transport *http.Transport) *httputil.ReverseProxy {
+	return &httputil.ReverseProxy{
 		Rewrite: func(pr *httputil.ProxyRequest) {
 			target := pr.In.Context().Value(targetKey{}).(*url.URL)
 			pr.Out.URL.Scheme = target.Scheme
@@ -98,7 +117,7 @@ func newTailnetProxy(secret string, dial dialFunc) *tailnetProxy {
 			pr.Out.Host = hostHeader(target)
 			pr.Out.RequestURI = ""
 		},
-		Transport:      p.transport,
+		Transport:      transport,
 		ModifyResponse: rewriteRedirect,
 		FlushInterval:  -1, // audio streams and server-sent events flush at once
 		ErrorHandler: func(w http.ResponseWriter, r *http.Request, err error) {
@@ -106,10 +125,12 @@ func newTailnetProxy(secret string, dial dialFunc) *tailnetProxy {
 			w.WriteHeader(http.StatusBadGateway)
 		},
 	}
-	return p
 }
 
-func (p *tailnetProxy) closeIdle() { p.transport.CloseIdleConnections() }
+func (p *tailnetProxy) closeIdle() {
+	p.transport.CloseIdleConnections()
+	p.insecureTransport.CloseIdleConnections()
+}
 
 func (p *tailnetProxy) authorized(r *http.Request) bool {
 	h := r.Header.Get("Proxy-Authorization")
@@ -148,7 +169,7 @@ func (p *tailnetProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		p.rp.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), targetKey{}, target)))
 	case strings.HasPrefix(r.URL.Path, pathPrefix):
 		escaped := r.URL.EscapedPath()
-		target, rest, ok := parseRoutedPath(escaped, p.secret)
+		target, rest, insecure, ok := parseRoutedPath(escaped, p.secret)
 		if !ok {
 			http.NotFound(w, r)
 			return
@@ -163,7 +184,11 @@ func (p *tailnetProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		prefix := strings.TrimSuffix(escaped, rest)
 		ctx := context.WithValue(r.Context(), targetKey{}, target)
 		ctx = context.WithValue(ctx, prefixKey{}, prefix)
-		p.rp.ServeHTTP(w, r.WithContext(ctx))
+		rp := p.rp
+		if insecure {
+			rp = p.rpInsecure
+		}
+		rp.ServeHTTP(w, r.WithContext(ctx))
 	default:
 		http.NotFound(w, r)
 	}
@@ -171,25 +196,29 @@ func (p *tailnetProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // parseRoutedPath splits the escaped path
 // "/_ts/<secret>/<scheme>/<host:port>/<rest>" into the target origin and the
-// still-escaped "/<rest>".
-func parseRoutedPath(path, secret string) (*url.URL, string, bool) {
+// still-escaped "/<rest>". insecure is true for the "https-insecure" scheme,
+// whose target is plain https.
+func parseRoutedPath(path, secret string) (target *url.URL, rest string, insecure, ok bool) {
 	parts := strings.SplitN(strings.TrimPrefix(path, pathPrefix), "/", 4)
 	if len(parts) < 3 {
-		return nil, "", false
+		return nil, "", false, false
 	}
 	if subtle.ConstantTimeCompare([]byte(parts[0]), []byte(secret)) != 1 {
-		return nil, "", false
+		return nil, "", false, false
 	}
 	scheme := parts[1]
+	if scheme == insecureScheme {
+		scheme, insecure = "https", true
+	}
 	host, err := url.PathUnescape(parts[2]) // "[fd7a::1]" may arrive as %5B...%5D
 	if err != nil || (scheme != "http" && scheme != "https") || host == "" {
-		return nil, "", false
+		return nil, "", false, false
 	}
-	rest := "/"
+	rest = "/"
 	if len(parts) == 4 {
 		rest += parts[3]
 	}
-	return &url.URL{Scheme: scheme, Host: host}, rest, true
+	return &url.URL{Scheme: scheme, Host: host}, rest, insecure, true
 }
 
 // withDefaultPort fills in the scheme's port when hostport has none or port

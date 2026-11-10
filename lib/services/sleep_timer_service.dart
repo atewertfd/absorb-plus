@@ -8,6 +8,9 @@ import 'scoped_prefs.dart';
 import 'audio_player_service.dart';
 import 'chromecast_service.dart';
 import 'sleep_timer_tick_policy.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'fell_asleep_marker.dart'; // Absorb Plus
+import '../utils/calendar_days.dart'; // Absorb Plus
 
 enum SleepTimerMode { off, time, chapters, episodes }
 
@@ -96,7 +99,7 @@ class SleepTimerService extends ChangeNotifier {
   // Singleton
   static final SleepTimerService _instance = SleepTimerService._();
   factory SleepTimerService() => _instance;
-  SleepTimerService._();
+  SleepTimerService._() { FellAsleepTracker.attach(this); } // Absorb Plus: fell asleep marker
 
   final _player = AudioPlayerService();
   final _cast = ChromecastService();
@@ -581,6 +584,7 @@ class SleepTimerService extends ChangeNotifier {
     _isTriggeringSleep = true;
     debugPrint('[SleepTimer] Triggering sleep — pausing playback');
     try {
+      unawaited(FellAsleepTracker.instance.onSleepStopped(_playingItemKey(), _currentPositionSeconds())); // Absorb Plus
       if (_cast.isCastEngaged) {
         await _cast.pauseNowOrOnReconnect();
       } else {
@@ -706,11 +710,9 @@ class SleepTimerService extends ChangeNotifier {
       chime.play();
       // Restore the main volume when the chime ends - or fails, never ends,
       // or is replaced - so the book can't stay at 15%.
-      chime.playerStateStream
-          .where((s) => s.processingState == ja.ProcessingState.completed)
-          .first
-          .timeout(const Duration(seconds: 10))
-          .then<void>((_) {}, onError: (Object e) {
+      chime.playerStateStream.where((s) => s.processingState == ja.ProcessingState.completed).first.timeout(const Duration(seconds: 10))
+          .then<void>((_) {
+        }, onError: (Object e) {
         debugPrint('[SleepTimer] Chime did not finish (${e.runtimeType}) - restoring volume');
       }).whenComplete(() {
         player.setVolume(prevVol);
@@ -836,6 +838,7 @@ class SleepTimerService extends ChangeNotifier {
           debugPrint('[SleepTimer] Auto sleep: in window ${settings.startLabel}–${settings.endLabel}, '
               'starting end-of-chapter timer');
           setChapterSleep(1);
+          if (!isActive) return; // Absorb Plus: didn't arm (no chapters yet) - no toast, not auto-started
           onToast?.call('Auto sleep: end of chapter timer started');
         } else {
           debugPrint('[SleepTimer] Auto sleep: in window ${settings.startLabel}–${settings.endLabel}, '
@@ -858,7 +861,7 @@ class SleepTimerService extends ChangeNotifier {
 
     final now = DateTime.now();
     final todayStart = DateTime(now.year, now.month, now.day, settings.startHour, settings.startMinute);
-    final nextStart = todayStart.isAfter(now) ? todayStart : todayStart.add(const Duration(days: 1));
+    final nextStart = todayStart.isAfter(now) ? todayStart : addCalendarDays(todayStart, 1);
     final delay = nextStart.difference(now);
 
     debugPrint('[SleepTimer] Window boundary timer set for ${delay.inMinutes}m from now');
@@ -869,6 +872,7 @@ class SleepTimerService extends ChangeNotifier {
         if (settings.useEndOfChapter) {
           debugPrint('[SleepTimer] Window boundary hit — starting end-of-chapter timer');
           setChapterSleep(1);
+          if (!isActive) return; // Absorb Plus: didn't arm (no chapters yet) - no toast, not auto-started
           onToast?.call('Auto sleep: end of chapter timer started');
         } else {
           debugPrint('[SleepTimer] Window boundary hit — starting ${settings.durationMinutes}m timer');

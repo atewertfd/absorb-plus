@@ -102,7 +102,7 @@ Map<String, dynamic>? pickUpdateRelease(
       .where(
         (release) =>
             release['draft'] != true &&
-            (release['tag_name'] as String? ?? '').isNotEmpty,
+            isVersionReleaseTag(release['tag_name'] as String? ?? ''),
       )
       .toList();
 
@@ -130,6 +130,11 @@ Map<String, dynamic>? pickUpdateRelease(
     published.where((release) => hasPlatformAsset(releaseAssetsOf(release))),
   );
 }
+
+/// Absorb Plus: only `v1.2.3...` tags are releases. The rolling
+/// `test-channel` pre-release (Developer mode) is never offered as an update.
+bool isVersionReleaseTag(String tag) =>
+    RegExp(r'^v\d+\.\d+\.\d+', caseSensitive: false).hasMatch(tag);
 
 /// The kind of build asking for an update, which decides the file it needs.
 enum UpdateTarget {

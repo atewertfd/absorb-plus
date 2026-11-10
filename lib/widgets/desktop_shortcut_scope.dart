@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +8,15 @@ import 'package:flutter/services.dart';
 import '../services/desktop_shortcuts.dart';
 import '../utils/fork_platform.dart';
 import 'expanded_card.dart';
+import 'go_to_time_dialog.dart';
 
 /// Intent for one of the [DesktopShortcutAction]s (playback, search...).
 class DesktopShortcutIntent extends Intent {
-  const DesktopShortcutIntent(this.action);
+  const DesktopShortcutIntent(this.action, [this.definition]);
   final DesktopShortcutAction action;
+
+  /// The binding that fired (Help has two, ? and F1, with different rules).
+  final DesktopShortcutDefinition? definition;
 }
 
 /// Intent for one of the [DesktopNavigationAction]s (Esc, back, F5...).
@@ -73,7 +78,8 @@ class DesktopShortcutScope extends StatelessWidget {
       shortcuts: <ShortcutActivator, Intent>{
         for (final shortcut in desktopShortcutDefinitions)
           if (!_browserOwns(shortcut.action))
-            shortcut.activator: DesktopShortcutIntent(shortcut.action),
+            shortcut.activator:
+                DesktopShortcutIntent(shortcut.action, shortcut),
         for (final shortcut in navigation)
           shortcut.activator: DesktopNavigationIntent(shortcut.action),
       },
@@ -107,6 +113,8 @@ class _AppShortcutAction extends DesktopShortcutCallbackAction {
       : super(
           actionOf: (intent) =>
               intent is DesktopShortcutIntent ? intent.action : null,
+          definitionOf: (intent) =>
+              intent is DesktopShortcutIntent ? intent.definition : null,
           onInvoke: (intent) {
             if (intent is DesktopShortcutIntent) {
               DesktopShortcutScope.handlers?.run(intent.action);
@@ -157,6 +165,12 @@ class _NavigationAction extends Action<DesktopNavigationIntent> {
       case DesktopNavigationAction.previousCard:
       case DesktopNavigationAction.nextCard:
         return DesktopShortcutScope.handlers?.canSwitchCard() ?? false;
+      case DesktopNavigationAction.goToTime:
+        if (focusIsInDialog() || !goToTimeAvailable()) return false;
+        final nav = _rootNavigator(scopeContext);
+        return nav != null &&
+            (topRouteOf(nav) is ExpandedCardRoute ||
+                (DesktopShortcutScope.handlers?.canSwitchCard() ?? false));
     }
   }
 
@@ -170,11 +184,14 @@ class _NavigationAction extends Action<DesktopNavigationIntent> {
       case DesktopNavigationAction.refresh:
         final refresh = _refresh;
         _refresh = null;
-        if (refresh != null && refresh.mounted) refresh.show();
+        if (refresh != null && refresh.mounted) unawaited(refresh.show());
       case DesktopNavigationAction.previousCard:
         DesktopShortcutScope.handlers?.switchCard(-1);
       case DesktopNavigationAction.nextCard:
         DesktopShortcutScope.handlers?.switchCard(1);
+      case DesktopNavigationAction.goToTime:
+        final nav = _rootNavigator(scopeContext);
+        if (nav != null) unawaited(showGoToTimeDialog(nav.context));
     }
     return null;
   }

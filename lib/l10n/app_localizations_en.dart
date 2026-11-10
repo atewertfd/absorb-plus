@@ -109,7 +109,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsWhatsNewSubtitle =>
-      'After an update, show what\'s new in the app';
+      'After Absorb updates, a popup links to the release notes';
 
   @override
   String get gotIt => 'Got it';
@@ -709,6 +709,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get absorbingManageQueue => 'Manage Queue';
+
+  @override
+  String get desktopAbsorbingQueueHint =>
+      'Use Add to Absorbing on a book or episode to put it here. Items play in this order.';
 
   @override
   String get absorbingDone => 'Done';
@@ -1483,7 +1487,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fullBookScrubberOffSubtitle => 'Off - progress bar only';
 
   @override
-  String get cardScrubbers => 'Card scrubbers';
+  String get cardScrubbers => 'Progress bars';
 
   @override
   String get cardScrubbersBoth => 'Both';
@@ -1541,22 +1545,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get whenAbsorbedAutoRelease => 'Auto-release';
 
   @override
-  String get mergeLibraries => 'Unified Absorbing page';
+  String get mergeLibraries => 'Unified Absorbing';
 
   @override
-  String get mergeLibrariesInfoTitle => 'Unified Absorbing Page';
+  String get mergeLibrariesInfoTitle => 'Unified Absorbing';
 
   @override
   String get mergeLibrariesInfoContent =>
-      'When enabled, the Absorbing screen shows all your in-progress books and podcasts from every library in a single view. When disabled, only items from the library you currently have selected are shown.';
+      'When enabled, Absorbing shows and queues books and podcast episodes from every library together. When disabled, the page and Manual queue stay within the current library or media type.';
 
   @override
   String get mergeLibrariesOnSubtitle =>
-      'Absorbing page shows items from all libraries';
+      'Show and queue items from all libraries together';
 
   @override
   String get mergeLibrariesOffSubtitle =>
-      'Absorbing page shows current library only';
+      'Keep the page and Manual queue in the current library';
 
   @override
   String get queueMode => 'Queue mode';
@@ -1576,7 +1580,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get queueModeInfoManualDesc =>
-      'Your absorbing cards act as a playlist. When one finishes, the next non-finished card auto-plays. Add items with the \"Add to Absorbing\" button on a book or episode and reorder from the absorbing screen.';
+      'Items in Absorbing are your manual queue. When one finishes, the next unfinished item plays. Use Add to Absorbing on a book or episode, then reorder it in the Queue panel.';
 
   @override
   String get queueModeOff => 'Off';
@@ -1765,6 +1769,20 @@ class AppLocalizationsEn extends AppLocalizations {
       'Off - this library uses the global skip amounts';
 
   @override
+  String get currentLibrarySpeedOverride => 'Custom default speed';
+
+  @override
+  String get currentLibrarySpeedOverrideOnSubtitle =>
+      'On - new items in this library start at their own speed';
+
+  @override
+  String get currentLibrarySpeedOverrideOffSubtitle =>
+      'Off - new items in this library start at the global default speed';
+
+  @override
+  String get currentLibrarySpeed => 'Default speed';
+
+  @override
   String get currentLibrarySkipBack => 'Skip back';
 
   @override
@@ -1788,6 +1806,18 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get chapterProgressOnSubtitleIos =>
       'On - lock screen & CarPlay show chapter progress';
+
+  @override
+  String get chapterProgressInNowPlayingBar =>
+      'Chapter progress in now playing bar';
+
+  @override
+  String get chapterProgressInNowPlayingBarOnSubtitle =>
+      'On - the bottom player shows current chapter progress';
+
+  @override
+  String get chapterProgressInNowPlayingBarOffSubtitle =>
+      'Off - the bottom player shows full book progress';
 
   @override
   String get nowPlayingText => 'Now playing text';
@@ -2456,6 +2486,17 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String breqFailedReason(String reason) {
     return 'Couldn\'t send the request: $reason';
+  }
+
+  @override
+  String breqBookCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count books',
+      one: '1 book',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -3154,6 +3195,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hideEbookOnlyOffSubtitle => 'Off - all library items shown';
 
   @override
+  String get audibleRatings => 'Audible ratings';
+
+  @override
+  String get audibleRatingsOnSubtitle =>
+      'On - book details show the Audible rating';
+
+  @override
+  String get audibleRatingsOffSubtitle => 'Off - no Audible lookup or stars';
+
+  @override
   String get homeCardsOpenDetails => 'Open details from Home';
 
   @override
@@ -3223,7 +3274,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enableLoggingOnSubtitle =>
-      'On - logs saved to file (restart to apply)';
+      'On - logs are being captured (restart to apply)';
 
   @override
   String get enableLoggingOffSubtitle => 'Off - no logs captured';
@@ -3237,14 +3288,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Logging disabled - restart app to stop capturing';
 
   @override
-  String get sendLogs => 'Send logs';
+  String get sendLogs => 'Export logs';
 
   @override
-  String get sendLogsSubtitle => 'Share log file as attachment';
+  String get sendLogsSubtitle => 'Download or share the .txt log file';
 
   @override
   String failedToShare(String error) {
-    return 'Failed to share: $error';
+    return 'Failed to export: $error';
   }
 
   @override
@@ -4307,6 +4358,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Failed to update - check your connection';
 
   @override
+  String get markedFinishedWillSync =>
+      'Marked as finished - will sync when you\'re back online';
+
+  @override
   String get markAsNotFinishedQuestion => 'Mark as Not Finished?';
 
   @override
@@ -4324,8 +4379,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resetProgressQuestion => 'Reset Progress?';
 
   @override
-  String get resetProgressContent =>
-      'This will erase all progress for this book and set it back to the beginning. This can\'t be undone.';
+  String get resetProgressListeningAndReading =>
+      'Your listening and reading progress will both go back to 0%.';
+
+  @override
+  String get resetProgressListening =>
+      'Your listening progress will go back to 0%.';
+
+  @override
+  String get resetProgressReading =>
+      'Your reading progress will go back to 0%.';
+
+  @override
+  String get resetProgressMarksUnread =>
+      'The book will also be marked as unread.';
+
+  @override
+  String get resetProgressCantUndo => 'This can\'t be undone.';
 
   @override
   String get progressResetFreshStart => 'Progress reset - fresh start!';
@@ -4682,6 +4752,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loudness => 'Loudness';
 
   @override
+  String get pitch => 'Pitch';
+
+  @override
   String get monoAudio => 'Mono Audio';
 
   @override
@@ -4702,6 +4775,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteCollectionFailed => 'Couldn\'t delete the collection';
+
+  @override
+  String get deletePlaylistFailed => 'Couldn\'t delete the playlist';
 
   @override
   String get deletePermissionRequired =>
@@ -4817,7 +4893,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noOutputDevicesFound => 'No output devices found';
 
   @override
-  String get welcomeToAbsorb => 'Welcome to Absorb Plus';
+  String get welcomeToAbsorb => 'Welcome to Absorb';
 
   @override
   String get welcomeTagline => 'An Audiobookshelf client.';
@@ -4892,6 +4968,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get refreshTooltip => 'Refresh';
+
+  @override
+  String get openNowPlayingTooltip => 'Open Now Playing';
+
+  @override
+  String get previousChapterTooltip => 'Previous chapter';
+
+  @override
+  String get nextChapterTooltip => 'Next chapter';
 
   @override
   String get noBooksFound => 'No books found';
@@ -5370,66 +5455,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get speed => 'Speed';
-
-  @override
-  String get desktopShortcutPlayPause => 'Play / pause';
-
-  @override
-  String get desktopShortcutRewind => 'Rewind';
-
-  @override
-  String get desktopShortcutForward => 'Fast-forward';
-
-  @override
-  String get desktopShortcutSlower => 'Decrease playback speed';
-
-  @override
-  String get desktopShortcutFaster => 'Increase playback speed';
-
-  @override
-  String get desktopShortcutNormalSpeed => 'Reset playback speed';
-
-  @override
-  String get desktopShortcutSearch => 'Open search';
-
-  @override
-  String get desktopShortcutLibrary => 'Open library';
-
-  @override
-  String get desktopShortcutNowPlaying => 'Open now playing';
-
-  @override
-  String get desktopShortcutFullScreen => 'Full screen';
-
-  @override
-  String get desktopShortcutClosePlayer => 'Close the full-screen player';
-
-  @override
-  String get desktopShortcutBack => 'Go back (close the top page or sheet)';
-
-  @override
-  String get desktopShortcutRefresh => 'Refresh the list on screen';
-
-  @override
-  String get desktopShortcutPreviousCard => 'Previous Absorbing card';
-
-  @override
-  String get desktopShortcutNextCard => 'Next Absorbing card';
-
-  @override
-  String get desktopShortcutContextMenu => 'Open the long-press menu';
-
-  @override
-  String get desktopShortcutMouseBack => 'Mouse back button';
-
-  @override
-  String get desktopShortcutRightClick => 'Right-click';
-
-  @override
-  String get desktopShortcutDragShelves => 'Drag shelves and cards sideways';
-
-  @override
-  String get desktopShortcutMouseDrag => 'Click and drag';
 
   @override
   String get details => 'Details';
@@ -7118,6 +7143,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get upcomingReleasesBadgeNew => 'NEW';
+
+  @override
+  String get upcomingReleasesOpenSeries => 'Open series on Audible';
 
   @override
   String get upcomingReleasesOpenLibrarySeries => 'Open series in library';
@@ -11503,7 +11531,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get readStatusHint =>
-      'BookOrbit keeps a status you pick here until you change it.';
+      'Listening to or reading the book can change this again.';
 
   @override
   String get readStatusUnread => 'Unread';
@@ -12765,6 +12793,1633 @@ class AppLocalizationsEn extends AppLocalizations {
       'Couldn\'t change achievements on BookOrbit';
 
   @override
+  String get boNotifyReadAlong => 'Read alongs';
+
+  @override
+  String get boNotifyReadAlongDesc =>
+      'When a read along you started is ready, needs a look, or fails.';
+
+  @override
+  String get readAlongCreate => 'Create read along';
+
+  @override
+  String get readAlongLoadFailed =>
+      'Couldn\'t check whether a read along can be made for this book.';
+
+  @override
+  String get readAlongCheckAgain => 'Check again';
+
+  @override
+  String get readAlongWhyWorkerOffline =>
+      'BookOrbit\'s read along worker is offline right now.';
+
+  @override
+  String get readAlongWhyWorkerOutdated =>
+      'BookOrbit\'s read along worker needs an update to work with this server.';
+
+  @override
+  String get readAlongWhyFilesMissing =>
+      'Restore this book\'s missing files to make a read along.';
+
+  @override
+  String get readAlongWhyNoEpub =>
+      'Add a plain EPUB to this book to make a read along.';
+
+  @override
+  String get readAlongWhyNoEpubHasOne =>
+      'This book already has a read along and no plain EPUB to make another from.';
+
+  @override
+  String get readAlongWhyTooManyTracks =>
+      'This audiobook has more files than a read along can be made from.';
+
+  @override
+  String get readAlongWhyEpubNotAllowed =>
+      'This library doesn\'t take EPUB files, so a read along can\'t be added.';
+
+  @override
+  String get readAlongWhyNotMounted =>
+      'BookOrbit\'s read along worker can\'t reach this library\'s folder.';
+
+  @override
+  String get readAlongWhyRunning =>
+      'A read along is already being made for this book.';
+
+  @override
+  String get readAlongWhyUnknown =>
+      'A read along can\'t be made for this book right now.';
+
+  @override
+  String get readAlongSheetTitle => 'Create a read along';
+
+  @override
+  String get readAlongSheetIntro =>
+      'BookOrbit matches the narration to the ebook text and adds an EPUB that highlights along with the audio.';
+
+  @override
+  String get readAlongEbook => 'Ebook';
+
+  @override
+  String get readAlongEbookHint =>
+      'Pick the plain EPUB that matches the narration.';
+
+  @override
+  String get readAlongAudio => 'Audiobook';
+
+  @override
+  String readAlongTracks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tracks',
+      one: '1 track',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String readAlongExistingTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'This book already has $count read alongs',
+      one: 'This book already has a read along',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String readAlongReplace(String name) {
+    return 'Replace $name';
+  }
+
+  @override
+  String readAlongKeepBoth(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Keep all of them',
+      one: 'Keep both',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readAlongKeepHint =>
+      'The new read along is added as another file.';
+
+  @override
+  String get readAlongReplaceHint =>
+      'The old file is only replaced once the new one passes its checks, and reading spots carry over.';
+
+  @override
+  String get readAlongReplaceNotAllowed =>
+      'Replacing a read along needs permission to delete books, so the new one is added as another file.';
+
+  @override
+  String get readAlongMadeByBookOrbit => 'Made by BookOrbit';
+
+  @override
+  String get readAlongImported => 'Imported';
+
+  @override
+  String get readAlongLanguage => 'Narration language';
+
+  @override
+  String get readAlongPickLanguage => 'Choose a language';
+
+  @override
+  String readAlongLanguageUnsupported(String language) {
+    return 'The speech model doesn\'t know this book\'s language ($language).';
+  }
+
+  @override
+  String get readAlongLanguageFromBook => 'From this book\'s details.';
+
+  @override
+  String get readAlongLanguageIsDefault => 'Your default language.';
+
+  @override
+  String get readAlongLanguageSaved => 'Saved as your default language.';
+
+  @override
+  String get readAlongSetDefault => 'Set as default';
+
+  @override
+  String get readAlongDefaultFailed => 'Couldn\'t save your default language.';
+
+  @override
+  String get readAlongHighlighting => 'Highlighting';
+
+  @override
+  String get readAlongSentence => 'Sentence';
+
+  @override
+  String get readAlongSentenceHint =>
+      'Highlights one sentence at a time. Recommended.';
+
+  @override
+  String get readAlongWord => 'Word';
+
+  @override
+  String get readAlongWordHint =>
+      'Highlights each word. Takes longer and makes a bigger file. Still experimental.';
+
+  @override
+  String readAlongEstimatedSize(String size) {
+    return 'Estimated size: $size';
+  }
+
+  @override
+  String get readAlongBackgroundNote =>
+      'Runs on the server, so you can close this. Long audiobooks can take hours, and the first run for a language downloads its speech model.';
+
+  @override
+  String readAlongLowDisk(String needed, String free) {
+    return 'Low disk space: this needs about $needed of working space on the worker, which has $free free.';
+  }
+
+  @override
+  String get readAlongStart => 'Start';
+
+  @override
+  String get readAlongStartFailed =>
+      'The read along couldn\'t be started. Try again.';
+
+  @override
+  String get readAlongStartInvalid =>
+      'Some of the picked files are no longer on this book. Check them and try again.';
+
+  @override
+  String get readAlongStartOffline =>
+      'BookOrbit\'s read along worker is offline. Try again later.';
+
+  @override
+  String get readAlongNotAllowed => 'You don\'t have permission to do that.';
+
+  @override
+  String get readAlongGone => 'This read along job is gone.';
+
+  @override
+  String get readAlongMovedOn =>
+      'This job had already moved on. It now shows where it is.';
+
+  @override
+  String get readAlongActionFailed => 'That didn\'t go through. Try again.';
+
+  @override
+  String readAlongStartedBy(String name) {
+    return 'Started by $name';
+  }
+
+  @override
+  String get readAlongStartedByOther => 'Started by another user';
+
+  @override
+  String get readAlongWaiting => 'Waiting to start';
+
+  @override
+  String get readAlongNextInLine => 'Next in line';
+
+  @override
+  String readAlongJobsAhead(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jobs ahead',
+      one: '1 job ahead',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readAlongStopping => 'Stopping';
+
+  @override
+  String get readAlongStoppingHint =>
+      'Finishing the current step, then it stops. Nothing will be added to this book.';
+
+  @override
+  String get readAlongStagePreparingAudio => 'Preparing the audio';
+
+  @override
+  String get readAlongStageDownloadingModel => 'Downloading the speech model';
+
+  @override
+  String get readAlongStageListening => 'Listening to the narration';
+
+  @override
+  String get readAlongStageMarkingUp => 'Marking up the ebook text';
+
+  @override
+  String get readAlongStageAligning => 'Matching the text to the narration';
+
+  @override
+  String get readAlongStageChecking => 'Checking the result';
+
+  @override
+  String get readAlongStagePublishing => 'Adding the read along to this book';
+
+  @override
+  String get readAlongStageWorking => 'Working';
+
+  @override
+  String readAlongFileOf(int current, int total) {
+    return 'File $current of $total';
+  }
+
+  @override
+  String readAlongTrackOf(int current, int total) {
+    return 'Track $current of $total';
+  }
+
+  @override
+  String readAlongChapterOf(int current, int total) {
+    return 'Chapter $current of $total';
+  }
+
+  @override
+  String readAlongStepOf(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get readAlongFirstRun => 'First run for this language';
+
+  @override
+  String get readAlongJustStarted => 'Just started';
+
+  @override
+  String readAlongRunningFor(String duration) {
+    return 'Running for $duration';
+  }
+
+  @override
+  String get readAlongStepAudio => 'Audio';
+
+  @override
+  String get readAlongStepSpeech => 'Speech';
+
+  @override
+  String get readAlongStepText => 'Text';
+
+  @override
+  String get readAlongStepAlign => 'Align';
+
+  @override
+  String get readAlongStepCheck => 'Check';
+
+  @override
+  String get readAlongStepAdd => 'Add';
+
+  @override
+  String get readAlongReviewTitle => 'Ready for review';
+
+  @override
+  String readAlongReviewMatched(String percent) {
+    return '$percent of the text matched the narration. Check it before adding it to the book.';
+  }
+
+  @override
+  String get readAlongReviewPlain => 'Check it before adding it to the book.';
+
+  @override
+  String get readAlongReviewWeb =>
+      'To leave chapters out and match again, open this book in BookOrbit on the web.';
+
+  @override
+  String readAlongReviewExpires(String date) {
+    return 'Thrown away on its own on $date unless you review it.';
+  }
+
+  @override
+  String get readAlongAddAnyway => 'Add it anyway';
+
+  @override
+  String get readAlongDiscard => 'Discard';
+
+  @override
+  String get readAlongDiscardPrompt => 'Discard this read along?';
+
+  @override
+  String get readAlongKeepIt => 'Keep it';
+
+  @override
+  String get readAlongReady => 'Read along ready';
+
+  @override
+  String get readAlongReadyWarnings => 'Read along ready, with warnings';
+
+  @override
+  String get readAlongAdded => 'Added to this book as a new EPUB.';
+
+  @override
+  String get readAlongReplaced =>
+      'Replaced the old read along. Reading spots carry over.';
+
+  @override
+  String readAlongMatchedSentences(String matched, String total) {
+    return '$matched of $total sentences matched the narration';
+  }
+
+  @override
+  String readAlongAudioUsed(String percent) {
+    return '$percent of the audio used';
+  }
+
+  @override
+  String readAlongOutside(String chapters) {
+    return 'Not in the narration, so left without audio: $chapters.';
+  }
+
+  @override
+  String readAlongOutsideMore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more chapters',
+      one: '1 more chapter',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readAlongWarnUnaligned =>
+      'One or more audio tracks couldn\'t be matched.';
+
+  @override
+  String get readAlongWarnUnmatched =>
+      'A noticeable amount of the ebook text wasn\'t matched to the narration.';
+
+  @override
+  String get readAlongWarnInterpolated =>
+      'Some text timing was estimated between confident matches.';
+
+  @override
+  String get readAlongWarnDropped =>
+      'Some ebook text was left out of the highlighting.';
+
+  @override
+  String get readAlongFailed => 'Read along failed';
+
+  @override
+  String get readAlongCancelled => 'Read along cancelled';
+
+  @override
+  String get readAlongDiscarded => 'Read along thrown away';
+
+  @override
+  String get readAlongNothingAdded => 'Nothing was added to this book.';
+
+  @override
+  String get readAlongExpired =>
+      'It wasn\'t reviewed within 14 days, so nothing was added to this book.';
+
+  @override
+  String readAlongRetryUntil(String date) {
+    return 'Retry picks up from the last finished step until $date.';
+  }
+
+  @override
+  String get readAlongStartOver => 'Start over';
+
+  @override
+  String get readAlongCancel => 'Cancel read along';
+
+  @override
+  String get readAlongCancelPrompt => 'Cancel this read along?';
+
+  @override
+  String get readAlongKeepRunning => 'Keep running';
+
+  @override
+  String get readAlongErrorWorkerOffline =>
+      'BookOrbit couldn\'t reach its read along worker.';
+
+  @override
+  String get readAlongErrorWorkerCrashed =>
+      'The read along worker stopped unexpectedly.';
+
+  @override
+  String get readAlongErrorSourceMissing => 'A picked file is no longer there.';
+
+  @override
+  String get readAlongErrorSourceChanged =>
+      'A picked file changed after the job started.';
+
+  @override
+  String get readAlongErrorInvalidSource =>
+      'The EPUB or audiobook couldn\'t be read.';
+
+  @override
+  String get readAlongErrorLanguage =>
+      'The speech model doesn\'t know the picked language.';
+
+  @override
+  String get readAlongErrorStorage =>
+      'There isn\'t enough free disk space on the worker to finish.';
+
+  @override
+  String get readAlongErrorAudio => 'The audiobook couldn\'t be prepared.';
+
+  @override
+  String get readAlongErrorModel => 'The speech model couldn\'t be downloaded.';
+
+  @override
+  String get readAlongErrorListening =>
+      'Speech recognition failed while listening to the narration.';
+
+  @override
+  String get readAlongErrorMarkup =>
+      'The ebook text couldn\'t be prepared for matching.';
+
+  @override
+  String get readAlongErrorAlignment =>
+      'The text couldn\'t be matched to the narration.';
+
+  @override
+  String get readAlongErrorOutput => 'The new EPUB failed its checks.';
+
+  @override
+  String get readAlongErrorPublish =>
+      'The new EPUB couldn\'t be added to this book.';
+
+  @override
+  String get readAlongErrorDiscarded => 'It was thrown away at review.';
+
+  @override
+  String get readAlongErrorCancelled => 'It was cancelled.';
+
+  @override
+  String get readAlongErrorUnknown =>
+      'Something went wrong while making the read along.';
+
+  @override
+  String get fileInfoNoAudiobook => 'No audiobook yet';
+
+  @override
+  String get fileInfoNoEbook => 'No e-book yet';
+
+  @override
+  String get fileInfoRequestedBySomeone => 'Requested by someone else';
+
+  @override
+  String get fileInfoOwnedSeparately => 'In your library as a separate book';
+
+  @override
+  String get fileInfoCopyPath => 'Copy path';
+
+  @override
+  String get fileInfoDeleteTitle => 'Delete file?';
+
+  @override
+  String fileInfoDeletePrompt(String name) {
+    return '\"$name\" will be deleted from the server. This can\'t be undone.';
+  }
+
+  @override
+  String get fileInfoDeleteLast =>
+      'It\'s the book\'s last audio or e-book file, so the book will show as missing.';
+
+  @override
+  String get fileInfoDeleteNotAllowed =>
+      'You don\'t have permission to delete files';
+
+  @override
+  String get chapterSourceEmbedded => 'Read from the audio files';
+
+  @override
+  String get chapterSourceTracks => 'One chapter per audio file, not saved';
+
+  @override
+  String get chapterSourceProvider => 'From fetched metadata';
+
+  @override
+  String get chapterSourceMigration => 'Imported from Audiobookshelf';
+
+  @override
+  String get chapterSourceManual => 'Edited in BookOrbit';
+
+  @override
+  String chapterSourceManualBy(String name) {
+    return 'Edited by $name';
+  }
+
+  @override
+  String get chapterSourceNone => 'No chapters yet';
+
+  @override
+  String get chapterProtected => 'Protected from rescans';
+
+  @override
+  String get chapterNotProtected => 'A rescan can replace these';
+
+  @override
+  String get chapterProtectOnSave => 'Protect from rescans';
+
+  @override
+  String get chapterGetFrom => 'Get Chapters From';
+
+  @override
+  String get chapterFromFiles => 'The audio files';
+
+  @override
+  String get chapterFromEbookToc => 'The e-book\'s contents';
+
+  @override
+  String get chapterFromReadAlong => 'The read along';
+
+  @override
+  String get chapterFromHistory => 'Earlier versions';
+
+  @override
+  String get chapterHistoryTitle => 'Earlier versions';
+
+  @override
+  String get chapterHistoryEmpty => 'Saved versions show up here.';
+
+  @override
+  String chapterHistoryBy(String source, String name) {
+    return '$source by $name';
+  }
+
+  @override
+  String get chapterReadingFiles => 'Reading the audio files...';
+
+  @override
+  String get chapterRevertToFiles => 'Revert to Files';
+
+  @override
+  String get chapterRevertTitle => 'Go back to the chapters in the files?';
+
+  @override
+  String get chapterRevertMessage =>
+      'BookOrbit reads the chapters in the audio files again and stops protecting them from rescans. Unsaved edits are lost. The current list stays in the earlier versions.';
+
+  @override
+  String get chapterReverted => 'Chapters set back to the audio files';
+
+  @override
+  String get chapterWriteFiles => 'Write to Files';
+
+  @override
+  String get chapterWriteTitle => 'Write the chapters into the audio files?';
+
+  @override
+  String chapterWriteMessage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'This rewrites the book\'s $count audio files with these chapters.',
+      one: 'This rewrites the book\'s audio file with these chapters.',
+    );
+    return '$_temp0 The audio itself is copied unchanged. Phones that already downloaded the book keep their copy until it\'s downloaded again.';
+  }
+
+  @override
+  String get chapterWriteConfirm => 'Write';
+
+  @override
+  String get chapterWriting => 'Writing the chapters into the audio files...';
+
+  @override
+  String chapterWritten(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Chapters written into all $count audio files',
+      one: 'Chapters written into the audio file',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String chapterWrittenPartly(int written, int total) {
+    return 'Chapters written into $written of $total files. The rest were left as they were.';
+  }
+
+  @override
+  String get chapterStaleTitle => 'These chapters changed';
+
+  @override
+  String get chapterStaleMessage =>
+      'Someone else saved these chapters after you opened them. Reload to see their version. Your edits stay until you do.';
+
+  @override
+  String get chapterReload => 'Reload';
+
+  @override
+  String get chapterKeepEditing => 'Keep editing';
+
+  @override
+  String get matchExplicitYes => 'Marked explicit';
+
+  @override
+  String get matchExplicitNo => 'Not explicit';
+
+  @override
+  String get matchAbridgedYes => 'Abridged';
+
+  @override
+  String get matchAbridgedNo => 'Unabridged';
+
+  @override
+  String boQuickMatchBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'these $count books',
+      one: 'this book',
+    );
+    return 'BookOrbit looks up $_temp0 and fills in what it finds, following its metadata settings.';
+  }
+
+  @override
+  String get boQuickMatchIgnoreCache => 'Ask every source again';
+
+  @override
+  String get boQuickMatchIgnoreCacheHint =>
+      'Skips saved answers. Slower, and uses more of each source\'s request limit.';
+
+  @override
+  String boAdminServerCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count mail servers',
+      one: '1 mail server',
+      zero: 'None yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get boEmailTitle => 'Send by email';
+
+  @override
+  String get boEmailSubtitle =>
+      'Devices, mail servers and templates for sending books';
+
+  @override
+  String get boEmailTabDevices => 'Devices';
+
+  @override
+  String get boEmailTabServers => 'Mail servers';
+
+  @override
+  String get boEmailTabTemplates => 'Templates';
+
+  @override
+  String get boEmailTabHistory => 'History';
+
+  @override
+  String get boEmailName => 'Name';
+
+  @override
+  String boEmailDeleteTitle(String name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String get boEmailMakeDefault => 'Make default';
+
+  @override
+  String get boEmailBadgeDefault => 'Default';
+
+  @override
+  String get boEmailBadgeShared => 'Shared';
+
+  @override
+  String get boEmailBadgeSystem => 'Password resets';
+
+  @override
+  String get boEmailBadgeBuiltIn => 'Built in';
+
+  @override
+  String get boEmailDevicesEmpty =>
+      'No devices yet. Add your e-reader\'s email address to send it books.';
+
+  @override
+  String get boEmailAddDevice => 'Add device';
+
+  @override
+  String get boEmailNewDevice => 'New device';
+
+  @override
+  String get boEmailDeviceNameHint => 'My Kindle';
+
+  @override
+  String get boEmailDeviceAddress => 'Email address';
+
+  @override
+  String get boEmailDeviceType => 'Device';
+
+  @override
+  String get boEmailDeviceNone => 'Person or inbox';
+
+  @override
+  String get boEmailDeviceKindle => 'Kindle';
+
+  @override
+  String get boEmailDeviceKobo => 'Kobo';
+
+  @override
+  String get boEmailDeviceOther => 'Other e-reader';
+
+  @override
+  String get boEmailKindleHint =>
+      'Kindle gets the subject \"convert\" and only takes EPUB and PDF by email.';
+
+  @override
+  String boEmailKindleApprove(String address) {
+    return 'Kindle drops mail from addresses it doesn\'t know. In Amazon\'s Personal Document Settings, add $address to the approved list.';
+  }
+
+  @override
+  String get boEmailKindleApproveNoServer =>
+      'Add a mail server first to see the address Kindle needs to approve.';
+
+  @override
+  String get boEmailFormat => 'Format';
+
+  @override
+  String get boEmailFormatPrimary => 'Book\'s main file';
+
+  @override
+  String get boEmailFormatHint =>
+      'A book without this format gets its main file.';
+
+  @override
+  String get boEmailReadAlong => 'Read along books';
+
+  @override
+  String get boEmailReadAlongAuto => 'Automatic';
+
+  @override
+  String get boEmailReadAlongAutoHint =>
+      'Text only when a copy can be made, otherwise the original.';
+
+  @override
+  String get boEmailReadAlongText => 'Text only';
+
+  @override
+  String get boEmailReadAlongTextHint =>
+      'Narration removed. Small enough for email.';
+
+  @override
+  String get boEmailReadAlongOriginal => 'With narration';
+
+  @override
+  String get boEmailReadAlongOriginalHint =>
+      'Keeps the narration. Often 100 MB or more, over most mail servers\' limits.';
+
+  @override
+  String get boEmailTemplate => 'Template';
+
+  @override
+  String get boEmailTemplateYourDefault => 'Your default';
+
+  @override
+  String get boEmailTemplateKindleHint =>
+      'Kindle never shows the message, so it skips the template.';
+
+  @override
+  String get boEmailDefaultDevice => 'Default device';
+
+  @override
+  String get boEmailDefaultDeviceHint => 'Picked first when you send a book.';
+
+  @override
+  String get boEmailSendTest => 'Send a test email';
+
+  @override
+  String get boEmailTestSubject => 'Test email from Absorb';
+
+  @override
+  String boEmailTestBody(String name) {
+    return 'This is a test from Absorb. If you can read it, books sent to $name will arrive here too.';
+  }
+
+  @override
+  String boEmailTestSent(String name) {
+    return 'Test email sent to $name';
+  }
+
+  @override
+  String boEmailTestFailed(String error) {
+    return 'The test email didn\'t go out: $error';
+  }
+
+  @override
+  String get boEmailDeleteDevice => 'Delete device';
+
+  @override
+  String get boEmailDeleteDeviceBody => 'Its send history stays.';
+
+  @override
+  String get boEmailDeviceRequired => 'Enter a name and an email address';
+
+  @override
+  String get boEmailLastSendFailed => 'Last send failed';
+
+  @override
+  String get boEmailGroups => 'Groups';
+
+  @override
+  String get boEmailGroupsHint => 'Send to several devices at once.';
+
+  @override
+  String get boEmailNewGroup => 'New group';
+
+  @override
+  String get boEmailGroupNameHint => 'Book club';
+
+  @override
+  String get boEmailGroupMembers => 'Devices in this group';
+
+  @override
+  String get boEmailGroupMembersEmpty => 'Add a device first.';
+
+  @override
+  String boEmailGroupMemberCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count devices',
+      one: '1 device',
+      zero: 'No devices',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get boEmailDeleteGroup => 'Delete group';
+
+  @override
+  String get boEmailDeleteGroupBody => 'The devices in it stay.';
+
+  @override
+  String get boEmailGroupRequired => 'Enter a group name';
+
+  @override
+  String get boEmailServersEmptyManage =>
+      'No mail servers yet. Add one to start sending books.';
+
+  @override
+  String get boEmailServersEmpty =>
+      'No mail servers yet. Ask an admin to add one.';
+
+  @override
+  String get boEmailAddServer => 'Add mail server';
+
+  @override
+  String get boEmailNewServer => 'New mail server';
+
+  @override
+  String get boEmailServerPresetOther => 'Other';
+
+  @override
+  String get boEmailServerPresetHint =>
+      'A preset fills in the host, port and security. You can still change them.';
+
+  @override
+  String get boEmailServerHost => 'Host';
+
+  @override
+  String get boEmailServerPort => 'Port';
+
+  @override
+  String get boEmailServerSecurity => 'Security';
+
+  @override
+  String get boEmailServerSecurityNone => 'None';
+
+  @override
+  String get boEmailServerSecurityHint =>
+      'STARTTLS on port 587, SSL/TLS on 465.';
+
+  @override
+  String get boEmailServerNeedsPassword => 'Signs in with a password';
+
+  @override
+  String get boEmailServerUsername => 'Username';
+
+  @override
+  String get boEmailServerPassword => 'Password';
+
+  @override
+  String get boEmailServerAppPassword => 'App password';
+
+  @override
+  String get boEmailServerPasswordKeep => 'Saved. Type to replace it';
+
+  @override
+  String get boEmailServerAppPasswordHint =>
+      'Gmail and iCloud need an app password, not your account password.';
+
+  @override
+  String get boEmailServerFromName => 'From name';
+
+  @override
+  String get boEmailServerFromAddress => 'From address';
+
+  @override
+  String get boEmailServerFromAddressHint =>
+      'Kindle owners need to approve this address.';
+
+  @override
+  String get boEmailServerShare => 'Share with everyone';
+
+  @override
+  String get boEmailServerShareHint =>
+      'Other people can send books through this server without seeing the password.';
+
+  @override
+  String get boEmailServerSystem => 'Send password resets and sign-in links';
+
+  @override
+  String get boEmailServerSystemHint =>
+      'The server BookOrbit uses for its own mail.';
+
+  @override
+  String get boEmailServerVerifyTls => 'Check the server\'s certificate';
+
+  @override
+  String get boEmailServerVerifyTlsHint =>
+      'Turn this off only for a server on your own network with a self-signed certificate.';
+
+  @override
+  String get boEmailServerTest => 'Test connection';
+
+  @override
+  String get boEmailServerTestSaveFirst => 'Save first, then test';
+
+  @override
+  String get boEmailServerTestOk => 'Connected';
+
+  @override
+  String boEmailServerTestFailed(String error) {
+    return 'Can\'t connect: $error';
+  }
+
+  @override
+  String get boEmailServerDelete => 'Delete mail server';
+
+  @override
+  String get boEmailServerDeleteBody => 'Everyone it\'s shared with loses it.';
+
+  @override
+  String get boEmailServerSystemFirst =>
+      'Turn off password resets on this server before deleting it.';
+
+  @override
+  String get boEmailServerRequired => 'Enter a name and a host';
+
+  @override
+  String get boEmailServerNotYours =>
+      'Someone else added this server. Only they can change it.';
+
+  @override
+  String get boEmailTemplatesEmpty => 'No templates yet.';
+
+  @override
+  String get boEmailNewTemplate => 'New template';
+
+  @override
+  String get boEmailTemplateSubject => 'Subject';
+
+  @override
+  String get boEmailTemplateMessage => 'Message';
+
+  @override
+  String get boEmailTemplateInsert => 'Insert';
+
+  @override
+  String get boEmailTemplateInsertHint =>
+      'Goes in where the cursor is. Details a book doesn\'t have print nothing.';
+
+  @override
+  String get boEmailVarBook => 'Book';
+
+  @override
+  String get boEmailVarFile => 'File';
+
+  @override
+  String get boEmailVarOther => 'Other';
+
+  @override
+  String get boEmailTemplatePreview => 'Preview';
+
+  @override
+  String get boEmailTemplatePreviewNone =>
+      'Send a book once to preview a template with it.';
+
+  @override
+  String boEmailTemplateAttached(String name) {
+    return 'Attached: $name';
+  }
+
+  @override
+  String get boEmailTemplateBuiltIn => 'Built in. Only an admin can change it.';
+
+  @override
+  String get boEmailTemplateKindleNote =>
+      'Kindle never shows a template. It always gets the subject \"convert\".';
+
+  @override
+  String get boEmailTemplateDelete => 'Delete template';
+
+  @override
+  String get boEmailTemplateDeleteBody =>
+      'Devices that use it go back to your default template.';
+
+  @override
+  String get boEmailTemplateRequired => 'Enter a name and a subject';
+
+  @override
+  String get boEmailHistoryEmpty => 'Nothing sent yet.';
+
+  @override
+  String get boEmailHistoryAll => 'All';
+
+  @override
+  String get boEmailHistoryEveryone => 'Everyone';
+
+  @override
+  String get boEmailStatusSent => 'Sent';
+
+  @override
+  String get boEmailStatusSending => 'Sending';
+
+  @override
+  String boEmailStatusRetrying(int attempt) {
+    return 'Trying again ($attempt)';
+  }
+
+  @override
+  String get boEmailStatusFailed => 'Failed';
+
+  @override
+  String boEmailTo(String name) {
+    return 'To $name';
+  }
+
+  @override
+  String get boEmailResend => 'Send again';
+
+  @override
+  String get boEmailResent => 'Sending again';
+
+  @override
+  String get boEmailForget => 'Remove from history';
+
+  @override
+  String get boEmailLoadMore => 'Load more';
+
+  @override
+  String get boEmailUnknownBook => 'Deleted book';
+
+  @override
+  String get boEmailSendNoServer =>
+      'No mail server is set up on this server yet.';
+
+  @override
+  String get boEmailSendAskAdmin => 'Ask an admin to add one.';
+
+  @override
+  String get boEmailSendNoDevices => 'Add a device to send this book to.';
+
+  @override
+  String get boEmailSendOptions => 'Options';
+
+  @override
+  String get boEmailSendFormatEach => 'Each device\'s own';
+
+  @override
+  String get boEmailSendServer => 'Mail server';
+
+  @override
+  String get boEmailSendButton => 'Send';
+
+  @override
+  String boEmailSendGets(String format, String size) {
+    return 'Gets $format · $size';
+  }
+
+  @override
+  String boEmailSendMissing(String format, String got) {
+    return 'No $format, gets the $got';
+  }
+
+  @override
+  String boEmailSendKindleRejects(String format) {
+    return 'Kindle doesn\'t take $format by email';
+  }
+
+  @override
+  String boEmailSendOverKindle(String size) {
+    return '$size, over Kindle\'s 50 MB limit';
+  }
+
+  @override
+  String boEmailSendOverGmail(String size) {
+    return '$size, over Gmail\'s 25 MB limit';
+  }
+
+  @override
+  String boEmailSendNarrated(String size) {
+    return 'Gets the narrated copy · $size';
+  }
+
+  @override
+  String boEmailSendHanding(String server) {
+    return 'Sending through $server';
+  }
+
+  @override
+  String boEmailSendAccepted(String server) {
+    return 'Sent through $server';
+  }
+
+  @override
+  String boEmailSendFailedLine(String error) {
+    return 'Didn\'t send: $error';
+  }
+
+  @override
+  String get boEmailSendStillGoing =>
+      'Still sending. You\'ll get a notification when it\'s done.';
+
+  @override
+  String get boEmailKindleOriginal =>
+      'A Kindle can\'t take the narrated copy. Set it to text only.';
+
+  @override
+  String get boEmailNoCopy => 'Couldn\'t make a copy without the narration.';
+
+  @override
+  String get boForgotLink => 'Forgot password?';
+
+  @override
+  String get boForgotTitle => 'Reset your password';
+
+  @override
+  String get boForgotBody =>
+      'Enter the email on your account and the server will send you a link to choose a new password.';
+
+  @override
+  String get boForgotSend => 'Send link';
+
+  @override
+  String get boForgotSent =>
+      'If that email is on an account, a link is on its way. Open it to choose a new password, then sign in here.';
+
+  @override
+  String get boForgotNotSetUp =>
+      'This server isn\'t set up to send email. Ask whoever runs it for a password link.';
+
+  @override
+  String get boForgotTooMany => 'Too many tries. Wait a while and try again.';
+
+  @override
+  String get boActivityTitle => 'Reading activity';
+
+  @override
+  String get boActivityPrivate => 'Keeps their reading activity private';
+
+  @override
+  String get boActivitySharesSummary =>
+      'Shares a summary. They can see when you view it.';
+
+  @override
+  String get boActivitySharesDetails =>
+      'Shares details, including books. They can see when you view it.';
+
+  @override
+  String get boActivityNotice => 'This person can see that you viewed this.';
+
+  @override
+  String get boActivityNowPrivate =>
+      'This person isn\'t sharing their reading activity anymore.';
+
+  @override
+  String get boActivityLoadFailed => 'Couldn\'t load reading activity.';
+
+  @override
+  String get boActivityEmpty => 'No reading in this period';
+
+  @override
+  String get boActivityReadingTime => 'Reading time';
+
+  @override
+  String get boActivitySessions => 'Sessions';
+
+  @override
+  String get boActivityActiveDays => 'Active days';
+
+  @override
+  String get boActivityStarted => 'Books started';
+
+  @override
+  String get boActivityFinished => 'Books finished';
+
+  @override
+  String get boActivityTrend => 'Daily reading';
+
+  @override
+  String get boActivitySources => 'Read on';
+
+  @override
+  String get boActivityFormats => 'Formats';
+
+  @override
+  String get boActivityGenres => 'Genres';
+
+  @override
+  String get boActivityTopBooks => 'Most read';
+
+  @override
+  String get boActivityRecentBooks => 'Recently read';
+
+  @override
+  String get boActivityTopAuthors => 'Top authors';
+
+  @override
+  String get boActivityTopGenres => 'Top genres';
+
+  @override
+  String get boActivityTopSeries => 'Top series';
+
+  @override
+  String get boActivityTopNarrators => 'Top narrators';
+
+  @override
+  String get boActivityUntitled => 'Untitled book';
+
+  @override
+  String get boActivitySourceWeb => 'Web reader';
+
+  @override
+  String get boActivitySourceIos => 'iOS app';
+
+  @override
+  String get boActivitySourceWatch => 'Apple Watch';
+
+  @override
+  String get boActivitySourceAndroid => 'Android app';
+
+  @override
+  String get boActivitySourceManual => 'Manual';
+
+  @override
+  String get boActivitySourceUnknown => 'Unknown';
+
+  @override
+  String get boActivityGenreSciFi => 'Science fiction';
+
+  @override
+  String get boActivityGenreFantasy => 'Fantasy';
+
+  @override
+  String get boActivityGenreMystery => 'Mystery and thriller';
+
+  @override
+  String get boActivityGenreRomance => 'Romance';
+
+  @override
+  String get boActivityGenreHorror => 'Horror';
+
+  @override
+  String get boActivityGenreHistory => 'History and biography';
+
+  @override
+  String get boActivityGenreScience => 'Science and technology';
+
+  @override
+  String get boActivityGenreBusiness => 'Business and economics';
+
+  @override
+  String get boActivityGenreSelf => 'Self-development';
+
+  @override
+  String get boActivityGenreSociety => 'Society and culture';
+
+  @override
+  String get boActivityGenreChildren => 'Children and young adult';
+
+  @override
+  String get boActivityGenreComics => 'Comics and graphic novels';
+
+  @override
+  String get boActivityGenrePoetry => 'Poetry';
+
+  @override
+  String get boActivityGenreOther => 'Other';
+
+  @override
+  String boActivityDays(int count) {
+    return '$count days';
+  }
+
+  @override
+  String boActivityMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String boActivityHours(double count) {
+    return '$count h';
+  }
+
+  @override
+  String get recentSearchesTitle => 'Recent searches';
+
+  @override
+  String get recentSearchesClear => 'Clear';
+
+  @override
+  String get recentSearchesRemove => 'Remove';
+
+  @override
+  String get removedSeriesTapToUndo =>
+      'Removed from Continue Series. Tap to undo.';
+
+  @override
+  String get seriesBackOnContinueSeries => 'Back on Continue Series';
+
+  @override
+  String get desktopShortcutPlayPause => 'Play / pause';
+
+  @override
+  String get desktopShortcutRewind => 'Rewind';
+
+  @override
+  String get desktopShortcutForward => 'Fast-forward';
+
+  @override
+  String get desktopShortcutSlower => 'Decrease playback speed';
+
+  @override
+  String get desktopShortcutFaster => 'Increase playback speed';
+
+  @override
+  String get desktopShortcutNormalSpeed => 'Reset playback speed';
+
+  @override
+  String get desktopShortcutSearch => 'Open search';
+
+  @override
+  String get desktopShortcutLibrary => 'Open library';
+
+  @override
+  String get desktopShortcutNowPlaying => 'Open now playing';
+
+  @override
+  String get desktopShortcutFullScreen => 'Full screen';
+
+  @override
+  String get desktopShortcutClosePlayer => 'Close the full-screen player';
+
+  @override
+  String get desktopShortcutBack => 'Go back (close the top page or sheet)';
+
+  @override
+  String get desktopShortcutRefresh => 'Refresh the list on screen';
+
+  @override
+  String get desktopShortcutPreviousCard => 'Previous Absorbing card';
+
+  @override
+  String get desktopShortcutNextCard => 'Next Absorbing card';
+
+  @override
+  String get desktopShortcutContextMenu => 'Open the long-press menu';
+
+  @override
+  String get desktopShortcutMouseBack => 'Mouse back button';
+
+  @override
+  String get desktopShortcutRightClick => 'Right-click';
+
+  @override
+  String get desktopShortcutDragShelves => 'Drag shelves and cards sideways';
+
+  @override
+  String get desktopShortcutMouseDrag => 'Click and drag';
+
+  @override
+  String get fileHealthAction => 'Check files';
+
+  @override
+  String get fileHealthTitle => 'Check files';
+
+  @override
+  String fileHealthAllFine(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'All $count files look fine',
+      one: 'The file looks fine',
+      zero: 'Nothing looks wrong',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fileHealthProblems(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count problems found',
+      one: '1 problem found',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fileHealthReadOnlyNote =>
+      'This only reads what the server already reports. Nothing is changed.';
+
+  @override
+  String get fileHealthLocalChecked =>
+      'Downloaded files on this device were checked too.';
+
+  @override
+  String get fileHealthItemMissing => 'Book folder missing';
+
+  @override
+  String get fileHealthItemMissingInfo =>
+      'The server can\'t find this book\'s folder any more. It may have been moved, renamed or deleted, or its drive is offline. A library scan on the server can find it again.';
+
+  @override
+  String get fileHealthItemInvalid => 'Book marked invalid';
+
+  @override
+  String get fileHealthItemInvalidInfo =>
+      'The server found no usable audio or ebook files for this book.';
+
+  @override
+  String get fileHealthInvalidFiles => 'Unreadable files';
+
+  @override
+  String get fileHealthInvalidFilesInfo =>
+      'The server couldn\'t read these files. They may be damaged or in a format it doesn\'t support, and playback can stop or skip at them.';
+
+  @override
+  String get fileHealthEmptyFiles => 'Files with no length';
+
+  @override
+  String get fileHealthEmptyFilesInfo =>
+      'These files report a length of zero, so there\'s nothing to play in them. They\'re often empty or cut off.';
+
+  @override
+  String get fileHealthTrackGaps => 'Gaps between files';
+
+  @override
+  String get fileHealthTrackGapsInfo =>
+      'The book\'s timeline jumps ahead between these files, leaving a stretch where nothing plays.';
+
+  @override
+  String get fileHealthTrackOverlaps => 'Overlapping files';
+
+  @override
+  String get fileHealthTrackOverlapsInfo =>
+      'These files overlap in the book\'s timeline, so part of one can be skipped or the position can jump.';
+
+  @override
+  String get fileHealthDurationMismatch => 'Length doesn\'t add up';
+
+  @override
+  String fileHealthDurationMismatchInfo(String actual, String expected) {
+    return 'The files add up to $actual, but the book says it\'s $expected long. Progress and chapters can be off. A rescan on the server usually fixes this.';
+  }
+
+  @override
+  String get fileHealthLowBitrate => 'Low quality audio';
+
+  @override
+  String get fileHealthLowBitrateInfo =>
+      'These files are encoded below 32 kbps and may sound muffled.';
+
+  @override
+  String get fileHealthMixedSampleRates => 'Mixed sample rates';
+
+  @override
+  String get fileHealthMixedSampleRatesInfo =>
+      'The files were recorded at different sample rates. Most players cope, but some can click or change speed where one file ends and the next starts.';
+
+  @override
+  String get fileHealthMixedChannels => 'Mono and stereo mixed';
+
+  @override
+  String get fileHealthMixedChannelsInfo =>
+      'Some files have a different number of channels than others, so the sound can change between files.';
+
+  @override
+  String get fileHealthChaptersPastEnd => 'Chapters past the end';
+
+  @override
+  String get fileHealthChaptersPastEndInfo =>
+      'These chapters start or end after the audio finishes, so jumping to them can go nowhere.';
+
+  @override
+  String get fileHealthLocalMissing => 'Downloaded files missing';
+
+  @override
+  String get fileHealthLocalMissingInfo =>
+      'These downloaded files are gone from this device. Playing offline will fail where they should be.';
+
+  @override
+  String get fileHealthLocalSizeMismatch => 'Downloaded files differ';
+
+  @override
+  String get fileHealthLocalSizeMismatchInfo =>
+      'These downloaded files aren\'t the same size as the server\'s copies, so they may be incomplete or damaged.';
+
+  @override
+  String fileHealthStartsAt(String time) {
+    return 'starts at $time';
+  }
+
+  @override
+  String fileHealthSizeHere(String local, String server) {
+    return '$local here, $server on the server';
+  }
+
+  @override
+  String fileHealthSampleRate(String value) {
+    return '$value kHz';
+  }
+
+  @override
+  String get fileHealthMono => 'Mono';
+
+  @override
+  String get fileHealthStereo => 'Stereo';
+
+  @override
+  String get fileHealthRedownload => 'Re-download this book';
+
+  @override
+  String get fileHealthRedownloadQuestion => 'Re-download this book?';
+
+  @override
+  String get fileHealthRedownloadInfo =>
+      'The copy on this device is removed and downloaded again from the server. If the book is playing, it stops. Nothing on the server changes.';
+
+  @override
+  String get fileHealthNotAvailableOffline =>
+      'Connect to your server to re-download';
+
+  @override
+  String get playerReconnecting => 'Connection lost, reconnecting…';
+
+  @override
+  String get playerReconnectFailed =>
+      'Couldn\'t reconnect to the server, so playback stopped.';
+
+  @override
   String get downloadsFailed => 'Failed downloads';
 
   @override
@@ -13051,6 +14706,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get windowsSettingFailed => 'Windows didn\'t accept that change';
 
   @override
+  String get windowsGlobalHotkeys => 'Global hotkeys';
+
+  @override
+  String get windowsGlobalHotkeysSubtitle =>
+      'Work while Absorb Plus is in the background: Ctrl+Alt+Space play/pause, Ctrl+Alt+Left/Right skip back/forward, Ctrl+Alt+Up/Down volume, Ctrl+Alt+B add bookmark';
+
+  @override
+  String windowsGlobalHotkeysUnavailable(String keys) {
+    return 'Taken by another app, not available: $keys';
+  }
+
+  @override
   String get windowsTrayShow => 'Show Absorb Plus';
 
   @override
@@ -13069,8 +14736,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get windowsTaskbarForward => 'Fast-forward';
 
   @override
-  String get supportContactSubtitle =>
-      'Ask a question on the Absorb Plus GitHub';
+  String windowsJumpListResume(String title) {
+    return 'Resume $title';
+  }
 
   @override
   String get githubProjectTitle => 'Absorb Plus on GitHub';
@@ -13384,4 +15052,1355 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tailscaleExtraHostsHelp =>
       'Addresses in 100.64.0.0/10 and names ending in .ts.net or your tailnet\'s MagicDNS name always go through Tailscale. Separate names with commas.';
+
+  @override
+  String playerChapterEndsAt(String time) {
+    return 'Chapter ends at $time';
+  }
+
+  @override
+  String playerEndsAt(String time) {
+    return 'Ends at $time';
+  }
+
+  @override
+  String lastPlayedOnDevice(String device, String ago) {
+    return 'Last played on $device · $ago';
+  }
+
+  @override
+  String lastPlayedElsewhere(String ago) {
+    return 'Last played on another device · $ago';
+  }
+
+  @override
+  String get opmlExportAction => 'Export OPML';
+
+  @override
+  String get opmlExportDialogTitle => 'Save podcast feeds as OPML';
+
+  @override
+  String opmlExportSaved(String path) {
+    return 'OPML saved to $path';
+  }
+
+  @override
+  String get opmlExportDownloaded => 'OPML downloaded';
+
+  @override
+  String get opmlExportFailed => 'Couldn\'t export the OPML file';
+
+  @override
+  String get bookCopySaveAction => 'Save a copy…';
+
+  @override
+  String get bookCopyDialogTitle => 'Save a copy of this book';
+
+  @override
+  String get bookCopySaving => 'Saving a copy…';
+
+  @override
+  String bookCopySaved(String path) {
+    return 'Copy saved to $path';
+  }
+
+  @override
+  String get bookCopyFailed => 'Couldn\'t save a copy of this book';
+
+  @override
+  String get exclusiveAudioTitle => 'Exclusive audio';
+
+  @override
+  String get exclusiveAudioSubtitle =>
+      'Fixes crackling or jumpy volume by skipping Windows sound effects. Other apps are muted while Absorb plays. Restart Absorb to apply.';
+
+  @override
+  String get exclusiveAudioFallback =>
+      'Your sound device refused exclusive audio, so Absorb is playing in normal mode';
+
+  @override
+  String homeRecentlyAddedNewBadge(int count) {
+    return '$count new';
+  }
+
+  @override
+  String seekUndoBackTo(String time) {
+    return 'Back to $time';
+  }
+
+  @override
+  String get goToTime => 'Go to time';
+
+  @override
+  String get goToTimeLabel => 'Time';
+
+  @override
+  String get goToTimeHint => 'h:mm:ss, mm:ss or minutes';
+
+  @override
+  String get goToTimeGo => 'Go';
+
+  @override
+  String goToTimeLength(String time) {
+    return 'Length $time';
+  }
+
+  @override
+  String get goToTimeInvalid => 'Type a time like 1:23:45, 23:45 or 90';
+
+  @override
+  String goToTimePastEnd(String time) {
+    return 'That\'s past the end ($time)';
+  }
+
+  @override
+  String get desktopShortcutGoToTime => 'Go to a time in the open player';
+
+  @override
+  String fellAsleepJumpBack(String time) {
+    return 'Fell asleep around $time · Jump back';
+  }
+
+  @override
+  String get surpriseMe => 'Surprise me';
+
+  @override
+  String get surpriseMeNoneLeft =>
+      'You\'ve finished every book in this library';
+
+  @override
+  String get surpriseMeFailed => 'Couldn\'t pick a book. Try again.';
+
+  @override
+  String get surpriseMeOffline =>
+      'Surprise me needs a connection to the server';
+
+  @override
+  String get surpriseMeBooksOnly =>
+      'Surprise me picks books. Switch to a book library.';
+
+  @override
+  String get autoDownloadNextInSeries =>
+      'Download the next book in the series automatically';
+
+  @override
+  String get autoDownloadNextInSeriesSubtitle =>
+      'When the book you\'re playing is 80% done or has less than an hour left. Follows the Wi-Fi only setting.';
+
+  @override
+  String get emptyStateBrowseLibrary => 'Browse library';
+
+  @override
+  String get emptyStateClearSearch => 'Clear search';
+
+  @override
+  String get statsNoListeningYet => 'No listening yet';
+
+  @override
+  String get desktopShortcutQuickSwitcher =>
+      'Quick switcher: find books or go anywhere';
+
+  @override
+  String get desktopShortcutHelp => 'Show keyboard shortcuts';
+
+  @override
+  String get quickSwitcherTooltip => 'Quick switcher (Ctrl+K)';
+
+  @override
+  String get quickSwitcherHint => 'Search this library or type a command';
+
+  @override
+  String get quickSwitcherNoResults => 'No matches';
+
+  @override
+  String get quickSwitcherGoHome => 'Go to Home';
+
+  @override
+  String get quickSwitcherGoLibrary => 'Go to Library';
+
+  @override
+  String get quickSwitcherGoAbsorbing => 'Go to Absorbing';
+
+  @override
+  String get quickSwitcherGoStats => 'Go to Stats';
+
+  @override
+  String get quickSwitcherGoSettings => 'Go to Settings';
+
+  @override
+  String get quickSwitcherGoDownloads => 'Go to Downloads';
+
+  @override
+  String get quickSwitcherPlayPause => 'Play / pause';
+
+  @override
+  String get quickSwitcherSleepTimer => 'Sleep timer';
+
+  @override
+  String get quickSwitcherKeywordsAbsorbing => 'now playing player';
+
+  @override
+  String get quickSwitcherKeywordsSettings => 'preferences options';
+
+  @override
+  String get quickSwitcherKeywordsDownloads => 'offline';
+
+  @override
+  String get quickSwitcherKeywordsPlayPause => 'resume pause';
+
+  @override
+  String get quickSwitcherKeywordsSleepTimer => 'timer';
+
+  @override
+  String get quickSwitcherKeywordsShortcuts => 'keys help hotkeys keyboard';
+
+  @override
+  String get quickSwitcherKindAction => 'Action';
+
+  @override
+  String get quickSwitcherKindBook => 'Book';
+
+  @override
+  String get quickSwitcherKindPodcast => 'Podcast';
+
+  @override
+  String get quickSwitcherKindSeries => 'Series';
+
+  @override
+  String get quickSwitcherKindAuthor => 'Author';
+
+  @override
+  String get alphabetScrollerLabel => 'Jump to a letter';
+
+  @override
+  String get stepperDecrease => 'Decrease';
+
+  @override
+  String get stepperIncrease => 'Increase';
+
+  @override
+  String get statsStreakKeepGoing => 'Listen 5 minutes today to keep it going';
+
+  @override
+  String get statsStreakHowTo => 'Listen 5 minutes a day to build a streak';
+
+  @override
+  String get statsDailyGoalSheetTitle => 'Daily listening goal';
+
+  @override
+  String get statsDailyGoalSheetBody =>
+      'A ring on the streak card fills as you listen today.';
+
+  @override
+  String get statsDailyGoalSet => 'Set a daily goal';
+
+  @override
+  String get statsMonthListened => 'Listened';
+
+  @override
+  String get statsMonthTime => 'Time';
+
+  @override
+  String get statsMonthTopBook => 'Top book';
+
+  @override
+  String bookmarksSearchResults(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count results',
+      one: '1 result',
+      zero: 'No results',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bookmarksViewMenu => 'Sort and group';
+
+  @override
+  String get bookmarksViewByBook => 'By book';
+
+  @override
+  String get bookmarksViewNewest => 'Newest first';
+
+  @override
+  String get bookmarksViewPosition => 'By position';
+
+  @override
+  String get bookmarksExportAction => 'Export bookmarks';
+
+  @override
+  String get bookmarksExportDialogTitle => 'Save bookmarks as Markdown';
+
+  @override
+  String bookmarksExportSaved(String path) {
+    return 'Bookmarks saved to $path';
+  }
+
+  @override
+  String get bookmarksExportDownloaded => 'Bookmarks downloaded';
+
+  @override
+  String get bookmarksExportFailed => 'Couldn\'t export the bookmarks';
+
+  @override
+  String get chapterSearchHint => 'Search chapters or type a time (1:23:00)';
+
+  @override
+  String get chapterSearchNoResults => 'No chapters match';
+
+  @override
+  String get dropUploadNotAllowed =>
+      'Your account can\'t upload to this server';
+
+  @override
+  String get dropUploadNothingUsable =>
+      'None of the dropped files can be uploaded';
+
+  @override
+  String get dropUploadAlreadyOpen => 'Finish or close the open upload first';
+
+  @override
+  String get remoteHostTitle => 'Control from your phone';
+
+  @override
+  String get remoteHostSubtitleOff =>
+      'Use your phone as a remote for Absorb on this PC';
+
+  @override
+  String remoteHostSubtitleOn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count phones connected',
+      one: '1 phone connected',
+      zero: 'no phones connected',
+    );
+    return 'On · $_temp0';
+  }
+
+  @override
+  String get remoteHostSheetBody =>
+      'Use your phone as a remote for this PC. The audio keeps playing here on the PC, and your phone shows what\'s playing with the buttons. Your phone and this PC need to be on the same Wi-Fi.';
+
+  @override
+  String get remoteHostSwitch => 'Turn on';
+
+  @override
+  String get remoteHostSwitchSubtitle =>
+      'Windows may ask to let Absorb Plus through the firewall the first time. Allow it.';
+
+  @override
+  String get remoteHostKeepOn => 'Keep on when Absorb starts';
+
+  @override
+  String get remoteHostKeepOnSubtitle =>
+      'When this is off, it turns off each time you close Absorb.';
+
+  @override
+  String remoteHostPortsBusy(int first, int last) {
+    return 'Couldn\'t start: ports $first to $last are all in use.';
+  }
+
+  @override
+  String get remoteHostPairTitle => 'Pair your phone';
+
+  @override
+  String get remoteHostStep1 => '1. Turn it on here.';
+
+  @override
+  String get remoteHostStep2 =>
+      '2. Scan the code with your phone\'s camera, or open Absorb on the phone and go to Settings > Control your computer.';
+
+  @override
+  String get remoteHostStep3 =>
+      '3. Enter the code on the phone, then choose Allow here.';
+
+  @override
+  String get remoteHostCodeLabel => 'Code';
+
+  @override
+  String remoteHostCodeExpires(String time) {
+    return 'Works for $time';
+  }
+
+  @override
+  String get remoteHostPairFirst => 'Pair a phone';
+
+  @override
+  String get remoteHostPairAnother => 'Pair another device';
+
+  @override
+  String get remoteHostPairingClosed =>
+      'Pairing is closed. Tap the button for a new code; it works for 2 minutes and for one device.';
+
+  @override
+  String get remoteHostFull =>
+      '5 devices are paired, the most allowed. Forget one to pair another.';
+
+  @override
+  String remoteHostAddresses(String addresses) {
+    return 'This PC\'s address: $addresses';
+  }
+
+  @override
+  String get remoteHostNoAddress => 'This PC has no network address right now.';
+
+  @override
+  String get remoteHostNoDiscovery =>
+      'Your phone may not find this PC by itself; type this PC\'s address on the phone instead.';
+
+  @override
+  String get remoteHostConnectedTitle => 'Connected now';
+
+  @override
+  String get remoteHostPairedTitle => 'Paired devices';
+
+  @override
+  String get remoteHostNoDevices => 'No paired devices yet';
+
+  @override
+  String get remoteHostUnusedNote =>
+      'A device not used for 90 days is forgotten.';
+
+  @override
+  String remoteHostLastUsed(String date) {
+    return 'Last used $date';
+  }
+
+  @override
+  String remoteHostConnectedFrom(String address, String time) {
+    return '$address, connected since $time';
+  }
+
+  @override
+  String get remoteHostForget => 'Forget';
+
+  @override
+  String get remoteHostForgetAll => 'Forget all';
+
+  @override
+  String get remoteHostForgetAllConfirm =>
+      'Forget all paired devices? Each one has to pair again to control this PC.';
+
+  @override
+  String get remoteHostDisconnect => 'Disconnect';
+
+  @override
+  String remoteHostAllowTitle(String name) {
+    return 'Allow ‘$name’ to control Absorb on this PC?';
+  }
+
+  @override
+  String get remoteHostAllowBody =>
+      'Only allow a device you know. It can play, pause and change what plays here. No answer means no.';
+
+  @override
+  String get remoteHostAllow => 'Allow';
+
+  @override
+  String get remoteHostDeny => 'Deny';
+
+  @override
+  String get remoteControlAnother => 'Control your computer';
+
+  @override
+  String get remoteControlAnotherSubtitle =>
+      'Use this phone as a remote for Absorb on your PC';
+
+  @override
+  String get remoteConnectIntro =>
+      'Use this phone as a remote for Absorb on your PC. The audio keeps playing on the PC. Your phone and PC need to be on the same Wi-Fi. On the PC, open Settings > Control from your phone and turn it on.';
+
+  @override
+  String get remoteConnectSearching => 'Looking for computers on your Wi-Fi…';
+
+  @override
+  String get remoteConnectNoneFound =>
+      'No computers found. On the PC, open Settings > Control from your phone and turn it on, or enter its address.';
+
+  @override
+  String get remoteConnectSearchAgain => 'Search again';
+
+  @override
+  String get remoteConnectPaired => 'Paired';
+
+  @override
+  String get remoteConnectFound => 'On your Wi-Fi';
+
+  @override
+  String get remoteConnectEnterAddress => 'Enter an address';
+
+  @override
+  String get remoteConnectAddressHint => '192.168.1.20:47390';
+
+  @override
+  String get remoteConnectAddressInvalid =>
+      'Enter an address like 192.168.1.20 or 192.168.1.20:47390';
+
+  @override
+  String get remoteConnectNext => 'Next';
+
+  @override
+  String remoteConnectCodeTitle(String name) {
+    return 'Pair with $name';
+  }
+
+  @override
+  String get remoteConnectCodeHelp =>
+      'Enter the 6-digit code shown on the PC under Control from your phone.';
+
+  @override
+  String get remoteConnectWaiting => 'Now choose Allow on the PC…';
+
+  @override
+  String get remoteConnectPair => 'Pair';
+
+  @override
+  String get remoteConnectForget => 'Forget this computer';
+
+  @override
+  String get remotePairBadCode =>
+      'That code isn\'t right. Check the PC and try again.';
+
+  @override
+  String get remotePairExpired =>
+      'The code expired. Get a new one on the PC with Pair another device.';
+
+  @override
+  String get remotePairClosed =>
+      'Pairing isn\'t open on the PC. On the PC, tap Pair another device for a new code.';
+
+  @override
+  String get remotePairDenied =>
+      'The PC didn\'t allow this phone. Try again and choose Allow on the PC.';
+
+  @override
+  String get remotePairTooManyDevices =>
+      'That PC already has 5 paired devices. Forget one on the PC first.';
+
+  @override
+  String get remotePairTooMany =>
+      'Too many tries. Wait a minute and try again.';
+
+  @override
+  String get remotePairUnreachable =>
+      'Your phone and PC aren\'t on the same Wi-Fi, or the PC hasn\'t turned it on. Check both and try again.';
+
+  @override
+  String get remotePairFailed => 'Pairing didn\'t work. Try again.';
+
+  @override
+  String get remoteVersionMismatch =>
+      'Update Absorb Plus on both devices to use the remote.';
+
+  @override
+  String get remoteConnecting => 'Connecting…';
+
+  @override
+  String get remoteReconnecting => 'Reconnecting…';
+
+  @override
+  String get remoteUnreachableHint =>
+      'Can\'t reach the PC. Check that it\'s awake, Absorb is open, and both are on the same Wi-Fi.';
+
+  @override
+  String remoteNothingPlaying(String name) {
+    return 'Nothing is playing on $name';
+  }
+
+  @override
+  String get remoteNothingLoaded => 'Start something on the PC first.';
+
+  @override
+  String get remoteCommandFailed => 'The PC couldn\'t do that.';
+
+  @override
+  String get remoteNotOnList => 'That book isn\'t on the PC\'s list any more.';
+
+  @override
+  String get remoteDisconnectedByHost => 'The PC disconnected this device.';
+
+  @override
+  String get remoteUnauthorized =>
+      'The PC doesn\'t know this device any more. Pair it again.';
+
+  @override
+  String get remotePairAgain => 'Pair again';
+
+  @override
+  String get remoteConnectAgain => 'Connect again';
+
+  @override
+  String get remotePlay => 'Play';
+
+  @override
+  String get remotePause => 'Pause';
+
+  @override
+  String get remoteStop => 'Stop';
+
+  @override
+  String get remotePreviousChapter => 'Previous chapter';
+
+  @override
+  String get remoteNextChapter => 'Next chapter';
+
+  @override
+  String remoteSkipBack(int seconds) {
+    return 'Back $seconds seconds';
+  }
+
+  @override
+  String remoteSkipForward(int seconds) {
+    return 'Forward $seconds seconds';
+  }
+
+  @override
+  String get remoteSpeed => 'Speed';
+
+  @override
+  String get remoteSpeedSlower => 'Slower';
+
+  @override
+  String get remoteSpeedFaster => 'Faster';
+
+  @override
+  String get remoteSleepTimer => 'Sleep timer';
+
+  @override
+  String remoteSleepMinutes(int minutes) {
+    return '$minutes minutes';
+  }
+
+  @override
+  String get remoteSleepEndOfChapter => 'End of chapter';
+
+  @override
+  String get remoteSleepEndOfEpisode => 'End of episode';
+
+  @override
+  String remoteSleepChapters(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count chapters',
+      one: '1 chapter',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get remoteSleepCancel => 'Turn off the sleep timer';
+
+  @override
+  String get remoteVolume => 'Volume';
+
+  @override
+  String get remoteMute => 'Mute';
+
+  @override
+  String get remoteUnmute => 'Unmute';
+
+  @override
+  String get remoteChapters => 'Chapters';
+
+  @override
+  String get remoteBookmark => 'Bookmark';
+
+  @override
+  String get remoteBookmarkTitle => 'Add a bookmark here';
+
+  @override
+  String get remoteBookmarkNoteHint => 'Note (optional)';
+
+  @override
+  String get remoteBookmarkAdd => 'Add';
+
+  @override
+  String get remoteBookmarkAdded => 'Bookmark added on the PC';
+
+  @override
+  String get remoteContinueListening => 'Continue listening';
+
+  @override
+  String get remoteContinueEmpty => 'Nothing in progress on the PC.';
+
+  @override
+  String remoteTimeLeft(String time) {
+    return '$time left';
+  }
+
+  @override
+  String remoteChapterTimeLeft(String time) {
+    return '$time left in the chapter';
+  }
+
+  @override
+  String get remoteLockScreenControls => 'Show controls on the lock screen';
+
+  @override
+  String get remoteMoreOptions => 'More options';
+
+  @override
+  String remoteHostBrowserAddress(String url) {
+    return 'Or open $url in any browser on the same Wi-Fi (iPhone, tablet, laptop) and type the code there.';
+  }
+
+  @override
+  String get remoteHostBrowserDevice => 'Web browser';
+
+  @override
+  String get remoteCustomize => 'Customize';
+
+  @override
+  String get remoteCustomizeTitle => 'Customize the remote';
+
+  @override
+  String get remoteCustomizeHintPortrait =>
+      'Editing the portrait layout. Drag a block by its handle, or hold it, to move it. Turn the phone to edit landscape.';
+
+  @override
+  String get remoteCustomizeHintLandscape =>
+      'Editing the landscape layout. Drag blocks within or between the two columns. Turn the phone to edit portrait.';
+
+  @override
+  String get remoteCustomizeReset => 'Reset to default';
+
+  @override
+  String get remoteCustomizePresets => 'Presets';
+
+  @override
+  String get remoteCustomizeAddTitle => 'Add to the screen';
+
+  @override
+  String get remoteCustomizeDropHere => 'Drop blocks here';
+
+  @override
+  String get remoteCustomizeMove => 'Drag to move';
+
+  @override
+  String get remoteCustomizeEmpty =>
+      'Nothing on this screen. Tap Customize to add controls.';
+
+  @override
+  String get remotePresetDefault => 'Default';
+
+  @override
+  String get remotePresetMinimal => 'Minimal';
+
+  @override
+  String get remotePresetNightstand => 'Nightstand';
+
+  @override
+  String get remotePresetFull => 'Full';
+
+  @override
+  String get remoteBlockCover => 'Cover';
+
+  @override
+  String get remoteBlockTitle => 'Title and author';
+
+  @override
+  String get remoteBlockChapterTitle => 'Chapter title';
+
+  @override
+  String get remoteBlockProgress => 'Progress bar';
+
+  @override
+  String get remoteBlockTimeLeft => 'Time left';
+
+  @override
+  String get remoteBlockTransport => 'Playback buttons';
+
+  @override
+  String get remoteBlockClock => 'Clock';
+
+  @override
+  String get remoteBlockSpacer => 'Space';
+
+  @override
+  String get remoteSizeSmall => 'Small';
+
+  @override
+  String get remoteSizeMedium => 'Medium';
+
+  @override
+  String get remoteSizeLarge => 'Large';
+
+  @override
+  String get remoteSizeCompact => 'Compact';
+
+  @override
+  String get remoteSizeNormal => 'Normal';
+
+  @override
+  String get remoteDisplayBackground => 'Background';
+
+  @override
+  String get remoteDisplayBackgroundTheme => 'Theme';
+
+  @override
+  String get remoteDisplayBackgroundCover => 'Blurred cover';
+
+  @override
+  String get remoteDisplayBackgroundBlack => 'Black';
+
+  @override
+  String get remoteDisplayTextSize => 'Text size';
+
+  @override
+  String get remoteDisplayTextHuge => 'Huge';
+
+  @override
+  String get remoteDisplay24Hour => '24-hour clock';
+
+  @override
+  String get remoteDisplayDim => 'Dim the screen after';
+
+  @override
+  String get remoteDisplayDimNever => 'Never';
+
+  @override
+  String get remoteFullScreen => 'Full screen';
+
+  @override
+  String get remoteFullScreenHint => 'Tap empty space to exit full screen';
+
+  @override
+  String get remoteBlockOptions => 'Options';
+
+  @override
+  String get remoteOptSize => 'Size';
+
+  @override
+  String get remoteOptAlign => 'Alignment';
+
+  @override
+  String get remoteOptAlignLeft => 'Left';
+
+  @override
+  String get remoteOptAlignCenter => 'Center';
+
+  @override
+  String get remoteOptAlignRight => 'Right';
+
+  @override
+  String get remoteOptGap => 'Space above';
+
+  @override
+  String get remoteOptDefault => 'Default';
+
+  @override
+  String get remoteOptNone => 'None';
+
+  @override
+  String get remoteOptCorners => 'Corners';
+
+  @override
+  String get remoteOptCornersSquare => 'Square';
+
+  @override
+  String get remoteOptCornersRounded => 'Rounded';
+
+  @override
+  String get remoteOptCornersCircle => 'Circle';
+
+  @override
+  String get remoteOptShadow => 'Shadow';
+
+  @override
+  String get remoteOptLines => 'Lines';
+
+  @override
+  String get remoteOptTime => 'Time on the right';
+
+  @override
+  String get remoteOptTimeTotal => 'Total length';
+
+  @override
+  String get remoteOptSpan => 'Range';
+
+  @override
+  String get remoteOptSpanChapter => 'Chapter';
+
+  @override
+  String get remoteOptSpanBook => 'Whole book';
+
+  @override
+  String get remoteOptButtons => 'Buttons';
+
+  @override
+  String get remoteOptButtonBack => 'Skip back';
+
+  @override
+  String get remoteOptButtonPlay => 'Play/pause';
+
+  @override
+  String get remoteOptButtonForward => 'Skip forward';
+
+  @override
+  String get remoteOptSkipSeconds => 'Show the skip seconds';
+
+  @override
+  String get remoteOptStyle => 'Style';
+
+  @override
+  String get remoteOptStyleSlider => 'Slider';
+
+  @override
+  String get remoteOptStyleButtons => '− and + buttons';
+
+  @override
+  String get remoteOptPresets => 'Choices';
+
+  @override
+  String get remoteOptHours => 'Clock format';
+
+  @override
+  String get remoteOptHoursPhone => 'Phone setting';
+
+  @override
+  String get remoteOpt12Hour => '12-hour clock';
+
+  @override
+  String get remoteOptDate => 'Show the date';
+
+  @override
+  String get remoteVolumeDown => 'Volume down';
+
+  @override
+  String get remoteVolumeUp => 'Volume up';
+
+  @override
+  String get remoteLook => 'Look';
+
+  @override
+  String get remoteLookAccent => 'Accent color';
+
+  @override
+  String get remoteLookAccentCover => 'From cover';
+
+  @override
+  String get remoteLookAccentTheme => 'App theme';
+
+  @override
+  String remoteLookSwatch(int number) {
+    return 'Color $number';
+  }
+
+  @override
+  String get remoteLookBackgroundGradient => 'Soft gradient';
+
+  @override
+  String get remoteLookButtons => 'Button style';
+
+  @override
+  String get remoteLookButtonsFilled => 'Filled';
+
+  @override
+  String get remoteLookButtonsOutlined => 'Outlined';
+
+  @override
+  String get remoteLookButtonsPlain => 'Plain';
+
+  @override
+  String get remoteLookCornersSharp => 'Sharp';
+
+  @override
+  String get remoteLookCornersExtra => 'Extra round';
+
+  @override
+  String get remoteLookSpacing => 'Spacing';
+
+  @override
+  String get remoteLookSpacingComfortable => 'Comfortable';
+
+  @override
+  String get remoteLookReset => 'Reset look';
+
+  @override
+  String get quickSwitcherKeywordsRemote => 'remote phone control pc link pair';
+
+  @override
+  String get quickSwitcherKeywordsSurprise => 'random pick shuffle';
+
+  @override
+  String get developerModeOn => 'Developer mode on';
+
+  @override
+  String get developerModeAlreadyOn => 'Developer mode is already on';
+
+  @override
+  String get developerTitle => 'Developer';
+
+  @override
+  String get developerSubtitle => 'Test builds and tools for development';
+
+  @override
+  String get developerModeSwitch => 'Developer mode';
+
+  @override
+  String get developerModeSwitchSubtitle =>
+      'Turning it off hides this page. Tap the version 7 times to bring it back.';
+
+  @override
+  String get testChannelTitle => 'Test channel';
+
+  @override
+  String get testChannelSubtitle => 'Install the newest test build';
+
+  @override
+  String get testChannelUnavailable =>
+      'This test copy is updated directly with every new build, so there\'s nothing to install here. The test channel is for the Android test app.';
+
+  @override
+  String get testChannelCodeLabel => 'Test channel code';
+
+  @override
+  String get testChannelUnlock => 'Unlock';
+
+  @override
+  String get testChannelUnlocked => 'Test channel unlocked';
+
+  @override
+  String get testChannelWrongCode => 'That code isn\'t right';
+
+  @override
+  String get testChannelLaunchCheck => 'Check for test builds on launch';
+
+  @override
+  String get testChannelLaunchCheckSubtitle =>
+      'Asks to install a newer test build when the app starts';
+
+  @override
+  String get testChannelWarning =>
+      'Test builds are unfinished and can break things. They replace the installed app and keep your data.';
+
+  @override
+  String testChannelInstalled(String version) {
+    return 'Installed: $version';
+  }
+
+  @override
+  String testChannelNewest(String version) {
+    return 'Newest test build: $version';
+  }
+
+  @override
+  String get testChannelNone => 'No test build is up yet';
+
+  @override
+  String get testChannelUpToDate => 'Up to date';
+
+  @override
+  String get testChannelInstall => 'Install';
+
+  @override
+  String get testChannelCheckNow => 'Check now';
+
+  @override
+  String get testChannelNotes => 'What\'s in it';
+
+  @override
+  String testBuildNotesTitle(int build) {
+    return 'What\'s new in build $build';
+  }
+
+  @override
+  String get patchNotesTitle => 'Patch notes';
+
+  @override
+  String get patchNotesSubtitle =>
+      'What changed in each test build on this phone';
+
+  @override
+  String get patchNotesEmpty =>
+      'No patch notes yet. They show up here after the next test build is installed.';
+
+  @override
+  String patchNotesBuild(int build) {
+    return 'Build $build';
+  }
+
+  @override
+  String get testBuildAvailable => 'Test build available';
+
+  @override
+  String testBuildDialogContent(String latest, String current) {
+    return 'Test build $latest is out.\n\nYou are on $current.';
+  }
+
+  @override
+  String testBuildPackageLabel(int build) {
+    return 'Test build $build';
+  }
+
+  @override
+  String get githubSignIn => 'Sign in with GitHub';
+
+  @override
+  String get githubSignInSubtitle =>
+      'Test builds are private: sign in to get them';
+
+  @override
+  String get githubSignInNotSetUp =>
+      'GitHub sign-in isn\'t set up in this build yet';
+
+  @override
+  String get githubSignInAgain => 'Sign in again';
+
+  @override
+  String get githubSignInExpired => 'Your GitHub sign-in ran out';
+
+  @override
+  String githubSignedInAs(String login) {
+    return 'Signed in to GitHub as $login';
+  }
+
+  @override
+  String get githubSignedIn => 'Signed in to GitHub';
+
+  @override
+  String get githubSignOut => 'Sign out';
+
+  @override
+  String get githubSignInEnterCode => 'Enter this code on GitHub:';
+
+  @override
+  String get githubSignInOpen => 'Open github.com/login/device';
+
+  @override
+  String get githubSignInCopyCode => 'Copy code';
+
+  @override
+  String get githubSignInCodeCopied => 'Code copied';
+
+  @override
+  String get githubSignInWaiting =>
+      'Waiting for you to approve it on GitHub...';
+
+  @override
+  String get githubSignInDenied => 'Sign-in was cancelled on GitHub.';
+
+  @override
+  String get githubSignInCodeExpired => 'The code ran out. Try again.';
+
+  @override
+  String get githubSignInFailed => 'Couldn\'t sign in to GitHub. Try again.';
+
+  @override
+  String get githubSignInTryAgain => 'Try again';
+
+  @override
+  String get testChannelSignInNeeded =>
+      'Sign in with GitHub to get test builds';
+
+  @override
+  String get downloadEtaUnderMinute => '<1 min left';
+
+  @override
+  String downloadEtaMinutes(int minutes) {
+    return '$minutes min left';
+  }
+
+  @override
+  String downloadEtaHours(int hours) {
+    return '$hours hr left';
+  }
+
+  @override
+  String downloadEtaHoursMinutes(int hours, int minutes) {
+    return '$hours hr $minutes min left';
+  }
+
+  @override
+  String get sameSpeedAllBooksTitle => 'Same speed for every book';
+
+  @override
+  String get sameSpeedAllBooksSubtitle =>
+      'Every book plays at the default speed, and changing the speed in the player changes it for all books. Off: each book (or its series) keeps its own speed.';
+
+  @override
+  String setupStepOf(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get setupNext => 'Next';
+
+  @override
+  String get setupBack => 'Back';
+
+  @override
+  String get setupSkip => 'Skip';
+
+  @override
+  String get setupWelcomeBody =>
+      'Listen to the audiobooks and podcasts on your own Audiobookshelf server. A few quick steps and you\'re in.';
+
+  @override
+  String get setupConnectTitle => 'Connect to your server';
+
+  @override
+  String setupSignedInAs(String user) {
+    return 'Signed in as $user';
+  }
+
+  @override
+  String get setupLookIntro => 'Tap a look or a color to use it right away.';
+
+  @override
+  String get setupListeningTitle => 'Listening';
+
+  @override
+  String get setupListeningIntro =>
+      'The basics. Settings > Playback has the rest.';
+
+  @override
+  String get setupDownloadsTitle => 'Downloads';
+
+  @override
+  String get setupDownloadsIntro =>
+      'Download books to listen without a connection.';
+
+  @override
+  String get setupPermissionsTitle => 'Permissions';
+
+  @override
+  String get setupPermissionsIntro =>
+      'Android asks you before Absorb can do these.';
+
+  @override
+  String get setupAllow => 'Allow';
+
+  @override
+  String get setupAllowed => 'Allowed';
+
+  @override
+  String get setupDoneTitle => 'You\'re all set';
+
+  @override
+  String get setupDoneLater => 'Change any of this later in Settings.';
+
+  @override
+  String get setupDoneStart => 'Start listening';
+
+  @override
+  String setupSummaryLook(String name) {
+    return 'Look: $name';
+  }
+
+  @override
+  String setupSummarySpeed(String speed) {
+    return 'Default speed: ${speed}x';
+  }
+
+  @override
+  String setupSummarySkip(int back, int forward) {
+    return 'Skip back ${back}s, forward ${forward}s';
+  }
+
+  @override
+  String get setupRunAgain => 'Run setup again';
+
+  @override
+  String get setupRunAgainSubtitle =>
+      'The look, playback basics and more, step by step';
+
+  @override
+  String get loginDesignTitle => 'Sign-in screen design';
+
+  @override
+  String get loginDesignPreviewTitle => 'Preview sign-in designs';
+
+  @override
+  String get loginDesignClassic => 'Current';
+
+  @override
+  String get loginDesignClassicName => 'Classic';
+
+  @override
+  String get loginDesignSteps => 'B · Two steps';
+
+  @override
+  String get loginDesignStepsGlass => 'B2 · Glass steps';
+
+  @override
+  String get loginDesignStepsDesktop => 'B3 · Desktop steps';
+
+  @override
+  String get loginStepLibrary => 'Your library';
+
+  @override
+  String get loginStepSignIn => 'Sign in';
+
+  @override
+  String get loginStepsKeyboardHint => 'Enter to continue, Esc to go back';
+
+  @override
+  String get loginDesignUse => 'Use this design';
+
+  @override
+  String get loginDesignInUse => 'In use';
+
+  @override
+  String get loginDesignPreviewNote =>
+      'Preview: this design would sign you in here';
+
+  @override
+  String get loginDesignAdvancedSubtitle =>
+      'Custom headers, API key and certificates';
+
+  @override
+  String get loginMoreWays => 'More ways to sign in';
+
+  @override
+  String get loginRecentServers => 'Recent servers';
+
+  @override
+  String get loginWhereIsLibrary => 'Where is your library?';
+
+  @override
+  String get loginWhereIsLibraryIntro =>
+      'Enter your server\'s address, the same one you open in a browser.';
+
+  @override
+  String get loginContinue => 'Continue';
+
+  @override
+  String get loginChangeServer => 'Change server';
+
+  @override
+  String loginSignInToNamed(String server) {
+    return 'Sign in to $server';
+  }
+
+  @override
+  String get loginSignInToNamedIntro =>
+      'Use the account you have on this server.';
+
+  @override
+  String get quickSwitcherKeywordsLoginDesign =>
+      'login sign in screen design layout preview';
+
+  @override
+  String get appBackgroundLabel => 'Background';
+
+  @override
+  String get appBackgroundGlow => 'Soft glow';
+
+  @override
+  String get appBackgroundCover => 'Book colors';
+
+  @override
+  String get appBackgroundGradient => 'Gradient';
+
+  @override
+  String get appBackgroundPlain => 'Plain';
+
+  @override
+  String get appBackgroundCoverHint =>
+      'Follows the cover of the book you\'re listening to. Soft glow while nothing is playing.';
 }

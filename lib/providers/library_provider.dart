@@ -5,16 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import '../services/scoped_prefs.dart';
-import '../services/startup_timing.dart';
-import '../services/home_shelf_snapshot.dart';
-import '../services/precache_service.dart';
-import '../services/user_account_service.dart';
 import '../services/audio_player_service.dart';
 import 'auth_provider.dart';
 import '../services/api_service.dart';
 import '../services/bookorbit_notification_socket.dart';
 import '../services/progress_sync_service.dart';
-import '../services/own_progress_echo.dart';
 import '../services/local_session_service.dart';
 import '../services/download_service.dart';
 import '../services/episode_notification_service.dart';
@@ -31,7 +26,7 @@ import '../services/home_widget_service.dart';
 import '../services/queue_download_policy.dart';
 import '../services/siri_service.dart';
 import '../utils/absorbing_inclusion.dart';
-import '../utils/unmetered_network.dart';
+import '../utils/app_platform.dart';
 import '../l10n/app_localizations.dart';
 import '../main.dart' show rootNavigatorKey;
 import '../widgets/overlay_toast.dart';
@@ -39,7 +34,20 @@ import '../services/ebook_cache.dart';
 import '../services/screen_wake.dart';
 import '../services/up_next_narration.dart';
 import '../services/narrated_books.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../services/startup_timing.dart';
+import '../services/home_shelf_snapshot.dart';
+import '../services/precache_service.dart';
+import '../services/user_account_service.dart';
+import '../services/own_progress_echo.dart';
+import '../services/socket_refresh_policy.dart';
+import '../services/library_item_request_cache.dart';
+import '../utils/unmetered_network.dart';
+import '../utils/lru_cache.dart';
 import '../services/startup_overlap.dart';
+import '../services/account_epoch.dart';
+import '../utils/session_json.dart';
+import '../utils/episode_key.dart';
 
 part '_lp_state.dart';
 part '_lp_core.dart';
@@ -72,7 +80,24 @@ class LibraryProvider extends ChangeNotifier
     yield* BookSearchIndex().indexedItems;
   }
 
+  // Fork: the account is about to change. Stop the old account's live work
+  // (socket, timers, BookOrbit feed) while its scope is still the active one,
+  // and make loads still running for it drop their answers.
+  Future<void> _suspendForAccountChange() async {
+    _accountLoadGeneration++;
+    _connectivitySub?.cancel();
+    _connectivityDebounce?.cancel();
+    _progressRefreshDebounce?.cancel();
+    _stopServerPingTimer();
+    _stopHealthCheckTimer();
+    _stopBookOrbitPoll();
+    _stopLocalProbeTimer();
+    SocketService().disconnect();
+    _resetSocketRefresh();
+  }
+
   LibraryProvider() {
+    AccountEpoch.addHandler(_suspendForAccountChange);
     SiriService.libraryItems = _itemsForSiri;
     // Registered once at provider construction so the audio service can
     // notify this provider on completion/playback events even when the
@@ -89,6 +114,7 @@ class LibraryProvider extends ChangeNotifier
     AudioPlayerService.setOnPeekNextItemCallback(peekNextQueueItemForPreBuffer);
     AudioPlayerService.setOnPlayStartedCallback((key, duration) async {
       await _prepareAbsorbingForPlayback(key, duration);
+      if (AppPlatform.lacksPhonePlugins) return;
       // Auto-download the book/episode you're listening to kicks off quickly so
       // it doesn't feel broken; the short wait still skips it if you stop or
       // switch right away. Rolling/queue look-ahead stays deferred to keep the
@@ -133,6 +159,7 @@ class LibraryProvider extends ChangeNotifier
   // and the DownloadService listener (matters for tests and hot restart).
   @override
   void dispose() {
+    AccountEpoch.removeHandler(_suspendForAccountChange);
     if (_listeningToDownloads) {
       DownloadService().removeListener(_onDownloadsChanged);
     }
@@ -143,11 +170,12 @@ class LibraryProvider extends ChangeNotifier
     _stopHealthCheckTimer();
     _stopBookOrbitPoll();
     _stopLocalProbeTimer();
+    _resetSocketRefresh();
     super.dispose();
   }
 
   void updateAuth(AuthProvider auth) {
-    if (!_listeningToDownloads) {
+    if (!AppPlatform.lacksPhonePlugins && !_listeningToDownloads) {
       _listeningToDownloads = true;
       DownloadService().addListener(_onDownloadsChanged);
     }
@@ -212,6 +240,7 @@ class LibraryProvider extends ChangeNotifier
         _itemUpdatedAt.clear();
         _seriesBooksCache.clear();
         _seriesTabCache.clear();
+        sessionJsonCache.clear(); // Absorb Plus
         _personalizedInFlight = null;
         _rssHydrationInFlight = false;
         _lastRssHydrationAt = null;
@@ -226,6 +255,7 @@ class LibraryProvider extends ChangeNotifier
         _stopBookOrbitPoll();
         _stopLocalProbeTimer();
         SocketService().disconnect();
+        _resetSocketRefresh();
         _sectionsByLibrary.clear();
         _sectionsFetchedAt.clear();
         _locallyFinishedItems.clear();
@@ -262,7 +292,7 @@ class LibraryProvider extends ChangeNotifier
 
         _buildProgressMap(auth);
 
-        if (!auth.serverReachable) {
+        if (!AppPlatform.lacksPhonePlugins && !auth.serverReachable) {
           debugPrint(
               '[Library] Server not reachable — going offline with ${_libraries.length} libraries '
               '(fromCache=$_librariesFromCache selected=$_selectedLibraryId)');
@@ -283,7 +313,7 @@ class LibraryProvider extends ChangeNotifier
           ProgressSyncService().flushPendingSync(api: _api!);
           ProgressSyncService().flushOfflineListeningTime(api: _api!);
           LocalSessionService().flushPending(api: _api!);
-          DownloadService().enrichMetadata(_api!);
+          if (!AppPlatform.lacksPhonePlugins) DownloadService().enrichMetadata(_api!);
           // Start proactive reachability verification so the cloud icon
           // reflects actual server state, not just the initial login result.
           _startHealthCheckTimer();
@@ -306,7 +336,9 @@ class LibraryProvider extends ChangeNotifier
             // it's a no-op on an already-filtered list.
             auth.setEreaderDevices(auth.filterDevicesForCurrentUser(devices));
           };
-          socket.connect(auth.serverUrl!, auth.token!, customHeaders: auth.customHeaders);
+          // Fork: manual offline keeps the details but opens no connection.
+          if (_manualOffline) _socketSoftDisconnected = true;
+          socket.connect(auth.serverUrl!, auth.token!, customHeaders: auth.customHeaders, open: !_manualOffline);
           _startBookOrbitPoll();
         }
         debugPrint('[Library] Calling loadLibraries()');
@@ -337,6 +369,7 @@ class LibraryProvider extends ChangeNotifier
       _stopBookOrbitPoll();
       _stopLocalProbeTimer();
       SocketService().disconnect();
+      _resetSocketRefresh();
       _personalizedInFlight = null;
       _networkOffline = false;
       debugPrint('[Library] Signed out - showing what is on the phone');
@@ -380,9 +413,11 @@ class LibraryProvider extends ChangeNotifier
       _stopBookOrbitPoll();
       _stopLocalProbeTimer();
       SocketService().disconnect();
+      _resetSocketRefresh();
       _sectionsByLibrary.clear();
       _sectionsFetchedAt.clear();
       _locallyFinishedItems.clear();
+      sessionJsonCache.clear(); // Absorb Plus
       _personalizedInFlight = null;
       _rssHydrationInFlight = false;
       _lastRssHydrationAt = null;
@@ -407,6 +442,8 @@ class LibraryProvider extends ChangeNotifier
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
+    // Fork: an answer for an account that is no longer active is dropped.
+    final gen = _accountLoadGeneration;
 
     // Fork (B6): on a cold start the last library's shelves load alongside
     // the library list.
@@ -421,6 +458,7 @@ class LibraryProvider extends ChangeNotifier
     try {
       final fetched = await _api!.getLibraries();
       debugPrint('[Library] loadLibraries: got ${fetched.length} libraries');
+      if (gen != _accountLoadGeneration) return;
 
       if (fetched.isNotEmpty) {
         _libraries = fetched;
@@ -428,6 +466,7 @@ class LibraryProvider extends ChangeNotifier
         await LibraryCache.save(fetched);
         debugPrint('[Library] Saved ${fetched.length} libraries for offline starts');
         await _restoreSelectedLibrary();
+        if (gen != _accountLoadGeneration) return;
 
         if (early == null || !await early.covers(() => _selectedLibraryId)) {
           // The early load was for a library that is gone: drop its shelves.
@@ -438,22 +477,25 @@ class LibraryProvider extends ChangeNotifier
             _sectionsFetchedAt.remove(_selectedLibraryId);
           }
           await _loadSectionPrefs();
-          await loadPersonalizedView(force: true);
-        }
+        await loadPersonalizedView(force: true);
+      }
       } else {
         await early?.settle();
+        if (gen != _accountLoadGeneration) return;
         // getLibraries swallows network/auth failures and returns an empty
         // list, so empty is indistinguishable from a failed fetch. Keep the
         // current list, cache, and selection instead of wiping them.
         await _restoreCachedLibraries();
       }
     } catch (e) {
+      if (gen != _accountLoadGeneration) return;
       if (_isLikelyNetworkError(e)) {
         _goOffline();
       } else {
         debugPrint('[Library] Non-network error (staying online): $e');
       }
     }
+    if (gen != _accountLoadGeneration) return;
 
     _isLoading = false;
     notifyListeners();
@@ -551,8 +593,10 @@ class LibraryProvider extends ChangeNotifier
     await _loadSectionPrefs();
     notifyListeners();
     await loadPersonalizedView(force: true);
-    AndroidAutoService().refresh(force: true);
-    CarPlayService().refreshTemplates();
+    if (!AppPlatform.lacksPhonePlugins) {
+      AndroidAutoService().refresh(force: true);
+      CarPlayService().refreshTemplates();
+    }
   }
 
   /// Library switch for the dedicated Podcasts tab flips. Never stops
@@ -575,8 +619,10 @@ class LibraryProvider extends ChangeNotifier
     unawaited(loadPlaylists());
     unawaited(loadCollections());
     await loadPersonalizedView();
-    AndroidAutoService().refresh(force: true);
-    CarPlayService().refreshTemplates();
+    if (!AppPlatform.lacksPhonePlugins) {
+      AndroidAutoService().refresh(force: true);
+      CarPlayService().refreshTemplates();
+    }
   }
 
   bool isPodcastLibraryId(String libraryId) {
@@ -617,16 +663,22 @@ class LibraryProvider extends ChangeNotifier
       notifyListeners();
       return;
     }
+    final gen = _accountLoadGeneration; // fork: drop a switched account's answer
     if (_api != null) {
       await ProgressSyncService().flushPendingSync(api: _api!);
     }
     final pendingSyncs =
         (await ScopedPrefs.getStringList('pending_syncs')).toSet();
+    if (gen != _accountLoadGeneration) return;
     _lastFinishedItemId = null;
     await Future.wait([
       loadPersonalizedView(force: true),
       _refreshProgress(),
+      // Pull to refresh skips the playlists/collections cooldown.
+      loadPlaylists(force: true),
+      loadCollections(force: true),
     ]);
+    if (gen != _accountLoadGeneration) return;
     _localProgressOverrides
         .removeWhere((itemId, _) => !pendingSyncs.contains(itemId));
     _locallyFinishedItems
@@ -638,6 +690,7 @@ class LibraryProvider extends ChangeNotifier
       final currentTime = (mp['currentTime'] as num?)?.toDouble() ?? 0;
       final duration = (mp['duration'] as num?)?.toDouble() ?? 0;
       if (duration > 0 && currentTime > 0) {
+        if (gen != _accountLoadGeneration) return;
         await sync.cacheServerProgress(
           itemId: itemId,
           currentTime: currentTime,
@@ -660,6 +713,7 @@ class LibraryProvider extends ChangeNotifier
 
     _isLoadingSeries = true;
     notifyListeners();
+    final gen = _accountLoadGeneration; // fork
 
     try {
       final result = await _api!.getLibrarySeries(
@@ -667,7 +721,7 @@ class LibraryProvider extends ChangeNotifier
         sort: sort,
         desc: desc,
       );
-      if (result != null) {
+      if (result != null && gen == _accountLoadGeneration) {
         _series = (result['results'] as List<dynamic>?) ?? [];
         // Register updatedAt for books in series for cover cache busting
         for (final s in _series) {
@@ -697,9 +751,9 @@ class LibraryProvider extends ChangeNotifier
 
   bool isItemFinishedByKey(String key) {
     if (_locallyFinishedItems.contains(key)) return true;
-    if (key.length > 36) {
-      final showId = key.substring(0, 36);
-      final epId = key.substring(37);
+    if (isEpisodeKey(key)) {
+      final showId = itemIdOfKey(key);
+      final epId = episodeIdOfKey(key)!;
       return getEpisodeProgressData(showId, epId)?['isFinished'] == true;
     }
     return getProgressData(key)?['isFinished'] == true;

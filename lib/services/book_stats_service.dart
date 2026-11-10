@@ -6,6 +6,8 @@ import 'api_service.dart';
 import 'bookorbit_mapper.dart';
 import 'narrated_books.dart';
 import 'scoped_prefs.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'item_listening_scan.dart';
 
 /// One session as the book's activity card lists it.
 class BookActivityRow {
@@ -165,10 +167,20 @@ class BookUserStat {
   /// their sessions haven't changed.
   final int lastUpdate;
   double seconds = 0;
+
+  /// Missing on totals cached before it was stored.
+  final String? userId;
   BookUserStat(this.username, this.progress, this.finished, this.finishedAt,
-      this.lastUpdate);
+      this.lastUpdate, {this.userId});
+
+  /// A progress row with nothing on it isn't listening.
+  bool get listened => finished || progress > 0 || seconds > 0;
+
+  bool isMe({String? id, String? username}) =>
+      id != null && userId != null ? userId == id : this.username == username;
 
   Map<String, dynamic> toJson() => {
+        'id': userId,
         'u': username,
         'p': progress,
         'f': finished,
@@ -183,6 +195,7 @@ class BookUserStat {
         j['f'] == true,
         (j['fa'] as num?)?.toInt(),
         (j['lu'] as num?)?.toInt() ?? 0,
+        userId: j['id'] as String?,
       )..seconds = (j['s'] as num?)?.toDouble() ?? 0;
 }
 
@@ -223,9 +236,11 @@ class BookStats extends ChangeNotifier {
       ? 'bookStats_${itemId}_$episodeId'
       : 'bookStats_$itemId';
 
-  /// Everyone from the scan except [me].
-  int othersCount(String? me) =>
-      users.where((u) => u.username != me).length;
+  List<BookUserStat> get listeners => users.where((u) => u.listened).toList();
+
+  /// Everyone who listened except the signed-in account.
+  int othersCount({String? id, String? username}) =>
+      listeners.where((u) => !u.isMe(id: id, username: username)).length;
 
   /// The service mutates the fields above and calls this after each step.
   void bump() => notifyListeners();
@@ -365,7 +380,7 @@ class BookStatsService {
           .toList();
       s.loading = false;
       s.bump();
-    } catch (_) {}
+    } catch (e) { debugPrint('[BookStats] _loadCache failed: ${e.runtimeType}'); }
   }
 
   Future<void> _saveCache(BookStats s) async {
@@ -395,6 +410,7 @@ class BookStatsService {
       // reused when that person's progress hasn't moved since.
       final cached = {for (final u in s.users) u.username: u};
       final found = <String, BookUserStat>{};
+      final startedAt = <String, int>{};
       final ids = [
         for (final entry in userList)
           if (entry is Map && entry['id'] is String) entry['id'] as String,
@@ -423,7 +439,10 @@ class BookStatsService {
             p['isFinished'] == true,
             (p['finishedAt'] as num?)?.toInt(),
             (p['lastUpdate'] as num?)?.toInt() ?? 0,
+            userId: id,
           );
+          final start = (p['startedAt'] as num?)?.toInt();
+          if (start != null && start > 0) startedAt[id] = start;
           break;
         }
       }
@@ -442,17 +461,16 @@ class BookStatsService {
       s.scanTotal = pending.length;
       s.bump();
       Future<void> scan(MapEntry<String, BookUserStat> entry) async {
-        final payload =
-            await api.getUserListeningSessions(entry.key, itemsPerPage: 1000);
-        final sessions = (payload?['sessions'] as List<dynamic>?) ?? const [];
-        var total = 0.0;
-        for (final sess in sessions) {
-          if (sess is! Map) continue;
-          if (sess['libraryItemId'] != s.itemId) continue;
-          if (s.episodeId != null && sess['episodeId'] != s.episodeId) continue;
-          total += (sess['timeListening'] as num?)?.toDouble() ?? 0;
-        }
-        entry.value.seconds = total;
+        // Pages of 100, stopping once they reach back past the day before
+        // this user started the item (slack for clock skew).
+        final start = startedAt[entry.key];
+        entry.value.seconds = await sumItemListeningSeconds(
+          fetchPage: (page, size) => api.getUserListeningSessions(entry.key,
+              page: page, itemsPerPage: size),
+          itemId: s.itemId,
+          episodeId: s.episodeId,
+          notBefore: start == null ? null : start - 86400000,
+        );
         s.scanDone++;
         s.bump();
       }

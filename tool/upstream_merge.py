@@ -93,6 +93,16 @@ def run(ref: str, fetch: bool, gen: bool, cwd: Path = ROOT) -> int:
     if behind == "0":
         print(f"Nothing to merge: HEAD already contains {ref}.")
         return 0
+    # IMP-006: upstream fixes in code the fork rewrote can be lost in the merge.
+    if cwd == ROOT:
+        import upstream_fix_check  # noqa: E402
+        try:
+            hits = upstream_fix_check.report(ref)
+        except upstream_fix_check.NoMergeBase as e:
+            print(f"ERROR: upstream fix check: {e}", file=sys.stderr)
+            return 1
+        if hits:
+            print(upstream_fix_check.format_hits(hits))
     print(f"Merging {behind} upstream commit(s) from {ref}...")
     git("-c", "rerere.enabled=true", "merge", "--no-ff", "--no-commit", ref, cwd=cwd)
 

@@ -368,7 +368,7 @@ class ChapterStartFinder {
       if (slice != null) {
         try {
           File(slice.path).deleteSync();
-        } catch (_) {}
+        } catch (e) { debugPrint('[ChapterFind] run failed: ${e.runtimeType}'); }
       }
     }
     if (wavPath == null) throw TranscriptionException(TranscriptionError.extractFailed);
@@ -410,7 +410,7 @@ class ChapterStartFinder {
         } finally {
           try {
             File(piecePath).deleteSync();
-          } catch (_) {}
+          } catch (e) { debugPrint('[ChapterFind] run failed: ${e.runtimeType}'); }
         }
         final score = ChapterStartAnalysis.score(heard, number: chapterNumber, title: title);
         final candidate = ChapterCandidate(
@@ -428,7 +428,7 @@ class ChapterStartFinder {
     } finally {
       try {
         File(wavPath).deleteSync();
-      } catch (_) {}
+      } catch (e) { debugPrint('[ChapterFind] run failed: ${e.runtimeType}'); }
     }
     return found;
   }

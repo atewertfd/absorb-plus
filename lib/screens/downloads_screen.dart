@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
@@ -15,8 +17,12 @@ import '../widgets/card_buttons.dart' show showErrorToast;
 import 'app_shell.dart';
 import '../widgets/overlay_toast.dart';
 import '../l10n/app_localizations.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 import '../widgets/desktop_input.dart';
+import '../utils/fork_format.dart';
+import '../widgets/empty_state.dart'; // Absorb Plus
+import '../utils/episode_key.dart';
 
 String _downloadRate(double? bytesPerSecond) {
   if (bytesPerSecond == null || bytesPerSecond <= 0) return '';
@@ -25,23 +31,16 @@ String _downloadRate(double? bytesPerSecond) {
   return '${(bytesPerSecond / 1024).toStringAsFixed(0)} KB/s';
 }
 
-String _downloadEta(int? seconds) {
+String _downloadEta(AppLocalizations l, int? seconds) {
   if (seconds == null || seconds <= 0) return '';
-  if (seconds < 60) return '<1 min left';
+  if (seconds < 60) return l.downloadEtaUnderMinute;
   final minutes = (seconds / 60).ceil();
-  if (minutes < 60) return '$minutes min left';
+  if (minutes < 60) return l.downloadEtaMinutes(minutes);
   final hours = minutes ~/ 60;
   final remainder = minutes % 60;
-  return remainder == 0 ? '$hours hr left' : '$hours hr $remainder min left';
-}
-
-String _formatDownloadBytes(int bytes) {
-  if (bytes < 1024) return '$bytes B';
-  if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-  if (bytes < 1024 * 1024 * 1024) {
-    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
-  }
-  return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
+  return remainder == 0
+      ? l.downloadEtaHours(hours)
+      : l.downloadEtaHoursMinutes(hours, remainder);
 }
 
 class DownloadsScreen extends StatefulWidget {
@@ -106,16 +105,19 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
     });
   }
 
-  /// The completed downloads currently visible, honoring the same library
-  /// filter as the list - select-all must never grab hidden items or a bulk
-  /// delete would remove downloads the user can't see.
+  /// The completed downloads and kept ebooks currently visible, honoring the
+  /// same library filter as the list - select-all must never grab hidden
+  /// items or a bulk delete would remove downloads the user can't see.
   List<DownloadInfo> _visibleCompleted() {
     final lib = context.read<LibraryProvider>();
     final activeLibId = lib.selectedLibraryId;
     final shouldFilter = !lib.isOffline && !_mergeLibraries && activeLibId != null;
-    final completed = DownloadService().downloadedItems;
-    if (!shouldFilter) return completed;
-    return completed
+    final ds = DownloadService();
+    final completed = ds.downloadedItems;
+    final downloadedIds = completed.map((d) => d.itemId).toSet();
+    final all = [...completed, ...ds.keptEbooks.where((e) => !downloadedIds.contains(e.itemId))];
+    if (!shouldFilter) return all;
+    return all
         .where((d) => d.libraryId == null || d.libraryId == activeLibId)
         .toList();
   }
@@ -156,8 +158,14 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
 
     if (confirmed != true || !mounted) return;
 
+    final ds = DownloadService();
+    final downloadedIds = ds.downloadedItems.map((d) => d.itemId).toSet();
     for (final itemId in _selected.toList()) {
-      await DownloadService().deleteDownload(itemId, byUser: true);
+      if (downloadedIds.contains(itemId)) {
+        await ds.deleteDownload(itemId, byUser: true);
+      } else {
+        await ds.deleteKeptEbook(itemId);
+      }
     }
 
     _exitSelection();
@@ -251,9 +259,9 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
     if (api == null || info.localPaths.isEmpty) return;
     debugPrint(
         '[Downloads] Play ${info.itemId} from the downloads list (library=${info.libraryId})');
-    final isEpisode = info.itemId.length > 36;
-    final itemId = isEpisode ? info.itemId.substring(0, 36) : info.itemId;
-    final episodeId = isEpisode ? info.itemId.substring(37) : null;
+    final isEpisode = isEpisodeKey(info.itemId);
+    final itemId = isEpisode ? itemIdOfKey(info.itemId) : info.itemId;
+    final episodeId = isEpisode ? episodeIdOfKey(info.itemId)! : null;
     double duration = 0;
     List<dynamic> chapters = const [];
     final sessionJson = info.sessionData;
@@ -262,7 +270,7 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
         final session = jsonDecode(sessionJson) as Map<String, dynamic>;
         duration = (session['duration'] as num?)?.toDouble() ?? 0;
         chapters = session['chapters'] as List<dynamic>? ?? const [];
-      } catch (_) {}
+      } catch (e) { debugPrint('[Downloads] _play failed: ${e.runtimeType}'); }
     }
     final title = info.title ?? '';
     // Episode downloads store the episode as the title and the show as the
@@ -348,7 +356,7 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                           onPressed: _exitSelection,
                         ),
                       ] else ...[
-                        if (_items.isNotEmpty)
+                        if (_items.isNotEmpty || _visibleCompleted().isNotEmpty)
                           IconButton(
                             icon: Icon(Icons.checklist_rounded,
                                 color: cs.onSurfaceVariant),
@@ -399,19 +407,14 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                             ebooks.isNotEmpty;
 
                         if (!hasAny) {
-                          return Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.download_done_rounded,
-                                    size: 48,
-                                    color: cs.onSurfaceVariant
-                                        .withValues(alpha: 0.4)),
-                                const SizedBox(height: 12),
-                                Text(l.downloadsNoDownloads,
-                                    style: tt.bodyLarge?.copyWith(
-                                        color: cs.onSurfaceVariant)),
-                              ],
+                          // Absorb Plus: shared empty state with a way out.
+                          return AbsorbEmptyState(
+                            icon: Icons.download_done_rounded,
+                            message: l.downloadsNoDownloads,
+                            actionLabel: l.emptyStateBrowseLibrary,
+                            actionIcon: Icons.library_books_rounded,
+                            onAction: (
+                                        ) => browseLibraryFrom(context
                             ),
                           );
                         }
@@ -537,11 +540,11 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                                   fileSize: cachedEbookBytesSync(info.itemId),
                                   cs: cs,
                                   tt: tt,
-                                  selecting: false,
-                                  isSelected: false,
-                                  onToggle: () {},
+                                  selecting: _selecting,
+                                  isSelected: _selected.contains(info.itemId),
+                                  onToggle: () => _toggleSelect(info.itemId),
                                   onPlay: () => _openEbook(info),
-                                  onLongPress: () {},
+                                  onLongPress: () => _enterSelection(info.itemId),
                                   onDelete: () => _deleteEbook(info),
                                   formatBytes: _formatBytes,
                                   mediaHeaders: context.read<LibraryProvider>().mediaHeaders,
@@ -815,7 +818,7 @@ class _DownloadCard extends StatelessWidget {
         }
         return _coverPlaceholder();
       }
-      return CachedNetworkImage(
+      return CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
         imageUrl: info.coverUrl!,
         fit: BoxFit.cover,
         httpHeaders: mediaHeaders,
@@ -906,19 +909,19 @@ class _ActiveDownloadCard extends StatelessWidget {
                                   'Download progress for ${info.title ?? l.unknown}',
                               value:
                                   '$pct percent complete'
-                                  '${info.bytesDone != null && info.bytesTotal != null ? ', ${_formatDownloadBytes(info.bytesDone!)} of ${_formatDownloadBytes(info.bytesTotal!)}' : ''}'
+                                  '${info.bytesDone != null && info.bytesTotal != null ? ', ${formatBytesFine(info.bytesDone!)} of ${formatBytesFine(info.bytesTotal!)}' : ''}'
                                   '${_downloadRate(info.speedBytesPerSecond).isEmpty ? '' : ', ${_downloadRate(info.speedBytesPerSecond)}'}'
-                                  '${_downloadEta(info.etaSeconds).isEmpty ? '' : ', ${_downloadEta(info.etaSeconds)} remaining'}',
+                                  '${_downloadEta(l, info.etaSeconds).isEmpty ? '' : ', ${_downloadEta(l, info.etaSeconds)}'}',
                               child: ClipRRect(
                               borderRadius: BorderRadius.circular(4),
                               child: LinearProgressIndicator(
                                 value: progress,
                                 minHeight: 6,
                                 backgroundColor: cs.surfaceContainerHighest,
-                                valueColor: AlwaysStoppedAnimation(cs.primary,),
-                                ),
+                                valueColor: AlwaysStoppedAnimation(cs.primary),
                               ),
                             ),
+                          ),
                           ),
                           const SizedBox(width: 8),
                           Text('$pct%',
@@ -931,9 +934,9 @@ class _ActiveDownloadCard extends StatelessWidget {
                           info.bytesTotal != null) ...[
                         const SizedBox(height: 4),
                         Text(
-                          '${_formatDownloadBytes(info.bytesDone!)} of ${_formatDownloadBytes(info.bytesTotal!)}'
+                          '${formatBytesFine(info.bytesDone!)} of ${formatBytesFine(info.bytesTotal!)}'
                           '${_downloadRate(info.speedBytesPerSecond).isEmpty ? '' : ' · ${_downloadRate(info.speedBytesPerSecond)}'}'
-                          '${_downloadEta(info.etaSeconds).isEmpty ? '' : ' · ${_downloadEta(info.etaSeconds)}'}',
+                          '${_downloadEta(l, info.etaSeconds).isEmpty ? '' : ' · ${_downloadEta(l, info.etaSeconds)}'}',
                           style: tt.labelSmall?.copyWith(
                             color: cs.onSurfaceVariant,
                           ),
@@ -968,7 +971,7 @@ class _ActiveDownloadCard extends StatelessWidget {
         }
         return _coverPlaceholder();
       }
-      return CachedNetworkImage(
+      return CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
         imageUrl: info.coverUrl!,
         fit: BoxFit.cover,
         httpHeaders: mediaHeaders,

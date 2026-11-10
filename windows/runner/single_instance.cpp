@@ -1,25 +1,33 @@
 #include "single_instance.h"
 
+#include <shlobj.h>
+
 #include <cwchar>
-#include <vector>
+#include <string>
 
 #include "win32_window.h"
 
 namespace {
 
-std::wstring LowercaseExecutablePath() {
-  std::vector<wchar_t> buffer(MAX_PATH);
-  for (;;) {
-    const DWORD length = GetModuleFileNameW(
-        nullptr, buffer.data(), static_cast<DWORD>(buffer.size()));
-    if (length == 0) return L"";
-    if (length < buffer.size()) {
-      std::wstring path(buffer.data(), length);
-      CharLowerBuffW(path.data(), static_cast<DWORD>(path.size()));
-      return path;
-    }
-    buffer.resize(buffer.size() * 2);
+// The folder every copy of this app keeps its data in: path_provider's
+// application support folder, %APPDATA%\<CompanyName>\<ProductName> from
+// Runner.rc. Keep the two names in sync with Runner.rc. Keying the lock on
+// this (not the exe path) stops the beta copy, the Release build and an
+// installed copy from running at once and overwriting each other's settings
+// and sign-in tokens.
+constexpr wchar_t kDataFolder[] = L"\\com.barnabas\\Absorb Plus";
+
+std::wstring LowercaseDataFolder() {
+  PWSTR roaming = nullptr;
+  std::wstring path;
+  if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_RoamingAppData, KF_FLAG_DEFAULT,
+                                     nullptr, &roaming)) &&
+      roaming != nullptr) {
+    path = std::wstring(roaming) + kDataFolder;
   }
+  CoTaskMemFree(roaming);
+  CharLowerBuffW(path.data(), static_cast<DWORD>(path.size()));
+  return path;
 }
 
 // FNV-1a; only needs to be stable for one path on one machine.
@@ -64,7 +72,7 @@ SingleInstance::~SingleInstance() {
 }
 
 bool SingleInstance::Acquire(bool probe, const wchar_t* command_line) {
-  const std::wstring path = LowercaseExecutablePath();
+  const std::wstring path = LowercaseDataFolder();
   if (path.empty()) return true;
   tag_ = HashPath(path, probe);
 

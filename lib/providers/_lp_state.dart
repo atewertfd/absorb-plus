@@ -67,6 +67,12 @@ mixin _StateMixin on ChangeNotifier {
   Future<void>? _collectionsInFlight;
   String? _collectionsInFlightFor;
 
+  // Absorb Plus: Home loads reuse playlists and collections fetched within
+  // the cooldown; forced loads (pull to refresh, socket events) fetch.
+  static const _listFetchCooldown = Duration(minutes: 5);
+  final _playlistsCooldown = ListFetchCooldown(_listFetchCooldown);
+  final _collectionsCooldown = ListFetchCooldown(_listFetchCooldown);
+
   List<String> _sectionOrder = [];
   Set<String> _hiddenSectionIds = {};
   bool _applyDefaultPlaylistCollectionHiding = false;
@@ -76,9 +82,10 @@ mixin _StateMixin on ChangeNotifier {
   /// Persisted set of genre names the user has added as home sections.
   Set<String> _addedGenres = {};
 
-  final Map<String, Map<String, dynamic>> _seriesBooksCache = {};
-  final Map<String, Map<String, dynamic>> _seriesTabCache = {};
-  final Map<String, Map<String, dynamic>> _subSeriesCache = {};
+  // Absorb Plus: bounded (LRU) so browsing many series doesn't grow memory.
+  final _seriesBooksCache = LruCache<String, Map<String, dynamic>>(32);
+  final _seriesTabCache = LruCache<String, Map<String, dynamic>>(8);
+  final _subSeriesCache = LruCache<String, Map<String, dynamic>>(32);
 
   Set<String> _rollingDownloadSeries = {};
   // id -> {name, kind} for the settings list; the set above is bare ids.
@@ -155,6 +162,20 @@ mixin _StateMixin on ChangeNotifier {
   List<String> get absorbingBookIds => _absorbingBookIds;
   Map<String, Map<String, dynamic>> get absorbingItemCache =>
       _absorbingItemCache;
+
+  /// The library an item belongs to, as far as this phone knows: the card
+  /// cache, then download metadata, then whatever is playing.
+  String? libraryIdOf(String itemId, {String? episodeId}) {
+    final key = episodeId != null ? '$itemId-$episodeId' : itemId;
+    final cached = _absorbingItemCache[key]?['libraryId'] as String? ??
+        _absorbingItemCache[itemId]?['libraryId'] as String?;
+    if (cached != null && cached.isNotEmpty) return cached;
+    final downloaded = DownloadService().getInfo(key).libraryId;
+    if (downloaded != null && downloaded.isNotEmpty) return downloaded;
+    final player = AudioPlayerService();
+    if (player.currentItemId == itemId) return player.currentLibraryId;
+    return null;
+  }
   String? get freshQueuedFrontKey => _freshQueuedFrontKey;
 
   Map<String, dynamic>? get selectedLibrary {
@@ -361,13 +382,13 @@ mixin _StateMixin on ChangeNotifier {
     final dl = DownloadService().getInfo(itemId);
     if (dl.sessionData == null) return cached;
     try {
-      final session = jsonDecode(dl.sessionData!) as Map<String, dynamic>;
+      final session = sessionJsonCache[dl.sessionData]!; // Absorb Plus: decoded once (null = bad JSON, caught below)
       final libItem = session['libraryItem'] as Map<String, dynamic>?;
       if (libItem != null) {
         final (sid, _) = _extractSeries(libItem);
         if (sid != null) return libItem;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Library] _itemDataWithSeries failed: ${e.runtimeType}'); }
     return cached;
   }
 
@@ -390,8 +411,8 @@ mixin _StateMixin on ChangeNotifier {
   String? getCoverUrl(String? itemId, {int width = 400}) {
     if (itemId == null) return null;
 
-    final isCompositeKey = itemId.length > 36;
-    final apiItemId = isCompositeKey ? itemId.substring(0, 36) : itemId;
+    final isCompositeKey = isEpisodeKey(itemId);
+    final apiItemId = isCompositeKey ? itemIdOfKey(itemId) : itemId;
 
     if (_itemsWithoutCover.contains(apiItemId)) return null;
 

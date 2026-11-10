@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
@@ -12,6 +14,7 @@ import 'book_detail_sheet.dart';
 import 'books_sheet_shared.dart' show coverGridCount;
 import 'overlay_toast.dart';
 import 'stackable_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 
 /// Show a modal sheet listing every book the user has finished in the
@@ -378,7 +381,7 @@ class _FinishedBooksThisYearSheetState
           fit: BoxFit.cover,
           errorBuilder: (_, __, ___) => _placeholder(cs));
     }
-    return CachedNetworkImage(
+    return CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
       imageUrl: coverUrl,
       fit: BoxFit.cover,
       httpHeaders: lib.mediaHeaders,

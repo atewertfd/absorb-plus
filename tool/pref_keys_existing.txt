@@ -1,0 +1,43 @@
+# Fork SharedPreferences keys that existed on 2026-11-03. They keep their names
+# (renaming would lose what users saved). New fork keys must be fork_snake_case;
+# python tool/pref_keys.py --check enforces that (dev.ps1 check runs it).
+bookmarks_list_view
+cached_sessions
+cached_stats
+desktop_download_dir
+desktop_download_dirs_used
+fork_autoDownloadNextInSeries
+fork_developer_mode
+fork_downloads_in_file
+fork_downloads_legacy_stamp
+fork_fell_asleep_markers
+fork_look_compact_header
+fork_look_extra_badges
+fork_look_full_covers
+fork_look_reading_shelf
+fork_precache_enabled
+fork_tailscale_cover_from
+fork_tailscale_cover_to
+fork_tailscale_dns_suffix
+fork_tailscale_enabled
+fork_tailscale_hosts
+fork_tailscale_port
+fork_test_channel_dismissed_build
+fork_test_channel_launch_check
+fork_test_channel_unlocked
+fork_ui_glass
+fork_ui_theme
+fork_whats_new_installed
+fork_whats_new_notes_cache
+fork_whats_new_previous
+fork_windows_exclusive_audio
+recent_library_searches
+remote_link_host_enabled
+remote_link_host_id
+remote_link_hosts
+remote_link_paired_devices
+streamingPending
+update_check_frequency
+windows_global_hotkeys
+# Shipped in 1.12.1+364 (bug hunt BUG-003): renaming would drop queued offline bookmark edits.
+bookmarks_pending_edits

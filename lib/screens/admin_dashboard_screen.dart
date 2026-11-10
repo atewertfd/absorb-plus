@@ -101,7 +101,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
     // server (tests inject a source and no tracker polling).
     if (_ownsTracker) _taskApi = api;
     _tracker.addListener(_onTasksChanged);
-    _loadAll();
+    unawaited(_loadAll());
     _startLiveTimer();
   }
 

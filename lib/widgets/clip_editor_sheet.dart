@@ -99,7 +99,7 @@ class _ClipEditorSheetState extends State<ClipEditorSheet> {
       );
       try {
         await File(res.tempPath).delete();
-      } catch (_) {}
+      } catch (e) { debugPrint('[ClipEditor] _save failed: ${e.runtimeType}'); }
       if (!mounted) return;
       if (saved == null) {
         setState(() => _saving = false);

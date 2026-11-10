@@ -5,6 +5,7 @@ import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
@@ -19,11 +20,13 @@ import '../widgets/library_picker_sheet.dart';
 import '../widgets/library_search_results.dart';
 import '../widgets/podcast_episode_feed.dart';
 import '../main.dart' show flatNotifier, gradientIntensityNotifier;
-import '../ui_themes/ui_theme_hooks.dart';
 import '../widgets/library_sort_filter_sheet.dart';
 import '../widgets/desktop_batch_actions.dart';
+import '../widgets/desktop_cover_size_control.dart';
 import '../widgets/overlay_toast.dart';
 import '../widgets/library_books_tab.dart';
+import '../utils/app_platform.dart';
+import '../utils/desktop_workspace.dart';
 import '../widgets/library_series_tab.dart';
 import '../widgets/library_authors_tab.dart';
 import '../widgets/library_narrators_tab.dart';
@@ -35,20 +38,30 @@ import 'app_shell.dart';
 import 'book_requests_screen.dart';
 import 'upcoming_releases_screen.dart';
 import '../widgets/audible_series_sheet.dart' show showAudibleRegionPicker;
-import '../widgets/books_sheet_shared.dart' show coverGridCount, CoverGridScope;
+import '../widgets/books_sheet_shared.dart'
+    show coverGridCount, coverGridTextScale, CoverGridScope;
 import '../widgets/offline_status_icon.dart';
 import '../widgets/rmab_config_sheet.dart'
     show kRmabBaseUrlKey, kRmabApiTokenKey;
 import '../widgets/rmab_search_results_sheet.dart';
 import '../widgets/scroll_reveal.dart';
-import '../utils/performance_policy.dart';
 import '../services/scoped_prefs.dart';
 import '../services/server_backend.dart';
 import '../services/user_account_service.dart';
 import '../l10n/app_localizations.dart';
 import 'smart_scope_editor_screen.dart';
 import '../widgets/new_list_flow.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../widgets/alphabet_scroller.dart'; // Absorb Plus
+import '../ui_themes/ui_theme_hooks.dart';
+import '../utils/performance_policy.dart';
 import '../widgets/text_scale_room.dart';
+import '../widgets/recent_searches_panel.dart';
+import '../services/recent_searches.dart';
+import '../widgets/surprise_me_button.dart'; // Absorb Plus
+import '../ui_themes/app_backdrop.dart'; // Absorb Plus
+import 'library_paging.dart'; // Absorb Plus
+import '../utils/episode_key.dart';
 
 /// Responsive grid column count based on available width and the cover size
 /// setting; scales up on tablets/iPads.
@@ -60,7 +73,110 @@ int responsiveGridCount(BuildContext context) => coverGridCount(context);
 /// hide-on-scroll then snap back, the viewport shrinks but the scroll offset
 /// stays put, so the bottom items end up closer to the pill than steady-state
 /// math would suggest. This value keeps a comfortable gap even in that case.
-const double libraryGridBottomPadding = 180;
+/// Room under the grid for the playing pill and the nav bar, which the
+/// desktop workspace does not have.
+double libraryGridBottomPadding(BuildContext context) =>
+    isDesktopWorkspace(context) ? 80 : 180;
+
+const double kDesktopLibraryTileMaxExtent = 220;
+
+/// [crossAxisCount] is the phone column count from the cover size setting;
+/// without it the count falls back to the width. [mainAxisExtent] sizes the
+/// cell outright (subtitled tiles), on every layout.
+SliverGridDelegate libraryGridDelegateForWidth(
+  double width, {
+  required bool desktopWorkspace,
+  required double childAspectRatio,
+  double desktopMaxCrossAxisExtent = kDesktopLibraryTileMaxExtent,
+  int? crossAxisCount,
+  double? mainAxisExtent,
+}) {
+  if (desktopWorkspace) {
+    return SliverGridDelegateWithMaxCrossAxisExtent(
+      maxCrossAxisExtent: desktopMaxCrossAxisExtent,
+      childAspectRatio: childAspectRatio,
+      mainAxisExtent: mainAxisExtent,
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
+    );
+  }
+  return SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: crossAxisCount ?? (width / 130).floor().clamp(3, 10),
+    childAspectRatio: childAspectRatio,
+    mainAxisExtent: mainAxisExtent,
+    crossAxisSpacing: 10,
+    mainAxisSpacing: 10,
+  );
+}
+
+/// Desktop cover grid whose cells are exactly cover plus labels. A fixed
+/// aspect ratio only fits one tile size; the desktop zoom makes tiles as wide
+/// as 200+ px, where the ratio left a tall blank strip under every title.
+class CoverTileGridDelegate extends SliverGridDelegate {
+  const CoverTileGridDelegate({
+    required this.maxCrossAxisExtent,
+    required this.coverAspectRatio,
+    required this.labelHeight,
+    this.spacing = 10,
+  });
+
+  final double maxCrossAxisExtent;
+  final double coverAspectRatio;
+  final double labelHeight;
+  final double spacing;
+
+  @override
+  SliverGridLayout getLayout(SliverConstraints constraints) {
+    final width = constraints.crossAxisExtent;
+    // Same column rule as SliverGridDelegateWithMaxCrossAxisExtent.
+    final count = max(1, (width / (maxCrossAxisExtent + spacing)).ceil());
+    final tileWidth = max(0.0, (width - spacing * (count - 1)) / count);
+    final tileHeight = tileWidth / coverAspectRatio + labelHeight;
+    return SliverGridRegularTileLayout(
+      crossAxisCount: count,
+      mainAxisStride: tileHeight + spacing,
+      crossAxisStride: tileWidth + spacing,
+      childMainAxisExtent: tileHeight,
+      childCrossAxisExtent: tileWidth,
+      reverseCrossAxis: axisDirectionIsReversed(constraints.crossAxisDirection),
+    );
+  }
+
+  @override
+  bool shouldRelayout(CoverTileGridDelegate oldDelegate) =>
+      oldDelegate.maxCrossAxisExtent != maxCrossAxisExtent ||
+      oldDelegate.coverAspectRatio != coverAspectRatio ||
+      oldDelegate.labelHeight != labelHeight ||
+      oldDelegate.spacing != spacing;
+}
+
+/// Height of a book tile's labels under the cover: the gap, a title line and
+/// an author line, plus a subtitle line when shown. Line heights follow
+/// labelSmall's 1.45 at the tile's text scale.
+double coverTileLabelHeight(BuildContext context, {required bool subtitle}) {
+  final scale = coverGridTextScale(context);
+  final scaler = MediaQuery.textScalerOf(context);
+  final title = scaler.scale(11 * scale) * 1.45;
+  final line = scaler.scale(10 * scale) * 1.45;
+  return 5 + title + line + (subtitle ? line : 0) + 4;
+}
+
+SliverGridDelegate libraryGridDelegate(
+  BuildContext context, {
+  required double childAspectRatio,
+  double desktopMaxCrossAxisExtent = kDesktopLibraryTileMaxExtent,
+  int? crossAxisCount,
+  double? mainAxisExtent,
+}) {
+  return libraryGridDelegateForWidth(
+    MediaQuery.sizeOf(context).width,
+    desktopWorkspace: isDesktopWorkspace(context),
+    childAspectRatio: childAspectRatio,
+    desktopMaxCrossAxisExtent: desktopMaxCrossAxisExtent,
+    crossAxisCount: crossAxisCount,
+    mainAxisExtent: mainAxisExtent,
+  );
+}
 
 // ─── Sort modes ──────────────────────────────────────────────
 enum LibrarySort {
@@ -375,7 +491,12 @@ class LibraryScreenState extends State<LibraryScreen>
       if (!_focusNode.hasFocus) {
         FocusScope.of(context).requestFocus(_focusNode);
       }
-      SystemChannels.textInput.invokeMethod<void>('TextInput.show');
+      // Only phones need the keyboard nudged up. In a browser this made a
+      // second, unconnected input take the focus: typing after the rail's
+      // Search button went into it and never reached the search box.
+      if (!kIsWeb) {
+        SystemChannels.textInput.invokeMethod<void>('TextInput.show');
+      }
     });
   }
 
@@ -405,6 +526,7 @@ class LibraryScreenState extends State<LibraryScreen>
   String? _matchingAuthorId;
   int _authorMatchPosition = 0;
   int _authorMatchTotal = 0;
+  String? _bookMatchProgress;
   final Set<String> _selectedItemIds = {};
   int? _lastSelectedVisibleIndex;
 
@@ -512,6 +634,12 @@ class LibraryScreenState extends State<LibraryScreen>
   bool _hasMoreAuthors = true;
   int _totalAuthors = 0;
   int _authorsGen = 0;
+  // Absorb Plus (BUG-005): bumped by every Series / Narrators reset so an
+  // answer for the list before it is dropped, like _authorsGen.
+  int _seriesGen = 0;
+  int _narratorsGen = 0;
+  // Absorb Plus (BUG-008): whether page 0 of the grid was requested wide.
+  bool? _pageWide;
   static const _authorsPageSize = 100;
   LibrarySort _authorSort = LibrarySort.alphabetical;
   bool _authorSortAsc = true;
@@ -531,6 +659,21 @@ class LibraryScreenState extends State<LibraryScreen>
   // ── Cover aspect ratio ──
   bool _rectangleCovers = false;
   bool _showSubtitles = false;
+  // Desktop grid tile size, stepped by the control at the bottom right. Phone
+  // grids take their size from the cover size setting instead.
+  int _bookshelfCoverSize = 120;
+  double get _desktopTileMaxExtent =>
+      kDesktopLibraryTileMaxExtent * (_bookshelfCoverSize / 120);
+
+  void _changeBookshelfCoverSize(int direction) {
+    final sizes = PlayerSettings.bookshelfCoverSizes;
+    final currentIndex = sizes.indexOf(_bookshelfCoverSize);
+    final nextIndex = (currentIndex + direction).clamp(0, sizes.length - 1);
+    final next = sizes[nextIndex];
+    if (next == _bookshelfCoverSize) return;
+    setState(() => _bookshelfCoverSize = next);
+    PlayerSettings.setBookshelfCoverSize(next);
+  }
   double get _coverAspectRatio => _rectangleCovers ? 2 / 3 : 1.0;
 
   // ── Scroll-to-hide bars ──
@@ -692,6 +835,9 @@ class LibraryScreenState extends State<LibraryScreen>
       _loadGeneration++;
       _loadBookRequests();
       // Cover shape and subtitles can differ per library.
+      PlayerSettings.getBookshelfCoverSize().then((v) {
+        if (mounted && v != _bookshelfCoverSize) setState(() => _bookshelfCoverSize = v);
+      });
       PlayerSettings.getRectangleCoversFor(lib.selectedLibraryId).then((v) {
         if (mounted && v != _rectangleCovers)
           setState(() => _rectangleCovers = v);
@@ -733,6 +879,7 @@ class LibraryScreenState extends State<LibraryScreen>
         _seriesItems.clear();
         _seriesPage = 0;
         _hasMoreSeries = true;
+        _seriesGen++; // Absorb Plus
         _isLoadingSeriesPage = false;
         _totalSeries = 0;
         _authors.clear();
@@ -745,6 +892,7 @@ class LibraryScreenState extends State<LibraryScreen>
         _narrators.clear();
         _narratorCounts = {};
         _narratorsLoaded = false;
+        _narratorsGen++; // Absorb Plus
         _isLoadingNarrators = false;
         _listsFailed = false;
         _allNarratorsCache = null;
@@ -1144,7 +1292,7 @@ class LibraryScreenState extends State<LibraryScreen>
       final lib = context.read<LibraryProvider>();
       lib.removeListener(_onLibraryChanged);
       lib.removeListener(_onLibraryProviderChanged);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Library] dispose failed: ${e.runtimeType}'); }
     super.dispose();
   }
 
@@ -1326,15 +1474,19 @@ class LibraryScreenState extends State<LibraryScreen>
         });
       }
     } else {
-      if (_page == 0) _loadedCount = 0;
+      if (_page == 0) {
+        _loadedCount = 0;
+        _pageWide = null; // Absorb Plus (BUG-008)
+      }
       // Each size divides the count loaded so far (20, 40, 80, 160, ...),
       // which is what a page*limit offset needs. A wide window shows more
       // than 20 covers at once, so it starts at 40 (one request, not two).
-      final wide = MediaQuery.sizeOf(context).width >= 900;
-      final limit = _loadedCount < 40
-          ? (wide ? 40 : 20)
-          : (_loadedCount < 80 ? 40 : _pageSize);
-      final pageIndex = _loadedCount ~/ limit;
+      // Absorb Plus (BUG-008): the width decision of page 0 sticks, so a
+      // window widened mid-listing can't ask for page 0 again.
+      final wide = _pageWide ??= MediaQuery.sizeOf(context).width >= 900;
+      final request = libraryGridPageRequest(_loadedCount, wide: wide, maxLimit: _pageSize);
+      final limit = request.limit;
+      final pageIndex = request.page;
       debugPrint('[LibPage] request page=$pageIndex limit=$limit loaded=$_loadedCount');
       final sw = Stopwatch()..start();
       final result = await api.getLibraryItems(
@@ -1413,7 +1565,7 @@ class LibraryScreenState extends State<LibraryScreen>
       if (libraryId != null && libraryId.isNotEmpty && selectedId != null) {
         return libraryId == selectedId;
       }
-      return (dl.itemId.length > 36) == isPodcast;
+      return isEpisodeKey(dl.itemId) == isPodcast;
     }).toList();
 
     final items = <Map<String, dynamic>>[];
@@ -1425,7 +1577,7 @@ class LibraryScreenState extends State<LibraryScreen>
           final session = jsonDecode(dl.sessionData!) as Map<String, dynamic>;
           duration = (session['duration'] as num?)?.toDouble() ?? 0;
           chapters = session['chapters'] as List<dynamic>? ?? [];
-        } catch (_) {}
+        } catch (e) { debugPrint('[Library] _loadOfflinePage failed: ${e.runtimeType}'); }
       }
       items.add({
         'id': dl.itemId,
@@ -1517,6 +1669,7 @@ class LibraryScreenState extends State<LibraryScreen>
       setState(() => _isLoadingSeriesPage = false);
       return;
     }
+    final gen = _seriesGen; // Absorb Plus (BUG-005)
 
     String sort;
     switch (_seriesSort) {
@@ -1558,7 +1711,7 @@ class LibraryScreenState extends State<LibraryScreen>
         sort: sort,
         desc: _seriesSortAsc ? 0 : 1,
       );
-      if (!mounted) return;
+      if (!mounted || gen != _seriesGen) return; // Absorb Plus (BUG-005)
       if (result == null) {
         setState(() => _isLoadingSeriesPage = false);
         return;
@@ -1607,7 +1760,7 @@ class LibraryScreenState extends State<LibraryScreen>
               _isLoadingSeriesPage = false;
             });
             // Refresh in background
-            _refreshSeriesInBackground(api, lib, sort, cacheKey);
+            _refreshSeriesInBackground(api, lib, sort, cacheKey, gen);
             return;
           }
         }
@@ -1622,6 +1775,7 @@ class LibraryScreenState extends State<LibraryScreen>
       sort: sort,
       desc: _seriesSortAsc ? 0 : 1,
     );
+    if (gen != _seriesGen) return; // Absorb Plus (BUG-005): reset meanwhile
 
     if (result != null && mounted) {
       final results = (result['results'] as List<dynamic>?) ?? [];
@@ -1663,6 +1817,7 @@ class LibraryScreenState extends State<LibraryScreen>
     LibraryProvider lib,
     String sort,
     String cacheKey,
+    int gen, // Absorb Plus (BUG-005)
   ) async {
     final allItems = <Map<String, dynamic>>[];
     int page = 0;
@@ -1679,6 +1834,7 @@ class LibraryScreenState extends State<LibraryScreen>
         sort: sort,
         desc: _seriesSortAsc ? 0 : 1,
       );
+      if (gen != _seriesGen) return; // Absorb Plus (BUG-005)
       if (result == null) break;
       final results = (result['results'] as List<dynamic>?) ?? [];
       total = (result['total'] as int?) ?? 0;
@@ -1813,8 +1969,9 @@ class LibraryScreenState extends State<LibraryScreen>
     }
 
     final libId = lib.selectedLibraryId!;
+    final gen = _narratorsGen; // Absorb Plus (BUG-005)
     final narrators = await api.getLibraryNarrators(libId);
-    if (!mounted) return;
+    if (!mounted || gen != _narratorsGen) return;
     setState(() {
       _narrators = narrators;
       _sortNarrators();
@@ -1824,7 +1981,7 @@ class LibraryScreenState extends State<LibraryScreen>
     // Book counts come from a separate endpoint that walks every book with a
     // narrator, so they land after the names and re-sort the list then.
     final counts = await api.getLibraryNarratorCounts(libId);
-    if (!mounted || counts.isEmpty || lib.selectedLibraryId != libId) return;
+    if (!mounted || counts.isEmpty || lib.selectedLibraryId != libId || gen != _narratorsGen) return;
     setState(() {
       _narratorCounts = counts;
       _sortNarrators();
@@ -1936,6 +2093,7 @@ class LibraryScreenState extends State<LibraryScreen>
       _seriesItems.clear();
       _seriesPage = 0;
       _hasMoreSeries = true;
+      _seriesGen++; // Absorb Plus
       _isLoadingSeriesPage = false;
     });
     PlayerSettings.setSeriesSort(_seriesSort.name);
@@ -2034,6 +2192,9 @@ class LibraryScreenState extends State<LibraryScreen>
   /// AppShell.openLibraryWithTagFilterGlobal so a tag chip tapped from the
   /// book detail sheet drops the user into the matching library view.
   void applyTagFilter(String tag) {
+    // The sheet may have been opened from search results: leave search
+    // so the filtered library shows instead of the results list.
+    clearSearch();
     if (_currentTab != 0 && _tabController != null) {
       _tabController!.animateTo(0);
     }
@@ -2043,6 +2204,7 @@ class LibraryScreenState extends State<LibraryScreen>
   /// Switch to the Books sub-tab (if needed) and apply a genre filter.
   /// Mirrors [applyTagFilter] for genre chips tapped from book detail.
   void applyGenreFilter(String genre) {
+    clearSearch();
     if (_currentTab != 0 && _tabController != null) {
       _tabController!.animateTo(0);
     }
@@ -2060,6 +2222,7 @@ class LibraryScreenState extends State<LibraryScreen>
       _seriesItems.clear();
       _seriesPage = 0;
       _hasMoreSeries = true;
+      _seriesGen++; // Absorb Plus
       _isLoadingSeriesPage = false;
     });
     PlayerSettings.setLibrarySeriesFilter(_seriesFilter.name);
@@ -2604,6 +2767,7 @@ class LibraryScreenState extends State<LibraryScreen>
               _seriesItems.clear();
               _seriesPage = 0;
               _hasMoreSeries = true;
+              _seriesGen++; // Absorb Plus
               _isLoadingSeriesPage = false;
             });
             PlayerSettings.setSeriesSortAsc(_seriesSortAsc);
@@ -2737,6 +2901,10 @@ class LibraryScreenState extends State<LibraryScreen>
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
     final l = AppLocalizations.of(context)!;
+    final desktopWorkspace = isDesktopWorkspace(context);
+    // The bars the reveal driver hides are the phone's; the desktop
+    // workspace pins its header and has no floating pill.
+    _revealDriver.setEnabled(!desktopWorkspace);
     final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
     final lowerFade = Color.lerp(cs.surface, scaffoldBg, 0.55) ?? scaffoldBg;
     // Watch LibraryProvider so this screen rebuilds when the active library
@@ -2774,6 +2942,10 @@ class LibraryScreenState extends State<LibraryScreen>
     final selectionAvailable =
         authorSelectionAvailable || bookSelectionAvailable;
     if (!selectionAvailable && _selectionMode) _resetSelectionState();
+    final showCoverControl =
+        desktopWorkspace &&
+        !_isInSearchMode &&
+        (hasTabs ? _currentTab != 3 : _podcastView == 0);
     final selectableItems = selectionAvailable && _selectionMode
         ? _selectableVisibleItems()
         : const <Map<String, dynamic>>[];
@@ -2790,7 +2962,13 @@ class LibraryScreenState extends State<LibraryScreen>
       backgroundColor: scaffoldBg,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: !_selectionMode
-          ? null
+          ? (showCoverControl
+                ? DesktopCoverSizeControl(
+                    value: _bookshelfCoverSize,
+                    onDecrease: () => _changeBookshelfCoverSize(-1),
+                    onIncrease: () => _changeBookshelfCoverSize(1),
+                  )
+                : null)
           : authorSelectionAvailable
           ? DesktopBatchActionBar(
               selectedCount: _selectedItemIds.length,
@@ -2815,10 +2993,11 @@ class LibraryScreenState extends State<LibraryScreen>
               selectedCount: _selectedItemIds.length,
               selectableCount: selectableCount,
               busy: _batchActionBusy,
-              canQuickMatch: auth.isAdmin && !libWatch.isPodcastLibrary,
+              busyLabel: _bookMatchProgress,
+              canQuickMatch: _canQuickMatchBooks(auth, libWatch),
               canMarkProgress: !libWatch.isPodcastLibrary,
               canDelete: auth.canDelete,
-              canDownload: !libWatch.isPodcastLibrary,
+              canDownload: !AppPlatform.lacksPhonePlugins && !libWatch.isPodcastLibrary,
               onSelectAll: _toggleSelectAll,
               onClear: _clearSelection,
               onDownload: () => _runBatchAction(
@@ -2829,12 +3008,17 @@ class LibraryScreenState extends State<LibraryScreen>
                       .toList(),
                 ),
               ),
-              onQuickMatch: () => _runBatchAction(
-                () => DesktopBatchActions.quickMatch(
+              onQuickMatch: () => _runBatchAction(() async {
+                final ok = await DesktopBatchActions.quickMatch(
                   context,
                   _selectedItemIds.toList(),
-                ),
-              ),
+                  onProgress: (done, total) {
+                    if (mounted) setState(() => _bookMatchProgress = '$done/$total');
+                  },
+                );
+                if (mounted) setState(() => _bookMatchProgress = null);
+                return ok;
+              }),
               onMarkFinished: () => _runBatchAction(
                 () => DesktopBatchActions.setFinished(
                   context,
@@ -2859,7 +3043,7 @@ class LibraryScreenState extends State<LibraryScreen>
           : null,
       body: Stack(
         children: [
-          if (!flatNotifier.value)
+          if (!flatNotifier.value && !AppBackdrop.isActive(context))
             OverflowBox(
               maxHeight: MediaQuery.of(context).size.height,
               alignment: Alignment.topCenter,
@@ -2933,7 +3117,7 @@ class LibraryScreenState extends State<LibraryScreen>
                     },
                   ),
                 ),
-                if (hasTabs && !_isInSearchMode)
+                if (hasTabs && !_isInSearchMode && !desktopWorkspace)
                   Positioned(
                     left: 0,
                     right: 0,
@@ -2956,7 +3140,7 @@ class LibraryScreenState extends State<LibraryScreen>
                       child: RepaintBoundary(child: _buildFloatingTabBar(cs)),
                     ),
                   ),
-                if (!hasTabs && !_isInSearchMode)
+                if (!hasTabs && !_isInSearchMode && !desktopWorkspace)
                   Positioned(
                     left: 0,
                     right: 0,
@@ -3034,7 +3218,9 @@ class LibraryScreenState extends State<LibraryScreen>
         lib.selectedLibrary?['name'] as String? ?? l.libraryFallback;
     final topInset = MediaQuery.of(context).padding.top;
     final screenH = MediaQuery.of(context).size.height;
-    final headerBackground = flatNotifier.value
+    final headerBackground = AppBackdrop.isActive(context)
+        ? const AppBackdropSlice() // Absorb Plus: the app background
+        : flatNotifier.value
         ? ColoredBox(color: scaffoldBg)
         : ClipRect(
             child: OverflowBox(
@@ -3068,20 +3254,26 @@ class LibraryScreenState extends State<LibraryScreen>
               ),
             ),
           );
+    final desktop = isDesktopWorkspace(context);
     return SliverAppBar(
-      floating: true,
-      snap: true,
+      floating: !desktop,
+      snap: !desktop,
+      pinned: desktop,
       // primary: false disables Material's automatic status
       // bar padding so the header doesn't get inset twice
       // (we already wrap the whole NestedScrollView in
       // SafeArea above).
       primary: false,
+      // Desktop puts the title beside the header actions instead of under the
+      // ABSORB wordmark, a row shorter; the phone height left an empty band
+      // above the grid there.
       toolbarHeight: (_isInSearchMode
-          ? 156
-          : ((_filter != LibraryFilter.none ||
-                    _seriesFilter != SeriesFilter.none)
-                ? 204
-                : 192)) + textScaleRoom(context, 48),
+              ? 156
+              : ((_filter != LibraryFilter.none ||
+                        _seriesFilter != SeriesFilter.none)
+                    ? 204
+                    : 192)) -
+          (desktop ? 40 : 0) + textScaleRoom(context, 48),
       backgroundColor: scaffoldBg,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
@@ -3099,6 +3291,7 @@ class LibraryScreenState extends State<LibraryScreen>
               children: [
                 AbsorbPageHeader(
                   title: l.libraryTitle,
+                  showBranding: !desktop,
                   trailing: OfflineStatusIcon(
                     onTapWhenOnline: () {
                       lib.setManualOffline(true);
@@ -3169,6 +3362,7 @@ class LibraryScreenState extends State<LibraryScreen>
                               ),
                             ),
                           ),
+                        if (SurpriseMeButton.availableFor(lib)) const SurpriseMeButton(), // Absorb Plus
                         // Holds the row at the select button's height on
                         // tabs without it, so the search bar doesn't jump.
                         if (!canSelectItems) const SizedBox(height: 48),
@@ -3192,49 +3386,116 @@ class LibraryScreenState extends State<LibraryScreen>
                           ),
                       ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                  child: SearchBar(
-                    // Same GlobalKey on whichever SearchBar gets the shared
-                    // focus, so when _isInSearchMode toggles and the tree
-                    // swaps from tabbed -> search results, Flutter re-parents
-                    // the existing Element instead of destroying and
-                    // recreating it. Keeps focus + keyboard alive.
-                    key: useSharedFocus ? _searchBarKey : null,
-                    controller: _searchController,
-                    // Only the active tab's SearchBar binds to the screen-
-                    // level focus node. Inactive tabs' SearchBars use their
-                    // own internal focus so multiple instances in the
-                    // IndexedStack don't fight over the same FocusNode (the
-                    // bug that left tap-to-focus dead until you switched
-                    // libraries to force a state reset).
-                    focusNode: useSharedFocus ? _focusNode : null,
-                    hintText: lib.isPodcastLibrary
-                        ? l.librarySearchShowsHint
-                        : l.librarySearchBooksHint,
-                    leading: const Padding(
-                      padding: EdgeInsets.only(left: 8),
-                      child: Icon(Icons.search_rounded),
+                Builder(
+                  builder: (context) {
+                    final searchBar = RecentSearchesAnchor(
+                      controller: _searchController,
+                      focusNode: useSharedFocus ? _focusNode : null,
+                      onSelected: (t) {
+                        _searchController.text = t;
+                        _onSearchChanged(t);
+                        RecentSearches().add(t);
+                      },
+                      child: SearchBar(
+                      onSubmitted: (q) => RecentSearches().add(q),
+                      // Same GlobalKey on whichever SearchBar gets the shared
+                      // focus, so when _isInSearchMode toggles and the tree
+                      // swaps from tabbed -> search results, Flutter re-parents
+                      // the existing Element instead of destroying and
+                      // recreating it. Keeps focus + keyboard alive.
+                      key: useSharedFocus ? _searchBarKey : null,
+                      controller: _searchController,
+                      // Only the active tab's SearchBar binds to the screen-
+                      // level focus node. Inactive tabs' SearchBars use their
+                      // own internal focus so multiple instances in the
+                      // IndexedStack don't fight over the same FocusNode (the
+                      // bug that left tap-to-focus dead until you switched
+                      // libraries to force a state reset).
+                      focusNode: useSharedFocus ? _focusNode : null,
+                      hintText: lib.isPodcastLibrary
+                          ? l.librarySearchShowsHint
+                          : l.librarySearchBooksHint,
+                      leading: const Padding(
+                        padding: EdgeInsets.only(left: 8),
+                        child: Icon(Icons.search_rounded),
+                      ),
+                      trailing: [
+                        if (_searchController.text.isNotEmpty)
+                          IconButton(
+                            tooltip: AppLocalizations.of(context)!.emptyStateClearSearch, // Absorb Plus
+                            icon: const Icon(Icons.clear_rounded),
+                            onPressed: () {
+                              _searchController.clear();
+                              _onSearchChanged('');
+                              _focusNode.unfocus();
+                            },
+                          ),
+                      ],
+                      onChanged: _onSearchChanged,
+                      padding: const WidgetStatePropertyAll(
+                        EdgeInsets.symmetric(horizontal: 8),
+                      ),
+                      side: WidgetStatePropertyAll(
+                        BorderSide(color: cs.onSurface.withValues(alpha: 0.08)),
+                      ),
                     ),
-                    trailing: [
-                      if (_searchController.text.isNotEmpty)
-                        IconButton(
-                          icon: const Icon(Icons.clear_rounded),
-                          onPressed: () {
-                            _searchController.clear();
-                            _onSearchChanged('');
-                            _focusNode.unfocus();
-                          },
-                        ),
-                    ],
-                    onChanged: _onSearchChanged,
-                    padding: const WidgetStatePropertyAll(
-                      EdgeInsets.symmetric(horizontal: 8),
-                    ),
-                    side: WidgetStatePropertyAll(
-                      BorderSide(color: cs.onSurface.withValues(alpha: 0.08)),
-                    ),
-                  ),
+                    );
+                    if (!desktop) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                        child: searchBar,
+                      );
+                    }
+                    // Desktop: the tab pill sits next to the search box, and a
+                    // refresh chip stands in for pull to refresh.
+                    final hasBookTabs =
+                        _tabController != null && !_isInSearchMode;
+                    final showsPodcastPill =
+                        !hasBookTabs &&
+                        lib.isPodcastLibrary &&
+                        !_isInSearchMode;
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                      child: Row(
+                        children: [
+                          // Flex against the Spacer below: at an even split
+                          // the box only got half the room and cut off its
+                          // own placeholder.
+                          Flexible(
+                            flex: 4,
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 560),
+                              child: searchBar,
+                            ),
+                          ),
+                          if (hasBookTabs) ...[
+                            const SizedBox(width: 12),
+                            _buildFloatingTabBar(cs, floating: false),
+                          ],
+                          if (showsPodcastPill) ...[
+                            const SizedBox(width: 12),
+                            _buildPodcastViewPill(cs, floating: false),
+                            if (context.read<AuthProvider>().isAdmin) ...[
+                              const SizedBox(width: 8),
+                              _buildFloatingManageButton(cs),
+                            ],
+                          ],
+                          const Spacer(),
+                          if (!lib.isOffline)
+                            Tooltip(
+                              message: l.refreshTooltip,
+                              child: IconButton(
+                                onPressed: _refreshCurrentTab,
+                                icon: Icon(
+                                  Icons.refresh_rounded,
+                                  color: cs.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
                 // Item count + filter badge row
                 if (!_isInSearchMode) _buildInfoRow(cs, tt, l),
@@ -3248,9 +3509,22 @@ class LibraryScreenState extends State<LibraryScreen>
 
   // Shows | Episodes switcher for podcast libraries, styled like the book
   // libraries' floating tab pills.
-  Widget _buildPodcastViewPill(ColorScheme cs) {
+  Widget _buildPodcastViewPill(ColorScheme cs, {bool floating = true}) {
     final l = AppLocalizations.of(context)!;
     final labels = [l.appShellShowsTab, l.libraryTabEpisodes];
+    // Inline in the desktop header the pill is opaque: nothing scrolls under
+    // it, so the blur would only cost a saveLayer.
+    if (!floating) {
+      return Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: cs.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.45)),
+        ),
+        child: _podcastViewPillRow(cs, labels),
+      );
+    }
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),
       child: BackdropFilter(
@@ -3262,7 +3536,15 @@ class LibraryScreenState extends State<LibraryScreen>
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: cs.primary.withValues(alpha: 0.25)),
           ),
-          child: Row(
+          child: _podcastViewPillRow(cs, labels),
+        ),
+      ),
+    );
+  }
+
+  Widget _podcastViewPillRow(ColorScheme cs, List<String> labels) {
+    return Builder(builder: (context) {
+      return Row(
             mainAxisSize: MainAxisSize.min,
             children: List.generate(labels.length, (i) {
               final active = _podcastView == i;
@@ -3318,13 +3600,11 @@ class LibraryScreenState extends State<LibraryScreen>
                 ),
               );
             }),
-          ),
-        ),
-      ),
-    );
+          );
+    });
   }
 
-  Widget _buildFloatingTabBar(ColorScheme cs) {
+  Widget _buildFloatingTabBar(ColorScheme cs, {bool floating = true}) {
     final l = AppLocalizations.of(context)!;
     final labels = [
       l.libraryTabLibrary,
@@ -3333,6 +3613,17 @@ class LibraryScreenState extends State<LibraryScreen>
       l.libraryTabNarrators,
       'Lists',
     ];
+    if (!floating) {
+      return Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: cs.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.45)),
+        ),
+        child: _tabPillRow(cs, labels),
+      );
+    }
     return Center(
       child: Padding(
         // Inset from the screen edges; the FittedBox below scales the whole
@@ -3350,7 +3641,16 @@ class LibraryScreenState extends State<LibraryScreen>
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(color: cs.primary.withValues(alpha: 0.25)),
               ),
-              child: FittedBox(
+              child: _tabPillRow(cs, labels),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _tabPillRow(ColorScheme cs, List<String> labels) {
+    return FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -3412,11 +3712,6 @@ class LibraryScreenState extends State<LibraryScreen>
                     );
                   }),
                 ),
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -3659,9 +3954,26 @@ class LibraryScreenState extends State<LibraryScreen>
   }
 
   // ── Pull-to-refresh ──
+  Future<void> _refreshCurrentTab() {
+    if (_tabController == null) return _refreshAll();
+    switch (_currentTab) {
+      case 1:
+        return _refreshSeries();
+      case 2:
+        return _refreshAuthors();
+      case 3:
+        return _refreshNarrators();
+      case 4:
+        return _refreshLists();
+      default:
+        return _refreshAll();
+    }
+  }
+
   Future<void> _refreshAll() async {
     final lib = context.read<LibraryProvider>();
     await lib.refresh();
+    if (!mounted) return; // Absorb Plus: signed out during the refresh
     setState(() {
       _items.clear();
       _page = 0;
@@ -3678,6 +3990,7 @@ class LibraryScreenState extends State<LibraryScreen>
       _seriesItems.clear();
       _seriesPage = 0;
       _hasMoreSeries = true;
+      _seriesGen++; // Absorb Plus
       _isLoadingSeriesPage = false;
     });
     await _loadSeriesPage();
@@ -3693,7 +4006,8 @@ class LibraryScreenState extends State<LibraryScreen>
   // ═══════════════════════════════════════════════════════════════
   Widget _buildGrid(Widget headerSliver) {
     final lib = context.watch<LibraryProvider>();
-    return LibraryBooksTab(
+    final grid = LibraryBooksTab(
+      desktopMaxCrossAxisExtent: _desktopTileMaxExtent,
       items: _visibleLibraryItems(lib),
       isLoadingPage: _isLoadingPage,
       hasMore: _hasMore,
@@ -3713,6 +4027,17 @@ class LibraryScreenState extends State<LibraryScreen>
       selectionMode: _selectionMode && (_tabController == null || _currentTab == 0),
       selectedItemIds: _selectedItemIds,
       onSelectionToggle: _toggleSelection,
+    );
+    return LibraryAlphabetRail( // Absorb Plus: A-Z rail for title/author sorts
+      sort: _sort,
+      descending: !_sortAsc,
+      podcast: lib.isPodcastLibrary,
+      items: _visibleLibraryItems(lib),
+      hasMore: _hasMore && !_loadFailed,
+      onLoadMore: _loadPage,
+      controller: _scrollController,
+      generation: _loadGeneration,
+      child: grid,
     );
   }
 
@@ -3807,6 +4132,16 @@ class LibraryScreenState extends State<LibraryScreen>
       _batchActionBusy = false;
       if (success == true) _resetSelectionState();
     });
+  }
+
+  /// Audiobookshelf admins, and on BookOrbit anyone who may edit metadata.
+  /// Book Dock files aren't books yet, so they can't be matched in bulk.
+  bool _canQuickMatchBooks(AuthProvider auth, LibraryProvider lib) {
+    if (lib.isPodcastLibrary) return false;
+    if (auth.isAdmin) return true;
+    return auth.isBookOrbit &&
+        auth.canUpdateMetadata &&
+        lib.selectedLibraryId != ApiService.bookDockLibraryId;
   }
 
   List<Map<String, dynamic>> _selectedAuthors() {
@@ -3961,6 +4296,7 @@ class LibraryScreenState extends State<LibraryScreen>
   // ═══════════════════════════════════════════════════════════════
   Widget _buildAuthorsGrid(Widget headerSliver) {
     return LibraryAuthorsTab(
+      desktopMaxCrossAxisExtent: _desktopTileMaxExtent,
       authors: _authors,
       isLoadingAuthors: _isLoadingAuthors,
       authorsLoaded: _authorsLoaded,
@@ -3984,6 +4320,7 @@ class LibraryScreenState extends State<LibraryScreen>
       _narrators.clear();
       _narratorCounts = {};
       _narratorsLoaded = false;
+      _narratorsGen++; // Absorb Plus
       _isLoadingNarrators = false;
     });
     await _loadNarrators();
@@ -4093,6 +4430,14 @@ class LibraryScreenState extends State<LibraryScreen>
                         debugPrint('[RMAB] library CTA tapped (query="$q")');
                         showRmabSearchResultsSheet(context, initialQuery: q);
                       },
+                    ),
+                  ] else ...[
+                    // Absorb Plus: nothing to request, so offer a way back.
+                    const SizedBox(height: 20),
+                    OutlinedButton.icon(
+                      icon: const Icon(Icons.close_rounded, size: 18),
+                      label: Text(l.emptyStateClearSearch),
+                      onPressed: clearSearch,
                     ),
                   ],
                 ],
@@ -4386,7 +4731,10 @@ class LibraryScreenState extends State<LibraryScreen>
         injector,
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-          sliver: SliverList(delegate: SliverChildListDelegate(children)),
+          sliver: SliverList(delegate: SliverChildListDelegate([
+            for (final c in children)
+              RecentSearchTapSaver(onTap: () => RecentSearches().add(_searchController.text), child: c),
+          ])),
         ),
       ],
     );

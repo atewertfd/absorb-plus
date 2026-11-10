@@ -1,18 +1,25 @@
-import '../utils/web_safe_platform.dart'; // web-safe Platform
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../l10n/app_localizations.dart';
+import '../providers/auth_provider.dart';
 import '../services/api_service.dart';
 import '../services/player_settings.dart';
 import '../services/rmab_service.dart';
 import '../services/scoped_prefs.dart';
 import '../services/upcoming_releases_service.dart';
+import '../utils/app_platform.dart';
 import '../utils/series_number_match.dart';
+import 'adaptive_modal.dart';
+import 'audible_book_request.dart';
 import 'overlay_toast.dart';
 import 'rmab_book_detail_sheet.dart';
 import 'rmab_config_sheet.dart' show kRmabBaseUrlKey, kRmabApiTokenKey;
 import 'stackable_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 
 /// Show a bottom sheet with Audible series discovery results.
 /// Shows missing books and upcoming releases for a series.
@@ -68,6 +75,7 @@ class _AudibleSeriesSheetState extends State<AudibleSeriesSheet> {
   int _filter = 0; // 0 = missing, 1 = upcoming, 2 = all
   late String _region;
   bool _rmabConfigured = false;
+  bool _serverRequests = false;
 
   @override
   void initState() {
@@ -75,6 +83,12 @@ class _AudibleSeriesSheetState extends State<AudibleSeriesSheet> {
     _region = ApiService.debugRegion;
     _loadRegionAndFetch();
     _loadRmabConfigured();
+    _loadServerRequests();
+  }
+
+  Future<void> _loadServerRequests() async {
+    final ok = await canRequestAudibleBooks(context.read<AuthProvider>().apiService);
+    if (mounted && ok) setState(() => _serverRequests = true);
   }
 
   Future<void> _loadRmabConfigured() async {
@@ -170,9 +184,9 @@ class _AudibleSeriesSheetState extends State<AudibleSeriesSheet> {
   }) {
     final l = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
-    // Surface the RMAB Request action only for missing-but-released books,
-    // and only when the user has RMAB configured.
-    final showRequest = _rmabConfigured && !owned && !upcoming;
+    // Request only missing-but-released books, from BookOrbit when this
+    // account can ask it, otherwise from ReadMeABook when that's set up.
+    final showRequest = (_serverRequests || _rmabConfigured) && !owned && !upcoming;
     // Let upcoming or recently-released books be pushed onto the upcoming page
     // without rescanning the whole library.
     final canAddToUpcoming = upcoming || _isRecent(book);
@@ -200,13 +214,18 @@ class _AudibleSeriesSheetState extends State<AudibleSeriesSheet> {
           ListTile(
             leading: Icon(Icons.menu_book_rounded,
                 color: cs.primary, size: 22),
-            title: Text(l.rmabRequestCta,
+            title: Text(_serverRequests ? l.breqRequest : l.rmabRequestCta,
                 style: const TextStyle(
                     fontSize: 14, fontWeight: FontWeight.w500)),
             dense: true,
             visualDensity: VisualDensity.compact,
             onTap: () {
               Navigator.pop(context);
+              final api = context.read<AuthProvider>().apiService;
+              if (_serverRequests && api != null) {
+                requestAudibleBooks(context, api, [(book: book, seriesName: widget.seriesName)]);
+                return;
+              }
               final asin = book['asin'] as String? ?? '';
               final title = book['title'] as String? ?? '';
               debugPrint(
@@ -439,7 +458,7 @@ class _AudibleSeriesSheetState extends State<AudibleSeriesSheet> {
                 child: Stack(children: [
                   Positioned.fill(
                     child: coverUrl.isNotEmpty
-                        ? CachedNetworkImage(
+                        ? CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                             imageUrl: coverUrl, fit: BoxFit.cover,
                             placeholder: (_, __) => _placeholder(cs),
                             errorWidget: (_, __, ___) => _placeholder(cs))
@@ -557,13 +576,14 @@ Future<String?> showAudibleRegionPicker(BuildContext context, {required String c
   final cs = Theme.of(context).colorScheme;
   final tt = Theme.of(context).textTheme;
   final l = AppLocalizations.of(context)!;
-  return showModalBottomSheet<String>(
+  return showAdaptiveActionMenu<String>(
     context: context,
     backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
     ),
     isScrollControlled: true,
+    desktopScrollWrap: false,
     constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.6),
     builder: (ctx) => SafeArea(
       child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -620,7 +640,7 @@ void showAudibleBookMenu(BuildContext context, {
   final isFutureRelease =
       releaseDateTime != null && releaseDateTime.isAfter(DateTime.now());
 
-  showModalBottomSheet(
+  showAdaptiveActionMenu(
     context: context,
     backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
     shape: const RoundedRectangleBorder(
@@ -704,7 +724,7 @@ Future<void> _addToCalendar(BuildContext context, String title, String seriesNam
   final eventTitle = '$title - $seriesName';
   final description = l.audibleSeriesCalendarDescription(seriesName);
 
-  if (Platform.isAndroid) {
+  if (AppPlatform.isAndroid) {
     final begin = DateTime(date.year, date.month, date.day).millisecondsSinceEpoch;
     final end = DateTime(date.year, date.month, date.day, 23, 59).millisecondsSinceEpoch;
     final uri = Uri.parse(
@@ -718,7 +738,7 @@ Future<void> _addToCalendar(BuildContext context, String title, String seriesNam
     try {
       await launchUrl(uri);
       return;
-    } catch (_) {}
+    } catch (e) { debugPrint('[RMAB] _addToCalendar failed: ${e.runtimeType}'); }
   }
 
   final dateFormatted = '${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}';

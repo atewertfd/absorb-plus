@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'session_cache_prune.dart';
 import 'user_account_service.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'session_cache_prune.dart';
 
 /// Caches playback session metadata (track URLs, chapters, duration) per item
 /// so the app can start playback immediately on cold start without waiting for
@@ -74,11 +75,16 @@ class SessionCache {
   }) async {
     try {
       final prefs = await SharedPreferences.getInstance();
+      // Absorb Plus: a remove rewrites the whole prefs file on Windows even
+      // for a missing key, and every socket item_updated lands here.
+      Future<void> drop(String k) async {
+        if (prefs.containsKey(k)) await prefs.remove(k);
+      }
       if (episodeId != null) {
-        await prefs.remove(_key(itemId, episodeId));
+        await drop(_key(itemId, episodeId));
       } else {
         // Clear the item key and any episode keys under it
-        await prefs.remove(_key(itemId, null));
+        await drop(_key(itemId, null));
         final scope = UserAccountService().activeScopeKey;
         final prefix = scope.isEmpty ? '' : '$scope:';
         final itemPrefix = '${prefix}session_cache_${itemId}_';

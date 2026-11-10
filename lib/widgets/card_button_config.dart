@@ -1,8 +1,9 @@
-import '../utils/web_safe_platform.dart'; // web-safe Platform
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../services/chromecast_service.dart';
 import '../services/wording.dart';
+import '../utils/app_platform.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/fork_platform.dart';
 
 class CardButtonDef {
@@ -50,6 +51,8 @@ String localizedCardButtonLabel(AppLocalizations l, CardButtonDef def) {
       return l.findInEbook;
     case 'lyrics':
       return l.lyricsMode;
+    case 'gototime': // Absorb Plus
+      return l.goToTime;
   }
   return def.label;
 }
@@ -59,10 +62,17 @@ String localizedCardButtonLabel(AppLocalizations l, CardButtonDef def) {
 /// - F-Droid (GMS-free): Chromecast needs Google Play Services, so the stub
 ///   service reports castSupported=false and the button is dropped entirely.
 final Set<String> _hiddenButtons = {
-  if (Platform.isIOS) 'cast',
+  if (AppPlatform.lacksPhonePlugins || AppPlatform.isIOS) 'cast',
   if (!ChromecastService.castSupported) 'cast',
   // AirPlay is iOS-only (Chromecast covers Android).
-  if (!Platform.isIOS) 'airplay',
+  if (AppPlatform.lacksPhonePlugins || !AppPlatform.isIOS) 'airplay',
+  if (AppPlatform.lacksPhonePlugins) ...{
+    'car',
+    // Absorb Plus: downloads and the equalizer work on Windows and Linux.
+    if (!ForkPlatform.isDesktop) 'download',
+    if (!ForkPlatform.isDesktop) 'equalizer',
+  },
+  if (AppPlatform.isWeb) 'ebook',
   ...ForkPlatform.hiddenCardButtons(), // Absorb Plus: cast and live transcript are Android-only
 };
 
@@ -84,6 +94,7 @@ const _allCardButtons = [
   CardButtonDef('ebook', 'Read', Icons.menu_book_rounded),
   CardButtonDef('findinebook', 'Find position in ebook', Icons.manage_search_rounded),
   CardButtonDef('lyrics', 'Live transcript', Icons.subtitles_rounded),
+  CardButtonDef('gototime', 'Go to time', Icons.more_time_rounded), // Absorb Plus
 ];
 
 /// Card buttons filtered for the current platform.

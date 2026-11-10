@@ -5,6 +5,8 @@ import 'api_service.dart';
 import 'download_service.dart';
 import 'progress_sync_service.dart';
 import 'scoped_prefs.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'local_session_queue.dart';
 
 /// Owns client-built LOCAL playback sessions for downloaded/offline plays.
 ///
@@ -41,7 +43,9 @@ class LocalSessionService {
   bool _flushing = false;
   // Set once a server returns 404/501 for /api/session/local: that server is
   // too old, so route everything through the legacy /play flush instead.
-  bool _localUnsupported = false;
+  // Absorb Plus: per server, so one old (or BookOrbit) server doesn't send
+  // every account after it down the legacy path for the rest of the run.
+  final Set<String> _localUnsupportedOn = {};
 
   // ── Date helpers (must match home_widget_service._dateKey so day buckets
   //    line up with the streak calculation). ──
@@ -73,6 +77,15 @@ class LocalSessionService {
         debugPrint('[LocalSession] active session unreadable, dropped: ${e.runtimeType}');
         _active = null;
       }
+      // Absorb Plus: a record that decodes but lacks the numbers accrue
+      // reads would throw on every tick, losing the listening each time.
+      // Drop it once instead; the next start begins a fresh session.
+      if (_active != null &&
+          (_active!['updatedAt'] is! num || _active!['timeListening'] is! num)) {
+        debugPrint('[LocalSession] active session malformed, dropped');
+        _active = null;
+        await ScopedPrefs.remove(_kActive);
+      }
     }
     _loaded = true;
   }
@@ -103,7 +116,9 @@ class LocalSessionService {
         'duration': s['duration'],
         'startTime': s['startTime'],
         'currentTime': s['currentTime'],
-        'timeListening': s['timeListening'],
+        // Absorb Plus: minus anything a legacy /play send already credited.
+        'timeListening': (s['timeListening'] as num? ?? 0) -
+            (s['legacySent'] as num? ?? 0),
         'startedAt': s['startedAt'],
         'updatedAt': s['updatedAt'],
         'date': s['date'],
@@ -136,7 +151,7 @@ class LocalSessionService {
     _active = null;
     _loaded = false;
     _flushing = false;
-    _localUnsupported = false;
+    _localUnsupportedOn.clear();
     clock = DateTime.now;
   }
 
@@ -147,10 +162,12 @@ class LocalSessionService {
   /// next connection, and start clean.
   Future<void> init() async {
     await _loadActive();
-    if (_active != null) {
-      debugPrint('[LocalSession] Recovering orphaned active session ${_active!['id']} into pending');
-      await _enqueue(_active!);
-      _active = null;
+    // Absorb Plus (IMP-008): work on a copy taken before any await.
+    final active = _active;
+    if (active != null) {
+      debugPrint('[LocalSession] Recovering orphaned active session ${active['id']} into pending');
+      await _enqueue(active);
+      if (identical(_active, active)) _active = null;
       await _persistActive();
     }
   }
@@ -196,7 +213,7 @@ class LocalSessionService {
     if (_active != null) {
       await finalizeActive();
     }
-    _active = {
+    final session = <String, dynamic>{
       'id': _uuid(),
       'progressKey': progressKey,
       'libraryItemId': libraryItemId,
@@ -216,8 +233,9 @@ class LocalSessionService {
       'displayAuthor': displayAuthor,
       if (playMethod != null) 'playMethod': playMethod,
     };
+    _active = session;
     await _persistActive();
-    debugPrint('[LocalSession] Began session ${_active!['id']} for $progressKey ($today)');
+    debugPrint('[LocalSession] Began session ${session['id']} for $progressKey ($today)');
   }
 
   /// Accrue [seconds] of listening at [currentTime]. Rolls over to a new
@@ -232,17 +250,20 @@ class LocalSessionService {
     if (seconds <= 0) return;
     if (DownloadService().isFromOtherAccount(progressKey)) return;
     await _loadActive();
-    if (_active == null) {
+    // Absorb Plus (IMP-008): work on a copy; the session can be finalized
+    // (stop, finish) while this awaits.
+    var active = _active;
+    if (active == null) {
       debugPrint('[LocalSession] accrue with no active session — skipping');
       return;
     }
-    if (_active!['progressKey'] != progressKey) {
-      debugPrint('[LocalSession] accrue key mismatch (${_active!['progressKey']} != $progressKey) — finalizing stale session');
+    if (active['progressKey'] != progressKey) {
+      debugPrint('[LocalSession] accrue key mismatch (${active['progressKey']} != $progressKey) — finalizing stale session');
       await finalizeActive();
       return;
     }
 
-    final lastMs = (_active!['updatedAt'] as num).toInt();
+    final lastMs = (active['updatedAt'] as num).toInt();
     // A backward device clock must never move the session to an earlier day or
     // mint a spurious session — clamp to the last accrual time so the day is
     // derived from a non-decreasing timestamp.
@@ -251,13 +272,14 @@ class LocalSessionService {
     final effective = DateTime.fromMillisecondsSinceEpoch(nowMs);
     final today = _dateKey(effective);
 
-    if (_active!['date'] != today) {
+    if (active['date'] != today) {
       // Day boundary: freeze the old session (verbatim timestamps) and start a
       // new one for today so listening is attributed to the correct day.
-      final old = _active!;
+      final old = active;
       debugPrint('[LocalSession] Day rollover: ${old['date']} -> $today (session ${old['id']})');
       await _enqueue(old);
-      _active = {
+      if (!identical(_active, old)) return; // finalized meanwhile
+      active = _active = {
         'id': _uuid(),
         'progressKey': progressKey,
         'libraryItemId': old['libraryItemId'],
@@ -277,13 +299,14 @@ class LocalSessionService {
       };
       // Ship the just-closed day promptly when online.
       if (api != null) await flushPending(api: api);
+      if (!identical(_active, active)) return; // finalized meanwhile
     }
 
-    _active!['timeListening'] = (_active!['timeListening'] as num).toInt() + seconds;
-    _active!['currentTime'] = currentTime;
-    _active!['updatedAt'] = nowMs;
-    _active!['date'] = today;
-    _active!['dayOfWeek'] = _dayOfWeek(effective);
+    active['timeListening'] = (active['timeListening'] as num).toInt() + seconds;
+    active['currentTime'] = currentTime;
+    active['updatedAt'] = nowMs;
+    active['date'] = today;
+    active['dayOfWeek'] = _dayOfWeek(effective);
     await _persistActive();
 
     if (api != null) await pushActive(api: api);
@@ -293,46 +316,67 @@ class LocalSessionService {
   /// true when the server durably recorded it (so the caller can skip queuing).
   Future<bool> pushActive({required ApiService api}) async {
     await _loadActive();
-    if (_active == null) return true;
-    if (_localUnsupported) {
-      await _legacyFlush(api, _active!);
-      return true;
+    // Absorb Plus (BUG-007, upstream 4e0c6865): the session can end while
+    // the push is away (a book finishing during a server timeout), so work
+    // from the copy taken here.
+    final active = _active;
+    if (active == null) return true;
+    if (_localUnsupportedOn.contains(api.baseUrl)) {
+      return _legacyPushActive(api);
     }
     final result =
-        await api.syncLocalSession(await _trustedPayload(api, _active!));
+        await api.syncLocalSession(await _trustedPayload(api, active));
     if (result.serverTooOld) {
       debugPrint('[LocalSession] Server lacks /api/session/local — falling back to /play');
-      _localUnsupported = true;
-      await _legacyFlush(api, _active!);
-      return true;
+      _localUnsupportedOn.add(api.baseUrl);
+      if (_active == null) return false; // ended meanwhile: finalize queued it
+      return _legacyPushActive(api);
     }
-    final ct = (_active!['currentTime'] as num?)?.toDouble() ?? 0;
+    final ct = (active['currentTime'] as num?)?.toDouble() ?? 0;
     if (!result.ok) {
-      debugPrint('[LocalSession] Push failed for ${_active!['id']} at ${ct.toStringAsFixed(0)}s');
+      debugPrint('[LocalSession] Push failed for ${active['id']} at ${ct.toStringAsFixed(0)}s');
     } else if (_lastPushLogAt == null ||
         clock().difference(_lastPushLogAt!) >= const Duration(minutes: 5)) {
       _lastPushLogAt = clock();
-      debugPrint('[LocalSession] Pushed ${_active!['id']} at ${ct.toStringAsFixed(0)}s');
+      debugPrint('[LocalSession] Pushed ${active['id']} at ${ct.toStringAsFixed(0)}s');
     }
     return result.ok;
   }
 
   DateTime? _lastPushLogAt;
 
+  /// Absorb Plus: the legacy push sends only what the active session gained
+  /// since its last legacy send (the sent total is kept on the session), and
+  /// reports whether the server took it, so a failed push is queued, not
+  /// dropped as sent.
+  Future<bool> _legacyPushActive(ApiService api) async {
+    final s = _active!;
+    final ok = await _legacyFlush(api, s);
+    if (ok && identical(_active, s)) await _persistActive();
+    return ok;
+  }
+
   String newSessionId() => _uuid();
 
   /// A finished session that couldn't be sent (reading time logged while
   /// offline), queued to go with the next replay.
-  Future<void> queue(Map<String, dynamic> session) => _enqueue(session);
+  Future<void> queue(Map<String, dynamic> session) async {
+    // Absorb Plus: another account's download is not this server's to log,
+    // and its queued session could never be placed.
+    final itemId = session['libraryItemId'];
+    if (itemId is String && DownloadService().isFromOtherAccount(itemId)) return;
+    await _enqueue(session);
+  }
 
   /// Clear the active session (stop / finish / item change). When [pushed] is
   /// false (offline, or the push failed) it's queued for replay; when true it's
   /// already on the server so we just drop it.
   Future<void> finalizeActive({bool pushed = false}) async {
     await _loadActive();
-    if (_active == null) return;
-    if (!pushed) await _enqueue(_active!);
-    _active = null;
+    final active = _active; // Absorb Plus (IMP-008)
+    if (active == null) return;
+    if (!pushed) await _enqueue(active);
+    if (identical(_active, active)) _active = null;
     await _persistActive();
   }
 
@@ -367,11 +411,13 @@ class LocalSessionService {
         for (var i = 0; i < combined.length; i++) {
           final sent = await _legacyFlush(api, combined[i]);
           if (sent && i < sessionRaw.length) done.add(sessionRaw[i]);
+          // The active session keeps going: remember what it has sent.
+          if (sent && identical(combined[i], _active)) await _persistActive();
         }
         await _dropPending(done);
       }
 
-      if (_localUnsupported) {
+      if (_localUnsupportedOn.contains(api.baseUrl)) {
         await legacyAll();
         return;
       }
@@ -387,10 +433,14 @@ class LocalSessionService {
         debugPrint('[LocalSession] Flushed ${combined.length} local session(s)');
       } else if (result.serverTooOld) {
         debugPrint('[LocalSession] Server lacks /api/session/local-all — falling back to /play');
-        _localUnsupported = true;
+        _localUnsupportedOn.add(api.baseUrl);
         await legacyAll();
+        } else {
+        // Absorb Plus: settle each session on its own (local_session_queue.dart).
+        await applyReplayOutcome(_kPending,
+            settleReplay(sessionRaw, sessions, result, alsoDrop: done));
       }
-      // Network failure: leave the queue intact for the next trigger.
+      // Network failure: leave the rest of the queue for the next trigger.
     } finally {
       _flushing = false;
     }
@@ -406,16 +456,22 @@ class LocalSessionService {
       final epId = s['episodeId'] as String?;
       final currentTime = (s['currentTime'] as num?)?.toDouble() ?? 0;
       final duration = (s['duration'] as num?)?.toDouble() ?? 0;
-      final secs = (s['timeListening'] as num?)?.toInt() ?? 0;
+      // Absorb Plus: each /play session adds its time, so send only what
+      // this session gained since its last legacy send, not the running
+      // total (ten one-minute pushes credited 55 minutes).
+      final total = (s['timeListening'] as num?)?.toInt() ?? 0;
+      final secs = total - ((s['legacySent'] as num?)?.toInt() ?? 0);
       if (secs <= 0) return true;
       final data = epId != null
           ? await api.startEpisodePlaybackSession(libId, epId)
           : await api.startPlaybackSession(libId);
       final sid = data?['id'] as String?;
       if (sid == null) return false;
-      final ok = await api.syncPlaybackSession(sid,
-          currentTime: currentTime, duration: duration, timeListened: secs);
-      await api.closePlaybackSession(sid);
+      final ok =
+        await api.syncPlaybackSession(sid,
+            currentTime: currentTime, duration: duration, timeListened: secs);
+        await api.closePlaybackSession(sid);
+      if (ok) s['legacySent'] = total;
       return ok;
     } catch (e) {
       debugPrint('[LocalSession] legacy flush failed: $e');

@@ -5,10 +5,11 @@
 
 #include <string>
 
-// One running copy per executable path (absorb-plus fork). A second launch of
-// the same absorb.exe hands its command line to the running window, which
-// comes to the front, and then exits. Installed and portable copies in other
-// folders are separate, as before.
+// One running copy per data folder (absorb-plus fork). Every copy (installed,
+// portable, the beta folder, a fresh Release build) shares
+// %APPDATA%\com.barnabas\Absorb Plus, so they must not run at once: a second
+// launch of any copy hands its command line to the running window, which
+// comes to the front, and then exits. --probe builds use their own lock.
 class SingleInstance {
  public:
   // dwData of the WM_COPYDATA a second launch sends to the running window.

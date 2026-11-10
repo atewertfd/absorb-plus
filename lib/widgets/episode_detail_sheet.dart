@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import '../l10n/app_localizations.dart';
 import '../services/wording.dart';
 import '../providers/library_provider.dart';
@@ -17,10 +19,14 @@ import 'overlay_toast.dart';
 import 'absorb_placement.dart';
 import 'playlist_picker_sheet.dart';
 import 'action_pill.dart';
+import 'adaptive_modal.dart';
 import '../main.dart' show rootNavigatorKey;
 import 'stackable_sheet.dart';
 import 'episode_list_sheet.dart';
 import '../utils/duration_format.dart';
+import '../utils/app_platform.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../ui_themes/app_backdrop.dart'; // Absorb Plus
 
 class EpisodeDetailSheet extends StatefulWidget {
   static final Set<String> _openEpisodeKeys = <String>{};
@@ -156,6 +162,7 @@ class _EpisodeDetailSheetState extends State<EpisodeDetailSheet> {
         api: api, itemId: _itemId, title: _episodeTitle, author: _showTitle,
         coverUrl: api.getCoverUrl(_itemId), totalDuration: _duration, chapters: _chapters,
         episodeId: _episodeId,
+        libraryId: widget.podcastItem['libraryId'] as String?,
       );
       if (mounted) Navigator.of(context, rootNavigator: true).popUntil((route) => route.isFirst);
       return;
@@ -198,6 +205,7 @@ class _EpisodeDetailSheetState extends State<EpisodeDetailSheet> {
   }
 
   Future<void> _download() async {
+    if (AppPlatform.lacksPhonePlugins) return;
     final auth = context.read<AuthProvider>();
     final api = auth.apiService;
     if (api == null) return;
@@ -274,12 +282,13 @@ class _EpisodeDetailSheetState extends State<EpisodeDetailSheet> {
         );
         if (confirmed != true) return;
         // Mark finished — update server then local state for instant UI
-        await api.updateEpisodeProgress(
+        final pushed = await api.updateEpisodeProgress(
           _itemId, _episodeId,
           currentTime: _duration,
           duration: _duration,
           isFinished: true,
         );
+        if (!pushed) await ProgressSyncService().saveFinishedOffline(key, _duration);
         lib.markFinishedLocally(key, skipAutoAdvance: true);
         if (mounted) {
           showOverlayToast(
@@ -402,8 +411,10 @@ class _EpisodeDetailSheetState extends State<EpisodeDetailSheet> {
 
             // Download + Finished row
             Row(children: [
-              Expanded(child: _downloadCell(cs, l, dlKey)),
-              const SizedBox(width: 8),
+              if (!AppPlatform.lacksPhonePlugins) ...[
+                Expanded(child: _downloadCell(cs, l, dlKey)),
+                const SizedBox(width: 8),
+              ],
               Expanded(child: _finishedCell(cs, isFinished)),
               const SizedBox(width: 8),
               GestureDetector(
@@ -495,7 +506,7 @@ class _EpisodeDetailSheetState extends State<EpisodeDetailSheet> {
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: pageSurfaceColor(context),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Stack(children: [
@@ -515,7 +526,7 @@ class _EpisodeDetailSheetState extends State<EpisodeDetailSheet> {
       if (coverUrl != null)
         Positioned.fill(
           child: RepaintBoundary(
-            child: CachedNetworkImage(
+            child: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
               imageUrl: coverUrl, fit: BoxFit.cover,
               httpHeaders: lib.mediaHeaders,
               imageBuilder: (_, p) => ImageFiltered(
@@ -530,9 +541,9 @@ class _EpisodeDetailSheetState extends State<EpisodeDetailSheet> {
       Positioned.fill(child: DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(
         begin: Alignment.topCenter, end: Alignment.bottomCenter,
         colors: [
-          Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.6),
-          Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.85),
-          Theme.of(context).scaffoldBackgroundColor,
+          pageSurfaceColor(context).withValues(alpha: 0.6),
+          pageSurfaceColor(context).withValues(alpha: 0.85),
+          pageSurfaceColor(context),
         ],
       )))),
     ];
@@ -666,8 +677,10 @@ class _EpisodeDetailSheetState extends State<EpisodeDetailSheet> {
       _playButton(cs, tt, l, progress, isFinished),
       const SizedBox(height: 10),
       Row(children: [
-        Expanded(child: _downloadCell(cs, l, dlKey)),
-        const SizedBox(width: 8),
+        if (!AppPlatform.lacksPhonePlugins) ...[
+          Expanded(child: _downloadCell(cs, l, dlKey)),
+          const SizedBox(width: 8),
+        ],
         Expanded(child: _finishedCell(cs, isFinished)),
       ]),
       const SizedBox(height: 18),
@@ -753,7 +766,7 @@ class _EpisodeDetailSheetState extends State<EpisodeDetailSheet> {
 
   void _showMoreSheet(BuildContext context, LibraryProvider lib, String dlKey, double progress, bool isFinished) {
     final cs = Theme.of(context).colorScheme;
-    showModalBottomSheet(
+    showAdaptiveActionMenu(
       context: context,
       backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
       shape: const RoundedRectangleBorder(

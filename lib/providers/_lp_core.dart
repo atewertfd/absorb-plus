@@ -154,7 +154,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
             }
           }
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[Library] _loadRollingDownloadSeries failed: ${e.runtimeType}'); }
     }
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('rollingDownload')) {
@@ -312,6 +312,11 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   // ── Offline mode ──
 
   Future<void> setManualOffline(bool value) async {
+    if (AppPlatform.lacksPhonePlugins) {
+      _manualOffline = false;
+      _networkOffline = false;
+      return;
+    }
     debugPrint('[Library] setManualOffline($value)');
     _manualOffline = value;
     final prefs = await SharedPreferences.getInstance();
@@ -329,6 +334,8 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         return;
       }
       _networkOffline = false;
+      if (!_isBackgrounded && !_readerQuiet) _softReconnectSocket(); // fork
+      _startBookOrbitPoll();
       if (_api != null) {
         debugPrint('[Library] Manual offline off — flushing pending syncs');
         ProgressSyncService().flushPendingSync(api: _api!);
@@ -341,12 +348,21 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         (this as LibraryProvider).refresh();
       }
     } else {
+      // Fork: offline means no live connection either.
+      _softDisconnectSocket();
+      _stopBookOrbitPoll();
+      _stopHealthCheckTimer();
       _buildOfflineSections();
     }
     notifyListeners();
   }
 
   Future<void> restoreOfflineMode() async {
+    if (AppPlatform.lacksPhonePlugins) {
+      _manualOffline = false;
+      _networkOffline = false;
+      return;
+    }
     final prefs = await SharedPreferences.getInstance();
     _manualOffline = prefs.getBool('manual_offline_mode') ?? false;
   }
@@ -406,6 +422,11 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   void setNetworkOffline(bool offline) {
+    if (AppPlatform.lacksPhonePlugins) {
+      _networkOffline = false;
+      AudioPlayerService().setKnownOffline(false);
+      return;
+    }
     final wasOffline = _networkOffline;
     _networkOffline = offline;
     // Mirror into AudioPlayerService so playback start can skip server session
@@ -448,6 +469,12 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   void _buildOfflineSections() {
+    if (AppPlatform.lacksPhonePlugins) {
+      _personalizedSections = [];
+      _errorMessage = null;
+      _isLoading = false;
+      return;
+    }
     final isPodcast = isPodcastLibrary;
     final allDownloads = DownloadService().downloadedItems;
     final downloads = allDownloads.where((dl) {
@@ -457,7 +484,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
           _selectedLibraryId != null) {
         return libraryId == _selectedLibraryId;
       }
-      return (dl.itemId.length > 36) == isPodcast;
+      return isEpisodeKey(dl.itemId) == isPodcast;
     }).toList();
     final downloadedIds = downloads.map((d) => d.itemId).toSet();
     final keptEbooks = isPodcast
@@ -492,21 +519,21 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       Map<String, dynamic>? ebookFile;
       if (dl.sessionData != null) {
         try {
-          final session = jsonDecode(dl.sessionData!) as Map<String, dynamic>;
+          final session = sessionJsonCache[dl.sessionData]!; // Absorb Plus: decoded once (null = bad JSON, caught below)
           duration = (session['duration'] as num?)?.toDouble() ?? 0;
           chapters = session['chapters'] as List<dynamic>? ?? [];
           episodeTitle = session['episodeTitle'] as String? ??
               session['displayTitle'] as String?;
           ebookFile = resolveEbookFile(
               session['libraryItem'] as Map<String, dynamic>?);
-        } catch (_) {}
+        } catch (e) { debugPrint('[Library] _buildOfflineSections failed: ${e.runtimeType}'); }
       }
 
-      final isCompound = dl.itemId.length > 36;
+      final isCompound = isEpisodeKey(dl.itemId);
       late final Map<String, dynamic> entity;
       if (isCompound) {
-        final showId = dl.itemId.substring(0, 36);
-        final episodeId = dl.itemId.substring(37);
+        final showId = itemIdOfKey(dl.itemId);
+        final episodeId = episodeIdOfKey(dl.itemId)!;
         entity = {
           'id': showId,
           '_absorbingKey': dl.itemId,
@@ -554,9 +581,9 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     for (final kept in keptEbooks) {
       Map<String, dynamic>? item;
       try {
-        item = (jsonDecode(kept.sessionData ?? '{}')
+        item = (sessionJsonCache[kept.sessionData ?? '{}'] // Absorb Plus: decoded once
             as Map<String, dynamic>)['libraryItem'] as Map<String, dynamic>?;
-      } catch (_) {}
+      } catch (e) { debugPrint('[Library] _buildOfflineSections failed: ${e.runtimeType}'); }
       final ebookFile = resolveEbookFile(item);
       downloadedEntities.add({
         'id': kept.itemId,
@@ -609,8 +636,17 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       );
 
   void _onDownloadsChanged() {
-    if (isOffline || _personalizedSections.isEmpty) return;
     final signature = _currentDownloadedShelfSignature();
+    // Fork: offline Home is built from the downloads, so rebuild it when they
+    // change (a deleted download, or the index loading after a cold start).
+    if (isOffline) {
+      if (signature == _downloadedShelfSignature) return;
+      _downloadedShelfSignature = signature;
+      _buildOfflineSections();
+      notifyListeners();
+      return;
+    }
+    if (_personalizedSections.isEmpty) return;
     if (signature == _downloadedShelfSignature &&
         identical(_personalizedSections, _downloadedShelfSections)) {
       return;
@@ -625,6 +661,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   void _injectDownloadedSection() {
+    if (AppPlatform.lacksPhonePlugins) return;
     final isPodcast = isPodcastLibrary;
     final allDownloads = DownloadService().downloadedItems;
     final downloads = allDownloads.where((dl) {
@@ -634,7 +671,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
           _selectedLibraryId != null) {
         return libraryId == _selectedLibraryId;
       }
-      return (dl.itemId.length > 36) == isPodcast;
+      return isEpisodeKey(dl.itemId) == isPodcast;
     }).toList();
     if (downloads.isEmpty) return;
 
@@ -646,20 +683,20 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       Map<String, dynamic>? ebookFile;
       if (dl.sessionData != null) {
         try {
-          final session = jsonDecode(dl.sessionData!) as Map<String, dynamic>;
+          final session = sessionJsonCache[dl.sessionData]!; // Absorb Plus: decoded once (null = bad JSON, caught below)
           duration = (session['duration'] as num?)?.toDouble() ?? 0;
           chapters = session['chapters'] as List<dynamic>? ?? [];
           episodeTitle = session['episodeTitle'] as String? ??
               session['displayTitle'] as String?;
           ebookFile = resolveEbookFile(
               session['libraryItem'] as Map<String, dynamic>?);
-        } catch (_) {}
+        } catch (e) { debugPrint('[Library] _injectDownloadedSection failed: ${e.runtimeType}'); }
       }
 
-      final isCompound = dl.itemId.length > 36;
+      final isCompound = isEpisodeKey(dl.itemId);
       if (isCompound) {
-        final showId = dl.itemId.substring(0, 36);
-        final episodeId = dl.itemId.substring(37);
+        final showId = itemIdOfKey(dl.itemId);
+        final episodeId = episodeIdOfKey(dl.itemId)!;
         entities.add({
           'id': showId,
           '_absorbingKey': dl.itemId,
@@ -801,6 +838,11 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     if (seriesId != null) _hiddenShelfSeries[seriesId] = now;
     _personalizedSections = _withoutJustHidden(_personalizedSections);
     notifyListeners();
+  }
+
+  /// Undoes [hideFromContinueShelves] for a series the server put back.
+  void unhideSeriesFromContinueShelves(String seriesId) {
+    if (_hiddenShelfSeries.remove(seriesId) != null) notifyListeners();
   }
 
   List<dynamic> _withoutJustHidden(List<dynamic> sections) {
@@ -988,7 +1030,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     for (final dl in DownloadService().downloadedItems) {
       itemIds.add(dl.itemId);
     }
+    // Fork (C9): only ids with a local entry; the rest read as null anyway.
+    final withLocal = await sync.withLocalProgress(itemIds);
     for (final itemId in itemIds) {
+      if (!withLocal.contains(itemId)) continue;
       if (_locallyFinishedItems.contains(itemId)) continue;
       if (_resetItems.contains(itemId)) continue;
       final serverFinished = _progressMap[itemId]?['isFinished'] == true;
@@ -1034,15 +1079,15 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   void resetProgressFor(String itemId) {
-    if (itemId.length > 36 && _progressMap[itemId]?['isFinished'] == true) {
-      nudgeUnfinishedEpisodeCount(itemId.substring(0, 36), 1);
+    if (isEpisodeKey(itemId) && _progressMap[itemId]?['isFinished'] == true) {
+      nudgeUnfinishedEpisodeCount(itemIdOfKey(itemId), 1);
     }
     // The widget stash is a third copy of the position, outside the scoped
     // prefs. Left alone it wins the resume race and the first sync writes the
     // old spot back to the server.
     unawaited(HomeWidgetService().clearStashedNowPlayingPosition(
-      itemId.length > 36 ? itemId.substring(0, 36) : itemId,
-      itemId.length > 36 ? itemId.substring(37) : null,
+      itemIdOfKey(itemId),
+      episodeIdOfKey(itemId),
     ));
     _progressMap.remove(itemId);
     _localProgressOverrides.remove(itemId);
@@ -1099,10 +1144,13 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
 
   Future<void> _refreshProgress() async {
     if (_api == null) return;
+    final self = this as LibraryProvider; // fork: drop a switched account's answer
+    final gen = self._accountLoadGeneration;
     try {
       final pendingSyncs =
           (await ScopedPrefs.getStringList('pending_syncs')).toSet();
       final progressList = await _api!.getAllProgress();
+      if (gen != self._accountLoadGeneration) return;
       if (progressList != null) {
           final localFinished = <String, Map<String, dynamic>>{};
           if (_lastFinishedItemId != null &&
@@ -1193,7 +1241,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
           (this as _AbsorbingMixin)
               ._pruneRemotelyFinishedBooks(_progressMap.keys);
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Library] _refreshProgress failed: ${e.runtimeType}'); }
   }
 
   // ── Connectivity ──
@@ -1214,10 +1262,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
           } else {
             _startServerPingTimer();
           }
-          _startLocalProbeTimer();
+          _startLocalProbeTimer(networkChanged: true);
         });
       } else if (_deviceHasConnectivity) {
-        _startLocalProbeTimer();
+        _startLocalProbeTimer(networkChanged: true);
       }
     });
     _connectivitySub = Connectivity().onConnectivityChanged.listen((result) async {
@@ -1262,7 +1310,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
             _goOffline();
           }
         }
-        _startLocalProbeTimer();
+        _startLocalProbeTimer(networkChanged: true);
       });
     });
   }
@@ -1355,7 +1403,11 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   static const _remoteProbeFastMisses = 4;
   static const _remoteProbeMaxGap = Duration(minutes: 5);
 
-  void _startLocalProbeTimer() {
+  /// [networkChanged]: called from the connectivity handlers. Only then do
+  /// the away-from-home checks go back to every 30 s; playback starts,
+  /// foregrounding and reader closes used to reset them too, so the 5-minute
+  /// spacing was rarely reached (Absorb Plus, audit C14).
+  void _startLocalProbeTimer({bool networkChanged = false}) {
     final auth = _auth;
     if (auth == null) return;
     if (!auth.localServerEnabled || auth.localServerUrl.isEmpty) {
@@ -1368,8 +1420,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       _stopLocalProbeTimer();
       return;
     }
-    _remoteProbeMisses = 0;
-    _nextRemoteProbeAt = null;
+    if (networkChanged) {
+      _remoteProbeMisses = 0;
+      _nextRemoteProbeAt = null;
+    }
     if (_localProbeTimer != null) return;
     _localProbeFailures = 0;
     _localProbeTimer = Timer.periodic(_localProbeInterval, (_) => _probeLocalServer());
@@ -1391,8 +1445,25 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     if (url == auth.localServerUrl) {
       _localLastReachableAt = DateTime.now();
       _localProbeFailures = 0;
+      _remoteProbeMisses = 0; // fork (C14): home again
+      _nextRemoteProbeAt = null;
     }
   }
+
+  // Fork (C14) test seams.
+  @visibleForTesting
+  ({int misses, DateTime? nextAt}) get debugRemoteProbeBackoff =>
+      (misses: _remoteProbeMisses, nextAt: _nextRemoteProbeAt);
+
+  @visibleForTesting
+  void debugSetRemoteProbeBackoff(int misses, DateTime? nextAt) {
+    _remoteProbeMisses = misses;
+    _nextRemoteProbeAt = nextAt;
+  }
+
+  @visibleForTesting
+  void debugStartLocalProbeTimer({bool networkChanged = false}) =>
+      _startLocalProbeTimer(networkChanged: networkChanged);
 
   Future<void> _probeLocalServer() async {
     final auth = _auth;
@@ -1473,10 +1544,19 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     _healthCheckTimer = Timer.periodic(const Duration(seconds: 60), (_) async {
       if (_networkOffline || _manualOffline || !_deviceHasConnectivity) return;
       if ((_auth?.activeServerUrl ?? _auth?.serverUrl ?? '').isEmpty) return;
-      final reachableUrl =
+      var reachableUrl =
           await _pingActiveServerWithFallback(const Duration(seconds: 10));
       if (reachableUrl == null) {
-        debugPrint('[Library] Health check failed — server unreachable, going offline');
+        // One lost answer is often a short drop on the phone's side, so ask
+        // once more before tearing the online state down.
+        debugPrint('[Library] Health check missed - confirming before going offline');
+        await Future.delayed(const Duration(seconds: 3));
+        if (_networkOffline || _manualOffline || !_deviceHasConnectivity) return;
+        reachableUrl =
+            await _pingActiveServerWithFallback(const Duration(seconds: 10));
+      }
+      if (reachableUrl == null) {
+        debugPrint('[Library] Health check failed twice — server unreachable, going offline');
         setNetworkOffline(true);
       } else {
         notifyServerReachable(reachableUrl);
@@ -1501,7 +1581,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     _bookOrbitPollTimer?.cancel();
     _bookOrbitPollTimer = null;
     final api = _api;
-    if (_auth?.isBookOrbit != true || api == null ||
+    if (_auth?.isBookOrbit != true || api == null || _manualOffline ||
         _isBackgrounded || _readerQuiet || PlayerSettings.einkMode) {
       BookOrbitNotificationSocket.instance.stop();
       return;
@@ -1676,7 +1756,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         BookSearchIndex().patchItem(item);
       }
       if (changed) notifyListeners();
-    } catch (_) {}
+    } catch (e) { debugPrint('[Library] _catchUpAfterBackground failed: ${e.runtimeType}'); }
   }
 
   void onPlaybackStarted() {
@@ -1694,7 +1774,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   void _softDisconnectSocket() {
-    if (_socketSoftDisconnected || _manualOffline) return;
+    if (_socketSoftDisconnected) return;
     _socketSoftDisconnected = true;
     SocketService().softDisconnect();
   }
@@ -1816,6 +1896,11 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   void _onRemoteProgressUpdated(Map<String, dynamic> mp) {
+    // Absorb Plus: cached item answers carry progress.
+    final progressItemId = mp['libraryItemId'];
+    if (progressItemId is String) {
+      LibraryItemRequestCache.instance.forgetItem(progressItemId);
+    }
     final itemId = mp['libraryItemId'] as String?;
     final episodeId = mp['episodeId'] as String?;
     if (itemId == null) return;
@@ -1891,7 +1976,8 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
               debugPrint('[Sync] Adopting newer remote position for paused player: '
                   '${posS.toStringAsFixed(1)}s -> ${serverTime.toStringAsFixed(1)}s');
               await player.seekTo(
-                  Duration(milliseconds: (serverTime * 1000).round()));
+                  Duration(milliseconds: (serverTime * 1000).round()),
+                  offerUndo: false);
             }
           }());
         }
@@ -1925,7 +2011,9 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       registerUpdatedAt(id, ts.toInt());
       // Mirror into AA/CarPlay so the next browse-tree refresh hands out a
       // ts-suffixed cover URI and the native cover cache can invalidate.
-      AndroidAutoService.notifyItemUpdated(id, ts.toInt());
+      if (!AppPlatform.lacksPhonePlugins) {
+        AndroidAutoService.notifyItemUpdated(id, ts.toInt());
+      }
     }
     if (id != null) {
       final coverPath = (data['media'] as Map<String, dynamic>?)?['coverPath'] as String?;
@@ -1933,28 +2021,54 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     }
     // Invalidate cached session metadata - track URLs may have changed
     if (id != null) SessionCache.clear(itemId: id);
-    loadPersonalizedView(force: true);
+    if (id != null) LibraryItemRequestCache.instance.forgetItem(id);
+    _requestHomeReloadFor(data);
     _checkSubscribedPodcastUpdate(data);
   }
 
   void _onRemoteItemRemoved(Map<String, dynamic> data) {
     final id = data['id'] as String?;
     if (id != null) SessionCache.clear(itemId: id);
-    loadPersonalizedView(force: true);
+    if (id != null) LibraryItemRequestCache.instance.forgetItem(id);
+    _requestHomeReloadFor(data);
   }
 
   void _onRemoteSeriesUpdated() {
-    loadPersonalizedView(force: true);
-    (this as LibraryProvider).loadSeries();
+    _socketRefresh.request(home: true, series: true);
   }
 
   void _onRemoteCollectionUpdated() {
-    loadPersonalizedView(force: true);
-    loadCollections();
+    _socketRefresh.request(home: true, collections: true);
   }
 
   void _onRemotePlaylistUpdated() {
-    loadPlaylists();
+    loadPlaylists(force: true);
+  }
+
+  // Absorb Plus: a scan's burst of item events becomes one Home reload, and
+  // only for the library on screen (another library's cached Home is just
+  // marked stale).
+  late final SocketRefreshCoalescer _socketRefresh =
+      SocketRefreshCoalescer(onFlush: (pending) {
+    if (pending.home) loadPersonalizedView(force: true);
+    if (pending.series) (this as LibraryProvider).loadSeries();
+    if (pending.collections) loadCollections(force: true);
+  });
+
+  /// Sign-out, account switch or dispose: nothing pending carries over, and
+  /// the next account's lists are fetched, not reused.
+  void _resetSocketRefresh() {
+    _socketRefresh.cancel();
+    _playlistsCooldown.clear();
+    _collectionsCooldown.clear();
+  }
+
+  void _requestHomeReloadFor(Map<String, dynamic> data) {
+    if (itemEventIsForLibrary(data, _selectedLibraryId)) {
+      _socketRefresh.request(home: true);
+    } else {
+      _sectionsFetchedAt.remove(data['libraryId']);
+    }
   }
 
   void _onRemoteUserUpdated(Map<String, dynamic> data) {
@@ -2017,6 +2131,9 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   /// load whether a newer one has started since (account or library switch).
   String? _personalizedInFlightLibrary;
   int _personalizedGeneration = 0;
+  // Fork (C10): server answers applied to Home. An empty answer leaves the
+  // shelves empty too, so emptiness can't tell the saved copy it came last.
+  int _personalizedAnswers = 0;
 
   Future<void> loadPersonalizedView({bool force = false}) async {
     final existing = _personalizedInFlight;
@@ -2079,7 +2196,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       for (final e in (section['entities'] as List<dynamic>? ?? const [])) {
         if (e is! Map<String, dynamic>) continue;
         final id = e['id'] as String?;
-        if (id == null || id.length > 36) continue;
+        if (id == null || isEpisodeKey(id)) continue;
         home.add(id);
         if (continueListening || n < 2) detail.add(id);
         n++;
@@ -2128,9 +2245,11 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     final libraryId = _selectedLibraryId;
     final scope = UserAccountService().activeScopeKey;
     if (libraryId == null || scope.isEmpty) return;
+    final answers = _personalizedAnswers;
     final snapshot = await HomeShelfSnapshot.instance.load(scope, libraryId);
     if (snapshot == null ||
         snapshot.isEmpty ||
+        answers != _personalizedAnswers ||
         _personalizedSections.isNotEmpty ||
         _selectedLibraryId != libraryId ||
         UserAccountService().activeScopeKey != scope ||
@@ -2168,10 +2287,15 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       // Progress and shelves load side by side (one round trip, not two).
       final progress = _refreshProgress();
       final List<dynamic>? view;
+      // Absorb Plus: podcast libraries ask for the RSS feed fields up
+      // front instead of loading the whole view a second time for them.
+      final withRss = isPodcastLibrary;
       try {
         view = await api.getPersonalizedView(
           libraryId,
-          include: const ['numEpisodesIncomplete'],
+          include: withRss
+              ? const ['numEpisodesIncomplete', 'rssfeed']
+              : const ['numEpisodesIncomplete'],
         );
       } finally {
         await progress;
@@ -2196,6 +2320,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         return;
       }
       _personalizedSections = _withoutJustHidden(view);
+      _personalizedAnswers++;
       _registerSectionEntities(_personalizedSections);
       // Saved only under the account the request was made for. (Not compared
       // by ApiService: startup replaces it once while this request runs, and
@@ -2210,6 +2335,13 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       loadCollections();
       _narratedToContinueListening();
       await (this as _AbsorbingMixin)._updateAbsorbingCache();
+      // Fork: a library flip during that await swapped in the other library's
+      // shelves; filing them (and the cooldown) under it left it stale.
+      if (_selectedLibraryId != libraryId) {
+        _isLoading = false;
+        notifyListeners();
+        return;
+      }
 
       _injectDownloadedSection();
 
@@ -2219,7 +2351,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       StartupTiming.markHomeReady();
       SiriService().scheduleCatalogUpdate();
 
-      if (isPodcastLibrary) {
+      if (withRss) {
+        _lastRssHydrationAt = DateTime.now();
+        _lastRssHydrationLibraryId = libraryId;
+      } else if (isPodcastLibrary) {
         _hydrateRssFeedFieldsDeferred();
       }
     } catch (e) {
@@ -2436,7 +2571,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
           await (this as _AbsorbingMixin)._updateAbsorbingCache();
           notifyListeners();
         }
-      } catch (_) {
+      } catch (e) { debugPrint('[Library] _hydrateRssFeedFieldsDeferred failed: ${e.runtimeType}');
       } finally {
         _rssHydrationInFlight = false;
       }
@@ -2456,6 +2591,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       await existing;
       return;
     }
+    if (!force && _playlistsCooldown.isFresh(libId, _playlists)) return;
 
     final inFlight = _doLoadPlaylists(libId);
     _playlistsInFlight = inFlight;
@@ -2474,11 +2610,16 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     final libId = forLibrary ?? _selectedLibraryId;
     if (_api == null || libId == null) return;
     _isLoadingPlaylists = true;
+    final self = this as LibraryProvider, gen = self._accountLoadGeneration; // fork
     try {
       // Keep whatever we already had when the request fails, rather than
       // blanking the shelves over one bad response.
       final loaded = await _api!.getLibraryPlaylists(libId);
-      if (loaded != null && _selectedLibraryId == libId) _playlists = loaded;
+      if (loaded != null && _selectedLibraryId == libId &&
+          gen == self._accountLoadGeneration) {
+        _playlists = loaded;
+        _playlistsCooldown.markFetched(libId, loaded);
+      }
       debugPrint('[Library] playlists for $libId: ${loaded?.length ?? 'failed'}');
     } catch (e) {
       debugPrint('[Library] playlists for $libId failed: $e');
@@ -2577,6 +2718,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       await existing;
       return;
     }
+    if (!force && _collectionsCooldown.isFresh(libId, _collections)) return;
 
     final inFlight = _doLoadCollections(libId);
     _collectionsInFlight = inFlight;
@@ -2595,10 +2737,15 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     final libId = forLibrary ?? _selectedLibraryId;
     if (_api == null || libId == null) return;
     _isLoadingCollections = true;
+    final self = this as LibraryProvider, gen = self._accountLoadGeneration; // fork
     try {
       final loaded = await _api!.getLibraryCollections(libId);
-      if (loaded != null && _selectedLibraryId == libId) _collections = loaded;
-    } catch (_) {}
+      if (loaded != null && _selectedLibraryId == libId &&
+          gen == self._accountLoadGeneration) {
+        _collections = loaded;
+        _collectionsCooldown.markFetched(libId, loaded);
+      }
+    } catch (e) { debugPrint('[Library] _doLoadCollections failed: ${e.runtimeType}'); }
     _isLoadingCollections = false;
     notifyListeners();
     unawaited(_catchUpQueueAutoDownloads());
@@ -3171,7 +3318,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     List<String>? keys,
     Map<String, Map<String, dynamic>>? meta,
   }) async {
-    if (_api == null || isOffline) return false;
+    if (AppPlatform.lacksPhonePlugins || _api == null || isOffline) return false;
     final wifiOnly = await PlayerSettings.getWifiOnlyDownloads();
     if (wifiOnly) {
       final connectivity = await Connectivity().checkConnectivity();
@@ -3255,7 +3402,12 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   Future<void> catchUpSubscribedPodcasts() async {
-    if (_subscribedPodcasts.isEmpty || _api == null || isOffline) return;
+    if (AppPlatform.lacksPhonePlugins ||
+        _subscribedPodcasts.isEmpty ||
+        _api == null ||
+        isOffline) {
+      return;
+    }
     for (final podcastId in _subscribedPodcasts) {
       await _downloadSubscribedEpisodes(podcastId);
     }
@@ -3277,7 +3429,12 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   void _catchUpRollingDownloads() async {
-    if (_api == null || isOffline || _rollingDownloadSeries.isEmpty) return;
+    if (AppPlatform.lacksPhonePlugins ||
+        _api == null ||
+        isOffline ||
+        _rollingDownloadSeries.isEmpty) {
+      return;
+    }
 
     final wifiOnly = await PlayerSettings.getWifiOnlyDownloads();
     if (wifiOnly) {
@@ -3298,12 +3455,12 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         if (!_hasListened(data)) continue;
         final lastUpdate = data['lastUpdate'] as num? ?? 0;
 
-        if (key.length > 36 && key.substring(0, 36) == seriesOrShowId) {
+        if (isEpisodeKey(key) && itemIdOfKey(key) == seriesOrShowId) {
           if (lastUpdate > latestPodcastUpdate) {
             latestPodcastUpdate = lastUpdate;
             latestPodcastKey = key;
           }
-        } else if (key.length <= 36) {
+        } else if (!isEpisodeKey(key)) {
           final itemData = _itemDataWithSeries(key);
           if (itemData != null) {
             final (sid, _) = _StateMixin._extractSeries(itemData);
@@ -3326,6 +3483,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   void _checkRollingDownloads(String playingKey) async {
+    if (AppPlatform.lacksPhonePlugins) return;
     final api = _api;
     if (api == null || isOffline) return;
     // With the "auto series download" default on, a book in a series enables
@@ -3338,7 +3496,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         : '${player.currentItemId}-${player.currentEpisodeId}';
     final activeQueueMode = activeKey == null
         ? 'off'
-        : activeKey.length > 36
+        : isEpisodeKey(activeKey)
             ? await PlayerSettings.getPodcastQueueMode()
             : await PlayerSettings.getBookQueueMode();
     final globalQueueAutoDownload =
@@ -3347,10 +3505,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     final count = await PlayerSettings.getRollingDownloadCount();
     _checkListRollingDownloads(playingKey, count);
 
-    if (playingKey.length > 36) {
-      final showId = playingKey.substring(0, 36);
-      final activeShowId = activeKey != null && activeKey.length > 36
-          ? activeKey.substring(0, 36)
+    if (isEpisodeKey(playingKey)) {
+      final showId = itemIdOfKey(playingKey);
+      final activeShowId = activeKey != null && isEpisodeKey(activeKey)
+          ? itemIdOfKey(activeKey)
           : null;
       // Only an auto_next queue follows this same show; playlist and
       // collection queues plan their own list's window instead, so they
@@ -3384,7 +3542,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         notifyListeners();
       }
       String? activeSeriesId;
-      if (activeKey != null && activeKey.length <= 36) {
+      if (activeKey != null && !isEpisodeKey(activeKey)) {
         if (activeKey == playingKey) {
           activeSeriesId = seriesId;
         } else {
@@ -3450,7 +3608,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     }
     if (sources.isEmpty) return;
 
-    final activeQueueMode = playingKey.length > 36
+    final activeQueueMode = isEpisodeKey(playingKey)
         ? await PlayerSettings.getPodcastQueueMode()
         : await PlayerSettings.getBookQueueMode();
     final globalAutoDownload = await PlayerSettings.getQueueAutoDownload();
@@ -3586,7 +3744,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       return PlayerSettings.getQueueCollectionId();
     }
     if (queueMode != 'auto_next') return null;
-    if (playingKey.length > 36) return playingKey.substring(0, 36);
+    if (isEpisodeKey(playingKey)) return itemIdOfKey(playingKey);
 
     var data = _itemDataWithSeries(playingKey);
     var (seriesId, _) = data != null
@@ -3605,6 +3763,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   // queue auto-download that never fired looked identical to one that never
   // ran. Each return now names the gate that stopped it. Strip before beta.
   Future<void> _checkQueueAutoDownloads(String playingKey) async {
+    if (AppPlatform.lacksPhonePlugins) return;
     try {
       final self = this as LibraryProvider;
       final planGeneration = ++_queueDownloadPlanGeneration;
@@ -3657,7 +3816,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
 
       debugPrint('[QueueDL] check start key=$playingKey');
       if (stop('start')) return;
-      final isPodcastKey = playingKey.length > 36;
+      final isPodcastKey = isEpisodeKey(playingKey);
       final bookMode = await PlayerSettings.getBookQueueMode();
       if (stop('read book mode')) return;
       final podcastMode = await PlayerSettings.getPodcastQueueMode();
@@ -3705,7 +3864,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       if (stop('read keep-next count')) return;
       final podcastAdvanceDir = isPodcastKey && queueMode == 'auto_next'
           ? await PlayerSettings.getPodcastAdvanceDir(
-              playingKey.substring(0, 36))
+              itemIdOfKey(playingKey))
           : null;
       if (stop('read podcast advance dir')) return;
 
@@ -3760,7 +3919,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         }
         if (podcastAdvanceDir != null &&
             await PlayerSettings.getPodcastAdvanceDir(
-                    playingKey.substring(0, 36)) !=
+                    itemIdOfKey(playingKey)) !=
                 podcastAdvanceDir) {
           return false;
         }
@@ -3887,6 +4046,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       if (downloads.isDownloaded(key) || downloads.isDownloading(key)) {
         continue;
       }
+      await downloads.liftAutoDownloadBlock(key);
       final error = await downloads.downloadItem(
         api: api,
         itemId: key,
@@ -3915,6 +4075,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   Future<void> _catchUpQueueAutoDownloads() async {
+    if (AppPlatform.lacksPhonePlugins) return;
     final itemId = AudioPlayerService().currentItemId;
     if (itemId == null) {
       debugPrint(
@@ -3930,7 +4091,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   Future<void> syncQueueAutoDownloads() => _catchUpQueueAutoDownloads();
 
   void _checkAutoDownloadOnStream(String playingKey) async {
-    if (_api == null || isOffline) {
+    if (AppPlatform.lacksPhonePlugins || _api == null || isOffline) {
       return;
     }
     final enabled = await PlayerSettings.getAutoDownloadOnStream();
@@ -3963,6 +4124,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   Future<void> _rollingDownloadBook(String bookId, int count) async {
+    if (AppPlatform.lacksPhonePlugins) return;
     var data = _itemDataWithSeries(bookId);
     var (seriesId, currentSeq) =
         data != null ? _StateMixin._extractSeries(data) : (null, null);
@@ -4052,8 +4214,9 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   Future<void> _rollingDownloadPodcast(String compoundKey, int count) async {
-    final showId = compoundKey.substring(0, 36);
-    final episodeId = compoundKey.substring(37);
+    if (AppPlatform.lacksPhonePlugins) return;
+    final showId = itemIdOfKey(compoundKey);
+    final episodeId = episodeIdOfKey(compoundKey)!;
 
     final fullItem = await _api!.getLibraryItem(showId);
     if (fullItem == null) return;

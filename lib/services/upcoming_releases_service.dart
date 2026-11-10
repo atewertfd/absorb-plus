@@ -1767,7 +1767,7 @@ class UpcomingReleasesService extends ChangeNotifier {
         _foregroundActive = false;
       }
       await FlutterLocalNotificationsPlugin().cancel(_scanNotifId);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Upcoming] _cancelScanNotification failed: ${e.runtimeType}'); }
   }
 
   Future<void> _showCompleteNotification() async {

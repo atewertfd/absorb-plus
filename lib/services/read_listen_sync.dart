@@ -331,7 +331,7 @@ class ReadListenSync {
     try {
       final server = (await api.getEbookPosition(itemId))?['ebookLocation'] as String?;
       if (server != null && server.startsWith('epubcfi(')) return server;
-    } catch (_) {}
+    } catch (e) { debugPrint('[SyncSpot] _ebookSpot failed: ${e.runtimeType}'); }
     return local != null && local.startsWith('epubcfi(') ? local : null;
   }
 
@@ -489,7 +489,7 @@ class ReadListenSync {
           return null;
         }
         if (inPlayer) {
-          await now.seekTo(Duration(milliseconds: (t * 1000).round()));
+          await now.seekTo(Duration(milliseconds: (t * 1000).round()), offerUndo: false);
         } else {
           final local = await ProgressSyncService().getLocal(itemId);
           await ProgressSyncService().saveLocal(

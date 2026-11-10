@@ -4,7 +4,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../ui_themes/ui_theme_hooks.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import '../l10n/app_localizations.dart';
 import '../utils/cover_accent.dart';
 import '../providers/auth_provider.dart';
@@ -26,17 +27,62 @@ import 'card_buttons.dart';
 import '../services/chromecast_service.dart';
 import 'expanded_card.dart';
 import '../main.dart' show colorSourceNotifier, useColorEverywhereNotifier, manualSeedNotifier, manualColorScheme;
+import '../utils/desktop_workspace.dart';
 import 'stable_cached_network_image.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../ui_themes/ui_theme_hooks.dart';
 import 'text_scale_room.dart';
 import '../utils/local_path.dart';
 import 'item_download_watch.dart';
 import '../utils/cover_cache.dart';
 import '../utils/cover_decode_size.dart';
+import 'fell_asleep_chip.dart'; // Absorb Plus
+import '../utils/episode_key.dart';
+
+enum AbsorbingCardPresentation { card, desktop }
+
+const double kAbsorbingDesktopRowLayoutWidth = 760;
+const double kAbsorbingSpaciousDesktopLayoutWidth = 1280;
+
+@immutable
+class AbsorbingChapterData {
+  final String itemKey;
+  final String itemId;
+  final String? episodeId;
+  final List<dynamic> chapters;
+  final double totalDuration;
+  final double currentPosition;
+  final bool isPlaybackActive;
+  final bool isCastingThis;
+  final double displaySpeed;
+
+  const AbsorbingChapterData({
+    required this.itemKey,
+    required this.itemId,
+    required this.episodeId,
+    required this.chapters,
+    required this.totalDuration,
+    required this.currentPosition,
+    required this.isPlaybackActive,
+    required this.isCastingThis,
+    required this.displaySpeed,
+  });
+}
 
 class AbsorbingCard extends StatefulWidget {
   final Map<String, dynamic> item;
   final AudioPlayerService player;
-  const AbsorbingCard({super.key, required this.item, required this.player});
+  final AbsorbingCardPresentation presentation;
+  final bool? spaciousDesktopLayout;
+  final ValueChanged<AbsorbingChapterData>? onChapterDataChanged;
+  const AbsorbingCard({
+    super.key,
+    required this.item,
+    required this.player,
+    this.presentation = AbsorbingCardPresentation.card,
+    this.spaciousDesktopLayout,
+    this.onChapterDataChanged,
+  });
 
   @override
   State<AbsorbingCard> createState() => AbsorbingCardState();
@@ -89,6 +135,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
   // all its texts show.
   Stream<int>? _statsStream;
   Object? _statsStreamKey;
+  int? _lastChapterDataSignature;
 
   @override
   bool get wantKeepAlive => true;
@@ -136,6 +183,71 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
   bool get _isPlaybackActive => _isActive || _isCastingThis;
   bool get _isPodcastEpisode => _isActive && widget.player.currentEpisodeId != null;
 
+  String get _itemKey => _episodeId == null ? _itemId : '$_itemId-${_episodeId!}';
+
+  void _publishChapterData() {
+    final callback = widget.onChapterDataChanged;
+    if (callback == null) return;
+
+    final cast = ChromecastService();
+    final chapters = _isCastingThis && cast.castingChapters.isNotEmpty
+        ? cast.castingChapters
+        : _isActive && widget.player.chapters.isNotEmpty
+            ? widget.player.chapters
+            : _chapters;
+    final totalDuration = _isCastingThis && cast.castingDuration > 0
+        ? cast.castingDuration
+        : _isActive && widget.player.totalDuration > 0
+            ? widget.player.totalDuration
+            : _effectiveDuration;
+    final displaySpeed = _isCastingThis
+        ? cast.castSpeed
+        : _isActive
+            ? widget.player.speed
+            : _savedSpeed;
+    final double currentPosition;
+    if (_isCastingThis) {
+      currentPosition = cast.castPosition.inMilliseconds / 1000.0;
+    } else if (_isActive) {
+      currentPosition = widget.player.position.inMilliseconds / 1000.0;
+    } else {
+      final lib = context.read<LibraryProvider>();
+      final progress = _episodeId == null
+          ? lib.getProgress(_itemId)
+          : lib.getEpisodeProgress(_itemId, _episodeId!);
+      currentPosition = progress * totalDuration;
+    }
+    final chapterHash = Object.hashAll(chapters.map((chapter) {
+      if (chapter is! Map) return chapter.hashCode;
+      return Object.hash(chapter['title'], chapter['start'], chapter['end']);
+    }));
+    final signature = Object.hash(
+      _itemKey,
+      chapterHash,
+      totalDuration,
+      _isPlaybackActive,
+      _isCastingThis,
+      displaySpeed,
+    );
+    if (signature == _lastChapterDataSignature) return;
+    _lastChapterDataSignature = signature;
+
+    final data = AbsorbingChapterData(
+      itemKey: _itemKey,
+      itemId: _itemId,
+      episodeId: _episodeId,
+      chapters: List<dynamic>.unmodifiable(chapters),
+      totalDuration: totalDuration,
+      currentPosition: currentPosition,
+      isPlaybackActive: _isPlaybackActive,
+      isCastingThis: _isCastingThis,
+      displaySpeed: displaySpeed,
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _itemKey == data.itemKey) callback(data);
+    });
+  }
+
   // For inactive podcast show cards: recentEpisode is embedded in the continue-listening entity
   Map<String, dynamic>? get _recentEpisode => widget.item['recentEpisode'] as Map<String, dynamic>?;
 
@@ -146,7 +258,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
     if (re != null) return re['id'] as String?;
     // Compound absorbing keys are "showUUID-episodeId" (>36 chars)
     final absKey = widget.item['_absorbingKey'] as String?;
-    if (absKey != null && absKey.length > 36) return absKey.substring(37);
+    if (absKey != null && isEpisodeKey(absKey)) return episodeIdOfKey(absKey)!;
     return null;
   }
   // Use episode duration for inactive podcast show cards (show duration is aggregate/incorrect)
@@ -245,7 +357,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
 
   Future<void> _loadSavedSpeed() async {
     final bookSpeed = await PlayerSettings.getBookSpeed(_itemId);
-    final speed = bookSpeed ?? await PlayerSettings.getDefaultSpeed();
+    final speed = bookSpeed ?? await PlayerSettings.defaultSpeedFor(libraryId: _resolveLibraryId());
     if (mounted && speed != _savedSpeed) setState(() => _savedSpeed = speed);
   }
 
@@ -336,7 +448,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
           }
         }
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Card] _fetchChaptersIfNeeded failed: ${e.runtimeType}'); }
   }
 
   /// Re-fetch the full item when the server reports this book changed (socket
@@ -453,6 +565,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
       _fetchedChapters = null;
       _fetchedEbookFile = null;
       _lastChapterIdx = -1;
+      _lastChapterDataSignature = null;
       _lastSeenUpdatedAt = context.read<LibraryProvider>().itemUpdatedAt(_itemId);
       _fetchChaptersIfNeeded();
       // The per-show speed is item state too - without this, a card recycled
@@ -488,7 +601,8 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
     _rederiveCoverScheme();
     // Precache the blurred version of the cover, but only when the blurred
     // background is actually in use (skip the work for gradient / off modes).
-    if (_cardBackground == 'blurred' &&
+    if (widget.presentation != AbsorbingCardPresentation.desktop &&
+        _cardBackground == 'blurred' &&
         _blurredCoverIdentity != coverIdentity &&
         _pendingBlurIdentity != coverIdentity) {
       _pendingBlurIdentity = coverIdentity;
@@ -512,7 +626,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
     if (isLocalCoverPath(coverUrl)) {
       provider = FileImage(File(coverUrl));
     } else {
-      provider = CachedNetworkImageProvider(
+      provider = CachedNetworkImageProvider(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
         coverUrl,
         headers: headers,
         cacheKey: coverIdentity, cacheManager: coverCacheManager,
@@ -542,7 +656,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
             });
           }
         })
-        .catchError((_) {});
+        .catchError((e) { debugPrint('[Card] _rederiveCoverScheme failed: ${e.runtimeType}'); });
   }
 
   /// Resolve the image, render it blurred to an offscreen canvas, cache the result.
@@ -687,25 +801,28 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
     // A chapterless book gets the same single-bar look as a chapterless
     // podcast: no top book bar, just the scrubber bar carrying the title.
     final showBookBar = _chapters.isNotEmpty;
+    final desktopPresentation = widget.presentation == AbsorbingCardPresentation.desktop;
+    _publishChapterData();
     return GestureDetector(
-      onVerticalDragEnd: (details) {
+      onVerticalDragEnd: desktopPresentation ? null : (details) {
         final vy = details.primaryVelocity ?? 0;
         if (vy < -300) expandCard(context); // swipe up to expand
       },
       child: Container(
-      decoration: BoxDecoration(
+      key: ValueKey(desktopPresentation ? 'desktop-absorbing-player' : 'absorbing-card-shell'),
+      decoration: desktopPresentation ? null : BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: lookPlayerCardEdge(context, accent.withValues(alpha: 0.15)), width: 1),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(23),
+        borderRadius: desktopPresentation ? BorderRadius.zero : BorderRadius.circular(23),
         child: Stack(
           fit: StackFit.expand,
           children: [
           // Layer 1: Card background — blurred cover, color gradient, or plain surface
-          if (_cardBackground == 'off')
+          if (!desktopPresentation && _cardBackground == 'off')
             ColoredBox(color: Theme.of(context).colorScheme.surface)
-          else if (_cardBackground == 'gradient')
+          else if (!desktopPresentation && _cardBackground == 'gradient')
             DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -716,7 +833,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
               ),
             )
           // Pre-blurred cover background (cached bitmap — no per-frame blur)
-          else if (_blurredCover != null)
+          else if (!desktopPresentation && _blurredCover != null)
             RepaintBoundary(
               child: RawImage(
                 image: _blurredCover,
@@ -725,7 +842,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                 height: double.infinity,
               ),
             )
-          else if (coverUrl != null && coverIdentity != null)
+          else if (!desktopPresentation && coverUrl != null && coverIdentity != null)
             // Fallback while blur is being computed: show unblurred cover dimmed
             RepaintBoundary(
               child: isLocalCover
@@ -756,6 +873,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                     ),
             ),
           // Layer 2: Scrim
+          if (!desktopPresentation)
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -796,6 +914,10 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
           builder: (context, cardConstraints) {
           final textScale = MediaQuery.textScalerOf(context).scale(1.0).clamp(1.0, 1.5);
           final compact = cardConstraints.maxHeight < 600 * textScale;
+          final spaciousDesktop = desktopPresentation &&
+              (widget.spaciousDesktopLayout ??
+                  cardConstraints.maxWidth >=
+                      kAbsorbingSpaciousDesktopLayoutWidth);
           // In landscape the card is wider than tall — switch to a two-pane
           // layout with the cover on the left and everything else on the right.
           final wide = cardConstraints.maxWidth > cardConstraints.maxHeight;
@@ -885,7 +1007,9 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                     listenable: Listenable.merge([ChromecastService(), widget.player]),
                     builder: (context, _) => LayoutBuilder(
                     builder: (context, constraints) {
-                      final maxW = constraints.maxWidth * 0.85;
+                      final maxW = spaciousDesktop
+                          ? (constraints.maxWidth * 0.9).clamp(0.0, 780.0).toDouble()
+                          : constraints.maxWidth * 0.85;
                       final rawH = constraints.maxHeight.isFinite ? constraints.maxHeight : maxW;
                       final maxH = rawH - 24 - textScaleRoom(context, 14);
                       double coverW, coverH;
@@ -906,7 +1030,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                       final castService = ChromecastService();
                       final isCastingThis = castService.isCasting && castService.castingItemId == _itemId;
                       final coverPlaying = isCastingThis ? castService.isPlaying : (_isActive && widget.player.isPlaying);
-                      final coverLoading = _isStarting || (_isActive && widget.player.isLoadingOrBuffering && !widget.player.isPlaying);
+                      final coverLoading = _isStarting || (_isActive && widget.player.isLoadingOrBuffering && (!widget.player.isPlaying || widget.player.isReconnecting));
                       return Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
@@ -945,6 +1069,9 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                           }
                         } : null,
                         child: Container(
+                          key: desktopPresentation
+                              ? const ValueKey('desktop-player-cover')
+                              : null,
                           width: coverW,
                           height: coverH,
                           decoration: BoxDecoration(
@@ -1092,7 +1219,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
 
           final scrubberBar = Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: CardDualProgressBar(player: widget.player, accent: accent, isActive: _isActive, staticProgress: (_isPodcastEpisode && _chapters.isEmpty) ? 0.0 : progress, staticDuration: (_isPodcastEpisode && _chapters.isEmpty) ? widget.player.totalDuration : _effectiveDuration, chapters: _chapters, showBookBar: false, showChapterBar: true, chapterName: (_isPodcastEpisode && _chapters.isEmpty) ? (widget.player.currentEpisodeTitle ?? widget.player.currentTitle ?? _title) : (_episodeId != null && !_isActive ? (_recentEpisode?['title'] as String? ?? _title) : (_chapters.isEmpty ? _title : _chapterName(chapterIdx))), chapterIndex: chapterIdx, totalChapters: totalChapters, itemId: _itemId, compact: compact),
+                  child: CardDualProgressBar(player: widget.player, accent: accent, isActive: _isActive, staticProgress: (_isPodcastEpisode && _chapters.isEmpty) ? 0.0 : progress, staticDuration: (_isPodcastEpisode && _chapters.isEmpty) ? widget.player.totalDuration : _effectiveDuration, chapters: _chapters, showBookBar: false, showChapterBar: true, chapterName: (_isPodcastEpisode && _chapters.isEmpty) ? (widget.player.currentEpisodeTitle ?? widget.player.currentTitle ?? _title) : (_episodeId != null && !_isActive ? (_recentEpisode?['title'] as String? ?? _title) : (_chapters.isEmpty ? _title : _chapterName(chapterIdx))), chapterIndex: chapterIdx, totalChapters: totalChapters, itemId: _itemId, compact: compact, libraryId: _resolveLibraryId()),
                 );
 
           final controlsRow = Padding(
@@ -1119,12 +1246,16 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                     builder: (context, buttonsConstraints) => FittedBox(
                     fit: BoxFit.scaleDown,
                     child: SizedBox(
-                      width: buttonsConstraints.maxWidth - 40,
+                      width: buttonsConstraints.maxWidth,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          ..._buildButtonGrid(accent, tt),
-                          if (!_moreInline) ...[
+                          ..._buildButtonGrid(
+                            accent,
+                            tt,
+                            showAll: desktopPresentation,
+                          ),
+                          if (!desktopPresentation && !_moreInline) ...[
                           const SizedBox(height: 6),
                           Center(
                             child: ListenableBuilder(
@@ -1169,6 +1300,124 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                 ),
                 );
 
+          if (desktopPresentation) {
+            final episodeTitle = _episodeId == null
+                ? null
+                : (_isActive ? widget.player.currentEpisodeTitle : _recentEpisode?['title'] as String?);
+            final primaryTitle = episodeTitle?.trim().isNotEmpty == true ? episodeTitle! : _title;
+            final contextLine = <String>[
+              if (_episodeId != null && _title.trim().isNotEmpty) _title,
+              if (_author.trim().isNotEmpty) _author,
+            ].join('  •  ');
+            final desktopProgress = Semantics(
+              label: 'Full book progress',
+              child: KeyedSubtree(
+                key: const ValueKey('desktop-book-progress'),
+                child: CardDualProgressBar(
+                  player: widget.player,
+                  accent: accent,
+                  isActive: _isActive,
+                  staticProgress: progress,
+                  staticDuration: _effectiveDuration,
+                  chapters: _chapters,
+                  showBookBar: true,
+                  showChapterBar: _chapters.isNotEmpty,
+                  chapterName: _chapterName(chapterIdx),
+                  chapterIndex: chapterIdx,
+                  totalChapters: totalChapters,
+                  itemId: _itemId,
+                  compact: compact,
+                  showBookPercentage: true,
+                  libraryId: _resolveLibraryId(),
+                ),
+              ),
+            );
+            final details = Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                child: ConstrainedBox(
+                  key: const ValueKey('desktop-player-details'),
+                  constraints: BoxConstraints(maxWidth: spaciousDesktop ? 760 : 640),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        primaryTitle,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: (spaciousDesktop ? tt.headlineMedium : tt.headlineSmall)
+                            ?.copyWith(fontWeight: FontWeight.w700, height: 1.12),
+                      ),
+                      if (contextLine.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          contextLine,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: tt.titleSmall?.copyWith(
+                            color: cs.onSurfaceVariant,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 22),
+                      desktopProgress,
+                      SizedBox(height: compact ? 6 : 12),
+                      controlsRow,
+                      SizedBox(height: compact ? 8 : 16),
+                      buttonGrid,
+                    ],
+                  ),
+                ),
+              ),
+            );
+
+            if (spaciousDesktop) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1680),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(flex: 10, child: coverArea),
+                          const SizedBox(width: 48),
+                          Expanded(flex: 9, child: details),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            if (cardConstraints.maxWidth >=
+                kAbsorbingDesktopRowLayoutWidth) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(flex: 5, child: coverArea),
+                    const SizedBox(width: 16),
+                    Expanded(flex: 7, child: details),
+                  ],
+                ),
+              );
+            }
+
+            return Column(
+              children: [
+                Expanded(flex: 5, child: coverArea),
+                Expanded(flex: 7, child: details),
+              ],
+            );
+          }
+
           if (wide) {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1204,7 +1453,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
           );
           }),
           // Edge progress bar (thin strip at top of card)
-          if (showBookBar)
+          if (!desktopPresentation && showBookBar)
             Positioned(
               top: 0,
               left: 0,
@@ -1220,6 +1469,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
                 expandedNotifier: _edgeBarExpanded,
               ),
             ),
+          FellAsleepChip(itemId: _itemId, episodeId: _episodeId), // Absorb Plus
         ],
       ),
       ),
@@ -1324,6 +1574,9 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
   }
 
   void expandCard(BuildContext context) {
+    // The desktop workspace has no full-screen player; the Absorbing tab is
+    // the now-playing surface itself.
+    if (isDesktopWorkspace(context)) return;
     AppShell.setExpandedOpen(true);
     Navigator.of(context, rootNavigator: true).push(
       ExpandedCardRoute(
@@ -1384,6 +1637,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
     item: widget.item,
     itemId: _itemId,
     episodeId: _episodeId,
+    libraryId: _resolveLibraryId(),
     isPodcastEpisode: _isPodcastEpisode,
     title: _title,
     author: _author,
@@ -1401,6 +1655,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
     iconsOnly: _iconsOnly,
     moreInline: _moreInline,
     buttonOrder: _buttonOrder,
+    showChaptersAction: widget.presentation != AbsorbingCardPresentation.desktop,
     removeFromAbsorbing: _removeFromAbsorbing,
     onReorder: (newOrder, newCount) {
       setState(() { _buttonOrder = newOrder; _buttonVisibleCount = newCount; });
@@ -1416,7 +1671,11 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
 
   int get _visibleButtonCount => _buttonVisibleCount;
 
-  List<Widget> _buildButtonGrid(Color accent, TextTheme tt) => _makeActions().buildButtonGrid(accent, tt);
+  List<Widget> _buildButtonGrid(
+    Color accent,
+    TextTheme tt, {
+    bool showAll = false,
+  }) => _makeActions().buildButtonGrid(accent, tt, showAll: showAll);
 
   void _showMoreMenu(BuildContext context, Color accent, TextTheme tt) => _makeActions().showMoreMenu(accent, tt);
 

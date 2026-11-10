@@ -84,7 +84,7 @@ class BookOrbitMediaProxy {
       _server = null;
       try {
         await server.close(force: true);
-      } catch (_) {}
+      } catch (e) { debugPrint('[BookOrbitProxy] _ensure failed: ${e.runtimeType}'); }
     }
     await _start();
   }
@@ -213,7 +213,7 @@ class BookOrbitMediaProxy {
       upstreamReq = await _open(req, upstream, source, token);
       var upstreamRes = await upstreamReq.close();
       if (upstreamRes.statusCode == HttpStatus.unauthorized) {
-        await upstreamRes.drain<void>().catchError((_) {});
+        await upstreamRes.drain<void>().catchError((e) { debugPrint('[BookOrbitProxy] _handle failed: ${e.runtimeType}'); });
         token = await source.tokenAfterRejection();
         if (token != null) {
           upstreamReq = await _open(req, upstream, source, token);
@@ -230,7 +230,7 @@ class BookOrbitMediaProxy {
         debugPrint('[BookOrbitProxy] ${upstreamRes.statusCode} for $serverPath');
       }
       if (req.method == 'HEAD') {
-        await upstreamRes.drain<void>().catchError((_) {});
+        await upstreamRes.drain<void>().catchError((e) { debugPrint('[BookOrbitProxy] _handle failed: ${e.runtimeType}'); });
         await res.close();
         return;
       }
@@ -247,7 +247,7 @@ class BookOrbitMediaProxy {
       try {
         res.statusCode = HttpStatus.badGateway;
         await res.close();
-      } catch (_) {}
+      } catch (e) { debugPrint('[BookOrbitProxy] _handle failed: ${e.runtimeType}'); }
     }
   }
 

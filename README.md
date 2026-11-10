@@ -96,7 +96,7 @@ flutter build windows --release   # or: linux, web, apk
 flutter test
 ```
 
-Contributors on Windows can use `tool/dev.ps1` (`check`, `build`, `apk`, …). The code map is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and the house rules are in [AGENTS.md](AGENTS.md).
+Contributors on Windows can use `tool/dev.ps1` (`check`, `build`, `apk`, …). The code map is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Good to know
 

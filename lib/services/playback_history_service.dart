@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'history_write_buffer.dart';
 import 'scoped_prefs.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'history_write_buffer.dart';
 import 'user_account_service.dart';
 
 /// Types of playback events we track.

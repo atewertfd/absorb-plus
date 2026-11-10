@@ -29,13 +29,13 @@ Future<RestoreProbe> authorizeWhilePinging({
     (auth) => auth,
     onError: (Object _) => null,
   );
-  answer.then((auth) {
+  unawaited(answer.then((auth) {
     if (auth != null) finish((reachable: true, auth: auth));
-  });
-  ping.then((reachable) async {
+  }));
+  unawaited(ping.then((reachable) async {
     if (!reachable) return finish((reachable: false, auth: null));
     finish((reachable: true, auth: await answer));
-  }, onError: (Object _) => finish((reachable: false, auth: null)));
+  }, onError: (Object _) => finish((reachable: false, auth: null))));
   return done.future;
 }
 

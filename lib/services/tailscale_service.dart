@@ -115,7 +115,14 @@ class TailscaleService extends ChangeNotifier {
   }
 
   /// Media URL for players and native downloaders (see buildTrackUrl).
-  String mediaUrl(String url) => _routing.mediaUrl(url);
+  String mediaUrl(String url) =>
+      _routing.mediaUrl(url, trustSelfSigned: trustSelfSigned());
+
+  /// Whether the user trusts self-signed certificates (main.dart sets it to
+  /// read `trustAllCerts`). The node's proxy then skips the certificate
+  /// check for media too, as Dart's own requests already do.
+  static bool Function() trustSelfSigned = _never;
+  static bool _never() => false;
 
   /// Whether [serverUrl] would go through the tailnet with the setting on.
   bool routesServer(String serverUrl) =>
@@ -298,8 +305,8 @@ class TailscaleService extends ChangeNotifier {
     if (next.magicDnsSuffix.isNotEmpty && next.magicDnsSuffix != _dnsSuffix) {
       _dnsSuffix = next.magicDnsSuffix;
       _rebuildRouting();
-      SharedPreferences.getInstance()
-          .then((p) => p.setString(prefDnsSuffix, _dnsSuffix));
+      unawaited(SharedPreferences.getInstance()
+          .then((p) => p.setString(prefDnsSuffix, _dnsSuffix)));
     }
     if (next.isRunning != wasRunning) {
       debugPrint('[Tailscale] state: ${next.state}');
@@ -314,7 +321,9 @@ class TailscaleService extends ChangeNotifier {
     try {
       final existing = (await file.readAsString()).trim();
       if (existing.length >= 32) return existing;
-    } catch (_) {}
+    } catch (_) {
+      // No saved key yet (or unreadable): a new one is made below.
+    }
     final rnd = Random.secure();
     final secret = List.generate(16, (_) => rnd.nextInt(256))
         .map((b) => b.toRadixString(16).padLeft(2, '0'))
@@ -338,7 +347,9 @@ class TailscaleService extends ChangeNotifier {
     String local = '';
     try {
       local = Platform.localHostname;
-    } catch (_) {}
+    } catch (_) {
+      // No host name on this platform: the name is built without it.
+    }
     return tailscaleHostname(platform, local);
   }
 }

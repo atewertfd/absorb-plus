@@ -14,7 +14,10 @@ String stableCoverCacheKey(String imageUrl, {int? updatedAt}) {
   query.remove('ts');
   if (revision != null) query['ts'] = revision;
 
-  return uri.replace(queryParameters: query.isEmpty ? null : query).toString();
+  // Absorb Plus: replace(queryParameters: null) kept the old query (and its
+  // token); an empty map clears it but leaves a bare '?', dropped here.
+  final key = uri.replace(queryParameters: query).toString();
+  return query.isEmpty && key.endsWith('?') ? key.substring(0, key.length - 1) : key;
 }
 
 class StableCachedNetworkImage extends CachedNetworkImage {

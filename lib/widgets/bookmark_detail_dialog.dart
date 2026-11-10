@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io' hide Platform; // web-safe Platform below
-import '../utils/web_safe_platform.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +13,8 @@ import '../services/bookmark_service.dart';
 import '../services/bookmark_preview_player.dart';
 import '../services/chapter_lookup.dart';
 import '../services/download_service.dart';
+import '../utils/app_platform.dart';
+import 'adaptive_modal.dart';
 import '../services/ebook_cache.dart';
 import '../services/media_overlay.dart';
 import '../services/narration_service.dart';
@@ -24,6 +25,7 @@ import 'clip_editor_sheet.dart';
 import 'overlay_toast.dart';
 import 'progress_dialog.dart';
 import 'quote_share_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/fork_platform.dart';
 
 /// Result of [BookmarkDetailSheet]. [action] is 'jump' (caller should seek
@@ -115,7 +117,7 @@ class _BookmarkDetailSheetState extends State<BookmarkDetailSheet> {
       try {
         final item = await widget.api!.getLibraryItem(widget.itemId);
         ef = resolveEbookFile(item);
-      } catch (_) {}
+      } catch (e) { debugPrint('[Bookmark] _resolveEpubForCrossRef failed: ${e.runtimeType}'); }
     }
     if (ef == null || ebookExtFromFile(ef) != '.epub') return;
     if (mounted) setState(() => _epubForCrossRef = ef);
@@ -129,7 +131,9 @@ class _BookmarkDetailSheetState extends State<BookmarkDetailSheet> {
                 player.currentEpisodeId == widget.episodeId)
         ? player.speed
         : (await PlayerSettings.getBookSpeed(widget.itemId) ??
-            await PlayerSettings.getDefaultSpeed());
+            await PlayerSettings.defaultSpeedFor(
+                libraryId: context.read<LibraryProvider>().libraryIdOf(
+                    widget.itemId, episodeId: widget.episodeId)));
     if (mounted && speed > 0 && speed != _displaySpeed) {
       setState(() => _displaySpeed = speed);
     }
@@ -183,12 +187,13 @@ class _BookmarkDetailSheetState extends State<BookmarkDetailSheet> {
     // iOS can't export from a streaming book, so prompt to download up front
     // rather than letting the user trim a clip and only fail at Save. Android
     // exports streamed clips fine, so it always opens the editor.
-    if (Platform.isIOS && !DownloadService().isDownloaded(widget._key)) {
+    if (AppPlatform.isIOS && !DownloadService().isDownloaded(widget._key)) {
       await _promptDownload();
       return;
     }
-    await showModalBottomSheet<void>(
+    await showAdaptiveActionMenu<void>(
       context: context,
+      desktopWidth: 560,
       isScrollControlled: true,
       showDragHandle: true,
       backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
@@ -249,7 +254,7 @@ class _BookmarkDetailSheetState extends State<BookmarkDetailSheet> {
         if (author.isEmpty) author = title;
         if (epTitle != null && epTitle.isNotEmpty) title = epTitle;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Bookmark] _startDownload failed: ${e.runtimeType}'); }
     await DownloadService().downloadItem(
       api: api,
       itemId: widget._key,
@@ -347,7 +352,7 @@ class _BookmarkDetailSheetState extends State<BookmarkDetailSheet> {
       try {
         final f = File(result.audioPath);
         if (f.existsSync()) await f.delete();
-      } catch (_) {}
+      } catch (e) { debugPrint('[Bookmark] _transcribe failed: ${e.runtimeType}'); }
       text = result.text.trim();
       // Cross-reference the ebook: a confident match swaps Whisper's
       // approximation for the book's actual words. Still under the progress
@@ -517,7 +522,7 @@ class _BookmarkDetailSheetState extends State<BookmarkDetailSheet> {
           if (duration <= 0) {
             duration = (session['duration'] as num?)?.toDouble() ?? 0;
           }
-        } catch (_) {}
+        } catch (e) { debugPrint('[Bookmark] _quoteMetadata failed: ${e.runtimeType}'); }
       }
     }
 
@@ -546,7 +551,7 @@ class _BookmarkDetailSheetState extends State<BookmarkDetailSheet> {
         if (duration <= 0) {
           duration = ((ep?['duration'] ?? media['duration']) as num?)?.toDouble() ?? 0;
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[Bookmark] _quoteMetadata failed: ${e.runtimeType}'); }
     }
 
     String? chapterTitle;
@@ -675,15 +680,17 @@ class _BookmarkDetailSheetState extends State<BookmarkDetailSheet> {
               ),
             ),
             if (ForkPlatform.supportsClipExport) const SizedBox(height: 8),
-            if (ForkPlatform.supportsClipExport) SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                icon: const Icon(Icons.content_cut_rounded, size: 18),
-                label: Text(l.clipExport),
-                onPressed: _saving ? null : _openClipEditor,
+            if (ForkPlatform.supportsClipExport) ...[
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  icon: const Icon(Icons.content_cut_rounded, size: 18),
+                  label: Text(l.clipExport),
+                  onPressed: _saving ? null : _openClipEditor,
+                ),
               ),
-            ),
-            if (_transcriptionOn || _fromNarration) ...[
+            ],
+            if (!AppPlatform.isWeb && (_transcriptionOn || _fromNarration)) ...[
               const SizedBox(height: 8),
               SizedBox(
                 width: double.infinity,

@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -17,15 +19,21 @@ import '../widgets/card_buttons.dart';
 import '../services/download_service.dart';
 import '../services/ebook_annotation_service.dart';
 import '../services/highlight_sync.dart';
+import '../services/narration_service.dart';
 import '../utils/episode_key.dart';
 import '../widgets/absorb_page_header.dart';
 import '../widgets/adaptive_modal.dart';
+import '../widgets/desktop_page_body.dart';
 import '../widgets/ebook_router.dart';
 import '../widgets/quote_share_sheet.dart';
 import '../widgets/overlay_toast.dart';
 import '../l10n/app_localizations.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 import '../widgets/desktop_input.dart';
+import '../utils/bookmark_list_tools.dart';
+import '../widgets/bookmark_list_controls.dart';
+import '../widgets/empty_state.dart';
 
 class BookmarksScreen extends StatefulWidget {
   const BookmarksScreen({super.key});
@@ -42,6 +50,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
   int _tabIndex = 0;
   bool _selecting = false;
   String _sort = 'newest';
+  BookmarkView _view = BookmarkView.byBook;
   // Selected bookmarks as "itemId::bookmarkId" keys
   final Set<String> _selected = {};
   // Same idea on the highlights tab, keyed "itemId::annotationId". Separate
@@ -53,6 +62,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
   // speed-adjusted-time setting at that book's own speed.
   final Map<String, double> _bookSpeeds = {};
   double _defaultSpeed = 1.0;
+  final Map<String, double> _librarySpeeds = {};
   final TextEditingController _searchCtl = TextEditingController();
   String _query = '';
   // Books opened on the bookmarks tab; all start folded. Kept while the screen is open.
@@ -88,25 +98,14 @@ class _BookmarksScreenState extends State<BookmarksScreen>
 
   /// A book matching the search keeps all its bookmarks; otherwise only the
   /// bookmarks whose title or note match stay, and empty books drop out.
-  Map<String, List<Bookmark>> _filteredBookmarks() {
-    if (_query.isEmpty) return _allBookmarks;
-    final out = <String, List<Bookmark>>{};
-    for (final entry in _allBookmarks.entries) {
-      final book = '${_resolveTitle(entry.key) ?? ''} ${_resolveShowTitle(entry.key) ?? ''}'
-          .toLowerCase();
-      if (book.contains(_query)) {
-        out[entry.key] = entry.value;
-        continue;
-      }
-      final hits = entry.value
-          .where((b) =>
-              b.title.toLowerCase().contains(_query) ||
-              (b.note ?? '').toLowerCase().contains(_query))
-          .toList();
-      if (hits.isNotEmpty) out[entry.key] = hits;
-    }
-    return out;
-  }
+  Map<String, List<Bookmark>> _filteredBookmarks() =>
+      filterBookmarks(_allBookmarks, _query, _bookInfo);
+
+  BookmarkBookInfo _bookInfo(String key) => (
+        title: _resolveTitle(key),
+        author: _resolveAuthor(splitEpisodeKey(key).itemId),
+        subtitle: _resolveShowTitle(key),
+      );
 
   /// Same rule as bookmarks: a matching book keeps all its highlights,
   /// otherwise only highlights whose text or note match.
@@ -179,6 +178,14 @@ class _BookmarksScreenState extends State<BookmarksScreen>
 
   Future<void> _loadBookSpeeds() async {
     _defaultSpeed = await PlayerSettings.getDefaultSpeed();
+    if (mounted) {
+      for (final library in context.read<LibraryProvider>().libraries) {
+        final id = library['id'] as String?;
+        if (id == null) continue;
+        final override = await PlayerSettings.getSpeedOverride(id);
+        if (override != null) _librarySpeeds[id] = override;
+      }
+    }
     var changed = false;
     for (final key in _allBookmarks.keys) {
       final itemId = splitEpisodeKey(key).itemId;
@@ -196,14 +203,19 @@ class _BookmarksScreenState extends State<BookmarksScreen>
     if (!_speedAdjustedTime) return 1.0;
     // Speed is saved per book, and a podcast's per-show, so an episode key has
     // to come apart before either lookup.
-    final itemId = splitEpisodeKey(key).itemId;
+    final parts = splitEpisodeKey(key);
+    final itemId = parts.itemId;
     final player = AudioPlayerService();
     if (player.currentItemId == itemId) return player.speed;
-    return _bookSpeeds[itemId] ?? _defaultSpeed;
+    final libraryId = context
+        .read<LibraryProvider>()
+        .libraryIdOf(itemId, episodeId: parts.episodeId);
+    return _bookSpeeds[itemId] ?? _librarySpeeds[libraryId] ?? _defaultSpeed;
   }
 
   Future<void> _loadSort() async {
     _sort = await PlayerSettings.getBookmarkSort();
+    _view = await BookmarkViewPrefs.load(legacySort: _sort);
     // Read the persisted title cache before rendering so rows don't flash
     // raw item-ID fragments on the first paint while _syncAll fetches.
     await _loadTitleCache();
@@ -222,13 +234,13 @@ class _BookmarksScreenState extends State<BookmarksScreen>
           if (k is String && v is String) _titleCache[k] = v;
         });
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Bookmarks] _loadTitleCache failed: ${e.runtimeType}'); }
   }
 
   Future<void> _saveTitleCache() async {
     try {
       await ScopedPrefs.setString(_titleCacheKey, jsonEncode(_titleCache));
-    } catch (_) {}
+    } catch (e) { debugPrint('[Bookmarks] _saveTitleCache failed: ${e.runtimeType}'); }
   }
 
   Future<void> _load() async {
@@ -530,7 +542,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
     final ids = splitEpisodeKey(key);
     final itemId = ids.itemId;
     final episodeId = ids.episodeId;
-    final result = await showModalBottomSheet<BookmarkDetailResult>(
+    final result = await showAdaptiveActionMenu<BookmarkDetailResult>(
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
@@ -538,6 +550,8 @@ class _BookmarksScreenState extends State<BookmarksScreen>
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
+      desktopWidth: 560,
+      desktopScrollWrap: false,
       builder: (ctx) => BookmarkDetailSheet(
         itemId: itemId,
         episodeId: episodeId,
@@ -660,6 +674,9 @@ class _BookmarksScreenState extends State<BookmarksScreen>
     final l = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
+    // A book whose EPUB reads itself aloud can play from the highlight.
+    final narrated = await NarrationService.instance.knownNarrated(itemId) == true;
+    if (!mounted) return;
     final action = await showAdaptiveActionMenu<String>(
       context: context,
       showDragHandle: true,
@@ -678,6 +695,12 @@ class _BookmarksScreenState extends State<BookmarksScreen>
                 overflow: TextOverflow.ellipsis,
                 style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
               ),
+            ),
+          if (narrated)
+            ListTile(
+              leading: Icon(Icons.play_arrow_rounded, color: cs.onSurfaceVariant),
+              title: Text(l.narrationPlayFromHere),
+              onTap: () => Navigator.pop(ctx, 'play'),
             ),
           ListTile(
             leading: Icon(Icons.ios_share_rounded, color: cs.onSurfaceVariant),
@@ -703,7 +726,12 @@ class _BookmarksScreenState extends State<BookmarksScreen>
       ),
     );
     if (action == null || !mounted) return;
-    if (action == 'share') {
+    if (action == 'play') {
+      await openHighlightInReader(context,
+          itemId: itemId, cfi: highlight.cfi, title: _resolveTitle(itemId),
+          playNarration: true);
+      if (mounted) await _loadHighlights();
+    } else if (action == 'share') {
       await _shareHighlight(itemId, highlight);
     } else if (action == 'open') {
       await _openHighlight(itemId, highlight);
@@ -749,16 +777,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
   }
 
   Widget _emptyState(ColorScheme cs, TextTheme tt, IconData icon, String label) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 48, color: cs.onSurfaceVariant.withValues(alpha: 0.4)),
-          const SizedBox(height: 12),
-          Text(label, style: tt.bodyLarge?.copyWith(color: cs.onSurfaceVariant)),
-        ],
-      ),
-    );
+    return AbsorbEmptyState(icon: icon, message: label);
   }
 
   Widget _buildBookmarksTab(ColorScheme cs, TextTheme tt, AppLocalizations l) {
@@ -771,18 +790,19 @@ class _BookmarksScreenState extends State<BookmarksScreen>
       return _emptyState(
           cs, tt, Icons.search_off_rounded, l.bookmarksNoMatches);
     }
+    final runs = arrangeBookmarks(groups, _view);
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-      itemCount: groups.length,
+      itemCount: runs.length,
       itemBuilder: (ctx, i) {
         final lib = context.read<LibraryProvider>();
-        final itemId = groups.keys.elementAt(i);
-        final bookmarks = groups[itemId]!;
+        final itemId = runs[i].itemId;
+        final bookmarks = runs[i].bookmarks;
         final resolvedTitle = _resolveTitle(itemId);
         final coverUrl = lib.getCoverUrl(itemId, width: 400);
         return _BookGroup(
           // A search keeps every match in view, folded or not.
-          expanded: _query.isNotEmpty || _expanded.contains(itemId),
+          expanded: _query.isNotEmpty || _view == BookmarkView.newest || _expanded.contains(itemId),
           onToggleExpanded: () => setState(() {
             if (!_expanded.remove(itemId)) _expanded.add(itemId);
           }),
@@ -859,7 +879,8 @@ class _BookmarksScreenState extends State<BookmarksScreen>
       body: SafeArea(
         child: _loading
             ? const Center(child: CircularProgressIndicator())
-            : Column(
+            : DesktopPageBody(
+                child: Column(
                 children: [
                   // Header
                   Padding(
@@ -880,38 +901,12 @@ class _BookmarksScreenState extends State<BookmarksScreen>
                             onPressed: () => setState(() => _selecting = true),
                           ),
                         if (_tabIndex == 0 && _allBookmarks.isNotEmpty) ...[
-                          GestureDetector(
-                            onTap: () {
-                              final next = _sort == 'newest' ? 'position'
-                                  : _sort == 'position' ? 'position_desc'
-                                  : 'newest';
-                              setState(() => _sort = next);
-                              PlayerSettings.setBookmarkSort(next);
-                              _load();
-                            },
-                            child: Container(
-                              height: 32,
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
-                              decoration: BoxDecoration(
-                                color: cs.onSurface.withValues(alpha: 0.06),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                                Icon(
-                                  _sort == 'newest' ? Icons.schedule_rounded
-                                      : _sort == 'position' ? Icons.arrow_upward_rounded
-                                      : Icons.arrow_downward_rounded,
-                                  color: cs.onSurfaceVariant, size: 16,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  _sort == 'newest' ? l.bookmarksScreenSortNewest
-                                      : l.bookmarksScreenSortPosition,
-                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(color: cs.onSurfaceVariant),
-                                ),
-                              ]),
-                            ),
-                          ),
+                          // Absorb Plus: sort/group menu and Markdown export.
+                          BookmarkViewMenu(view: _view, onChanged: (v) {
+                            setState(() => _view = v);
+                            BookmarkViewPrefs.save(v);
+                          }),
+                          BookmarkExportButton(groups: _filteredBookmarks, bookInfo: _bookInfo),
                           IconButton(
                             icon: Icon(Icons.checklist_rounded, color: cs.onSurfaceVariant),
                             tooltip: l.bookmarksSelect,
@@ -954,6 +949,19 @@ class _BookmarksScreenState extends State<BookmarksScreen>
                             borderRadius: BorderRadius.circular(14),
                             borderSide: BorderSide.none,
                           ),
+                        ),
+                      ),
+                    ),
+                  if (_query.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Text(
+                          l.bookmarksSearchResults(_tabIndex == 0
+                              ? countBookmarks(_filteredBookmarks())
+                              : _filteredHighlights().values.fold(0, (n, h) => n + h.length)),
+                          style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant),
                         ),
                       ),
                     ),
@@ -1022,6 +1030,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
                       ),
                     ),
                 ],
+              ),
               ),
       ),
     );
@@ -1206,7 +1215,7 @@ class _BookCover extends StatelessWidget {
       return _placeholder();
     }
 
-    return CachedNetworkImage(
+    return CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
       imageUrl: coverUrl!,
       fit: BoxFit.cover,
       httpHeaders: mediaHeaders,

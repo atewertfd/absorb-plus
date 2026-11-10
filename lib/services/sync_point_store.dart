@@ -241,7 +241,7 @@ class SyncPointStore {
         if (f is! File) continue;
         try {
           await f.delete();
-        } catch (_) {}
+        } catch (e) { debugPrint('[SyncPoints] clearAll failed: ${e.runtimeType}'); }
       }
     } catch (e) {
       debugPrint('[SyncPoints] clear failed: $e');

@@ -1,7 +1,7 @@
+import '../utils/app_platform.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' hide Platform; // web-safe Platform below
-import '../utils/web_safe_platform.dart';
 import 'dart:math' show max, min;
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
@@ -47,6 +47,7 @@ import '../services/transcription_service.dart';
 import '../services/volume_key_service.dart';
 import '../utils/chapter_title_match.dart';
 import '../utils/percent_escapes.dart';
+import 'adaptive_modal.dart';
 import 'overlay_toast.dart';
 import 'page_curl.dart';
 import 'reader_tap_zones.dart';
@@ -62,6 +63,7 @@ import 'card_chapters_sheet.dart';
 import 'chromecast_button.dart';
 import 'equalizer_sheet.dart';
 import 'sleep_timer_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'desktop_input.dart';
 
 typedef _ReaderAction = ({
@@ -115,6 +117,9 @@ class EbookReaderView extends StatefulWidget {
   /// Turn read along on as soon as the book is displayed, for the card's
   /// Read along button.
   final bool startReadAlong;
+  /// Start the narration from [openAtCfi] once the book is displayed, for
+  /// Play from here on a highlight outside the reader.
+  final bool playFromOpenCfi;
 
   const EbookReaderView({
     super.key,
@@ -127,6 +132,7 @@ class EbookReaderView extends StatefulWidget {
     this.findPositionSeconds,
     this.openAtAudioSeconds,
     this.startReadAlong = false,
+    this.playFromOpenCfi = false,
   });
 
   @override
@@ -235,6 +241,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
   // Read along: follow the audiobook by coloring the words being spoken.
   bool _readAlongOn = false;
   bool _didAutoReadAlong = false;
+  bool _didPlayFromOpenCfi = false;
   // Backgrounding stops read along; this brings it back on return.
   bool _readAlongResume = false;
   // Catch up offers: each direction is offered once per visit.
@@ -302,10 +309,20 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
 
   /// Read along can follow the narration when the book's audio is that
   /// narration: BookOrbit plays it as the audio, and an Audiobookshelf
-  /// ebook-only book has it fetched out of the EPUB. A book with its own
-  /// audiobook keeps transcription.
+  /// ebook-only book has it fetched out of the EPUB. On BookOrbit it also
+  /// follows a read along EPUB laid on the audiobook beside it. Any other
+  /// book with its own audiobook keeps transcription.
   bool get _useNarration =>
       _narration != null && (_narrationFromServer || !_hasAudio || _audioIsNarration);
+
+  /// Whether the page and the audio may move each other. A book with its own
+  /// audiobook beside a read along EPUB does that only with Sync reading and
+  /// listening on, as any book with both does.
+  Future<bool> _narrationMovesSpots() async {
+    await _audioMetaLookup;
+    if (!_hasAudio || _audioIsNarration) return true;
+    return PlayerSettings.getSyncReadingListening();
+  }
 
   // The narration and audio lookups started on open: read along waits for
   // them, since which kind it is depends on their answers.
@@ -486,9 +503,46 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     },
   );
 
+  /// Arrow and page keys on desktop: the same path as a volume key, so read
+  /// along knows the reader moved on purpose and doesn't pull the page back.
+  void _keyTurn(bool forward) {
+    if (_autoScroll) return;
+    _userMoved('keyboard');
+    _turnByUser(forward);
+  }
+
+  /// A turn asked for by tap or key. With no selection toolbar up, any
+  /// selection the page still holds is stale (a mouse leaves one behind
+  /// where a finger would not) and the viewer would refuse the turn for it.
+  void _turnByUser(bool forward) {
+    if (_selectionCfi == null) _epubController?.clearSelection();
+    _turnPage(forward);
+  }
+
+  /// The desktop WebView draws a full-height scrollbar down the page in
+  /// scroll mode; phones show a thin one that fades, so it is hidden only
+  /// where it would stay.
+  void _hideDesktopScrollbar() {
+    _epubController?.webViewController?.evaluateJavascript(source: r'''
+(function () {
+  if (document.getElementById('absorbNoBar')) return;
+  var s = document.createElement('style');
+  s.id = 'absorbNoBar';
+  s.textContent = '.epub-container::-webkit-scrollbar, #viewer::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; height: 0; } ' +
+    '.epub-container, #viewer, body { scrollbar-width: none; }';
+  document.head.appendChild(s);
+})();''');
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
+    debugPrint('[EbookReader] lifecycle ${state.name} active=$_readerActive item=${widget.itemId}');
+    // A desktop window is "inactive" whenever its focus is elsewhere, which
+    // includes the page's own web view after a click, so the reader is only
+    // away there once the window is hidden. Treating each click as leaving
+    // dropped every relocation and put the page back on the next click.
+    if (state == AppLifecycleState.inactive && AppPlatform.isDesktop) return;
     if (state == AppLifecycleState.resumed) {
       _readerActive = true;
       // Restore the page we were on before the recents/background resize drifted
@@ -557,7 +611,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
         _audioTotal = dur;
         _audioIsNarration = media['narration'] != null;
       });
-    } catch (_) {}
+    } catch (e) { debugPrint('[Reader] _loadAudioMeta failed: ${e.runtimeType}'); }
   }
 
   Future<void> _startThisBook() async {
@@ -1067,6 +1121,13 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     PlayerSettings.settingsChanged.removeListener(_loadSkipSettings);
     _pendingTapAction?.cancel();
     _curlShotTimer?.cancel();
+    // Absorb Plus: the curl layer goes with this widget, so nothing draws these now.
+    _curlShot?.dispose();
+    _curlShot = null;
+    for (final image in _curlShotsToFree) {
+      image.dispose();
+    }
+    _curlShotsToFree.clear();
     _controlsHideTimer?.cancel();
     // Restore system UI when leaving
     _setFullscreen(false);
@@ -1142,10 +1203,10 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
   void _commitReaderTap(String action) {
     if (action == 'prev') {
       _userMoved('tap');
-      _turnPage(false);
+      _turnByUser(false);
     } else if (action == 'next') {
       _userMoved('tap');
-      _turnPage(true);
+      _turnByUser(true);
     } else if (action == 'menu') {
       _toggleControls();
     }
@@ -1217,6 +1278,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     _curling = false;
     _curlDragReady = false;
     _curl.hide();
+    _freeCurlShots(); // Absorb Plus: pictures replaced during the turn
     _queueCurlShot();
     if (_pendingTurns.isNotEmpty) unawaited(_turnPage(_pendingTurns.removeAt(0), fresh: true));
   }
@@ -1274,8 +1336,11 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
       if (!mounted || _curling || !_curlOn) return;
       final cfi = _currentCfi;
       final shot = await _pictureOfPage();
-      if (shot == null || !mounted || _curling || _currentCfi != cfi) return;
-      _curlShot = shot;
+      if (shot == null || !mounted || _curling || _currentCfi != cfi) {
+        shot?.dispose(); // Absorb Plus: never shown, nothing else holds it
+        return;
+      }
+      _setCurlShot(shot); // Absorb Plus: frees the one it replaces
       _curlShotCfi = cfi;
     });
   }
@@ -1283,8 +1348,31 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
   /// The page looks different now (a highlight, the theme, the font).
   void _refreshCurlShot() {
     _curlShotCfi = null;
-    _curlShot = null;
+    _setCurlShot(null); // Absorb Plus: frees the old picture
     _queueCurlShot();
+  }
+
+  // Absorb Plus: page pictures are big; a replaced one is freed once the curl
+  // layer can't be drawing it (no turn running, layer hidden) and a frame has
+  // been drawn since. One a running turn still shows waits for _endCurl.
+  final List<ui.Image> _curlShotsToFree = [];
+
+  void _setCurlShot(ui.Image? shot) {
+    final old = _curlShot;
+    _curlShot = shot;
+    if (old != null && !identical(old, shot)) _curlShotsToFree.add(old);
+    _freeCurlShots();
+  }
+
+  void _freeCurlShots() {
+    if (_curlShotsToFree.isEmpty || _curling || _curl.showing) return;
+    final done = List.of(_curlShotsToFree);
+    _curlShotsToFree.clear();
+    WidgetsBinding.instance.endOfFrame.then((_) {
+      for (final image in done) {
+        image.dispose();
+      }
+    });
   }
 
   void _curlDragDown(PointerDownEvent e) {
@@ -1420,6 +1508,17 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
   /// (the same callHandler bridge the selection menu uses). Skips taps while
   /// text is selected so highlighting still works.
   void _setupTapHandler() {
+    // A mouse wheel moves the page in scroll mode without any touch, so it
+    // has to count as the reader moving, or read along pulls the page back.
+    _epubController?.webViewController?.addJavaScriptHandler(
+      handlerName: 'absorbReaderWheel',
+      callback: (args) {
+        if (!mounted || !_scroll) return;
+        _userMoved('scroll');
+        final cfi = _currentCfi;
+        if (cfi != null) _syncProgress(cfi, _progress);
+      },
+    );
     _epubController?.webViewController?.addJavaScriptHandler(
       handlerName: 'absorbReaderTap',
       callback: (args) {
@@ -1479,6 +1578,13 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
             doc.addEventListener('click', function(e){ onTapGuarded(e,'click'); }, true);
             doc.addEventListener('pointerup', function(e){ onTapGuarded(e,'pointerup'); }, true);
             doc.addEventListener('touchend', function(e){ onTapGuarded(e,'touchend'); }, true);
+            doc.addEventListener('wheel', function(){
+              var now=Date.now();
+              if(now-(window.__absorbWheelAt||0)<400)return;
+              window.__absorbWheelAt=now;
+              try { if(window.flutter_inappwebview){ window.flutter_inappwebview.callHandler('absorbReaderWheel'); return; } } catch(err){}
+              try { if(window.parent && window.parent.flutter_inappwebview){ window.parent.flutter_inappwebview.callHandler('absorbReaderWheel'); } } catch(err){}
+            }, {passive:true});
           } catch(e){}
         }
         try { rendition.getContents().forEach(function(c){ attach(c.document); }); } catch(e){}
@@ -2087,9 +2193,14 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
                 _shareHighlight(annotation, onThisPage: true);
               },
             ),
+            // A narrated book plays from the highlight outright, the same
+            // button the selection toolbar shows; the search is for books
+            // whose audio has to be matched to the text first.
             ListTile(
-              leading: Icon(Icons.headphones_rounded, color: cs.onSurfaceVariant),
-              title: Text(l.findInAudiobook),
+              leading: Icon(
+                  _useNarration ? Icons.play_arrow_rounded : Icons.headphones_rounded,
+                  color: cs.onSurfaceVariant),
+              title: Text(_useNarration ? l.narrationPlayFromHere : l.findInAudiobook),
               onTap: () {
                 Navigator.pop(ctx);
                 _findInAudiobookFromSelection(
@@ -2309,12 +2420,13 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
 
   void _showChapterList() {
     final cs = Theme.of(context).colorScheme;
-    showModalBottomSheet(
+    showAdaptiveActionMenu(
       context: context,
       backgroundColor: cs.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
+      desktopScrollWrap: false,
       builder: (ctx) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -2360,13 +2472,14 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
         );
     var sheetRaMode = LyricsService.instance.readAlongMode;
     var sheetRaColor = LyricsService.instance.readAlongColor;
-    showModalBottomSheet(
+    showAdaptiveActionMenu(
       context: context,
       backgroundColor: cs.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       isScrollControlled: true,
+      desktopScrollWrap: false,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setSheetState) {
           final l = AppLocalizations.of(ctx)!;
@@ -2432,6 +2545,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
                   Text(l.readerFontSize, style: tt.bodyMedium),
                   const Spacer(),
                   IconButton(
+                    tooltip: l.stepperDecrease, // Absorb Plus
                     icon: Icon(Icons.remove_rounded, size: 20, color: cs.onSurfaceVariant),
                     onPressed: _fontSize > 10 ? () {
                       setSheetState(() {});
@@ -2440,6 +2554,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
                   ),
                   Text('$_fontSize', style: tt.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
                   IconButton(
+                    tooltip: l.stepperIncrease, // Absorb Plus
                     icon: Icon(Icons.add_rounded, size: 20, color: cs.onSurfaceVariant),
                     onPressed: _fontSize < 32 ? () {
                       setSheetState(() {});
@@ -3031,13 +3146,14 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     final svc = ReaderFontService();
     await svc.load();
     if (!mounted) return;
-    await showModalBottomSheet(
+    await showAdaptiveActionMenu(
       context: context,
       backgroundColor: cs.surface,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
+      desktopScrollWrap: false,
       builder: (ctx) => SafeArea(
         child: ListenableBuilder(
           listenable: svc,
@@ -3142,27 +3258,30 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     _translators = await TranslateService.available();
     if (!mounted) return;
     final current = TranslateService.pick(_translators, _translateWith).id;
-    await showModalBottomSheet(
+    await showAdaptiveActionMenu(
       context: context,
       backgroundColor: cs.surface,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
+      desktopScrollWrap: false,
       builder: (ctx) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 8),
-            Center(
-              child: Container(
-                width: 40, height: 4,
-                decoration: BoxDecoration(
-                  color: cs.onSurface.withValues(alpha: 0.24),
-                  borderRadius: BorderRadius.circular(2),
+            if (!ModalSurface.isDesktopOf(ctx)) ...[
+              const SizedBox(height: 8),
+              Center(
+                child: Container(
+                  width: 40, height: 4,
+                  decoration: BoxDecoration(
+                    color: cs.onSurface.withValues(alpha: 0.24),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-            ),
+            ],
             Padding(
               padding: const EdgeInsets.all(16),
               child: Align(
@@ -3402,7 +3521,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
           if (d['matched'] == true && d['liveCfi'] is String) {
             liveCfi = d['liveCfi'] as String;
           }
-        } catch (_) {}
+        } catch (e) { debugPrint('[Reader] _jumpToSearchResult failed: ${e.runtimeType}'); }
       }
       _highlightSearchHit(liveCfi);
     });
@@ -3461,7 +3580,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
           try {
             final f = File(longer.audioPath);
             if (f.existsSync()) await f.delete();
-          } catch (_) {}
+          } catch (e) { debugPrint('[Reader] _runFindInEbook failed: ${e.runtimeType}'); }
           decision = await _decideFindTarget(longer.text.trim(), chapterHint,
               nearSeconds: pos);
         } on TranscriptionException catch (e) {
@@ -3791,7 +3910,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
         if (flash) _highlightSearchHit(d['cfi'] as String);
         return true;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Reader] _jumpToFindHit failed: ${e.runtimeType}'); }
     return false;
   }
 
@@ -3935,7 +4054,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
       try {
         final f = File(r.audioPath);
         if (f.existsSync()) await f.delete();
-      } catch (_) {}
+      } catch (e) { debugPrint('[Reader] _catchUpPageToAudio failed: ${e.runtimeType}'); }
     } on TranscriptionException catch (e) {
       error = switch (e.kind) {
         TranscriptionError.busy => l.transcriptionBusyMsg,
@@ -4221,7 +4340,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     try {
       final d = jsonDecode(raw) as Map<String, dynamic>;
       if (d['si'] is num && d['offset'] is num && d['total'] is num) return d;
-    } catch (_) {}
+    } catch (e) { debugPrint('[Reader] _selectionSectionInfo failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -4564,6 +4683,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     final player = AudioPlayerService();
     // Find in ebook names the spot, whether or not it is ahead of the page.
     double? at = widget.openAtAudioSeconds;
+    if (at == null && !await _narrationMovesSpots()) return;
     if (at == null && player.currentItemId == widget.itemId && player.currentEpisodeId == null) {
       at = player.position.inMilliseconds / 1000.0;
     } else if (at == null) {
@@ -4632,6 +4752,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     final t = _narrationReadAt;
     if (n == null || t == null || !_useNarration || _readAlongOn) return;
     _narrationReadAt = null;
+    if (!await _narrationMovesSpots()) return;
     final player = AudioPlayerService();
     final inPlayer = player.currentItemId == widget.itemId && player.currentEpisodeId == null;
     if (inPlayer && player.isPlaying) return;
@@ -4645,7 +4766,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     debugPrint('[ReadAlong] read ahead of the narration '
         '(${heard.toStringAsFixed(0)}s -> ${t.toStringAsFixed(0)}s) - moving it to the page');
     if (inPlayer) {
-      await player.seekTo(Duration(milliseconds: (t * 1000).round()));
+      await player.seekTo(Duration(milliseconds: (t * 1000).round()), offerUndo: false);
       return;
     }
     final duration = n.duration;
@@ -5013,7 +5134,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
         try {
           final f = File(r.audioPath);
           if (f.existsSync()) await f.delete();
-        } catch (_) {}
+        } catch (e) { debugPrint('[Reader] _transcribeForJump failed: ${e.runtimeType}'); }
         final t = r.text.trim();
         return t.isEmpty ? null : t;
       } on TranscriptionException catch (e) {
@@ -5249,14 +5370,14 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
         _epubController?.webViewController
             ?.evaluateJavascript(source: 'window.__absorbMO && __absorbMO.clear()')
             .catchError((_) => null);
-      } catch (_) {}
+      } catch (e) { debugPrint('[Reader] _stopReadAlong failed: ${e.runtimeType}'); }
     }
     // Runs from dispose() too, when the WebView may already be on its way out.
     try {
       _epubController?.webViewController
           ?.evaluateJavascript(source: 'window.__absorbRA && __absorbRA.stop()')
           .catchError((_) => null);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Reader] _stopReadAlong failed: ${e.runtimeType}'); }
     _readAlongLineStart = null;
     _readAlongPageWords = 0;
     _readAlongLineWords = 0;
@@ -5492,7 +5613,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     if (raw is String && raw.isNotEmpty) {
       try {
         d = jsonDecode(raw) as Map<String, dynamic>;
-      } catch (_) {}
+      } catch (_) { /* runs every 100 ms; the next tick asks again */ }
     }
     // The page turned into a different section and took the anchor with it:
     // locate the sentence again on the next tick.
@@ -5678,7 +5799,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     if (raw is String && raw.isNotEmpty) {
       try {
         d = jsonDecode(raw) as Map<String, dynamic>;
-      } catch (_) {}
+      } catch (_) { /* runs from the 100 ms read-along tick; the next tick repaints */ }
     }
     final head = needle.length > 50 ? '${needle.substring(0, 50)}...' : needle;
     if (d != null && d['found'] == true) {
@@ -5797,7 +5918,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     String href = '';
     try {
       href = (jsonDecode(hraw) as Map<String, dynamic>)['href'] as String? ?? '';
-    } catch (_) {}
+    } catch (_) { /* runs from the 100 ms read-along tick; the next tick repaints */ }
     if (href.isEmpty) return;
     // Land on the sentence itself, the way Find in ebook does, and let the
     // next tick paint it. Only if the sentence can't be pinned in the live
@@ -6088,14 +6209,15 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     final highlights = _annotations.where((a) => a.type == AnnotationType.highlight).toList();
     final bookmarks = _annotations.where((a) => a.type == AnnotationType.bookmark).toList();
 
-    showModalBottomSheet(
+    showAdaptiveActionMenu(
       context: context,
       backgroundColor: cs.surface,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (ctx) => DraggableScrollableSheet(
+      desktopScrollWrap: false,
+      builder: (ctx) => AdaptiveDraggableScrollableSheet(
         expand: false,
         initialChildSize: 0.6,
         maxChildSize: 0.9,
@@ -6114,6 +6236,16 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
                       '${_annotations.length}',
                       style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                     ),
+                    if (ModalSurface.isDesktopOf(ctx)) ...[
+                      const SizedBox(width: 4),
+                      IconButton(
+                        tooltip: MaterialLocalizations.of(
+                          ctx,
+                        ).closeButtonTooltip,
+                        onPressed: () => Navigator.pop(ctx),
+                        icon: const Icon(Icons.close_rounded),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -6727,7 +6859,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
         'sleep',
         'bookmarks',
         'equalizer',
-        Platform.isIOS ? 'airplay' : 'cast',
+        AppPlatform.isIOS ? 'airplay' : 'cast',
         'details',
         'download',
       ];
@@ -6763,7 +6895,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
           label: l.speed,
           tint: null,
           enabled: true,
-          onTap: () => showModalBottomSheet(
+          onTap: () => showAdaptiveActionMenu(
                 context: context,
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 shape: const RoundedRectangleBorder(
@@ -6925,10 +7057,11 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
   Future<void> _pickBarAction() async {
     final l = AppLocalizations.of(context)!;
     final current = _barActionId;
-    final picked = await showModalBottomSheet<String>(
+    final picked = await showAdaptiveActionMenu<String>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
+      desktopScrollWrap: false,
       builder: (ctx) {
         final cs = Theme.of(ctx).colorScheme;
         return SafeArea(
@@ -7102,11 +7235,15 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
                   children: [
                     // Skips only act on the live session.
                     IconButton(
+                      tooltip: AppLocalizations.of(context)!.skipBack, // Absorb Plus
                       icon: Icon(backIcon, color: isActive ? fg : dim),
                       iconSize: 30,
                       onPressed: isActive ? () => player.skipBackward(_backSkip) : null,
                     ),
                     IconButton(
+                      tooltip: (isActive && player.isPlaying) // Absorb Plus
+                          ? AppLocalizations.of(context)!.pauseAction
+                          : AppLocalizations.of(context)!.playAction,
                       icon: Icon(
                         (isActive && player.isPlaying)
                             ? Icons.pause_circle_filled_rounded
@@ -7128,6 +7265,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
                                 : _startThisBook),
                     ),
                     IconButton(
+                      tooltip: AppLocalizations.of(context)!.skipForward, // Absorb Plus
                       icon: Icon(fwdIcon, color: isActive ? fg : dim),
                       iconSize: 30,
                       onPressed: isActive ? () => player.skipForward(_forwardSkip) : null,
@@ -7215,6 +7353,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
               epubController: _epubController!,
               initialCfi: _initialCfi,
               cachedLocations: _cachedLocations,
+              onKeyTurn: _keyTurn,
               onLocationsGenerated: (json) {
                 debugPrint('[EbookReader] locations generated item=${widget.itemId} chars=${json.length}');
                 final file = _cachedFile;
@@ -7313,6 +7452,13 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
                   _setupPageInfoHandler();
                   _setupTapHandler();
                   _applyTurnStyle();
+                  if (AppPlatform.lacksPhonePlugins || AppPlatform.isDesktop) { // Absorb Plus: desktop too
+                    _hideDesktopScrollbar();
+                    // Desktop page moves into the app log while the jump
+                    // back after a turn is being chased.
+                    _epubController?.webViewController?.evaluateJavascript(
+                        source: 'window.__absorbLogMoves = true;');
+                  }
                   _queueCurlShot();
                   _setupAutoScrollHandlers();
                   _setupFontInjector();
@@ -7322,6 +7468,19 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
                   _didAutoReadAlong = true;
                   Future.delayed(const Duration(milliseconds: 900), () {
                     if (mounted && !_readAlongOn) _toggleReadAlong();
+                  });
+                }
+                final playAt = widget.openAtCfi;
+                if (widget.playFromOpenCfi && playAt != null && !_didPlayFromOpenCfi) {
+                  _didPlayFromOpenCfi = true;
+                  // Once the load rescue has settled on the highlight and the
+                  // narration lookup has answered.
+                  Future.delayed(const Duration(milliseconds: 1200), () async {
+                    if (!mounted) return;
+                    await _narrationLookup;
+                    if (!mounted || !_useNarration) return;
+                    await _findInAudiobookFromSelection(
+                        cfiOverride: playAt, textOverride: '', flashPassage: false);
                   });
                 }
                 unawaited(_narrationOpenAtAudio());
@@ -7575,6 +7734,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
                                       : AppLocalizations.of(context)!.findInAudiobook,
                                 ),
                               IconButton(
+                                tooltip: MaterialLocalizations.of(context).closeButtonTooltip, // Absorb Plus
                                 icon: Icon(Icons.close_rounded, color: cs.onSurfaceVariant),
                                 onPressed: _dismissSelection,
                               ),
@@ -7590,7 +7750,23 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
 
         ],
       );
-    return _wrap(viewerBody, bg);
+    // Keys land here when the Flutter side of the reader has focus (after a
+    // tap on an overlay button, say); the web view handles its own.
+    return Focus(
+      autofocus: AppPlatform.lacksPhonePlugins || AppPlatform.isDesktop, // Absorb Plus: desktop too
+      onKeyEvent: (node, event) {
+        if (!node.hasPrimaryFocus || event is KeyUpEvent) return KeyEventResult.ignored;
+        final key = event.logicalKey;
+        final forward = key == LogicalKeyboardKey.arrowRight ||
+            (!_scroll && (key == LogicalKeyboardKey.pageDown || key == LogicalKeyboardKey.space));
+        final back = key == LogicalKeyboardKey.arrowLeft ||
+            (!_scroll && key == LogicalKeyboardKey.pageUp);
+        if (!forward && !back) return KeyEventResult.ignored;
+        _keyTurn(forward);
+        return KeyEventResult.handled;
+      },
+      child: _wrap(viewerBody, bg),
+    );
   }
 }
 
@@ -7680,6 +7856,7 @@ class _EbookSearchScreenState extends State<_EbookSearchScreen> {
         backgroundColor: cs.surface,
         elevation: 0,
         leading: IconButton(
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip, // Absorb Plus
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -7696,6 +7873,7 @@ class _EbookSearchScreenState extends State<_EbookSearchScreen> {
         ),
         actions: [
           IconButton(
+            tooltip: AppLocalizations.of(context)!.readerTooltipSearch, // Absorb Plus
             icon: const Icon(Icons.search_rounded),
             onPressed: _searching ? null : _run,
           ),

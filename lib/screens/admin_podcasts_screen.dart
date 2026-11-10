@@ -15,6 +15,8 @@ import '../widgets/overlay_toast.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/desktop_workspace.dart';
 import '../utils/duration_format.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../widgets/opml_export_button.dart';
 
 /// Opens the podcast lookup used by the admin podcast manager.
 ///
@@ -102,7 +104,7 @@ class _AdminPodcastsScreenState extends State<AdminPodcastsScreen> {
           return item;
         }).toList();
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[AdminPodcasts] _loadShows failed: ${e.runtimeType}'); }
     if (mounted) setState(() => _loading = false);
   }
 
@@ -161,6 +163,7 @@ class _AdminPodcastsScreenState extends State<AdminPodcastsScreen> {
                     icon: Icon(Icons.cloud_download_rounded, color: cs.onSurfaceVariant.withValues(alpha: 0.6), size: 22),
                     tooltip: l.adminPodcastsCheckFeedsTooltip,
                     onPressed: () => _confirmCheckNewEpisodes(cs, tt)),
+            OpmlExportButton(libraryId: _libraryId, libraryName: widget.library['name'] as String? ?? ''), // Absorb Plus
             IconButton(icon: Icon(Icons.close_rounded, color: cs.onSurfaceVariant.withValues(alpha: 0.6)), onPressed: () => Navigator.pop(context)),
           ]),
         ),
@@ -651,7 +654,7 @@ class _PodcastSearchSheetState extends State<_PodcastSearchSheet> {
             } else {
               releaseDateStr = l.adminPodcastsYearsAgo((diff.inDays / 365).floor());
             }
-          } catch (_) {}
+          } catch (e) { debugPrint('[AdminPodcasts] _buildResultsList failed: ${e.runtimeType}'); }
         }
 
         // Build metadata chips
@@ -1117,7 +1120,7 @@ class _PodcastDetailScreenState extends State<_PodcastDetailScreen> with SingleT
         final copy = jsonDecode(jsonEncode(found)) as Map<String, dynamic>;
         setState(() => _item = copy);
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[AdminPodcasts] _reloadItem failed: ${e.runtimeType}'); }
   }
 
   Future<void> _editMaxEpisodesToKeep() async {

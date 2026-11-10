@@ -1,5 +1,4 @@
 import 'dart:async';
-import '../utils/web_safe_platform.dart'; // web-safe Platform
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -8,6 +7,9 @@ import 'api_service.dart';
 import 'audio_player_service.dart';
 import 'chapter_lookup.dart';
 import 'progress_sync_service.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart'; // web-safe Platform
+import 'sync_logic.dart'; // Absorb Plus
 
 enum CastConnectionState { disconnected, connecting, connected }
 enum CastPlaybackState { idle, loading, playing, paused, buffering }
@@ -291,7 +293,7 @@ class ChromecastService extends ChangeNotifier {
         await GoogleCastSessionManager.instance
             .endSession()
             .timeout(const Duration(milliseconds: 500));
-      } catch (_) {}
+      } catch (e) { debugPrint('[Cast] _tryReconnect failed: ${e.runtimeType}'); }
       if (!_reconnecting) return;
       try {
         debugPrint('[Cast] Reconnect backstop: connecting to ${device.friendlyName}');
@@ -569,7 +571,7 @@ class ChromecastService extends ChangeNotifier {
       await _syncProgressToServer();
     }
     if (_playbackSessionId != null && _api != null) {
-      try { await _api!.closePlaybackSession(_playbackSessionId!); } catch (_) {}
+      try { await _api!.closePlaybackSession(_playbackSessionId!); } catch (e) { debugPrint('[Cast] Closing the session failed: $e'); } // Absorb Plus (IMP-012)
       _playbackSessionId = null;
     }
     // User-initiated - don't let the disconnect event this triggers attempt a
@@ -592,6 +594,7 @@ class ChromecastService extends ChangeNotifier {
     required String? coverUrl, required double totalDuration,
     required List<dynamic> chapters, double startTime = 0,
     String? episodeId,
+    String? libraryId,
   }) async {
     debugPrint('[Cast] >>> castItem() — "$title" (id: $itemId)');
     debugPrint('[Cast] isConnected=$isConnected, connectionState=$_connectionState');
@@ -636,14 +639,29 @@ class ChromecastService extends ChangeNotifier {
       }
       debugPrint('[Cast] Got session data, keys: ${sessionData.keys.toList()}');
 
-      final serverPos = (sessionData['currentTime'] as num?)?.toDouble() ?? 0;
+      // Absorb Plus (BUG-006): the new session's own updatedAt says nothing
+      // about when the progress was saved. Pick with the progress row's
+      // lastUpdate and keep a spot that is still waiting to sync, the way a
+      // local start does (SyncLogic.resumePosition).
+      final serverRow = await api
+          .getItemProgress(progressKey)
+          .timeout(const Duration(seconds: 5), onTimeout: () => null)
+          .catchError((Object _) => null);
+      final serverPos = (serverRow?['currentTime'] as num?)?.toDouble() ??
+          (sessionData['currentTime'] as num?)?.toDouble() ??
+          0;
+      final serverTs = (serverRow?['lastUpdate'] as num?)?.toInt() ?? 0;
       debugPrint('[Cast] Server position: $serverPos');
       if (serverPos > 0) {
         final localData = await _progressSync.getLocal(progressKey);
         final lt = (localData?['timestamp'] as num?)?.toInt() ?? 0;
-        final st = (sessionData['updatedAt'] as num?)?.toInt() ?? 0;
-        if (st > lt && (serverPos - startTime).abs() > 1.0) startTime = serverPos;
-        else if (startTime == 0 && serverPos > 0) startTime = serverPos;
+        startTime = SyncLogic.resumePosition(
+          local: startTime,
+          localTimestamp: lt,
+          hasPendingSync: await _progressSync.hasPendingSync(progressKey),
+          server: serverPos,
+          serverLastUpdate: serverTs,
+        );
       }
 
       // Update duration from server if we don't have it (common for podcast episodes)
@@ -669,7 +687,8 @@ class ChromecastService extends ChangeNotifier {
 
       // Load per-book speed (or global default)
       final bookSpeed = await PlayerSettings.getBookSpeed(itemId);
-      final speed = bookSpeed ?? await PlayerSettings.getDefaultSpeed();
+      final speed = bookSpeed ??
+          await PlayerSettings.defaultSpeedFor(libraryId: libraryId);
       _castSpeed = speed;
 
       debugPrint('[Cast] Starting from position: ${startTime}s, speed: ${speed}x');
@@ -870,7 +889,7 @@ class ChromecastService extends ChangeNotifier {
         await Future.delayed(const Duration(milliseconds: 300));
         try {
           await GoogleCastRemoteMediaClient.instance.setPlaybackRate(_castSpeed);
-        } catch (_) {}
+        } catch (e) { debugPrint('[Cast] _advanceToNextTrack failed: ${e.runtimeType}'); }
       }
     } catch (e) {
       debugPrint('[Cast] Auto-advance error: $e');
@@ -919,7 +938,7 @@ class ChromecastService extends ChangeNotifier {
       if (session != null) {
         _volume = session.currentDeviceVolume.clamp(0.0, 1.0);
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Cast] _updateVolumeFromSession failed: ${e.runtimeType}'); }
   }
 
   Future<void> setVolume(double value) async {
@@ -936,7 +955,7 @@ class ChromecastService extends ChangeNotifier {
 
   Future<void> play() async {
     if (!isConnected) return;
-    try { await GoogleCastRemoteMediaClient.instance.play(); } catch (_) {}
+    try { await GoogleCastRemoteMediaClient.instance.play(); } catch (e) { debugPrint('[Cast] play failed: ${e.runtimeType}'); }
     // Reset the sync clock so the first tick after resume only counts the
     // seconds actually played since now, not the wall-clock elapsed since
     // the last sync (which would include the entire pause).
@@ -944,7 +963,7 @@ class ChromecastService extends ChangeNotifier {
   }
   Future<void> pause() async {
     if (!isConnected) return;
-    try { await GoogleCastRemoteMediaClient.instance.pause(); } catch (_) {}
+    try { await GoogleCastRemoteMediaClient.instance.pause(); } catch (e) { debugPrint('[Cast] pause failed: ${e.runtimeType}'); }
     await _saveProgressLocal();
     await _syncProgressToServer();
   }
@@ -1049,12 +1068,12 @@ class ChromecastService extends ChangeNotifier {
     if (!isConnected) return;
     await _saveProgressLocal();
     await _syncProgressToServer();
-    try { await GoogleCastRemoteMediaClient.instance.stop(); } catch (_) {}
+    try { await GoogleCastRemoteMediaClient.instance.stop(); } catch (e) { debugPrint('[Cast] stopCasting failed: ${e.runtimeType}'); }
 
 
     // Close the playback session so stats are finalized
     if (_playbackSessionId != null && _api != null) {
-      try { await _api!.closePlaybackSession(_playbackSessionId!); } catch (_) {}
+      try { await _api!.closePlaybackSession(_playbackSessionId!); } catch (e) { debugPrint('[Cast] Closing the session failed: $e'); } // Absorb Plus (IMP-012)
       _playbackSessionId = null;
     }
 
@@ -1120,7 +1139,7 @@ class ChromecastService extends ChangeNotifier {
 
     // Close playback session
     if (_playbackSessionId != null && _api != null) {
-      try { await _api!.closePlaybackSession(_playbackSessionId!); } catch (_) {}
+      try { await _api!.closePlaybackSession(_playbackSessionId!); } catch (e) { debugPrint('[Cast] Closing the session failed: $e'); } // Absorb Plus (IMP-012)
       _playbackSessionId = null;
     }
 
@@ -1158,18 +1177,20 @@ class ChromecastService extends ChangeNotifier {
       if (_playbackSessionId != null) {
         debugPrint('[CastSync] ct=${ct.toStringAsFixed(1)}s timeListened=${elapsed}s sid=${_playbackSessionId!.substring(0, 8)}...');
         // Sync via playback session so timeListened is tracked in stats
-        await _api!.syncPlaybackSession(
+        final ok = await _api!.syncPlaybackSession(
           _playbackSessionId!,
           currentTime: ct,
           duration: _castingDuration,
           timeListened: elapsed,
         );
+        if (!ok) debugPrint('[CastSync] The server did not take the sync'); // Absorb Plus (IMP-012)
       } else {
         // Fallback to progress update if no session
         final progressId = _castingEpisodeId != null
             ? '$_castingItemId-$_castingEpisodeId'
             : _castingItemId!;
-        await _api!.updateProgress(progressId, currentTime: ct, duration: _castingDuration);
+        final ok = await _api!.updateProgress(progressId, currentTime: ct, duration: _castingDuration);
+        if (!ok) debugPrint('[CastSync] The server did not take the progress'); // Absorb Plus (IMP-012)
       }
     } catch (e) {
       debugPrint('[Cast] Server sync error: $e');

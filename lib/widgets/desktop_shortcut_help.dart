@@ -26,6 +26,8 @@ String desktopShortcutDescription(
       DesktopShortcutAction.library => l.desktopShortcutLibrary,
       DesktopShortcutAction.nowPlaying => l.desktopShortcutNowPlaying,
       DesktopShortcutAction.fullScreen => l.desktopShortcutFullScreen,
+      DesktopShortcutAction.quickSwitcher => l.desktopShortcutQuickSwitcher,
+      DesktopShortcutAction.shortcutHelp => l.desktopShortcutHelp,
     };
 
 String desktopNavigationDescription(
@@ -38,16 +40,21 @@ String desktopNavigationDescription(
       DesktopNavigationAction.refresh => l.desktopShortcutRefresh,
       DesktopNavigationAction.previousCard => l.desktopShortcutPreviousCard,
       DesktopNavigationAction.nextCard => l.desktopShortcutNextCard,
+      DesktopNavigationAction.goToTime => l.desktopShortcutGoToTime,
     };
 
 /// Every shortcut this platform has, in table order. Keys bound to the same
 /// action share a row ("F5 / Ctrl+R"); mouse extras come last.
 List<DesktopShortcutHelpEntry> desktopShortcutHelpEntries(AppLocalizations l) {
+  final labelsByAction = <DesktopShortcutAction, List<String>>{};
+  for (final shortcut in desktopShortcutDefinitions) {
+    labelsByAction.putIfAbsent(shortcut.action, () => []).add(shortcut.label);
+  }
   final entries = <DesktopShortcutHelpEntry>[
-    for (final shortcut in desktopShortcutDefinitions)
+    for (final MapEntry(key: action, value: labels) in labelsByAction.entries)
       DesktopShortcutHelpEntry(
-        desktopShortcutDescription(l, shortcut.action),
-        shortcut.label,
+        desktopShortcutDescription(l, action),
+        labels.join(' / '),
       ),
   ];
   final navigation = desktopNavigationShortcuts;
@@ -94,6 +101,7 @@ class DesktopShortcutHelpList extends StatelessWidget {
         for (final entry in desktopShortcutHelpEntries(l))
           Semantics(
             label: '${entry.description}, ${entry.keys}',
+            excludeSemantics: true, // the tile's texts would repeat it
             child: ListTile(
               dense: true,
               title: Text(entry.description),
@@ -107,4 +115,26 @@ class DesktopShortcutHelpList extends StatelessWidget {
       ],
     );
   }
+}
+
+/// The keyboard-shortcuts dialog (Settings, the quick switcher, ? and F1).
+Future<void> showDesktopShortcutsDialog(BuildContext context) {
+  return showDialog<void>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(AppLocalizations.of(context)!.desktopShortcutsTitle),
+      content: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 420),
+        child: const SingleChildScrollView(
+          child: DesktopShortcutHelpList(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(AppLocalizations.of(context)!.desktopShortcutsClose),
+        ),
+      ],
+    ),
+  );
 }

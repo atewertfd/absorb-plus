@@ -4,16 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
+import '../services/api_service.dart';
 import '../services/ebook_cache.dart';
 import '../services/image_epub.dart';
 import '../services/narration_service.dart';
 import '../services/server_backend.dart';
-import '../utils/fork_platform.dart';
 import 'comic_reader_view.dart';
 import 'ebook_reader_view.dart';
 import 'pdf_reader_view.dart';
 import 'foliate_reader_view.dart';
 import 'overlay_toast.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/fork_platform.dart';
 
 /// Lower-cased ebook format (no dot) for an ABS ebookFile. Shares the cache's
 /// format-first derivation so the router, cache and readers can never disagree
@@ -40,6 +42,7 @@ Future<void> openHighlightInReader(
   required String itemId,
   required String cfi,
   String? title,
+  bool playNarration = false,
 }) async {
   final l = AppLocalizations.of(context)!;
   final api = context.read<AuthProvider>().apiService;
@@ -68,6 +71,7 @@ Future<void> openHighlightInReader(
     title: title ?? '',
     ebookFile: ebookFile,
     openAtCfi: cfi,
+    playFromOpenCfi: playNarration,
   );
 }
 
@@ -87,6 +91,7 @@ Future<void> openEbookReader(
   double? findPositionSeconds,
   double? openAtAudioSeconds,
   bool startReadAlong = false,
+  bool playFromOpenCfi = false,
 }) async {
   final ext = ForkPlatform.canOpenEbookFormat(ebookExt(ebookFile)) ? ebookExt(ebookFile) : ''; // '' shows 'unsupported'
   final Widget viewer;
@@ -95,11 +100,11 @@ Future<void> openEbookReader(
       itemId: itemId,
       title: title,
       ebookFile: ebookFile,
-      epubReader: () => EbookReaderView(
-          itemId: itemId, title: title, ebookFile: ebookFile, openAtCfi: openAtCfi,
+      epubReader: (file) => EbookReaderView(
+          itemId: itemId, title: title, ebookFile: file, openAtCfi: openAtCfi,
           findText: findText, findChapterHint: findChapterHint,
           findPositionSeconds: findPositionSeconds, openAtAudioSeconds: openAtAudioSeconds,
-          startReadAlong: startReadAlong),
+          startReadAlong: startReadAlong, playFromOpenCfi: playFromOpenCfi),
     );
   } else if (comicEbookFormats.contains(ext)) {
     viewer = ComicReaderView(itemId: itemId, title: title, ebookFile: ebookFile);
@@ -124,7 +129,7 @@ class _EpubGate extends StatefulWidget {
   final String itemId;
   final String title;
   final Map<String, dynamic> ebookFile;
-  final Widget Function() epubReader;
+  final Widget Function(Map<String, dynamic> ebookFile) epubReader;
 
   const _EpubGate({
     required this.itemId,
@@ -140,6 +145,7 @@ class _EpubGate extends StatefulWidget {
 class _EpubGateState extends State<_EpubGate> {
   bool _decided = false;
   File? _imageEpub;
+  late Map<String, dynamic> _ebookFile = widget.ebookFile;
 
   @override
   void initState() {
@@ -153,9 +159,17 @@ class _EpubGateState extends State<_EpubGate> {
     File? imageEpub;
     try {
       final api = context.read<AuthProvider>().apiService;
+      if (api is BookOrbitApiService) {
+        final readAlong = await api.readAlongReaderFile(widget.itemId);
+        if (readAlong != null && readAlong['ino'] != widget.ebookFile['ino']) {
+          debugPrint('[EbookRouter] ${widget.itemId}: opening the read along EPUB ${readAlong['ino']} '
+              'instead of ${widget.ebookFile['ino']}');
+          _ebookFile = readAlong;
+        }
+      }
       if (api != null) {
         final file = await NarrationService.instance
-            .readerFile(api, widget.itemId, widget.ebookFile, widget.title);
+            .readerFile(api, widget.itemId, _ebookFile, widget.title);
         final pages = await imageEpubPageCount(file);
         if (pages > 0) {
           debugPrint('[EbookRouter] ${widget.itemId} is $pages page pictures - opening as a comic');
@@ -181,10 +195,10 @@ class _EpubGateState extends State<_EpubGate> {
       return ComicReaderView(
         itemId: widget.itemId,
         title: widget.title,
-        ebookFile: widget.ebookFile,
+        ebookFile: _ebookFile,
         imageEpub: imageEpub,
       );
     }
-    return widget.epubReader();
+    return widget.epubReader(_ebookFile);
   }
 }

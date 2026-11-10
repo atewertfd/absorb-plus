@@ -182,6 +182,7 @@ function loadBook(data, cfi, initialXPath, manager, flow, spread, snap, allowScr
     lastRenderOpts.offset = Math.round((window.innerHeight || 800) * 2);
   }
   rendition = book.renderTo("viewer", lastRenderOpts);
+  holdSpotThroughResize(rendition);
   var turnsFor = rendition;
   rendition.started.then(function () {
     setupTurns(turnsFor);
@@ -254,6 +255,26 @@ function loadBook(data, cfi, initialXPath, manager, flow, spread, snap, allowScr
     // Setup blocking again to ensure it's active (in case it wasn't set up earlier)
     setupRenditionBlocking();
   });
+
+  // Arrow and page keys turn pages, from inside the book's frame (epub.js
+  // forwards its keydown) and from the outer page. The app does the turn so
+  // page animations and position tracking stay on the one path. In scrolled
+  // mode the page keys and space scroll as they would anywhere.
+  var scrolledFlow = String(flow || '').indexOf('scrolled') === 0;
+  window.__keyTurn = function (e) {
+    if (!e || e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
+    var k = e.key;
+    var forward = k === 'ArrowRight' || (!scrolledFlow && (k === 'PageDown' || k === ' ' || k === 'Spacebar'));
+    var back = k === 'ArrowLeft' || (!scrolledFlow && k === 'PageUp');
+    if (!forward && !back) return;
+    e.preventDefault();
+    window.flutter_inappwebview.callHandler('keyTurn', forward ? 'next' : 'prev');
+  };
+  rendition.on('keydown', function (e) { window.__keyTurn(e); });
+  if (!window.__keyTurnBound) {
+    window.__keyTurnBound = true;
+    window.addEventListener('keydown', function (e) { window.__keyTurn(e); });
+  }
 
   // Reset selection state tracking (use global variables)
   selectionTimeout = null;
@@ -2066,8 +2087,11 @@ function setupRenditionBlocking() {
     rendition.next = function () {
       if (hasActiveSelection()) {
         console.log('Blocked next() - selection active');
+    if (window.__absorbLogMoves) blindNotify("absorbAutoScrollLog", "next blocked by a selection");
         return Promise.resolve(rendition.location);
       }
+      window.__absorbUserMoveAt = Date.now();
+      if (window.__absorbLogMoves) blindNotify("absorbAutoScrollLog", "next");
       return originalNext();
     };
 
@@ -2075,8 +2099,11 @@ function setupRenditionBlocking() {
     rendition.prev = function () {
       if (hasActiveSelection()) {
         console.log('Blocked prev() - selection active');
+        if (window.__absorbLogMoves) blindNotify("absorbAutoScrollLog", "prev blocked by a selection");
         return Promise.resolve(rendition.location);
       }
+      window.__absorbUserMoveAt = Date.now();
+      if (window.__absorbLogMoves) blindNotify("absorbAutoScrollLog", "prev");
       return originalPrev();
     };
 
@@ -2084,11 +2111,71 @@ function setupRenditionBlocking() {
     rendition.display = function (cfi) {
       if (hasActiveSelection()) {
         console.log('Blocked display() - selection active, cfi:', cfi);
+        if (window.__absorbLogMoves) blindNotify("absorbAutoScrollLog", "display blocked by a selection " + cfi);
         return Promise.resolve(rendition.location);
+      }
+      // A resize putting the page back is not the reader moving.
+      if (!window.__absorbResizeDisplaying) window.__absorbUserMoveAt = Date.now();
+      if (window.__absorbLogMoves) {
+        blindNotify("absorbAutoScrollLog", "display " + cfi + (window.__absorbResizeDisplaying ? " (resize)" : ""));
       }
       return originalDisplay(cfi);
     };
   }
+}
+
+// Absorb patch: epub.js answers a resize by showing the page that holds the
+// first word of the page before it, and in the new size that page usually
+// starts a little earlier. Turning the phone fires several resizes, so the
+// book slid back a page or more each time, down to the start of the chapter.
+// Every resize now goes back to where the reader last was, and the pages the
+// resizes land on never replace that spot. Set before the rendition starts,
+// which is when epub.js binds its resize handler.
+function holdSpotThroughResize(r) {
+  var spot = null;
+  var resizing = 0;
+  var quietUntil = 0;
+  var lastW = 0, lastH = 0;
+  var resizeAt = 0;
+  r.onResized = function (size, epubcfi) {
+    this.emit("resized", { width: size.width, height: size.height }, epubcfi);
+    if (!this.location || !this.location.start) return;
+    // A resize to the size the page already has moved nothing, so there is
+    // nothing to put back: going to the remembered spot from here would undo
+    // a page turn or a scroll that happened since. Windows fires these.
+    var same = size && size.width === lastW && size.height === lastH;
+    if (size) { lastW = size.width; lastH = size.height; }
+    var cfi = epubcfi || (same ? this.location.start.cfi : spot) || this.location.start.cfi;
+    if (window.__absorbLogMoves) {
+      blindNotify("absorbAutoScrollLog", "resize " + (size ? size.width + "x" + size.height : "?") +
+        (same ? " (same size)" : "") + " -> " + cfi);
+    }
+    resizing++;
+    resizeAt = Date.now();
+    window.__absorbResizeDisplaying = true;
+    // The relocated event for this display comes a couple of frames after it
+    // resolves.
+    var settle = function () {
+      resizing--;
+      if (resizing <= 0) window.__absorbResizeDisplaying = false;
+      quietUntil = Date.now() + 500;
+    };
+    Promise.resolve(this.display(cfi)).then(settle, settle);
+  };
+  r.on("relocated", function (location) {
+    var cfi = location && location.start ? location.start.cfi : null;
+    // A move the reader asked for since the resize began is theirs to keep,
+    // quiet window or not; only the pages the resize itself lands on are not.
+    var moved = (window.__absorbUserMoveAt || 0) > resizeAt;
+    var settling = resizing > 0 || Date.now() < quietUntil;
+    if (window.__absorbLogMoves) {
+      blindNotify("absorbAutoScrollLog", "relocated " + cfi +
+        (resizing > 0 ? " (during resize)" : Date.now() < quietUntil ? " (quiet)" : "") +
+        (settling && moved ? " (kept: reader moved)" : ""));
+    }
+    if (settling && !moved) return;
+    if (cfi) spot = cfi;
+  });
 }
 
 //move to next page
@@ -2096,6 +2183,7 @@ function next() {
   // Block navigation if there's an active selection
   if (hasActiveSelection()) {
     console.log('Blocked next() - selection active');
+    if (window.__absorbLogMoves) blindNotify("absorbAutoScrollLog", "next blocked by a selection");
     return;
   }
   if (rendition) {
@@ -2531,15 +2619,18 @@ function clearSelection() {
         window.getSelection().removeAllRanges();
       }
 
-      // Notify Flutter that selection was cleared - only if we've actually sent a selection
-      if (hasSentSelection && (isSelecting || lastCfiRange) && window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
-        isSelecting = false;
-        lastCfiRange = null;
-        hasSentSelection = false;
-        if (selectionTimeout) {
-          clearTimeout(selectionTimeout);
-          selectionTimeout = null;
-        }
+      // The tracking flags come down whether or not Flutter ever heard of
+      // the selection: left set, hasActiveSelection() keeps blocking page
+      // turns with nothing on screen to show for it.
+      var tell = hasSentSelection && (isSelecting || lastCfiRange);
+      isSelecting = false;
+      lastCfiRange = null;
+      hasSentSelection = false;
+      if (selectionTimeout) {
+        clearTimeout(selectionTimeout);
+        selectionTimeout = null;
+      }
+      if (tell && window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
         window.flutter_inappwebview.callHandler('selectionCleared');
       }
     } else {

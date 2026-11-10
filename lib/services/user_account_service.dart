@@ -5,6 +5,10 @@ import '../utils/server_url.dart';
 import 'api_service.dart';
 import 'auth_tokens.dart';
 import 'server_backend.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'dart:async';
+import 'account_epoch.dart';
+import 'home_shelf_snapshot.dart';
 
 /// Represents a saved user account (server + credentials).
 class SavedAccount {
@@ -113,7 +117,7 @@ class UserAccountService {
       try {
         legacyCustomHeaders =
             Map<String, String>.from(jsonDecode(headersJson) as Map);
-      } catch (_) {}
+      } catch (e) { debugPrint('[UserAccount] init failed: ${e.runtimeType}'); }
     }
 
     // Load saved accounts
@@ -163,15 +167,11 @@ class UserAccountService {
   }
 
   /// Save or update an account after login. Sets it as active.
-  Future<void> saveAccount(SavedAccount account) async {
+  Future<void> saveAccount(SavedAccount account, {bool restoring = false}) async {
     // Nothing in here may stop the account being saved: a sign-in that got
     // this far has already written the new session, and bailing out now
     // leaves the old account's scope active under it.
-    try {
-      await beforeAccountChange?.call(account);
-    } catch (e) {
-      debugPrint('[UserAccount] beforeAccountChange failed: $e');
-    }
+    await prepareAccountChange(account, moveEpoch: !restoring);
     // Remove existing entry for same server+username (update token)
     _accounts.removeWhere(
         (a) => a.serverUrl == account.serverUrl && a.username == account.username);
@@ -179,6 +179,23 @@ class UserAccountService {
     _activeScopeKey = account.scopeKey;
     await _persist();
     debugPrint('[UserAccount] Saved & activated: ${account.username}@${account.serverUrl}');
+  }
+
+  /// Fork: runs before the active scope moves to [next], while the old
+  /// account's scope is still active. Moving to another account advances the
+  /// [AccountEpoch], which stops the old account's socket and timers, unless
+  /// [moveEpoch] is false (a backup restore rewriting the account list, with
+  /// no sign-in to start the next account's work afterwards). Never throws.
+  Future<void> prepareAccountChange(SavedAccount next,
+      {bool moveEpoch = true}) async {
+    if (moveEpoch && next.scopeKey != _activeScopeKey) {
+      await AccountEpoch.advance();
+    }
+    try {
+      await beforeAccountChange?.call(next);
+    } catch (e) {
+      debugPrint('[UserAccount] beforeAccountChange failed: $e');
+    }
   }
 
   /// Switch to a different saved account. Returns the account or null if not found.
@@ -198,10 +215,17 @@ class UserAccountService {
   /// user wants to re-add later). Returns true if found and removed.
   Future<bool> removeAccount(String serverUrl, String username) async {
     final before = _accounts.length;
+    final removed = _accounts
+        .where((a) => a.serverUrl == serverUrl && a.username == username)
+        .toList();
     _accounts.removeWhere(
         (a) => a.serverUrl == serverUrl && a.username == username);
     if (_accounts.length < before) {
       await _persist();
+      // Absorb Plus (C15): its saved Home shelves are only a cache.
+      for (final a in removed) {
+        unawaited(HomeShelfSnapshot.instance.clearScope(a.scopeKey));
+      }
       debugPrint('[UserAccount] Removed: $username@$serverUrl');
       return true;
     }

@@ -47,6 +47,14 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="absorb" android:host="setup"/>
             </intent-filter>
+            <!-- Absorb Plus: the phone remote's pairing page (web/pair.html)
+                 opens absorb://remote-pair with the PC's address and code. -->
+            <intent-filter android:label="Absorb remote pairing">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="absorb" android:host="remote-pair"/>
+            </intent-filter>
         </activity>
 
         <!-- OIDC callback via Chrome Custom Tab (flutter_web_auth_2) -->
@@ -261,6 +269,11 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- The Wear OS companion app carries "open on the watch" requests
+             (RemoteActivityHelper), so it has to be visible to us. -->
+        <intent>
+            <action android:name="com.google.android.wearable.intent.action.REMOTE_INTENT"/>
         </intent>
     </queries>
 </manifest>

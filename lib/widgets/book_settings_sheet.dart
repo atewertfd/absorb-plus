@@ -61,7 +61,7 @@ class _BookSettingsSheetState extends State<BookSettingsSheet> {
   @override
   void initState() {
     super.initState();
-    _load();
+    unawaited(_load());
   }
 
   Future<void> _load() async {
@@ -147,7 +147,7 @@ class _BookSettingsSheetState extends State<BookSettingsSheet> {
   void _setSkip(BookSkip skip) {
     if (skip == _skip) return;
     setState(() => _skip = skip);
-    _saveSkip();
+    unawaited(_saveSkip());
   }
 
   Future<void> _setWholeSeries(bool on) async {

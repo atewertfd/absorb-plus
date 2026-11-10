@@ -1,30 +1,20 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:absorb/services/settings_sync_service.dart';
 
+import 'support/fakes.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late SettingsSyncService sync;
 
   setUp(() async {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-          const MethodChannel('dev.fluttercommunity.plus/package_info'),
-          (call) async => {
-            'appName': 'Absorb',
-            'packageName': 'com.example.absorb',
-            'version': 'fixture',
-            'buildNumber': '1',
-            'buildSignature': '',
-            'installerStore': null,
-          },
-        );
+    fakePackageInfo();
     SharedPreferences.setMockInitialValues({
       'settingsSyncEnabled': true,
       'settingsSyncUrl': 'https://dav.example/absorb',
@@ -37,11 +27,7 @@ void main() {
 
   tearDown(() {
     SettingsSyncService.testClient = null;
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-          const MethodChannel('dev.fluttercommunity.plus/package_info'),
-          null,
-        );
+    clearFakePackageInfo();
   });
 
   test(

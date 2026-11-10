@@ -4,18 +4,28 @@
 
 .DESCRIPTION
   check      pub get, analyze, full test suite, tool tests, removed-paths check,
-             fork-only lints (tool/fork_lints.py)
+             settings-key naming (tool/pref_keys.py --check), fork-only lints
+             (tool/fork_lints.py)
+             check -Quick: for iterating. Analyze, then only the tests that
+             import a changed lib/ file (changed vs claude/slim, committed or
+             not) plus changed tests; skips fork lints, and pub get unless
+             pubspec changed. Run the full check before merging or building.
   build      Windows release into build\windows\x64\runner\Release, then
              verify the exe's version matches pubspec.yaml and refresh the
              owner's test copy in Desktop\Absorb Plus Beta
   beta-sync  refresh Desktop\Absorb Plus Beta from the last build (when it
              was open during the build)
   apk        signed phone-test APK from CI into Absorb Plus Beta\Android
-             (~10 min; run it in the background)
+             (~10 min; run it in the background), then onto the fork's
+             rolling test-channel pre-release for the app's Developer mode >
+             Test channel (-NoPublish skips that)
   bump      next build number (+1) in pubspec.yaml, for every build the
              owner gets. The beta number (lib/build_info.dart) names the
              next beta to be published and stays put; after publishing one,
              run bump -NextBeta (or -Beta N to set it).
+  clean      free build\ and .dart_tool\ safely (unlinks the Pub-cache
+             junctions first, then flutter clean + pub get); the next
+             build is a full one
   footprint  how far the fork's lib/ code differs from upstream
   merge      merge upstream origin/main with the fork's rules
              (tool/upstream_merge.py); never commits
@@ -38,7 +48,7 @@
 #>
 param(
   [Parameter(Mandatory = $true, Position = 0)]
-  [ValidateSet('check', 'build', 'beta-sync', 'apk', 'bump', 'footprint', 'merge', 'server', 'itest')]
+  [ValidateSet('check', 'build', 'beta-sync', 'apk', 'bump', 'clean', 'footprint', 'merge', 'server', 'itest')]
   [string]$Command,
   [Parameter(Position = 1)]
   [string]$Action = '',
@@ -46,6 +56,8 @@ param(
   [switch]$CloseRunning,
   [switch]$Local,
   [switch]$NextBeta,
+  [switch]$NoPublish,
+  [switch]$Quick,
   [switch]$Full
 )
 $script:ShowFull = [bool]$Full
@@ -193,6 +205,13 @@ function Update-BetaFolder {
     $blob = Join-Path $dir 'data\flutter_assets\kernel_blob.bin'
     if (Test-Path -LiteralPath $blob -PathType Leaf) { Remove-Item -LiteralPath $blob -Force }
   }
+  # Same for the Tailscale library: a build made without it must not keep an
+  # older one (possibly with a different C ABI) in the beta folder.
+  $tsDll = 'absorb_tailscale.dll'
+  if (-not (Test-Path -LiteralPath (Join-Path $src $tsDll) -PathType Leaf) -and
+      (Test-Path -LiteralPath (Join-Path $dst $tsDll) -PathType Leaf)) {
+    Remove-Item -LiteralPath (Join-Path $dst $tsDll) -Force
+  }
   Write-BetaNotes
   Write-Host "beta folder: $dst ($((Get-Item $dstExe).VersionInfo.ProductVersion))" -ForegroundColor Green
 }
@@ -200,19 +219,189 @@ function Get-PubspecVersion {
   $line = Select-String -Path pubspec.yaml -Pattern '^version:\s*(\S+)' | Select-Object -First 1
   return $line.Matches[0].Groups[1].Value
 }
+# The test channel: one rolling GitHub pre-release, tag "test-channel", in the
+# separate public repo atewertfd/absorb-plus-test-builds (owner, 2026-11-03),
+# so the main repo's Releases page only shows real betas and releases. Developer mode > Test channel in the Android app installs the
+# APK from it. Puts this APK there as absorb-plus-test-<version>+<build>.apk,
+# then removes older APKs and sets the notes to this build's patch notes
+# (tool/test_build_notes.py). Touches no other release or tag and never marks
+# anything Latest. Skip with -NoPublish. After a successful publish, the commit
+# goes to build\test-channel-last.txt: the next build's notes start there.
+$TestNotesAsset = Join-Path $root 'assets\test_build\notes.json'
+$TestNotesBody = Join-Path $root 'build\test-channel-notes.md'
+$TestChannelLastFile = Join-Path $root 'build\test-channel-last.txt'
+function Publish-TestChannelCore {
+  param([string]$ApkPath, [string]$Version, [string]$Commit)
+  $repo = 'atewertfd/absorb-plus-test-builds'
+  $tag = 'test-channel'
+  if ($Version -notmatch '^\d+\.\d+\.\d+\+\d+$') { throw "Unexpected version for the test channel: $Version" }
+  $name = "absorb-plus-test-$Version.apk"
+  $work = Join-Path $env:TEMP "absorb-test-channel-$PID"
+  New-Item -ItemType Directory -Force -Path $work | Out-Null
+  $asset = Join-Path $work $name
+  Copy-Item -LiteralPath $ApkPath -Destination $asset -Force
+  # Notes: this build's patch notes (version line and bullets), written
+  # before the build by tool/test_build_notes.py.
+  $short = if ($Commit.Length -ge 8) { $Commit.Substring(0, 8) } else { $Commit }
+  $notesFile = Join-Path $work 'notes.md'
+  $notes = @(if (Test-Path -LiteralPath $TestNotesBody) { Get-Content -LiteralPath $TestNotesBody -Encoding utf8 }
+    else { "Test build $Version (commit $short). Not a release: install it from Developer > Test channel in the Absorb Plus Test app." })
+  # No BOM (Windows PowerShell's utf8 adds one, which would show in the notes).
+  [IO.File]::WriteAllLines($notesFile, [string[]]$notes, (New-Object Text.UTF8Encoding $false))
+
+  # Native errors must not stop the script here (a missing release is a 404).
+  $prevPreference = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  try {
+    $lookup = (gh api "repos/$repo/releases/tags/$tag" --jq '.id' 2>&1 | Out-String)
+    $exists = $LASTEXITCODE -eq 0
+    $global:LASTEXITCODE = 0
+    # Only "not found" means it is missing; anything else (offline, signed
+    # out) must not lead to a second create.
+    if (-not $exists -and $lookup -notmatch '404|Not Found') {
+      throw "Could not look up the test channel release: $($lookup.Trim())"
+    }
+    if (-not $exists) {
+      # --target only takes a commit GitHub has; otherwise the default branch.
+      gh api "repos/$repo/commits/$Commit" --jq '.sha' *> $null
+      $targetArgs = if ($LASTEXITCODE -eq 0) { @('--target', $Commit) } else { @() }
+      $global:LASTEXITCODE = 0
+    }
+  } finally {
+    $ErrorActionPreference = $prevPreference
+  }
+  if ($exists) {
+    Invoke-Step -Name 'test-channel-upload' -Run { gh release upload $tag $asset --repo $repo --clobber }
+    Invoke-Step -Name 'test-channel-notes' -Run {
+      gh release edit $tag --repo $repo --prerelease --latest=false --notes-file $notesFile
+    }
+  } else {
+    Invoke-Step -Name 'test-channel-create' -Run {
+      gh release create $tag $asset --repo $repo --prerelease --latest=false `
+        --title 'Test channel (not a release)' --notes-file $notesFile @targetArgs
+    }
+  }
+  # Older test APKs go once the new one is up, so the channel is never empty.
+  $names = @(gh release view $tag --repo $repo --json assets --jq '.assets[].name')
+  if ($LASTEXITCODE -ne 0) { throw 'Could not list the test channel files.' }
+  # GitHub may store the "+" as another character, so match the new file
+  # loosely rather than by its exact name.
+  $core, $build = $Version -split '\+'
+  $current = "^absorb-plus-test-$([regex]::Escape($core))[+._ -]$build\.apk$"
+  if (-not ($names | Where-Object { $_ -match $current })) {
+    Write-Warning "The test channel doesn't list the new APK ($name); older APKs were left there."
+    $names = @()
+  }
+  foreach ($old in $names) {
+    if ($old -notmatch $current -and $old -like 'absorb-plus-test-*.apk') {
+      Invoke-Step -Name 'test-channel-prune' -Run { gh release delete-asset $tag $old --repo $repo --yes }
+    }
+  }
+  Set-Content -LiteralPath $TestChannelLastFile -Value $Commit -Encoding ascii
+  Write-Host "test channel: $name (https://github.com/$repo/releases/tag/$tag)" -ForegroundColor Green
+}
+# A failed publish only warns: the APK in the beta folder is already fine.
+function Publish-TestChannel {
+  param([string]$ApkPath, [string]$Version, [string]$Commit)
+  try {
+    Publish-TestChannelCore -ApkPath $ApkPath -Version $Version -Commit $Commit
+  } catch {
+    Write-Warning "Test channel not updated: $_ (the APK in the beta folder is fine; -NoPublish skips this step)"
+  } finally {
+    # Only the two files this step wrote; never a recursive delete.
+    $work = Join-Path $env:TEMP "absorb-test-channel-$PID"
+    Get-ChildItem -LiteralPath $work -File -ErrorAction SilentlyContinue |
+      Remove-Item -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $work -Force -ErrorAction SilentlyContinue
+  }
+}
 
 switch ($Command) {
   'check' {
+    if ($Quick) {
+      # What changed: since this branch left the integration branch, committed
+      # or not, plus untracked files. On claude/slim itself: since fork/claude/slim.
+      $head = git rev-parse HEAD
+      $slim = git rev-parse --verify --quiet claude/slim
+      $base = if ($slim -and $slim -ne $head) { git merge-base HEAD claude/slim }
+              elseif (git rev-parse --verify --quiet fork/claude/slim) { git merge-base HEAD fork/claude/slim }
+              else { $head }
+      $changed = @(@(git diff --name-only $base) + @(git ls-files --others --exclude-standard) |
+        Where-Object { $_ } | Sort-Object -Unique)
+      $needPub = -not (Test-Path (Join-Path $root '.dart_tool\package_config.json')) -or
+        ($changed | Where-Object { $_ -in 'pubspec.yaml', 'pubspec.lock' })
+      if ($needPub) { Invoke-Flutter pub get }
+      Invoke-Flutter analyze --no-pub --no-fatal-infos
+      $pkg = ((Get-Content (Join-Path $root 'pubspec.yaml') | Select-String '^name:\s*(\S+)').Matches[0].Groups[1].Value)
+      $libChanged = @($changed | Where-Object { $_ -like 'lib/*.dart' })
+      $tests = @($changed | Where-Object { $_ -like 'test/*_test.dart' -and $_ -notlike 'test/integration/*' })
+      if ($libChanged.Count) {
+        $needles = @($libChanged | ForEach-Object { "package:$pkg/" + $_.Substring(4) })
+        $tests += @(Get-ChildItem (Join-Path $root 'test') -Recurse -Filter '*_test.dart' |
+          Where-Object { $_.FullName -notlike '*\test\integration\*' } |
+          Where-Object { Select-String -Path $_.FullName -SimpleMatch -Pattern $needles -Quiet } |
+          ForEach-Object { $_.FullName.Substring($root.Length + 1).Replace('\', '/') })
+      }
+      $tests = @($tests | Sort-Object -Unique)
+      if ($tests.Count) {
+        Invoke-Step -Name 'flutter-test-quick' -Run { & $flutter test --no-pub --reporter expanded @tests } `
+          -SummaryPattern 'All tests passed|tests? passed|Some tests failed'
+        Write-Host "  ($($tests.Count) test file(s) for $($libChanged.Count) changed lib file(s))"
+      } else {
+        Write-Host "ok: no tests import the $($libChanged.Count) changed lib file(s)"
+      }
+      if ($changed | Where-Object { $_ -like 'tool/*.py' -or $_ -like 'tool/tests/*' }) {
+        Invoke-Step -Name 'tool-tests' -Run { python -m unittest discover -s tool/tests } `
+          -SummaryPattern '^Ran \d+ tests'
+      }
+      Invoke-Step -Name 'removed-paths' -Run { python tool/check_fork_removed.py } -SummaryPattern '^OK'
+      Write-Host 'quick check passed (run the full check before merging or building)' -ForegroundColor Green
+      break
+    }
     Invoke-Flutter pub get
     Invoke-Flutter analyze --no-pub --no-fatal-infos
     Invoke-Flutter test --no-pub --reporter expanded
     Invoke-Step -Name 'tool-tests' -Run { python -m unittest discover -s tool/tests } `
       -SummaryPattern '^Ran \d+ tests'
+    # The maintainer's hooks live in the private .claude repo (git-ignored here).
+    if (Test-Path (Join-Path $root '.claude\hooks\tests')) {
+      Invoke-Step -Name 'hook-tests' -Run { python -m unittest discover -s .claude/hooks/tests } `
+        -SummaryPattern '^Ran \d+ tests'
+    }
     Invoke-Step -Name 'removed-paths' -Run { python tool/check_fork_removed.py } -SummaryPattern '^OK'
+    # New fork settings keys are fork_snake_case (tool/pref_keys.py).
+    Invoke-Step -Name 'pref-keys' -Run { python tool/pref_keys.py --check } -SummaryPattern '^(OK|FAIL)'
     # Lints only fork-added files must pass (one extra analyzer run).
     $env:FLUTTER = $flutter
     Invoke-Step -Name 'fork-lints' -Run { python tool/fork_lints.py } -SummaryPattern '^(OK|FAIL)'
     Write-Host 'check passed' -ForegroundColor Green
+  }
+
+  'clean' {
+    # Frees build\ and .dart_tool\ (often 10+ GB). */flutter/ephemeral/.plugin_symlinks
+    # hold junctions into the shared Pub cache, and a recursive delete through
+    # them once emptied cached packages. So each link is removed by itself
+    # first (a non-recursive Directory.Delete never follows a junction), then
+    # flutter clean removes the rest. Never use Remove-Item -Recurse here.
+    $exe = Join-Path $root 'build\windows\x64\runner\Release\absorb.exe'
+    if (Get-Process absorb -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq $exe }) {
+      throw 'The Release absorb.exe is running from build\. Close it first.'
+    }
+    foreach ($os in 'windows', 'linux') {
+      $links = Join-Path $root "$os\flutter\ephemeral\.plugin_symlinks"
+      if (-not (Test-Path -LiteralPath $links)) { continue }
+      $kids = @(Get-ChildItem -LiteralPath $links -Force)
+      $real = @($kids | Where-Object { -not ($_.Attributes -band [IO.FileAttributes]::ReparsePoint) })
+      if ($real.Count) { throw "$links holds real folders, not links; stopping so nothing is deleted through them." }
+      foreach ($k in $kids) { [IO.Directory]::Delete($k.FullName, $false) }
+      [IO.Directory]::Delete($links, $false)
+    }
+    # Not through Invoke-Step: its log lives in build\, which this deletes.
+    & $flutter clean *> $null
+    if ($LASTEXITCODE -ne 0) { throw "flutter clean failed (exit $LASTEXITCODE)" }
+    New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+    Invoke-Flutter pub get
+    Write-Host 'clean done: build output removed; the next build is a full one' -ForegroundColor Green
   }
 
   'merge' {
@@ -237,7 +426,10 @@ switch ($Command) {
       throw 'NuGet CLI not found. Install it with: winget install Microsoft.NuGet'
     }
     Invoke-Flutter pub get
-    Invoke-Flutter build windows --release --no-pub --dart-define=GITHUB_BUILD=true
+    # The owner's Windows test copy is a test build too (owner, 2026-11-04):
+    # Developer mode, sign-in design previews and the like. Public Windows
+    # releases are built by release.yml without ABSORB_TEST_BUILD.
+    Invoke-Flutter build windows --release --no-pub --dart-define=GITHUB_BUILD=true --dart-define=ABSORB_TEST_BUILD=true
     $expected = Get-PubspecVersion
     $actual = (Get-Item $exe).VersionInfo.ProductVersion
     if ($actual -ne $expected) { throw "absorb.exe reports $actual but pubspec.yaml says $expected" }
@@ -257,29 +449,93 @@ switch ($Command) {
         throw 'No signing setup on this PC: the owner runs tool\android-signing-setup.ps1 once.'
       }
       Invoke-Step -Name 'flutter-pub-get' -Run { & $flutter pub get }
-      Invoke-Step -Name 'apk-local' -Run {
-        & $flutter build apk --release --no-pub --flavor github --target-platform android-arm64 --dart-define=GITHUB_BUILD=true
+      # Patch notes bundled in the test app (Developer > Patch notes, and a
+      # "What's new in build N" sheet after updating): the commits since the
+      # last published test build, or the last 15. Written to a git-ignored
+      # asset that only the dev flavor bundles, and removed after the build.
+      $headSha = (git rev-parse HEAD).Trim()
+      $notesArgs = @('tool/test_build_notes.py', '--version', (Get-PubspecVersion),
+        '--out', $TestNotesAsset, '--release-notes', $TestNotesBody, '--commit', $headSha)
+      if (Test-Path $TestChannelLastFile) {
+        $lastSha = "$(Get-Content $TestChannelLastFile -Raw)".Trim()
+        if ($lastSha) { $notesArgs += @('--since', $lastSha) }
       }
-      $apk = Get-ChildItem 'build\app\outputs\flutter-apk' -Filter '*github-release*.apk' |
+      Invoke-Step -Name 'test-build-notes' -Run { python @notesArgs } -SummaryPattern 'test build notes'
+      try {
+        Invoke-Step -Name 'apk-local' -Run {
+          # The "Absorb Plus Test" app: dev flavor (own app id, installs beside
+          # the normal app) with Developer mode and the test channel compiled in.
+          # The GitHub App's client id (public, not a secret) turns on GitHub
+          # sign-in for the private test-builds repo; empty means not set up.
+          $clientIdFile = 'tool\test-channel-client-id.txt'
+          # An empty file reads as $null with -Raw, so wrap it before trimming.
+          $clientId = if (Test-Path $clientIdFile) { "$(Get-Content $clientIdFile -Raw)".Trim() } else { '' }
+          & $flutter build apk --release --no-pub --flavor dev --target-platform android-arm64 --dart-define=GITHUB_BUILD=true --dart-define=ABSORB_TEST_BUILD=true "--dart-define=ABSORB_GH_CLIENT_ID=$clientId"
+        }
+      } finally {
+        Remove-Item -LiteralPath $TestNotesAsset -Force -ErrorAction SilentlyContinue
+      }
+      $apk = Get-ChildItem 'build\app\outputs\flutter-apk' -Filter '*dev-release*.apk' |
         Sort-Object LastWriteTime -Descending | Select-Object -First 1
       if (-not $apk) { throw 'The build produced no APK.' }
       Invoke-Step -Name 'apk-signature' -Run { python tool/ci/verify_apk_signature.py $apk.FullName }
       $dest = Join-Path $BetaDir 'Android'
       New-Item -ItemType Directory -Force -Path $dest | Out-Null
-      Copy-Item $apk.FullName (Join-Path $dest 'Absorb Plus beta.apk') -Force
+      Copy-Item $apk.FullName (Join-Path $dest 'Absorb Plus Test.apk') -Force
       Write-BetaNotes -AndroidRun 'local'
-      Write-Host "APK ready: $(Join-Path $dest 'Absorb Plus beta.apk')" -ForegroundColor Green
+      Write-Host "APK ready: $(Join-Path $dest 'Absorb Plus Test.apk')" -ForegroundColor Green
+      # The owner's phone on USB debugging (owner OK, 2026-11-03): install the
+      # test app on it right away. Skipped when no authorized device is attached.
+      $adb = Join-Path $env:LOCALAPPDATA 'Android\Sdk\platform-tools\adb.exe'
+      if (Test-Path $adb) {
+        $devices = @(& $adb devices 2>$null | Select-String "`tdevice$")
+        if ($devices.Count -eq 1) {
+          Invoke-Step -Name 'apk-install-usb' -Run { & $adb install -r $apk.FullName }
+        }
+      }
+      if (-not $NoPublish) {
+        Publish-TestChannel -ApkPath $apk.FullName -Version (Get-PubspecVersion) -Commit $headSha
+      }
       break
     }
     $branch = (git rev-parse --abbrev-ref HEAD).Trim()
     $repo = 'atewertfd/absorb-plus'
-    $before = (gh run list --repo $repo --workflow ci.yml --branch $branch --limit 1 --json databaseId --jq '.[0].databaseId')
+    # Download only the run this call starts: a workflow_dispatch run that
+    # didn't exist before, on the commit the branch points at on GitHub, and
+    # created after the dispatch (an older run's APK would be a stale build).
+    $sha = (gh api "repos/$repo/branches/$branch" --jq '.commit.sha').Trim()
+    if (-not $sha) { throw "Branch $branch isn't on $repo; push it first." }
+    if ($sha -ne (git rev-parse HEAD).Trim()) {
+      Write-Warning "GitHub's $branch is at $($sha.Substring(0, 8)), not your HEAD; the APK is built from GitHub's commit."
+    }
+    $listRuns = {
+      gh run list --repo $repo --workflow ci.yml --branch $branch --event workflow_dispatch --limit 20 `
+        --json databaseId,headSha,createdAt | ConvertFrom-Json
+    }
+    # PowerShell 7's ConvertFrom-Json already turns createdAt into a DateTime;
+    # Windows PowerShell leaves the ISO string.
+    $utc = {
+      param($t)
+      if ($t -isnot [DateTime]) {
+        $t = [DateTime]::Parse([string]$t, [Globalization.CultureInfo]::InvariantCulture,
+          [Globalization.DateTimeStyles]::AdjustToUniversal -bor [Globalization.DateTimeStyles]::AssumeUniversal)
+      }
+      $t.ToUniversalTime()
+    }
+    $beforeIds = @(& $listRuns | ForEach-Object { [string]$_.databaseId })
+    # A little slack for clock skew between this PC and GitHub.
+    $dispatchedAt = [DateTime]::UtcNow.AddSeconds(-30)
     gh workflow run ci.yml --repo $repo --ref $branch | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw 'gh workflow run failed.' }
     $runId = $null
     for ($i = 0; $i -lt 30 -and -not $runId; $i++) {
       Start-Sleep -Seconds 4
-      $latest = (gh run list --repo $repo --workflow ci.yml --branch $branch --event workflow_dispatch --limit 1 --json databaseId --jq '.[0].databaseId')
-      if ($latest -and $latest -ne $before) { $runId = $latest }
+      $match = & $listRuns | Where-Object {
+        ($beforeIds -notcontains [string]$_.databaseId) -and
+        $_.headSha -eq $sha -and
+        ((& $utc $_.createdAt) -ge $dispatchedAt)
+      } | Sort-Object { & $utc $_.createdAt } | Select-Object -First 1
+      if ($match) { $runId = [string]$match.databaseId }
     }
     if (-not $runId) { throw 'Could not find the CI run that was just started.' }
     Write-Host "CI run $runId building the APK..."
@@ -294,6 +550,22 @@ switch ($Command) {
     Copy-Item $apk.FullName (Join-Path $dest 'Absorb Plus beta.apk') -Force
     Write-BetaNotes -AndroidRun $runId
     Write-Host "APK ready: $(Join-Path $dest 'Absorb Plus beta.apk')" -ForegroundColor Green
+    # CI builds the normal app (github flavor), not the Absorb Plus Test app,
+    # so it never goes to the test channel; test builds come from -Local.
+    if ($false) {
+      # The version of the commit CI built (GitHub's branch head), when this
+      # checkout has it; otherwise the local pubspec.yaml.
+      $builtVersion = Get-PubspecVersion
+      $prevPreference = $ErrorActionPreference
+      $ErrorActionPreference = 'Continue'
+      $builtPubspec = git show "${sha}:pubspec.yaml" 2>$null
+      if ($LASTEXITCODE -eq 0 -and (($builtPubspec -join "`n") -match '(?m)^version:\s*(\S+)')) {
+        $builtVersion = $Matches[1]
+      }
+      $global:LASTEXITCODE = 0
+      $ErrorActionPreference = $prevPreference
+      Publish-TestChannel -ApkPath $apk.FullName -Version $builtVersion -Commit $sha
+    }
   }
 
   'bump' {
@@ -379,5 +651,17 @@ switch ($Command) {
     git diff --numstat origin/main -- lib ':!lib/l10n' |
       ForEach-Object { $c = $_ -split "`t"; [pscustomobject]@{ Lines = [int]$c[0] + [int]$c[1]; File = $c[2] } } |
       Sort-Object Lines -Descending | Select-Object -First 10 | Format-Table -AutoSize
+  }
+}
+
+# pub get rewrites */flutter/generated_plugin*. When the content is unchanged
+# but the size Git recorded differs (an old CRLF checkout), `git status` keeps
+# calling them modified without comparing content. Re-recording them is a
+# no-op for content; files whose content really changed are left alone.
+if ($Command -in 'check', 'build', 'clean', 'apk') {
+  $gen = @(git ls-files -m -- 'windows/flutter/generated_plugin*' 'linux/flutter/generated_plugin*')
+  foreach ($f in $gen) {
+    git diff --quiet -- $f
+    if ($LASTEXITCODE -eq 0) { git add -- $f }
   }
 }

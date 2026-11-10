@@ -76,9 +76,10 @@ class StatsCacheStore {
       );
     }
     await _ensureLoaded();
-    var entry = _data![scope];
-    if (entry is! Map<String, dynamic>)
-      entry = await _migrate(scope, statsKey, sessionsKey);
+    final cached = _data![scope];
+    final entry = cached is Map<String, dynamic>
+        ? cached
+        : await _migrate(scope, statsKey, sessionsKey);
     final stats = entry?['stats'];
     final sessions = entry?['sessions'];
     return (

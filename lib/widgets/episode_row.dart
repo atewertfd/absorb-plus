@@ -3,7 +3,10 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/library_provider.dart';
 import '../services/download_service.dart';
+import '../utils/app_platform.dart';
+import '../utils/media_card_gesture_policy.dart';
 import 'episode_detail_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'desktop_input.dart';
 
 class EpisodeRow extends StatefulWidget {
@@ -36,6 +39,7 @@ class _EpisodeRowState extends State<EpisodeRow> {
     final cs = Theme.of(context).colorScheme;
     final l = AppLocalizations.of(context)!;
     final lib = context.watch<LibraryProvider>();
+    final gesturePolicy = MediaCardGesturePolicy(isWeb: AppPlatform.lacksPhonePlugins);
     final ep = widget.episode;
 
     final title = ep['title'] as String? ?? l.episodeRowEpisode;
@@ -93,12 +97,14 @@ class _EpisodeRowState extends State<EpisodeRow> {
           sourcePlaylistId: widget.sourcePlaylistId,
         );
       },
-      onLongPress: () => EpisodeDetailSheet.showQuick(
-        context,
-        widget.podcastItem,
-        ep,
-        sourcePlaylistId: widget.sourcePlaylistId,
-      ),
+      onLongPress: gesturePolicy.allowsLongPressShortcuts
+          ? () => EpisodeDetailSheet.showQuick(
+                context,
+                widget.podcastItem,
+                ep,
+                sourcePlaylistId: widget.sourcePlaylistId,
+              )
+          : null,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 10, 12, 10),
         child: Column(
@@ -176,7 +182,7 @@ class _EpisodeRowState extends State<EpisodeRow> {
                                 style: TextStyle(fontSize: 11, color: cs.onSurfaceVariant.withValues(alpha: 0.6)),
                               ),
                             ),
-                          ListenableBuilder(
+                          if (!AppPlatform.lacksPhonePlugins) ListenableBuilder(
                             listenable: DownloadService(),
                             builder: (_, __) {
                               final downloaded = DownloadService().isDownloaded(dlKey);
@@ -198,7 +204,7 @@ class _EpisodeRowState extends State<EpisodeRow> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // Download button (reactive)
-                    ListenableBuilder(
+                    if (!AppPlatform.lacksPhonePlugins) ListenableBuilder(
                       listenable: DownloadService(),
                       builder: (_, __) {
                         final dl = DownloadService();
@@ -227,6 +233,7 @@ class _EpisodeRowState extends State<EpisodeRow> {
                           );
                         }
                         return IconButton(
+                          tooltip: AppLocalizations.of(context)!.download, // Absorb Plus
                           onPressed: widget.onDownload,
                           icon: Icon(Icons.download_rounded, size: 20,
                             color: cs.onSurfaceVariant.withValues(alpha: 0.5)),

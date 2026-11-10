@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' hide Platform; // web-safe Platform below
-import '../utils/web_safe_platform.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +19,9 @@ import 'scoped_prefs.dart';
 import 'user_account_service.dart';
 import 'wear_player_service.dart';
 import 'sleep_timer_service.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart';
+import '../utils/calendar_days.dart'; // Absorb Plus
 
 const String _androidWidgetName = 'NowPlayingWidget';
 const String _androidWidgetCompactName = 'NowPlayingWidgetCompact';
@@ -329,8 +331,13 @@ class HomeWidgetService {
           final episodeId = (rawEpisode == null || rawEpisode.isEmpty)
               ? null
               : rawEpisode;
+          final position = double.tryParse(uri.queryParameters['position'] ?? '');
           if (itemId != null && itemId.isNotEmpty) {
-            _handlePlayItem(itemId, episodeId);
+            _handlePlayItem(
+              itemId,
+              episodeId,
+              position: position != null && position.isFinite && position > 0 ? position : null,
+            );
           }
           break;
         case '/next_chapter':
@@ -376,10 +383,12 @@ class HomeWidgetService {
   /// Start playback of a specific item. Used by the watch's Continue
   /// Listening tap → WearPlayerCommandListenerService → /play_item URI.
   /// Always plays (no toggle path) — the watch already chose which book
-  /// it wants and the user expects an immediate switch.
-  Future<void> _handlePlayItem(String itemId, String? episodeId) async {
+  /// it wants and the user expects an immediate switch. A [position] is
+  /// where the watch was in it, so the phone carries on from there instead
+  /// of from its own or the server's older spot.
+  Future<void> _handlePlayItem(String itemId, String? episodeId, {double? position}) async {
     debugPrint(
-      '[HomeWidget] _handlePlayItem itemId=$itemId episodeId=$episodeId',
+      '[HomeWidget] _handlePlayItem itemId=$itemId episodeId=$episodeId position=$position',
     );
     final player = AudioPlayerService();
 
@@ -400,7 +409,7 @@ class HomeWidgetService {
         customHeaders = Map<String, String>.from(
           jsonDecode(headersJson) as Map,
         );
-      } catch (_) {}
+      } catch (e) { debugPrint('[HomeWidget] _handlePlayItem failed: ${e.runtimeType}'); }
     }
 
     final api = ApiService.forSession(
@@ -455,6 +464,8 @@ class HomeWidgetService {
           coverUrl: coverUrl,
           totalDuration: epDuration,
           chapters: const [],
+          startTime: position ?? 0,
+          forceStartTime: position != null,
           episodeId: episodeId,
           episodeTitle: epTitle,
           libraryId: fullItem['libraryId'] as String?,
@@ -468,6 +479,8 @@ class HomeWidgetService {
           coverUrl: coverUrl,
           totalDuration: duration,
           chapters: chapters,
+          startTime: position ?? 0,
+          forceStartTime: position != null,
           libraryId: fullItem['libraryId'] as String?,
         );
       }
@@ -623,7 +636,7 @@ class HomeWidgetService {
         customHeaders = Map<String, String>.from(
           jsonDecode(headersJson) as Map,
         );
-      } catch (_) {}
+      } catch (e) { debugPrint('[HomeWidget] _apiFromPrefs failed: ${e.runtimeType}'); }
     }
     return ApiService.forSession(
       backend: ServerBackend.loadActive(prefs),
@@ -664,7 +677,7 @@ class HomeWidgetService {
         final session = jsonDecode(sessionJson) as Map<String, dynamic>;
         duration = (session['duration'] as num?)?.toDouble() ?? 0;
         chapters = session['chapters'] as List<dynamic>? ?? const [];
-      } catch (_) {}
+      } catch (e) { debugPrint('[HomeWidget] _resumeFromDownloadRecord failed: ${e.runtimeType}'); }
     }
     final title = info.title ?? '';
     debugPrint(
@@ -1241,7 +1254,7 @@ class HomeWidgetService {
         customHeaders = Map<String, String>.from(
           jsonDecode(headersJson) as Map,
         );
-      } catch (_) {}
+      } catch (e) { debugPrint('[HomeWidget] _buildApiService failed: ${e.runtimeType}'); }
     }
     final headers = customHeaders ?? const <String, String>{};
 
@@ -1326,7 +1339,7 @@ class HomeWidgetService {
     final now = DateTime.now();
     final startOffset = _daySeconds(dailyMap, _dateKey(now)) > 0 ? 0 : 1;
     for (int i = startOffset; i < 365; i++) {
-      if (_daySeconds(dailyMap, _dateKey(now.subtract(Duration(days: i)))) >
+      if (_daySeconds(dailyMap, _dateKey(addCalendarDays(now, -i))) >
           0) {
         streak++;
       } else {

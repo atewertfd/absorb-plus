@@ -3,16 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../providers/library_provider.dart';
 import '../services/bookorbit_match.dart';
 import '../services/socket_service.dart';
 import '../screens/chapter_editor_screen.dart';
+import '../utils/desktop_workspace.dart';
 import 'bookorbit_match_view.dart';
+import 'metadata_lookup_sheet.dart'
+    show metadataFieldPickerDialogConstraints;
 import 'overlay_toast.dart';
 
 enum _ETab { details, cover, chapters, match, encode, embed }
+
+const double _metadataDetailsWideBreakpoint = 700;
 
 /// The unified per-book editor body: one swipeable tab bar over Details, Cover,
 /// Chapters, Match and Encode (in Audiobookshelf web order). Hosted full-screen
@@ -22,6 +29,7 @@ enum _ETab { details, cover, chapters, match, encode, embed }
 class MetadataEditView extends StatefulWidget {
   static const quickMatchButtonKey = Key('metadataQuickMatchButton');
   static const filePathsSectionKey = Key('metadataFilePathsSection');
+  static const descriptionFieldKey = Key('metadataDescriptionField');
 
   final String itemId;
   final String bookTitle;
@@ -549,6 +557,8 @@ class _MetadataEditViewState extends State<MetadataEditView>
     add('asin', book['asin']);
     add('isbn', book['isbn']);
     add('language', book['language']);
+    if (selected.contains('explicit') && book['explicit'] is bool) update['explicit'] = book['explicit'];
+    if (selected.contains('abridged') && book['abridged'] is bool) update['abridged'] = book['abridged'];
 
     // Authors/narrators are arrays in ABS
     if (selected.contains('author')) {
@@ -655,6 +665,13 @@ class _MetadataEditViewState extends State<MetadataEditView>
         ? _safeString(book['cover'])
         : _safeString(book['image']);
     if (cover.isNotEmpty) fields['cover'] = cover;
+    // Audible results carry both since Audiobookshelf 2.37.
+    if (book['explicit'] is bool) {
+      fields['explicit'] = book['explicit'] == true ? l.matchExplicitYes : l.matchExplicitNo;
+    }
+    if (book['abridged'] is bool) {
+      fields['abridged'] = book['abridged'] == true ? l.matchAbridgedYes : l.matchAbridgedNo;
+    }
 
     if (fields.isEmpty) return;
 
@@ -673,6 +690,8 @@ class _MetadataEditViewState extends State<MetadataEditView>
       'genres': l.genresLabel,
       'series': l.seriesLabel,
       'cover': l.metadataLookupCover,
+      'explicit': l.explicitContent,
+      'abridged': l.abridged,
     };
 
     showDialog(
@@ -682,6 +701,10 @@ class _MetadataEditViewState extends State<MetadataEditView>
           final cs = Theme.of(ctx).colorScheme;
           final tt = Theme.of(ctx).textTheme;
           return AlertDialog(
+            constraints: metadataFieldPickerDialogConstraints(
+              desktop: isDesktopWorkspace(ctx),
+              viewportHeight: MediaQuery.sizeOf(ctx).height,
+            ),
             title: Text(l.metadataLookupChooseFields),
             content: SizedBox(
               width: double.maxFinite,
@@ -1482,7 +1505,7 @@ class _MetadataEditViewState extends State<MetadataEditView>
               child: SizedBox(
                 width: 60, height: 60,
                 child: cover.isNotEmpty
-                    ? CachedNetworkImage(imageUrl: cover, fit: BoxFit.cover,
+                    ? CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, imageUrl: cover, fit: BoxFit.cover,
                         placeholder: (_, __) => _placeholder(cs),
                         errorWidget: (_, __, ___) => _placeholder(cs))
                     : _placeholder(cs),
@@ -1547,6 +1570,17 @@ class _MetadataEditViewState extends State<MetadataEditView>
   // ─── Custom Tab ─────────────────────────────────────────────
 
   Widget _buildCustomTab(ColorScheme cs, TextTheme tt, AppLocalizations l) {
+    return LayoutBuilder(
+      builder: (context, constraints) => _buildCustomTabLayout(
+        cs,
+        tt,
+        l,
+        wide: constraints.maxWidth >= _metadataDetailsWideBreakpoint,
+      ),
+    );
+  }
+
+  Widget _buildCustomTabLayout(ColorScheme cs, TextTheme tt, AppLocalizations l, {required bool wide}) {
     final filePaths = fullLibraryFilePaths(widget.libraryFiles);
     final bookOrbit = context.read<AuthProvider>().isBookOrbit;
     return Column(children: [
@@ -1583,10 +1617,23 @@ class _MetadataEditViewState extends State<MetadataEditView>
           controller: _detailsScroll,
           padding: EdgeInsets.fromLTRB(20, 8, 20, 32 + MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).viewPadding.bottom),
           children: [
-            _field(l.titleLabel, _titleCtrl, tt),
-            _field(l.subtitleLabel, _subtitleCtrl, tt),
-            _field(l.authorLabel, _authorCtrl, tt),
-            _field(l.narratorLabel, _narratorCtrl, tt),
+            if (wide) ...[
+              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Expanded(child: _field(l.titleLabel, _titleCtrl, tt)),
+                const SizedBox(width: 16),
+                Expanded(child: _field(l.subtitleLabel, _subtitleCtrl, tt)),
+              ]),
+              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Expanded(child: _field(l.authorLabel, _authorCtrl, tt)),
+                const SizedBox(width: 16),
+                Expanded(child: _field(l.narratorLabel, _narratorCtrl, tt)),
+              ]),
+            ] else ...[
+              _field(l.titleLabel, _titleCtrl, tt),
+              _field(l.subtitleLabel, _subtitleCtrl, tt),
+              _field(l.authorLabel, _authorCtrl, tt),
+              _field(l.narratorLabel, _narratorCtrl, tt),
+            ],
             for (int i = 0; i < _seriesRows.length; i++) ...[
               Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Expanded(child: _field(l.seriesLabel, _seriesRows[i].name, tt)),
@@ -1626,13 +1673,30 @@ class _MetadataEditViewState extends State<MetadataEditView>
                 ),
               ),
             ),
-            _field(l.descriptionLabel, _descCtrl, tt, maxLines: 5),
-            _field(l.publisherLabel, _publisherCtrl, tt),
-            Row(children: [
-              Expanded(child: _field(l.yearLabel, _yearCtrl, tt, keyboardType: TextInputType.number)),
-              const SizedBox(width: 12),
-              Expanded(child: _field(l.languageLabel, _languageCtrl, tt)),
-            ]),
+            _field(
+              l.descriptionLabel,
+              _descCtrl,
+              tt,
+              maxLines: wide ? null : 5,
+              minLines: wide ? 10 : null,
+              fieldKey: MetadataEditView.descriptionFieldKey,
+            ),
+            if (wide)
+              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Expanded(flex: 2, child: _field(l.publisherLabel, _publisherCtrl, tt)),
+                const SizedBox(width: 16),
+                Expanded(child: _field(l.yearLabel, _yearCtrl, tt, keyboardType: TextInputType.number)),
+                const SizedBox(width: 16),
+                Expanded(child: _field(l.languageLabel, _languageCtrl, tt)),
+              ])
+            else ...[
+              _field(l.publisherLabel, _publisherCtrl, tt),
+              Row(children: [
+                Expanded(child: _field(l.yearLabel, _yearCtrl, tt, keyboardType: TextInputType.number)),
+                const SizedBox(width: 12),
+                Expanded(child: _field(l.languageLabel, _languageCtrl, tt)),
+              ]),
+            ],
             _field(l.genresLabel, _genresCtrl, tt, hint: l.commaSeparated),
             _suggestionChips(_genresCtrl, _allGenres, multi: true),
             _field(l.tagsLabel, _tagsCtrl, tt, hint: l.commaSeparated),
@@ -1684,7 +1748,6 @@ class _MetadataEditViewState extends State<MetadataEditView>
                     color: cs.onSurfaceVariant, height: 1.35)),
                 ),
             ],
-
           ],
         ),
       ),
@@ -1752,7 +1815,7 @@ class _MetadataEditViewState extends State<MetadataEditView>
                 borderRadius: BorderRadius.circular(12),
                 child: SizedBox(
                   height: 200,
-                  child: CachedNetworkImage(
+                  child: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                     imageUrl: coverUrl,
                     httpHeaders: context.read<AuthProvider>().apiService?.mediaHeaders,
                     fit: BoxFit.contain,
@@ -1905,7 +1968,7 @@ class _MetadataEditViewState extends State<MetadataEditView>
                           borderRadius: BorderRadius.circular(8),
                         ),
                         clipBehavior: Clip.antiAlias,
-                        child: CachedNetworkImage(
+                        child: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                           imageUrl: url,
                           fit: BoxFit.contain,
                           placeholder: (_, __) => _placeholder(cs),
@@ -2001,7 +2064,7 @@ class _MetadataEditViewState extends State<MetadataEditView>
   Future<void> _showCoverPreview(String url) async {
     Size? size;
     try {
-      final provider = CachedNetworkImageProvider(url);
+      final provider = CachedNetworkImageProvider(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, url);
       final completer = Completer<Size>();
       final stream = provider.resolve(ImageConfiguration.empty);
       late final ImageStreamListener listener;
@@ -2016,7 +2079,7 @@ class _MetadataEditViewState extends State<MetadataEditView>
       });
       stream.addListener(listener);
       size = await completer.future.timeout(const Duration(seconds: 10));
-    } catch (_) {}
+    } catch (e) { debugPrint('[EditMetadata] _showCoverPreview failed: ${e.runtimeType}'); }
 
     if (!mounted) return;
     final l = AppLocalizations.of(context)!;
@@ -2033,7 +2096,7 @@ class _MetadataEditViewState extends State<MetadataEditView>
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: InteractiveViewer(
-                    child: CachedNetworkImage(
+                    child: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                       imageUrl: url,
                       fit: BoxFit.contain,
                       placeholder: (_, __) => const SizedBox(
@@ -2069,12 +2132,14 @@ class _MetadataEditViewState extends State<MetadataEditView>
     }
   }
 
-  Widget _field(String label, TextEditingController ctrl, TextTheme tt, {int maxLines = 1, String? hint, TextInputType? keyboardType}) {
+  Widget _field(String label, TextEditingController ctrl, TextTheme tt, {int? maxLines = 1, int? minLines, String? hint, TextInputType? keyboardType, Key? fieldKey}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextField(
+        key: fieldKey,
         controller: ctrl,
         maxLines: maxLines,
+        minLines: minLines,
         keyboardType: keyboardType,
         decoration: InputDecoration(
           labelText: label,

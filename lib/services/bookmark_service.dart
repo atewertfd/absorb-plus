@@ -127,11 +127,16 @@ class BookmarkService {
   // Persisted via ScopedPrefs so offline pending state survives app restart.
   static const _pendingCreatesKey = 'bookmarks_pending_creates';
   static const _pendingDeletesKey = 'bookmarks_pending_deletes';
+  // Absorb Plus (BUG-003): title/note edits the server hasn't taken yet.
+  static const _pendingEditsKey = 'bookmarks_pending_edits';
 
   // Track bookmarks not yet pushed to server (created offline).
   final Set<String> _unpushed = {}; // "itemId::position" keys
   // Track bookmarks deleted offline that need to be deleted on server.
   final Map<String, Set<double>> _pendingDeletes = {}; // itemId -> positions
+  // Absorb Plus (BUG-003): edited offline or refused by the server; the local
+  // title wins at the next sync and is sent then. "itemId::position" keys.
+  final Set<String> _pendingEdits = {};
   // Scope key whose pending state is currently hydrated into the two fields above.
   String? _hydratedScope;
 
@@ -143,6 +148,17 @@ class BookmarkService {
 
     _unpushed.clear();
     _pendingDeletes.clear();
+    _pendingEdits.clear();
+
+    final editsJson = await ScopedPrefs.getString(_pendingEditsKey);
+    if (editsJson != null && editsJson.isNotEmpty) {
+      try {
+        final list = jsonDecode(editsJson) as List<dynamic>;
+        _pendingEdits.addAll(list.whereType<String>());
+      } catch (e) {
+        debugPrint('[Bookmarks] Failed to parse pending edits: $e');
+      }
+    }
 
     final createsJson = await ScopedPrefs.getString(_pendingCreatesKey);
     if (createsJson != null && createsJson.isNotEmpty) {
@@ -193,6 +209,13 @@ class BookmarkService {
   Future<void> _persistUnpushed() async {
     await ScopedPrefs.setString(_pendingCreatesKey, jsonEncode(_unpushed.toList()));
   }
+
+  Future<void> _persistPendingEdits() async {
+    await ScopedPrefs.setString(_pendingEditsKey, jsonEncode(_pendingEdits.toList()));
+  }
+
+  static String _pendingKey(String itemId, double positionSeconds) =>
+      '$itemId::${positionSeconds.toStringAsFixed(1)}';
 
   Future<void> _persistPendingDeletes() async {
     final out = <String, List<double>>{};
@@ -315,10 +338,16 @@ class BookmarkService {
       return;
     }
 
-    // Update on server
-    if (api != null && time != null && serverTitle != null) {
-      await api.updateBookmark(itemId, time: time, title: serverTitle);
-    }
+    // Update on server. Absorb Plus (BUG-003): an edit the server didn't
+    // take is queued, so the next sync sends it instead of reverting it.
+    if (time == null || serverTitle == null) return;
+    await _ensureHydrated();
+    final editKey = _pendingKey(itemId, time);
+    if (_unpushed.contains(editKey)) return; // the pending create carries the new title
+    final ok = api != null &&
+        await api.updateBookmark(itemId, time: time, title: serverTitle);
+    final changed = ok ? _pendingEdits.remove(editKey) : _pendingEdits.add(editKey);
+    if (changed) await _persistPendingEdits();
   }
 
   /// Move a bookmark to a new time. Updates locally and re-points the server
@@ -376,6 +405,8 @@ class BookmarkService {
     // confirms the create.
     final newKey = '$itemId::${newPos.toStringAsFixed(1)}';
     _unpushed.remove('$itemId::${oldTime.toStringAsFixed(1)}');
+    // The create at the new position carries the current title.
+    if (_pendingEdits.remove(_pendingKey(itemId, oldTime))) await _persistPendingEdits();
     _unpushed.add(newKey);
     await _persistUnpushed();
 
@@ -430,6 +461,7 @@ class BookmarkService {
     // flag - the server never knew about it, so there's nothing to delete.
     if (time != null) {
       final unpushedKey = '$itemId::${time.toStringAsFixed(1)}';
+      if (_pendingEdits.remove(unpushedKey)) await _persistPendingEdits();
       if (_unpushed.remove(unpushedKey)) {
         await _persistUnpushed();
         return;
@@ -504,9 +536,22 @@ class BookmarkService {
           existing.add(jsonEncode(serverBm.toJson()));
           await ScopedPrefs.setStringList(key, existing);
           debugPrint('[Bookmarks] Synced from server: "${serverBm.title}" at ${serverBm.formattedPosition}');
-        } else if (serverBm.serverTitle != localMatch.serverTitle && serverBm.created.isAfter(localMatch.created)) {
-          // Server is newer - take its title and note (fromServer already
-          // split the combined server string back into the two fields).
+        } else if (serverBm.serverTitle != localMatch.serverTitle) {
+          // Absorb Plus (BUG-003): a local edit the server hasn't taken yet
+          // wins and is sent now. Otherwise the server's text is the newer
+          // one (ABS keeps no edit time; creation times said nothing here).
+          final editKey = _pendingKey(itemId, localMatch.positionSeconds);
+          if (_pendingEdits.contains(editKey)) {
+            if (await api.updateBookmark(itemId,
+                time: serverBm.positionSeconds, title: localMatch.serverTitle)) {
+              _pendingEdits.remove(editKey);
+              await _persistPendingEdits();
+              debugPrint('[Bookmarks] Sent offline edit: "${localMatch.title}"');
+            }
+            continue;
+          }
+          // Take its title and note (fromServer already split the combined
+          // server string back into the two fields).
           localMatch
             ..title = serverBm.title
             ..note = serverBm.note;
@@ -545,6 +590,9 @@ class BookmarkService {
         } else {
           debugPrint('[Bookmarks] Removed locally (deleted on server): "${lb.title}" at ${lb.formattedPosition}');
           localChanged = true;
+          if (_pendingEdits.remove(_pendingKey(itemId, lb.positionSeconds))) {
+            await _persistPendingEdits();
+          }
         }
       }
       if (localChanged) await _saveAll(itemId, kept);
@@ -586,7 +634,7 @@ class BookmarkService {
       for (final json in stored) {
         try {
           bookmarks.add(Bookmark.fromJson(jsonDecode(json)));
-        } catch (_) {}
+        } catch (e) { debugPrint('[Bookmarks] getAllBookmarks failed: ${e.runtimeType}'); }
       }
       if (bookmarks.isNotEmpty) {
         if (sort == 'position') {

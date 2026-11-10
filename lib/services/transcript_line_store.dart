@@ -272,7 +272,7 @@ class TranscriptLineStore {
       for (final f in dir.listSync()) {
         if (f is File) total += f.lengthSync();
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Lyrics] cacheBytes failed: ${e.runtimeType}'); }
     return total;
   }
 
@@ -288,7 +288,7 @@ class TranscriptLineStore {
         if (f is! File) continue;
         try {
           await f.delete();
-        } catch (_) {}
+        } catch (e) { debugPrint('[Lyrics] clearAll failed: ${e.runtimeType}'); }
       }
     } catch (e) {
       debugPrint('[Lyrics] store clear failed: $e');

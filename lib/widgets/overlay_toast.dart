@@ -85,6 +85,8 @@ class LiveOverlayToast {
         (message: message, icon: icon));
     final entry = OverlayEntry(builder: (_) => _LiveToast(value: value));
     overlay.insert(entry);
+    // Absorb Plus: the next toast replaces this one instead of stacking on it.
+    _currentToast = entry;
     return LiveOverlayToast._(value, entry);
   }
 
@@ -98,6 +100,7 @@ class LiveOverlayToast {
     if (entry == null) return;
     _entry = null;
     _removeToast(entry);
+    if (_currentToast == entry) _currentToast = null;
     _value.dispose();
   }
 }
@@ -207,44 +210,49 @@ class _AnimatedToastState extends State<_AnimatedToast>
             end: Offset.zero,
           ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut)),
           child: Center(
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: widget.onTap == null
-                  ? null
-                  : () {
-                      widget.onDone();
-                      widget.onTap!();
-                    },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
-                child: BackdropFilter(
-                  filter: ui.ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: cs.surface.withValues(alpha: 0.7),
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(color: cs.primary.withValues(alpha: 0.25)),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (widget.icon != null) ...[
-                          Icon(widget.icon, size: 18, color: cs.primary),
-                          const SizedBox(width: 8),
-                        ],
-                        Flexible(
-                          child: Text(
-                            widget.message,
-                            style: TextStyle(
-                              color: cs.onSurface,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.none,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: widget.onTap == null
+                    ? null
+                    : () {
+                        widget.onDone();
+                        widget.onTap!();
+                      },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: BackdropFilter(
+                    filter: ui.ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: cs.surface.withValues(alpha: 0.7),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                            color: cs.primary.withValues(alpha: 0.25)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (widget.icon != null) ...[
+                            Icon(widget.icon, size: 18, color: cs.primary),
+                            const SizedBox(width: 8),
+                          ],
+                          Flexible(
+                            child: Text(
+                              widget.message,
+                              style: TextStyle(
+                                color: cs.onSurface,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                decoration: TextDecoration.none,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

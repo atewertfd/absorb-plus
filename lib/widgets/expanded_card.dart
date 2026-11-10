@@ -2,8 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import '../l10n/app_localizations.dart';
 import '../utils/cover_accent.dart';
 import '../providers/auth_provider.dart';
@@ -22,7 +25,11 @@ import 'overlay_toast.dart';
 import '../services/ebook_cache.dart';
 import '../services/find_in_ebook.dart';
 import '../main.dart' show colorSourceNotifier, useColorEverywhereNotifier, manualSeedNotifier, manualColorScheme;
+import '../utils/app_platform.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
+import 'fell_asleep_chip.dart'; // Absorb Plus
+import '../utils/episode_key.dart';
 
 // ─── Custom route: slide-up + fade ────────────────────────────
 
@@ -171,7 +178,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
     final re = _recentEpisode;
     if (re != null) return re['id'] as String?;
     final absKey = _item['_absorbingKey'] as String?;
-    if (absKey != null && absKey.length > 36) return absKey.substring(37);
+    if (absKey != null && isEpisodeKey(absKey)) return episodeIdOfKey(absKey)!;
     return null;
   }
   double get _effectiveDuration {
@@ -186,10 +193,12 @@ class _ExpandedCardState extends State<ExpandedCard> {
   }
 
   String? get _coverUrl {
-    final episodeId = _episodeId;
-    final downloadKey = episodeId == null ? _itemId : '$_itemId-$episodeId';
-    final localCover = DownloadService().getInfo(downloadKey).localCoverPath;
-    if (localCover != null && File(localCover).existsSync()) return localCover;
+    if (!AppPlatform.lacksPhonePlugins) {
+      final episodeId = _episodeId;
+      final downloadKey = episodeId == null ? _itemId : '$_itemId-$episodeId';
+      final localCover = DownloadService().getInfo(downloadKey).localCoverPath;
+      if (localCover != null && File(localCover).existsSync()) return localCover;
+    }
 
     if (_isActive) {
       final playingCover = widget.player.currentCoverUrl;
@@ -506,7 +515,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
           }
         }
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[ExpandedCard] _fetchChaptersIfNeeded failed: ${e.runtimeType}'); }
   }
 
   void _onCoverLoaded(ImageProvider provider) {
@@ -524,7 +533,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
     if (isLocalCoverPath(url)) {
       provider = FileImage(File(url));
     } else {
-      provider = CachedNetworkImageProvider(url, headers: context.read<LibraryProvider>().mediaHeaders);
+      provider = CachedNetworkImageProvider(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, url, headers: context.read<LibraryProvider>().mediaHeaders);
     }
     _onCoverLoaded(provider);
   }
@@ -543,7 +552,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
             });
           }
         })
-        .catchError((_) {});
+        .catchError((e) { debugPrint('[ExpandedCard] _rederiveCoverScheme failed: ${e.runtimeType}'); });
   }
 
   /// Generate our own blurred cover from the current cover URL.
@@ -557,7 +566,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
         provider = FileImage(File(url));
       } else {
         final lib = context.read<LibraryProvider>();
-        provider = CachedNetworkImageProvider(url, headers: lib.mediaHeaders);
+        provider = CachedNetworkImageProvider(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, url, headers: lib.mediaHeaders);
       }
 
       final completer = Completer<ui.Image>();
@@ -605,7 +614,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
       // Also derive cover scheme if needed
       if (_rawCoverScheme == null) _onCoverLoaded(provider);
-    } catch (_) {}
+    } catch (e) { debugPrint('[ExpandedCard] _generateBlur failed: ${e.runtimeType}'); }
   }
 
   @override
@@ -655,7 +664,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
       bookProgress = progress;
     }
 
-    return GestureDetector(
+    final player = GestureDetector(
       onVerticalDragEnd: (details) {
         final vy = details.primaryVelocity ?? 0;
         if (vy > 300) _dismissExpanded(); // swipe down to collapse
@@ -711,8 +720,10 @@ class _ExpandedCardState extends State<ExpandedCard> {
                   child: LayoutBuilder(
                     builder: (context, outerConstraints) {
                     final compact = outerConstraints.maxHeight < 600;
-                    // Landscape: split into left (cover) + right (controls/info).
-                    final wide = outerConstraints.maxWidth > outerConstraints.maxHeight;
+                    final wide = AppPlatform.lacksPhonePlugins
+                        ? outerConstraints.maxWidth >= 900
+                        : outerConstraints.maxWidth >
+                            outerConstraints.maxHeight;
 
                     // Same story as the small card: the scrim is thinnest at
                     // the top, so on a blurred background take the ink from
@@ -742,7 +753,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
                     final bookProgressBar = Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: CardDualProgressBar(player: widget.player, accent: accent, isActive: _isActive, staticProgress: progress, staticDuration: _effectiveDuration, chapters: _chapters, showBookBar: showBookBar, showChapterBar: false, itemId: _itemId, showCenterPercent: true),
+                        child: CardDualProgressBar(player: widget.player, accent: accent, isActive: _isActive, staticProgress: progress, staticDuration: _effectiveDuration, chapters: _chapters, showBookBar: showBookBar, showChapterBar: false, itemId: _itemId, showCenterPercent: true, libraryId: _resolveLibraryId()),
                       );
 
                     final coverArea = Padding(
@@ -764,7 +775,8 @@ class _ExpandedCardState extends State<ExpandedCard> {
                                   coverH = s;
                                 }
                                 final dlKey = _episodeId != null ? '$_itemId-$_episodeId' : _itemId;
-                                final isDownloaded = DownloadService().isDownloaded(dlKey);
+                                final isDownloaded = !AppPlatform.lacksPhonePlugins &&
+                                    DownloadService().isDownloaded(dlKey);
                                 final castService = ChromecastService();
                                 final isCastingThis = castService.isCasting && castService.castingItemId == _itemId;
                                 final coverPlaying = isCastingThis ? castService.isPlaying : (_isActive && widget.player.isPlaying);
@@ -836,10 +848,10 @@ class _ExpandedCardState extends State<ExpandedCard> {
                                                       errorBuilder: (_, __, ___) => const SizedBox.shrink()),
                                                       enabled: !_rectangleCovers, child: Image.file(File(_coverUrl!), fit: _rectangleCovers ? BoxFit.cover : BoxFit.contain,
                                                       errorBuilder: (_, __, ___) => CoverPlaceholder(title: _title, author: _author)))
-                                                  : BlurPaddedCover(blurChild: CachedNetworkImage(imageUrl: _coverUrl!, fit: BoxFit.cover,
+                                                  : BlurPaddedCover(blurChild: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, imageUrl: _coverUrl!, fit: BoxFit.cover,
                                                         httpHeaders: mediaHeaders,
                                                         errorWidget: (_, __, ___) => const SizedBox.shrink()),
-                                                      enabled: !_rectangleCovers, child: CachedNetworkImage(imageUrl: _coverUrl!, fit: _rectangleCovers ? BoxFit.cover : BoxFit.contain,
+                                                      enabled: !_rectangleCovers, child: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, imageUrl: _coverUrl!, fit: _rectangleCovers ? BoxFit.cover : BoxFit.contain,
                                                         httpHeaders: mediaHeaders,
                                                         placeholder: (_, __) => CoverPlaceholder(title: _title, author: _author),
                                                         errorWidget: (_, __, ___) => CoverPlaceholder(title: _title, author: _author)))
@@ -943,7 +955,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
                     final chapterScrubber = Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: CardDualProgressBar(player: widget.player, accent: accent, isActive: _isActive, staticProgress: (_isPodcastEpisode && _chapters.isEmpty) ? 0.0 : progress, staticDuration: (_isPodcastEpisode && _chapters.isEmpty) ? widget.player.totalDuration : _effectiveDuration, chapters: _chapters, showBookBar: false, showChapterBar: true, chapterName: (_isPodcastEpisode && _chapters.isEmpty) ? (widget.player.currentEpisodeTitle ?? widget.player.currentTitle ?? _title) : (_episodeId != null && !_isActive ? (_recentEpisode?['title'] as String? ?? _title) : (_chapters.isEmpty ? _title : _chapterName(chapterIdx))), chapterIndex: chapterIdx, totalChapters: totalChapters, itemId: _itemId),
+                        child: CardDualProgressBar(player: widget.player, accent: accent, isActive: _isActive, staticProgress: (_isPodcastEpisode && _chapters.isEmpty) ? 0.0 : progress, staticDuration: (_isPodcastEpisode && _chapters.isEmpty) ? widget.player.totalDuration : _effectiveDuration, chapters: _chapters, showBookBar: false, showChapterBar: true, chapterName: (_isPodcastEpisode && _chapters.isEmpty) ? (widget.player.currentEpisodeTitle ?? widget.player.currentTitle ?? _title) : (_episodeId != null && !_isActive ? (_recentEpisode?['title'] as String? ?? _title) : (_chapters.isEmpty ? _title : _chapterName(chapterIdx))), chapterIndex: chapterIdx, totalChapters: totalChapters, itemId: _itemId, libraryId: _resolveLibraryId()),
                       );
 
                     final controlsAndButtons = MediaQuery(
@@ -1049,9 +1061,38 @@ class _ExpandedCardState extends State<ExpandedCard> {
                     );
                   }),
                 ),
+                FellAsleepChip(itemId: _itemId, episodeId: _episodeId, top: MediaQuery.paddingOf(context).top + 56), // Absorb Plus
+                if (AppPlatform.lacksPhonePlugins)
+                  Positioned(
+                    top: 16,
+                    right: 20,
+                    child: Material(
+                      color: cs.surface.withValues(alpha: 0.9),
+                      elevation: 6,
+                      shape: CircleBorder(
+                        side: BorderSide(
+                          color: cs.outlineVariant.withValues(alpha: 0.7),
+                        ),
+                      ),
+                      child: IconButton(
+                        tooltip:
+                            MaterialLocalizations.of(context).closeButtonTooltip,
+                        onPressed: _dismissExpanded,
+                        icon: const Icon(Icons.close_rounded),
+                      ),
+                    ),
+                  ),
               ],
             ),
     ),
+    );
+
+    if (!AppPlatform.lacksPhonePlugins) return player;
+    return CallbackShortcuts(
+      bindings: <ShortcutActivator, VoidCallback>{
+        const SingleActivator(LogicalKeyboardKey.escape): _dismissExpanded,
+      },
+      child: Focus(autofocus: true, child: player),
     );
   }
 
@@ -1104,7 +1145,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
                     errorBuilder: (_, __, ___) => Container(color: isDark ? Colors.black : Colors.white)),
                 );
               })
-            : CachedNetworkImage(
+            : CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                 imageUrl: _coverUrl!,
                 fit: BoxFit.cover,
                 httpHeaders: mediaHeaders,
@@ -1210,6 +1251,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
     item: _item,
     itemId: _itemId,
     episodeId: _episodeId,
+    libraryId: _resolveLibraryId(),
     isPodcastEpisode: _isPodcastEpisode,
     title: _title,
     author: _author,
@@ -1304,4 +1346,3 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
   void _showMoreMenu(BuildContext context, Color accent, TextTheme tt) => _makeActions().showMoreMenu(accent, tt);
 }
-

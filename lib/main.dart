@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'dart:io' hide Platform; // web-safe Platform below
-import 'utils/web_safe_platform.dart';
+import 'dart:io';
 import 'dart:ui';
 // Flutter 3.44 moved CupertinoPageTransitionsBuilder from material.dart to
 // cupertino.dart. Older SDKs (incl. local) still re-export it from material,
@@ -41,25 +40,27 @@ import 'services/narrated_books.dart';
 import 'services/read_listen_sync.dart';
 import 'services/log_service.dart';
 import 'services/quick_actions_service.dart';
-import 'services/startup_task_coordinator.dart';
 import 'services/setup_link_service.dart';
 import 'services/wording.dart';
-import 'services/startup_timing.dart';
+import 'utils/app_platform.dart';
 import 'screens/login_screen.dart';
 import 'screens/app_shell.dart';
 import 'widgets/auth_loading_screen.dart';
 import 'widgets/beta_logging_notice.dart';
 import 'widgets/setup_link_login.dart';
-import 'widgets/book_detail_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'fork/fork_startup.dart';
+import 'screens/setup/setup_flow_screen.dart';
+import 'screens/setup/setup_flow_store.dart';
+import 'fork/remote_link_hooks.dart';
+import 'services/startup_task_coordinator.dart';
+import 'services/startup_timing.dart';
 import 'utils/app_motion.dart';
-import 'utils/scroll_diagnostics.dart';
-import 'utils/smooth_wheel_scroll.dart';
-import 'utils/memory_policy.dart';
 import 'ui_themes/ui_theme.dart';
 import 'ui_themes/frosted.dart';
+import 'ui_themes/app_backdrop.dart' show AppBackgroundStore; // fork
 import 'services/tailscale_service.dart';
-import 'services/precache_service.dart';
-import 'services/pending_writes.dart';
+import 'utils/platform_appearance.dart'; // fork (C16)
 
 /// Global notifier so any widget (e.g. settings) can change the theme instantly.
 final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.dark);
@@ -237,6 +238,11 @@ Future<void> applyAppearanceFromPrefs() async {
   applyUseColorEverywhere(await PlayerSettings.getUseColorEverywhere());
   snappyTransitionsNotifier.value = await PlayerSettings.getSnappyTransitions();
   classicWordingNotifier.value = await PlayerSettings.getClassicWording();
+  await AppBackgroundStore.load(); // fork: app background
+  // Fork (C8): a synced or restored language takes effect too.
+  final lang = await PlayerSettings.getLanguage();
+  final locale = lang.isEmpty ? null : Locale(lang);
+  if (localeNotifier.value != locale) localeNotifier.value = locale;
   await applyOrientationLock();
 }
 
@@ -244,6 +250,7 @@ Future<void> applyAppearanceFromPrefs() async {
 /// pinned to portrait; otherwise all orientations are allowed (the default).
 /// Safe to call any time the setting changes.
 Future<void> applyOrientationLock() async {
+  if (AppPlatform.lacksPhonePlugins) return;
   final lock = await PlayerSettings.getLockPortrait();
   await SystemChrome.setPreferredOrientations(lock
       ? const [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]
@@ -256,37 +263,36 @@ Future<void> applyOrientationLock() async {
 }
 
 void main() async {
-  StartupTiming.markMain();
-  PrecacheService.itemSink = primeBookDetailItem;
-  HttpOverrides.global = _CertOverrides();
+  ForkStartup.beforeBinding(); // Absorb Plus (lib/fork/fork_startup.dart)
+  if (!AppPlatform.isWeb) HttpOverrides.global = _CertOverrides();
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  bool smoothWheel() =>
-      !einkModeNotifier.value && !snappyTransitionsNotifier.value;
-  installSmoothWheelScroll(enabled: smoothWheel);
-  installScrollDiagnostics(smoothingEnabled: smoothWheel); // ABSORB_SCROLL_DIAG=1
-  configureImageCache(PaintingBinding.instance.imageCache);
-  PendingWrites.installLifecycleFlush(); // fork: flush held-back writes on background
+  ForkStartup.afterBinding(
+    smoothWheel: () => !einkModeNotifier.value && !snappyTransitionsNotifier.value,
+    trustSelfSigned: () => trustAllCerts,
+    navigatorKey: rootNavigatorKey,
+  );
   ReadListenSync.instance.start();
-  unawaited(TailscaleService.instance.init()); // fork; no-op unless turned on
   BookOrbitApiService.placeReadingSpot = NarrationService.readingSpotSeconds;
   BookOrbitApiService.keptNarration = NarrationService.instance.localOverlay;
   ApiService.pageReadElsewhere = NarrationService.pageReadElsewhere;
   try {
     await NarratedBooks.load().timeout(const Duration(seconds: 2));
-  } catch (_) {}
-  final appLinks = AppLinks();
+  } catch (e) { debugPrint('[Init] main failed: ${e.runtimeType}'); }
+  final setupLinkStream = AppPlatform.lacksPhonePlugins ? null : AppLinks().uriLinkStream;
 
   // These calls use platform channels that require an Activity. When Android
   // Auto cold-starts the app for the MediaBrowserService, no Activity exists
   // and these calls can hang forever - blocking runApp() and freezing on the
   // splash screen. Wrap in try-catch with a timeout so we always reach runApp().
-  try {
-    FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  } catch (_) {}
+  if (!AppPlatform.lacksPhonePlugins) {
+    try {
+      FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+    } catch (e) { debugPrint('[Init] main failed: ${e.runtimeType}'); }
+  }
 
   try {
     await applyOrientationLock().timeout(const Duration(seconds: 2));
-  } catch (_) {}
+  } catch (e) { debugPrint('[Init] main failed: ${e.runtimeType}'); }
 
   // Load saved theme preference so we render the correct theme immediately
   try {
@@ -314,6 +320,7 @@ void main() async {
     PlayerSettings.coverSize = await PlayerSettings.getCoverSize();
     PlayerSettings.cardButtonFill = await PlayerSettings.getCardButtonFill();
     await UiThemeStore.load(); // device-wide look (Absorb Plus / Classic)
+    await AppBackgroundStore.load(); // fork: app background
     // Restore last cover seed color so the theme doesn't flash on startup
     {
       final seedInt = await PlayerSettings.getCoverSeedColor();
@@ -326,12 +333,12 @@ void main() async {
         );
       }
     }
-  } catch (_) {}
+  } catch (e) { debugPrint('[Init] main failed: ${e.runtimeType}'); }
 
   // Trust user-installed / self-signed certificates if the user opted in
   try {
     trustAllCerts = await PlayerSettings.getTrustAllCerts();
-  } catch (_) {}
+  } catch (e) { debugPrint('[Init] main failed: ${e.runtimeType}'); }
 
   // Capture Flutter framework errors (widget build failures, etc.)
   FlutterError.onError = (details) {
@@ -346,9 +353,11 @@ void main() async {
   };
 
   // Remove native splash — Flutter will render the AuthGate splash immediately
-  try {
-    FlutterNativeSplash.remove();
-  } catch (_) {}
+  if (!AppPlatform.lacksPhonePlugins) {
+    try {
+      FlutterNativeSplash.remove();
+    } catch (e) { debugPrint('[Init] main failed: ${e.runtimeType}'); }
+  }
 
   WidgetsBinding.instance
       .addPostFrameCallback((_) => StartupTiming.markFirstFrame());
@@ -361,7 +370,7 @@ void main() async {
           update: (_, auth, lib) => lib!..updateAuth(auth),
         ),
       ],
-      child: UiThemeScope(child: AbsorbApp(setupLinkStream: appLinks.uriLinkStream)),
+      child: UiThemeScope(child: AbsorbApp(setupLinkStream: setupLinkStream)),
     ),
   );
 }
@@ -388,6 +397,7 @@ class AbsorbApp extends StatelessWidget {
         snappyTransitionsNotifier,
         uiThemeNotifier,
         uiThemePreviewNotifier, // "Try it" live look (fork UI themes)
+        PlatformAppearance.changes, // fork (C16): OS dark mode, reduce motion
       ]),
       builder: (context, _) {
         final isEink = einkModeNotifier.value;
@@ -529,6 +539,8 @@ class AbsorbApp extends StatelessWidget {
               navigatorKey: rootNavigatorKey,
               title: 'Absorb Plus',
               debugShowCheckedModeBanner: false,
+              scrollBehavior:
+                  AppPlatform.lacksPhonePlugins ? const _AppScrollBehavior() : null,
               locale: overrideLocale,
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
@@ -619,6 +631,9 @@ class AbsorbApp extends StatelessWidget {
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                   ),
+                  constraints: AppPlatform.lacksPhonePlugins
+                      ? const BoxConstraints(maxWidth: 640)
+                      : null,
                 ),
                 snackBarTheme: SnackBarThemeData(
                   backgroundColor: lightScheme.inverseSurface,
@@ -687,6 +702,9 @@ class AbsorbApp extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                   ),
+                  constraints: AppPlatform.lacksPhonePlugins
+                      ? const BoxConstraints(maxWidth: 640)
+                      : null,
                 ),
                 snackBarTheme: SnackBarThemeData(
                   backgroundColor: darkScheme.surfaceContainerHighest,
@@ -700,11 +718,14 @@ class AbsorbApp extends StatelessWidget {
                 pageTransitionsTheme: pageTransition,
                 extensions: [absorbLookFor(Brightness.dark, eink: isEink)],
               ),
-              builder: absorbLookBuilder, // Frosted surfaces (fork UI themes)
-              home: AppMotionScope(
+              // Frosted surfaces (fork UI themes). Fork (C16): the motion
+              // scope sits above the navigator, so pushed routes, dialogs
+              // and sheets see it too.
+              builder: (context, child) => AppMotionScope(
                 mode: motionMode,
-                child: AuthGate(setupLinkStream: setupLinkStream),
+                child: absorbLookBuilder(context, child),
               ),
+              home: AuthGate(setupLinkStream: setupLinkStream),
             );
       },
     );
@@ -732,7 +753,7 @@ class _AuthGateState extends State<AuthGate> {
     super.initState();
     _setupLinkSubscription = widget.setupLinkStream?.listen(
       _queueSetupLink,
-      onError: (_) {},
+      onError: (e) { debugPrint('[Init] initState failed: ${e.runtimeType}'); },
     );
     _initServices();
   }
@@ -744,6 +765,7 @@ class _AuthGateState extends State<AuthGate> {
   }
 
   void _queueSetupLink(Uri uri) {
+    if (RemoteLinkHooks.offerLink(uri)) return; // fork: phone remote pairing
     if (!SetupLinkService.isSetupLink(uri)) return;
     if (_pendingSetupLink == uri || _activeSetupLink == uri) return;
     _pendingSetupLink = uri;
@@ -786,7 +808,14 @@ class _AuthGateState extends State<AuthGate> {
     if (_appearanceScope == null || scope == _appearanceScope) return;
     _appearanceScope = scope;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      applyAppearanceFromPrefs().catchError((Object e) {
+      final einkBefore = PlayerSettings.einkMode;
+      applyAppearanceFromPrefs().then((_) {
+        // Fork (C8): the e-ink quiet state (no socket, no polling) follows
+        // the account's setting, not just its look.
+        if (PlayerSettings.einkMode != einkBefore && mounted) {
+          context.read<LibraryProvider>().applyEinkMode(PlayerSettings.einkMode);
+        }
+      }).catchError((Object e) {
         debugPrint('[Init] Applying the account appearance failed: $e');
       });
     });
@@ -797,27 +826,27 @@ class _AuthGateState extends State<AuthGate> {
     // app version and device model instead of fallback values.
     await ApiService.initVersion();
     try {
-      if (Platform.isAndroid) {
+      if (AppPlatform.isAndroid) {
         final info = await DeviceInfoPlugin().androidInfo;
         ApiService.deviceManufacturer = info.manufacturer;
         ApiService.deviceModel = info.model;
         ApiService.deviceSdkInt = info.version.sdkInt;
-      } else if (Platform.isIOS) {
+      } else if (AppPlatform.isIOS) {
         final info = await DeviceInfoPlugin().iosInfo;
         ApiService.deviceManufacturer = 'Apple';
         ApiService.deviceModel = info.utsname.machine;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Init] _initServices failed: ${e.runtimeType}'); }
 
     // Initialize log service early so all debugPrint calls are captured in the
     // log file. This is critical for diagnosing startup freezes in production.
     try {
       await BetaLoggingNotice.applyDefault(ApiService.appVersionFull);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Init] _initServices failed: ${e.runtimeType}'); }
     try {
       final loggingEnabled = await PlayerSettings.getLoggingEnabled();
       await LogService().init(loggingEnabled);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Init] _initServices failed: ${e.runtimeType}'); }
 
     final sw = Stopwatch()..start();
     debugPrint('[Init] _initServices started');
@@ -829,6 +858,7 @@ class _AuthGateState extends State<AuthGate> {
     // correct scoped keys. Without this, settings read before init() would
     // fall back to un-scoped keys and appear as defaults.
     await UserAccountService().init();
+    await SetupFlowStore.decide(hasAccounts: UserAccountService().accounts.isNotEmpty); // Absorb Plus
 
     // One-time migration: copy any settings that were written under unscoped
     // keys (before scope was active) to the current user's scoped keys.
@@ -855,6 +885,7 @@ class _AuthGateState extends State<AuthGate> {
     PlayerSettings.mp3IndexSeeking = await PlayerSettings.getMp3IndexSeeking();
     PlayerSettings.coverSize = await PlayerSettings.getCoverSize();
     PlayerSettings.cardButtonFill = await PlayerSettings.getCardButtonFill();
+    await AppBackgroundStore.load(); // fork: per-account app background
     // Rotation lock: main() applied it before scope was active, so that pass
     // read the never-written unscoped key and always came up unlocked. The
     // timeout matters: on a headless boot (Android Auto bind) there is no
@@ -862,11 +893,13 @@ class _AuthGateState extends State<AuthGate> {
     // wedges the entire init - the browse tree never builds.
     try {
       await applyOrientationLock().timeout(const Duration(seconds: 2));
-    } catch (_) {}
+    } catch (e) { debugPrint('[Init] _initServices failed: ${e.runtimeType}'); }
     // Background new-episode notifications: re-register the periodic job
     // (self-healing after OEM kills) and wire up notification taps.
-    EpisodeNotificationService.syncRegistration();
-    EpisodeNotificationService.initTapHandling();
+    if (!AppPlatform.lacksPhonePlugins) {
+      EpisodeNotificationService.syncRegistration();
+      EpisodeNotificationService.initTapHandling();
+    }
     // Restore cover seed color
     {
       final seedInt = await PlayerSettings.getCoverSeedColor();
@@ -901,13 +934,15 @@ class _AuthGateState extends State<AuthGate> {
 
     // Downloads must be loaded before the audio handler so getChildren()
     // can serve the Android Auto browse tree immediately.
-    debugPrint('[Init] DownloadService... (${sw.elapsedMilliseconds}ms)');
-    try {
-      await DownloadService().init().timeout(const Duration(seconds: 8));
-    } catch (e) {
-      debugPrint('[Init] DownloadService.init timed out or failed: $e');
+    if (!AppPlatform.lacksPhonePlugins) {
+      debugPrint('[Init] DownloadService... (${sw.elapsedMilliseconds}ms)');
+      try {
+        await DownloadService().init().timeout(const Duration(seconds: 8));
+      } catch (e) {
+        debugPrint('[Init] DownloadService.init timed out or failed: $e');
+      }
+      debugPrint('[Init] DownloadService done (${sw.elapsedMilliseconds}ms)');
     }
-    debugPrint('[Init] DownloadService done (${sw.elapsedMilliseconds}ms)');
 
     // Timeout guards against AudioService.init() hanging when Android killed
     // the app process but kept the MediaBrowserService alive.
@@ -921,18 +956,22 @@ class _AuthGateState extends State<AuthGate> {
     // the UI has bootstrapped the current item) through the existing
     // home-widget restore path. Registered as a static callback to avoid a
     // circular import between AudioPlayerService and HomeWidgetService.
-    AudioPlayerService.onColdStartPlayRequested =
-        HomeWidgetService().resumeLastPlayedIfAvailable;
-    // A headset press may have cold-launched this process into the background
-    // with the native core already playing - adopt that audio now rather than
-    // leaving the lock screen blank until the next press.
-    unawaited(AudioPlayerService().adoptBackgroundEngineIfRunning());
+    if (!AppPlatform.lacksPhonePlugins) {
+      AudioPlayerService.onColdStartPlayRequested =
+          HomeWidgetService().resumeLastPlayedIfAvailable;
+      // A headset press may have cold-launched this process into the background
+      // with the native core already playing - adopt that audio now rather than
+      // leaving the lock screen blank until the next press.
+      unawaited(AudioPlayerService().adoptBackgroundEngineIfRunning());
+    }
     debugPrint('[Init] AudioPlayerService done (${sw.elapsedMilliseconds}ms)');
 
-    try {
-      await Permission.notification.request();
-    } catch (e) {
-      debugPrint('[Init] Permission request failed: $e');
+    if (!AppPlatform.lacksPhonePlugins) {
+      try {
+        if (!SetupFlowStore.active) await Permission.notification.request(); // fork: the setup asks in place
+      } catch (e) {
+        debugPrint('[Init] Permission request failed: $e');
+      }
     }
 
     // Optional integrations do not gate the authenticated first frame. Keep
@@ -940,7 +979,7 @@ class _AuthGateState extends State<AuthGate> {
     // account/audio/download path is ready.
     StartupTaskCoordinator.startBackground(
       [
-    if (Platform.isAndroid)
+    if (AppPlatform.isAndroid)
           () async {
         await ChromecastService().init();
       },
@@ -952,27 +991,30 @@ class _AuthGateState extends State<AuthGate> {
           // it.
       await ProgressSyncService().migrateOrphanStreamingTime();
       await LocalSessionService().init();
-      await EqualizerService().init();
+      if (!AppPlatform.lacksPhonePlugins) await EqualizerService().init();
       await SleepTimerService().loadAutoSleepSettings();
       // Watch for settings changes and pull the synced copy on the way in.
       await SettingsSyncService().startIfEnabled();
       unawaited(SettingsSyncService().onAppForegrounded());
-      if (Platform.isAndroid) {
+      if (AppPlatform.isAndroid) {
+        // Pre-populate Android Auto browse tree in background.
         Future.microtask(() => AndroidAutoService().refresh());
       }
-      if (Platform.isIOS) {
+      if (AppPlatform.isIOS) {
+        // Initialize CarPlay browse tree.
         CarPlayService().init();
       }
-      if (Platform.isAndroid || Platform.isIOS) {
+      if (AppPlatform.isMobile) {
+        // Initialize homescreen widget
         await HomeWidgetService().init();
       }
-      if (Platform.isIOS) {
+      if (AppPlatform.isIOS) {
         // Siri requests wait on this; a Siri launch reaches it headless.
         await SiriService().init();
       }
       // Depends on AudioPlayerService + HomeWidgetService so they're ready
       // when the shortcut handler fires.
-      await QuickActionsService().init();
+      if (!AppPlatform.lacksPhonePlugins) await QuickActionsService().init();
     },
       ],
       onError: (error, stackTrace) {
@@ -995,6 +1037,7 @@ class _AuthGateState extends State<AuthGate> {
     if (auth.isLoading) {
       return const AuthLoadingScreen();
     }
+    if (SetupFlowStore.active) return SetupFlowScreen(onFinished: () => setState(() {})); // Absorb Plus: first-run setup
 
     if (auth.isAuthenticated || auth.isSignedOut) {
       return AppShell(
@@ -1005,4 +1048,18 @@ class _AuthGateState extends State<AuthGate> {
 
     return const LoginScreen();
   }
+}
+
+/// Web ships without mouse in the default drag devices, which leaves every
+/// horizontal list unscrollable with a mouse.
+class _AppScrollBehavior extends MaterialScrollBehavior {
+  const _AppScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.trackpad,
+        PointerDeviceKind.stylus,
+      };
 }

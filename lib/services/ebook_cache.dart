@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'api_service.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'authenticated_get.dart'; // Absorb Plus
 
 /// File extension (with leading dot) for an ABS ebookFile, or '' if unknown.
 /// Prefers the explicit `ebookFormat` field over the filename extension so a
@@ -28,6 +30,14 @@ const foliateEbookFormats = {'mobi', 'azw3'};
 const comicEbookFormats = {'cbz', 'cbr', 'cb7'};
 const readableEbookFormats = {'epub', 'pdf', 'cbz', ...foliateEbookFormats};
 const allEbookFormats = {...readableEbookFormats, 'cbr', 'cb7'};
+
+/// The ebook to save to the device: the plain EPUB when a read along copy,
+/// which carries the whole audiobook inside it, is the one opened for reading.
+Map<String, dynamic>? exportEbookFile(Map<String, dynamic>? item) {
+  final media = item?['media'] as Map<String, dynamic>?;
+  final plain = (media?['readAlongEpub'] as Map?)?['plainEbookFile'];
+  return plain is Map<String, dynamic> ? plain : resolveEbookFile(item);
+}
 
 /// The ebook to use for a library item: the server's primary (media.ebookFile)
 /// when set, otherwise the best supplementary ebook from libraryFiles - epub
@@ -89,7 +99,7 @@ int cachedEbookBytesSync(String itemId) {
         return f.lengthSync();
       }
     }
-  } catch (_) {}
+  } catch (e) { debugPrint('[EbookCache] cachedEbookBytesSync failed: ${e.runtimeType}'); }
   return 0;
 }
 
@@ -120,7 +130,7 @@ Future<Map<String, dynamic>?> cachedEbookFileFor(String itemId) async {
       first ??= entry;
     }
     return first;
-  } catch (_) {}
+  } catch (e) { debugPrint('[EbookCache] cachedEbookFileFor failed: ${e.runtimeType}'); }
   return null;
 }
 
@@ -138,7 +148,7 @@ Future<List<String>> cachedEbookItemIds() async {
       if (!allEbookFormats.contains(ext)) continue;
       ids.add(name.substring(0, dot));
     }
-  } catch (_) {}
+  } catch (e) { debugPrint('[EbookCache] cachedEbookItemIds failed: ${e.runtimeType}'); }
   return ids.toList();
 }
 
@@ -153,7 +163,7 @@ Future<void> deleteCachedEbookCover(String itemId) async {
   try {
     final f = await ebookCoverCacheFile(itemId);
     if (f.existsSync()) await f.delete();
-  } catch (_) {}
+  } catch (e) { debugPrint('[EbookCache] deleteCachedEbookCover failed: ${e.runtimeType}'); }
 }
 
 /// Persistent cache path for an item's ebook, keyed by itemId so it's stable
@@ -190,7 +200,7 @@ Future<void> saveCachedLocations(File epub, String locations) async {
     await _locationsFileFor(epub).writeAsString(
       jsonEncode({'size': await epub.length(), 'locations': locations}),
     );
-  } catch (_) {}
+  } catch (e) { debugPrint('[EbookCache] saveCachedLocations failed: ${e.runtimeType}'); }
 }
 
 /// Drops the location index kept beside [epub], for a copy that changed.
@@ -198,7 +208,7 @@ Future<void> dropCachedLocations(File epub) async {
   try {
     final f = _locationsFileFor(epub);
     if (f.existsSync()) await f.delete();
-  } catch (_) {}
+  } catch (e) { debugPrint('[EbookCache] dropCachedLocations failed: ${e.runtimeType}'); }
 }
 
 /// What identifies the server's copy of an ebook, so a cached copy can tell
@@ -238,7 +248,7 @@ Future<void> rememberEbookVersion(File cached, Map<String, dynamic> ebookFile) a
   if (version == null) return;
   try {
     await _versionFileFor(cached).writeAsString(version);
-  } catch (_) {}
+  } catch (e) { debugPrint('[EbookCache] rememberEbookVersion failed: ${e.runtimeType}'); }
 }
 
 /// True if the item's ebook is already cached on disk (readable offline).
@@ -299,23 +309,10 @@ Future<File> _downloadEbook(
   debugPrint('[EbookCache] downloading item=$itemId path=/api/items/$itemId/file/$ino');
   final startedAt = DateTime.now();
   final partFile = File('${cachedFile.path}.part');
-  final request = http.Request('GET', Uri.parse(url));
-  request.followRedirects = false;
-  api.mediaHeaders.forEach((k, v) => request.headers[k] = v);
   final client = http.Client();
   try {
-    var response = await client.send(request);
-    var redirects = 0;
-    while ([301, 302, 303, 307, 308].contains(response.statusCode) && redirects < 5) {
-      final location = response.headers['location'];
-      if (location == null) break;
-      final redirectUrl = Uri.parse(url).resolve(location);
-      final rReq = http.Request('GET', redirectUrl);
-      api.mediaHeaders.forEach((k, v) => rReq.headers[k] = v);
-      rReq.followRedirects = false;
-      response = await client.send(rReq);
-      redirects++;
-    }
+    // Absorb Plus (BUG-001): headers only on the server's own origin.
+    final response = await authenticatedGet(client, Uri.parse(url), api.mediaHeaders);
     if (response.statusCode != 200) {
       throw Exception('Failed to download ebook (${response.statusCode})');
     }
@@ -350,7 +347,7 @@ Future<File> _downloadEbook(
   } finally {
     client.close();
     if (partFile.existsSync()) {
-      try { await partFile.delete(); } catch (_) {}
+      try { await partFile.delete(); } catch (e) { debugPrint('[EbookCache] _downloadEbook failed: ${e.runtimeType}'); }
     }
   }
   return cachedFile;
@@ -367,8 +364,8 @@ Future<void> deleteCachedEbook(String itemId) async {
       if (name == itemId ||
           name.startsWith('$itemId.') ||
           name == 'cover_$itemId.jpg') {
-        try { await f.delete(); } catch (_) {}
+        try { await f.delete(); } catch (e) { debugPrint('[EbookCache] deleteCachedEbook failed: ${e.runtimeType}'); }
       }
     }
-  } catch (_) {}
+  } catch (e) { debugPrint('[EbookCache] deleteCachedEbook failed: ${e.runtimeType}'); }
 }

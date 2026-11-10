@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
@@ -9,6 +11,7 @@ import '../providers/library_provider.dart';
 import '../services/book_search_index.dart';
 import 'overlay_toast.dart';
 import 'stackable_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 
 /// A stay-open search picker for bulk-adding books to a target (collection or
@@ -298,7 +301,7 @@ class _AddBooksSearchSheetState extends State<AddBooksSearchSheet> {
                   width: 44,
                   height: 44,
                   child: coverUrl != null && !isLocalCoverPath(coverUrl)
-                      ? CachedNetworkImage(
+                      ? CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                           imageUrl: coverUrl,
                           fit: BoxFit.cover,
                           httpHeaders: lib.mediaHeaders,

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/calendar_days.dart'; // Absorb Plus
+
 
 /// One day of listening for the stats charts.
 class ChartDay {
@@ -230,6 +233,11 @@ class StatsHeatmap extends StatelessWidget {
   });
 
   static const _weeks = 53;
+
+  /// Absorb Plus (BUG-004): the grid's first cell, the Monday [_weeks] - 1
+  /// weeks before [today]'s week, stepped by the calendar (DST-safe).
+  static DateTime heatmapStart(DateTime today) => addCalendarDays(
+      startOfDay(today), -(today.weekday - 1) - 7 * (_weeks - 1));
   static const _gap = 2.0;
   static const _cell = 11.0;
   static const _labelHeight = 14.0;
@@ -240,9 +248,7 @@ class StatsHeatmap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final today = DateTime.now();
-    final monday = DateTime(today.year, today.month, today.day)
-        .subtract(Duration(days: today.weekday - 1));
-    final start = monday.subtract(const Duration(days: 7 * (_weeks - 1)));
+    final start = heatmapStart(today); // Absorb Plus (BUG-004)
 
     var maxVal = 0.0;
     var selW = -1;
@@ -250,7 +256,7 @@ class StatsHeatmap extends StatelessWidget {
     final levels = List<List<double>>.generate(_weeks, (_) => List.filled(7, -1));
     for (var w = 0; w < _weeks; w++) {
       for (var d = 0; d < 7; d++) {
-        final date = start.add(Duration(days: w * 7 + d));
+        final date = addCalendarDays(start, w * 7 + d);
         if (date.isAfter(today)) continue;
         final key = _dateKey(date);
         final v = dailySeconds[key] ?? 0;
@@ -266,7 +272,7 @@ class StatsHeatmap extends StatelessWidget {
     final monthLabels = <int, String>{};
     var lastMonth = -1;
     for (var w = 0; w < _weeks; w++) {
-      final date = start.add(Duration(days: w * 7));
+      final date = addCalendarDays(start, w * 7);
       if (date.month != lastMonth) {
         lastMonth = date.month;
         monthLabels[w] = _monthShort(date.month);
@@ -313,7 +319,7 @@ class StatsHeatmap extends StatelessWidget {
                       if (w < 0 || w >= _weeks || d < 0 || d > 6) return;
                       final v = levels[w][d];
                       if (v < 0) return;
-                      final date = start.add(Duration(days: w * 7 + d));
+                      final date = addCalendarDays(start, w * 7 + d);
                       onDaySelected!(_dateKey(date), v);
                     },
               child: SizedBox(

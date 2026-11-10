@@ -2,8 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import '../l10n/app_localizations.dart';
 import 'cover_badges.dart';
+import '../providers/auth_provider.dart';
 import '../services/narrated_books.dart';
 import '../services/ebook_cache.dart';
 import '../providers/library_provider.dart';
@@ -12,6 +15,10 @@ import '../services/download_service.dart';
 import 'absorbing_shared.dart';
 import 'book_detail_sheet.dart';
 import 'episode_list_sheet.dart';
+import 'hover_cover_actions.dart';
+import '../utils/app_platform.dart';
+import '../utils/desktop_workspace.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'cover_decode.dart';
 import 'library_item_snapshot.dart';
 import '../ui_themes/ui_theme_hooks.dart';
@@ -19,6 +26,7 @@ import '../utils/local_path.dart';
 import 'desktop_input.dart';
 import 'stable_cached_network_image.dart';
 import '../utils/cover_cache.dart';
+import '../utils/fork_platform.dart';
 
 class BookCard extends StatelessWidget {
   final Map<String, dynamic> item;
@@ -98,13 +106,26 @@ class BookCard extends StatelessWidget {
     final card = isWide
         ? _buildWideCard(context, cs, tt, l, title, authorName, coverUrl, progress, headers, isExplicit: isExplicit, hasEbook: hasEbook, readAlong: readAlong)
         : _buildCompactCard(context, cs, tt, l, title, subtitle, authorName, coverUrl, progress, headers, isFinished: isFinished, isSkimmed: isSkimmed, isDownloaded: isDownloaded, isExplicit: isExplicit, unfinishedCount: unfinishedCount, hasEbook: hasEbook, readAlong: readAlong);
-    if (!selectionMode) return card;
+    final isOffline = context.select<LibraryProvider, bool>((lib) => lib.isOffline); // Absorb Plus: no full watch
+    final canEdit = itemId != null &&
+        !snapshot.isPodcastLibrary &&
+        !isOffline &&
+        isDesktopWorkspace(context) &&
+        (context.watch<AuthProvider?>()?.canUpdateMetadata ?? false);
+    // Desktop hover actions only; selection is drawn below, on every layout.
+    final hovered = HoverCoverActions(
+      onMenu: itemId == null || selectionMode ? null : () => _onLongPress(context),
+      editItemId: canEdit && !selectionMode ? itemId : null,
+      selectionMode: selectionMode,
+      child: card,
+    );
+    if (!selectionMode) return hovered;
     // Selection sits on top of the finished card rather than inside both
     // layouts: the overlay swallows the tap, so nothing below it can open a
     // sheet while the shelf is being ticked through.
     return Stack(
       children: [
-        card,
+        hovered,
         Positioned.fill(
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
@@ -148,6 +169,14 @@ class BookCard extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _handleTap(BuildContext context) {
+    if (selectionMode && onSelectionToggle != null) {
+      onSelectionToggle!();
+      return;
+    }
+    _navigateToDetail(context);
   }
 
   void _navigateToDetail(BuildContext context) {
@@ -235,8 +264,10 @@ class BookCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => _navigateToDetail(context),
-        onLongPress: () => _onLongPress(context),
+        onTap: () => _handleTap(context),
+        onLongPress: (AppPlatform.lacksPhonePlugins && !ForkPlatform.isDesktop) || selectionMode
+            ? null
+            : () => _onLongPress(context),
         onSecondaryTap: desktopSecondaryTap(() => _onLongPress(context)),
         borderRadius: BorderRadius.circular(16),
         child: Row(
@@ -252,20 +283,43 @@ class BookCard extends StatelessWidget {
                     Positioned(top: 4, left: 4, child: EbookCoverBadge(readAlong: readAlong)),
                   if (isExplicit)
                     Positioned(
-                      top: 4, right: DownloadService().isDownloaded(item['id'] as String? ?? '') ? 30 : 4,
+                      top: 4,
+                      right:
+                          DownloadService().isDownloaded(
+                            item['id'] as String? ?? '',
+                          )
+                          ? 30
+                          : 4,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 1,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.red.withValues(alpha: 0.85),
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: Text(l.bookCardExplicitBadge, style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.w800)),
+                        child: Text(
+                          l.bookCardExplicitBadge,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                       ),
                     ),
-                  if (DownloadService().isDownloaded(item['id'] as String? ?? ''))
+                  if (DownloadService().isDownloaded(
+                    item['id'] as String? ?? '',
+                  ))
                     const Positioned(
-                      left: 0, right: 0, bottom: 0,
-                      child: CoverStateBadges(isDownloaded: true, isFinished: false),
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: CoverStateBadges(
+                        isDownloaded: true,
+                        isFinished: false,
+                      ),
                     ),
                 ],
               ),
@@ -273,7 +327,10 @@ class BookCard extends StatelessWidget {
             // Info section
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -362,8 +419,10 @@ class BookCard extends StatelessWidget {
         AspectRatio(
           aspectRatio: coverAspectRatio,
           child: _PressableCard(
-            onTap: () => _navigateToDetail(context),
-            onLongPress: () => _onLongPress(context),
+            onTap: () => _handleTap(context),
+            onLongPress: (AppPlatform.lacksPhonePlugins && !ForkPlatform.isDesktop) || selectionMode
+                ? null
+                : () => _onLongPress(context),
             borderRadius: 12,
             child: Card(
               elevation: 0,
@@ -399,12 +458,22 @@ class BookCard extends StatelessWidget {
                       top: unfinishedCount > 0 ? 26 : 4,
                       right: 4,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 1,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.red.withValues(alpha: 0.85),
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: Text(l.bookCardExplicitBadge, style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.w800)),
+                        child: Text(
+                          l.bookCardExplicitBadge,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                       ),
                     ),
                   if (unfinishedCount > 0)
@@ -413,7 +482,9 @@ class BookCard extends StatelessWidget {
                       right: 4,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: cs.primary,
                           borderRadius: BorderRadius.circular(10),
@@ -432,12 +503,16 @@ class BookCard extends StatelessWidget {
                     Positioned(top: 4, left: 4, child: EbookCoverBadge(readAlong: readAlong)),
                   if (isFinished || isDownloaded)
                     Positioned(
-                      left: 0, right: 0, bottom: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
                       child: CoverStateBadges(
                         isDownloaded: isDownloaded,
                         isFinished: isFinished,
                         isSkimmed: isSkimmed,
-                        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
+                        borderRadius: const BorderRadius.vertical(
+                          bottom: Radius.circular(12),
+                        ),
                       ),
                     ),
                 ],
@@ -480,9 +555,7 @@ class BookCard extends StatelessWidget {
               authorName,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: tt.labelSmall?.copyWith(
-                color: cs.onSurfaceVariant,
-              ),
+              style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant),
             ),
           ),
       ],
@@ -532,14 +605,14 @@ class _CoverImage extends StatelessWidget {
 
     return EinkCoverTone(child: BlurPaddedCover(
       enabled: isSquare,
-      blurChild: CachedNetworkImage(
+      blurChild: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
         imageUrl: coverUrl!, cacheKey: stableCoverCacheKey(coverUrl!), cacheManager: coverCacheManager,
         fit: BoxFit.cover,
         httpHeaders: httpHeaders,
         memCacheWidth: themedCoverDecodeWidth(context, 32),
               errorWidget: (_, __, ___) => const SizedBox.shrink(),
       ),
-      child: CachedNetworkImage(
+      child: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
         imageUrl: coverUrl!, cacheKey: stableCoverCacheKey(coverUrl!), cacheManager: coverCacheManager,
         fit: effectiveFit,
         httpHeaders: httpHeaders,
@@ -589,9 +662,10 @@ class _PressableCardState extends State<_PressableCard>
       duration: const Duration(milliseconds: 100),
       reverseDuration: const Duration(milliseconds: 200),
     );
-    _scale = Tween<double>(begin: 1.0, end: 0.96).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scale = Tween<double>(
+      begin: 1.0,
+      end: 0.96,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -616,10 +690,7 @@ class _PressableCardState extends State<_PressableCard>
               _controller.reverse();
               widget.onLongPress!();
             },
-      child: ScaleTransition(
-        scale: _scale,
-        child: widget.child,
-      ),
+      child: ScaleTransition(scale: _scale, child: widget.child),
     );
   }
 }

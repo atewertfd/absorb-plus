@@ -30,7 +30,9 @@ Future<int> pruneSessionCaches(
       final raw = prefs.getString(key);
       final m = raw == null ? null : _savedAt.firstMatch(raw);
       savedAt = m == null ? 0 : int.tryParse(m.group(1)!) ?? 0;
-    } catch (_) {}
+    } catch (_) {
+      // Unreadable entry: savedAt stays 0, so it counts as old and is pruned.
+    }
     entries.add((key, savedAt));
   }
   if (entries.length <= keep) return 0;

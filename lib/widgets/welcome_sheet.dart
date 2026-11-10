@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/app_localizations.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'absorb_plus_logo.dart';
 
 /// Shows a one-time welcome dialog explaining the Absorb terminology and a

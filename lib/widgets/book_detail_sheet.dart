@@ -14,11 +14,17 @@ import '../services/media_overlay.dart';
 import '../services/narration_service.dart';
 import '../services/read_listen_sync.dart';
 import '../services/book_dock.dart';
+import '../services/bookorbit_email.dart';
 import '../services/bookorbit_mapper.dart';
 import 'absorb_placement.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import 'package:palette_generator/palette_generator.dart';
 import '../utils/cover_accent.dart';
+import '../utils/app_platform.dart';
+import '../utils/audible_url.dart';
+import '../utils/desktop_workspace.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
@@ -43,15 +49,13 @@ import '../services/bookmark_service.dart';
 import '../services/download_service.dart';
 import '../services/narrated_books.dart';
 import 'book_files_sheet.dart';
-import 'book_settings_sheet.dart';
-import '../services/book_settings_service.dart';
+import 'bookorbit_send_sheet.dart';
 import '../services/transcription_service.dart';
 import '../services/ebook_cache.dart';
 import '../services/progress_sync_service.dart';
 import '../services/metadata_override_service.dart';
 import '../services/socket_service.dart';
 import '../services/scoped_prefs.dart';
-import '../services/user_account_service.dart';
 import '../main.dart' show rootNavigatorKey, colorSourceNotifier, useColorEverywhereNotifier, manualSeedNotifier, manualColorScheme;
 import '../screens/app_shell.dart';
 import '../screens/book_edit_screen.dart';
@@ -65,15 +69,30 @@ import 'playlist_picker_sheet.dart';
 import 'collection_picker_sheet.dart';
 import 'delete_confirm_dialog.dart';
 import 'absorb_wave_icon.dart';
+import 'adaptive_modal.dart';
 import 'stackable_sheet.dart';
 import 'ebook_router.dart';
 import '../utils/duration_format.dart';
+import '../utils/url_file_download.dart';
 import '../utils/share_origin.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'save_book_copy.dart';
+import '../services/book_copy_download.dart';
+import 'last_played_line.dart';
+import 'file_health_sheet.dart';
+import 'book_settings_sheet.dart';
+import '../services/book_settings_service.dart';
+import '../services/user_account_service.dart';
+import '../services/continue_series_undo.dart';
 import '../utils/local_path.dart';
 import '../utils/fork_platform.dart';
 import 'stable_cached_network_image.dart';
 import '../utils/cover_cache.dart';
 import '../utils/cover_palette.dart';
+import 'bookmark_list_controls.dart';
+import '../ui_themes/app_backdrop.dart'; // Absorb Plus
+import '../services/authenticated_get.dart'; // Absorb Plus
+import '../utils/safe_file_name.dart'; // Absorb Plus
 
 // ─── BOOK DETAIL BOTTOM SHEET ───────────────────────────────
 
@@ -153,6 +172,7 @@ void showQuickActionsSheet(
     useSafeArea: true,
     initialChildSize: 0.6,
     maxChildSize: 0.92,
+    desktopWidth: 520,
     builder: (ctx, sc) => _BookDetailSheetContent(
       itemId: itemId,
       scrollController: sc,
@@ -480,9 +500,9 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       bookOrbit: bookOrbit,
       accent: accent,
       me: auth.username,
+      meId: auth.userId,
       onOpen: () => bookOrbit
-          ? Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-              builder: (_) => ReadingLogScreen(itemId: widget.itemId, title: title, item: _item, accent: accent)))
+          ? _openReadingLog(title, accent)
           : showBookStatsSheet(context, itemId: widget.itemId, title: title),
       onOthers: () => showBookStatsSheet(context, itemId: widget.itemId, title: title),
       onAllSessions: bookOrbit
@@ -494,6 +514,17 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
                 accent: accent,
               ),
     );
+  }
+
+  void _openReadingLog(String title, Color accent) {
+    final itemId = widget.itemId;
+    final item = _item;
+    final nav = contentNavigator(context);
+    if (isDesktopWorkspace(context)) {
+      Navigator.of(context, rootNavigator: true).popUntil((r) => r.isFirst);
+    }
+    nav.push(MaterialPageRoute(
+        builder: (_) => ReadingLogScreen(itemId: itemId, title: title, item: item, accent: accent)));
   }
 
   Future<void> _loadBookmarks() async {
@@ -509,6 +540,12 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     PlayerSettings.getRectangleCoversFor(libraryId).then((rect) {
       if (mounted && _squareCovers == rect) setState(() => _squareCovers = !rect);
     });
+  }
+
+  /// A read along made from File info is a new file on the book, and it
+  /// changes the buttons.
+  void _filesChanged() {
+    if (mounted) _loadItem();
   }
 
   Future<void> _loadItem() async {
@@ -534,6 +571,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
           // Apply local metadata overrides
           final overrideService = MetadataOverrideService();
           final override = await overrideService.get(widget.itemId);
+          if (!mounted) return; // Absorb Plus: closed while it loaded
           Map<String, dynamic> finalItem = item;
           if (override != null) {
             finalItem = overrideService.applyOverrides(item, override);
@@ -558,7 +596,10 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
             unawaited(_loadSimilar(api));
           }
 
-          // Fetch Audible rating
+          // Fetch Audible rating, unless the stars are switched off in
+          // Library settings; then nothing is looked up or shown. BookOrbit
+          // sends its ratings with the book, so the switch is ABS only.
+          if (!api.isBookOrbit && !await PlayerSettings.getShowAudibleRating()) return;
           final media = finalItem['media'] as Map<String, dynamic>? ?? {};
           final metadata = media['metadata'] as Map<String, dynamic>? ?? {};
           final asin = metadata['asin'] as String?;
@@ -638,7 +679,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
           _deriveCoverScheme();
           return;
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[BookDetail] _loadItem failed: ${e.runtimeType}'); }
     }
     // Minimal fallback from DownloadInfo metadata
     if (dl.title != null && mounted) {
@@ -685,7 +726,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       provider = FileImage(File(url));
     } else {
       final lib = context.read<LibraryProvider>();
-      provider = CachedNetworkImageProvider(url, cacheKey: stableCoverCacheKey(url), cacheManager: coverCacheManager, headers: lib.mediaHeaders);
+      provider = CachedNetworkImageProvider(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, url, cacheKey: stableCoverCacheKey(url), cacheManager: coverCacheManager, headers: lib.mediaHeaders);
     }
     final t0 = DateTime.now();
     debugPrint('[BookDetail] _deriveCoverScheme start url=$url');
@@ -736,18 +777,26 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
     final l = AppLocalizations.of(context)!;
+    // In a desktop dialog the dialog already rounds and frames it; a sheet's
+    // rounded top inside that read as a phone sheet stuck in a box.
+    final inDialog = ModalSurface.isDesktopOf(context);
     return Container(
       clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor, borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
+      decoration: BoxDecoration(
+        color: pageSurfaceColor(context),
+        borderRadius: inDialog
+            ? BorderRadius.zero
+            : const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       child: Stack(children: [
         // Cover-derived color gradient background - lighter than blurred image.
         Positioned.fill(child: DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(
           begin: Alignment.topCenter, end: Alignment.bottomCenter,
           stops: const [0.0, 0.4, 1.0],
           colors: [
-            (_coverScheme?.primaryContainer ?? Theme.of(context).scaffoldBackgroundColor).withValues(alpha: 0.5),
-            Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.85),
-            Theme.of(context).scaffoldBackgroundColor,
+            (_coverScheme?.primaryContainer ?? pageSurfaceColor(context)).withValues(alpha: 0.5),
+            pageSurfaceColor(context).withValues(alpha: 0.85),
+            pageSurfaceColor(context),
           ],
         )))),
         // Don't block sheet rendering on cover-scheme palette generation -
@@ -842,7 +891,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     }
 
     return ListView(controller: widget.scrollController, padding: EdgeInsets.fromLTRB(20, 8, 20, 32 + MediaQuery.of(context).viewPadding.bottom), children: [
-      Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+      if (!ModalSurface.isDesktopOf(context)) Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(color: cs.onSurface.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(2)))),
       if (_coverUrl != null) ...[
         Center(child: GestureDetector(
@@ -864,19 +913,19 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
                             errorBuilder: (_, __, ___) => const SizedBox()),
                       )
                     : BlurPaddedCover(
-                        blurChild: CachedNetworkImage(
+                        blurChild: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                           imageUrl: _coverUrl!, cacheKey: stableCoverCacheKey(_coverUrl!), cacheManager: coverCacheManager, fit: BoxFit.cover,
                           httpHeaders: lib.mediaHeaders,
                           errorWidget: (_, __, ___) => const SizedBox.shrink(),
                         ),
-                        child: CachedNetworkImage(
+                        child: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                           imageUrl: _coverUrl!, cacheKey: stableCoverCacheKey(_coverUrl!), cacheManager: coverCacheManager, fit: BoxFit.contain,
                           httpHeaders: lib.mediaHeaders,
                           placeholder: (_, __) => const SizedBox(),
                           errorWidget: (_, __, ___) => const SizedBox(),
                         ),
                       ))
-                : CachedNetworkImage(
+                : CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                     imageUrl: _coverUrl!, cacheKey: stableCoverCacheKey(_coverUrl!), cacheManager: coverCacheManager, fit: BoxFit.contain,
                     httpHeaders: lib.mediaHeaders,
                     placeholder: (_, __) => const SizedBox(),
@@ -922,7 +971,8 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
                       '${(s['sequence'] as String? ?? '').isNotEmpty ? ' #${s['sequence']}' : ''}',
                       maxLines: 2, overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: accent),
-                    )),
+                    ),
+                    ),
                     const SizedBox(width: 2),
                     Icon(Icons.chevron_right_rounded, size: 16, color: accent.withValues(alpha: 0.6)),
                   ]),
@@ -967,6 +1017,14 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       const SizedBox(height: 12),
       if (_lookingForNarration)
         _lookingButton(accent, _coverScheme?.onPrimary ?? cs.onPrimary)
+      else if (isEbookOnly && AppPlatform.isWeb)
+        SizedBox(height: 52, child: FilledButton.icon(
+          onPressed: null,
+          icon: const Icon(Icons.menu_book_rounded, size: 24),
+          label: Text(l.ebookOnlyNoAudio,
+            style: tt.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+          style: FilledButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+        ))
       else if (isEbookOnly && ebookFile != null && canReadEbook(ebookFile))
         // Reading progress fills the button the same way listening progress
         // fills Absorb.
@@ -1316,7 +1374,11 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       // Primary action row: Download | Fully Absorb | ebook download (ebook-only)
       const SizedBox(height: 12),
       Row(children: [
-        if (!isEbookOnly) ...[
+        if (AppPlatform.lacksPhonePlugins && auth.canDownload) ...[
+          Expanded(child: _webDownloadButton(context, cs, l, auth)),
+          const SizedBox(width: 8),
+        ],
+        if (!isEbookOnly && !AppPlatform.lacksPhonePlugins) ...[
           Expanded(child: DownloadWideButton(itemId: widget.itemId, coverUrl: _coverUrl, title: title, author: authorName, accent: accent)),
           const SizedBox(width: 8),
         ],
@@ -1345,11 +1407,12 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
                   color: isFinished ? Colors.green : cs.onSurfaceVariant,
                   fontSize: 12, fontWeight: FontWeight.w500,
                 ),
-              )),
+              ),
+              ),
             ]),
           ),
         )),
-        if (isEbookOnly && !_lookingForNarration && ebookFile != null && canReadEbook(ebookFile)) ...[
+        if (!AppPlatform.lacksPhonePlugins && isEbookOnly && !_lookingForNarration && ebookFile != null && canReadEbook(ebookFile)) ...[
           const SizedBox(width: 8),
           // For ebook-only books the big button above is already "Read", so this
           // slot is the offline download (matching the audiobook download
@@ -1489,6 +1552,8 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
                   startedAt: (progressData['startedAt'] as num).toInt(),
                   finishedAt: (progressData['finishedAt'] as num).toInt())),
       ]),
+      // Absorb Plus (C4): "Last played on <device> · 2h ago".
+      LastPlayedLine(itemId: widget.itemId, progressLastUpdateMs: (progressData?['lastUpdate'] as num?)?.toInt()),
       if (descRaw.isNotEmpty) ...[const SizedBox(height: 16),
         Text(l.aboutSection, style: tt.titleSmall?.copyWith(color: cs.onSurfaceVariant, fontWeight: FontWeight.w600)),
         const SizedBox(height: 6),
@@ -1568,7 +1633,9 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         GestureDetector(onTap: () => setState(() => _bookmarksExpanded = !_bookmarksExpanded),
           child: Row(children: [
             Text(l.bookmarksWithCount(_bookmarks.length), style: tt.titleSmall?.copyWith(color: cs.onSurfaceVariant, fontWeight: FontWeight.w600)),
-            const Spacer(), Icon(_bookmarksExpanded ? Icons.expand_less : Icons.expand_more, color: cs.onSurface.withValues(alpha: 0.3), size: 20)])),
+            const Spacer(),
+            if (_bookmarksExpanded) BookmarkExportButton(dense: true, bookTitle: title, groups: () => {'book': _bookmarks}, bookInfo: (_) => (title: title, author: authorName, subtitle: null)),
+            Icon(_bookmarksExpanded ? Icons.expand_less : Icons.expand_more, color: cs.onSurface.withValues(alpha: 0.3), size: 20)])),
         if (_bookmarksExpanded) ...[const SizedBox(height: 8),
           ..._bookmarks.map((bm) {
             final hasNote = bm.note != null && bm.note!.isNotEmpty;
@@ -1600,6 +1667,66 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       ]);
   }
 
+  Widget _webDownloadButton(
+    BuildContext context,
+    ColorScheme cs,
+    AppLocalizations l,
+    AuthProvider auth,
+  ) {
+    return GestureDetector(
+      onTap: () => _downloadToComputer(context, auth),
+      child: Container(
+        height: 36,
+        decoration: BoxDecoration(
+          color: cs.onSurface.withValues(alpha: 0.06),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: cs.onSurface.withValues(alpha: 0.08),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.download_outlined,
+              size: 16,
+              color: cs.onSurfaceVariant,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              l.download,
+              style: TextStyle(
+                color: cs.onSurfaceVariant,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _downloadToComputer(
+    BuildContext context,
+    AuthProvider auth,
+  ) async {
+    final api = auth.apiService;
+    if (api == null) return;
+
+    final uri = Uri.parse(
+      '${api.cleanBaseUrl}/api/items/${Uri.encodeComponent(widget.itemId)}/download',
+    ).replace(queryParameters: {'token': api.token});
+    final started = await downloadUrlFile(uri);
+    if (!started && context.mounted) {
+      showOverlayToast(
+        context,
+        AppLocalizations.of(context)!.downloadNotifFailedTitle,
+        icon: Icons.error_outline_rounded,
+      );
+    }
+  }
+
   Future<void> _loadSimilar(ApiService api) async {
     final list = await api.getSimilarBooks(widget.itemId);
     if (mounted && list.isNotEmpty) setState(() => _similar = list.take(20).toList());
@@ -1627,6 +1754,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
               child: url == null
                   ? blank
                   : CachedNetworkImage(
+                      imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
                       imageUrl: url, cacheKey: stableCoverCacheKey(url), cacheManager: coverCacheManager,
                       httpHeaders: lib.mediaHeaders,
                       fit: BoxFit.cover,
@@ -1661,13 +1789,12 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
 
   static IconData _readStatusIcon(String s) => readStatusIcon(s);
 
-  // Unread and Read stay with the finish button: a hand-set Unread would
-  // keep BookOrbit from ever moving the book back to Reading.
-  static const _pickableReadStatuses = ['want_to_read', 'reading', 'rereading', 'on_hold', 'skimmed', 'abandoned'];
+  // Read stays with the finish button, which also moves the spot to the end.
+  static const _pickableReadStatuses = ['unread', 'want_to_read', 'reading', 'rereading', 'on_hold', 'skimmed', 'abandoned'];
 
   Future<void> _pickReadStatus(AuthProvider auth, LibraryProvider lib, String current) async {
     final l = AppLocalizations.of(context)!;
-    final picked = await showModalBottomSheet<String>(
+    final picked = await showAdaptiveActionMenu<String>(
       context: context,
       showDragHandle: true,
       builder: (ctx) {
@@ -1676,7 +1803,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         return SafeArea(
           child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 4),
+              padding: EdgeInsets.fromLTRB(24, ModalSurface.isDesktopOf(ctx) ? 20 : 0, 24, 4),
               child: Text(l.readStatusTitle, style: tt.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
             ),
             Padding(
@@ -1924,7 +2051,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       controller: widget.scrollController,
       padding: EdgeInsets.fromLTRB(20, 8, 20, 24 + MediaQuery.of(context).viewPadding.bottom),
       children: [
-        Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+        if (!ModalSurface.isDesktopOf(context)) Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(color: cs.onSurface.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(2)))),
         // Header: cover thumb + title/author
         Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -1947,8 +2074,10 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         else if (!isEbookOnly)
           Row(children: [
             Expanded(child: _quickAbsorbButton(context, cs, tt, auth, accent, onAccent, title, authorName, duration, chapters, isFinished, progress)),
-            const SizedBox(width: 10),
-            Expanded(child: DownloadWideButton(itemId: widget.itemId, coverUrl: _coverUrl, title: title, author: authorName, accent: accent)),
+            if (!AppPlatform.lacksPhonePlugins) ...[
+              const SizedBox(width: 10),
+              Expanded(child: DownloadWideButton(itemId: widget.itemId, coverUrl: _coverUrl, title: title, author: authorName, accent: accent)),
+            ],
           ])
         else
           SizedBox(height: 44, child: Center(child: Text(l.ebookOnlyNoAudio,
@@ -2026,25 +2155,37 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         if (!lib.isOffline && !lib.isPodcastLibrary && (auth.isAdmin || auth.isBookOrbit)) {
           add(Icons.collections_bookmark_rounded, l.addToCollection, () => CollectionPickerSheet.show(context, widget.itemId));
         }
-        if (ebookFile != null && canReadEbook(ebookFile)) {
+        if (!AppPlatform.isWeb && ebookFile != null && canReadEbook(ebookFile)) {
           add(Icons.menu_book_rounded, l.readEbook, () => _openEbookReader(context, auth, ebookFile, title));
         }
         // Save/Send push the file elsewhere, which needs the server's own file
         // entry (with ino) - the cache-synthesized fallback can't serve them.
         final serverEbookFile = resolveEbookFile(_item);
-        if (serverEbookFile != null) {
+        if (!AppPlatform.lacksPhonePlugins && serverEbookFile != null) {
           add(_ebookSaved ? Icons.download_done_rounded : Icons.save_alt_rounded,
-            l.ebookSaveToDevice, () => _saveEbook(context, auth, serverEbookFile, title));
+            l.ebookSaveToDevice, () => _saveEbook(context, auth, exportEbookFile(_item) ?? serverEbookFile, title));
         }
-        if (serverEbookFile != null && auth.ereaderDevices.isNotEmpty) {
+        if (!AppPlatform.lacksPhonePlugins &&
+            serverEbookFile != null &&
+            auth.ereaderDevices.isNotEmpty) {
           add(Icons.send_to_mobile_rounded, l.sendToEreader, () => _sendToEreader(context, auth));
         }
         if (!isEbookOnly && !lib.isPodcastLibrary) { // Absorb Plus
           add(Icons.tune_rounded, l.bookSettingsTitle, () => showBookSettingsSheet(context,
             itemId: widget.itemId, item: _item, accent: _coverScheme?.primary ?? cs.primary));
         }
-        if (progress > 0 || isFinished) {
-          add(Icons.restart_alt_rounded, l.resetProgress, () => _resetProgress(context, auth, duration));
+        if (auth.bookOrbitAdmin?.emailSend == true &&
+            !lib.isOffline &&
+            !ApiService.isBookDockItem(widget.itemId) &&
+            boSendableFiles(_item).isNotEmpty) {
+          add(Icons.send_to_mobile_rounded, l.sendToEreader,
+              () => showBookOrbitSendSheet(context, item: _item!, title: title));
+        }
+        final listened = !isEbookOnly && (progress > 0 || isFinished);
+        final read = lib.getEbookProgress(widget.itemId) > 0 || (isEbookOnly && (progress > 0 || isFinished));
+        if (listened || read) {
+          add(Icons.restart_alt_rounded, l.resetProgress,
+            () => _resetProgress(context, auth, duration, listened: listened, read: read));
         }
         if (continueShelf != null && !lib.isOffline) {
           final reading = continueShelf == 'continue-reading';
@@ -2069,7 +2210,17 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         }
         final item = _item;
         if (item != null) {
-          add(Icons.info_outline_rounded, l.fileInfoTitle, () => showBookFilesSheet(context, item));
+          add(Icons.info_outline_rounded, l.fileInfoTitle, () => showBookFilesSheet(context, item, onFilesChanged: _filesChanged));
+        }
+        if (item != null && !includeOpenDetails && !lib.isPodcastLibrary) { // Absorb Plus
+          add(Icons.fact_check_rounded, l.fileHealthAction, () => showFileHealthSheet(context,
+            itemId: widget.itemId, item: item, api: lib.isOffline ? null : auth.apiService,
+            title: title, author: authorName, coverUrl: _coverUrl));
+        }
+        if (!includeOpenDetails && auth.apiService != null && BookCopyDownload.available( // Absorb Plus
+            userJson: auth.userJson, isBookOrbit: auth.isBookOrbit, offline: lib.isOffline)) {
+          add(Icons.save_alt_rounded, l.bookCopySaveAction, () => SaveBookCopy.run(context,
+            api: auth.apiService!, itemId: widget.itemId, title: title, item: _item));
         }
         if (auth.canDelete && !lib.isOffline) {
           add(Icons.delete_outline_rounded, l.deleteFromServerAction,
@@ -2113,7 +2264,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       img = Image.file(File(url), fit: BoxFit.cover,
         errorBuilder: (_, __, ___) => Container(color: cs.surfaceContainerHighest));
     } else {
-      img = CachedNetworkImage(imageUrl: url, cacheKey: stableCoverCacheKey(url), cacheManager: coverCacheManager, fit: BoxFit.cover, httpHeaders: headers,
+      img = CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, imageUrl: url, cacheKey: stableCoverCacheKey(url), cacheManager: coverCacheManager, fit: BoxFit.cover, httpHeaders: headers,
         placeholder: (_, __) => Container(color: cs.surfaceContainerHighest),
         errorWidget: (_, __, ___) => Container(color: cs.surfaceContainerHighest));
     }
@@ -2264,9 +2415,11 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       if (id.isNotEmpty) bookSeriesIds.add(id);
     }
     final continueSeriesId = lib.continueSeriesShelfMatch(bookSeriesIds);
-    showModalBottomSheet(
+    showAdaptiveActionMenu(
       context: context,
       isScrollControlled: true,
+      desktopWidth: 520,
+      desktopScrollWrap: false,
       backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -2276,7 +2429,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+              if (!ModalSurface.isDesktopOf(ctx)) Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(color: cs.onSurface.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(2)))),
               Flexible(
                 child: SingleChildScrollView(
@@ -2332,6 +2485,12 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     }
     if (!context.mounted) return;
     HapticFeedback.mediumImpact();
+    if (ok) {
+      return showHiddenSeriesUndoToast(context, seriesId: seriesId,
+          readd: api.readdSeriesToContinueListening,
+          unhide: lib.unhideSeriesFromContinueShelves,
+          refresh: () => lib.refreshProgressShelves(force: true, reason: 'readd-continue-series'));
+    }
     showOverlayToast(context,
         ok ? l.removedSeriesFromContinueSeries : l.couldNotUpdate,
         icon: ok ? Icons.bookmark_remove_rounded : Icons.error_outline_rounded);
@@ -2346,19 +2505,29 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     final audioFiles = (media['audioFiles'] as List<dynamic>?) ?? const [];
     final libraryFiles = (_item!['libraryFiles'] as List<dynamic>?) ?? const [];
     final rel = _item!['relPath'] as String? ?? '';
-    Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+    final itemId = widget.itemId;
+    final libraryId = _item!['libraryId'] as String?;
+    final isAdmin = auth.isAdmin;
+    final isBookDock = BookDockInfo.of(_item) != null;
+    final nav = contentNavigator(context);
+    // On desktop the detail surface is a root-navigator dialog while the
+    // editor lands in the content pane below it; close the dialogs first.
+    if (isDesktopWorkspace(context)) {
+      Navigator.of(context, rootNavigator: true).popUntil((r) => r.isFirst);
+    }
+    nav.push(MaterialPageRoute(
       builder: (_) => BookEditScreen(
-        itemId: widget.itemId,
+        itemId: itemId,
         bookTitle: title,
         metadata: meta,
         tags: mediaTags,
         audioFiles: audioFiles,
-          libraryFiles: libraryFiles,
-          relPath: rel,
+        libraryFiles: libraryFiles,
+        relPath: rel,
         isEbookOnly: isEbookOnly,
-        isAdmin: auth.isAdmin,
-        libraryId: _item!['libraryId'] as String?,
-        isBookDock: BookDockInfo.of(_item) != null,
+        isAdmin: isAdmin,
+        libraryId: libraryId,
+        isBookDock: isBookDock,
       ),
     ));
   }
@@ -2401,7 +2570,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     };
 
     return ListView(controller: widget.scrollController, padding: EdgeInsets.fromLTRB(20, 8, 20, 32 + MediaQuery.of(context).viewPadding.bottom), children: [
-      Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+      if (!ModalSurface.isDesktopOf(context)) Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(color: cs.onSurface.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(2)))),
       if (_coverUrl != null) ...[
         Center(child: Container(
@@ -2411,7 +2580,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
             boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 16, offset: const Offset(0, 4))],
           ),
           clipBehavior: Clip.antiAlias,
-          child: CachedNetworkImage(
+          child: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
             imageUrl: _coverUrl!, cacheKey: stableCoverCacheKey(_coverUrl!), cacheManager: coverCacheManager, fit: BoxFit.contain,
             httpHeaders: lib.mediaHeaders,
             placeholder: (_, __) => const SizedBox(width: 140),
@@ -2721,10 +2890,11 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     for (final d in destinations) {
       folderCount[d.libraryId] = (folderCount[d.libraryId] ?? 0) + 1;
     }
-    return showModalBottomSheet<BookDockDestination>(
+    return showAdaptiveActionMenu<BookDockDestination>(
       context: context,
       useSafeArea: true,
       isScrollControlled: true,
+      desktopScrollWrap: false,
       builder: (ctx) => SafeArea(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.6),
@@ -2825,7 +2995,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     }
     final l = AppLocalizations.of(context)!;
     final item = _item;
-    final showFiles = item == null ? null : () => showBookFilesSheet(context, item);
+    final showFiles = item == null ? null : () => showBookFilesSheet(context, item, onFilesChanged: _filesChanged);
     return [
       if (codec != null && codec.isNotEmpty) _chip(Icons.audio_file_rounded, codec, onTap: showFiles),
       if (bitRate != null && bitRate > 0) _chip(Icons.speed_rounded, l.kbpsValue((bitRate / 1000).round()), onTap: showFiles),
@@ -2957,6 +3127,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     return stars;
   }
 
+  // ignore: unused_element (Absorb Plus: upstream leaves this unused too)
   static String get _audibleDomain {
     final code = (ui.PlatformDispatcher.instance.locale.countryCode ?? 'US').toUpperCase();
     const domains = {
@@ -2986,24 +3157,30 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
   void _showAudibleReviews(BuildContext context) {
     final asin = _asin;
     if (asin == null) return;
-    final url = 'https://www.$_audibleDomain/pd/$asin#customer-reviews';
-    if (ForkPlatform.openInBrowserInstead(url)) return;
+    final uri = audibleReviewsUri(
+      asin,
+      countryCode: ui.PlatformDispatcher.instance.locale.countryCode,
+    );
+    if (AppPlatform.lacksPhonePlugins || !ForkPlatform.hasInAppWebView) { // Absorb Plus: web view is Android-only
+      unawaited(_launchAudibleReviews(context, uri));
+      return;
+    }
     final cs = Theme.of(context).colorScheme;
 
     final controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(cs.surface)
-      ..loadRequest(Uri.parse(url));
+      ..loadRequest(uri);
 
-    showModalBottomSheet(
+    showAdaptiveActionMenu(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
+      desktopWidth: 720,
+      desktopScrollWrap: false,
       backgroundColor: Colors.transparent,
-      enableDrag: true,
-      builder: (ctx) => FractionallySizedBox(
-        heightFactor: 0.92,
-        child: Container(
+      builder: (ctx) {
+        final body = Container(
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(
             color: cs.surface,
@@ -3023,6 +3200,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
                     children: [
                       const Spacer(),
                       IconButton(
+                        tooltip: MaterialLocalizations.of(ctx).closeButtonTooltip, // Absorb Plus
                         icon: Icon(Icons.close_rounded, color: cs.onSurfaceVariant),
                         onPressed: () => Navigator.pop(ctx),
                       ),
@@ -3044,9 +3222,25 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
               ),
             ),
           ]),
-        ),
-      ),
+        );
+        if (ModalSurface.isDesktopOf(ctx)) return body;
+        return FractionallySizedBox(heightFactor: 0.92, child: body);
+      },
     );
+  }
+
+  Future<void> _launchAudibleReviews(BuildContext context, Uri uri) async {
+    var opened = false;
+    try {
+      opened = await launchUrl(uri, webOnlyWindowName: '_blank');
+    } catch (e) { debugPrint('[BookDetail] _launchAudibleReviews failed: ${e.runtimeType}'); }
+    if (!opened && context.mounted) {
+      showOverlayToast(
+        context,
+        AppLocalizations.of(context)!.audibleSeriesCouldNotOpenAudible,
+        icon: Icons.error_outline_rounded,
+      );
+    }
   }
 
   // The name and its comma are one Wrap child so the comma can never start
@@ -3306,11 +3500,13 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
 
       final ebookName = ebookFile['metadata']?['filename'] as String? ?? ebookFile['name'] as String? ?? 'book.epub';
       final ext = ebookName.contains('.') ? ebookName.substring(ebookName.lastIndexOf('.')) : '.epub';
-      final safeTitle = bookTitle.replaceAll(RegExp(r'[^\w\s-]'), '').trim();
+      final safeTitle = safeFileName(bookTitle, fallback: 'book'); // Absorb Plus (BUG-002)
 
-      // Download to cache first (reuse if already cached)
+      // Download to cache first (reuse if already cached). Absorb Plus
+      // (BUG-002): keyed by item and file, written to .part and renamed only
+      // once complete, so another book or a cut-off download is never reused.
       final cacheDir = await getTemporaryDirectory();
-      final cachedFile = File('${cacheDir.path}/$safeTitle$ext');
+      final cachedFile = File(ebookExportCachePath(cacheDir.path, widget.itemId, ino, ext));
 
       if (!cachedFile.existsSync()) {
         final cleanBase = api.baseUrl.endsWith('/') ? api.baseUrl.substring(0, api.baseUrl.length - 1) : api.baseUrl;
@@ -3321,25 +3517,10 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         // Use streamed download with proper headers (including custom
         // reverse-proxy headers) and manual redirect following so auth
         // headers are preserved across redirects.
-        final request = http.Request('GET', Uri.parse(url));
-        request.followRedirects = false;
-        api.mediaHeaders.forEach((k, v) => request.headers[k] = v);
         final client = http.Client();
         try {
-          var response = await client.send(request);
-
-          // Manually follow redirects while preserving auth headers
-          var redirects = 0;
-          while ([301, 302, 303, 307, 308].contains(response.statusCode) && redirects < 5) {
-            final location = response.headers['location'];
-            if (location == null) break;
-            final redirectUrl = Uri.parse(url).resolve(location);
-            final rReq = http.Request('GET', redirectUrl);
-            api.mediaHeaders.forEach((k, v) => rReq.headers[k] = v);
-            rReq.followRedirects = false;
-            response = await client.send(rReq);
-            redirects++;
-          }
+          // Absorb Plus (BUG-001): headers only on the server's own origin.
+          final response = await authenticatedGet(client, Uri.parse(url), api.mediaHeaders);
 
           if (response.statusCode != 200) {
             if (mounted) {
@@ -3367,12 +3548,17 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
             return;
           }
 
-          final sink = cachedFile.openWrite();
+          final part = File('${cachedFile.path}.part');
+          final sink = part.openWrite();
           try {
             await response.stream.pipe(sink);
-          } finally {
+          } catch (_) {
             await sink.close();
+            if (await part.exists()) await part.delete();
+            rethrow;
           }
+          await sink.close();
+          await part.rename(cachedFile.path);
         } finally {
           client.close();
         }
@@ -3453,8 +3639,9 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       BuildContext context, List<Map<String, dynamic>> devices) {
     final cs = Theme.of(context).colorScheme;
     final l = AppLocalizations.of(context)!;
-    return showModalBottomSheet<String>(
+    return showAdaptiveActionMenu<String>(
       context: context,
+      desktopScrollWrap: false,
       backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -3464,7 +3651,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+              if (!ModalSurface.isDesktopOf(ctx)) Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(color: cs.onSurface.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(2)))),
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
@@ -3725,7 +3912,8 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         Text(formatHm((end - start) / _displaySpeed), style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant)),
       ]),
       onTap: () => _jumpToChapter(context, auth, chTitle, start, isActive, title, author, duration, chapters),
-    ));
+    ),
+    );
   }
 
   /// Confirm, then seek the live session or start the book at [start].
@@ -3795,8 +3983,9 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         }
       }
     } catch (_) {
+      await ProgressSyncService().saveFinishedOffline(widget.itemId, duration);
       if (context.mounted) {
-        showOverlayToast(context, l.failedToUpdateCheckConnection, icon: Icons.error_outline_rounded);
+        showOverlayToast(context, l.markedFinishedWillSync, icon: Icons.cloud_off_rounded);
       }
     }
   }
@@ -3835,13 +4024,23 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     }
   }
 
-  Future<void> _resetProgress(BuildContext context, AuthProvider auth, double duration) async {
+  Future<void> _resetProgress(BuildContext context, AuthProvider auth, double duration,
+      {required bool listened, required bool read}) async {
     final l = AppLocalizations.of(context)!;
+    final content = [
+      listened && read
+          ? l.resetProgressListeningAndReading
+          : read
+              ? l.resetProgressReading
+              : l.resetProgressListening,
+      if (auth.isBookOrbit) l.resetProgressMarksUnread,
+      l.resetProgressCantUndo,
+    ].join(' ');
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(l.resetProgressQuestion),
-        content: Text(l.resetProgressContent),
+        content: Text(content),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l.cancel)),
           FilledButton(onPressed: () => Navigator.pop(ctx, true),
@@ -3862,7 +4061,9 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     
     // Clear local progress
     await ProgressSyncService().deleteLocal(widget.itemId);
-    
+    // A page saved while offline would put the old place back on the next sync.
+    await ProgressSyncService().dropPendingEbookProgress(widget.itemId);
+
     // Reset server progress (PATCH to zero + hide from continue listening)
     String? progressId;
     if (context.mounted) {
@@ -3956,31 +4157,29 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
   void _openMetadataLookup(BuildContext context, AuthProvider auth, String title, String author) {
     final api = auth.apiService;
     if (api == null) return;
-    showModalBottomSheet(
+    showAdaptiveSheetDialog(
       context: context,
-      isScrollControlled: true,
+      useSafeArea: false,
       backgroundColor: Colors.transparent,
-      builder: (_) => DraggableScrollableSheet(
-        expand: false,
-        initialChildSize: 0.85,
-        minChildSize: 0.05, snap: true,
-        maxChildSize: 0.95,
-        builder: (ctx, sc) => MetadataLookupSheet(
-          scrollController: sc,
-          itemId: widget.itemId,
-          api: api,
-          initialTitle: title,
-          initialAuthor: author,
-          currentMetadata: (_item?['media'] as Map<String, dynamic>?)?['metadata'] as Map<String, dynamic>?,
-          onApplied: () {
-            // Reload the item to show the new override, and repaint the
-            // library so the grid/absorbing card pick up the override cover.
-            _loadItem();
-            if (mounted) {
-              context.read<LibraryProvider>().notifyCoverOverridesChanged();
-            }
-          },
-        ),
+      expand: false,
+      initialChildSize: 0.85,
+      minChildSize: 0.05, snap: true,
+      maxChildSize: 0.95,
+      builder: (ctx, sc) => MetadataLookupSheet(
+        scrollController: sc,
+        itemId: widget.itemId,
+        api: api,
+        initialTitle: title,
+        initialAuthor: author,
+        currentMetadata: (_item?['media'] as Map<String, dynamic>?)?['metadata'] as Map<String, dynamic>?,
+        onApplied: () {
+          // Reload the item to show the new override, and repaint the
+          // library so the grid/absorbing card pick up the override cover.
+          _loadItem();
+          if (mounted) {
+            context.read<LibraryProvider>().notifyCoverOverridesChanged();
+          }
+        },
       ),
     );
   }
@@ -4060,7 +4259,7 @@ class _FullCoverViewerState extends State<_FullCoverViewer> {
       final response = await http.get(Uri.parse(widget.url), headers: widget.headers);
       if (response.statusCode != 200) throw Exception('Download failed');
       final ext = widget.url.contains('.png') ? '.png' : '.jpg';
-      final safeTitle = widget.title.replaceAll(RegExp(r'[^\w\s-]'), '').trim();
+      final safeTitle = safeFileName(widget.title, fallback: 'cover'); // Absorb Plus
       final dir = await getTemporaryDirectory();
       final file = File('${dir.path}/$safeTitle$ext');
       await file.writeAsBytes(response.bodyBytes);
@@ -4123,7 +4322,7 @@ class _FullCoverViewerState extends State<_FullCoverViewer> {
                   }
                 },
                 child: Center(
-                  child: CachedNetworkImage(
+                  child: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                     imageUrl: widget.url, cacheKey: stableCoverCacheKey(widget.url), cacheManager: coverCacheManager,
                     httpHeaders: widget.headers,
                     fit: BoxFit.contain,
@@ -4140,6 +4339,7 @@ class _FullCoverViewerState extends State<_FullCoverViewer> {
           top: MediaQuery.of(context).viewPadding.top + 8,
           left: 8,
           child: IconButton(
+            tooltip: MaterialLocalizations.of(context).closeButtonTooltip, // Absorb Plus
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.close_rounded, color: Colors.white),
             style: IconButton.styleFrom(backgroundColor: Colors.black45),
@@ -4150,6 +4350,7 @@ class _FullCoverViewerState extends State<_FullCoverViewer> {
           top: MediaQuery.of(context).viewPadding.top + 8,
           right: 8,
           child: IconButton(
+            tooltip: AppLocalizations.of(context)!.quoteShareAction, // Absorb Plus
             onPressed: _saving ? null : _saveAndShare,
             icon: _saving
                 ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))

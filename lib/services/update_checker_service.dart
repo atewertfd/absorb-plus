@@ -10,8 +10,10 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'update_check_policy.dart';
 import 'update_policy.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'update_check_policy.dart';
+import 'windows_shell.dart';
 
 class UpdateInfo {
   final String latestVersion;
@@ -22,6 +24,11 @@ class UpdateInfo {
   final bool isDirectApk;
   final bool isWindowsInstaller;
   final String? packageLabel;
+  // Absorb Plus: the test channel's private assets download in-app from
+  // this API URL with these headers (a token); [downloadUrl] stays the
+  // browser URL and names the file.
+  final String? authDownloadUrl;
+  final Map<String, String> downloadHeaders;
 
   UpdateInfo({
     required this.latestVersion,
@@ -32,6 +39,8 @@ class UpdateInfo {
     this.isDirectApk = true,
     this.isWindowsInstaller = false,
     this. packageLabel,
+    this.authDownloadUrl,
+    this.downloadHeaders = const {},
   });
 
   bool get hasUpdate =>
@@ -255,7 +264,8 @@ class UpdateCheckerService {
         data = jsonDecode(response.body) as Map<String, dynamic>;
         // CI creates the release before it uploads the files; offer it on
         // the next check, once this platform's file is there.
-        if (!hasPlatformAsset(releaseAssetsOf(data))) {
+        if (!isVersionReleaseTag(data['tag_name'] as String? ?? '') || // fork
+            !hasPlatformAsset(releaseAssetsOf(data))) {
           return UpdateCheckResult(
             UpdateCheckStatus.upToDate,
             currentVersion: await currentInstalledVersion(),
@@ -416,7 +426,7 @@ class ApkUpdater {
     final dir = await getTemporaryDirectory();
     final filename = Uri.parse(info.downloadUrl).pathSegments.last;
     final file = File('${dir.path}/$filename');
-      return await download.run(Uri.parse(info.downloadUrl), file, onProgress);
+      return await download.run(Uri.parse(info.authDownloadUrl ?? info.downloadUrl), file, onProgress, headers: info.downloadHeaders);
     } finally {
       if (identical(_active, download)) _active = null;
       download.close();
@@ -484,6 +494,11 @@ class WindowsUpdater {
     // Give the detached installer time to open before the Flutter process
     // exits. The installer owns the rest of the update flow.
     await Future<void>.delayed(const Duration(milliseconds: 250));
+    // Quit the way closing the window does, so the playback position and
+    // held-back writes are saved first; exit directly only if that fails.
+    if (await WindowsShell.instance.requestQuit()) {
+      await Future<void>.delayed(const Duration(seconds: 6));
+    }
     exit(0);
   }
 
@@ -539,13 +554,16 @@ class UpdateDownload {
   Future<File> run(
     Uri url,
     File file,
-    void Function(int received, int total) onProgress,
-  ) async {
+    void Function(int received, int total) onProgress, {
+    Map<String, String> headers = const {},
+  }) async {
     try {
       if (_cancelled) throw const _CancelledException();
       if (await file.exists()) await file.delete();
 
-    final response = await _client.send(http.Request('GET', url));
+    final response = headers.isEmpty
+        ? await _client.send(http.Request('GET', url))
+        : await sendWithoutForwardingAuth(_client, url, headers);
       if (response.statusCode != 200) {
         throw HttpException('HTTP ${response.statusCode}');
       }
@@ -579,6 +597,33 @@ class UpdateDownload {
     } finally {
       _client.close();
     }
+  }
+}
+
+/// Absorb Plus: GETs [url] with [headers], following redirects by hand so
+/// the headers (a GitHub token) go only to [url]'s host, never to the
+/// signed download URL GitHub redirects private assets to.
+@visibleForTesting
+Future<http.StreamedResponse> sendWithoutForwardingAuth(
+  http.Client client,
+  Uri url,
+  Map<String, String> headers, {
+  int maxRedirects = 5,
+}) async {
+  var current = url;
+  for (var hop = 0; ; hop++) {
+    final request = http.Request('GET', current)..followRedirects = false;
+    if (current.host == url.host && current.scheme == url.scheme) {
+      request.headers.addAll(headers);
+    }
+    final response = await client.send(request);
+    final location = response.headers['location'];
+    if (response.statusCode < 300 || response.statusCode >= 400 || location == null) {
+      return response;
+    }
+    await response.stream.drain<void>();
+    if (hop >= maxRedirects) throw const HttpException('Too many redirects');
+    current = current.resolve(location);
   }
 }
 

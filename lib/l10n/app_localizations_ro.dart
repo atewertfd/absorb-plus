@@ -18,901 +18,909 @@ class AppLocalizationsRo extends AppLocalizations {
   String get offline => 'Offline';
 
   @override
-  String get stillOffline => 'Still offline. Tap to try again.';
+  String get stillOffline => 'Încă offline. Atinge pentru a reîncerca.';
 
   @override
-  String get retry => 'Retry';
+  String get retry => 'Reîncearcă';
 
   @override
-  String get listsNone => 'No collections or playlists';
+  String get listsNone => 'Nicio colecție sau listă de redare';
 
   @override
   String get listsNoneHint =>
-      'Collections and playlists are made on your Audiobookshelf server, and show up here.';
+      'Colecțiile și listele de redare se creează pe serverul tău Audiobookshelf și apar aici.';
 
   @override
-  String get listsLoadFailed => 'Couldn\'t load your lists';
+  String get listsLoadFailed => 'Nu am putut încărca listele tale';
 
   @override
   String get listsLoadFailedHint =>
-      'Absorb couldn\'t reach your server for collections and playlists.';
+      'Absorb nu a putut contacta serverul pentru colecții și liste de redare.';
 
   @override
-  String get listsNoneBookOrbit => 'No collections or Smart Scopes';
+  String get listsNoneBookOrbit => 'Nicio colecție sau Smart Scope';
 
   @override
   String get listsNoneHintBookOrbit =>
-      'Collections and Smart Scopes are made on your BookOrbit server, and show up here.';
+      'Colecțiile și Smart Scopes se creează pe serverul tău BookOrbit și apar aici.';
 
   @override
   String get listsLoadFailedHintBookOrbit =>
-      'Absorb couldn\'t reach your server for collections and Smart Scopes.';
+      'Absorb nu a putut contacta serverul pentru colecții și Smart Scopes.';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Anulează';
 
   @override
-  String get delete => 'Delete';
+  String get delete => 'Șterge';
 
   @override
-  String get remove => 'Remove';
+  String get remove => 'Elimină';
 
   @override
-  String get save => 'Save';
+  String get save => 'Salvează';
 
   @override
-  String get done => 'Done';
+  String get done => 'Gata';
 
   @override
-  String get edit => 'Edit';
+  String get edit => 'Editează';
 
   @override
-  String get search => 'Search';
+  String get search => 'Caută';
 
   @override
-  String get apply => 'Apply';
+  String get apply => 'Aplică';
 
   @override
-  String get enable => 'Enable';
+  String get enable => 'Activează';
 
   @override
-  String get clear => 'Clear';
+  String get clear => 'Golește';
 
   @override
-  String get off => 'Off';
+  String get off => 'Oprit';
 
   @override
-  String get disabled => 'Disabled';
+  String get disabled => 'Dezactivat';
 
   @override
-  String get later => 'Later';
+  String get later => 'Mai târziu';
 
   @override
-  String get whatsNewTitle => 'Absorb was updated';
+  String get whatsNewTitle => 'Absorb a fost actualizat';
 
   @override
   String whatsNewContent(String version) {
-    return 'You\'re now on $version.';
+    return 'Acum ești pe $version.';
   }
 
   @override
-  String get whatsNewButton => 'See what\'s new';
+  String get whatsNewButton => 'Vezi ce e nou';
 
   @override
-  String get whatsNewKeepShowing => 'Show this after every update';
+  String get whatsNewKeepShowing => 'Afișează după fiecare actualizare';
 
   @override
-  String get whatsNewKeepShowingHint => 'You can turn it back on in Settings';
+  String get whatsNewKeepShowingHint => 'Îl poți reactiva în Setări';
 
   @override
-  String get settingsWhatsNew => 'Show what\'s new after updates';
+  String get settingsWhatsNew => 'Arată noutățile după actualizări';
 
   @override
   String get settingsWhatsNewSubtitle =>
-      'After an update, show what\'s new in the app';
+      'După o actualizare, arată noutățile în aplicație';
 
   @override
-  String get gotIt => 'Got it';
+  String get gotIt => 'Am înțeles';
 
   @override
-  String get betaLoggingTitle => 'Logs are on';
+  String get betaLoggingTitle => 'Jurnalele sunt activate';
 
   @override
   String get betaLoggingContent =>
-      'Since this is a beta, Absorb now keeps logs to help track down problems. They stay on this device unless you share them.\n\nYou can send them or turn them off in Settings, under Issues & Support. If you turn them off, later betas leave them off.';
+      'Fiind o versiune beta, Absorb păstrează acum jurnale pentru a ajuta la depistarea problemelor. Rămân pe acest dispozitiv, dacă nu le trimiți tu.\n\nPoți să le trimiți sau să le dezactivezi în Setări, la Probleme și asistență. Dacă le dezactivezi, versiunile beta ulterioare le lasă dezactivate.';
 
   @override
-  String get preview => 'Preview';
+  String get preview => 'Previzualizare';
 
   @override
-  String get or => 'or';
+  String get or => 'sau';
 
   @override
-  String get file => 'File';
+  String get file => 'Fișier';
 
   @override
-  String get more => 'More';
+  String get more => 'Mai multe';
 
   @override
-  String get unknown => 'Unknown';
+  String get unknown => 'Necunoscut';
 
   @override
-  String get untitled => 'Untitled';
+  String get untitled => 'Fără titlu';
 
   @override
-  String get noThanks => 'No Thanks';
+  String get noThanks => 'Nu, mulțumesc';
 
   @override
-  String get stay => 'Stay';
+  String get stay => 'Rămâi';
 
   @override
-  String get homeTitle => 'Home';
+  String get homeTitle => 'Acasă';
 
   @override
-  String get continueListening => 'Continue Listening';
+  String get continueListening => 'Continuă ascultarea';
 
   @override
-  String get continueReading => 'Continue Reading';
+  String get continueReading => 'Continuă citirea';
 
   @override
-  String get continueSeries => 'Continue Series';
+  String get continueSeries => 'Continuă seria';
 
   @override
-  String get recentlyAdded => 'Recently Added';
+  String get recentlyAdded => 'Adăugate recent';
 
   @override
-  String get listenAgain => 'Listen Again';
+  String get listenAgain => 'Ascultă din nou';
 
   @override
-  String get discover => 'Discover';
+  String get discover => 'Descoperă';
 
   @override
-  String get newEpisodes => 'New Episodes';
+  String get newEpisodes => 'Episoade noi';
 
   @override
-  String get downloads => 'Downloads';
+  String get downloads => 'Descărcări';
 
   @override
-  String get noDownloadedBooks => 'No downloaded books';
+  String get noDownloadedBooks => 'Nicio carte descărcată';
 
   @override
-  String get yourLibraryIsEmpty => 'Your library is empty';
+  String get yourLibraryIsEmpty => 'Biblioteca ta este goală';
 
   @override
   String get downloadBooksWhileOnline =>
-      'Download books while online to listen offline';
+      'Descarcă cărți cât ești online pentru a le asculta offline';
 
   @override
-  String get customizeHome => 'Customize Home';
+  String get customizeHome => 'Personalizează Acasă';
 
   @override
-  String get dragToReorderTapEye => 'Drag to reorder, tap eye to show/hide';
+  String get dragToReorderTapEye =>
+      'Trage pentru a reordona, atinge ochiul pentru a afișa/ascunde';
 
   @override
-  String get loginTagline => 'Start Absorbing';
+  String get loginTagline => 'Începe să absorbi';
 
   @override
-  String get loginConnectToServer => 'Connect to your server';
+  String get loginConnectToServer => 'Conectează-te la serverul tău';
 
   @override
-  String get loginServerAddress => 'Server address';
+  String get loginServerAddress => 'Adresa serverului';
 
   @override
   String get loginServerHint => 'my.server.com';
 
   @override
-  String get loginServerHelper => 'IP:port works too (e.g. 192.168.1.5:13378)';
+  String get loginServerHelper => 'Merge și IP:port (de ex. 192.168.1.5:13378)';
 
   @override
-  String get loginCouldNotReachServer => 'Could not reach server';
+  String get loginCouldNotReachServer => 'Nu s-a putut contacta serverul';
 
   @override
-  String get loginAdvanced => 'Advanced';
+  String get loginAdvanced => 'Avansat';
 
   @override
-  String get loginCustomHttpHeaders => 'Custom HTTP Headers';
+  String get loginCustomHttpHeaders => 'Antete HTTP personalizate';
 
   @override
   String get loginCustomHeadersDescription =>
-      'For Cloudflare tunnels or reverse proxies that require extra headers. Add headers before entering your server URL.';
+      'Pentru tunelurile Cloudflare sau proxy-urile inverse care necesită antete suplimentare. Adaugă antetele înainte de a introduce adresa serverului.';
 
   @override
-  String get loginHeaderName => 'Header name';
+  String get loginHeaderName => 'Numele antetului';
 
   @override
-  String get loginHeaderValue => 'Value';
+  String get loginHeaderValue => 'Valoare';
 
   @override
-  String get loginAddHeader => 'Add Header';
+  String get loginAddHeader => 'Adaugă antet';
 
   @override
-  String get loginSelfSignedCertificates => 'Self-signed Certificates';
+  String get loginSelfSignedCertificates => 'Certificate autosemnate';
 
   @override
   String get loginTrustAllCertificates =>
-      'Trust all certificates (for self-signed / custom CA setups)';
+      'Ai încredere în toate certificatele (pentru configurări cu certificate autosemnate / CA personalizat)';
 
   @override
-  String get loginApiKey => 'API Key';
+  String get loginApiKey => 'Cheie API';
 
   @override
   String get loginApiKeyDescription =>
-      'Use an admin-generated API key instead of username/password. Useful when token refresh fails for your account.';
+      'Folosește o cheie API generată de administrator în loc de nume de utilizator/parolă. Utilă când reîmprospătarea token-ului eșuează pentru contul tău.';
 
   @override
-  String get loginWaitingForSso => 'Waiting for SSO...';
+  String get loginWaitingForSso => 'Se așteaptă SSO...';
 
   @override
-  String get loginRedirectUri => 'Redirect URI: absorb://oauth';
+  String get loginRedirectUri => 'URI de redirecționare: absorb://oauth';
 
   @override
-  String get loginOrSignInManually => 'or sign in manually';
+  String get loginOrSignInManually => 'sau conectează-te manual';
 
   @override
-  String get loginUsername => 'Username';
+  String get loginUsername => 'Nume de utilizator';
 
   @override
-  String get loginUsernameRequired => 'Please enter your username';
+  String get loginUsernameRequired => 'Introdu numele de utilizator';
 
   @override
-  String get loginPassword => 'Password';
+  String get loginPassword => 'Parolă';
 
   @override
-  String get loginSignIn => 'Sign In';
+  String get loginSignIn => 'Conectare';
 
   @override
   String loginSignInAs(String username) {
-    return 'Sign in as $username?';
+    return 'Te conectezi ca $username?';
   }
 
   @override
-  String get loginSignInToServer => 'Sign in to this server?';
+  String get loginSignInToServer => 'Te conectezi la acest server?';
 
   @override
   String loginSignedInAs(String username) {
-    return 'Signed in as $username';
+    return 'Conectat ca $username';
   }
 
   @override
-  String get adminCreateSetupFile => 'Share sign-in';
+  String get adminCreateSetupFile => 'Partajează conectarea';
 
   @override
   String adminSetupFileDescription(String username) {
-    return 'Creates a private sign-in link for $username that only works in the Absorb app.';
+    return 'Creează un link de conectare privat pentru $username, care funcționează doar în aplicația Absorb.';
   }
 
   @override
-  String get adminSetupFileServerUrl => 'Server URL the new user will use';
+  String get adminSetupFileServerUrl =>
+      'Adresa serverului pe care o va folosi noul utilizator';
 
   @override
   String get adminSetupFileNoteWithHeaders =>
-      'A dedicated API key and your custom headers will be included so they can reach the server. Treat the link like a password.';
+      'Vor fi incluse o cheie API dedicată și antetele tale personalizate, ca să poată ajunge la server. Tratează linkul ca pe o parolă.';
 
   @override
   String get adminSetupFileNote =>
-      'A dedicated API key will be included. Treat the link like a password.';
+      'Va fi inclusă o cheie API dedicată. Tratează linkul ca pe o parolă.';
 
   @override
-  String get adminSetupFileCreate => 'Create link';
+  String get adminSetupFileCreate => 'Creează link';
 
   @override
-  String get adminSetupFileSaveTitle => 'Save setup file';
+  String get adminSetupFileSaveTitle => 'Salvează fișierul de configurare';
 
   @override
   String get adminSetupFileKeyError =>
-      'Could not create an API key for this user';
+      'Nu s-a putut crea o cheie API pentru acest utilizator';
 
   @override
   String adminSetupFileSaved(String username) {
-    return 'Setup file for $username saved';
+    return 'Fișierul de configurare pentru $username a fost salvat';
   }
 
   @override
   String adminSetupFileFailed(String error) {
-    return 'Failed to create sign-in: $error';
+    return 'Crearea conectării a eșuat: $error';
   }
 
   @override
-  String get setupLinkShareTitle => 'Share sign-in';
+  String get setupLinkShareTitle => 'Partajează conectarea';
 
   @override
   String setupLinkShareDescription(String username) {
-    return 'Send this private link or have them scan the QR code to sign in as $username.';
+    return 'Trimite acest link privat sau cere-i să scaneze codul QR pentru a se conecta ca $username.';
   }
 
   @override
   String setupLinkPrivateWarning(String username) {
-    return 'Anyone with this link can sign in as $username. Treat it like a password.';
+    return 'Oricine are acest link se poate conecta ca $username. Tratează-l ca pe o parolă.';
   }
 
   @override
-  String get setupLinkShare => 'Share link';
+  String get setupLinkShare => 'Partajează linkul';
 
   @override
-  String get setupLinkCopy => 'Copy link';
+  String get setupLinkCopy => 'Copiază linkul';
 
   @override
-  String get setupLinkCopied => 'Sign-in link copied';
+  String get setupLinkCopied => 'Linkul de conectare a fost copiat';
 
   @override
-  String get setupLinkSaveFile => 'Save setup file';
+  String get setupLinkSaveFile => 'Salvează fișierul de configurare';
 
   @override
   String get setupLinkQrError =>
-      'This setup link is too large for a QR code. Share the link instead.';
+      'Acest link de configurare este prea mare pentru un cod QR. Partajează linkul în schimb.';
 
   @override
   String setupLinkShareSubject(String username) {
-    return 'Absorb sign-in for $username';
+    return 'Conectare Absorb pentru $username';
   }
 
   @override
-  String get setupLinkConfirmTitle => 'Sign in with this link?';
+  String get setupLinkConfirmTitle => 'Te conectezi cu acest link?';
 
   @override
   String setupLinkConfirmBody(String server, String username) {
-    return 'Sign in to $server as $username? Only continue if you trust who sent this link.';
+    return 'Te conectezi la $server ca $username? Continuă doar dacă ai încredere în cel care ți-a trimis linkul.';
   }
 
   @override
-  String get setupLinkInvalid => 'This sign-in link is invalid or incomplete';
+  String get setupLinkInvalid =>
+      'Acest link de conectare este invalid sau incomplet';
 
   @override
-  String get setupLinkSigningIn => 'Checking sign-in link...';
+  String get setupLinkSigningIn => 'Se verifică linkul de conectare...';
 
   @override
-  String get loginPlayDownloads => 'Play your downloads';
+  String get loginPlayDownloads => 'Redă descărcările tale';
 
   @override
   String signedOutDownloadsNote(String username) {
-    return 'You\'re signed out. Anything you listen to here syncs to $username when you sign back in.';
+    return 'Ești deconectat. Tot ce asculți aici se sincronizează cu $username când te conectezi din nou.';
   }
 
   @override
-  String get loginPasteLink => 'Paste login link';
+  String get loginPasteLink => 'Lipește linkul de conectare';
 
   @override
   String get loginPasteLinkHelp =>
-      'Paste the complete sign-in link you received. Treat it like a password.';
+      'Lipește linkul complet de conectare pe care l-ai primit. Tratează-l ca pe o parolă.';
 
   @override
-  String get loginFailed => 'Login failed';
+  String get loginFailed => 'Conectarea a eșuat';
 
   @override
-  String get loginSsoFailed => 'SSO login failed or was cancelled';
+  String get loginSsoFailed => 'Conectarea SSO a eșuat sau a fost anulată';
 
   @override
   String get loginSsoAuthFailed =>
-      'SSO authentication failed. Please try again.';
+      'Autentificarea SSO a eșuat. Încearcă din nou.';
 
   @override
-  String get loginRestoreFromBackup => 'Import';
+  String get loginRestoreFromBackup => 'Importă';
 
   @override
-  String get loginInvalidBackupFile => 'Invalid backup file';
+  String get loginInvalidBackupFile => 'Fișier de copie de rezervă invalid';
 
   @override
-  String get loginRestoreBackupTitle => 'Restore backup?';
+  String get loginRestoreBackupTitle => 'Restaurezi copia de rezervă?';
 
   @override
   String loginRestoreBackupWithAccounts(int count) {
-    return 'This will restore all settings and $count saved account(s). You\'ll be signed in automatically.';
+    return 'Aceasta va restaura toate setările și $count conturi salvate. Vei fi conectat automat.';
   }
 
   @override
   String get loginRestoreBackupNoAccounts =>
-      'This will restore all settings. No accounts were included in this backup.';
+      'Aceasta va restaura toate setările. Această copie de rezervă nu include conturi.';
 
   @override
-  String get loginRestore => 'Restore';
+  String get loginRestore => 'Restaurează';
 
   @override
   String loginRestoredAndSignedIn(String username) {
-    return 'Restored settings and signed in as $username';
+    return 'Setările au fost restaurate și ai fost conectat ca $username';
   }
 
   @override
   String get loginSessionExpired =>
-      'Settings restored. Session expired - sign in to continue.';
+      'Setările au fost restaurate. Sesiunea a expirat - conectează-te pentru a continua.';
 
   @override
-  String get loginSettingsRestored => 'Settings restored';
+  String get loginSettingsRestored => 'Setările au fost restaurate';
 
   @override
   String loginRestoreFailed(String error) {
-    return 'Restore failed: $error';
+    return 'Restaurarea a eșuat: $error';
   }
 
   @override
-  String get loginSavedAccounts => 'saved accounts';
+  String get loginSavedAccounts => 'conturi salvate';
 
   @override
-  String get libraryTitle => 'Library';
+  String get libraryTitle => 'Bibliotecă';
 
   @override
   String get librarySearchBooksHint =>
-      'Search books, series, authors, narrators...';
+      'Caută cărți, serii, autori, naratori...';
 
   @override
-  String get librarySearchShowsHint => 'Search shows and episodes...';
+  String get librarySearchShowsHint => 'Caută emisiuni și episoade...';
 
   @override
-  String get libraryTabLibrary => 'Library';
+  String get libraryTabLibrary => 'Bibliotecă';
 
   @override
-  String get libraryTabSeries => 'Series';
+  String get libraryTabSeries => 'Serii';
 
   @override
-  String get libraryTabAuthors => 'Authors';
+  String get libraryTabAuthors => 'Autori';
 
   @override
-  String get libraryTabNarrators => 'Narrators';
+  String get libraryTabNarrators => 'Naratori';
 
   @override
-  String get libraryNoBooks => 'No books found';
+  String get libraryNoBooks => 'Nu s-au găsit cărți';
 
   @override
-  String get libraryNoUnfinishedBooks => 'No unfinished books';
+  String get libraryNoUnfinishedBooks => 'Nicio carte neterminată';
 
   @override
-  String get libraryNoBooksInProgress => 'No books in progress';
+  String get libraryNoBooksInProgress => 'Nicio carte în curs';
 
   @override
-  String get libraryNoFinishedBooks => 'No finished books';
+  String get libraryNoFinishedBooks => 'Nicio carte terminată';
 
   @override
-  String get libraryAllBooksStarted => 'All books have been started';
+  String get libraryAllBooksStarted => 'Toate cărțile au fost începute';
 
   @override
-  String get libraryNoDownloadedBooks => 'No downloaded books';
+  String get libraryNoDownloadedBooks => 'Nicio carte descărcată';
 
   @override
-  String get libraryNoSeriesFound => 'No series found';
+  String get libraryNoSeriesFound => 'Nu s-au găsit serii';
 
   @override
-  String get libraryNoBooksWithEbooks => 'No books with eBooks';
+  String get libraryNoBooksWithEbooks => 'Nicio carte cu e-book';
 
   @override
   String get libraryNoBooksMissingMetadata =>
-      'No books are missing this metadata';
+      'Nicio carte nu are aceste metadate lipsă';
 
   @override
-  String get libraryNoItemsMatchingFilter => 'No items match this filter';
+  String get libraryNoItemsMatchingFilter =>
+      'Niciun element nu corespunde acestui filtru';
 
   @override
   String libraryNoBooksInGenre(String genre) {
-    return 'No books in \"$genre\"';
+    return 'Nicio carte în \"$genre\"';
   }
 
   @override
   String libraryNoBooksWithTag(String tag) {
-    return 'No books tagged \"$tag\"';
+    return 'Nicio carte cu eticheta \"$tag\"';
   }
 
   @override
-  String get libraryClearFilter => 'Clear filter';
+  String get libraryClearFilter => 'Șterge filtrul';
 
   @override
-  String get libraryNoAuthorsFound => 'No authors found';
+  String get libraryNoAuthorsFound => 'Nu s-au găsit autori';
 
   @override
-  String get libraryNoNarratorsFound => 'No narrators found';
+  String get libraryNoNarratorsFound => 'Nu s-au găsit naratori';
 
   @override
-  String get libraryNoResults => 'No results found';
+  String get libraryNoResults => 'Nu s-au găsit rezultate';
 
   @override
-  String get librarySearchBooks => 'Books';
+  String get librarySearchBooks => 'Cărți';
 
   @override
-  String get librarySearchShows => 'Shows';
+  String get librarySearchShows => 'Emisiuni';
 
   @override
-  String get librarySearchEpisodes => 'Episodes';
+  String get librarySearchEpisodes => 'Episoade';
 
   @override
-  String get librarySearchSeries => 'Series';
+  String get librarySearchSeries => 'Serii';
 
   @override
-  String get librarySearchAuthors => 'Authors';
+  String get librarySearchAuthors => 'Autori';
 
   @override
-  String get librarySearchTags => 'Tags';
+  String get librarySearchTags => 'Etichete';
 
   @override
-  String get librarySearchGenres => 'Genres';
+  String get librarySearchGenres => 'Genuri';
 
   @override
   String librarySeriesCount(int count) {
-    return '$count series';
+    return '$count serii';
   }
 
   @override
   String libraryAuthorsCount(int count) {
-    return '$count authors';
+    return '$count autori';
   }
 
   @override
   String libraryNarratorsCount(int count) {
-    return '$count narrators';
+    return '$count naratori';
   }
 
   @override
   String libraryBooksCount(int loaded, int total) {
-    return '$loaded/$total books';
+    return '$loaded/$total cărți';
   }
 
   @override
-  String get sort => 'Sort';
+  String get sort => 'Sortează';
 
   @override
-  String get filter => 'Filter';
+  String get filter => 'Filtrează';
 
   @override
-  String get filterActive => 'Filter ●';
+  String get filterActive => 'Filtru ●';
 
   @override
-  String get name => 'Name';
+  String get name => 'Nume';
 
   @override
-  String get title => 'Title';
+  String get title => 'Titlu';
 
   @override
-  String get author => 'Author';
+  String get author => 'Autor';
 
   @override
-  String get dateAdded => 'Date Added';
+  String get dateAdded => 'Data adăugării';
 
   @override
-  String get numberOfBooks => 'Number of Books';
+  String get numberOfBooks => 'Număr de cărți';
 
   @override
-  String get sortTotalDuration => 'Total duration';
+  String get sortTotalDuration => 'Durată totală';
 
   @override
-  String get sortLastBookAdded => 'Last book added';
+  String get sortLastBookAdded => 'Ultima carte adăugată';
 
   @override
-  String get sortLastBookUpdated => 'Last book updated';
+  String get sortLastBookUpdated => 'Ultima carte actualizată';
 
   @override
-  String get publishedYear => 'Published Year';
+  String get publishedYear => 'Anul publicării';
 
   @override
-  String get duration => 'Duration';
+  String get duration => 'Durată';
 
   @override
-  String get random => 'Random';
+  String get random => 'Aleatoriu';
 
   @override
-  String get collapseSeries => 'Collapse Series';
+  String get collapseSeries => 'Restrânge seriile';
 
   @override
-  String get notFinished => 'Not Finished';
+  String get notFinished => 'Neterminate';
 
   @override
-  String get inProgress => 'In Progress';
+  String get inProgress => 'În curs';
 
   @override
-  String get filterFinished => 'Finished';
+  String get filterFinished => 'Terminate';
 
   @override
-  String get notStarted => 'Not Started';
+  String get notStarted => 'Neîncepute';
 
   @override
-  String get downloaded => 'Downloaded';
+  String get downloaded => 'Descărcat';
 
   @override
-  String get hasEbook => 'Has eBook';
+  String get hasEbook => 'Are e-book';
 
   @override
-  String get noEbook => 'No eBook';
+  String get noEbook => 'Fără e-book';
 
   @override
-  String get hasSupplementaryEbook => 'Has Supplementary eBook';
+  String get hasSupplementaryEbook => 'Are e-book suplimentar';
 
   @override
-  String get noSupplementaryEbook => 'No Supplementary eBook';
+  String get noSupplementaryEbook => 'Fără e-book suplimentar';
 
   @override
-  String get noSeries => 'No Series';
+  String get noSeries => 'Fără serie';
 
   @override
-  String get publishedDecade => 'Published Decade';
+  String get publishedDecade => 'Deceniul publicării';
 
   @override
-  String get tracks => 'Tracks';
+  String get tracks => 'Piste';
 
   @override
-  String get noTracks => 'No Tracks';
+  String get noTracks => 'Fără piste';
 
   @override
-  String get singleTrack => 'Single Track';
+  String get singleTrack => 'Pistă unică';
 
   @override
-  String get multipleTracks => 'Multiple Tracks';
+  String get multipleTracks => 'Mai multe piste';
 
   @override
-  String get abridged => 'Abridged';
+  String get abridged => 'Prescurtat';
 
   @override
-  String get issues => 'Issues';
+  String get issues => 'Probleme';
 
   @override
-  String get rssFeedOpen => 'RSS Feed Open';
+  String get rssFeedOpen => 'Flux RSS deschis';
 
   @override
   String get explicitContent => 'Explicit';
 
   @override
-  String get missingMetadata => 'Missing Metadata';
+  String get missingMetadata => 'Metadate lipsă';
 
   @override
-  String get genre => 'Genre';
+  String get genre => 'Gen';
 
   @override
-  String get tag => 'Tag';
+  String get tag => 'Etichetă';
 
   @override
-  String get clearFilter => 'Clear Filter';
+  String get clearFilter => 'Șterge filtrul';
 
   @override
-  String get noGenresFound => 'No genres found';
+  String get noGenresFound => 'Nu s-au găsit genuri';
 
   @override
-  String get noTagsFound => 'No tags found';
+  String get noTagsFound => 'Nu s-au găsit etichete';
 
   @override
-  String get asc => 'ASC';
+  String get asc => 'CRESC.';
 
   @override
-  String get desc => 'DESC';
+  String get desc => 'DESC.';
 
   @override
-  String get fileSize => 'File Size';
+  String get fileSize => 'Dimensiune fișier';
 
   @override
-  String get lastUpdated => 'Last Updated';
+  String get lastUpdated => 'Ultima actualizare';
 
   @override
-  String get fileCreated => 'File Created';
+  String get fileCreated => 'Fișier creat';
 
   @override
-  String get lastModified => 'Last Modified';
+  String get lastModified => 'Ultima modificare';
 
   @override
-  String get authorFirstLast => 'Author (First Last)';
+  String get authorFirstLast => 'Autor (Prenume Nume)';
 
   @override
-  String get authorLastFirst => 'Author (Last, First)';
+  String get authorLastFirst => 'Autor (Nume, Prenume)';
 
   @override
-  String get progressSort => 'Progress';
+  String get progressSort => 'Progres';
 
   @override
-  String get dateStarted => 'Date Started';
+  String get dateStarted => 'Data începerii';
 
   @override
-  String get dateFinished => 'Date Finished';
+  String get dateFinished => 'Data terminării';
 
   @override
-  String get episodeCount => 'Episode Count';
+  String get episodeCount => 'Număr de episoade';
 
   @override
-  String get sequence => 'Series Sequence';
+  String get sequence => 'Numărul în serie';
 
   @override
   String get absorbingTitle => 'Absorbing';
 
   @override
-  String get absorbingStop => 'Stop';
+  String get absorbingStop => 'Oprește';
 
   @override
-  String get absorbingManageQueue => 'Manage Queue';
+  String get absorbingManageQueue => 'Gestionează coada';
 
   @override
-  String get absorbingDone => 'Done';
+  String get desktopAbsorbingQueueHint =>
+      'Use Add to Absorbing on a book or episode to put it here. Items play in this order.';
 
   @override
-  String get absorbingNoDownloadedEpisodes => 'No downloaded episodes';
+  String get absorbingDone => 'Gata';
 
   @override
-  String get absorbingNoDownloadedBooks => 'No downloaded books';
+  String get absorbingNoDownloadedEpisodes => 'Niciun episod descărcat';
 
   @override
-  String get absorbingNothingPlayingYet => 'Nothing playing yet';
+  String get absorbingNoDownloadedBooks => 'Nicio carte descărcată';
 
   @override
-  String get absorbingNothingAbsorbingYet => 'Nothing absorbing yet';
+  String get absorbingNothingPlayingYet => 'Nimic în redare încă';
+
+  @override
+  String get absorbingNothingAbsorbingYet => 'Nimic absorbit încă';
 
   @override
   String get absorbingDownloadEpisodesToListen =>
-      'Download episodes to listen offline';
+      'Descarcă episoade pentru a le asculta offline';
 
   @override
   String get absorbingDownloadBooksToListen =>
-      'Download books to listen offline';
+      'Descarcă cărți pentru a le asculta offline';
 
   @override
   String get absorbingStartEpisodeFromShows =>
-      'Start an episode from the Shows tab';
+      'Pornește un episod din fila Emisiuni';
 
   @override
   String get absorbingStartBookFromLibrary =>
-      'Start a book from the Library tab';
+      'Pornește o carte din fila Bibliotecă';
 
   @override
-  String get carModeTitle => 'Car Mode';
+  String get carModeTitle => 'Mod mașină';
 
   @override
-  String get carModeNoBookLoaded => 'No book loaded';
+  String get carModeNoBookLoaded => 'Nicio carte încărcată';
 
   @override
-  String get carModeBookLabel => 'Book';
+  String get carModeBookLabel => 'Carte';
 
   @override
-  String get carModeChapterLabel => 'Chapter';
+  String get carModeChapterLabel => 'Capitol';
 
   @override
-  String get carModeBookmarkDefault => 'Bookmark';
+  String get carModeBookmarkDefault => 'Marcaj';
 
   @override
-  String get carModeBookmarkAdded => 'Bookmark added';
+  String get carModeBookmarkAdded => 'Marcaj adăugat';
 
   @override
-  String get downloadsTitle => 'Downloads';
+  String get downloadsTitle => 'Descărcări';
 
   @override
-  String get downloadsCancelSelection => 'Cancel selection';
+  String get downloadsCancelSelection => 'Anulează selecția';
 
   @override
-  String get downloadsSelect => 'Select';
+  String get downloadsSelect => 'Selectează';
 
   @override
-  String get downloadsNoDownloads => 'No downloads';
+  String get downloadsNoDownloads => 'Nicio descărcare';
 
   @override
-  String get downloadsDownloading => 'Downloading';
+  String get downloadsDownloading => 'Se descarcă';
 
   @override
-  String get downloadsQueued => 'Queued';
+  String get downloadsQueued => 'În coadă';
 
   @override
-  String get downloadsCompleted => 'Completed';
+  String get downloadsCompleted => 'Finalizate';
 
   @override
-  String get downloadsEbooks => 'Ebooks';
+  String get downloadsEbooks => 'E-book-uri';
 
   @override
-  String get downloadsWaiting => 'Waiting...';
+  String get downloadsWaiting => 'Se așteaptă...';
 
   @override
-  String get downloadsCancel => 'Cancel';
+  String get downloadsCancel => 'Anulează';
 
   @override
-  String get downloadsDelete => 'Delete';
+  String get downloadsDelete => 'Șterge';
 
   @override
   String downloadsDeleteCount(int count) {
-    return 'Delete $count download(s)?';
+    return 'Ștergi $count descărcări?';
   }
 
   @override
   String get downloadsDeleteContent =>
-      'Downloaded files will be removed from this device.';
+      'Fișierele descărcate vor fi eliminate de pe acest dispozitiv.';
 
   @override
   String downloadsDeletedCount(int count) {
-    return 'Deleted $count download(s)';
+    return '$count descărcări șterse';
   }
 
   @override
-  String get downloadsRemoveTitle => 'Remove download?';
+  String get downloadsRemoveTitle => 'Elimini descărcarea?';
 
   @override
   String downloadsRemoveContent(String title) {
-    return 'Delete \"$title\" from this device?';
+    return 'Ștergi \"$title\" de pe acest dispozitiv?';
   }
 
   @override
   String downloadsRemovedTitle(String title) {
-    return '\"$title\" removed';
+    return '\"$title\" a fost eliminat';
   }
 
   @override
   String downloadFailedMissingFile(String title) {
-    return 'Couldn\'t download \"$title\" - one of its files isn\'t on the server. A library scan may fix it.';
+    return 'Nu s-a putut descărca \"$title\" - unul dintre fișiere nu se află pe server. O scanare a bibliotecii ar putea rezolva problema.';
   }
 
   @override
   String downloadFailedNoSpace(String title) {
-    return 'Couldn\'t download \"$title\" - not enough storage space';
+    return 'Nu s-a putut descărca \"$title\" - spațiu de stocare insuficient';
   }
 
   @override
   String downloadFailedPermission(String title) {
-    return 'Couldn\'t download \"$title\" - check the download location in Settings';
+    return 'Nu s-a putut descărca \"$title\" - verifică locația descărcărilor în Setări';
   }
 
   @override
   String downloadFailedGeneric(String title) {
-    return 'Couldn\'t download \"$title\"';
+    return 'Nu s-a putut descărca \"$title\"';
   }
 
   @override
   String downloadsSelectedCount(int count) {
-    return '$count selected';
+    return '$count selectate';
   }
 
   @override
-  String get bookmarksTitle => 'All Bookmarks';
+  String get bookmarksTitle => 'Toate marcajele';
 
   @override
-  String get bookmarksTabBookmarks => 'Bookmarks';
+  String get bookmarksTabBookmarks => 'Marcaje';
 
   @override
-  String get bookmarksTabHighlights => 'Highlights';
+  String get bookmarksTabHighlights => 'Evidențieri';
 
   @override
-  String get highlightOpenInBook => 'Open in book';
+  String get highlightOpenInBook => 'Deschide în carte';
 
   @override
-  String get highlightDeleteAction => 'Delete highlight';
+  String get highlightDeleteAction => 'Șterge evidențierea';
 
   @override
-  String get highlightDeleted => 'Highlight deleted';
+  String get highlightDeleted => 'Evidențiere ștearsă';
 
   @override
   String highlightsDeleteCount(int count) {
-    return 'Delete $count highlight(s)?';
+    return 'Ștergi $count evidențieri?';
   }
 
   @override
   String highlightsDeletedCount(int count) {
-    return 'Deleted $count highlight(s)';
+    return '$count evidențieri șterse';
   }
 
   @override
-  String get quoteShareTitle => 'Share quote';
+  String get quoteShareTitle => 'Partajează citatul';
 
   @override
-  String get quoteShareAction => 'Share';
+  String get quoteShareAction => 'Partajează';
 
   @override
-  String get quoteShareFailed => 'Couldn\'t make the quote image';
+  String get quoteShareFailed => 'Nu s-a putut crea imaginea citatului';
 
   @override
-  String get quoteShapePortrait => 'Portrait';
+  String get quoteShapePortrait => 'Portret';
 
   @override
-  String get quoteShapeSquare => 'Square';
+  String get quoteShapeSquare => 'Pătrat';
 
   @override
-  String get quoteShapeStory => 'Story';
+  String get quoteShapeStory => 'Poveste';
 
   @override
-  String get quoteStyleBlur => 'Blurred';
+  String get quoteStyleBlur => 'Neclar';
 
   @override
-  String get quoteStyleDim => 'Dimmed';
+  String get quoteStyleDim => 'Întunecat';
 
   @override
-  String get quoteStyleNone => 'Plain cover';
+  String get quoteStyleNone => 'Copertă simplă';
 
   @override
-  String get quoteTextLight => 'Light text';
+  String get quoteTextLight => 'Text deschis';
 
   @override
-  String get quoteTextDark => 'Dark text';
+  String get quoteTextDark => 'Text închis';
 
   @override
-  String get quoteFieldTitle => 'Title';
+  String get quoteFieldTitle => 'Titlu';
 
   @override
-  String get quoteFieldDetail => 'Details';
+  String get quoteFieldDetail => 'Detalii';
 
   @override
-  String get quoteFieldDetailHint => 'Author, chapter, page, who said it';
+  String get quoteFieldDetailHint => 'Autor, capitol, pagină, cine a spus-o';
 
   @override
   String highlightsMeta(String chapter, String date) {
@@ -920,83 +928,84 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get bookmarksCancelSelection => 'Cancel selection';
+  String get bookmarksCancelSelection => 'Anulează selecția';
 
   @override
-  String get bookmarksSortedByNewest => 'Sorted by newest';
+  String get bookmarksSortedByNewest => 'Sortate după cele mai noi';
 
   @override
-  String get bookmarksSortedByPosition => 'Sorted by position';
+  String get bookmarksSortedByPosition => 'Sortate după poziție';
 
   @override
-  String get bookmarksSelect => 'Select';
+  String get bookmarksSelect => 'Selectează';
 
   @override
-  String get bookmarksNoBookmarks => 'No bookmarks yet';
+  String get bookmarksNoBookmarks => 'Niciun marcaj încă';
 
   @override
-  String get bookmarksSearchHint => 'Search bookmarks';
+  String get bookmarksSearchHint => 'Caută marcaje';
 
   @override
-  String get bookmarksNoMatches => 'No bookmarks match your search';
+  String get bookmarksNoMatches => 'Niciun marcaj nu corespunde căutării';
 
   @override
   String batchDownloadQueued(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Downloading $count books',
-      one: 'Downloading 1 book',
+      other: 'Se descarcă $count de cărți',
+      few: 'Se descarcă $count cărți',
+      one: 'Se descarcă 1 carte',
     );
     return '$_temp0';
   }
 
   @override
-  String get batchDownloadNothingNew => 'Already downloaded';
+  String get batchDownloadNothingNew => 'Deja descărcate';
 
   @override
   String bookmarksDeleteCount(int count) {
-    return 'Delete $count bookmark(s)?';
+    return 'Ștergi $count marcaje?';
   }
 
   @override
-  String get bookmarksDeleteContent => 'This cannot be undone.';
+  String get bookmarksDeleteContent => 'Această acțiune nu poate fi anulată.';
 
   @override
   String bookmarksDeletedCount(int count) {
-    return 'Deleted $count bookmark(s)';
+    return '$count marcaje șterse';
   }
 
   @override
-  String get bookmarksJumpTitle => 'Jump to bookmark?';
+  String get bookmarksJumpTitle => 'Sari la marcaj?';
 
   @override
   String bookmarksJumpContent(String title, String position, String bookTitle) {
-    return '\"$title\" at $position\nin $bookTitle';
+    return '\"$title\" la $position\nîn $bookTitle';
   }
 
   @override
-  String get bookmarksJump => 'Jump';
+  String get bookmarksJump => 'Sari';
 
   @override
-  String get bookmarksNotConnected => 'Not connected to server';
+  String get bookmarksNotConnected => 'Neconectat la server';
 
   @override
-  String get bookmarksCouldNotLoad => 'Could not load book';
+  String get bookmarksCouldNotLoad => 'Nu s-a putut încărca cartea';
 
   @override
   String bookmarksSelectedCount(int count) {
-    return '$count selected';
+    return '$count selectate';
   }
 
   @override
-  String get statsTitle => 'Your Stats';
+  String get statsTitle => 'Statisticile tale';
 
   @override
-  String get statsCouldNotLoad => 'Couldn\'t load stats';
+  String get statsCouldNotLoad => 'Nu s-au putut încărca statisticile';
 
   @override
-  String get statsTotalListeningTime => 'TOTAL LISTENING TIME';
+  String get statsTotalListeningTime => 'TIMP TOTAL DE ASCULTARE';
 
   @override
   String get statsHoursUnit => 'h';
@@ -1009,129 +1018,129 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String statsDaysOfAudio(String days) {
-    return 'That\'s $days days of audio';
+    return 'Asta înseamnă $days zile de audio';
   }
 
   @override
   String statsHoursOfAudio(String hours) {
-    return 'That\'s $hours hours of audio';
+    return 'Asta înseamnă $hours ore de audio';
   }
 
   @override
-  String get statsToday => 'Today';
+  String get statsToday => 'Azi';
 
   @override
-  String get statsThisWeek => 'This Week';
+  String get statsThisWeek => 'Săptămâna aceasta';
 
   @override
-  String get statsThisMonth => 'This Month';
+  String get statsThisMonth => 'Luna aceasta';
 
   @override
-  String get statsActivity => 'Activity';
+  String get statsActivity => 'Activitate';
 
   @override
-  String get statsCurrentStreak => 'Current Streak';
+  String get statsCurrentStreak => 'Serie curentă';
 
   @override
-  String get statsBestStreak => 'Best Streak';
+  String get statsBestStreak => 'Cea mai bună serie';
 
   @override
-  String get statsFinished => 'Finished';
+  String get statsFinished => 'Terminate';
 
   @override
-  String get statsBooksFinished => 'Books';
+  String get statsBooksFinished => 'Cărți';
 
   @override
-  String get statsEpisodesFinished => 'Episodes';
+  String get statsEpisodesFinished => 'Episoade';
 
   @override
-  String get statsBooksThisYear => 'Books this year';
+  String get statsBooksThisYear => 'Cărți în acest an';
 
   @override
-  String get statsEpisodesThisYear => 'Episodes this year';
+  String get statsEpisodesThisYear => 'Episoade în acest an';
 
   @override
-  String get statsRemoveFromYearTitle => 'Remove from this year';
+  String get statsRemoveFromYearTitle => 'Elimină din acest an';
 
   @override
   String statsRemoveFromYearWithDate(String date, String title) {
-    return 'The finished date will still be $date on the server. This only removes \"$title\" from your Absorb books-this-year list.';
+    return 'Data terminării va rămâne $date pe server. Aceasta doar elimină \"$title\" din lista Absorb cu cărțile din acest an.';
   }
 
   @override
   String statsRemoveFromYearNoDate(String title) {
-    return 'The finished date stays on the server. This only removes \"$title\" from your Absorb books-this-year list.';
+    return 'Data terminării rămâne pe server. Aceasta doar elimină \"$title\" din lista Absorb cu cărțile din acest an.';
   }
 
   @override
-  String get statsRemovedFromYear => 'Removed from this year';
+  String get statsRemovedFromYear => 'Eliminat din acest an';
 
   @override
-  String get statsAddBackToYearTitle => 'Add back to this year';
+  String get statsAddBackToYearTitle => 'Adaugă înapoi în acest an';
 
   @override
   String statsAddBackToYearBody(String title) {
-    return 'Add \"$title\" back to your Absorb books-this-year list?';
+    return 'Adaugi \"$title\" înapoi în lista Absorb cu cărțile din acest an?';
   }
 
   @override
-  String get statsAddBack => 'Add back';
+  String get statsAddBack => 'Adaugă înapoi';
 
   @override
-  String get statsAddedBackToYear => 'Added back to this year';
+  String get statsAddedBackToYear => 'Adăugat înapoi în acest an';
 
   @override
-  String get statsHiddenFromYear => 'Hidden from this year';
+  String get statsHiddenFromYear => 'Ascunse din acest an';
 
   @override
-  String get statsNothingHidden => 'Nothing hidden';
+  String get statsNothingHidden => 'Nimic ascuns';
 
   @override
-  String get settingsCustomizeStats => 'Customize stats';
+  String get settingsCustomizeStats => 'Personalizează statisticile';
 
   @override
-  String get statsGoalTitle => 'Listening goal';
+  String get statsGoalTitle => 'Obiectiv de ascultare';
 
   @override
-  String get statsGoalOff => 'Off';
+  String get statsGoalOff => 'Oprit';
 
   @override
-  String get statsGoalDaily => 'Daily';
+  String get statsGoalDaily => 'Zilnic';
 
   @override
-  String get statsGoalWeekly => 'Weekly';
+  String get statsGoalWeekly => 'Săptămânal';
 
   @override
-  String get statsGoalMonthly => 'Monthly';
+  String get statsGoalMonthly => 'Lunar';
 
   @override
-  String get statsGoalTarget => 'Target';
+  String get statsGoalTarget => 'Țintă';
 
   @override
-  String get statsGoalEnterTitle => 'Set target';
+  String get statsGoalEnterTitle => 'Setează ținta';
 
   @override
-  String get statsGoalEnterTimeHint => 'Minutes or h:mm';
+  String get statsGoalEnterTimeHint => 'Minute sau h:mm';
 
   @override
   String statsBooksShort(int count) {
-    return '$count books';
+    return '$count cărți';
   }
 
   @override
-  String get statsBookChallengeTitle => 'Reading challenge';
+  String get statsBookChallengeTitle => 'Provocare de lectură';
 
   @override
-  String get statsBookChallengeDesc => 'Books to finish this year';
+  String get statsBookChallengeDesc => 'Cărți de terminat în acest an';
 
   @override
-  String get statsDailyGoal => 'Daily goal';
+  String get statsDailyGoal => 'Obiectiv zilnic';
 
   @override
-  String get statsWeeklyGoal => 'Weekly goal';
+  String get statsWeeklyGoal => 'Obiectiv săptămânal';
 
   @override
-  String get statsMonthlyGoal => 'Monthly goal';
+  String get statsMonthlyGoal => 'Obiectiv lunar';
 
   @override
   String statsGoalProgress(String done, String target) {
@@ -1140,793 +1149,831 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String statsBookChallengeProgress(int done, int target) {
-    return '$done of $target books';
+    return '$done din $target cărți';
   }
 
   @override
-  String get statsGoalReached => 'Goal reached';
+  String get statsGoalReached => 'Obiectiv atins';
 
   @override
-  String get statsChartTitle => 'Listening chart';
+  String get statsChartTitle => 'Grafic de ascultare';
 
   @override
-  String get statsChartBar => 'Bar';
+  String get statsChartBar => 'Bare';
 
   @override
-  String get statsChartLine => 'Line';
+  String get statsChartLine => 'Linie';
 
   @override
-  String get statsChartHeatmap => 'Heatmap';
+  String get statsChartHeatmap => 'Hartă termică';
 
   @override
-  String get statsChartDays7 => '7 days';
+  String get statsChartDays7 => '7 zile';
 
   @override
-  String get statsChartDays30 => '30 days';
+  String get statsChartDays30 => '30 de zile';
 
   @override
-  String get statsLast30Days => 'Last 30 days';
+  String get statsLast30Days => 'Ultimele 30 de zile';
 
   @override
-  String get statsThisYearTitle => 'This year';
+  String get statsThisYearTitle => 'Acest an';
 
   @override
-  String get statsSectionsTitle => 'Sections';
+  String get statsSectionsTitle => 'Secțiuni';
 
   @override
-  String get statsSectionTimePeriods => 'Time periods';
+  String get statsSectionTimePeriods => 'Perioade de timp';
 
   @override
-  String get statsHeatmapLess => 'Less';
+  String get statsHeatmapLess => 'Mai puțin';
 
   @override
-  String get statsHeatmapMore => 'More';
+  String get statsHeatmapMore => 'Mai mult';
 
   @override
-  String get statsDayOfWeek => 'Average by day of week';
+  String get statsDayOfWeek => 'Media pe zile ale săptămânii';
 
   @override
-  String get statsTimeSavedLabel => 'Saved by speed';
+  String get statsTimeSavedLabel => 'Economisit prin viteză';
 
   @override
   String statsTimeSavedSince(String date) {
-    return 'since $date';
+    return 'din $date';
   }
 
   @override
-  String get statsTimeSavedReset => 'Reset time saved';
+  String get statsTimeSavedReset => 'Resetează timpul economisit';
 
   @override
   String get statsTimeSavedResetConfirm =>
-      'Time saved will start counting again from today.';
+      'Timpul economisit va începe să se numere din nou de azi.';
 
   @override
-  String get statsTimeSavedResetDone => 'Time saved reset';
+  String get statsTimeSavedResetDone => 'Timpul economisit a fost resetat';
 
   @override
   String statsOnPaceFor(int count) {
-    return 'On pace for $count books';
+    return 'În ritm pentru $count cărți';
   }
 
   @override
-  String get statsDaysActive => 'Days Active';
+  String get statsDaysActive => 'Zile active';
 
   @override
-  String get statsDailyAverage => 'Daily Average';
+  String get statsDailyAverage => 'Media zilnică';
 
   @override
-  String get statsLast7Days => 'Last 7 Days';
+  String get statsLast7Days => 'Ultimele 7 zile';
 
   @override
-  String get statsMostListened => 'Most Listened';
+  String get statsMostListened => 'Cele mai ascultate';
 
   @override
-  String get statsRecentSessions => 'Recent Sessions';
+  String get statsRecentSessions => 'Sesiuni recente';
 
   @override
-  String get appShellHomeTab => 'Home';
+  String get appShellHomeTab => 'Acasă';
 
   @override
-  String get appShellLibraryTab => 'Library';
+  String get appShellLibraryTab => 'Bibliotecă';
 
   @override
   String get appShellAbsorbingTab => 'Absorbing';
 
   @override
-  String get appShellStatsTab => 'Stats';
+  String get appShellStatsTab => 'Statistici';
 
   @override
-  String get appShellSettingsTab => 'Settings';
+  String get appShellSettingsTab => 'Setări';
 
   @override
-  String get appShellDiscoverTab => 'Discover';
+  String get appShellDiscoverTab => 'Descoperă';
 
   @override
-  String get appShellShowsTab => 'Shows';
+  String get appShellShowsTab => 'Emisiuni';
 
   @override
-  String get appShellPodcastsTab => 'Podcasts';
+  String get appShellPodcastsTab => 'Podcasturi';
 
   @override
-  String get libraryTabEpisodes => 'Episodes';
+  String get libraryTabEpisodes => 'Episoade';
 
   @override
-  String get filterAllEpisodes => 'All';
+  String get filterAllEpisodes => 'Toate';
 
   @override
-  String get filterUnplayed => 'Unplayed';
+  String get filterUnplayed => 'Neredate';
 
   @override
-  String get episodeFeedEmpty => 'No episodes match this filter';
+  String get episodeFeedEmpty => 'Niciun episod nu corespunde acestui filtru';
 
   @override
-  String get podcastFilterUpNext => 'Up Next';
+  String get podcastFilterUpNext => 'Urmează';
 
   @override
-  String get podcastFilterNew => 'New';
+  String get podcastFilterNew => 'Noi';
 
   @override
-  String get settingsPodcastTab => 'Podcasts tab';
+  String get settingsPodcastTab => 'Fila Podcasturi';
 
   @override
   String get settingsPodcastTabDesc =>
-      'Give one podcast library its own tab in the bottom bar';
+      'Dă unei biblioteci de podcasturi propria filă în bara de jos';
 
   @override
-  String get settingsPodcastTabLibrary => 'Podcasts tab library';
+  String get settingsPodcastTabLibrary => 'Biblioteca filei Podcasturi';
 
   @override
   String get settingsMergeImpliedByPodcastTab =>
-      'Always on while the Podcasts tab is enabled';
+      'Mereu activat cât timp fila Podcasturi este activă';
 
   @override
-  String get settingsEpisodeNotifs => 'Notification settings';
+  String get settingsEpisodeNotifs => 'Setări de notificări';
 
   @override
   String get settingsEpisodeNotifsDesc =>
-      'New podcast episodes and upcoming book releases, checked in the background';
+      'Episoade noi de podcast și apariții viitoare de cărți, verificate în fundal';
 
   @override
-  String get notifIntervalOff => 'Off';
+  String get notifIntervalOff => 'Oprit';
 
   @override
   String notifIntervalMinutes(int n) {
-    return 'Every $n minutes';
+    return 'La fiecare $n minute';
   }
 
   @override
-  String get notifIntervalHour => 'Every hour';
+  String get notifIntervalHour => 'În fiecare oră';
 
   @override
   String notifIntervalHours(int n) {
-    return 'Every $n hours';
+    return 'La fiecare $n ore';
   }
 
   @override
-  String get settingsBatteryUnrestricted => 'Allow unrestricted battery use';
+  String get settingsBatteryUnrestricted =>
+      'Permite utilizarea nerestricționată a bateriei';
 
   @override
   String get settingsBatteryUnrestrictedDesc =>
-      'Keeps the system from pausing background checks on some phones';
+      'Împiedică sistemul să oprească verificările în fundal pe unele telefoane';
 
   @override
-  String get appShellPressBackToExit => 'Press back again to exit';
+  String get appShellPressBackToExit => 'Apasă din nou înapoi pentru a ieși';
 
   @override
-  String get settingsTitle => 'Settings';
+  String get settingsTitle => 'Setări';
 
   @override
-  String get sectionAppearance => 'Appearance';
+  String get sectionAppearance => 'Aspect';
 
   @override
-  String get languageLabel => 'Language';
+  String get languageLabel => 'Limbă';
 
   @override
-  String get languageSystemDefault => 'System default';
+  String get languageSystemDefault => 'Implicit sistem';
 
   @override
   String get languageHelpTranslateInvite =>
-      'Want to help translate Absorb into your language?';
+      'Vrei să ajuți la traducerea Absorb în limba ta?';
 
   @override
-  String get themeLabel => 'Theme';
+  String get themeLabel => 'Temă';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => 'Întunecată';
 
   @override
   String get themeOled => 'OLED';
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => 'Luminoasă';
 
   @override
-  String get themeAuto => 'Auto';
+  String get themeAuto => 'Automată';
 
   @override
-  String get colorSourceLabel => 'Color source';
+  String get colorSourceLabel => 'Sursa culorii';
 
   @override
   String get colorSourceCoverDescription =>
-      'App colors follow the currently playing book cover';
+      'Culorile aplicației urmăresc coperta cărții redate în prezent';
 
   @override
   String get colorSourceWallpaperDescription =>
-      'App colors follow your system wallpaper';
+      'Culorile aplicației urmăresc imaginea de fundal a sistemului';
 
   @override
-  String get colorSourceWallpaper => 'Wallpaper';
+  String get colorSourceWallpaper => 'Imagine de fundal';
 
   @override
-  String get colorSourceNowPlaying => 'Now Playing';
+  String get colorSourceNowPlaying => 'În redare';
 
   @override
-  String get colorSourceDynamic => 'Dynamic';
+  String get colorSourceDynamic => 'Dinamică';
 
   @override
-  String get colorSourceManual => 'Manual';
+  String get colorSourceManual => 'Manuală';
 
   @override
   String get colorSourceManualDescription =>
-      'Use a fixed app color you choose below';
+      'Folosește o culoare fixă a aplicației, aleasă mai jos';
 
   @override
-  String get colorSourceCustom => 'Custom';
+  String get colorSourceCustom => 'Personalizată';
 
   @override
-  String get useColorEverywhereLabel => 'Use this color everywhere';
+  String get useColorEverywhereLabel => 'Folosește această culoare peste tot';
 
   @override
   String get useColorEverywhereSubtitle =>
-      'Also color book detail pages and the player card with your set color instead of each book\'s cover';
+      'Colorează și paginile de detalii ale cărților și cardul player-ului cu culoarea setată, în loc de coperta fiecărei cărți';
 
   @override
-  String get flatBackgroundLabel => 'Flat background';
+  String get flatBackgroundLabel => 'Fundal uni';
 
   @override
   String get flatBackgroundSubtitle =>
-      'Remove the background gradient. Pure black in dark mode for OLED screens.';
+      'Elimină gradientul de fundal. Negru pur în modul întunecat pentru ecrane OLED.';
 
   @override
-  String get einkModeLabel => 'E-ink mode';
+  String get einkModeLabel => 'Mod e-ink';
 
   @override
   String get einkModeSubtitle =>
-      'High-contrast black and white with no animations, made for e-ink screens';
+      'Alb-negru cu contrast ridicat și fără animații, creat pentru ecrane e-ink';
 
   @override
   String get einkModeIntroBody =>
-      'Made for e-ink screens. The app switches to a flat black-and-white look with high contrast, animations are turned off, the playing card loses its background, and the live server connection stays off to save battery. Playback and progress still sync normally. Your appearance settings are kept and come back when you turn this off.';
+      'Creat pentru ecrane e-ink. Aplicația trece la un aspect alb-negru uni, cu contrast ridicat, animațiile sunt dezactivate, cardul de redare își pierde fundalul, iar conexiunea live cu serverul rămâne oprită pentru a economisi bateria. Redarea și progresul se sincronizează în continuare normal. Setările de aspect sunt păstrate și revin când dezactivezi acest mod.';
 
   @override
-  String get einkModeIntroConfirm => 'Turn on';
+  String get einkModeIntroConfirm => 'Activează';
 
   @override
-  String get backgroundIntensityLabel => 'Background intensity';
+  String get backgroundIntensityLabel => 'Intensitatea fundalului';
 
   @override
-  String get startScreenLabel => 'Start screen';
+  String get startScreenLabel => 'Ecran de pornire';
 
   @override
-  String get startScreenSubtitle => 'Which tab to open when the app launches';
+  String get startScreenSubtitle =>
+      'Fila care se deschide la lansarea aplicației';
 
   @override
-  String get startScreenHome => 'Home';
+  String get startScreenHome => 'Acasă';
 
   @override
-  String get startScreenLibrary => 'Library';
+  String get startScreenLibrary => 'Bibliotecă';
 
   @override
   String get startScreenAbsorb => 'Absorb';
 
   @override
-  String get startScreenStats => 'Stats';
+  String get startScreenStats => 'Statistici';
 
   @override
-  String get disablePageFade => 'Disable page fade';
+  String get disablePageFade => 'Dezactivează estomparea paginilor';
 
   @override
-  String get disablePageFadeOnSubtitle => 'Pages switch instantly';
+  String get disablePageFadeOnSubtitle => 'Paginile se schimbă instant';
 
   @override
-  String get disablePageFadeOffSubtitle => 'Pages fade when switching tabs';
+  String get disablePageFadeOffSubtitle =>
+      'Paginile se estompează la schimbarea filelor';
 
   @override
-  String get rectangleBookCovers => 'Rectangle book covers';
+  String get rectangleBookCovers => 'Coperți dreptunghiulare';
 
   @override
-  String get progressTextSize => 'Progress text size';
+  String get progressTextSize => 'Dimensiunea textului de progres';
 
   @override
   String get rectangleBookCoversOnSubtitle =>
-      'Covers display in 2:3 book proportion';
+      'Copertele sunt afișate în proporția 2:3 a cărților';
 
   @override
-  String get rectangleBookCoversOffSubtitle => 'Covers are square';
+  String get rectangleBookCoversOffSubtitle => 'Copertele sunt pătrate';
 
   @override
-  String get coverSize => 'Cover size';
+  String get coverSize => 'Dimensiunea copertelor';
 
   @override
-  String get coverSizeSubtitle => 'How many covers fit across the library grid';
+  String get coverSizeSubtitle =>
+      'Câte coperți încap pe lățimea grilei bibliotecii';
 
   @override
-  String get coverSizeSmall => 'Small';
+  String get coverSizeSmall => 'Mică';
 
   @override
-  String get coverSizeMedium => 'Medium';
+  String get coverSizeMedium => 'Medie';
 
   @override
-  String get coverSizeLarge => 'Large';
+  String get coverSizeLarge => 'Mare';
 
   @override
-  String get sectionAbsorbingCards => 'Absorbing Cards';
+  String get sectionAbsorbingCards => 'Carduri Absorbing';
 
   @override
-  String get fullScreenPlayer => 'Full screen player';
+  String get fullScreenPlayer => 'Player pe tot ecranul';
 
   @override
   String get fullScreenPlayerOnSubtitle =>
-      'On - books open in full screen when played';
+      'Activat - cărțile se deschid pe tot ecranul la redare';
 
   @override
-  String get fullScreenPlayerOffSubtitle => 'Off - play within card view';
+  String get fullScreenPlayerOffSubtitle =>
+      'Oprit - redare în vizualizarea cardului';
 
   @override
-  String get fullBookScrubber => 'Full book scrubber';
+  String get fullBookScrubber => 'Cursor pentru toată cartea';
 
   @override
   String get fullBookScrubberOnSubtitle =>
-      'On - seekable slider across entire book';
+      'Activat - cursor de derulare pe întreaga carte';
 
   @override
-  String get fullBookScrubberOffSubtitle => 'Off - progress bar only';
+  String get fullBookScrubberOffSubtitle => 'Oprit - doar bara de progres';
 
   @override
-  String get cardScrubbers => 'Card scrubbers';
+  String get cardScrubbers => 'Cursoare pe card';
 
   @override
-  String get cardScrubbersBoth => 'Both';
+  String get cardScrubbersBoth => 'Ambele';
 
   @override
-  String get cardScrubbersChapter => 'Chapter';
+  String get cardScrubbersChapter => 'Capitol';
 
   @override
-  String get cardScrubbersLocked => 'Locked';
+  String get cardScrubbersLocked => 'Blocate';
 
   @override
-  String get cardScrubbersBothSubtitle => 'Full book and chapter bars can seek';
+  String get cardScrubbersBothSubtitle =>
+      'Barele cărții întregi și ale capitolului pot derula';
 
   @override
-  String get cardScrubbersChapterSubtitle => 'Only the chapter bar can seek';
+  String get cardScrubbersChapterSubtitle =>
+      'Doar bara capitolului poate derula';
 
   @override
-  String get cardScrubbersLockedSubtitle => 'Progress is shown without seeking';
+  String get cardScrubbersLockedSubtitle =>
+      'Progresul este afișat fără derulare';
 
   @override
-  String get speedAdjustedTime => 'Speed-adjusted time';
+  String get speedAdjustedTime => 'Timp ajustat după viteză';
 
   @override
   String get speedAdjustedTimeOnSubtitle =>
-      'On - all times reflect your playback speed';
+      'Activat - toate duratele reflectă viteza de redare';
 
   @override
-  String get speedAdjustedTimeOffSubtitle => 'Off - showing raw audio duration';
+  String get speedAdjustedTimeOffSubtitle =>
+      'Oprit - se afișează durata audio reală';
 
   @override
-  String get buttonLayout => 'Button layout';
+  String get buttonLayout => 'Aranjarea butoanelor';
 
   @override
   String get buttonLayoutSubtitle =>
-      'How action buttons are arranged on the card';
+      'Cum sunt aranjate butoanele de acțiune pe card';
 
   @override
-  String get whenAbsorbed => 'When absorbed';
+  String get whenAbsorbed => 'Când e absorbit';
 
   @override
-  String get whenAbsorbedInfoTitle => 'When Absorbed';
+  String get whenAbsorbedInfoTitle => 'Când e absorbit';
 
   @override
   String get whenAbsorbedInfoContent =>
-      'Controls what happens to an absorbing card when you finish a book or episode.\n\nFinished cards are automatically removed from your Absorbing screen.';
+      'Controlează ce se întâmplă cu un card Absorbing când termini o carte sau un episod.\n\nCardurile terminate sunt eliminate automat din ecranul Absorbing.';
 
   @override
   String get whenAbsorbedSubtitle =>
-      'What happens to the absorbing card when a book or episode finishes';
+      'Ce se întâmplă cu cardul Absorbing când se termină o carte sau un episod';
 
   @override
-  String get whenAbsorbedShowOverlay => 'Show Overlay';
+  String get whenAbsorbedShowOverlay => 'Afișează suprapunerea';
 
   @override
-  String get whenAbsorbedAutoRelease => 'Auto-release';
+  String get whenAbsorbedAutoRelease => 'Eliberare automată';
 
   @override
-  String get mergeLibraries => 'Unified Absorbing page';
+  String get mergeLibraries => 'Pagină Absorbing unificată';
 
   @override
-  String get mergeLibrariesInfoTitle => 'Unified Absorbing Page';
+  String get mergeLibrariesInfoTitle => 'Pagină Absorbing unificată';
 
   @override
   String get mergeLibrariesInfoContent =>
-      'When enabled, the Absorbing screen shows all your in-progress books and podcasts from every library in a single view. When disabled, only items from the library you currently have selected are shown.';
+      'Când este activată, ecranul Absorbing afișează toate cărțile și podcasturile în curs din toate bibliotecile, într-o singură vedere. Când este dezactivată, sunt afișate doar elementele din biblioteca selectată în prezent.';
 
   @override
   String get mergeLibrariesOnSubtitle =>
-      'Absorbing page shows items from all libraries';
+      'Pagina Absorbing afișează elemente din toate bibliotecile';
 
   @override
   String get mergeLibrariesOffSubtitle =>
-      'Absorbing page shows current library only';
+      'Pagina Absorbing afișează doar biblioteca curentă';
 
   @override
-  String get queueMode => 'Queue mode';
+  String get queueMode => 'Mod coadă';
 
   @override
-  String get queueModeInfoTitle => 'Queue Mode';
+  String get queueModeInfoTitle => 'Mod coadă';
 
   @override
-  String get queueModeInfoOff => 'Off';
+  String get queueModeInfoOff => 'Oprit';
 
   @override
   String get queueModeInfoOffDesc =>
-      'Playback stops when the current book or episode finishes.';
+      'Redarea se oprește când se termină cartea sau episodul curent.';
 
   @override
-  String get queueModeInfoManual => 'Manual Queue';
+  String get queueModeInfoManual => 'Coadă manuală';
 
   @override
   String get queueModeInfoManualDesc =>
-      'Your absorbing cards act as a playlist. When one finishes, the next non-finished card auto-plays. Add items with the \"Add to Absorbing\" button on a book or episode and reorder from the absorbing screen.';
+      'Cardurile Absorbing funcționează ca o listă de redare. Când unul se termină, următorul card neterminat pornește automat. Adaugă elemente cu butonul \"Adaugă în Absorbing\" de pe o carte sau un episod și reordonează-le din ecranul Absorbing.';
 
   @override
-  String get queueModeOff => 'Off';
+  String get queueModeOff => 'Oprit';
 
   @override
   String get queueModeManual => 'Manual';
 
   @override
-  String get queueModeAuto => 'Auto';
+  String get queueModeAuto => 'Automat';
 
   @override
-  String get queueModePlaylist => 'Playlist';
+  String get queueModePlaylist => 'Listă de redare';
 
   @override
-  String get queueModeCollection => 'Collection';
+  String get queueModeCollection => 'Colecție';
 
   @override
-  String get queueModeInfoPlaylist => 'Playlist Queue';
+  String get queueModeInfoPlaylist => 'Coadă din listă de redare';
 
   @override
   String get queueModeInfoPlaylistDesc =>
-      'Plays items in order from a chosen playlist, skipping anything already finished. Stops at the end of the list.';
+      'Redă elementele în ordine dintr-o listă de redare aleasă, sărind peste cele deja terminate. Se oprește la sfârșitul listei.';
 
   @override
-  String get queuePlaylistPickerTitle => 'Choose a playlist';
+  String get queuePlaylistPickerTitle => 'Alege o listă de redare';
 
   @override
-  String get queuePlaylistNone => 'No playlist selected';
+  String get queuePlaylistNone => 'Nicio listă de redare selectată';
 
   @override
   String queuePlaylistActiveLabel(String name) {
-    return 'Playlist: $name';
+    return 'Listă de redare: $name';
   }
 
   @override
   String get queueModePlaylistHint =>
-      'Start a playlist queue by opening a playlist on the home page.';
+      'Pornește o coadă din listă de redare deschizând o listă de redare din pagina Acasă.';
 
   @override
-  String get exit => 'Exit';
+  String get exit => 'Ieșire';
 
   @override
   String upNext(String label) {
-    return 'Up next: $label';
+    return 'Urmează: $label';
   }
 
   @override
-  String get nothingUpNext => 'Nothing up next';
+  String get nothingUpNext => 'Nimic următor';
 
   @override
-  String get showUpNextLabel => 'Show Up next on the absorbing page';
+  String get showUpNextLabel => 'Afișează „Urmează” în pagina Absorbing';
 
   @override
-  String get openSeries => 'Open series';
+  String get openSeries => 'Deschide seria';
 
   @override
-  String get openPlaylist => 'Open playlist';
+  String get openPlaylist => 'Deschide lista de redare';
 
   @override
-  String get openCollection => 'Open collection';
+  String get openCollection => 'Deschide colecția';
 
   @override
-  String get playlistPlayAction => 'Play playlist';
+  String get playlistPlayAction => 'Redă lista de redare';
 
   @override
-  String get playlistAllFinished => 'All finished';
+  String get playlistAllFinished => 'Toate terminate';
 
   @override
-  String get queueModeBooks => 'Books';
+  String get queueModeBooks => 'Cărți';
 
   @override
-  String get queueModePodcasts => 'Podcasts';
+  String get queueModePodcasts => 'Podcasturi';
 
   @override
-  String get autoDownloadQueue => 'Auto-download queue';
+  String get autoDownloadQueue => 'Descărcare automată a cozii';
 
   @override
-  String get autoDownloadThisSeriesLabel => 'Auto-download this series';
+  String get autoDownloadThisSeriesLabel => 'Descarcă automat această serie';
 
   @override
-  String get autoDownloadThisShowLabel => 'Auto-download this podcast';
+  String get autoDownloadThisShowLabel => 'Descarcă automat acest podcast';
 
   @override
-  String get autoDownloadThisPlaylistLabel => 'Auto-download this playlist';
+  String get autoDownloadThisPlaylistLabel =>
+      'Descarcă automat această listă de redare';
 
   @override
-  String get autoDownloadThisCollectionLabel => 'Auto-download this collection';
+  String get autoDownloadThisCollectionLabel =>
+      'Descarcă automat această colecție';
 
   @override
   String autoDownloadQueueOnSubtitle(int count) {
-    return 'Keep next $count items downloaded';
+    return 'Păstrează descărcate următoarele $count elemente';
   }
 
   @override
-  String get autoDownloadQueueOffSubtitle => 'Off - manual downloads only';
+  String get autoDownloadQueueOffSubtitle => 'Oprit - doar descărcări manuale';
 
   @override
-  String get sectionPlayback => 'Playback';
+  String get sectionPlayback => 'Redare';
 
   @override
-  String get sectionMediaControls => 'Media Controls';
+  String get sectionMediaControls => 'Comenzi media';
 
   @override
-  String get defaultSpeed => 'Default speed';
+  String get defaultSpeed => 'Viteză implicită';
 
   @override
   String get defaultSpeedSubtitle =>
-      'New books start at this speed - each book remembers its own';
+      'Cărțile noi pornesc la această viteză - fiecare carte o reține pe a ei';
 
   @override
-  String get skipBack => 'Skip back';
+  String get skipBack => 'Sari înapoi';
 
   @override
-  String get skipForward => 'Skip forward';
+  String get skipForward => 'Sari înainte';
 
   @override
   String get iosLockScreenSkipHint =>
-      'The lock screen only draws the numbers iOS has icons for (5, 10, 15, 30, 45, 60, 75, 90). Other amounts show + on the button but still skip by your setting.';
+      'Ecranul de blocare afișează doar numerele pentru care iOS are pictograme (5, 10, 15, 30, 45, 60, 75, 90). Alte valori afișează + pe buton, dar tot sar conform setării tale.';
 
   @override
-  String get longSkipButtons => 'Long skip buttons';
+  String get longSkipButtons => 'Butoane de salt lung';
 
   @override
   String get longSkipButtonsOnSubtitle =>
-      'On - the player shows a second, bigger skip pair';
+      'Activat - player-ul afișează o a doua pereche de butoane de salt, mai mare';
 
   @override
   String get longSkipButtonsOffSubtitle =>
-      'Off - just the regular skip buttons';
+      'Oprit - doar butoanele obișnuite de salt';
 
   @override
-  String get longSkipBack => 'Long skip back';
+  String get longSkipBack => 'Salt lung înapoi';
 
   @override
-  String get longSkipForward => 'Long skip forward';
+  String get longSkipForward => 'Salt lung înainte';
 
   @override
-  String get coverShapeDefault => 'Default';
+  String get coverShapeDefault => 'Implicită';
 
   @override
-  String get coverShapeSquare => 'Square';
+  String get coverShapeSquare => 'Pătrată';
 
   @override
-  String get coverShapeRectangle => 'Rectangle';
+  String get coverShapeRectangle => 'Dreptunghiulară';
 
   @override
-  String get coverShapeLabel => 'Cover shape';
+  String get coverShapeLabel => 'Forma copertei';
 
   @override
-  String get showSubtitles => 'Show subtitles';
+  String get showSubtitles => 'Afișează subtitlurile';
 
   @override
   String get showSubtitlesOnSubtitle =>
-      'Subtitles show under book titles in the library and on home';
+      'Subtitlurile apar sub titlurile cărților în bibliotecă și pe Acasă';
 
   @override
   String get showSubtitlesOffSubtitle =>
-      'Off - subtitles only on the book details sheet';
+      'Oprit - subtitluri doar în fișa de detalii a cărții';
 
   @override
-  String get subtitleVisibilityLabel => 'Subtitles';
+  String get subtitleVisibilityLabel => 'Subtitluri';
 
   @override
-  String get subtitleVisibilityDefault => 'Default';
+  String get subtitleVisibilityDefault => 'Implicit';
 
   @override
-  String get subtitleVisibilityShow => 'Show';
+  String get subtitleVisibilityShow => 'Afișează';
 
   @override
-  String get subtitleVisibilityHide => 'Hide';
+  String get subtitleVisibilityHide => 'Ascunde';
 
   @override
   String currentLibrarySettingsTitle(String name) {
-    return 'Current library: $name';
+    return 'Biblioteca curentă: $name';
   }
 
   @override
-  String get currentLibrarySkipOverride => 'Custom skip amounts';
+  String get currentLibrarySkipOverride => 'Valori de salt personalizate';
 
   @override
   String get currentLibrarySkipOverrideOnSubtitle =>
-      'On - this library uses its own skip amounts';
+      'Activat - această bibliotecă folosește propriile valori de salt';
 
   @override
   String get currentLibrarySkipOverrideOffSubtitle =>
-      'Off - this library uses the global skip amounts';
+      'Oprit - această bibliotecă folosește valorile globale de salt';
 
   @override
-  String get currentLibrarySkipBack => 'Skip back';
+  String get currentLibrarySpeedOverride => 'Custom default speed';
 
   @override
-  String get currentLibrarySkipForward => 'Skip forward';
+  String get currentLibrarySpeedOverrideOnSubtitle =>
+      'On - new items in this library start at their own speed';
+
+  @override
+  String get currentLibrarySpeedOverrideOffSubtitle =>
+      'Off - new items in this library start at the global default speed';
+
+  @override
+  String get currentLibrarySpeed => 'Default speed';
+
+  @override
+  String get currentLibrarySkipBack => 'Sari înapoi';
+
+  @override
+  String get currentLibrarySkipForward => 'Sari înainte';
 
   @override
   String get chapterProgressInNotification =>
-      'Chapter progress in notification & Android Auto';
+      'Progresul capitolului în notificare și Android Auto';
 
   @override
   String get chapterProgressOnSubtitle =>
-      'On - notification & Android Auto show chapter progress';
+      'Activat - notificarea și Android Auto afișează progresul capitolului';
 
   @override
-  String get chapterProgressOffSubtitle => 'Off - they show full book progress';
+  String get chapterProgressOffSubtitle =>
+      'Oprit - afișează progresul întregii cărți';
 
   @override
   String get chapterProgressInNotificationIos =>
-      'Chapter progress on lock screen & CarPlay';
+      'Progresul capitolului pe ecranul de blocare și în CarPlay';
 
   @override
   String get chapterProgressOnSubtitleIos =>
-      'On - lock screen & CarPlay show chapter progress';
+      'Activat - ecranul de blocare și CarPlay afișează progresul capitolului';
 
   @override
-  String get nowPlayingText => 'Now playing text';
+  String get chapterProgressInNowPlayingBar =>
+      'Chapter progress in now playing bar';
+
+  @override
+  String get chapterProgressInNowPlayingBarOnSubtitle =>
+      'On - the bottom player shows current chapter progress';
+
+  @override
+  String get chapterProgressInNowPlayingBarOffSubtitle =>
+      'Off - the bottom player shows full book progress';
+
+  @override
+  String get nowPlayingText => 'Text „În redare”';
 
   @override
   String get nowPlayingTextSubtitle =>
-      'Choose what the media controls show on each line';
+      'Alege ce afișează comenzile media pe fiecare rând';
 
   @override
-  String get nowPlayingTopLine => 'Top line';
+  String get nowPlayingTopLine => 'Rândul de sus';
 
   @override
-  String get nowPlayingSecondLine => 'Second line';
+  String get nowPlayingSecondLine => 'Al doilea rând';
 
   @override
-  String get nowPlayingNotShown => 'Not shown';
+  String get nowPlayingNotShown => 'Neafișat';
 
   @override
   String get nowPlayingTopLineRequired =>
-      'The top line needs at least one item';
+      'Rândul de sus necesită cel puțin un element';
 
   @override
-  String get nowPlayingPieceChapter => 'Chapter';
+  String get nowPlayingPieceChapter => 'Capitol';
 
   @override
-  String get nowPlayingPieceTitle => 'Book title';
+  String get nowPlayingPieceTitle => 'Titlul cărții';
 
   @override
-  String get nowPlayingPieceNarrator => 'Narrator';
+  String get nowPlayingPieceNarrator => 'Narator';
 
   @override
-  String get nowPlayingPieceSeries => 'Series';
+  String get nowPlayingPieceSeries => 'Serie';
 
   @override
-  String get nowPlayingPiecePercent => 'Book percentage';
+  String get nowPlayingPiecePercent => 'Procentul din carte';
 
   @override
-  String get nowPlayingPieceChapterNumber => 'Chapter number';
+  String get nowPlayingPieceChapterNumber => 'Numărul capitolului';
 
   @override
-  String get nowPlayingPieceTimeLeft => 'Time left';
+  String get nowPlayingPieceTimeLeft => 'Timp rămas';
 
   @override
   String nowPlayingChapterNumber(int number, int total) {
-    return 'Ch. $number/$total';
+    return 'Cap. $number/$total';
   }
 
   @override
   String nowPlayingTimeLeft(String time) {
-    return '$time left';
+    return '$time rămase';
   }
 
   @override
-  String get bookDockBadgePending => 'Pending';
+  String get bookDockBadgePending => 'În așteptare';
 
   @override
-  String get bookDockBadgeExtracting => 'Reading file';
+  String get bookDockBadgeExtracting => 'Se citește fișierul';
 
   @override
-  String get bookDockBadgeFetching => 'Looking up';
+  String get bookDockBadgeFetching => 'Se caută';
 
   @override
-  String get bookDockBadgeError => 'Error';
+  String get bookDockBadgeError => 'Eroare';
 
   @override
-  String get bookDockNeedsReview => 'Needs review';
+  String get bookDockNeedsReview => 'Necesită verificare';
 
   @override
-  String get bookDockNoMatch => 'No match';
+  String get bookDockNoMatch => 'Fără potrivire';
 
   @override
-  String get bookDockApplied => 'Applied';
+  String get bookDockApplied => 'Aplicat';
 
   @override
-  String get bookDockNotApplied => 'Found details not used';
+  String get bookDockNotApplied => 'Detaliile găsite nu au fost folosite';
 
   @override
-  String get bookDockNoDestination => 'No destination set';
+  String get bookDockNoDestination => 'Nicio destinație setată';
 
   @override
-  String get bookDockNoAuthor => 'No author yet';
+  String get bookDockNoAuthor => 'Niciun autor încă';
 
   @override
-  String get bookDockLookUpAgain => 'Look up again';
+  String get bookDockLookUpAgain => 'Caută din nou';
 
   @override
-  String get bookDockLookingUp => 'Looking up details again';
+  String get bookDockLookingUp => 'Se caută din nou detaliile';
 
   @override
-  String get bookDockLookUpFailed => 'Couldn\'t look up details';
+  String get bookDockLookUpFailed => 'Nu s-au putut căuta detaliile';
 
   @override
-  String get bookDockProposedChanges => 'Proposed changes';
+  String get bookDockProposedChanges => 'Modificări propuse';
 
   @override
-  String get bookDockNoChanges => 'No details found online yet';
+  String get bookDockNoChanges => 'Încă nu s-au găsit detalii online';
 
   @override
-  String get bookDockStillReading => 'The server is still reading this file';
+  String get bookDockStillReading => 'Serverul încă citește acest fișier';
 
   @override
-  String get bookDockRoleBook => 'Book';
+  String get bookDockRoleBook => 'Carte';
 
   @override
-  String get bookDockRoleCover => 'Cover';
+  String get bookDockRoleCover => 'Copertă';
 
   @override
-  String get bookDockRoleMetadata => 'Metadata';
+  String get bookDockRoleMetadata => 'Metadate';
 
   @override
-  String get bookDockRoleExtra => 'Extra';
+  String get bookDockRoleExtra => 'Suplimentar';
 
   @override
-  String get bookDockFieldTitle => 'Title';
+  String get bookDockFieldTitle => 'Titlu';
 
   @override
-  String get bookDockFieldSubtitle => 'Subtitle';
+  String get bookDockFieldSubtitle => 'Subtitlu';
 
   @override
-  String get bookDockFieldAuthors => 'Authors';
+  String get bookDockFieldAuthors => 'Autori';
 
   @override
-  String get bookDockFieldSeries => 'Series';
+  String get bookDockFieldSeries => 'Serie';
 
   @override
-  String get bookDockFieldPublisher => 'Publisher';
+  String get bookDockFieldPublisher => 'Editură';
 
   @override
-  String get bookDockFieldYear => 'Year';
+  String get bookDockFieldYear => 'An';
 
   @override
-  String get bookDockFieldLanguage => 'Language';
+  String get bookDockFieldLanguage => 'Limbă';
 
   @override
   String get bookDockFieldIsbn => 'ISBN';
 
   @override
   String bookDockMatch(int percent) {
-    return '$percent% match';
+    return '$percent% potrivire';
   }
 
   @override
@@ -1934,15 +1981,16 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count de fișiere',
+      few: '$count fișiere',
+      one: '1 fișier',
     );
     return '$_temp0';
   }
 
   @override
   String bookDockGoesTo(String library) {
-    return 'Goes to $library';
+    return 'Merge în $library';
   }
 
   @override
@@ -1950,8 +1998,9 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count fields',
-      one: '1 field',
+      other: '$count de câmpuri',
+      few: '$count câmpuri',
+      one: '1 câmp',
     );
     return '$_temp0';
   }
@@ -1961,169 +2010,172 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files in this entry',
-      one: 'File in this entry',
+      other: '$count de fișiere în această intrare',
+      few: '$count fișiere în această intrare',
+      one: 'Fișier în această intrare',
     );
     return '$_temp0';
   }
 
   @override
   String bookDockAdded(String date) {
-    return 'Added $date';
+    return 'Adăugat $date';
   }
 
   @override
-  String get bookDockAddToLibrary => 'Add to library';
+  String get bookDockAddToLibrary => 'Adaugă în bibliotecă';
 
   @override
-  String get bookDockUseFound => 'Use found details';
+  String get bookDockUseFound => 'Folosește detaliile găsite';
 
   @override
-  String get bookDockRemoveTitle => 'Remove from Book Dock?';
+  String get bookDockRemoveTitle => 'Elimini din Book Dock?';
 
   @override
-  String get bookDockRemoveFailed => 'Couldn\'t remove this file';
+  String get bookDockRemoveFailed => 'Nu s-a putut elimina acest fișier';
 
   @override
-  String get bookDockPickLibrary => 'Add to which library?';
+  String get bookDockPickLibrary => 'În ce bibliotecă adaugi?';
 
   @override
   String get bookDockNoLibraries =>
-      'Your account can\'t add books to a library';
+      'Contul tău nu poate adăuga cărți într-o bibliotecă';
 
   @override
-  String get bookDockFileFailed => 'Couldn\'t add this file to the library';
+  String get bookDockFileFailed =>
+      'Nu s-a putut adăuga acest fișier în bibliotecă';
 
   @override
   String get bookDockDuplicateBody =>
-      'A file with this name is already in that library. Remove it from Book Dock?';
+      'Un fișier cu acest nume există deja în acea bibliotecă. Îl elimini din Book Dock?';
 
   @override
-  String get bookDockDetailsUpdated => 'Details updated';
+  String get bookDockDetailsUpdated => 'Detalii actualizate';
 
   @override
-  String get bookDockUseFoundFailed => 'No found details to use';
+  String get bookDockUseFoundFailed => 'Nu există detalii găsite de folosit';
 
   @override
   String bookDockRemoveBody(String title) {
-    return 'This deletes $title from the server.';
+    return 'Aceasta șterge $title de pe server.';
   }
 
   @override
   String bookDockRemoved(String title) {
-    return 'Removed $title from Book Dock';
+    return '$title a fost eliminat din Book Dock';
   }
 
   @override
   String bookDockFiled(String title, String library) {
-    return 'Added $title to $library';
+    return '$title a fost adăugat în $library';
   }
 
   @override
   String bookDockFileFailedReason(String reason) {
-    return 'Couldn\'t add this file: $reason';
+    return 'Nu s-a putut adăuga acest fișier: $reason';
   }
 
   @override
   String bookDockDuplicateTitle(String library) {
-    return 'Already in $library';
+    return 'Deja în $library';
   }
 
   @override
-  String get bomatchSearchAll => 'Search all sources';
+  String get bomatchSearchAll => 'Caută în toate sursele';
 
   @override
-  String get bomatchSearching => 'Searching...';
+  String get bomatchSearching => 'Se caută...';
 
   @override
   String get bomatchSearchFailed =>
-      'Couldn\'t search for matches. Check your connection and try again.';
+      'Nu s-au putut căuta potriviri. Verifică conexiunea și încearcă din nou.';
 
   @override
-  String get bomatchNoResults => 'No matches found';
+  String get bomatchNoResults => 'Nu s-au găsit potriviri';
 
   @override
-  String get bomatchStrong => 'Strong matches';
+  String get bomatchStrong => 'Potriviri puternice';
 
   @override
-  String get bomatchPossible => 'Possible matches';
+  String get bomatchPossible => 'Potriviri posibile';
 
   @override
-  String get bomatchSourceTimeout => 'timed out';
+  String get bomatchSourceTimeout => 'timp expirat';
 
   @override
-  String get bomatchSourceBusy => 'busy';
+  String get bomatchSourceBusy => 'ocupat';
 
   @override
-  String get bomatchSourceFailed => 'failed';
+  String get bomatchSourceFailed => 'eșuat';
 
   @override
-  String get bomatchLinked => 'Linked';
+  String get bomatchLinked => 'Asociat';
 
   @override
-  String get bomatchSameIsbn => 'Same ISBN';
+  String get bomatchSameIsbn => 'Același ISBN';
 
   @override
-  String get bomatchFewDetails => 'Few details';
+  String get bomatchFewDetails => 'Puține detalii';
 
   @override
-  String get bomatchBack => 'All results';
+  String get bomatchBack => 'Toate rezultatele';
 
   @override
-  String get bomatchFillEmpty => 'Fill empty';
+  String get bomatchFillEmpty => 'Completează golurile';
 
   @override
-  String get bomatchTakeAll => 'Take all';
+  String get bomatchTakeAll => 'Preia tot';
 
   @override
-  String get bomatchOnlyDifferences => 'Only differences';
+  String get bomatchOnlyDifferences => 'Doar diferențele';
 
   @override
-  String get bomatchNow => 'Now';
+  String get bomatchNow => 'Acum';
 
   @override
-  String get bomatchEmpty => 'Empty';
+  String get bomatchEmpty => 'Gol';
 
   @override
-  String get bomatchKindNew => 'New';
+  String get bomatchKindNew => 'Nou';
 
   @override
-  String get bomatchKindChange => 'Change';
+  String get bomatchKindChange => 'Modificare';
 
   @override
-  String get bomatchKindSmall => 'Small change';
+  String get bomatchKindSmall => 'Modificare minoră';
 
   @override
-  String get bomatchKindSame => 'Same';
+  String get bomatchKindSame => 'Identic';
 
   @override
-  String get bomatchKindNone => 'Not in result';
+  String get bomatchKindNone => 'Absent din rezultat';
 
   @override
-  String get bomatchKeep => 'Keep';
+  String get bomatchKeep => 'Păstrează';
 
   @override
-  String get bomatchUse => 'Use';
+  String get bomatchUse => 'Folosește';
 
   @override
-  String get bomatchMerge => 'Merge';
+  String get bomatchMerge => 'Îmbină';
 
   @override
-  String get bomatchReplace => 'Replace';
+  String get bomatchReplace => 'Înlocuiește';
 
   @override
-  String get bomatchUseThis => 'Use this';
+  String get bomatchUseThis => 'Folosește-l';
 
   @override
-  String get bomatchChosen => 'Chosen';
+  String get bomatchChosen => 'Ales';
 
   @override
   String bomatchOther(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count other books',
-      one: '1 other book',
+      other: '$count de alte cărți',
+      few: '$count alte cărți',
+      one: '1 altă carte',
     );
     return '$_temp0';
   }
@@ -2133,8 +2185,9 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count changes',
-      one: '1 change',
+      other: '$count de modificări',
+      few: '$count modificări',
+      one: '1 modificare',
     );
     return '$_temp0';
   }
@@ -2144,8 +2197,9 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count new',
-      one: '1 new',
+      other: '$count de noi',
+      few: '$count noi',
+      one: '1 nou',
     );
     return '$_temp0';
   }
@@ -2155,9 +2209,10 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Apply $count changes',
-      one: 'Apply 1 change',
-      zero: 'Apply',
+      other: 'Aplică $count de modificări',
+      few: 'Aplică $count modificări',
+      one: 'Aplică 1 modificare',
+      zero: 'Aplică',
     );
     return '$_temp0';
   }
@@ -2167,330 +2222,343 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count other sources',
-      one: '1 other source',
+      other: '$count de alte surse',
+      few: '$count alte surse',
+      one: '1 altă sursă',
     );
     return '$_temp0';
   }
 
   @override
   String bomatchFrom(String source) {
-    return 'From $source';
+    return 'Din $source';
   }
 
   @override
-  String get breqTitle => 'Book requests';
+  String get breqTitle => 'Cereri de cărți';
 
   @override
-  String get breqTabRequest => 'Request a book';
+  String get breqTabRequest => 'Cere o carte';
 
   @override
-  String get breqTabMine => 'My requests';
+  String get breqTabMine => 'Cererile mele';
 
   @override
-  String get breqTabAll => 'All requests';
+  String get breqTabAll => 'Toate cererile';
 
   @override
-  String get breqNoAccess =>
-      'Your account can\'t request books on this server.';
+  String get breqNoAccess => 'Contul tău nu poate cere cărți pe acest server.';
 
   @override
-  String get breqTitleHint => 'Book title';
+  String get breqTitleHint => 'Titlul cărții';
 
   @override
-  String get breqAuthorHint => 'Author';
+  String get breqAuthorHint => 'Autor';
 
   @override
-  String get breqKindAudiobook => 'Audiobook';
+  String get breqKindAudiobook => 'Carte audio';
 
   @override
   String get breqKindEbook => 'E-book';
 
   @override
-  String get breqKindComic => 'Comic';
+  String get breqKindComic => 'Benzi desenate';
 
   @override
-  String get breqSearch => 'Search';
+  String get breqSearch => 'Caută';
 
   @override
-  String get breqSearching => 'Searching...';
+  String get breqSearching => 'Se caută...';
 
   @override
   String get breqSearchFailed =>
-      'Couldn\'t search. Check your connection and try again.';
+      'Căutarea a eșuat. Verifică conexiunea și încearcă din nou.';
 
   @override
   String get breqSearchPrompt =>
-      'Search for a book the library does not have yet to request it.';
+      'Caută o carte pe care biblioteca nu o are încă, pentru a o cere.';
 
   @override
-  String get breqNoResults => 'No matching books found';
+  String get breqNoResults => 'Nu s-au găsit cărți potrivite';
 
   @override
-  String get breqInLibrary => 'In your library';
+  String get breqInLibrary => 'În biblioteca ta';
 
   @override
-  String get breqYouAsked => 'You requested this';
+  String get breqYouAsked => 'Ai cerut-o tu';
 
   @override
-  String get breqSomeoneAsked => 'Already requested by someone else';
+  String get breqSomeoneAsked => 'Deja cerută de altcineva';
 
   @override
-  String get breqView => 'View';
+  String get breqView => 'Vezi';
 
   @override
-  String get breqRequest => 'Request';
+  String get breqRequest => 'Cere';
 
   @override
-  String get breqRequested => 'Requested';
+  String get breqRequested => 'Cerută';
 
   @override
-  String get breqAddMeToo => 'Add me too';
+  String get breqAddMeToo => 'Adaugă-mă și pe mine';
 
   @override
-  String get breqLibrary => 'Library';
+  String get breqLibrary => 'Bibliotecă';
 
   @override
-  String get breqLibraryApprover => 'Let the approver decide';
+  String get breqLibraryApprover => 'Lasă aprobatorul să decidă';
 
   @override
-  String get breqLibraryChoose => 'Choose a library';
+  String get breqLibraryChoose => 'Alege o bibliotecă';
 
   @override
-  String get breqNote => 'Note for the approver';
+  String get breqNote => 'Notă pentru aprobator';
 
   @override
-  String get breqNoteHint => 'Anything worth knowing about this request';
+  String get breqNoteHint => 'Orice merită știut despre această cerere';
 
   @override
-  String get breqAutoApproved => 'Your requests are approved right away.';
+  String get breqAutoApproved => 'Cererile tale sunt aprobate imediat.';
 
   @override
-  String get breqSubmitted => 'Request submitted';
+  String get breqSubmitted => 'Cerere trimisă';
 
   @override
-  String get breqJoined => 'Added you to the existing request';
+  String get breqJoined => 'Ai fost adăugat la cererea existentă';
 
   @override
-  String get breqFailed => 'Couldn\'t send the request';
+  String get breqFailed => 'Nu s-a putut trimite cererea';
 
   @override
-  String get breqStatusPending => 'Pending';
+  String get breqStatusPending => 'În așteptare';
 
   @override
-  String get breqStatusApproved => 'Approved';
+  String get breqStatusApproved => 'Aprobată';
 
   @override
-  String get breqStatusRejected => 'Rejected';
+  String get breqStatusRejected => 'Respinsă';
 
   @override
-  String get breqStatusCancelled => 'Cancelled';
+  String get breqStatusCancelled => 'Anulată';
 
   @override
-  String get breqStatusSearching => 'Searching';
+  String get breqStatusSearching => 'Se caută';
 
   @override
-  String get breqStatusGrabbed => 'Release found';
+  String get breqStatusGrabbed => 'Ediție găsită';
 
   @override
-  String get breqStatusDownloading => 'Downloading';
+  String get breqStatusDownloading => 'Se descarcă';
 
   @override
-  String get breqStatusImporting => 'Importing';
+  String get breqStatusImporting => 'Se importă';
 
   @override
-  String get breqStatusNeedsReview => 'Needs review';
+  String get breqStatusNeedsReview => 'Necesită verificare';
 
   @override
-  String get breqStatusAvailable => 'Available';
+  String get breqStatusAvailable => 'Disponibilă';
 
   @override
-  String get breqStatusFailed => 'Failed';
+  String get breqStatusFailed => 'Eșuată';
 
   @override
-  String get breqWaitingApproval => 'Waiting for approval';
+  String get breqWaitingApproval => 'Se așteaptă aprobarea';
 
   @override
-  String get breqWaitingRelease => 'Waiting for a release to be picked';
+  String get breqWaitingRelease => 'Se așteaptă alegerea unei ediții';
 
   @override
-  String get breqLookingForRelease => 'Looking for a release';
+  String get breqLookingForRelease => 'Se caută o ediție';
 
   @override
-  String get breqStartingDownload => 'Starting the download';
+  String get breqStartingDownload => 'Se pornește descărcarea';
 
   @override
-  String get breqAddingToLibrary => 'Adding to the library';
+  String get breqAddingToLibrary => 'Se adaugă în bibliotecă';
 
   @override
-  String get breqWaitingCheck => 'Waiting for a manual check';
+  String get breqWaitingCheck => 'Se așteaptă o verificare manuală';
 
   @override
-  String get breqReady => 'Ready in your library';
+  String get breqReady => 'Gata în biblioteca ta';
 
   @override
-  String get breqSomethingWrong => 'Something went wrong';
+  String get breqSomethingWrong => 'Ceva nu a mers bine';
 
   @override
-  String get breqShowHidden => 'Show hidden';
+  String get breqShowHidden => 'Arată cele ascunse';
 
   @override
-  String get breqHidden => 'Hidden';
+  String get breqHidden => 'Ascunse';
 
   @override
-  String get breqMineEmpty => 'You haven\'t requested any books yet.';
+  String get breqMineEmpty => 'Nu ai cerut încă nicio carte.';
 
   @override
-  String get breqAllEmpty => 'No requests yet.';
+  String get breqAllEmpty => 'Nicio cerere încă.';
 
   @override
-  String get breqLoadFailed => 'Couldn\'t load requests.';
+  String get breqLoadFailed => 'Nu s-au putut încărca cererile.';
 
   @override
-  String get breqLoadMore => 'Load more';
+  String get breqLoadMore => 'Încarcă mai multe';
 
   @override
-  String get breqApprove => 'Approve';
+  String get breqApprove => 'Aprobă';
 
   @override
-  String get breqReject => 'Reject';
+  String get breqReject => 'Respinge';
 
   @override
-  String get breqCancel => 'Cancel request';
+  String get breqCancel => 'Anulează cererea';
 
   @override
-  String get breqHide => 'Hide from my list';
+  String get breqHide => 'Ascunde din lista mea';
 
   @override
-  String get breqUnhide => 'Show in my list';
+  String get breqUnhide => 'Arată în lista mea';
 
   @override
-  String get breqLeave => 'Leave request';
+  String get breqLeave => 'Părăsește cererea';
 
   @override
-  String get breqDelete => 'Delete request';
+  String get breqDelete => 'Șterge cererea';
 
   @override
-  String get breqOpenBook => 'Open book';
+  String get breqOpenBook => 'Deschide cartea';
 
   @override
   String get breqCancelConfirm =>
-      'Cancel this request? A download in progress stops too.';
+      'Anulezi această cerere? O descărcare în curs se oprește și ea.';
 
   @override
-  String get breqDeleteConfirm => 'Delete this request? This can\'t be undone.';
+  String get breqDeleteConfirm =>
+      'Ștergi această cerere? Acțiunea nu poate fi anulată.';
 
   @override
-  String get breqRejectTitle => 'Reject request';
+  String get breqRejectTitle => 'Respinge cererea';
 
   @override
-  String get breqRejectReason => 'Reason (optional)';
+  String get breqRejectReason => 'Motiv (opțional)';
 
   @override
-  String get breqApproveTitle => 'Approve request';
+  String get breqApproveTitle => 'Aprobă cererea';
 
   @override
   String get breqApproveLibraryNeeded =>
-      'Choose the library this book goes into.';
+      'Alege biblioteca în care intră această carte.';
 
   @override
-  String get breqApprovedToast => 'Request approved';
+  String get breqApprovedToast => 'Cerere aprobată';
 
   @override
-  String get breqRejectedToast => 'Request rejected';
+  String get breqRejectedToast => 'Cerere respinsă';
 
   @override
-  String get breqCancelledToast => 'Request cancelled';
+  String get breqCancelledToast => 'Cerere anulată';
 
   @override
-  String get breqHiddenToast => 'Hidden from your list';
+  String get breqHiddenToast => 'Ascunsă din lista ta';
 
   @override
-  String get breqRestoredToast => 'Back on your list';
+  String get breqRestoredToast => 'Înapoi în lista ta';
 
   @override
-  String get breqDeletedToast => 'Request deleted';
+  String get breqDeletedToast => 'Cerere ștearsă';
 
   @override
-  String get breqLeftToast => 'You left this request';
+  String get breqLeftToast => 'Ai părăsit această cerere';
 
   @override
-  String get breqActionFailed => 'Couldn\'t update the request';
+  String get breqActionFailed => 'Nu s-a putut actualiza cererea';
 
   @override
-  String get breqFactRequestedBy => 'Requested by';
+  String get breqFactRequestedBy => 'Cerută de';
 
   @override
-  String get breqFactRequestedOn => 'Requested on';
+  String get breqFactRequestedOn => 'Cerută la';
 
   @override
-  String get breqFactLibrary => 'Library';
+  String get breqFactLibrary => 'Bibliotecă';
 
   @override
-  String get breqFactDecidedBy => 'Decided by';
+  String get breqFactDecidedBy => 'Decisă de';
 
   @override
-  String get breqFactNote => 'Note from the requester';
+  String get breqFactNote => 'Notă de la solicitant';
 
   @override
-  String get breqFactDecisionNote => 'Decision note';
+  String get breqFactDecisionNote => 'Notă de decizie';
 
   @override
-  String get breqFactAlsoWanted => 'Also wanted by';
+  String get breqFactAlsoWanted => 'Dorită și de';
 
   @override
-  String get breqLibraryCta => 'Request a book';
+  String get breqLibraryCta => 'Cere o carte';
 
   @override
   String get breqSettingsSubtitle =>
-      'Ask for books the library does not have yet';
+      'Cere cărți pe care biblioteca nu le are încă';
 
   @override
-  String get navHoldBookRequests => 'Book requests';
+  String get navHoldBookRequests => 'Cereri de cărți';
 
   @override
   String breqLibraryDefault(String library) {
-    return 'Default ($library)';
+    return 'Implicită ($library)';
   }
 
   @override
   String breqFailedReason(String reason) {
-    return 'Couldn\'t send the request: $reason';
+    return 'Nu s-a putut trimite cererea: $reason';
+  }
+
+  @override
+  String breqBookCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de cărți',
+      few: '$count cărți',
+      one: '1 carte',
+    );
+    return '$_temp0';
   }
 
   @override
   String breqDownloadingPercent(int percent) {
-    return 'Downloading, $percent%';
+    return 'Se descarcă, $percent%';
   }
 
   @override
   String breqAddedTo(String library) {
-    return 'Added to $library';
+    return 'Adăugată în $library';
   }
 
   @override
   String breqRejectedWithNote(String note) {
-    return 'Rejected: $note';
+    return 'Respinsă: $note';
   }
 
   @override
   String breqFailedWithReason(String reason) {
-    return 'Failed: $reason';
+    return 'Eșuată: $reason';
   }
 
   @override
   String breqRequestedBy(String name) {
-    return 'Requested by $name';
+    return 'Cerută de $name';
   }
 
   @override
   String breqActionFailedReason(String reason) {
-    return 'Couldn\'t update the request: $reason';
+    return 'Nu s-a putut actualiza cererea: $reason';
   }
 
   @override
   String breqFooterCta(String query) {
-    return 'Request \"$query\"';
+    return 'Cere „$query”';
   }
 
   @override
@@ -2498,206 +2566,209 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count requests',
-      one: '1 request',
-      zero: 'No requests',
+      other: '$count de cereri',
+      few: '$count cereri',
+      one: '1 cerere',
+      zero: 'Nicio cerere',
     );
     return '$_temp0';
   }
 
   @override
-  String get breqFindRelease => 'Find a release';
+  String get breqFindRelease => 'Găsește o ediție';
 
   @override
-  String get breqTryAnotherRelease => 'Try another release';
+  String get breqTryAnotherRelease => 'Încearcă altă ediție';
 
   @override
-  String get breqApproveAndFind => 'Approve and find a release';
+  String get breqApproveAndFind => 'Aprobă și găsește o ediție';
 
   @override
-  String get breqReviewButton => 'Review download';
+  String get breqReviewButton => 'Verifică descărcarea';
 
   @override
-  String get breqStopDownload => 'Stop download';
+  String get breqStopDownload => 'Oprește descărcarea';
 
   @override
   String get breqStopDownloadConfirm =>
-      'Stop this download? The request goes back to approved so another release can be picked.';
+      'Oprești această descărcare? Cererea revine la starea aprobată, ca să poată fi aleasă altă ediție.';
 
   @override
-  String get breqDiscardImport => 'Discard download';
+  String get breqDiscardImport => 'Renunță la descărcare';
 
   @override
   String get breqDiscardConfirm =>
-      'Discard this download? The request is marked failed and can be tried again with another release.';
+      'Renunți la această descărcare? Cererea este marcată ca eșuată și poate fi reîncercată cu altă ediție.';
 
   @override
-  String get breqFileAnyway => 'Add to library';
+  String get breqFileAnyway => 'Adaugă în bibliotecă';
 
   @override
-  String get breqFiledToast => 'Added to the library';
+  String get breqFiledToast => 'Adăugată în bibliotecă';
 
   @override
-  String get breqDiscardedToast => 'Download discarded';
+  String get breqDiscardedToast => 'Descărcare eliminată';
 
   @override
-  String get breqStoppedToast => 'Download stopped';
+  String get breqStoppedToast => 'Descărcare oprită';
 
   @override
-  String get breqGrabTitle => 'Download this release?';
+  String get breqGrabTitle => 'Descarci această ediție?';
 
   @override
-  String get breqGrab => 'Download';
+  String get breqGrab => 'Descarcă';
 
   @override
-  String get breqGrabbed => 'Download started';
+  String get breqGrabbed => 'Descărcarea a început';
 
   @override
-  String get breqGrabFailed => 'Couldn\'t start that download';
+  String get breqGrabFailed => 'Nu s-a putut porni descărcarea';
 
   @override
   String get breqReleaseVipWarning =>
-      'This tracker only lets VIP accounts download it.';
+      'Acest tracker permite descărcarea doar conturilor VIP.';
 
   @override
   String get breqReleaseNoBookFile =>
-      'This release has no book file BookOrbit can add to a library.';
+      'Această ediție nu are niciun fișier de carte pe care BookOrbit să-l poată adăuga într-o bibliotecă.';
 
   @override
   String get breqReleaseCheckFailed =>
-      'Couldn\'t check what\'s in this release. Try again or pick another one.';
+      'Nu s-a putut verifica ce conține această ediție. Încearcă din nou sau alege alta.';
 
   @override
-  String get breqCheckingRelease => 'Checking the files...';
+  String get breqCheckingRelease => 'Se verifică fișierele...';
 
   @override
-  String get breqSearchAgain => 'Search again';
+  String get breqSearchAgain => 'Caută din nou';
 
   @override
-  String get breqSearchTerms => 'Search terms';
+  String get breqSearchTerms => 'Termeni de căutare';
 
   @override
-  String get breqIsbnHint => 'Leave empty to search by title and author';
+  String get breqIsbnHint => 'Lasă gol pentru a căuta după titlu și autor';
 
   @override
   String get breqSearchingIndexers =>
-      'Searching your indexers. This can take up to a minute.';
+      'Se caută în indexatoarele tale. Poate dura până la un minut.';
 
   @override
-  String get breqReleasesFailed => 'Couldn\'t search for releases.';
+  String get breqReleasesFailed => 'Nu s-au putut căuta ediții.';
 
   @override
-  String get breqNoSourcesSetUp => 'No search sources are set up in BookOrbit.';
+  String get breqNoSourcesSetUp =>
+      'Nicio sursă de căutare nu este configurată în BookOrbit.';
 
   @override
   String get breqNoSourcesOn =>
-      'Every search source is switched off in BookOrbit.';
+      'Toate sursele de căutare sunt dezactivate în BookOrbit.';
 
   @override
   String get breqNoSourceCarries =>
-      'None of your search sources carry this kind of book.';
+      'Niciuna dintre sursele tale de căutare nu are acest tip de carte.';
 
   @override
-  String get breqNoReleases => 'No releases found. Try different search terms.';
+  String get breqNoReleases =>
+      'Nu s-au găsit ediții. Încearcă alți termeni de căutare.';
 
   @override
-  String get breqFromCache => 'from a recent search';
+  String get breqFromCache => 'dintr-o căutare recentă';
 
   @override
-  String get breqIndexerUnauthorized => 'sign-in failed';
+  String get breqIndexerUnauthorized => 'conectarea a eșuat';
 
   @override
-  String get breqIndexerThrottled => 'busy';
+  String get breqIndexerThrottled => 'ocupat';
 
   @override
-  String get breqIndexerTimeout => 'timed out';
+  String get breqIndexerTimeout => 'timp expirat';
 
   @override
-  String get breqIndexerUnreachable => 'unreachable';
+  String get breqIndexerUnreachable => 'inaccesibil';
 
   @override
-  String get breqIndexerNoMedium => 'does not carry this';
+  String get breqIndexerNoMedium => 'nu are așa ceva';
 
   @override
-  String get breqIndexerError => 'failed';
+  String get breqIndexerError => 'eșuat';
 
   @override
-  String get breqSortBest => 'Best match';
+  String get breqSortBest => 'Cea mai bună potrivire';
 
   @override
-  String get breqSortSeeders => 'Seeders';
+  String get breqSortSeeders => 'Seederi';
 
   @override
-  String get breqSortSize => 'Size';
+  String get breqSortSize => 'Dimensiune';
 
   @override
-  String get breqSortNewest => 'Newest';
+  String get breqSortNewest => 'Cele mai noi';
 
   @override
   String get breqFreeleech => 'Freeleech';
 
   @override
-  String get breqVipOnly => 'VIP only';
+  String get breqVipOnly => 'Doar VIP';
 
   @override
-  String get breqAlreadyGrabbed => 'Downloaded before';
+  String get breqAlreadyGrabbed => 'Descărcată înainte';
 
   @override
   String get breqReasonIsbn => 'ISBN';
 
   @override
-  String get breqReasonTitle => 'Title';
+  String get breqReasonTitle => 'Titlu';
 
   @override
-  String get breqReasonAuthor => 'Author';
+  String get breqReasonAuthor => 'Autor';
 
   @override
-  String get breqReasonUnknownFormat => 'Unknown format';
+  String get breqReasonUnknownFormat => 'Format necunoscut';
 
   @override
-  String get breqReasonExpectedSize => 'Size';
+  String get breqReasonExpectedSize => 'Dimensiune';
 
   @override
-  String get breqReasonSuspiciousSize => 'Unusual size';
+  String get breqReasonSuspiciousSize => 'Dimensiune neobișnuită';
 
   @override
   String get breqReasonFreeleech => 'Freeleech';
 
   @override
-  String get breqReasonSeveralBooks => 'Several books';
+  String get breqReasonSeveralBooks => 'Mai multe cărți';
 
   @override
-  String get breqReviewTitle => 'Download waiting for a check';
+  String get breqReviewTitle => 'Descărcare în așteptarea verificării';
 
   @override
-  String get breqReviewFailed => 'Couldn\'t load the download details.';
+  String get breqReviewFailed => 'Nu s-au putut încărca detaliile descărcării.';
 
   @override
   String get breqReviewDockGone =>
-      'The downloaded files are no longer in the Book Dock.';
+      'Fișierele descărcate nu se mai află în Book Dock.';
 
   @override
   String get breqReviewNoLibrary =>
-      'This request has no library to add the book to.';
+      'Această cerere nu are o bibliotecă în care să fie adăugată cartea.';
 
   @override
   String breqGrabFailedReason(String reason) {
-    return 'Couldn\'t start that download: $reason';
+    return 'Nu s-a putut porni descărcarea: $reason';
   }
 
   @override
   String breqReleaseCheckFailedReason(String reason) {
-    return 'Couldn\'t check what\'s in this release: $reason';
+    return 'Nu s-a putut verifica ce conține această ediție: $reason';
   }
 
   @override
   String breqReleasesFailedReason(String reason) {
-    return 'Couldn\'t search for releases: $reason';
+    return 'Nu s-au putut căuta ediții: $reason';
   }
 
   @override
   String breqReviewFailedReason(String reason) {
-    return 'Couldn\'t load the download details: $reason';
+    return 'Nu s-au putut încărca detaliile descărcării: $reason';
   }
 
   @override
@@ -2705,9 +2776,10 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count releases',
-      one: '1 release',
-      zero: 'No releases',
+      other: '$count de ediții',
+      few: '$count ediții',
+      one: '1 ediție',
+      zero: 'Nicio ediție',
     );
     return '$_temp0';
   }
@@ -2717,8 +2789,9 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count de fișiere',
+      few: '$count fișiere',
+      one: '1 fișier',
     );
     return '$_temp0';
   }
@@ -2728,25 +2801,26 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count de fișiere',
+      few: '$count fișiere',
+      one: '1 fișier',
     );
     return '$_temp0';
   }
 
   @override
   String breqSeeders(int seeders, int leechers) {
-    return '$seeders seeders, $leechers leechers';
+    return '$seeders seederi, $leechers leecheri';
   }
 
   @override
   String breqScore(int score) {
-    return 'Score $score';
+    return 'Scor $score';
   }
 
   @override
   String breqReasonPreferredFormat(String format) {
-    return 'Preferred $format';
+    return '$format preferat';
   }
 
   @override
@@ -2756,168 +2830,169 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String breqReasonSeeders(String count) {
-    return '$count seeders';
+    return '$count seederi';
   }
 
   @override
   String breqReviewScore(int score, int threshold) {
-    return 'Match score $score. Downloads scoring $threshold or more are added on their own.';
+    return 'Scor de potrivire $score. Descărcările cu scor de $threshold sau mai mare sunt adăugate automat.';
   }
 
   @override
   String breqReviewRequested(String value) {
-    return 'Requested: $value';
+    return 'Cerut: $value';
   }
 
   @override
   String breqReviewImported(String value) {
-    return 'Downloaded: $value';
+    return 'Descărcat: $value';
   }
 
   @override
-  String get breqKindBoth => 'Both';
+  String get breqKindBoth => 'Ambele';
 
   @override
-  String get breqEbookLibrary => 'E-book library';
+  String get breqEbookLibrary => 'Bibliotecă de e-book-uri';
 
   @override
-  String get breqAudiobookLibrary => 'Audiobook library';
+  String get breqAudiobookLibrary => 'Bibliotecă de cărți audio';
 
   @override
-  String get breqRequestBoth => 'Request both';
+  String get breqRequestBoth => 'Cere ambele';
 
   @override
-  String get breqAddMeToBoth => 'Add me to both';
+  String get breqAddMeToBoth => 'Adaugă-mă la ambele';
 
   @override
-  String get breqRequestEbook => 'Request e-book';
+  String get breqRequestEbook => 'Cere e-book';
 
   @override
-  String get breqRequestAudiobook => 'Request audiobook';
+  String get breqRequestAudiobook => 'Cere carte audio';
 
   @override
-  String get breqAddMeEbook => 'Add me to the e-book request';
+  String get breqAddMeEbook => 'Adaugă-mă la cererea de e-book';
 
   @override
-  String get breqAddMeAudiobook => 'Add me to the audiobook request';
+  String get breqAddMeAudiobook => 'Adaugă-mă la cererea de carte audio';
 
   @override
-  String get breqPairSubmitted => 'Requested the e-book and the audiobook';
+  String get breqPairSubmitted => 'Ai cerut e-book-ul și cartea audio';
 
   @override
   String get breqPairOneJoined =>
-      'Requested both. One was already on its way, so you were added to that request';
+      'Ai cerut ambele. Una era deja în curs, așa că ai fost adăugat la acea cerere';
 
   @override
-  String get breqJoinedBoth => 'Added you to both requests';
+  String get breqJoinedBoth => 'Ai fost adăugat la ambele cereri';
 
   @override
   String get breqJoinsOwned =>
-      'Requested. It will join the copy already in your library';
+      'Cerută. Se va alătura exemplarului deja existent în biblioteca ta';
 
   @override
-  String get speedBookmarkInControls => 'Speed & bookmark in media controls';
+  String get speedBookmarkInControls => 'Viteză și marcaj în comenzile media';
 
   @override
   String get speedBookmarkOnSubtitle =>
-      'On - notification shows speed & bookmark; chapter skip stays in Android Auto';
+      'Activat - notificarea afișează viteza și marcajul; saltul între capitole rămâne în Android Auto';
 
   @override
   String get speedBookmarkOffSubtitle =>
-      'Off - notification shows chapter skip; speed & bookmark stay in Android Auto';
+      'Oprit - notificarea afișează saltul între capitole; viteza și marcajul rămân în Android Auto';
 
   @override
-  String get lockSeekBar => 'Lock the seek bar';
+  String get lockSeekBar => 'Blochează bara de derulare';
 
   @override
   String get lockSeekBarOnSubtitle =>
-      'On - the scrubber in the notification, lockscreen and car shows progress but can\'t be dragged';
+      'Activat - cursorul din notificare, de pe ecranul de blocare și din mașină arată progresul, dar nu poate fi tras';
 
   @override
   String get lockSeekBarOffSubtitle =>
-      'Off - drag the scrubber in the notification, lockscreen and car to jump around';
+      'Oprit - trage cursorul din notificare, de pe ecranul de blocare și din mașină pentru a sări în alt punct';
 
   @override
-  String get autoRewindOnResume => 'Auto-rewind on resume';
+  String get autoRewindOnResume => 'Derulare automată înapoi la reluare';
 
   @override
   String autoRewindOnSubtitle(String min, String max) {
-    return 'On - ${min}s to ${max}s based on pause length';
+    return 'Activat - de la ${min}s la ${max}s, în funcție de durata pauzei';
   }
 
   @override
-  String get autoRewindOffSubtitle => 'Off';
+  String get autoRewindOffSubtitle => 'Oprit';
 
   @override
-  String get rewindRange => 'Rewind range';
+  String get rewindRange => 'Interval de derulare';
 
   @override
-  String get rewindAfterPausedFor => 'Rewind after paused for';
+  String get rewindAfterPausedFor => 'Derulează după o pauză de';
 
   @override
-  String get rewindAnyPause => 'Any pause';
+  String get rewindAnyPause => 'Orice pauză';
 
   @override
-  String get rewindAlwaysLabel => 'Always';
+  String get rewindAlwaysLabel => 'Întotdeauna';
 
   @override
   String get rewindAlwaysDescription =>
-      'Rewinds every time you resume, even after quick interruptions';
+      'Derulează înapoi la fiecare reluare, chiar și după întreruperi scurte';
 
   @override
   String rewindAfterDescription(String seconds) {
-    return 'Only rewinds if paused for $seconds+ seconds';
+    return 'Derulează înapoi doar dacă pauza a durat $seconds+ secunde';
   }
 
   @override
-  String get chapterBarrier => 'Chapter barrier';
+  String get chapterBarrier => 'Limita capitolului';
 
   @override
   String get chapterBarrierSubtitle =>
-      'Don\'t auto-rewind past the start of the current chapter';
+      'Nu derula automat înapoi dincolo de începutul capitolului curent';
 
   @override
   String get rewindInstant => 'Instant';
 
   @override
   String rewindPause(String duration) {
-    return '$duration pause';
+    return 'Pauză de $duration';
   }
 
   @override
-  String get rewindNoRewind => 'no rewind';
+  String get rewindNoRewind => 'fără derulare';
 
   @override
   String rewindSeconds(String seconds) {
-    return '${seconds}s rewind';
+    return 'derulare de ${seconds}s';
   }
 
   @override
-  String get sectionSleepTimer => 'Sleep Timer';
+  String get sectionSleepTimer => 'Temporizator de somn';
 
   @override
-  String get sleep => 'Sleep';
+  String get sleep => 'Somn';
 
   @override
-  String get sleepTimer => 'Sleep Timer';
+  String get sleepTimer => 'Temporizator de somn';
 
   @override
-  String get shakeDuringSleepTimer => 'Shake during sleep timer';
+  String get shakeDuringSleepTimer =>
+      'Scuturare în timpul temporizatorului de somn';
 
   @override
-  String get shakeOff => 'Off';
+  String get shakeOff => 'Oprit';
 
   @override
-  String get shakeAddTime => 'Add Time';
+  String get shakeAddTime => 'Adaugă timp';
 
   @override
-  String get shakeReset => 'Reset';
+  String get shakeReset => 'Resetează';
 
   @override
-  String get shakeAdds => 'Shake adds';
+  String get shakeAdds => 'Scuturarea adaugă';
 
   @override
-  String get sleepAddAmount => 'Add time amount';
+  String get sleepAddAmount => 'Cantitatea de timp adăugat';
 
   @override
   String shakeAddsValue(int minutes) {
@@ -2925,54 +3000,55 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get shakeSensitivity => 'Shake sensitivity';
+  String get shakeSensitivity => 'Sensibilitatea la scuturare';
 
   @override
-  String get shakeSensitivityVeryLow => 'Very low';
+  String get shakeSensitivityVeryLow => 'Foarte scăzută';
 
   @override
-  String get shakeSensitivityLow => 'Low';
+  String get shakeSensitivityLow => 'Scăzută';
 
   @override
-  String get shakeSensitivityMedium => 'Medium';
+  String get shakeSensitivityMedium => 'Medie';
 
   @override
-  String get shakeSensitivityHigh => 'High';
+  String get shakeSensitivityHigh => 'Ridicată';
 
   @override
-  String get shakeSensitivityVeryHigh => 'Very high';
+  String get shakeSensitivityVeryHigh => 'Foarte ridicată';
 
   @override
-  String get buttonDuringSleepTimer => 'Headphone button during wind-down';
+  String get buttonDuringSleepTimer =>
+      'Butonul căștilor în timpul stingerii treptate';
 
   @override
   String get buttonDuringSleepTimerHint =>
-      'In the final wind-down moments, one press resets the timer instead of pausing. Double press still skips.';
+      'În ultimele momente ale stingerii treptate, o singură apăsare resetează temporizatorul în loc să pună pe pauză. Dubla apăsare tot sare peste.';
 
   @override
-  String get resetTimerOnPause => 'Reset timer on pause';
+  String get resetTimerOnPause => 'Resetează temporizatorul la pauză';
 
   @override
   String get resetTimerOnPauseOnSubtitle =>
-      'Timer restarts from full duration when you resume';
+      'Temporizatorul repornește de la durata completă când reiei redarea';
 
   @override
   String get resetTimerOnPauseOffSubtitle =>
-      'Timer continues from where it left off';
+      'Temporizatorul continuă de unde a rămas';
 
   @override
-  String get fadeVolumeBeforeSleep => 'Fade volume before sleep';
+  String get fadeVolumeBeforeSleep => 'Reduce treptat volumul înainte de somn';
 
   @override
   String get fadeVolumeOnSubtitle =>
-      'Gradually lowers volume during the last 30 seconds';
+      'Reduce treptat volumul în ultimele 30 de secunde';
 
   @override
   String get fadeVolumeOffSubtitle =>
-      'Playback stops immediately when timer ends';
+      'Redarea se oprește imediat când se încheie temporizatorul';
 
   @override
-  String get autoSleepTimer => 'Auto sleep timer';
+  String get autoSleepTimer => 'Temporizator de somn automat';
 
   @override
   String autoSleepTimerOnSubtitle(String start, String end, int duration) {
@@ -2981,386 +3057,404 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get autoSleepTimerOffSubtitle =>
-      'Automatically start a sleep timer during a time window';
+      'Pornește automat un temporizator de somn într-un interval orar';
 
   @override
-  String get windowStart => 'Window start';
+  String get windowStart => 'Începutul intervalului';
 
   @override
-  String get windowEnd => 'Window end';
+  String get windowEnd => 'Sfârșitul intervalului';
 
   @override
-  String get timerDuration => 'Timer duration';
+  String get timerDuration => 'Durata temporizatorului';
 
   @override
-  String get timer => 'Timer';
+  String get timer => 'Temporizator';
 
   @override
-  String get endOfChapter => 'End of Chapter';
+  String get endOfChapter => 'Sfârșitul capitolului';
 
   @override
   String startMinTimer(int minutes) {
-    return 'Start $minutes min timer';
+    return 'Pornește temporizator de $minutes min';
   }
 
   @override
   String sleepAfterChapters(int count, String label) {
-    return 'Sleep after $count $label';
+    return 'Somn după $count $label';
   }
 
   @override
-  String get addMoreTime => 'Add more time';
+  String get addMoreTime => 'Adaugă mai mult timp';
 
   @override
-  String get cancelTimer => 'Cancel timer';
+  String get cancelTimer => 'Anulează temporizatorul';
 
   @override
   String chaptersLeftCount(int count) {
-    return '$count ch left';
+    return '$count cap. rămase';
   }
 
   @override
-  String get sectionDownloadsAndStorage => 'Downloads & Storage';
+  String get sectionDownloadsAndStorage => 'Descărcări și stocare';
 
   @override
-  String get downloadOverWifiOnly => 'Download network';
+  String get downloadOverWifiOnly => 'Rețea pentru descărcări';
 
   @override
-  String get downloadOverWifiOnSubtitle => 'Wi-Fi only';
+  String get downloadOverWifiOnSubtitle => 'Doar Wi-Fi';
 
   @override
-  String get downloadOverWifiOffSubtitle => 'Any connection';
+  String get downloadOverWifiOffSubtitle => 'Orice conexiune';
 
   @override
-  String get autoDownloadOnWifi => 'Auto-download books you start';
+  String get autoDownloadOnWifi => 'Descarcă automat cărțile pe care le începi';
 
   @override
-  String get autoDownloadOnWifiInfoTitle => 'Auto-Download Books You Start';
+  String get autoDownloadOnWifiInfoTitle =>
+      'Descarcă automat cărțile pe care le începi';
 
   @override
   String get autoDownloadOnWifiInfoContent =>
-      'When you start streaming a book, the full book downloads in the background so you\'ll have it offline without starting the download yourself. These downloads follow your Download network setting above, so set it to Any connection if you want them to run on mobile data too.';
+      'Când începi să asculți o carte în streaming, cartea întreagă se descarcă în fundal, astfel încât să o ai offline fără să pornești tu descărcarea. Aceste descărcări respectă setarea Rețea pentru descărcări de mai sus, așa că setează-o pe Orice conexiune dacă vrei să ruleze și pe datele mobile.';
 
   @override
   String get autoDownloadOnWifiOnSubtitle =>
-      'Streamed books download in the background automatically';
+      'Cărțile ascultate în streaming se descarcă automat în fundal';
 
   @override
-  String get autoDownloadOnWifiOffSubtitle => 'Off';
+  String get autoDownloadOnWifiOffSubtitle => 'Oprit';
 
   @override
-  String get concurrentDownloads => 'Concurrent downloads';
+  String get concurrentDownloads => 'Descărcări simultane';
 
   @override
-  String get autoDownload => 'Auto-download';
+  String get autoDownload => 'Descărcare automată';
 
   @override
   String get autoDownloadSubtitle =>
-      'Enable per series, podcast, playlist or collection from their detail pages';
+      'Activează-o pentru fiecare serie, podcast, listă de redare sau colecție din paginile lor de detalii';
 
   @override
-  String get autoDownloadEnabledFor => 'Turned on for';
+  String get autoDownloadEnabledFor => 'Activată pentru';
 
   @override
-  String get autoDownloadEnabledForNone => 'Nothing yet';
+  String get autoDownloadEnabledForNone => 'Încă nimic';
 
   @override
-  String get autoDownloadSourceUnnamed => 'Not loaded yet';
+  String get autoDownloadSourceUnnamed => 'Încă neîncărcat';
 
   @override
-  String get keepNext => 'Keep next';
+  String get keepNext => 'Păstrează următoarele';
 
   @override
-  String get keepNextInfoTitle => 'Keep Next';
+  String get keepNextInfoTitle => 'Păstrează următoarele';
 
   @override
   String get keepNextInfoContent =>
-      'The number of items to keep downloaded, including the one you\'re currently listening to. For example, \"Keep next 3\" means the current book plus the next 2 in that series, podcast, playlist or collection will stay downloaded. This applies to every auto-download you turn on.';
+      'Numărul de elemente care rămân descărcate, inclusiv cel pe care îl asculți acum. De exemplu, „Păstrează următoarele 3” înseamnă că rămân descărcate cartea curentă și următoarele 2 din acea serie, podcast, listă de redare sau colecție. Se aplică fiecărei descărcări automate pe care o activezi.';
 
   @override
-  String get deleteAbsorbedDownloads => 'Delete absorbed downloads';
+  String get deleteAbsorbedDownloads => 'Șterge descărcările absorbite';
 
   @override
-  String get deleteAbsorbedDownloadsInfoTitle => 'Delete Absorbed Downloads';
+  String get deleteAbsorbedDownloadsInfoTitle =>
+      'Șterge descărcările absorbite';
 
   @override
   String get deleteAbsorbedDownloadsInfoContent =>
-      'When enabled, downloaded books or episodes are automatically deleted from this device after you finish them in Absorb. Finishing an item on the web or another device won’t delete its download here.';
+      'Când este activată, cărțile sau episoadele descărcate sunt șterse automat de pe acest dispozitiv după ce le termini în Absorb. Terminarea unui element pe web sau pe alt dispozitiv nu șterge descărcarea de aici.';
 
   @override
   String get deleteAbsorbedOnSubtitle =>
-      'Finished items are removed to save space';
+      'Elementele terminate sunt eliminate pentru a economisi spațiu';
 
   @override
-  String get deleteAbsorbedOffSubtitle => 'Off - finished downloads kept';
+  String get deleteAbsorbedOffSubtitle =>
+      'Oprit - descărcările terminate sunt păstrate';
 
   @override
-  String get downloadLocation => 'Download location';
+  String get downloadLocation => 'Locația descărcărilor';
 
   @override
-  String get storageUsed => 'Storage used';
+  String get storageUsed => 'Spațiu utilizat';
 
   @override
   String storageUsedByDownloads(String size) {
-    return '$size used by downloads';
+    return '$size utilizați de descărcări';
   }
 
   @override
   String storageFreeOfTotal(String free, String total) {
-    return '$free free of $total';
+    return '$free liberi din $total';
   }
 
   @override
-  String get manageDownloads => 'Manage downloads';
+  String get manageDownloads => 'Gestionează descărcările';
 
   @override
-  String get streamingCache => 'Streaming cache';
+  String get streamingCache => 'Cache de streaming';
 
   @override
-  String get streamingCacheInfoTitle => 'Streaming Cache';
+  String get streamingCacheInfoTitle => 'Cache de streaming';
 
   @override
   String get streamingCacheInfoContent =>
-      'Caches streamed audio to disk so it doesn\'t need to be re-downloaded if you seek back or re-listen to sections. The cache is automatically managed - oldest files are removed when the size limit is reached. This is separate from fully downloaded books.';
+      'Păstrează în cache pe disc sunetul ascultat în streaming, ca să nu fie descărcat din nou dacă derulezi înapoi sau reasculți secțiuni. Cache-ul este gestionat automat - cele mai vechi fișiere sunt eliminate când se atinge limita de dimensiune. Este separat de cărțile descărcate complet.';
 
   @override
-  String get streamingCacheOff => 'Off';
+  String get streamingCacheOff => 'Oprit';
 
   @override
   String get streamingCacheOffSubtitle =>
-      'Off - audio is streamed without caching';
+      'Oprit - sunetul este redat în streaming fără cache';
 
   @override
   String streamingCacheOnSubtitle(int size) {
-    return '$size MB - recently streamed audio is cached to disk';
+    return '$size MB - sunetul ascultat recent în streaming este păstrat în cache pe disc';
   }
 
   @override
-  String get clearCache => 'Clear cache';
+  String get clearCache => 'Golește cache-ul';
 
   @override
-  String get streamingCacheCleared => 'Streaming cache cleared';
+  String get streamingCacheCleared => 'Cache-ul de streaming a fost golit';
 
   @override
-  String get sectionLibrary => 'Library';
+  String get sectionLibrary => 'Bibliotecă';
 
   @override
-  String get hideEbookOnlyTitles => 'Hide eBook-only titles';
+  String get hideEbookOnlyTitles => 'Ascunde titlurile doar e-book';
 
   @override
-  String get hideEbookOnlyOnSubtitle => 'Books with no audio files are hidden';
+  String get hideEbookOnlyOnSubtitle =>
+      'Cărțile fără fișiere audio sunt ascunse';
 
   @override
-  String get hideEbookOnlyOffSubtitle => 'Off - all library items shown';
+  String get hideEbookOnlyOffSubtitle =>
+      'Oprit - toate elementele bibliotecii sunt afișate';
 
   @override
-  String get homeCardsOpenDetails => 'Open details from Home';
+  String get audibleRatings => 'Audible ratings';
+
+  @override
+  String get audibleRatingsOnSubtitle =>
+      'On - book details show the Audible rating';
+
+  @override
+  String get audibleRatingsOffSubtitle => 'Off - no Audible lookup or stars';
+
+  @override
+  String get homeCardsOpenDetails => 'Deschide detaliile din Acasă';
 
   @override
   String get homeCardsOpenDetailsOnSubtitle =>
-      'Tapping a Continue Listening or Continue Reading card opens its details';
+      'Atingerea unui card Continuă ascultarea sau Continuă citirea deschide detaliile';
 
   @override
   String get homeCardsOpenDetailsOffSubtitle =>
-      'Tapping a Continue Listening or Continue Reading card picks up where you left off';
+      'Atingerea unui card Continuă ascultarea sau Continuă citirea reia de unde ai rămas';
 
   @override
-  String get showGoodreadsButton => 'Show Goodreads button';
+  String get showGoodreadsButton => 'Afișează butonul Goodreads';
 
   @override
   String get showGoodreadsOnSubtitle =>
-      'Book detail sheet shows a link to Goodreads';
+      'Fișa de detalii a cărții arată un link către Goodreads';
 
   @override
-  String get showGoodreadsOffSubtitle => 'Off - Goodreads button hidden';
+  String get showGoodreadsOffSubtitle =>
+      'Oprit - butonul Goodreads este ascuns';
 
   @override
-  String get sectionPermissions => 'Permissions';
+  String get sectionPermissions => 'Permisiuni';
 
   @override
-  String get notifications => 'Notifications';
+  String get notifications => 'Notificări';
 
   @override
   String get notificationsSubtitle =>
-      'For download progress and playback controls';
+      'Pentru progresul descărcărilor și comenzile de redare';
 
   @override
-  String get notificationsAlreadyEnabled => 'Notifications already enabled';
+  String get notificationsAlreadyEnabled => 'Notificările sunt deja activate';
 
   @override
-  String get unrestrictedBattery => 'Unrestricted battery';
+  String get unrestrictedBattery => 'Baterie nerestricționată';
 
   @override
   String get unrestrictedBatterySubtitle =>
-      'Prevents Android from killing background playback';
+      'Împiedică Android să oprească redarea în fundal';
 
   @override
-  String get batteryAlreadyUnrestricted => 'Battery already unrestricted';
+  String get batteryAlreadyUnrestricted => 'Bateria este deja nerestricționată';
 
   @override
-  String get sectionIssuesAndSupport => 'Issues & Support';
+  String get sectionIssuesAndSupport => 'Probleme și asistență';
 
   @override
-  String get bugsAndFeatureRequests => 'Bugs & Feature Requests';
+  String get bugsAndFeatureRequests => 'Erori și cereri de funcții';
 
   @override
-  String get bugsAndFeatureRequestsSubtitle => 'Open an issue on GitHub';
+  String get bugsAndFeatureRequestsSubtitle => 'Deschide o problemă pe GitHub';
 
   @override
-  String get joinDiscord => 'Join Discord';
+  String get joinDiscord => 'Alătură-te pe Discord';
 
   @override
-  String get joinDiscordSubtitle => 'Community, support, and updates';
+  String get joinDiscordSubtitle => 'Comunitate, asistență și noutăți';
 
   @override
   String get contact => 'Contact';
 
   @override
-  String get contactSubtitle => 'Send device info via email';
+  String get contactSubtitle =>
+      'Trimite informații despre dispozitiv prin e-mail';
 
   @override
-  String get enableLogging => 'Enable logging';
+  String get enableLogging => 'Activează jurnalele';
 
   @override
   String get enableLoggingOnSubtitle =>
-      'On - logs saved to file (restart to apply)';
+      'Activat - jurnalele sunt salvate într-un fișier (repornește pentru aplicare)';
 
   @override
-  String get enableLoggingOffSubtitle => 'Off - no logs captured';
+  String get enableLoggingOffSubtitle => 'Oprit - nu se captează jurnale';
 
   @override
   String get loggingEnabledSnackbar =>
-      'Logging enabled - restart app to start capturing';
+      'Jurnalele sunt activate - repornește aplicația pentru a începe captarea';
 
   @override
   String get loggingDisabledSnackbar =>
-      'Logging disabled - restart app to stop capturing';
+      'Jurnalele sunt dezactivate - repornește aplicația pentru a opri captarea';
 
   @override
-  String get sendLogs => 'Send logs';
+  String get sendLogs => 'Trimite jurnalele';
 
   @override
-  String get sendLogsSubtitle => 'Share log file as attachment';
+  String get sendLogsSubtitle => 'Partajează fișierul de jurnal ca atașament';
 
   @override
   String failedToShare(String error) {
-    return 'Failed to share: $error';
+    return 'Partajarea a eșuat: $error';
   }
 
   @override
-  String get clearLogs => 'Clear logs';
+  String get clearLogs => 'Șterge jurnalele';
 
   @override
-  String get logsCleared => 'Logs cleared';
+  String get logsCleared => 'Jurnalele au fost șterse';
 
   @override
-  String get clearLogsQuestion => 'Clear logs?';
+  String get clearLogsQuestion => 'Ștergi jurnalele?';
 
   @override
   String get clearLogsContent =>
-      'This can\'t be undone. Send them first if you might want them.';
+      'Acțiunea nu poate fi anulată. Trimite-le mai întâi dacă s-ar putea să ai nevoie de ele.';
 
   @override
-  String get sectionAdvanced => 'Advanced';
+  String get sectionAdvanced => 'Avansat';
 
   @override
-  String get localServer => 'Local server';
+  String get localServer => 'Server local';
 
   @override
-  String get localServerInfoTitle => 'Local Server';
+  String get localServerInfoTitle => 'Server local';
 
   @override
   String get localServerInfoContent =>
-      'If you run your Audiobookshelf server at home, you can set a local/LAN URL here. Absorb will automatically switch to the faster local connection when it detects you\'re on your home network, and fall back to your remote URL when you\'re away.';
+      'Dacă îți rulezi serverul Audiobookshelf acasă, poți seta aici o adresă locală/LAN. Absorb va trece automat la conexiunea locală, mai rapidă, când detectează că ești în rețeaua de acasă, și va reveni la adresa de la distanță când ești plecat.';
 
   @override
-  String get localServerOnConnectedSubtitle => 'Connected via local server';
+  String get localServerOnConnectedSubtitle => 'Conectat prin serverul local';
 
   @override
-  String get localServerOnRemoteSubtitle => 'Enabled - using remote server';
+  String get localServerOnRemoteSubtitle =>
+      'Activat - se folosește serverul de la distanță';
 
   @override
   String get localServerOffSubtitle =>
-      'Auto-switch to a LAN server on your home WiFi';
+      'Trece automat la un server LAN în WiFi-ul de acasă';
 
   @override
-  String get localServerUrlLabel => 'Local server URL';
+  String get localServerUrlLabel => 'Adresa serverului local';
 
   @override
   String get localServerUrlHint => 'http://192.168.1.100:13378';
 
   @override
   String get localServerUrlSetSnackbar =>
-      'Local server URL set - will connect automatically when on your home network';
+      'Adresa serverului local a fost setată - se va conecta automat când ești în rețeaua de acasă';
 
   @override
-  String get disableAudioFocus => 'Disable audio focus';
+  String get disableAudioFocus => 'Dezactivează focalizarea audio';
 
   @override
-  String get disableAudioFocusInfoTitle => 'Audio Focus';
+  String get disableAudioFocusInfoTitle => 'Focalizare audio';
 
   @override
   String get disableAudioFocusInfoContent =>
-      'By default, Android gives audio \"focus\" to one app at a time - when Absorb plays, other audio (music, videos) will pause. Disabling audio focus lets Absorb play alongside other apps. Phone calls will still pause playback regardless of this setting.';
+      'Implicit, Android acordă „focalizarea” audio unei singure aplicații la un moment dat - când Absorb redă, alte sunete (muzică, videoclipuri) se opresc. Dezactivarea focalizării audio permite Absorb să redea alături de alte aplicații. Apelurile telefonice tot opresc redarea, indiferent de această setare.';
 
   @override
   String get disableAudioFocusOnSubtitle =>
-      'On - plays alongside other audio (still pauses for calls)';
+      'Activat - redă alături de alte sunete (se oprește totuși la apeluri)';
 
   @override
   String get disableAudioFocusOffSubtitle =>
-      'Off - other audio pauses when Absorb plays';
+      'Oprit - alte sunete se opresc când Absorb redă';
 
   @override
-  String get restartRequired => 'Restart Required';
+  String get restartRequired => 'Repornire necesară';
 
   @override
   String get restartRequiredContent =>
-      'Audio focus change requires a full restart to take effect. Close the app now?';
+      'Schimbarea focalizării audio necesită o repornire completă pentru a avea efect. Închizi aplicația acum?';
 
   @override
-  String get closeApp => 'Close App';
+  String get closeApp => 'Închide aplicația';
 
   @override
-  String get trustAllCertificates => 'Trust all certificates';
+  String get trustAllCertificates => 'Ai încredere în toate certificatele';
 
   @override
-  String get trustAllCertificatesInfoTitle => 'Self-signed Certificates';
+  String get trustAllCertificatesInfoTitle => 'Certificate autosemnate';
 
   @override
-  String get mp3IndexSeeking => 'MP3 index seeking';
+  String get mp3IndexSeeking => 'Derulare MP3 prin index';
 
   @override
-  String get mp3IndexSeekingInfoTitle => 'MP3 Index Seeking';
+  String get mp3IndexSeekingInfoTitle => 'Derulare MP3 prin index';
 
   @override
   String get mp3IndexSeekingInfoContent =>
-      'Only enable this if you have MP3 files that don\'t seek to the right position. Inaccurate seeking usually comes from variable bitrate (VBR) MP3s. Index seeking builds an exact time map as the file is read, so jumping near the end of a large MP3 can take a moment - especially when streaming, since the file has to be read up to that point. Takes effect the next time a book or podcast episode starts.';
+      'Activează-o doar dacă ai fișiere MP3 care nu derulează la poziția corectă. Derularea inexactă provine de obicei din MP3-uri cu rată de biți variabilă (VBR). Derularea prin index construiește o hartă exactă a timpului pe măsură ce fișierul este citit, așa că un salt aproape de sfârșitul unui MP3 mare poate dura puțin - mai ales în streaming, deoarece fișierul trebuie citit până în acel punct. Are efect la următoarea pornire a unei cărți sau a unui episod de podcast.';
 
   @override
   String get mp3IndexSeekingOnSubtitle =>
-      'On - exact seeking for VBR MP3 files';
+      'Activat - derulare exactă pentru fișiere MP3 VBR';
 
   @override
-  String get mp3IndexSeekingOffSubtitle => 'Off - normal seeking';
+  String get mp3IndexSeekingOffSubtitle => 'Oprit - derulare normală';
 
   @override
   String get trustAllCertificatesInfoContent =>
-      'Enable this if your Audiobookshelf server uses a self-signed certificate or a custom root CA. When enabled, Absorb will skip TLS certificate verification for all connections. Only enable this if you trust your network.';
+      'Activează-o dacă serverul tău Audiobookshelf folosește un certificat autosemnat sau un CA rădăcină personalizat. Când este activată, Absorb va sări peste verificarea certificatelor TLS pentru toate conexiunile. Activează-o doar dacă ai încredere în rețeaua ta.';
 
   @override
   String get trustAllCertificatesOnSubtitle =>
-      'On - accepting all certificates';
+      'Activat - se acceptă toate certificatele';
 
   @override
   String get trustAllCertificatesOffSubtitle =>
-      'Off - only trusted certificates accepted';
+      'Oprit - se acceptă doar certificatele de încredere';
 
   @override
-  String get supportTheDev => 'Support the Dev';
+  String get supportTheDev => 'Sprijină dezvoltatorul';
 
   @override
-  String get buyMeACoffee => 'Buy me a coffee';
+  String get buyMeACoffee => 'Cumpără-mi o cafea';
 
   @override
   String appVersionFormat(String version) {
@@ -3378,324 +3472,332 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get backupAndRestore => 'Backup & Restore';
+  String get backupAndRestore => 'Copie de rezervă și restaurare';
 
   @override
   String get backupAndRestoreSubtitle =>
-      'Save or restore all your settings to a file';
+      'Salvează sau restaurează toate setările într-un fișier';
 
   @override
-  String get backUp => 'Back up';
+  String get backUp => 'Fă copie';
 
   @override
-  String get restore => 'Restore';
+  String get restore => 'Restaurează';
 
   @override
-  String get allBookmarks => 'All Bookmarks';
+  String get allBookmarks => 'Toate marcajele';
 
   @override
-  String get allBookmarksSubtitle => 'View bookmarks across all books';
+  String get allBookmarksSubtitle => 'Vezi marcajele din toate cărțile';
 
   @override
-  String get switchAccount => 'Switch Account';
+  String get switchAccount => 'Schimbă contul';
 
   @override
-  String get addAccount => 'Add Account';
+  String get addAccount => 'Adaugă cont';
 
   @override
-  String get logOut => 'Log out';
+  String get logOut => 'Deconectare';
 
   @override
-  String get includeLoginInfoTitle => 'Include login info?';
+  String get includeLoginInfoTitle => 'Incluzi datele de conectare?';
 
   @override
   String get includeLoginInfoContent =>
-      'Would you like to include login credentials for all your saved accounts in the backup?\n\nThis makes it easy to restore on a new device, but the file will contain your auth tokens.';
+      'Vrei să incluzi în copia de rezervă datele de conectare ale tuturor conturilor salvate?\n\nAsta face restaurarea ușoară pe un dispozitiv nou, dar fișierul va conține token-urile tale de autentificare.';
 
   @override
-  String get noSettingsOnly => 'No, settings only';
+  String get noSettingsOnly => 'Nu, doar setările';
 
   @override
-  String get yesIncludeAccounts => 'Yes, include accounts';
+  String get yesIncludeAccounts => 'Da, include conturile';
 
   @override
-  String get backupSavedWithAccounts => 'Backup saved (with accounts)';
+  String get backupSavedWithAccounts => 'Copie de rezervă salvată (cu conturi)';
 
   @override
-  String get backupSavedSettingsOnly => 'Backup saved (settings only)';
+  String get backupSavedSettingsOnly =>
+      'Copie de rezervă salvată (doar setări)';
 
   @override
   String backupFailed(String error) {
-    return 'Backup failed: $error';
+    return 'Copierea de rezervă a eșuat: $error';
   }
 
   @override
-  String get restoreBackupTitle => 'Restore backup?';
+  String get restoreBackupTitle => 'Restaurezi copia de rezervă?';
 
   @override
   String get restoreBackupContent =>
-      'This will replace all your current settings with the backup values.';
+      'Aceasta va înlocui toate setările curente cu valorile din copia de rezervă.';
 
   @override
   String fromAbsorbVersion(String version) {
-    return 'From Absorb v$version';
+    return 'Din Absorb v$version';
   }
 
   @override
   String restoreAccountsChip(int count) {
-    return '$count account(s)';
+    return '$count cont(uri)';
   }
 
   @override
   String restoreBookmarksChip(int count) {
-    return 'Bookmarks for $count book(s)';
+    return 'Marcaje pentru $count carte/cărți';
   }
 
   @override
-  String get restoreCustomHeadersChip => 'Custom headers';
+  String get restoreCustomHeadersChip => 'Antete personalizate';
 
   @override
-  String get invalidBackupFile => 'Invalid backup file';
+  String get invalidBackupFile => 'Fișier de copie de rezervă invalid';
 
   @override
-  String get settingsRestoredSuccessfully => 'Settings restored successfully';
+  String get settingsRestoredSuccessfully =>
+      'Setările au fost restaurate cu succes';
 
   @override
   String restoreFailed(String error) {
-    return 'Restore failed: $error';
+    return 'Restaurarea a eșuat: $error';
   }
 
   @override
-  String get logOutTitle => 'Log out?';
+  String get logOutTitle => 'Te deconectezi?';
 
   @override
   String get logOutContent =>
-      'This will sign you out. Your downloads will stay on this device.';
+      'Vei fi deconectat. Descărcările rămân pe acest dispozitiv.';
 
   @override
-  String get signOut => 'Sign Out';
+  String get signOut => 'Deconectare';
 
   @override
-  String get changePasswordTitle => 'Change Password';
+  String get changePasswordTitle => 'Schimbă parola';
 
   @override
   String get changePasswordSubtitle =>
-      'Update your Audiobookshelf password safely';
+      'Actualizează-ți parola Audiobookshelf în siguranță';
 
   @override
-  String get currentPassword => 'Current password';
+  String get currentPassword => 'Parola curentă';
 
   @override
-  String get newPassword => 'New password';
+  String get newPassword => 'Parola nouă';
 
   @override
-  String get confirmNewPassword => 'Confirm new password';
+  String get confirmNewPassword => 'Confirmă parola nouă';
 
   @override
   String get passwordChangeEffect =>
-      'Changing your password signs out your other Audiobookshelf sessions. This device stays signed in.';
+      'Schimbarea parolei deconectează celelalte sesiuni Audiobookshelf. Acest dispozitiv rămâne conectat.';
 
   @override
-  String get passwordFieldsRequired => 'Fill in all password fields';
+  String get passwordFieldsRequired =>
+      'Completează toate câmpurile pentru parolă';
 
   @override
-  String get passwordsDoNotMatch => 'New passwords do not match';
+  String get passwordsDoNotMatch => 'Parolele noi nu se potrivesc';
 
   @override
   String get passwordChanged =>
-      'Password changed. Other signed-in devices were disconnected.';
+      'Parola a fost schimbată. Celelalte dispozitive conectate au fost deconectate.';
 
   @override
-  String get passwordInvalid => 'The current password is incorrect';
+  String get passwordInvalid => 'Parola curentă este incorectă';
 
   @override
   String get passwordChangeUnsupported =>
-      'This server version does not support safe password changes in Absorb';
+      'Această versiune de server nu acceptă schimbarea sigură a parolei în Absorb';
 
   @override
-  String get passwordChangeFailed => 'Could not change your password';
+  String get passwordChangeFailed => 'Nu s-a putut schimba parola';
 
   @override
   String get otherUserPasswordResetWarning =>
-      'Changing this password signs the user out on every device.';
+      'Schimbarea acestei parole deconectează utilizatorul pe toate dispozitivele.';
 
   @override
-  String get manageSessionsTitle => 'Signed-in Devices';
+  String get manageSessionsTitle => 'Dispozitive conectate';
 
   @override
   String get manageSessionsSubtitle =>
-      'Review and remove Audiobookshelf sessions';
+      'Verifică și elimină sesiunile Audiobookshelf';
 
   @override
-  String get sessionsCurrent => 'Current device';
+  String get sessionsCurrent => 'Dispozitivul curent';
 
   @override
-  String get sessionsUnknownDevice => 'Unknown device';
+  String get sessionsUnknownDevice => 'Dispozitiv necunoscut';
 
   @override
   String sessionsLastActive(String date) {
-    return 'Last active $date';
+    return 'Ultima activitate: $date';
   }
 
   @override
-  String get sessionsNone => 'No active sessions';
+  String get sessionsNone => 'Nicio sesiune activă';
 
   @override
-  String get sessionsLoadMore => 'Load more';
+  String get sessionsLoadMore => 'Încarcă mai multe';
 
   @override
   String get sessionsUnsupported =>
-      'Session management requires Audiobookshelf 2.36 or newer.';
+      'Gestionarea sesiunilor necesită Audiobookshelf 2.36 sau mai nou.';
 
   @override
-  String get sessionsLoadFailed => 'Could not load signed-in devices';
+  String get sessionsLoadFailed =>
+      'Nu s-au putut încărca dispozitivele conectate';
 
   @override
   String get sessionsLegacyNotice =>
-      'This login does not have a refresh session, so Absorb cannot identify this device in the list.';
+      'Această conectare nu are o sesiune de reîmprospătare, așa că Absorb nu poate identifica acest dispozitiv în listă.';
 
   @override
-  String get sessionsRemove => 'Sign out device';
+  String get sessionsRemove => 'Deconectează dispozitivul';
 
   @override
-  String get sessionsRemoveTitle => 'Sign out this device?';
+  String get sessionsRemoveTitle => 'Deconectezi acest dispozitiv?';
 
   @override
   String get sessionsRemoveContent =>
-      'This removes its refresh session. Its current access may keep working until that short-lived token expires.';
+      'Aceasta elimină sesiunea sa de reîmprospătare. Accesul curent poate continua să funcționeze până expiră token-ul său de scurtă durată.';
 
   @override
-  String get sessionsRemoved => 'Device signed out';
+  String get sessionsRemoved => 'Dispozitiv deconectat';
 
   @override
-  String get sessionsRemoveFailed => 'Could not sign out that device';
+  String get sessionsRemoveFailed => 'Nu s-a putut deconecta acel dispozitiv';
 
   @override
-  String get sessionsSignOutAll => 'Sign out all devices';
+  String get sessionsSignOutAll => 'Deconectează toate dispozitivele';
 
   @override
-  String get sessionsSignOutAllTitle => 'Sign out everywhere?';
+  String get sessionsSignOutAllTitle => 'Deconectezi peste tot?';
 
   @override
   String get sessionsSignOutAllContent =>
-      'This removes every refresh session, including this device. Existing access tokens may work until they expire.';
+      'Aceasta elimină toate sesiunile de reîmprospătare, inclusiv pe cea a acestui dispozitiv. Token-urile de acces existente pot funcționa până expiră.';
 
   @override
   String podcastScheduleServerTime(String timeZone) {
-    return 'Schedule uses server time ($timeZone)';
+    return 'Programul folosește ora serverului ($timeZone)';
   }
 
   @override
-  String get podcastScheduleServerTimeUnknown => 'Schedule uses server time';
+  String get podcastScheduleServerTimeUnknown =>
+      'Programul folosește ora serverului';
 
   @override
-  String get editServerAddressTitle => 'Edit Server Address';
+  String get editServerAddressTitle => 'Editează adresa serverului';
 
   @override
   String editServerAddressSubtitle(String username) {
-    return 'Update the address for $username. Use this if your server\'s address changed - it\'s still the same server, just a new URL. Your stats and downloads are kept.';
+    return 'Actualizează adresa pentru $username. Folosește asta dacă adresa serverului s-a schimbat - este același server, doar cu o adresă nouă. Statisticile și descărcările tale sunt păstrate.';
   }
 
   @override
-  String get editServerAddressField => 'Server Address';
+  String get editServerAddressField => 'Adresa serverului';
 
   @override
-  String get editServerAddressUpdated => 'Server address updated';
+  String get editServerAddressUpdated => 'Adresa serverului a fost actualizată';
 
   @override
-  String get editServerAddressFailed => 'Couldn\'t update server address';
+  String get editServerAddressFailed =>
+      'Nu s-a putut actualiza adresa serverului';
 
   @override
-  String get editServerAddressAction => 'Edit server address';
+  String get editServerAddressAction => 'Editează adresa serverului';
 
   @override
-  String get editServerConnectionTitle => 'Edit Server Connection';
+  String get editServerConnectionTitle => 'Editează conexiunea la server';
 
   @override
   String editServerConnectionSubtitle(String username) {
-    return 'Update the server address and custom headers for $username. Your stats and downloads are kept.';
+    return 'Actualizează adresa serverului și antetele personalizate pentru $username. Statisticile și descărcările tale sunt păstrate.';
   }
 
   @override
-  String get editServerConnectionAction => 'Edit server connection';
+  String get editServerConnectionAction => 'Editează conexiunea la server';
 
   @override
-  String get editServerConnectionUpdated => 'Server connection updated';
+  String get editServerConnectionUpdated =>
+      'Conexiunea la server a fost actualizată';
 
   @override
-  String get editServerConnectionFailed => 'Couldn\'t update server connection';
+  String get editServerConnectionFailed =>
+      'Nu s-a putut actualiza conexiunea la server';
 
   @override
   String get editCustomHeadersDescription =>
-      'Used for Cloudflare tunnels or reverse proxies. These headers apply only to this saved account.';
+      'Folosite pentru tuneluri Cloudflare sau proxy-uri inverse. Aceste antete se aplică doar acestui cont salvat.';
 
   @override
-  String get removeAccountAction => 'Remove account';
+  String get removeAccountAction => 'Elimină contul';
 
   @override
-  String get removeAccountTitle => 'Remove Account?';
+  String get removeAccountTitle => 'Elimini contul?';
 
   @override
   String removeAccountContent(String username, String server) {
-    return 'Remove $username on $server from saved accounts?\n\nYou can always add it back later by signing in again.';
+    return 'Elimini $username de pe $server din conturile salvate?\n\nÎl poți adăuga oricând înapoi conectându-te din nou.';
   }
 
   @override
-  String get switchAccountTitle => 'Switch Account?';
+  String get switchAccountTitle => 'Schimbi contul?';
 
   @override
   String switchAccountContent(String username, String server) {
-    return 'Switch to $username on $server?\n\nYour current playback will be stopped and the app will reload with the other account\'s data.';
+    return 'Treci la $username pe $server?\n\nRedarea curentă va fi oprită, iar aplicația se va reîncărca cu datele celuilalt cont.';
   }
 
   @override
-  String get switchButton => 'Switch';
+  String get switchButton => 'Schimbă';
 
   @override
-  String get downloadLocationSheetTitle => 'Download Location';
+  String get downloadLocationSheetTitle => 'Locația descărcărilor';
 
   @override
   String get downloadLocationSheetSubtitle =>
-      'Choose where audiobooks are saved';
+      'Alege unde sunt salvate cărțile audio';
 
   @override
-  String get currentLocation => 'Current location';
+  String get currentLocation => 'Locația curentă';
 
   @override
   String get existingDownloadsWarning =>
-      'Existing downloads stay in their current location. Only new downloads use the new path.';
+      'Descărcările existente rămân în locația lor curentă. Doar descărcările noi folosesc noua cale.';
 
   @override
-  String get chooseFolder => 'Choose folder';
+  String get chooseFolder => 'Alege folderul';
 
   @override
-  String get chooseDownloadFolder => 'Choose download folder';
+  String get chooseDownloadFolder => 'Alege folderul de descărcări';
 
   @override
   String get storagePermissionDenied =>
-      'Storage permission permanently denied - enable it in app settings';
+      'Permisiunea de stocare a fost refuzată definitiv - activează-o din setările aplicației';
 
   @override
-  String get openSettings => 'Open Settings';
+  String get openSettings => 'Deschide Setările';
 
   @override
   String get storagePermissionRequired =>
-      'Storage permission is required for custom download locations';
+      'Permisiunea de stocare este necesară pentru locații de descărcare personalizate';
 
   @override
   String get cannotWriteToFolder =>
-      'Cannot write to that folder - choose another location or grant file access in system settings';
+      'Nu se poate scrie în acel folder - alege altă locație sau acordă acces la fișiere din setările sistemului';
 
   @override
   String downloadLocationSetTo(String label) {
-    return 'Download location set to $label';
+    return 'Locația descărcărilor a fost setată la $label';
   }
 
   @override
-  String get resetToDefault => 'Reset to default';
+  String get resetToDefault => 'Resetează la implicit';
 
   @override
-  String get resetToDefaultStorage => 'Reset to default storage';
+  String get resetToDefaultStorage => 'Resetează la stocarea implicită';
 
   @override
   String legacyDownloadsNotice(int count) {
@@ -3703,511 +3805,518 @@ class AppLocalizationsRo extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          '$count downloads are in an old custom folder that can no longer be opened. Re-download them or dismiss this notice.',
+          '$count de descărcări se află într-un folder personalizat vechi, care nu mai poate fi deschis. Descarcă-le din nou sau închide această notificare.',
+      few:
+          '$count descărcări se află într-un folder personalizat vechi, care nu mai poate fi deschis. Descarcă-le din nou sau închide această notificare.',
       one:
-          '1 download is in an old custom folder that can no longer be opened. Re-download it or dismiss this notice.',
+          '1 descărcare se află într-un folder personalizat vechi, care nu mai poate fi deschis. Descarcă-o din nou sau închide această notificare.',
     );
     return '$_temp0';
   }
 
   @override
-  String get redownload => 'Re-download';
+  String get redownload => 'Descarcă din nou';
 
   @override
-  String get redownloadStarted => 'Re-downloading';
+  String get redownloadStarted => 'Se descarcă din nou';
 
   @override
-  String get dismiss => 'Dismiss';
+  String get dismiss => 'Închide';
 
   @override
-  String get tipsAndHiddenFeatures => 'Tips & Hidden Features';
+  String get tipsAndHiddenFeatures => 'Sfaturi și funcții ascunse';
 
   @override
-  String get tipsSubtitle => 'Get the most out of Absorb';
+  String get tipsSubtitle => 'Profită la maximum de Absorb';
 
   @override
-  String get adminTitle => 'Server Admin';
+  String get adminTitle => 'Administrare server';
 
   @override
-  String get adminTasksTitle => 'Server activity';
+  String get adminTasksTitle => 'Activitatea serverului';
 
   @override
   String adminTasksRunning(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count tasks running',
-      one: '1 task running',
+      other: '$count de sarcini în execuție',
+      few: '$count sarcini în execuție',
+      one: '1 sarcină în execuție',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminTasksRecent => 'Recent server activity';
+  String get adminTasksRecent => 'Activitate recentă a serverului';
 
   @override
-  String get adminTasksEmpty => 'No server tasks are running';
+  String get adminTasksEmpty => 'Nicio sarcină a serverului nu rulează';
 
   @override
   String adminTaskScanSummary(int added, int updated, int missing) {
-    return '$added added - $updated updated - $missing missing';
+    return '$added adăugate - $updated actualizate - $missing lipsă';
   }
 
   @override
   String get adminServer => 'Server';
 
   @override
-  String get adminVersion => 'Version';
+  String get adminVersion => 'Versiune';
 
   @override
-  String get adminUsers => 'Users';
+  String get adminUsers => 'Utilizatori';
 
   @override
   String get adminOnline => 'Online';
 
   @override
-  String get adminBackup => 'Backup';
+  String get adminBackup => 'Copie de rezervă';
 
   @override
-  String get adminPurgeCache => 'Purge Cache';
+  String get adminPurgeCache => 'Golește cache-ul';
 
   @override
-  String get adminManage => 'Manage';
+  String get adminManage => 'Gestionează';
 
   @override
   String adminUsersSubtitle(int userCount, int onlineCount) {
-    return '$userCount accounts - $onlineCount online';
+    return '$userCount conturi - $onlineCount online';
   }
 
   @override
-  String get adminPodcasts => 'Podcasts';
+  String get adminPodcasts => 'Podcasturi';
 
   @override
-  String get adminPodcastsSubtitle => 'Search, add & manage shows';
+  String get adminPodcastsSubtitle => 'Caută, adaugă și gestionează emisiuni';
 
   @override
-  String get adminScan => 'Scan';
+  String get adminScan => 'Scanează';
 
   @override
-  String get adminScanning => 'Scanning...';
+  String get adminScanning => 'Se scanează...';
 
   @override
-  String get adminMatchAll => 'Match All';
+  String get adminMatchAll => 'Potrivește tot';
 
   @override
-  String get adminMatching => 'Matching...';
+  String get adminMatching => 'Se potrivește...';
 
   @override
-  String get adminMatchAllTitle => 'Match All Items?';
+  String get adminMatchAllTitle => 'Potrivești toate elementele?';
 
   @override
   String adminMatchAllContent(String name) {
-    return 'Match metadata for all items in $name? This can take a while.';
+    return 'Potrivești metadatele pentru toate elementele din $name? Poate dura ceva timp.';
   }
 
   @override
   String adminScanStarted(String name) {
-    return 'Scan started for $name';
+    return 'Scanarea a început pentru $name';
   }
 
   @override
-  String get adminBackupCreated => 'Backup created';
+  String get adminBackupCreated => 'Copie de rezervă creată';
 
   @override
-  String get adminBackupFailed => 'Backup failed';
+  String get adminBackupFailed => 'Copierea de rezervă a eșuat';
 
   @override
-  String get adminCachePurged => 'Cache purged';
+  String get adminCachePurged => 'Cache golit';
 
   @override
   String get adminRmab => 'ReadMeABook';
 
   @override
-  String get adminRmabSubtitle => 'Open in app';
+  String get adminRmabSubtitle => 'Deschide în aplicație';
 
   @override
-  String get adminRmabAdd => 'Add ReadMeABook integration';
+  String get adminRmabAdd => 'Adaugă integrarea ReadMeABook';
 
   @override
-  String get adminRmabUrlTitle => 'ReadMeABook URL';
+  String get adminRmabUrlTitle => 'Adresa ReadMeABook';
 
   @override
   String get adminRmabUrlHelp =>
-      'Paste your URL with login token. Generate one in RMAB, Admin, Users.';
+      'Lipește adresa cu token-ul de conectare. Generează una în RMAB, Admin, Utilizatori.';
 
   @override
   String get adminRmabUrlHint => 'https://rmab.example.com/?token=...';
 
   @override
-  String get adminRmabInvalidUrl => 'Enter a valid http(s) URL';
+  String get adminRmabInvalidUrl => 'Introdu o adresă http(s) validă';
 
   @override
-  String get adminRmabSaved => 'ReadMeABook saved';
+  String get adminRmabSaved => 'ReadMeABook a fost salvat';
 
   @override
-  String get adminRmabRemoved => 'ReadMeABook removed';
+  String get adminRmabRemoved => 'ReadMeABook a fost eliminat';
 
   @override
-  String get adminRmabReload => 'Reload';
+  String get adminRmabReload => 'Reîncarcă';
 
   @override
   String get adminRmabLoadFailed =>
-      'Couldn\'t load ReadMeABook. Check your URL.';
+      'Nu s-a putut încărca ReadMeABook. Verifică adresa.';
 
   @override
-  String get adminRmabConnected => 'Connected';
+  String get adminRmabConnected => 'Conectat';
 
   @override
-  String get adminRmabAskAdmin => 'Get a login URL from your server admin';
+  String get adminRmabAskAdmin =>
+      'Cere o adresă de conectare de la administratorul serverului';
 
   @override
   String get adminRmabUrlHelpUser =>
-      'Get a login URL from your server admin. They generate one in RMAB > Admin > Users.';
+      'Cere o adresă de conectare de la administratorul serverului. Acesta o generează în RMAB > Admin > Utilizatori.';
 
   @override
   String get adminRmabSettingsInfo =>
-      'ReadMeABook is a self-hosted service for requesting and downloading audiobooks. It must be installed and set up by your server admin.';
+      'ReadMeABook este un serviciu auto-găzduit pentru cererea și descărcarea cărților audio. Trebuie instalat și configurat de administratorul serverului.';
 
   @override
-  String get rmabConfigTitle => 'Connect ReadMeABook';
+  String get rmabConfigTitle => 'Conectează ReadMeABook';
 
   @override
   String get rmabConfigExplainerAdmin =>
-      'ReadMeABook is a self-hosted service for requesting audiobooks. Generate an API token in RMAB under Admin Dashboard > Settings > API, then paste the server URL and token below. Absorb doesn\'t host or download any content, it just sends requests to your server.';
+      'ReadMeABook este un serviciu auto-găzduit pentru cererea de cărți audio. Generează un token API în RMAB, la Admin Dashboard > Settings > API, apoi lipește mai jos adresa serverului și token-ul. Absorb nu găzduiește și nu descarcă niciun conținut, doar trimite cereri către serverul tău.';
 
   @override
   String get rmabConfigExplainerUser =>
-      'ReadMeABook is a self-hosted service for requesting audiobooks. Ask your server admin for the RMAB URL and an API token. Absorb doesn\'t host or download any content, it just sends requests to your server.';
+      'ReadMeABook este un serviciu auto-găzduit pentru cererea de cărți audio. Cere administratorului serverului adresa RMAB și un token API. Absorb nu găzduiește și nu descarcă niciun conținut, doar trimite cereri către serverul tău.';
 
   @override
-  String get rmabConfigLearnMore => 'Learn more about ReadMeABook';
+  String get rmabConfigLearnMore => 'Află mai multe despre ReadMeABook';
 
   @override
-  String get rmabConfigBaseUrlLabel => 'RMAB server URL';
+  String get rmabConfigBaseUrlLabel => 'Adresa serverului RMAB';
 
   @override
   String get rmabConfigBaseUrlHint => 'https://rmab.example.com';
 
   @override
-  String get rmabConfigTokenLabel => 'API token';
+  String get rmabConfigTokenLabel => 'Token API';
 
   @override
   String get rmabConfigTokenHint => 'rmab_...';
 
   @override
-  String get rmabConfigLegacyUrlLabel => 'Web UI login URL (optional)';
+  String get rmabConfigLegacyUrlLabel =>
+      'Adresa de conectare a interfeței web (opțional)';
 
   @override
   String get rmabConfigLegacyUrlHint => 'https://rmab.example.com/?token=...';
 
   @override
   String get rmabConfigLegacyUrlHelp =>
-      'Paste your auto-login URL so \'Open in browser view\' lands you signed in. Leave blank to use a regular login.';
+      'Lipește adresa de conectare automată, ca „Deschide în vizualizarea browserului” să te ducă deja conectat. Lasă gol pentru conectare obișnuită.';
 
   @override
   String get rmabConfigHeadersHelp =>
-      'Extra headers sent with every ReadMeABook request, for reverse proxies like Cloudflare Access.';
+      'Antete suplimentare trimise cu fiecare cerere ReadMeABook, pentru proxy-uri inverse precum Cloudflare Access.';
 
   @override
-  String get rmabConfigConnect => 'Connect';
+  String get rmabConfigConnect => 'Conectează';
 
   @override
-  String get rmabConfigDisconnect => 'Disconnect';
+  String get rmabConfigDisconnect => 'Deconectează';
 
   @override
-  String get rmabConfigOpenWebView => 'Open in browser view';
+  String get rmabConfigOpenWebView => 'Deschide în vizualizarea browserului';
 
   @override
   String rmabConfigConnectedAs(String name) {
-    return 'Connected as $name';
+    return 'Conectat ca $name';
   }
 
   @override
-  String get rmabConfigErrorInvalidUrl => 'Enter a valid http(s) URL';
+  String get rmabConfigErrorInvalidUrl => 'Introdu o adresă http(s) validă';
 
   @override
-  String get rmabConfigErrorMissingToken => 'Enter your API token';
+  String get rmabConfigErrorMissingToken => 'Introdu token-ul API';
 
   @override
-  String get rmabConfigErrorUnauthorized => 'Token rejected by server';
+  String get rmabConfigErrorUnauthorized => 'Token respins de server';
 
   @override
   String get rmabConfigErrorForbidden =>
-      'This token isn\'t allowed for that action';
+      'Acest token nu are voie să facă acea acțiune';
 
   @override
-  String get rmabConfigErrorNetwork => 'Couldn\'t reach RMAB. Check the URL.';
+  String get rmabConfigErrorNetwork =>
+      'Nu s-a putut contacta RMAB. Verifică adresa.';
 
   @override
-  String get rmabConfigErrorGeneric => 'Couldn\'t connect';
+  String get rmabConfigErrorGeneric => 'Nu s-a putut realiza conectarea';
 
   @override
-  String get rmabConfigSavedSnackbar => 'ReadMeABook connected';
+  String get rmabConfigSavedSnackbar => 'ReadMeABook a fost conectat';
 
   @override
-  String get rmabConfigDisconnectedSnackbar => 'ReadMeABook disconnected';
+  String get rmabConfigDisconnectedSnackbar => 'ReadMeABook a fost deconectat';
 
   @override
-  String get rmabRequestCta => 'Request via ReadMeABook';
+  String get rmabRequestCta => 'Cere prin ReadMeABook';
 
   @override
-  String get rmabSearchHeader => 'Request via ReadMeABook';
+  String get rmabSearchHeader => 'Cere prin ReadMeABook';
 
   @override
-  String get rmabSearchHint => 'Search by title or author';
+  String get rmabSearchHint => 'Caută după titlu sau autor';
 
   @override
-  String get rmabSearchEmpty => 'No matches on your ReadMeABook server';
+  String get rmabSearchEmpty => 'Nicio potrivire pe serverul tău ReadMeABook';
 
   @override
-  String get rmabSearchError => 'Couldn\'t search ReadMeABook';
+  String get rmabSearchError => 'Nu s-a putut căuta în ReadMeABook';
 
   @override
-  String get rmabSearchPrompt => 'Type a title or author to search';
+  String get rmabSearchPrompt => 'Scrie un titlu sau un autor pentru a căuta';
 
   @override
-  String get rmabSearchFooterPrompt => 'Looking for something else?';
+  String get rmabSearchFooterPrompt => 'Cauți altceva?';
 
   @override
   String rmabSearchFooterCta(String query) {
-    return 'Search ReadMeABook for \"$query\"';
+    return 'Caută „$query” în ReadMeABook';
   }
 
   @override
   String get rmabBookDetailExplainer =>
-      'This request will be sent through your ReadMeABook server. The admin will review and process it. You can track it under My Requests on the ReadMeABook tile.';
+      'Această cerere va fi trimisă prin serverul tău ReadMeABook. Administratorul o va verifica și o va procesa. O poți urmări la Cererile mele, în panoul ReadMeABook.';
 
   @override
-  String get rmabBookAlreadyAvailable => 'Already in your library';
+  String get rmabBookAlreadyAvailable => 'Deja în biblioteca ta';
 
   @override
-  String get rmabBookAlreadyRequested => 'Already requested';
+  String get rmabBookAlreadyRequested => 'Deja cerută';
 
   @override
-  String get rmabRequestSubmitting => 'Submitting…';
+  String get rmabRequestSubmitting => 'Se trimite…';
 
   @override
-  String get rmabRequestSent => 'Request sent';
+  String get rmabRequestSent => 'Cerere trimisă';
 
   @override
-  String get rmabRequestErrorAlreadyAvailable => 'Already in your library';
+  String get rmabRequestErrorAlreadyAvailable => 'Deja în biblioteca ta';
 
   @override
-  String get rmabRequestErrorBeingProcessed => 'Already being processed';
+  String get rmabRequestErrorBeingProcessed => 'Deja în curs de procesare';
 
   @override
-  String get rmabRequestErrorDuplicate => 'You\'ve already requested this';
+  String get rmabRequestErrorDuplicate => 'Ai cerut deja aceasta';
 
   @override
-  String get rmabRequestErrorValidation => 'Couldn\'t send the request';
+  String get rmabRequestErrorValidation => 'Nu s-a putut trimite cererea';
 
   @override
   String get rmabRequestErrorUserNotFound =>
-      'Token user no longer exists. Reconnect ReadMeABook.';
+      'Utilizatorul token-ului nu mai există. Reconectează ReadMeABook.';
 
   @override
-  String get rmabRequestErrorIgnored => 'This book is on your ignore list';
+  String get rmabRequestErrorIgnored =>
+      'Această carte este în lista ta de ignorate';
 
   @override
-  String get rmabRequestErrorGeneric => 'Couldn\'t send the request';
+  String get rmabRequestErrorGeneric => 'Nu s-a putut trimite cererea';
 
   @override
   String get rmabRequestErrorTokenRejected =>
-      'Token rejected by server. Reconnect ReadMeABook.';
+      'Token respins de server. Reconectează ReadMeABook.';
 
   @override
-  String get rmabMyRequestsTab => 'My Requests';
+  String get rmabMyRequestsTab => 'Cererile mele';
 
   @override
-  String get rmabSetupTab => 'Setup';
+  String get rmabSetupTab => 'Configurare';
 
   @override
-  String get rmabMyRequestsEmpty => 'You haven\'t requested any books yet';
+  String get rmabMyRequestsEmpty => 'Nu ai cerut încă nicio carte';
 
   @override
-  String get rmabMyRequestsError => 'Couldn\'t load requests';
+  String get rmabMyRequestsError => 'Nu s-au putut încărca cererile';
 
   @override
-  String get rmabMyRequestsRefresh => 'Refresh';
+  String get rmabMyRequestsRefresh => 'Reîmprospătează';
 
   @override
-  String get rmabRequestDetailTitle => 'Request details';
+  String get rmabRequestDetailTitle => 'Detaliile cererii';
 
   @override
-  String get rmabRequestDetailStatus => 'Status';
+  String get rmabRequestDetailStatus => 'Stare';
 
   @override
-  String get rmabRequestDetailRequestedOn => 'Requested on';
+  String get rmabRequestDetailRequestedOn => 'Cerută la';
 
   @override
-  String get rmabRequestDetailCompletedOn => 'Completed on';
+  String get rmabRequestDetailCompletedOn => 'Finalizată la';
 
   @override
-  String get rmabRequestDetailProgress => 'Progress';
+  String get rmabRequestDetailProgress => 'Progres';
 
   @override
-  String get rmabStatusActive => 'In progress';
+  String get rmabStatusActive => 'În curs';
 
   @override
-  String get rmabStatusWaiting => 'Waiting';
+  String get rmabStatusWaiting => 'În așteptare';
 
   @override
-  String get rmabStatusAvailable => 'Available';
+  String get rmabStatusAvailable => 'Disponibilă';
 
   @override
-  String get rmabStatusDownloaded => 'Downloaded';
+  String get rmabStatusDownloaded => 'Descărcată';
 
   @override
-  String get rmabStatusFailed => 'Failed';
+  String get rmabStatusFailed => 'Eșuată';
 
   @override
-  String get rmabStatusCancelled => 'Cancelled';
+  String get rmabStatusCancelled => 'Anulată';
 
   @override
-  String get rmabStatusDenied => 'Denied';
+  String get rmabStatusDenied => 'Refuzată';
 
   @override
-  String get rmabStatusUnknown => 'Unknown';
+  String get rmabStatusUnknown => 'Necunoscută';
 
   @override
   String narratedBy(String narrator) {
-    return 'Narrated by $narrator';
+    return 'Narată de $narrator';
   }
 
   @override
-  String get onAudible => 'on Audible';
+  String get onAudible => 'pe Audible';
 
   @override
   String percentComplete(String percent) {
-    return '$percent% complete';
+    return '$percent% finalizat';
   }
 
   @override
   String get absorbing => 'Absorbing...';
 
   @override
-  String get absorbAgain => 'Absorb Again';
+  String get absorbAgain => 'Absorb din nou';
 
   @override
   String get absorb => 'Absorb';
 
   @override
-  String get ebookOnlyNoAudio => 'eBook Only - No Audio';
+  String get ebookOnlyNoAudio => 'Doar e-book - fără audio';
 
   @override
-  String get absorbAudioNotDownloaded => 'Audio not downloaded';
+  String get absorbAudioNotDownloaded => 'Audio nedescărcat';
 
   @override
   String get absorbAudioNotDownloadedEbookOnly =>
-      'Audio not downloaded, ebook only';
+      'Audio nedescărcat, doar e-book';
 
   @override
-  String get fullyAbsorbed => 'Fully Absorbed';
+  String get fullyAbsorbed => 'Absorbit complet';
 
   @override
-  String get fullyAbsorbAction => 'Fully Absorb';
+  String get fullyAbsorbAction => 'Absorbă complet';
 
   @override
-  String get removeFromAbsorbing => 'Remove from Absorbing';
+  String get removeFromAbsorbing => 'Elimină din Absorbing';
 
   @override
-  String get addToAbsorbing => 'Add to Absorbing';
+  String get addToAbsorbing => 'Adaugă în Absorbing';
 
   @override
-  String get absorbNext => 'Absorb Next';
+  String get absorbNext => 'Absorbă următorul';
 
   @override
-  String get absorbNextAdded => 'Up next in Absorbing';
+  String get absorbNextAdded => 'Următorul în Absorbing';
 
   @override
-  String get absorbLast => 'Absorb Last';
+  String get absorbLast => 'Absorbă la sfârșit';
 
   @override
-  String get absorbNextHint => 'Right after what\'s playing now';
+  String get absorbNextHint => 'Imediat după ce se redă acum';
 
   @override
-  String get absorbLastHint => 'At the end of the list';
+  String get absorbLastHint => 'La sfârșitul listei';
 
   @override
-  String get removedFromAbsorbing => 'Removed from Absorbing';
+  String get removedFromAbsorbing => 'Eliminat din Absorbing';
 
   @override
-  String get addedToAbsorbing => 'Added to Absorbing';
+  String get addedToAbsorbing => 'Adăugat în Absorbing';
 
   @override
-  String get removeFromContinueListening => 'Remove from Continue Listening';
+  String get removeFromContinueListening => 'Elimină din Continuă ascultarea';
 
   @override
-  String get removedFromContinueListening => 'Removed from Continue Listening';
+  String get removedFromContinueListening => 'Eliminat din Continuă ascultarea';
 
   @override
-  String get removeFromContinueReading => 'Remove from Continue Reading';
+  String get removeFromContinueReading => 'Elimină din Continuă citirea';
 
   @override
-  String get removedFromContinueReading => 'Removed from Continue Reading';
+  String get removedFromContinueReading => 'Eliminat din Continuă citirea';
 
   @override
-  String get sessionAdd => 'Add session';
+  String get sessionAdd => 'Adaugă sesiune';
 
   @override
-  String get sessionStartLabel => 'Started at';
+  String get sessionStartLabel => 'Început la';
 
   @override
-  String get sessionAdded => 'Session added';
+  String get sessionAdded => 'Sesiune adăugată';
 
   @override
-  String get sessionAddFailed => 'Could not add the session';
+  String get sessionAddFailed => 'Nu s-a putut adăuga sesiunea';
 
   @override
-  String get removeSeriesFromContinueSeries => 'Remove from Continue Series';
+  String get removeSeriesFromContinueSeries => 'Elimină din Continuă seria';
 
   @override
-  String get removedSeriesFromContinueSeries => 'Removed from Continue Series';
+  String get removedSeriesFromContinueSeries => 'Eliminat din Continuă seria';
 
   @override
-  String get couldNotUpdate => 'Could not update, try again';
+  String get couldNotUpdate => 'Nu s-a putut actualiza, încearcă din nou';
 
   @override
-  String get addToPlaylist => 'Add to Playlist';
+  String get addToPlaylist => 'Adaugă în listă de redare';
 
   @override
-  String get addToCollection => 'Add to Collection';
+  String get addToCollection => 'Adaugă în colecție';
 
   @override
-  String get downloadEbook => 'Download eBook';
+  String get downloadEbook => 'Descarcă e-book-ul';
 
   @override
-  String get downloadEbookAgain => 'Download eBook Again';
+  String get downloadEbookAgain => 'Descarcă din nou e-book-ul';
 
   @override
-  String get resetProgress => 'Reset Progress';
+  String get resetProgress => 'Resetează progresul';
 
   @override
-  String get lookupLocalMetadata => 'Lookup Local Metadata';
+  String get lookupLocalMetadata => 'Caută metadate locale';
 
   @override
-  String get reLookupLocalMetadata => 'Re-Lookup Local Metadata';
+  String get reLookupLocalMetadata => 'Caută din nou metadate locale';
 
   @override
-  String get clearLocalMetadata => 'Clear Local Metadata';
+  String get clearLocalMetadata => 'Șterge metadatele locale';
 
   @override
-  String get searchOnGoodreads => 'Search on Goodreads';
+  String get searchOnGoodreads => 'Caută pe Goodreads';
 
   @override
-  String get editServerDetails => 'Edit Server Details';
+  String get editServerDetails => 'Editează detaliile de pe server';
 
   @override
-  String get encodeTab => 'Encode';
+  String get encodeTab => 'Codare';
 
   @override
   String get codec => 'Codec';
 
   @override
-  String get bitrate => 'Bitrate';
+  String get bitrate => 'Rată de biți';
 
   @override
-  String get channels => 'Channels';
+  String get channels => 'Canale';
 
   @override
   String get mono => 'Mono';
@@ -4216,373 +4325,393 @@ class AppLocalizationsRo extends AppLocalizations {
   String get stereo => 'Stereo';
 
   @override
-  String get startM4bEncode => 'Start M4B Encode';
+  String get startM4bEncode => 'Pornește codarea M4B';
 
   @override
-  String get encodeStarted => 'M4B encode started';
+  String get encodeStarted => 'Codarea M4B a început';
 
   @override
-  String get encodeFailed => 'Failed to start encode';
+  String get encodeFailed => 'Codarea nu a putut porni';
 
   @override
-  String get encodeFinished => 'M4B encode finished';
+  String get encodeFinished => 'Codarea M4B s-a încheiat';
 
   @override
-  String get currentlyLabel => 'Currently:';
+  String get currentlyLabel => 'În prezent:';
 
   @override
   String encodeOutputPathNote(String path) {
-    return 'Finished M4B will be put into your audiobook folder at: $path/';
+    return 'M4B-ul finalizat va fi pus în folderul tău de cărți audio la: $path/';
   }
 
   @override
   String encodeBackupNote(String itemId) {
-    return 'A backup of your original audio files will be stored in: /metadata/cache/items/$itemId/. Make sure to periodically purge items cache.';
+    return 'O copie de rezervă a fișierelor audio originale va fi stocată în: /metadata/cache/items/$itemId/. Nu uita să golești periodic cache-ul elementelor.';
   }
 
   @override
-  String get encodeTimeNote => 'Encoding can take up to 30 minutes.';
+  String get encodeTimeNote => 'Codarea poate dura până la 30 de minute.';
 
   @override
   String get encodeRescanNote =>
-      'If you have the watcher disabled you will need to re-scan this audiobook afterwards.';
+      'Dacă ai dezactivat watcher-ul, va trebui să scanezi din nou această carte audio după aceea.';
 
   @override
-  String get aboutSection => 'About';
+  String get aboutSection => 'Despre';
 
   @override
   String chaptersCount(int count) {
-    return 'Chapters ($count)';
+    return 'Capitole ($count)';
   }
 
   @override
   String audioTracksCount(int count) {
-    return 'Audio Tracks ($count)';
+    return 'Piste audio ($count)';
   }
 
   @override
   String libraryFilesCount(int count) {
-    return 'Library Files ($count)';
+    return 'Fișierele bibliotecii ($count)';
   }
 
   @override
-  String get chapters => 'Chapters';
+  String get chapters => 'Capitole';
 
   @override
-  String get noChaptersBook => 'This book has no chapters';
+  String get noChaptersBook => 'Această carte nu are capitole';
 
   @override
-  String get noChaptersPodcast => 'This podcast has no chapters';
+  String get noChaptersPodcast => 'Acest podcast nu are capitole';
 
   @override
-  String get failedToLoad => 'Failed to load';
+  String get failedToLoad => 'Încărcarea a eșuat';
 
   @override
   String startedDate(String date) {
-    return 'Started $date';
+    return 'Început $date';
   }
 
   @override
   String finishedDate(String date) {
-    return 'Finished $date';
+    return 'Terminat $date';
   }
 
   @override
   String andCountMore(int count) {
-    return 'and $count more';
+    return 'și încă $count';
   }
 
   @override
-  String get markAsFullyAbsorbedQuestion => 'Mark as Fully Absorbed?';
+  String get markAsFullyAbsorbedQuestion => 'Marchezi ca absorbit complet?';
 
   @override
   String get markAsFullyAbsorbedContent =>
-      'This will set your progress to 100% and stop playback if this book is playing.';
+      'Aceasta va seta progresul la 100% și va opri redarea dacă această carte este în redare.';
 
   @override
-  String get markedAsFinishedNiceWork => 'Marked as finished - nice work!';
+  String get markedAsFinishedNiceWork => 'Marcat ca terminat - bravo!';
 
   @override
   String get failedToUpdateCheckConnection =>
-      'Failed to update - check your connection';
+      'Actualizarea a eșuat - verifică conexiunea';
 
   @override
-  String get markAsNotFinishedQuestion => 'Mark as Not Finished?';
+  String get markedFinishedWillSync =>
+      'Marked as finished - will sync when you\'re back online';
+
+  @override
+  String get markAsNotFinishedQuestion => 'Marchezi ca neterminat?';
 
   @override
   String get markAsNotFinishedContent =>
-      'This will clear the finished status and put your position back at the start.';
+      'Aceasta va șterge starea de terminat și va readuce poziția la început.';
 
   @override
-  String get unmark => 'Unmark';
+  String get unmark => 'Demarchează';
 
   @override
   String get markedAsNotFinishedBackAtIt =>
-      'Marked as not finished - back at it!';
+      'Marcat ca neterminat - hai înapoi la treabă!';
 
   @override
-  String get resetProgressQuestion => 'Reset Progress?';
+  String get resetProgressQuestion => 'Resetezi progresul?';
 
   @override
-  String get resetProgressContent =>
-      'This will erase all progress for this book and set it back to the beginning. This can\'t be undone.';
+  String get resetProgressListeningAndReading =>
+      'Progresul de ascultare și de citire va reveni la 0%.';
 
   @override
-  String get progressResetFreshStart => 'Progress reset - fresh start!';
+  String get resetProgressListening =>
+      'Progresul de ascultare va reveni la 0%.';
 
   @override
-  String get clearLocalMetadataQuestion => 'Clear Local Metadata?';
+  String get resetProgressReading => 'Progresul de citire va reveni la 0%.';
+
+  @override
+  String get resetProgressMarksUnread => 'Cartea va fi marcată și ca necitită.';
+
+  @override
+  String get resetProgressCantUndo => 'Această acțiune nu poate fi anulată.';
+
+  @override
+  String get progressResetFreshStart => 'Progres resetat - o nouă pornire!';
+
+  @override
+  String get clearLocalMetadataQuestion => 'Ștergi metadatele locale?';
 
   @override
   String get clearLocalMetadataContent =>
-      'This will remove the locally stored metadata and revert to whatever the server has.';
+      'Aceasta va elimina metadatele stocate local și va reveni la ce are serverul.';
 
   @override
-  String get localMetadataCleared => 'Local metadata cleared';
+  String get localMetadataCleared => 'Metadatele locale au fost șterse';
 
   @override
-  String get saveEbook => 'Save eBook';
+  String get saveEbook => 'Salvează e-book-ul';
 
   @override
-  String get noEbookFileFound => 'No ebook file found';
+  String get noEbookFileFound => 'Nu s-a găsit niciun fișier e-book';
 
   @override
-  String get bookmark => 'Bookmark';
+  String get bookmark => 'Marcaj';
 
   @override
-  String get bookmarks => 'Bookmarks';
+  String get bookmarks => 'Marcaje';
 
   @override
   String bookmarksWithCount(int count) {
-    return 'Bookmarks ($count)';
+    return 'Marcaje ($count)';
   }
 
   @override
-  String get playbackSpeed => 'Playback Speed';
+  String get playbackSpeed => 'Viteză de redare';
 
   @override
-  String get noBookmarksYet => 'No bookmarks yet';
+  String get noBookmarksYet => 'Niciun marcaj încă';
 
   @override
   String get longPressBookmarkHint =>
-      'Long-press the bookmark button to quick save';
+      'Ține apăsat butonul de marcaj pentru salvare rapidă';
 
   @override
-  String get addBookmark => 'Add Bookmark';
+  String get addBookmark => 'Adaugă marcaj';
 
   @override
-  String get editBookmark => 'Edit Bookmark';
+  String get editBookmark => 'Editează marcajul';
 
   @override
-  String get titleLabel => 'Title';
+  String get titleLabel => 'Titlu';
 
   @override
-  String get noteOptionalLabel => 'Note (optional)';
+  String get noteOptionalLabel => 'Notă (opțional)';
 
   @override
-  String get editLayout => 'Edit Layout';
+  String get editLayout => 'Editează aranjarea';
 
   @override
-  String get inMenu => 'In menu';
+  String get inMenu => 'În meniu';
 
   @override
-  String get bookmarkAdded => 'Bookmark added';
+  String get bookmarkAdded => 'Marcaj adăugat';
 
   @override
-  String get startPlayingSomethingFirst => 'Start playing something first';
+  String get startPlayingSomethingFirst => 'Începe mai întâi să redai ceva';
 
   @override
-  String get playbackHistory => 'Playback History';
+  String get playbackHistory => 'Istoricul redării';
 
   @override
-  String get historyLocalTab => 'History';
+  String get historyLocalTab => 'Istoric';
 
   @override
-  String get historyServerTab => 'Sessions';
+  String get historyServerTab => 'Sesiuni';
 
   @override
-  String get historyNoServerSessions => 'No server sessions for this item yet';
+  String get historyNoServerSessions =>
+      'Încă nu există sesiuni pe server pentru acest element';
 
   @override
-  String get historyServerLoadFailed => 'Could not load server sessions';
+  String get historyServerLoadFailed =>
+      'Nu s-au putut încărca sesiunile de pe server';
 
   @override
-  String get clearHistoryTooltip => 'Clear history';
+  String get clearHistoryTooltip => 'Șterge istoricul';
 
   @override
-  String get tapEventToJump => 'Tap an event to jump to that position';
+  String get tapEventToJump =>
+      'Atinge un eveniment pentru a sări la acea poziție';
 
   @override
-  String get noHistoryYet => 'No history yet';
+  String get noHistoryYet => 'Niciun istoric încă';
 
   @override
   String jumpedToPosition(String position) {
-    return 'Jumped to $position';
+    return 'S-a sărit la $position';
   }
 
   @override
   String booksInSeriesCount(int count) {
-    return '$count books in this series';
+    return '$count cărți în această serie';
   }
 
   @override
   String bookNumber(String number) {
-    return 'Book $number';
+    return 'Cartea $number';
   }
 
   @override
   String downloadRemainingCount(int count) {
-    return 'Download Remaining ($count)';
+    return 'Descarcă restul ($count)';
   }
 
   @override
-  String get downloadAll => 'Download All';
+  String get downloadAll => 'Descarcă tot';
 
   @override
-  String get markAllNotFinished => 'Mark All Not Finished';
+  String get markAllNotFinished => 'Marchează toate ca neterminate';
 
   @override
-  String get markAllFinished => 'Mark All Finished';
+  String get markAllFinished => 'Marchează toate ca terminate';
 
   @override
-  String get markAllNotFinishedQuestion => 'Mark All Not Finished?';
+  String get markAllNotFinishedQuestion => 'Marchezi toate ca neterminate?';
 
   @override
-  String get fullyAbsorbSeries => 'Fully Absorb Series?';
+  String get fullyAbsorbSeries => 'Absorbi complet seria?';
 
   @override
-  String get turnAutoDownloadOff => 'Turn Auto-Download Off';
+  String get turnAutoDownloadOff => 'Dezactivează descărcarea automată';
 
   @override
-  String get turnAutoDownloadOn => 'Turn Auto-Download On';
+  String get turnAutoDownloadOn => 'Activează descărcarea automată';
 
   @override
-  String get autoDownloadThisSeries => 'Auto-Download This Series?';
+  String get autoDownloadThisSeries => 'Descarci automat această serie?';
 
   @override
   String get autoDownloadSeriesContent =>
-      'Automatically download the next books as you listen.';
+      'Descarcă automat următoarele cărți pe măsură ce asculți.';
 
   @override
-  String get standalone => 'Standalone';
+  String get standalone => 'Independente';
 
   @override
-  String get episodes => 'Episodes';
+  String get episodes => 'Episoade';
 
   @override
-  String get noEpisodesFound => 'No episodes found';
+  String get noEpisodesFound => 'Nu s-au găsit episoade';
 
   @override
-  String get markFinished => 'Mark Finished';
+  String get markFinished => 'Marchează ca terminat';
 
   @override
-  String get markUnfinished => 'Mark Unfinished';
+  String get markUnfinished => 'Marchează ca neterminat';
 
   @override
-  String get allEpisodes => 'All Episodes';
+  String get allEpisodes => 'Toate episoadele';
 
   @override
-  String get aboutThisEpisode => 'About This Episode';
+  String get aboutThisEpisode => 'Despre acest episod';
 
   @override
-  String get reversePlayOrder => 'Reverse play order';
+  String get reversePlayOrder => 'Inversează ordinea de redare';
 
   @override
   String selectedCount(int count) {
-    return '$count selected';
+    return '$count selectate';
   }
 
   @override
-  String get selectAll => 'Select All';
+  String get selectAll => 'Selectează tot';
 
   @override
-  String get deselectAll => 'Deselect All';
+  String get deselectAll => 'Deselectează tot';
 
   @override
-  String get autoDownloadThisPodcast => 'Auto-Download This Podcast?';
+  String get autoDownloadThisPodcast => 'Descarci automat acest podcast?';
 
   @override
   String get autoDownloadPodcastContent =>
-      'Automatically download the next episodes as you listen.';
+      'Descarcă automat următoarele episoade pe măsură ce asculți.';
 
   @override
-  String get download => 'Download';
+  String get download => 'Descarcă';
 
   @override
-  String get deleteDownload => 'Delete Download';
+  String get deleteDownload => 'Șterge descărcarea';
 
   @override
-  String get casting => 'Casting';
+  String get casting => 'Se proiectează';
 
   @override
-  String get castingTo => 'Casting to';
+  String get castingTo => 'Se proiectează pe';
 
   @override
-  String get editDetails => 'Edit Details';
+  String get editDetails => 'Editează detaliile';
 
   @override
-  String get quickMatch => 'Quick Match';
+  String get quickMatch => 'Potrivire rapidă';
 
   @override
-  String get quickMatchNoUpdates => 'No updates necessary';
+  String get quickMatchNoUpdates => 'Nu sunt necesare actualizări';
 
   @override
-  String get custom => 'Custom';
+  String get custom => 'Personalizat';
 
   @override
-  String get authorOptionalLabel => 'Author (optional)';
+  String get authorOptionalLabel => 'Autor (opțional)';
 
   @override
   String get noResultsFound =>
-      'No results found.\nTry adjusting your search or provider.';
+      'Nu s-au găsit rezultate.\nÎncearcă să ajustezi căutarea sau furnizorul.';
 
   @override
-  String get searchForMetadataAbove => 'Search for metadata above';
+  String get searchForMetadataAbove => 'Caută metadate mai sus';
 
   @override
-  String get applyThisMatch => 'Apply This Match?';
+  String get applyThisMatch => 'Aplici această potrivire?';
 
   @override
-  String get metadataUpdated => 'Metadata updated';
+  String get metadataUpdated => 'Metadate actualizate';
 
   @override
-  String get failedToUpdateMetadata => 'Failed to update metadata';
+  String get failedToUpdateMetadata => 'Actualizarea metadatelor a eșuat';
 
   @override
-  String get subtitleLabel => 'Subtitle';
+  String get subtitleLabel => 'Subtitlu';
 
   @override
-  String get authorLabel => 'Author';
+  String get authorLabel => 'Autor';
 
   @override
-  String get narratorLabel => 'Narrator';
+  String get narratorLabel => 'Narator';
 
   @override
-  String get seriesLabel => 'Series';
+  String get seriesLabel => 'Serie';
 
   @override
-  String get addSeries => 'Add series';
+  String get addSeries => 'Adaugă serie';
 
   @override
-  String get removeSeries => 'Remove series';
+  String get removeSeries => 'Elimină seria';
 
   @override
-  String get descriptionLabel => 'Description';
+  String get descriptionLabel => 'Descriere';
 
   @override
-  String get publisherLabel => 'Publisher';
+  String get publisherLabel => 'Editură';
 
   @override
-  String get yearLabel => 'Year';
+  String get yearLabel => 'An';
 
   @override
-  String get genresLabel => 'Genres';
+  String get genresLabel => 'Genuri';
 
   @override
-  String get tagsLabel => 'Tags';
+  String get tagsLabel => 'Etichete';
 
   @override
-  String get commaSeparated => 'Comma separated';
+  String get commaSeparated => 'Separate prin virgulă';
 
   @override
   String get asinLabel => 'ASIN';
@@ -4591,347 +4720,366 @@ class AppLocalizationsRo extends AppLocalizations {
   String get isbnLabel => 'ISBN';
 
   @override
-  String get coverImage => 'Cover Image';
+  String get coverImage => 'Imaginea copertei';
 
   @override
-  String get coverRemove => 'Remove cover';
+  String get coverRemove => 'Elimină coperta';
 
   @override
   String get coverRemoveConfirm =>
-      'Remove this book\'s cover? It will show the generated title card instead.';
+      'Elimini coperta acestei cărți? Va fi afișat în schimb cardul de titlu generat.';
 
   @override
-  String get coverRemoved => 'Cover removed';
+  String get coverRemoved => 'Coperta a fost eliminată';
 
   @override
-  String get coverRemoveFailed => 'Could not remove the cover';
+  String get coverRemoveFailed => 'Nu s-a putut elimina coperta';
 
   @override
-  String get coverUrlLabel => 'Cover URL';
+  String get coverUrlLabel => 'Adresa copertei';
 
   @override
   String get coverUrlHint => 'https://...';
 
   @override
-  String get localMetadata => 'Local Metadata';
+  String get localMetadata => 'Metadate locale';
 
   @override
-  String get overrideLocalDisplay => 'Override local display';
+  String get overrideLocalDisplay => 'Suprascrie afișarea locală';
 
   @override
-  String get metadataSavedLocally => 'Metadata saved locally';
+  String get metadataSavedLocally => 'Metadate salvate local';
 
   @override
-  String get notes => 'Notes';
+  String get notes => 'Note';
 
   @override
-  String get newNote => 'New Note';
+  String get newNote => 'Notă nouă';
 
   @override
-  String get editNote => 'Edit Note';
+  String get editNote => 'Editează nota';
 
   @override
-  String get noNotesYet => 'No notes yet';
+  String get noNotesYet => 'Nicio notă încă';
 
   @override
-  String get markdownIsSupported => 'Markdown is supported';
+  String get markdownIsSupported => 'Markdown este acceptat';
 
   @override
   String get markdownMd => 'Markdown (.md)';
 
   @override
-  String get keepsFormattingIntact => 'Keeps formatting intact';
+  String get keepsFormattingIntact => 'Păstrează formatarea intactă';
 
   @override
-  String get plainTextTxt => 'Plain Text (.txt)';
+  String get plainTextTxt => 'Text simplu (.txt)';
 
   @override
-  String get simpleTextNoFormatting => 'Simple text, no formatting';
+  String get simpleTextNoFormatting => 'Text simplu, fără formatare';
 
   @override
-  String get untitledNote => 'Untitled note';
+  String get untitledNote => 'Notă fără titlu';
 
   @override
-  String get titleHint => 'Title';
+  String get titleHint => 'Titlu';
 
   @override
-  String get noteBodyHint => 'Write your note... (supports markdown)';
+  String get noteBodyHint => 'Scrie nota ta... (acceptă markdown)';
 
   @override
-  String get nothingToPreview => 'Nothing to preview';
+  String get nothingToPreview => 'Nimic de previzualizat';
 
   @override
-  String get audioEnhancements => 'Audio Enhancements';
+  String get audioEnhancements => 'Îmbunătățiri audio';
 
   @override
-  String get presets => 'PRESETS';
+  String get presets => 'PRESETĂRI';
 
   @override
-  String get equalizer => 'EQUALIZER';
+  String get equalizer => 'EGALIZATOR';
 
   @override
-  String get effects => 'EFFECTS';
+  String get effects => 'EFECTE';
 
   @override
-  String get bassBoost => 'Bass Boost';
+  String get bassBoost => 'Amplificare bas';
 
   @override
   String get surround => 'Surround';
 
   @override
-  String get loudness => 'Loudness';
+  String get loudness => 'Intensitate sonoră';
 
   @override
-  String get monoAudio => 'Mono Audio';
+  String get pitch => 'Pitch';
 
   @override
-  String get skipSilence => 'Skip Silence';
+  String get monoAudio => 'Audio mono';
 
   @override
-  String get resetAll => 'Reset All';
+  String get skipSilence => 'Sari peste liniște';
 
   @override
-  String get collectionNotFound => 'Collection not found';
+  String get resetAll => 'Resetează tot';
 
   @override
-  String get deleteCollection => 'Delete Collection';
+  String get collectionNotFound => 'Colecția nu a fost găsită';
+
+  @override
+  String get deleteCollection => 'Șterge colecția';
 
   @override
   String get deleteCollectionContent =>
-      'Are you sure you want to delete this collection?';
+      'Sigur vrei să ștergi această colecție?';
 
   @override
-  String get deleteCollectionFailed => 'Couldn\'t delete the collection';
+  String get deleteCollectionFailed => 'Nu s-a putut șterge colecția';
+
+  @override
+  String get deletePlaylistFailed => 'Couldn\'t delete the playlist';
 
   @override
   String get deletePermissionRequired =>
-      'Delete permission required. Ask the root admin to grant you the delete permission.';
+      'Este necesară permisiunea de ștergere. Cere administratorului root să ți-o acorde.';
 
   @override
-  String get deleteFilesCheckbox => 'Also delete the files on the server';
+  String get deleteFilesCheckbox => 'Șterge și fișierele de pe server';
 
   @override
   String get deleteFilesCheckedHint =>
-      'The files are deleted from the server for good.';
+      'Fișierele sunt șterse definitiv de pe server.';
 
   @override
   String get deleteFilesUncheckedHint =>
-      'The files stay on the server, so the next library scan can add this back.';
+      'Fișierele rămân pe server, așa că următoarea scanare a bibliotecii poate adăuga din nou elementul.';
 
   @override
-  String get deleteFromServerAction => 'Delete from Server';
+  String get deleteFromServerAction => 'Șterge de pe server';
 
   @override
-  String get deleteFromServerTitle => 'Delete from server';
+  String get deleteFromServerTitle => 'Șterge de pe server';
 
   @override
   String deleteFromServerContent(String title) {
-    return 'Delete \"$title\" from Audiobookshelf?';
+    return 'Ștergi \"$title\" din Audiobookshelf?';
   }
 
   @override
   String deletedFromServer(String title) {
-    return 'Deleted \"$title\"';
+    return '\"$title\" a fost șters';
   }
 
   @override
   String get deleteFromServerFailed =>
-      'Couldn\'t delete that. Check the server logs.';
+      'Nu s-a putut șterge. Verifică jurnalele serverului.';
 
   @override
-  String get playlistNotFound => 'Playlist not found';
+  String get playlistNotFound => 'Lista de redare nu a fost găsită';
 
   @override
-  String get deletePlaylist => 'Delete Playlist';
+  String get deletePlaylist => 'Șterge lista de redare';
 
   @override
   String get deletePlaylistContent =>
-      'Are you sure you want to delete this playlist?';
+      'Sigur vrei să ștergi această listă de redare?';
 
   @override
-  String get newPlaylist => 'New Playlist';
+  String get newPlaylist => 'Listă de redare nouă';
 
   @override
-  String get playlistNameHint => 'Playlist name';
+  String get playlistNameHint => 'Numele listei de redare';
 
   @override
   String addedToName(String name) {
-    return 'Added to \"$name\"';
+    return 'Adăugat în \"$name\"';
   }
 
   @override
-  String get failedToAdd => 'Failed to add';
+  String get failedToAdd => 'Adăugarea a eșuat';
 
   @override
-  String get newCollection => 'New Collection';
+  String get newCollection => 'Colecție nouă';
 
   @override
-  String get collectionNameHint => 'Collection name';
+  String get collectionNameHint => 'Numele colecției';
 
   @override
-  String get listsNewCollectionSubtitle => 'Group books into a list you keep';
+  String get listsNewCollectionSubtitle =>
+      'Grupează cărți într-o listă pe care o păstrezi';
 
   @override
   String get listsNewCollectionNeedsBookSubtitle =>
-      'Start it with at least one book';
+      'Începe-o cu cel puțin o carte';
 
   @override
-  String get listsNewPlaylistSubtitle => 'Line up books to listen to in order';
+  String get listsNewPlaylistSubtitle => 'Aliniază cărți de ascultat în ordine';
 
   @override
-  String get listsAddBooksNow => 'Add books now';
+  String get listsAddBooksNow => 'Adaugă cărți acum';
 
   @override
   String get listsPickBooksNext =>
-      'You\'ll pick books next. A collection on this server needs at least one.';
+      'Vei alege cărți în pasul următor. O colecție de pe acest server necesită cel puțin una.';
 
   @override
-  String get listsCreate => 'Create';
+  String get listsCreate => 'Creează';
 
   @override
   String get listsCollectionNeedsBook =>
-      'A collection needs at least one book, so nothing was created.';
+      'O colecție necesită cel puțin o carte, așa că nu s-a creat nimic.';
 
   @override
-  String get listsCreateFailed => 'Couldn\'t create it';
+  String get listsCreateFailed => 'Nu s-a putut crea';
 
   @override
-  String get castToDevice => 'Cast to Device';
+  String get castToDevice => 'Proiectează pe un dispozitiv';
 
   @override
-  String get searchingForCastDevices => 'Searching for Cast devices...';
+  String get searchingForCastDevices => 'Se caută dispozitive Cast...';
 
   @override
-  String get castDevice => 'Cast Device';
+  String get castDevice => 'Dispozitiv Cast';
 
   @override
-  String get stopCasting => 'Stop Casting';
+  String get stopCasting => 'Oprește proiectarea';
 
   @override
-  String get disconnect => 'Disconnect';
+  String get disconnect => 'Deconectează';
 
   @override
-  String get audioOutput => 'Audio Output';
+  String get audioOutput => 'Ieșire audio';
 
   @override
-  String get noOutputDevicesFound => 'No output devices found';
+  String get noOutputDevicesFound => 'Nu s-au găsit dispozitive de ieșire';
 
   @override
-  String get welcomeToAbsorb => 'Welcome to Absorb Plus';
+  String get welcomeToAbsorb => 'Bun venit în Absorb Plus';
 
   @override
-  String get welcomeTagline => 'An Audiobookshelf client.';
+  String get welcomeTagline => 'Un client Audiobookshelf.';
 
   @override
   String get welcomeAbsorbingTitle => 'Absorbing';
 
   @override
   String get welcomeAbsorbingIntro =>
-      'We use \"absorb\" in place of \"play\" and \"listen\". Prefer the classic wording? Switch it in Settings.';
+      'Folosim „absorb” în loc de „redă” și „ascultă”. Preferi formularea clasică? Schimbă-o în Setări.';
 
   @override
   String get welcomeAbsorbingTabBullet =>
-      'Absorbing tab - what you\'re currently listening to';
+      'Fila Absorbing - ce asculți în prezent';
 
   @override
-  String get welcomeAbsorbButtonBullet => 'Absorb button - start playback';
+  String get welcomeAbsorbButtonBullet => 'Butonul Absorb - pornește redarea';
 
   @override
-  String get welcomeFullyAbsorbBullet => 'Fully Absorb - mark as finished';
+  String get welcomeFullyAbsorbBullet =>
+      'Absorbă complet - marchează ca terminat';
 
   @override
-  String get welcomeGettingAroundTitle => 'Getting around';
+  String get welcomeGettingAroundTitle => 'Cum te descurci';
 
   @override
   String get welcomeGettingAroundBody =>
-      'Tap any cover to open its details. Continue Listening cards are different - tap to play right away, press and hold to open details.';
+      'Atinge orice copertă pentru a deschide detaliile. Cardurile Continuă ascultarea sunt diferite - atinge pentru a reda imediat, ține apăsat pentru a deschide detaliile.';
 
   @override
-  String get welcomeMakeItYoursTitle => 'Make it yours';
+  String get welcomeMakeItYoursTitle => 'Fă-o a ta';
 
   @override
   String get welcomeMakeItYoursBody =>
-      'Mess around in Settings to tune Absorb to your taste. The Tips & Hidden Features section in there is worth a look.';
+      'Explorează Setările pentru a regla Absorb după gustul tău. Secțiunea Sfaturi și funcții ascunse merită o privire.';
 
   @override
-  String get getStarted => 'Get Started';
+  String get getStarted => 'Începe';
 
   @override
-  String get showMore => 'Show more';
+  String get showMore => 'Arată mai mult';
 
   @override
-  String get showLess => 'Show less';
+  String get showLess => 'Arată mai puțin';
 
   @override
-  String get readMore => 'Read more';
+  String get readMore => 'Citește mai mult';
 
   @override
-  String get removeDownloadQuestion => 'Remove download?';
+  String get removeDownloadQuestion => 'Elimini descărcarea?';
 
   @override
-  String get removeDownloadContent => 'This will be removed from your device.';
+  String get removeDownloadContent =>
+      'Aceasta va fi eliminată de pe dispozitivul tău.';
 
   @override
   String get removeWhichDownload =>
-      'The audiobook and the ebook are both on this device. Choose what to remove.';
+      'Cartea audio și e-book-ul sunt ambele pe acest dispozitiv. Alege ce elimini.';
 
   @override
-  String get downloadRemoved => 'Download removed';
+  String get downloadRemoved => 'Descărcare eliminată';
 
   @override
-  String get finished => 'Finished';
+  String get finished => 'Terminat';
 
   @override
-  String get saved => 'Downloaded';
+  String get saved => 'Descărcat';
 
   @override
-  String get selectLibrary => 'Select Library';
+  String get selectLibrary => 'Selectează biblioteca';
 
   @override
-  String get switchLibraryTooltip => 'Switch library';
+  String get switchLibraryTooltip => 'Schimbă biblioteca';
 
   @override
-  String get refreshTooltip => 'Refresh';
+  String get refreshTooltip => 'Reîmprospătează';
 
   @override
-  String get noBooksFound => 'No books found';
+  String get openNowPlayingTooltip => 'Open Now Playing';
 
   @override
-  String get userFallback => 'User';
+  String get previousChapterTooltip => 'Previous chapter';
 
   @override
-  String get rootAdmin => 'Root Admin';
+  String get nextChapterTooltip => 'Next chapter';
 
   @override
-  String get admin => 'Admin';
+  String get noBooksFound => 'Nu s-au găsit cărți';
 
   @override
-  String get serverAdmin => 'Server Admin';
+  String get userFallback => 'Utilizator';
 
   @override
-  String get serverAdminSubtitle => 'Manage users, libraries & server settings';
+  String get rootAdmin => 'Administrator root';
+
+  @override
+  String get admin => 'Administrator';
+
+  @override
+  String get serverAdmin => 'Administrare server';
+
+  @override
+  String get serverAdminSubtitle =>
+      'Gestionează utilizatori, biblioteci și setările serverului';
 
   @override
   String serverUpdateAvailable(String version) {
-    return 'Server update $version available';
+    return 'Actualizare de server $version disponibilă';
   }
 
   @override
-  String get justNow => 'Just now';
+  String get justNow => 'Chiar acum';
 
   @override
   String minutesAgo(int count) {
-    return '${count}m ago';
+    return 'acum ${count}m';
   }
 
   @override
   String hoursAgo(int count) {
-    return '${count}h ago';
+    return 'acum ${count}h';
   }
 
   @override
   String daysAgo(int count) {
-    return '${count}d ago';
+    return 'acum ${count}z';
   }
 
   @override
@@ -4947,90 +5095,91 @@ class AppLocalizationsRo extends AppLocalizations {
   String get root => 'Root';
 
   @override
-  String get coverPlayPause => 'Cover play/pause';
+  String get coverPlayPause => 'Redare/pauză pe copertă';
 
   @override
-  String get coverPlayPauseOnSubtitle => 'On - tap cover art to play/pause';
+  String get coverPlayPauseOnSubtitle =>
+      'Activat - atinge coperta pentru redare/pauză';
 
   @override
   String get coverPlayPauseOffSubtitle =>
-      'Off - dedicated play/pause button in controls';
+      'Oprit - buton dedicat de redare/pauză în comenzi';
 
   @override
-  String get cardBackground => 'Card background';
+  String get cardBackground => 'Fundalul cardului';
 
   @override
-  String get cardBackgroundBlurred => 'Blurred';
+  String get cardBackgroundBlurred => 'Neclar';
 
   @override
   String get cardBackgroundGradient => 'Gradient';
 
   @override
   String get queueModeMergedSubtitle =>
-      'Playback stops, manual queue, or auto-plays next item';
+      'Redarea se oprește, coadă manuală sau redare automată a următorului element';
 
   @override
-  String get queueModeSeriesLabel => 'Series';
+  String get queueModeSeriesLabel => 'Serie';
 
   @override
-  String get queueModeShowLabel => 'Show';
+  String get queueModeShowLabel => 'Emisiune';
 
   @override
-  String get queueModeInfoSeries => 'Series';
+  String get queueModeInfoSeries => 'Serie';
 
   @override
   String get queueModeInfoSeriesDesc =>
-      'Automatically plays the next book in a series or the next episode in a podcast show.';
+      'Redă automat următoarea carte dintr-o serie sau următorul episod dintr-un podcast.';
 
   @override
-  String get resetButtonGridQuestion => 'Reset button grid?';
+  String get resetButtonGridQuestion => 'Resetezi grila de butoane?';
 
   @override
   String get resetButtonGridContent =>
-      'This will restore the default button layout, order, and toggle settings.';
+      'Aceasta va restaura aranjarea implicită a butoanelor, ordinea și setările de comutare.';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'Resetează';
 
   @override
-  String get buttonGridReset => 'Button grid reset';
+  String get buttonGridReset => 'Grila de butoane a fost resetată';
 
   @override
-  String get resetButtonGrid => 'Reset button grid';
+  String get resetButtonGrid => 'Resetează grila de butoane';
 
   @override
-  String get chapterBarrierOnRewind => 'Chapter barrier on rewind';
+  String get chapterBarrierOnRewind => 'Limita capitolului la derulare înapoi';
 
   @override
-  String get chapterBarrierInfoTitle => 'Chapter barrier';
+  String get chapterBarrierInfoTitle => 'Limita capitolului';
 
   @override
   String get chapterBarrierInfoContent =>
-      'When skipping back, the playback will snap to the start of the current chapter instead of crossing into the previous one.\n\nDouble-tap the skip back button within 2 seconds to break through the barrier.';
+      'La saltul înapoi, redarea se oprește la începutul capitolului curent în loc să treacă în cel anterior.\n\nApasă de două ori butonul de salt înapoi în 2 secunde pentru a depăși limita.';
 
   @override
   String get chapterBarrierOnRewindOnSubtitle =>
-      'On - rewind snaps to chapter start';
+      'Activat - derularea înapoi se oprește la începutul capitolului';
 
   @override
   String get chapterBarrierOnRewindOffSubtitle =>
-      'Off - rewind crosses chapter boundaries';
+      'Oprit - derularea înapoi trece peste limitele capitolelor';
 
   @override
   String autoRewindOnSubtitleFormat(String min, String max) {
-    return 'On -${min}s to ${max}s based on pause length';
+    return 'Activat - de la ${min}s la ${max}s, în funcție de durata pauzei';
   }
 
   @override
-  String get rewindOnSessionStart => 'Rewind on session start';
+  String get rewindOnSessionStart => 'Derulare înapoi la începutul sesiunii';
 
   @override
   String get rewindOnSessionStartInfoContent =>
-      'Normal auto-rewind triggers when you resume from a pause within an active session. This setting adds a rewind when starting a completely new session - for example after the app was closed, playback was stopped, or you open the app fresh.\n\nWhen enabled, playback rewinds by the full max rewind amount at the start of every new session so you can re-hear where you left off.';
+      'Derularea automată obișnuită se activează când reiei redarea după o pauză într-o sesiune activă. Această setare adaugă o derulare înapoi când începi o sesiune complet nouă - de exemplu după ce aplicația a fost închisă, redarea a fost oprită sau deschizi aplicația de la zero.\n\nCând este activată, redarea derulează înapoi cu valoarea maximă completă la începutul fiecărei sesiuni noi, ca să poți reasculta de unde ai rămas.';
 
   @override
   String rewindOnSessionStartOnSubtitle(String seconds) {
-    return 'On - rewinds ${seconds}s when starting a new session';
+    return 'Activat - derulează înapoi ${seconds}s la începerea unei sesiuni noi';
   }
 
   @override
@@ -5045,21 +5194,21 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String rewindSecondsPause(String seconds) {
-    return '${seconds}s pause';
+    return 'pauză de ${seconds}s';
   }
 
   @override
   String rewindMinPause(String minutes) {
-    return '$minutes min pause';
+    return 'pauză de $minutes min';
   }
 
   @override
   String rewindHrPause(String hours) {
-    return '$hours hr pause';
+    return 'pauză de $hours h';
   }
 
   @override
-  String get rewindOneHrPause => '1 hr pause';
+  String get rewindOneHrPause => 'pauză de 1 h';
 
   @override
   String speedValue(String speed) {
@@ -5077,26 +5226,27 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get chimeBeforeSleep => 'Chime before sleep';
+  String get chimeBeforeSleep => 'Sunet înainte de somn';
 
   @override
   String get chimeBeforeSleepOnSubtitle =>
-      'Plays a gentle bell when the timer is about to end';
+      'Redă un clopoțel discret când temporizatorul este pe punctul de a se încheia';
 
   @override
-  String get chimeBeforeSleepOffSubtitle => 'No sound warning before sleep';
+  String get chimeBeforeSleepOffSubtitle =>
+      'Fără avertizare sonoră înainte de somn';
 
   @override
-  String get windDownDuration => 'Wind-down duration';
+  String get windDownDuration => 'Durata stingerii treptate';
 
   @override
   String windDownDurationSubtitle(int seconds) {
-    return 'Fade and chime start ${seconds}s before sleep';
+    return 'Reducerea volumului și sunetul încep cu ${seconds}s înainte de somn';
   }
 
   @override
   String fadeVolumeOnSubtitleDynamic(int seconds) {
-    return 'Gradually lowers volume over the last ${seconds}s';
+    return 'Reduce treptat volumul în ultimele ${seconds}s';
   }
 
   @override
@@ -5109,224 +5259,229 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get endOfChapterShort => 'End of chapter';
+  String get endOfChapterShort => 'Sfârșitul capitolului';
 
   @override
-  String get endOfChapterOnSubtitle => 'Stop at the end of the current chapter';
+  String get endOfChapterOnSubtitle =>
+      'Oprește la sfârșitul capitolului curent';
 
   @override
-  String get endOfChapterOffSubtitle => 'Use a timed sleep timer';
+  String get endOfChapterOffSubtitle =>
+      'Folosește un temporizator de somn cu durată';
 
   @override
-  String get showExplicitBadge => 'Show explicit badge';
+  String get showExplicitBadge => 'Afișează insigna de conținut explicit';
 
   @override
   String get showExplicitBadgeOnSubtitle =>
-      'Explicit items show an \"E\" badge';
+      'Elementele explicite afișează o insignă „E”';
 
   @override
-  String get showExplicitBadgeOffSubtitle => 'Off - explicit badge hidden';
+  String get showExplicitBadgeOffSubtitle =>
+      'Oprit - insigna de conținut explicit este ascunsă';
 
   @override
-  String get showEbookBadge => 'Show ebook badge';
+  String get showEbookBadge => 'Afișează insigna e-book';
 
   @override
   String get showEbookBadgeOnSubtitle =>
-      'Books with an ebook show a book icon on the cover';
+      'Cărțile cu e-book afișează o pictogramă de carte pe copertă';
 
   @override
-  String get showEbookBadgeOffSubtitle => 'Off - ebook badge hidden';
+  String get showEbookBadgeOffSubtitle => 'Oprit - insigna e-book este ascunsă';
 
   @override
-  String get libraryFallback => 'Library';
+  String get libraryFallback => 'Bibliotecă';
 
   @override
-  String get preReleaseUpdatesInfoTitle => 'Pre-release Updates';
+  String get preReleaseUpdatesInfoTitle => 'Actualizări de pre-lansare';
 
   @override
   String get preReleaseUpdatesInfoContent =>
-      'When enabled, the update checker will also notify you about alpha and pre-release builds from GitHub. These may be less stable but include the latest features and fixes.';
+      'Când este activată, verificatorul de actualizări te va anunța și despre versiunile alpha și de pre-lansare de pe GitHub. Acestea pot fi mai puțin stabile, dar includ cele mai noi funcții și remedieri.';
 
   @override
-  String get includePreReleases => 'Include pre-releases';
+  String get includePreReleases => 'Include pre-lansările';
 
   @override
   String get includePreReleasesOnSubtitle =>
-      'On - checking for alpha & pre-release builds';
+      'Activat - se verifică și versiunile alpha și de pre-lansare';
 
   @override
-  String get includePreReleasesOffSubtitle => 'Off - stable releases only';
+  String get includePreReleasesOffSubtitle => 'Oprit - doar versiuni stabile';
 
   @override
-  String get setTooltip => 'Set';
+  String get setTooltip => 'Setează';
 
   @override
-  String get saveAbsorbBackup => 'Save Absorb backup';
+  String get saveAbsorbBackup => 'Salvează copia de rezervă Absorb';
 
   @override
-  String get checkForUpdate => 'Check for update';
+  String get checkForUpdate => 'Caută actualizări';
 
   @override
-  String get onLatestVersion => 'You\'re on the latest version';
+  String get onLatestVersion => 'Ai cea mai recentă versiune';
 
   @override
-  String get updateAvailable => 'Update available';
+  String get updateAvailable => 'Actualizare disponibilă';
 
   @override
-  String get preReleaseAvailable => 'Pre-release available';
+  String get preReleaseAvailable => 'Pre-lansare disponibilă';
 
   @override
   String updateDialogContent(String kind, String latest, String current) {
-    return 'A new $kind of Absorb is available: $latest\n\nYou are on $current.';
+    return 'Este disponibilă o nouă $kind Absorb: $latest\n\nAi versiunea $current.';
   }
 
   @override
-  String get updateKindPreRelease => 'pre-release';
+  String get updateKindPreRelease => 'pre-lansare';
 
   @override
-  String get updateKindVersion => 'version';
+  String get updateKindVersion => 'versiune';
 
   @override
-  String get downloadButton => 'Download';
+  String get downloadButton => 'Descarcă';
 
   @override
-  String get updateDownloading => 'Downloading update...';
+  String get updateDownloading => 'Se descarcă actualizarea...';
 
   @override
   String get updateInstallPermissionDenied =>
-      'Install permission denied. Enable \"Install unknown apps\" for Absorb in system settings.';
+      'Permisiunea de instalare a fost refuzată. Activează „Instalare aplicații necunoscute” pentru Absorb în setările sistemului.';
 
   @override
-  String get updateOpeningInBrowser => 'In-app update failed, opening browser';
+  String get updateOpeningInBrowser =>
+      'Actualizarea în aplicație a eșuat, se deschide browserul';
 
   @override
-  String get sendToEreader => 'Send to E-Reader';
+  String get sendToEreader => 'Trimite la e-reader';
 
   @override
   String sendingToEreader(String device) {
-    return 'Sending to $device...';
+    return 'Se trimite la $device...';
   }
 
   @override
   String sendToEreaderSuccess(String device) {
-    return 'Sent to $device';
+    return 'Trimis la $device';
   }
 
   @override
-  String get sendToEreaderFailed => 'Couldn\'t send the ebook';
+  String get sendToEreaderFailed => 'Cartea electronică nu a putut fi trimisă';
 
   @override
-  String get pickEreaderDevice => 'Pick a device';
+  String get pickEreaderDevice => 'Alege un dispozitiv';
 
   @override
-  String get adminEmail => 'Email';
+  String get adminEmail => 'E-mail';
 
   @override
-  String get adminEmailSubtitle => 'SMTP and e-reader devices';
+  String get adminEmailSubtitle => 'SMTP și dispozitive e-reader';
 
   @override
   String get smtpSection => 'SMTP';
 
   @override
-  String get smtpSetupGuide => 'Setup guide';
+  String get smtpSetupGuide => 'Ghid de configurare';
 
   @override
-  String get smtpHost => 'Host';
+  String get smtpHost => 'Gazdă';
 
   @override
   String get smtpPort => 'Port';
 
   @override
-  String get smtpSecure => 'Secure';
+  String get smtpSecure => 'Securizat';
 
   @override
-  String get smtpRejectUnauthorized => 'Reject unauthorized TLS';
+  String get smtpRejectUnauthorized => 'Respinge TLS neautorizat';
 
   @override
-  String get smtpUser => 'Username';
+  String get smtpUser => 'Nume de utilizator';
 
   @override
-  String get smtpPass => 'Password';
+  String get smtpPass => 'Parolă';
 
   @override
-  String get smtpFromAddress => 'From address';
+  String get smtpFromAddress => 'Adresa expeditorului';
 
   @override
-  String get smtpTestAddress => 'Test address';
+  String get smtpTestAddress => 'Adresă de test';
 
   @override
-  String get smtpSendTest => 'Send test';
+  String get smtpSendTest => 'Trimite test';
 
   @override
-  String get smtpSaveSettings => 'Save';
+  String get smtpSaveSettings => 'Salvează';
 
   @override
-  String get smtpSaved => 'Email settings saved';
+  String get smtpSaved => 'Setările de e-mail au fost salvate';
 
   @override
-  String get smtpSaveFailed => 'Couldn\'t save email settings';
+  String get smtpSaveFailed => 'Setările de e-mail nu au putut fi salvate';
 
   @override
-  String get smtpTestSent => 'Test email sent';
+  String get smtpTestSent => 'E-mailul de test a fost trimis';
 
   @override
-  String get smtpTestFailed => 'Test email failed';
+  String get smtpTestFailed => 'E-mailul de test a eșuat';
 
   @override
-  String get ereaderDevicesTitle => 'E-Reader devices';
+  String get ereaderDevicesTitle => 'Dispozitive e-reader';
 
   @override
-  String get ereaderDevicesEmpty => 'No devices yet. Add one below.';
+  String get ereaderDevicesEmpty =>
+      'Încă nu există dispozitive. Adaugă unul mai jos.';
 
   @override
-  String get addEreaderDevice => 'Add device';
+  String get addEreaderDevice => 'Adaugă dispozitiv';
 
   @override
-  String get editEreaderDevice => 'Edit device';
+  String get editEreaderDevice => 'Editează dispozitivul';
 
   @override
-  String get deleteEreaderDevice => 'Delete';
+  String get deleteEreaderDevice => 'Șterge';
 
   @override
-  String get ereaderDeviceName => 'Name';
+  String get ereaderDeviceName => 'Nume';
 
   @override
-  String get ereaderDeviceEmail => 'Email';
+  String get ereaderDeviceEmail => 'E-mail';
 
   @override
-  String get ereaderAvailability => 'Who can use this device';
+  String get ereaderAvailability => 'Cine poate folosi acest dispozitiv';
 
   @override
-  String get ereaderAvailAdminOrUp => 'Admins only';
+  String get ereaderAvailAdminOrUp => 'Doar administratorii';
 
   @override
-  String get ereaderAvailUserOrUp => 'All users';
+  String get ereaderAvailUserOrUp => 'Toți utilizatorii';
 
   @override
-  String get ereaderAvailGuestOrUp => 'Everyone';
+  String get ereaderAvailGuestOrUp => 'Toată lumea';
 
   @override
-  String get ereaderAvailSpecificUsers => 'Specific users';
+  String get ereaderAvailSpecificUsers => 'Utilizatori anume';
 
   @override
   String ereaderSpecificUsersN(int count) {
-    return 'Specific users ($count)';
+    return 'Utilizatori anume ($count)';
   }
 
   @override
-  String get ereaderDevicesSaved => 'Devices saved';
+  String get ereaderDevicesSaved => 'Dispozitivele au fost salvate';
 
   @override
-  String get ereaderDevicesSaveFailed => 'Couldn\'t save devices';
+  String get ereaderDevicesSaveFailed => 'Dispozitivele nu au putut fi salvate';
 
   @override
   String libraryCountOne(int count) {
-    return '$count library';
+    return '$count bibliotecă';
   }
 
   @override
   String libraryCountOther(int count) {
-    return '$count libraries';
+    return '$count biblioteci';
   }
 
   @override
@@ -5341,7 +5496,7 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String backupDateFormat(int month, int day, int year) {
-    return '$month/$day/$year';
+    return '$day.$month.$year';
   }
 
   @override
@@ -5349,132 +5504,72 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get bookmarksSortedByPositionReversed =>
-      'Sorted by position (reversed)';
+      'Sortate după poziție (inversat)';
 
   @override
   String bookmarksJumpShortContent(String title, String position) {
-    return '\"$title\" at $position';
+    return '„$title” la $position';
   }
 
   @override
-  String get deleteBookmarkQuestion => 'Delete bookmark?';
+  String get deleteBookmarkQuestion => 'Ștergi marcajul?';
 
   @override
-  String get cardIconsOnlyChip => 'Icons only';
+  String get cardIconsOnlyChip => 'Doar pictograme';
 
   @override
-  String get cardMoreInGridChip => '\"More\" in grid';
+  String get cardMoreInGridChip => '„Mai mult” în grilă';
 
   @override
-  String get cardLayoutHidden => 'Hidden';
+  String get cardLayoutHidden => 'Ascuns';
 
   @override
-  String get speed => 'Speed';
+  String get speed => 'Viteză';
 
   @override
-  String get desktopShortcutPlayPause => 'Play / pause';
+  String get details => 'Detalii';
 
   @override
-  String get desktopShortcutRewind => 'Rewind';
+  String get episodeDetailsLabel => 'Detaliile episodului';
 
   @override
-  String get desktopShortcutForward => 'Fast-forward';
-
-  @override
-  String get desktopShortcutSlower => 'Decrease playback speed';
-
-  @override
-  String get desktopShortcutFaster => 'Increase playback speed';
-
-  @override
-  String get desktopShortcutNormalSpeed => 'Reset playback speed';
-
-  @override
-  String get desktopShortcutSearch => 'Open search';
-
-  @override
-  String get desktopShortcutLibrary => 'Open library';
-
-  @override
-  String get desktopShortcutNowPlaying => 'Open now playing';
-
-  @override
-  String get desktopShortcutFullScreen => 'Full screen';
-
-  @override
-  String get desktopShortcutClosePlayer => 'Close the full-screen player';
-
-  @override
-  String get desktopShortcutBack => 'Go back (close the top page or sheet)';
-
-  @override
-  String get desktopShortcutRefresh => 'Refresh the list on screen';
-
-  @override
-  String get desktopShortcutPreviousCard => 'Previous Absorbing card';
-
-  @override
-  String get desktopShortcutNextCard => 'Next Absorbing card';
-
-  @override
-  String get desktopShortcutContextMenu => 'Open the long-press menu';
-
-  @override
-  String get desktopShortcutMouseBack => 'Mouse back button';
-
-  @override
-  String get desktopShortcutRightClick => 'Right-click';
-
-  @override
-  String get desktopShortcutDragShelves => 'Drag shelves and cards sideways';
-
-  @override
-  String get desktopShortcutMouseDrag => 'Click and drag';
-
-  @override
-  String get details => 'Details';
-
-  @override
-  String get episodeDetailsLabel => 'Episode Details';
-
-  @override
-  String get bookDetailsLabel => 'Book Details';
+  String get bookDetailsLabel => 'Detaliile cărții';
 
   @override
   String get equalizerShort => 'EQ';
 
   @override
-  String get equalizerLabel => 'Equalizer';
+  String get equalizerLabel => 'Egalizator';
 
   @override
-  String get cast => 'Cast';
+  String get cast => 'Proiectează';
 
   @override
   String castingToDevice(String device) {
-    return 'Casting to $device';
+    return 'Se proiectează pe $device';
   }
 
   @override
   String castToDeviceNamed(String device) {
-    return 'Cast to $device';
+    return 'Proiectează pe $device';
   }
 
   @override
-  String get historyShort => 'History';
+  String get historyShort => 'Istoric';
 
   @override
   String atPosition(String position) {
-    return 'at $position';
+    return 'la $position';
   }
 
   @override
   String chaptersChip(int count) {
-    return '$count chapters';
+    return '$count capitole';
   }
 
   @override
   String chapterNumber(int number) {
-    return 'Chapter $number';
+    return 'Capitolul $number';
   }
 
   @override
@@ -5483,156 +5578,158 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get fileInfoTitle => 'File info';
+  String get fileInfoTitle => 'Informații fișier';
 
   @override
   String fileInfoFileCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count de fișiere',
+      few: '$count fișiere',
+      one: '1 fișier',
     );
     return '$_temp0';
   }
 
   @override
-  String get fileInfoNone => 'This book has no file details.';
+  String get fileInfoNone => 'Această carte nu are detalii despre fișiere.';
 
   @override
   String get fileInfoAudio => 'Audio';
 
   @override
-  String get fileInfoEbook => 'Ebook';
+  String get fileInfoEbook => 'Carte electronică';
 
   @override
-  String get fileInfoOther => 'Other files';
+  String get fileInfoOther => 'Alte fișiere';
 
   @override
   String get fileInfoBookOrbitNote =>
-      'BookOrbit doesn\'t report codec or bitrate.';
+      'BookOrbit nu raportează codecul sau rata de biți.';
 
   @override
   String fileInfoChannels(int count) {
-    return '$count channels';
+    return '$count canale';
   }
 
   @override
-  String get fileInfoCover => 'Cover';
+  String get fileInfoCover => 'Copertă';
 
   @override
-  String get fileInfoMetadata => 'Metadata';
+  String get fileInfoMetadata => 'Metadate';
 
   @override
-  String get fileInfoSupplement => 'Extra';
+  String get fileInfoSupplement => 'Suplimentar';
 
   @override
-  String get fileInfoPathCopied => 'Path copied';
+  String get fileInfoPathCopied => 'Calea a fost copiată';
 
   @override
   String get resetMayNotHaveSynced =>
-      'Reset may not have synced - check your server';
+      'Este posibil ca resetarea să nu se fi sincronizat - verifică serverul';
 
   @override
   String failedToDownloadEbook(int code) {
-    return 'Failed to download ebook ($code)';
+    return 'Descărcarea cărții electronice a eșuat ($code)';
   }
 
   @override
   String get serverReturnedErrorPage =>
-      'Server returned an error page instead of the ebook file';
+      'Serverul a returnat o pagină de eroare în loc de fișierul cărții electronice';
 
   @override
   String ebookSaved(String filename) {
-    return 'Saved: $filename';
+    return 'Salvat: $filename';
   }
 
   @override
   String errorSavingEbook(String error) {
-    return 'Error saving ebook: $error';
+    return 'Eroare la salvarea cărții electronice: $error';
   }
 
   @override
   String failedToSaveError(String error) {
-    return 'Failed to save: $error';
+    return 'Salvarea a eșuat: $error';
   }
 
   @override
-  String get adminBackupsLabel => 'Backups';
+  String get adminBackupsLabel => 'Copii de rezervă';
 
   @override
-  String get adminListeningNow => 'Listening Now';
+  String get adminListeningNow => 'Ascultă acum';
 
   @override
-  String get adminLibraries => 'Libraries';
+  String get adminLibraries => 'Biblioteci';
 
   @override
-  String get adminLibraryShows => 'shows';
+  String get adminLibraryShows => 'emisiuni';
 
   @override
-  String get adminLibraryBooks => 'books';
+  String get adminLibraryBooks => 'cărți';
 
   @override
-  String get adminLibraryFolders => 'folders';
+  String get adminLibraryFolders => 'foldere';
 
   @override
-  String get adminLibrarySize => 'size';
+  String get adminLibrarySize => 'dimensiune';
 
   @override
-  String get adminLibraryDuration => 'duration';
+  String get adminLibraryDuration => 'durată';
 
   @override
   String adminLibraryIssues(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count missing or invalid items',
-      one: '1 missing or invalid item',
+      other: '$count de elemente lipsă sau nevalide',
+      few: '$count elemente lipsă sau nevalide',
+      one: '1 element lipsă sau nevalid',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminLibraryReview => 'Review';
+  String get adminLibraryReview => 'Verifică';
 
   @override
-  String get adminMissingTitle => 'Missing Items';
+  String get adminMissingTitle => 'Elemente lipsă';
 
   @override
   String adminMissingSubtitle(String library) {
-    return 'Entries in $library whose files are missing or unreadable';
+    return 'Intrări din $library ale căror fișiere lipsesc sau sunt ilizibile';
   }
 
   @override
-  String get adminMissingNone => 'No missing or invalid items';
+  String get adminMissingNone => 'Niciun element lipsă sau nevalid';
 
   @override
-  String get adminMissingBadge => 'Missing';
+  String get adminMissingBadge => 'Lipsă';
 
   @override
-  String get adminInvalidBadge => 'Invalid';
+  String get adminInvalidBadge => 'Nevalid';
 
   @override
-  String get adminMissingDeleteTitle => 'Remove entry';
+  String get adminMissingDeleteTitle => 'Elimină intrarea';
 
   @override
   String adminMissingDeleteOneContent(String title) {
-    return 'Remove \"$title\" from Audiobookshelf?';
+    return 'Elimini „$title” din Audiobookshelf?';
   }
 
   @override
   String adminMissingDeleteManyContent(int count) {
-    return 'Remove $count entries from Audiobookshelf?';
+    return 'Elimini $count intrări din Audiobookshelf?';
   }
 
   @override
   String adminMissingDeleteCount(int count) {
-    return 'Delete $count';
+    return 'Șterge $count';
   }
 
   @override
   String adminMissingRemovedOne(String title) {
-    return 'Removed $title';
+    return '$title a fost eliminat';
   }
 
   @override
@@ -5640,33 +5737,34 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Removed $count entries',
-      one: 'Removed 1 entry',
+      other: '$count de intrări eliminate',
+      few: '$count intrări eliminate',
+      one: '1 intrare eliminată',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminMissingDeleteFailed => 'Failed to delete entry';
+  String get adminMissingDeleteFailed => 'Ștergerea intrării a eșuat';
 
   @override
-  String get adminMatchAction => 'Match';
+  String get adminMatchAction => 'Potrivește';
 
   @override
   String adminMatchingStarted(String name) {
-    return 'Matching started for $name';
+    return 'Potrivirea a început pentru $name';
   }
 
   @override
-  String get adminMatchFailed => 'Failed';
+  String get adminMatchFailed => 'Eșuat';
 
   @override
   String adminScanFailed(String name) {
-    return 'Failed to scan $name';
+    return 'Scanarea $name a eșuat';
   }
 
   @override
-  String get adminPurgeCacheFailed => 'Failed';
+  String get adminPurgeCacheFailed => 'Eșuat';
 
   @override
   String get adminUsersRootBadge => 'root';
@@ -5675,621 +5773,633 @@ class AppLocalizationsRo extends AppLocalizations {
   String get adminUsersAdminBadge => 'admin';
 
   @override
-  String get adminUsersDisabledBadge => 'disabled';
+  String get adminUsersDisabledBadge => 'dezactivat';
 
   @override
-  String get adminUsersEditUserTooltip => 'Edit user';
+  String get adminUsersEditUserTooltip => 'Editează utilizatorul';
 
   @override
-  String get adminUsersOnlineNow => 'Online now';
+  String get adminUsersOnlineNow => 'Online acum';
 
   @override
   String adminUsersLastSeen(String time) {
-    return 'Last seen $time';
+    return 'Văzut ultima dată $time';
   }
 
   @override
-  String get adminUsersNever => 'Never';
+  String get adminUsersNever => 'Niciodată';
 
   @override
   String get adminUsersTotal => 'Total';
 
   @override
-  String get adminUsersNoReadingActivity => 'No reading activity';
+  String get adminUsersNoReadingActivity => 'Nicio activitate de citire';
 
   @override
-  String get adminUsersLoadingDots => 'Loading...';
+  String get adminUsersLoadingDots => 'Se încarcă...';
 
   @override
-  String get adminUsersLoadMoreSessions => 'Load more sessions';
+  String get adminUsersLoadMoreSessions => 'Încarcă mai multe sesiuni';
 
   @override
-  String get adminUsersNoRecentSessions => 'No recent sessions';
+  String get adminUsersNoRecentSessions => 'Nicio sesiune recentă';
 
   @override
-  String get adminUsersLibraryProgress => 'Library Progress';
+  String get adminUsersLibraryProgress => 'Progresul bibliotecii';
 
   @override
   String adminUsersLoadMoreRemaining(int count) {
-    return 'Load More ($count remaining)';
+    return 'Încarcă mai multe ($count rămase)';
   }
 
   @override
   String adminUsersMonthsAgo(int count) {
-    return '${count}mo ago';
+    return 'acum $count luni';
   }
 
   @override
-  String get adminUsersNewUser => 'New User';
+  String get adminUsersNewUser => 'Utilizator nou';
 
   @override
-  String get adminUsersEditUser => 'Edit User';
+  String get adminUsersEditUser => 'Editează utilizatorul';
 
   @override
-  String get adminUsersUsername => 'Username';
+  String get adminUsersUsername => 'Nume de utilizator';
 
   @override
-  String get adminUsersEnterUsername => 'Enter username';
+  String get adminUsersEnterUsername => 'Introdu numele de utilizator';
 
   @override
-  String get adminUsersPassword => 'Password';
+  String get adminUsersPassword => 'Parolă';
 
   @override
-  String get adminUsersNewPassword => 'New Password';
+  String get adminUsersNewPassword => 'Parolă nouă';
 
   @override
-  String get adminUsersEnterPassword => 'Enter password';
+  String get adminUsersEnterPassword => 'Introdu parola';
 
   @override
-  String get adminUsersLeaveBlankToKeep => 'Leave blank to keep current';
+  String get adminUsersLeaveBlankToKeep =>
+      'Lasă gol pentru a păstra parola curentă';
 
   @override
-  String get adminUsersAccountType => 'Account Type';
+  String get adminUsersAccountType => 'Tip de cont';
 
   @override
-  String get adminUsersTypeGuest => 'Guest';
+  String get adminUsersTypeGuest => 'Invitat';
 
   @override
-  String get adminUsersTypeUser => 'User';
+  String get adminUsersTypeUser => 'Utilizator';
 
   @override
-  String get adminUsersTypeAdmin => 'Admin';
+  String get adminUsersTypeAdmin => 'Administrator';
 
   @override
-  String get adminUsersStatus => 'Status';
+  String get adminUsersStatus => 'Stare';
 
   @override
-  String get adminUsersAccountActive => 'Account Active';
+  String get adminUsersAccountActive => 'Cont activ';
 
   @override
-  String get adminUsersAccountActiveSub => 'Disabled accounts cannot log in';
+  String get adminUsersAccountActiveSub =>
+      'Conturile dezactivate nu se pot conecta';
 
   @override
-  String get adminUsersLocked => 'Locked';
+  String get adminUsersLocked => 'Blocat';
 
   @override
-  String get adminUsersLockedSub => 'Prevents password changes';
+  String get adminUsersLockedSub => 'Împiedică schimbarea parolei';
 
   @override
-  String get adminUsersPermissions => 'Permissions';
+  String get adminUsersPermissions => 'Permisiuni';
 
   @override
-  String get adminUsersPermDownload => 'Download';
+  String get adminUsersPermDownload => 'Descărcare';
 
   @override
-  String get adminUsersPermUpdate => 'Update';
+  String get adminUsersPermUpdate => 'Actualizare';
 
   @override
-  String get adminUsersPermUpdateSub => 'Edit metadata and library items';
+  String get adminUsersPermUpdateSub =>
+      'Editează metadatele și elementele din bibliotecă';
 
   @override
-  String get adminUsersPermDelete => 'Delete';
+  String get adminUsersPermDelete => 'Ștergere';
 
   @override
-  String get adminUsersPermUpload => 'Upload';
+  String get adminUsersPermUpload => 'Încărcare';
 
   @override
-  String get adminUsersPermExplicit => 'Explicit Content';
+  String get adminUsersPermExplicit => 'Conținut explicit';
 
   @override
-  String get adminUsersLibraryAccess => 'Library Access';
+  String get adminUsersLibraryAccess => 'Acces la biblioteci';
 
   @override
-  String get adminUsersAccessAllLibraries => 'Access All Libraries';
+  String get adminUsersAccessAllLibraries => 'Acces la toate bibliotecile';
 
   @override
-  String get adminUsersCreateUser => 'Create User';
+  String get adminUsersCreateUser => 'Creează utilizator';
 
   @override
-  String get adminUsersSaveChanges => 'Save Changes';
+  String get adminUsersSaveChanges => 'Salvează modificările';
 
   @override
-  String get adminUsersUsernameRequired => 'Username is required';
+  String get adminUsersUsernameRequired =>
+      'Numele de utilizator este obligatoriu';
 
   @override
-  String get adminUsersPasswordRequired => 'Password is required';
+  String get adminUsersPasswordRequired => 'Parola este obligatorie';
 
   @override
-  String get adminUsersUserCreated => 'User created';
+  String get adminUsersUserCreated => 'Utilizator creat';
 
   @override
-  String get adminUsersUserUpdated => 'User updated';
+  String get adminUsersUserUpdated => 'Utilizator actualizat';
 
   @override
-  String get adminUsersFailedCreate => 'Failed to create user';
+  String get adminUsersFailedCreate => 'Crearea utilizatorului a eșuat';
 
   @override
-  String get adminUsersFailedUpdate => 'Failed to update user';
+  String get adminUsersFailedUpdate => 'Actualizarea utilizatorului a eșuat';
 
   @override
-  String get adminUsersThisUser => 'this user';
+  String get adminUsersThisUser => 'acest utilizator';
 
   @override
-  String get adminUsersDeleteUserTitle => 'Delete User?';
+  String get adminUsersDeleteUserTitle => 'Ștergi utilizatorul?';
 
   @override
   String adminUsersDeleteUserContent(String name) {
-    return 'Permanently delete $name?';
+    return 'Ștergi definitiv pe $name?';
   }
 
   @override
   String adminUsersUserDeleted(String name) {
-    return '$name deleted';
+    return '$name a fost șters';
   }
 
   @override
-  String get adminUsersFailedDelete => 'Failed to delete user';
+  String get adminUsersFailedDelete => 'Ștergerea utilizatorului a eșuat';
 
   @override
-  String get adminUsersUnlinkOpenId => 'Unlink OpenID';
+  String get adminUsersUnlinkOpenId => 'Deconectează OpenID';
 
   @override
-  String get adminUsersUnlinkOpenIdTitle => 'Unlink OpenID?';
+  String get adminUsersUnlinkOpenIdTitle => 'Deconectezi OpenID?';
 
   @override
   String adminUsersUnlinkOpenIdContent(String name) {
-    return 'Remove the OpenID connection for $name? They\'ll need to sign in with OpenID again to re-link.';
+    return 'Elimini conexiunea OpenID pentru $name? Va trebui să se conecteze din nou cu OpenID pentru a o reasocia.';
   }
 
   @override
-  String get adminUsersOpenIdUnlinked => 'OpenID unlinked';
+  String get adminUsersOpenIdUnlinked => 'OpenID deconectat';
 
   @override
-  String get adminUsersFailedUnlinkOpenId => 'Failed to unlink OpenID';
+  String get adminUsersFailedUnlinkOpenId => 'Deconectarea OpenID a eșuat';
 
   @override
   String adminUsersByAuthor(String author) {
-    return 'by $author';
+    return 'de $author';
   }
 
   @override
-  String get adminUsersListened => 'Listened';
+  String get adminUsersListened => 'Ascultat';
 
   @override
-  String get adminUsersStartedAtPosition => 'Started at position';
+  String get adminUsersStartedAtPosition => 'Început la poziția';
 
   @override
-  String get adminUsersEndedAtPosition => 'Ended at position';
+  String get adminUsersEndedAtPosition => 'Încheiat la poziția';
 
   @override
-  String get adminUsersTotalDuration => 'Total duration';
+  String get adminUsersTotalDuration => 'Durată totală';
 
   @override
-  String get adminUsersStarted => 'Started';
+  String get adminUsersStarted => 'Început';
 
   @override
-  String get adminUsersUpdated => 'Updated';
+  String get adminUsersUpdated => 'Actualizat';
 
   @override
   String get adminUsersClient => 'Client';
 
   @override
-  String get adminUsersDevice => 'Device';
+  String get adminUsersDevice => 'Dispozitiv';
 
   @override
-  String get adminUsersOs => 'OS';
+  String get adminUsersOs => 'SO';
 
   @override
-  String get adminUsersPlayMethod => 'Play method';
+  String get adminUsersPlayMethod => 'Metodă de redare';
 
   @override
-  String get adminUsersPlayDirect => 'Direct play';
+  String get adminUsersPlayDirect => 'Redare directă';
 
   @override
-  String get adminUsersPlayDirectStream => 'Direct stream';
+  String get adminUsersPlayDirectStream => 'Flux direct';
 
   @override
-  String get adminUsersPlayTranscode => 'Transcode';
+  String get adminUsersPlayTranscode => 'Transcodare';
 
   @override
   String get adminUsersPlayLocal => 'Local';
 
   @override
-  String get adminPodcastsCheckNewEpisodesTitle => 'Check for New Episodes';
+  String get adminPodcastsCheckNewEpisodesTitle => 'Caută episoade noi';
 
   @override
   String get adminPodcastsCheckNewEpisodesContent =>
-      'This will check RSS feeds for all podcasts and download any new episodes found (if auto-download is enabled).';
+      'Aceasta va verifica fluxurile RSS ale tuturor podcasturilor și va descărca episoadele noi găsite (dacă descărcarea automată este activată).';
 
   @override
   String get adminPodcastsCheckNewEpisodesSubtitle =>
-      'Scan RSS feed and download new episodes';
+      'Scanează fluxul RSS și descarcă episoadele noi';
 
   @override
-  String get adminPodcastsCheck => 'Check';
+  String get adminPodcastsCheck => 'Verifică';
 
   @override
-  String get adminPodcastsCheckingForNew => 'Checking for new episodes…';
+  String get adminPodcastsCheckingForNew => 'Se caută episoade noi…';
 
   @override
-  String get adminPodcastsCheckingForNewDots => 'Checking for new episodes...';
+  String get adminPodcastsCheckingForNewDots => 'Se caută episoade noi...';
 
   @override
-  String get adminPodcastsFailedCheckEpisodes => 'Failed to check episodes';
+  String get adminPodcastsFailedCheckEpisodes =>
+      'Verificarea episoadelor a eșuat';
 
   @override
-  String get adminPodcastsCheckFeedsTooltip => 'Check feeds for new episodes';
+  String get adminPodcastsCheckFeedsTooltip =>
+      'Verifică fluxurile pentru episoade noi';
 
   @override
-  String get adminPodcastsNoPodcastsYet => 'No podcasts yet';
+  String get adminPodcastsNoPodcastsYet => 'Încă nu există podcasturi';
 
   @override
-  String get adminPodcastsTapPlusHint => 'Tap + to search and add shows';
+  String get adminPodcastsTapPlusHint =>
+      'Atinge + pentru a căuta și adăuga emisiuni';
 
   @override
   String adminPodcastsEpisodesCount(int count) {
-    return '$count episodes';
+    return '$count episoade';
   }
 
   @override
-  String get adminPodcastsAddPodcast => 'Add Podcast';
+  String get adminPodcastsAddPodcast => 'Adaugă podcast';
 
   @override
-  String get adminPodcastsCouldNotFindFeed => 'Could not find podcast feed';
+  String get adminPodcastsCouldNotFindFeed =>
+      'Fluxul podcastului nu a fost găsit';
 
   @override
-  String get adminPodcastsSearchHint => 'Search for podcasts…';
+  String get adminPodcastsSearchHint => 'Caută podcasturi…';
 
   @override
-  String get adminPodcastsSearchItunesHint => 'Search iTunes...';
+  String get adminPodcastsSearchItunesHint => 'Caută în iTunes...';
 
   @override
   String adminPodcastsSearchItunesFor(String query) {
-    return 'Search iTunes for \"$query\"';
+    return 'Caută „$query” în iTunes';
   }
 
   @override
-  String get adminPodcastsNoPodcastsFound => 'No podcasts found';
+  String get adminPodcastsNoPodcastsFound => 'Nu s-a găsit niciun podcast';
 
   @override
-  String get adminPodcastsRelToday => 'Today';
+  String get adminPodcastsRelToday => 'Astăzi';
 
   @override
   String adminPodcastsWeeksAgo(int count) {
-    return '${count}w ago';
+    return 'acum $count săpt.';
   }
 
   @override
   String adminPodcastsMonthsAgo(int count) {
-    return '${count}mo ago';
+    return 'acum $count luni';
   }
 
   @override
   String adminPodcastsYearsAgo(int count) {
-    return '${count}y ago';
+    return 'acum $count ani';
   }
 
   @override
   String adminPodcastsUpdated(String when) {
-    return 'Updated $when';
+    return 'Actualizat $when';
   }
 
   @override
-  String get adminPodcastsGenreAll => 'All';
+  String get adminPodcastsGenreAll => 'Toate';
 
   @override
-  String get adminPodcastsGenreArts => 'Arts';
+  String get adminPodcastsGenreArts => 'Arte';
 
   @override
-  String get adminPodcastsGenreComedy => 'Comedy';
+  String get adminPodcastsGenreComedy => 'Comedie';
 
   @override
-  String get adminPodcastsGenreEducation => 'Education';
+  String get adminPodcastsGenreEducation => 'Educație';
 
   @override
-  String get adminPodcastsGenreTvFilm => 'TV & Film';
+  String get adminPodcastsGenreTvFilm => 'TV și film';
 
   @override
-  String get adminPodcastsGenreMusic => 'Music';
+  String get adminPodcastsGenreMusic => 'Muzică';
 
   @override
-  String get adminPodcastsGenreNews => 'News';
+  String get adminPodcastsGenreNews => 'Știri';
 
   @override
-  String get adminPodcastsGenreReligion => 'Religion';
+  String get adminPodcastsGenreReligion => 'Religie';
 
   @override
-  String get adminPodcastsGenreScience => 'Science';
+  String get adminPodcastsGenreScience => 'Știință';
 
   @override
-  String get adminPodcastsGenreSports => 'Sports';
+  String get adminPodcastsGenreSports => 'Sport';
 
   @override
-  String get adminPodcastsGenreTechnology => 'Technology';
+  String get adminPodcastsGenreTechnology => 'Tehnologie';
 
   @override
-  String get adminPodcastsGenreBusiness => 'Business';
+  String get adminPodcastsGenreBusiness => 'Afaceri';
 
   @override
-  String get adminPodcastsGenreFiction => 'Fiction';
+  String get adminPodcastsGenreFiction => 'Ficțiune';
 
   @override
-  String get adminPodcastsGenreSocietyCulture => 'Society & Culture';
+  String get adminPodcastsGenreSocietyCulture => 'Societate și cultură';
 
   @override
-  String get adminPodcastsGenreHealthFitness => 'Health & Fitness';
+  String get adminPodcastsGenreHealthFitness => 'Sănătate și fitness';
 
   @override
-  String get adminPodcastsGenreTrueCrime => 'True Crime';
+  String get adminPodcastsGenreTrueCrime => 'Crime reale';
 
   @override
-  String get adminPodcastsGenreHistory => 'History';
+  String get adminPodcastsGenreHistory => 'Istorie';
 
   @override
-  String get adminPodcastsGenreKidsFamily => 'Kids & Family';
+  String get adminPodcastsGenreKidsFamily => 'Copii și familie';
 
   @override
   String get adminPodcastsPodcastFallback => 'Podcast';
 
   @override
-  String get adminPodcastsEpisodeFallback => 'Episode';
+  String get adminPodcastsEpisodeFallback => 'Episod';
 
   @override
-  String get adminPodcastsNoFeedFound => 'No feed URL found';
+  String get adminPodcastsNoFeedFound => 'Nu s-a găsit nicio adresă de flux';
 
   @override
-  String get adminPodcastsNoFeedAvailable => 'No feed URL available';
+  String get adminPodcastsNoFeedAvailable => 'Nicio adresă de flux disponibilă';
 
   @override
   String adminPodcastsAddedToLibrary(String title) {
-    return '$title added to library';
+    return '$title a fost adăugat în bibliotecă';
   }
 
   @override
   String adminPodcastsFailedToAdd(String title) {
-    return 'Failed to add $title';
+    return 'Adăugarea $title a eșuat';
   }
 
   @override
   String adminPodcastsEpisodesInFeed(int count) {
-    return '$count episodes in feed';
+    return '$count episoade în flux';
   }
 
   @override
   String adminPodcastsMoreEpisodes(int count) {
-    return '+ $count more episodes';
+    return '+ încă $count episoade';
   }
 
   @override
-  String get adminPodcastsAdding => 'Adding…';
+  String get adminPodcastsAdding => 'Se adaugă…';
 
   @override
-  String get adminPodcastsAddToLibrary => 'Add to Library';
+  String get adminPodcastsAddToLibrary => 'Adaugă în bibliotecă';
 
   @override
-  String get adminPodcastsRemoveShowTitle => 'Remove Show?';
+  String get adminPodcastsRemoveShowTitle => 'Elimini emisiunea?';
 
   @override
   String adminPodcastsRemoveShowContent(String title) {
-    return 'Remove \"$title\" and all its episodes from the server? This cannot be undone.';
+    return 'Elimini „$title” și toate episoadele ei de pe server? Acțiunea nu poate fi anulată.';
   }
 
   @override
   String adminPodcastsRemovedShow(String title) {
-    return 'Removed \"$title\"';
+    return '„$title” a fost eliminată';
   }
 
   @override
-  String get adminPodcastsFailedRemoveShow => 'Failed to remove show';
+  String get adminPodcastsFailedRemoveShow => 'Eliminarea emisiunii a eșuat';
 
   @override
-  String get adminPodcastsRemoveShowTooltip => 'Remove show';
+  String get adminPodcastsRemoveShowTooltip => 'Elimină emisiunea';
 
   @override
-  String get adminPodcastsSelectMultipleTooltip => 'Select multiple';
+  String get adminPodcastsSelectMultipleTooltip => 'Selectează mai multe';
 
   @override
   String adminPodcastsDownloadedCount(int count) {
-    return '$count downloaded';
+    return '$count descărcate';
   }
 
   @override
-  String get adminPodcastsTabDownloaded => 'Downloaded';
+  String get adminPodcastsTabDownloaded => 'Descărcate';
 
   @override
-  String get adminPodcastsTabFeed => 'Feed';
+  String get adminPodcastsTabFeed => 'Flux';
 
   @override
-  String get adminPodcastsTabSettings => 'Settings';
+  String get adminPodcastsTabSettings => 'Setări';
 
   @override
   String adminPodcastsDownloadingEpisode(String title) {
-    return 'Downloading \"$title\"';
+    return 'Se descarcă „$title”';
   }
 
   @override
-  String get adminPodcastsFailedDownload => 'Failed to download';
+  String get adminPodcastsFailedDownload => 'Descărcarea a eșuat';
 
   @override
-  String get adminPodcastsDeleteEpisodeTitle => 'Delete Episode?';
+  String get adminPodcastsDeleteEpisodeTitle => 'Ștergi episodul?';
 
   @override
   String adminPodcastsDeleteEpisodeContent(String title) {
-    return 'Delete \"$title\"?';
+    return 'Ștergi „$title”?';
   }
 
   @override
-  String get adminPodcastsDeleted => 'Deleted';
+  String get adminPodcastsDeleted => 'Șters';
 
   @override
-  String get adminPodcastsFailed => 'Failed';
+  String get adminPodcastsFailed => 'Eșuat';
 
   @override
-  String get adminPodcastsDeleteEpisodesTitle => 'Delete Episodes?';
+  String get adminPodcastsDeleteEpisodesTitle => 'Ștergi episoadele?';
 
   @override
   String adminPodcastsDeleteEpisodesContent(int count) {
-    return 'Delete $count episode(s) from the server?';
+    return 'Ștergi $count episod(e) de pe server?';
   }
 
   @override
   String adminPodcastsDeletedEpisodes(int count) {
-    return 'Deleted $count episode(s)';
+    return '$count episod(e) șterse';
   }
 
   @override
-  String get adminPodcastsBrowseFeedToDownload => 'Browse feed to download';
+  String get adminPodcastsBrowseFeedToDownload =>
+      'Răsfoiește fluxul pentru a descărca';
 
   @override
-  String get adminPodcastsDownloadingDots => 'Downloading...';
+  String get adminPodcastsDownloadingDots => 'Se descarcă...';
 
   @override
   String adminPodcastsDeleteEpisodesCount(int count) {
-    return 'Delete $count episode(s)';
+    return 'Șterge $count episod(e)';
   }
 
   @override
   String adminPodcastsDownloadingCount(int count) {
-    return 'Downloading $count episode(s)';
+    return 'Se descarcă $count episod(e)';
   }
 
   @override
   String adminPodcastsDownloadEpisodesCount(int count) {
-    return 'Download $count episode(s)';
+    return 'Descarcă $count episod(e)';
   }
 
   @override
-  String get adminPodcastsLookForEpisodesAfter => 'Look for episodes after';
+  String get adminPodcastsLookForEpisodesAfter => 'Caută episoade după';
 
   @override
-  String get adminPodcastsSelectDate => 'Select date';
+  String get adminPodcastsSelectDate => 'Selectează data';
 
   @override
-  String get adminPodcastsMaxEpisodes => 'Max episodes to download';
+  String get adminPodcastsMaxEpisodes =>
+      'Numărul maxim de episoade de descărcat';
 
   @override
   String adminPodcastsNoNewEpisodesAfter(String date) {
-    return 'No new episodes found after $date';
+    return 'Nu s-au găsit episoade noi după $date';
   }
 
   @override
   String adminPodcastsFoundNewEpisodes(int count) {
-    return 'Found $count new episode(s) - downloading';
+    return 'S-au găsit $count episod(e) noi - se descarcă';
   }
 
   @override
   String get adminPodcastsFailedToCheckNew =>
-      'Failed to check for new episodes';
+      'Căutarea episoadelor noi a eșuat';
 
   @override
-  String get adminPodcastsCheckAndDownload => 'Check & Download';
+  String get adminPodcastsCheckAndDownload => 'Verifică și descarcă';
 
   @override
-  String get adminPodcastsMatchPodcast => 'Match Podcast';
+  String get adminPodcastsMatchPodcast => 'Potrivește podcastul';
 
   @override
   String get adminPodcastsMatchPodcastSubtitle =>
-      'Search iTunes to update cover and metadata';
+      'Caută în iTunes pentru a actualiza coperta și metadatele';
 
   @override
   String get adminPodcastsAutoDownloadNewEpisodes =>
-      'Auto-Download New Episodes';
+      'Descarcă automat episoadele noi';
 
   @override
   String get adminPodcastsAutoDownloadOnSubtitle =>
-      'Server downloads new episodes automatically';
+      'Serverul descarcă automat episoadele noi';
 
   @override
   String get adminPodcastsAutoDownloadOffSubtitle =>
-      'New episodes are not auto-downloaded';
+      'Episoadele noi nu se descarcă automat';
 
   @override
   String get adminPodcastsFailedAutoDownloadUpdate =>
-      'Failed to update auto-download setting';
+      'Actualizarea setării de descărcare automată a eșuat';
 
   @override
-  String get adminPodcastsMaxEpisodesToKeep => 'Max episodes to keep';
+  String get adminPodcastsMaxEpisodesToKeep =>
+      'Numărul maxim de episoade păstrate';
 
   @override
   String get adminPodcastsMaxEpisodesToKeepHelp =>
-      '0 keeps every episode. After a new episode is auto-downloaded, Audiobookshelf removes the oldest episode when the show is over this limit.';
+      '0 păstrează toate episoadele. După descărcarea automată a unui episod nou, Audiobookshelf elimină cel mai vechi episod dacă emisiunea depășește această limită.';
 
   @override
-  String get adminPodcastsNoEpisodeLimit => 'No limit';
+  String get adminPodcastsNoEpisodeLimit => 'Fără limită';
 
   @override
-  String get adminPodcastsEpisodeLimitInvalid => 'Enter 0 or a whole number';
+  String get adminPodcastsEpisodeLimitInvalid =>
+      'Introdu 0 sau un număr întreg';
 
   @override
-  String get adminPodcastsCheckSchedule => 'Check Schedule';
+  String get adminPodcastsCheckSchedule => 'Program de verificare';
 
   @override
-  String get adminPodcastsFrequency => 'Frequency';
+  String get adminPodcastsFrequency => 'Frecvență';
 
   @override
-  String get adminPodcastsFreqHourly => 'Hourly';
+  String get adminPodcastsFreqHourly => 'La fiecare oră';
 
   @override
-  String get adminPodcastsFreqDaily => 'Daily';
+  String get adminPodcastsFreqDaily => 'Zilnic';
 
   @override
-  String get adminPodcastsFreqWeekly => 'Weekly';
+  String get adminPodcastsFreqWeekly => 'Săptămânal';
 
   @override
-  String get adminPodcastsDay => 'Day';
+  String get adminPodcastsDay => 'Zi';
 
   @override
-  String get adminPodcastsTime => 'Time';
+  String get adminPodcastsTime => 'Oră';
 
   @override
-  String get adminPodcastsDaySun => 'Sun';
+  String get adminPodcastsDaySun => 'Dum';
 
   @override
-  String get adminPodcastsDayMon => 'Mon';
+  String get adminPodcastsDayMon => 'Lun';
 
   @override
-  String get adminPodcastsDayTue => 'Tue';
+  String get adminPodcastsDayTue => 'Mar';
 
   @override
-  String get adminPodcastsDayWed => 'Wed';
+  String get adminPodcastsDayWed => 'Mie';
 
   @override
-  String get adminPodcastsDayThu => 'Thu';
+  String get adminPodcastsDayThu => 'Joi';
 
   @override
-  String get adminPodcastsDayFri => 'Fri';
+  String get adminPodcastsDayFri => 'Vin';
 
   @override
-  String get adminPodcastsDaySat => 'Sat';
+  String get adminPodcastsDaySat => 'Sâm';
 
   @override
-  String get adminPodcastsFeedUrl => 'Feed URL';
+  String get adminPodcastsFeedUrl => 'Adresa fluxului';
 
   @override
-  String get adminPodcastsBack => 'Back';
+  String get adminPodcastsBack => 'Înapoi';
 
   @override
-  String get adminPodcastsRootOnly => 'Root Only';
+  String get adminPodcastsRootOnly => 'Doar root';
 
   @override
-  String get adminPodcastsDeleting => 'Deleting...';
+  String get adminPodcastsDeleting => 'Se șterge...';
 
   @override
-  String get adminPodcastsDeleteEpisode => 'Delete Episode';
+  String get adminPodcastsDeleteEpisode => 'Șterge episodul';
 
   @override
   String adminPodcastsSeasonChip(String season) {
-    return 'Season $season';
+    return 'Sezonul $season';
   }
 
   @override
@@ -6298,61 +6408,64 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get adminPodcastsApplyingMatch => 'Applying match...';
+  String get adminPodcastsApplyingMatch => 'Se aplică potrivirea...';
 
   @override
-  String get adminPodcastsNoResults => 'No results';
+  String get adminPodcastsNoResults => 'Niciun rezultat';
 
   @override
-  String get adminPodcastsPodcastMatched => 'Podcast matched and updated';
+  String get adminPodcastsPodcastMatched =>
+      'Podcastul a fost potrivit și actualizat';
 
   @override
-  String get adminPodcastsFailedMatch => 'Failed to match podcast';
+  String get adminPodcastsFailedMatch => 'Potrivirea podcastului a eșuat';
 
   @override
-  String get adminPodcastsSelectAll => 'Select all';
+  String get adminPodcastsSelectAll => 'Selectează tot';
 
   @override
-  String get adminPodcastsSelectAllNew => 'New only';
+  String get adminPodcastsSelectAllNew => 'Doar cele noi';
 
   @override
-  String get adminPodcastsSortNewestFirst => 'Newest first';
+  String get adminPodcastsSortNewestFirst => 'Cele mai noi mai întâi';
 
   @override
-  String get adminPodcastsSortOldestFirst => 'Oldest first';
+  String get adminPodcastsSortOldestFirst => 'Cele mai vechi mai întâi';
 
   @override
-  String get adminPodcastsEditInfo => 'Edit Info';
+  String get adminPodcastsEditInfo => 'Editează informațiile';
 
   @override
   String get adminPodcastsEditInfoSubtitle =>
-      'Change title, description, cover and more';
+      'Schimbă titlul, descrierea, coperta și altele';
 
   @override
-  String get adminPodcastsEditTitle => 'Edit Podcast';
+  String get adminPodcastsEditTitle => 'Editează podcastul';
 
   @override
-  String get adminPodcastsReleaseDate => 'Release date';
+  String get adminPodcastsReleaseDate => 'Data lansării';
 
   @override
   String get adminPodcastsExplicit => 'Explicit';
 
   @override
-  String get adminPodcastsExplicitSubtitle => 'Mark this podcast as explicit';
+  String get adminPodcastsExplicitSubtitle =>
+      'Marchează acest podcast ca explicit';
 
   @override
-  String get episodeListEpisodeFallback => 'Episode';
+  String get episodeListEpisodeFallback => 'Episod';
 
   @override
-  String get episodeListUnknownPodcast => 'Unknown Podcast';
+  String get episodeListUnknownPodcast => 'Podcast necunoscut';
 
   @override
   String episodeListMarkedFinished(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count episodes marked as finished',
-      one: '1 episode marked as finished',
+      other: '$count de episoade marcate ca terminate',
+      few: '$count episoade marcate ca terminate',
+      one: '1 episod marcat ca terminat',
     );
     return '$_temp0';
   }
@@ -6362,51 +6475,56 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count episodes marked as unfinished',
-      one: '1 episode marked as unfinished',
+      other: '$count de episoade marcate ca neterminate',
+      few: '$count episoade marcate ca neterminate',
+      one: '1 episod marcat ca neterminat',
     );
     return '$_temp0';
   }
 
   @override
   String get episodeListUnsubscribeFromNewEpisodes =>
-      'Unsubscribe from New Episodes';
+      'Dezabonează-te de la episoadele noi';
 
   @override
-  String get episodeListSubscribeToNewEpisodes => 'Subscribe to New Episodes';
+  String get episodeListSubscribeToNewEpisodes =>
+      'Abonează-te la episoadele noi';
 
   @override
-  String get episodeListSubscribeTitle => 'Subscribe to this podcast?';
+  String get episodeListSubscribeTitle => 'Te abonezi la acest podcast?';
 
   @override
   String get episodeListSubscribeContent =>
-      'New episodes will be automatically downloaded and added to your absorbing queue when they appear on the server.';
+      'Episoadele noi vor fi descărcate automat și adăugate în coada ta Absorbing când apar pe server.';
 
   @override
-  String get episodeListSubscribe => 'Subscribe';
+  String get episodeListSubscribe => 'Abonează-te';
 
   @override
-  String get episodeListShowFinishedEpisodes => 'Show Finished Episodes';
+  String get episodeListShowFinishedEpisodes => 'Arată episoadele terminate';
 
   @override
-  String get episodeListHideFinishedEpisodes => 'Hide Finished Episodes';
+  String get episodeListHideFinishedEpisodes => 'Ascunde episoadele terminate';
 
   @override
-  String get episodeListShowSettings => 'Show Settings';
+  String get episodeListShowSettings => 'Arată setările';
 
   @override
-  String get episodeListPlaysNewerToOlder => 'Plays newer to older episodes';
+  String get episodeListPlaysNewerToOlder =>
+      'Redă de la episoadele mai noi la cele mai vechi';
 
   @override
-  String get episodeListPlaysOlderToNewer => 'Plays older to newer episodes';
+  String get episodeListPlaysOlderToNewer =>
+      'Redă de la episoadele mai vechi la cele mai noi';
 
   @override
   String episodeListEpisodeCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count episodes',
-      one: '1 episode',
+      other: '$count de episoade',
+      few: '$count episoade',
+      one: '1 episod',
     );
     return '$_temp0';
   }
@@ -6416,135 +6534,138 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count unfinished',
-      one: '1 unfinished',
+      other: '$count de neterminate',
+      few: '$count neterminate',
+      one: '1 neterminat',
     );
     return '$_temp0';
   }
 
   @override
-  String get episodeListAutoDownloadChip => 'Auto-Download';
+  String get episodeListAutoDownloadChip => 'Descărcare automată';
 
   @override
-  String get episodeListSubscribedChip => 'Subscribed';
+  String get episodeListSubscribedChip => 'Abonat';
 
   @override
   String get episodeListExplicitChip => 'Explicit';
 
   @override
-  String get episodeListSortNewest => 'Newest';
+  String get episodeListSortNewest => 'Cele mai noi';
 
   @override
-  String get episodeListSortOldest => 'Oldest';
+  String get episodeListSortOldest => 'Cele mai vechi';
 
   @override
-  String get episodeListSortBy => 'Sort episodes';
+  String get episodeListSortBy => 'Sortează episoadele';
 
   @override
-  String get episodeListSortPubDate => 'Publish date';
+  String get episodeListSortPubDate => 'Data publicării';
 
   @override
-  String get episodeListSortTitle => 'Title';
+  String get episodeListSortTitle => 'Titlu';
 
   @override
-  String get episodeListSortSeason => 'Season';
+  String get episodeListSortSeason => 'Sezon';
 
   @override
-  String get episodeListSortEpisode => 'Episode number';
+  String get episodeListSortEpisode => 'Număr episod';
 
   @override
-  String get episodeListSortFileName => 'File name';
+  String get episodeListSortFileName => 'Nume fișier';
 
   @override
-  String get episodeListSortReverseHint => 'Tap again to reverse the order';
+  String get episodeListSortReverseHint =>
+      'Atinge din nou pentru a inversa ordinea';
 
   @override
   String episodeListAddedToAbsorbing(String title) {
-    return 'Added \"$title\" to Absorbing';
+    return '„$title” a fost adăugat în Absorbing';
   }
 
   @override
-  String get episodeDetailEpisodeFallback => 'Episode';
+  String get episodeDetailEpisodeFallback => 'Episod';
 
   @override
-  String get episodeDetailMarkedNotFinished => 'Marked as not finished';
+  String get episodeDetailMarkedNotFinished => 'Marcat ca neterminat';
 
   @override
-  String get episodeDetailMarkedFinishedNice => 'Marked as finished - nice!';
+  String get episodeDetailMarkedFinishedNice => 'Marcat ca terminat - bravo!';
 
   @override
   String get episodeDetailMarkAbsorbedContent =>
-      'This will set your progress to 100% for this episode.';
+      'Progresul tău pentru acest episod va fi setat la 100%.';
 
   @override
   String get episodeDetailResetProgressContent =>
-      'This will erase all progress for this episode and set it back to the beginning. This can\'t be undone.';
+      'Aceasta va șterge tot progresul pentru acest episod și îl va readuce la început. Acțiunea nu poate fi anulată.';
 
   @override
-  String get episodeDetailToday => 'Today';
+  String get episodeDetailToday => 'Astăzi';
 
   @override
-  String get episodeDetailYesterday => 'Yesterday';
+  String get episodeDetailYesterday => 'Ieri';
 
   @override
   String episodeDetailDaysAgo(int count) {
-    return '${count}d ago';
+    return 'acum $count z.';
   }
 
   @override
   String episodeDetailWeeksAgo(int count) {
-    return '${count}w ago';
+    return 'acum $count săpt.';
   }
 
   @override
   String episodeDetailDurationHm(int hours, int minutes) {
-    return '${hours}h ${minutes}m';
+    return '$hours h $minutes min';
   }
 
   @override
   String episodeDetailDurationM(int minutes) {
-    return '${minutes}m';
+    return '$minutes min';
   }
 
   @override
-  String get episodeDetailResume => 'Resume';
+  String get episodeDetailResume => 'Reia';
 
   @override
-  String get episodeDetailPlayEpisode => 'Play Episode';
+  String get episodeDetailPlayEpisode => 'Redă episodul';
 
   @override
   String episodeDetailEpisodeNumber(String number) {
-    return 'Episode $number';
+    return 'Episodul $number';
   }
 
   @override
   String episodeDetailSeasonNumber(String number) {
-    return 'Season $number';
+    return 'Sezonul $number';
   }
 
   @override
-  String get editMetadataUpdatedFromMatch => 'Metadata updated from match';
+  String get editMetadataUpdatedFromMatch =>
+      'Metadate actualizate din potrivire';
 
   @override
   String editMetadataConfirmMatch(String title) {
-    return 'This will update the server metadata for this book using:\n\n\"$title\"\n\nAll fields and the cover will be overwritten on the server.';
+    return 'Aceasta va actualiza metadatele de pe server pentru această carte folosind:\n\n„$title”\n\nToate câmpurile și coperta vor fi suprascrise pe server.';
   }
 
   @override
   String editMetadataConfirmMatchWithAuthor(String title, String author) {
-    return 'This will update the server metadata for this book using:\n\n\"$title\" by $author\n\nAll fields and the cover will be overwritten on the server.';
+    return 'Aceasta va actualiza metadatele de pe server pentru această carte folosind:\n\n„$title” de $author\n\nToate câmpurile și coperta vor fi suprascrise pe server.';
   }
 
   @override
-  String get seriesBooksFindMissingTitle => 'Find Missing Books';
+  String get seriesBooksFindMissingTitle => 'Găsește cărțile lipsă';
 
   @override
   String get seriesBooksFindMissingContent =>
-      'This searches Audible to find books in this series that may be missing from your library.\n\nBooks are matched by ASIN first (depending on whether your server has ASINs for its books), then falls back to title matching. Results may not be perfectly accurate.';
+      'Aceasta caută în Audible cărți din această serie care ar putea lipsi din biblioteca ta.\n\nCărțile sunt potrivite mai întâi după ASIN (dacă serverul tău are ASIN-uri pentru cărți), apoi după titlu. Rezultatele pot să nu fie perfect exacte.';
 
   @override
   String get seriesBooksCouldNotFindOnAudible =>
-      'Could not find this series on Audible';
+      'Această serie nu a fost găsită în Audible';
 
   @override
   String seriesBooksMarkAllNotFinishedContent(int count) {
@@ -6552,8 +6673,11 @@ class AppLocalizationsRo extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          'This will clear the finished status for all $count books in this series.',
-      one: 'This will clear the finished status for the 1 book in this series.',
+          'Aceasta va șterge starea „terminat” pentru toate cele $count de cărți din această serie.',
+      few:
+          'Aceasta va șterge starea „terminat” pentru toate cele $count cărți din această serie.',
+      one:
+          'Aceasta va șterge starea „terminat” pentru cartea din această serie.',
     );
     return '$_temp0';
   }
@@ -6563,234 +6687,240 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'This will mark all $count books in this series as finished.',
-      one: 'This will mark the 1 book in this series as finished.',
+      other:
+          'Aceasta va marca drept terminate toate cele $count de cărți din această serie.',
+      few:
+          'Aceasta va marca drept terminate toate cele $count cărți din această serie.',
+      one: 'Aceasta va marca drept terminată cartea din această serie.',
     );
     return '$_temp0';
   }
 
   @override
-  String get seriesBooksUnmarkAll => 'Unmark All';
+  String get seriesBooksUnmarkAll => 'Demarchează tot';
 
   @override
-  String get seriesBooksShowAllBooks => 'Show all books';
+  String get seriesBooksShowAllBooks => 'Arată toate cărțile';
 
   @override
-  String get seriesBooksGroupBySubSeries => 'Group by sub-series';
+  String get seriesBooksGroupBySubSeries => 'Grupează pe subserii';
 
   @override
-  String get seriesBooksLoadingSubSeries => 'Loading sub-series...';
+  String get seriesBooksLoadingSubSeries => 'Se încarcă subseriile...';
 
   @override
   String seriesBooksBookCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count de cărți',
+      few: '$count cărți',
+      one: '1 carte',
     );
     return '$_temp0';
   }
 
   @override
-  String get seriesBooksDone => 'Done';
+  String get seriesBooksDone => 'Gata';
 
   @override
   String get seriesBooksExplicitBadge => 'E';
 
   @override
-  String get expandedCardStreaming => 'Streaming';
+  String get expandedCardStreaming => 'Flux în direct';
 
   @override
-  String get expandedCardDeviceFallback => 'Device';
+  String get expandedCardDeviceFallback => 'Dispozitiv';
 
   @override
   String bookmarksScreenPositionInBook(String position, String bookTitle) {
-    return '$position in $bookTitle';
+    return '$position în $bookTitle';
   }
 
   @override
-  String get bookmarksScreenClose => 'Close';
+  String get bookmarksScreenClose => 'Închide';
 
   @override
-  String get bookmarksScreenSortNewest => 'Newest';
+  String get bookmarksScreenSortNewest => 'Cele mai noi';
 
   @override
-  String get bookmarksScreenSortPosition => 'Position';
+  String get bookmarksScreenSortPosition => 'Poziție';
 
   @override
   String statsScreenStreakDays(int count) {
-    return '${count}d';
+    return '$count z';
   }
 
   @override
   String statsScreenSessionCountOne(int count) {
-    return '$count session';
+    return '$count sesiune';
   }
 
   @override
   String statsScreenSessionCountOther(int count) {
-    return '$count sessions';
+    return '$count sesiuni';
   }
 
   @override
-  String get statsScreenDayMon => 'Mon';
+  String get statsScreenDayMon => 'Lun';
 
   @override
-  String get statsScreenDayTue => 'Tue';
+  String get statsScreenDayTue => 'Mar';
 
   @override
-  String get statsScreenDayWed => 'Wed';
+  String get statsScreenDayWed => 'Mie';
 
   @override
-  String get statsScreenDayThu => 'Thu';
+  String get statsScreenDayThu => 'Joi';
 
   @override
-  String get statsScreenDayFri => 'Fri';
+  String get statsScreenDayFri => 'Vin';
 
   @override
-  String get statsScreenDaySat => 'Sat';
+  String get statsScreenDaySat => 'Sâm';
 
   @override
-  String get statsScreenDaySun => 'Sun';
+  String get statsScreenDaySun => 'Dum';
 
   @override
   String statsScreenDurationHm(int h, int m) {
-    return '${h}h ${m}m';
+    return '$h h $m min';
   }
 
   @override
   String statsScreenDurationM(int m) {
-    return '${m}m';
+    return '$m min';
   }
 
   @override
-  String get statsScreenDurationLessThanMin => '<1m';
+  String get statsScreenDurationLessThanMin => '<1 min';
 
   @override
-  String get statsScreenDurationZero => '0m';
+  String get statsScreenDurationZero => '0 min';
 
   @override
   String statsScreenDurationShortH(int h) {
-    return '${h}h';
+    return '$h h';
   }
 
   @override
   String statsScreenDurationShortM(int m) {
-    return '${m}m';
+    return '$m min';
   }
 
   @override
-  String get statsScreenCouldNotLoadItem => 'Could not load item';
+  String get statsScreenCouldNotLoadItem => 'Elementul nu a putut fi încărcat';
 
   @override
-  String get statsScreenCouldNotFindEpisode => 'Could not find episode';
+  String get statsScreenCouldNotFindEpisode => 'Episodul nu a fost găsit';
 
   @override
   String statsScreenByAuthor(String author) {
-    return 'by $author';
+    return 'de $author';
   }
 
   @override
-  String get statsScreenListened => 'Listened';
+  String get statsScreenListened => 'Ascultat';
 
   @override
-  String get sessionEditTitle => 'Edit session';
+  String get sessionEditTitle => 'Editează sesiunea';
 
   @override
-  String get sessionDayLabel => 'Day';
+  String get sessionDayLabel => 'Zi';
 
   @override
-  String get sessionEndPosition => 'Ending position';
+  String get sessionEndPosition => 'Poziția de final';
 
   @override
   String get sessionEndPositionHint =>
-      'Changing this may also update your current progress.';
+      'Modificarea ei poate actualiza și progresul tău curent.';
 
   @override
-  String get statsViewSessions => 'View sessions';
+  String get statsViewSessions => 'Vezi sesiunile';
 
   @override
   String statsSessionsForDate(String date) {
-    return 'Sessions for $date';
+    return 'Sesiuni pentru $date';
   }
 
   @override
   String get statsNoSessionsForDate =>
-      'No listening sessions found for this day';
+      'Nu s-a găsit nicio sesiune de ascultare pentru această zi';
 
   @override
-  String get statsSearchSessions => 'Search sessions';
+  String get statsSearchSessions => 'Caută în sesiuni';
 
   @override
-  String get statsNoSessionSearchResults => 'No sessions match your search';
+  String get statsNoSessionSearchResults =>
+      'Nicio sesiune nu se potrivește căutării';
 
   @override
-  String get statsSessionsLoadFailed => 'Could not load sessions for this day';
+  String get statsSessionsLoadFailed =>
+      'Sesiunile pentru această zi nu au putut fi încărcate';
 
   @override
-  String get sessionDeleteConfirmTitle => 'Delete session?';
+  String get sessionDeleteConfirmTitle => 'Ștergi sesiunea?';
 
   @override
   String get sessionDeleteConfirmBody =>
-      'This removes the session and lowers your listening totals by its time. It cannot be undone.';
+      'Aceasta elimină sesiunea și scade totalurile de ascultare cu durata ei. Acțiunea nu poate fi anulată.';
 
   @override
-  String get sessionSaved => 'Session updated';
+  String get sessionSaved => 'Sesiune actualizată';
 
   @override
-  String get sessionDeleted => 'Session deleted';
+  String get sessionDeleted => 'Sesiune ștearsă';
 
   @override
-  String get sessionSaveFailed => 'Could not save changes';
+  String get sessionSaveFailed => 'Modificările nu au putut fi salvate';
 
   @override
-  String get sessionDeleteFailed => 'Could not delete this session';
+  String get sessionDeleteFailed => 'Această sesiune nu a putut fi ștearsă';
 
   @override
-  String get statsScreenStartedAtPosition => 'Started at position';
+  String get statsScreenStartedAtPosition => 'Început la poziția';
 
   @override
-  String get statsScreenEndedAtPosition => 'Ended at position';
+  String get statsScreenEndedAtPosition => 'Încheiat la poziția';
 
   @override
-  String get statsScreenTotalDuration => 'Total duration';
+  String get statsScreenTotalDuration => 'Durată totală';
 
   @override
-  String get statsScreenStarted => 'Started';
+  String get statsScreenStarted => 'Început';
 
   @override
-  String get statsScreenUpdated => 'Updated';
+  String get statsScreenUpdated => 'Actualizat';
 
   @override
   String get statsScreenClient => 'Client';
 
   @override
-  String get statsScreenDevice => 'Device';
+  String get statsScreenDevice => 'Dispozitiv';
 
   @override
-  String get statsScreenOs => 'OS';
+  String get statsScreenOs => 'SO';
 
   @override
-  String get statsScreenPlayMethod => 'Play method';
+  String get statsScreenPlayMethod => 'Metodă de redare';
 
   @override
-  String get statsScreenLoading => 'Loading...';
+  String get statsScreenLoading => 'Se încarcă...';
 
   @override
-  String get statsScreenJumpToStart => 'Jump to start';
+  String get statsScreenJumpToStart => 'Sari la început';
 
   @override
-  String get statsScreenJumpToEnd => 'Jump to end';
+  String get statsScreenJumpToEnd => 'Sari la final';
 
   @override
-  String get statsScreenPlayMethodDirect => 'Direct play';
+  String get statsScreenPlayMethodDirect => 'Redare directă';
 
   @override
-  String get statsScreenPlayMethodDirectStream => 'Direct stream';
+  String get statsScreenPlayMethodDirectStream => 'Flux direct';
 
   @override
-  String get statsScreenPlayMethodTranscode => 'Transcode';
+  String get statsScreenPlayMethodTranscode => 'Transcodare';
 
   @override
   String get statsScreenPlayMethodLocal => 'Local';
@@ -6810,134 +6940,135 @@ class AppLocalizationsRo extends AppLocalizations {
     String minute,
     String ampm,
   ) {
-    return '$month $day, $year at $hour:$minute $ampm';
+    return '$day $month $year, $hour:$minute $ampm';
   }
 
   @override
-  String get statsScreenMonthJan => 'Jan';
+  String get statsScreenMonthJan => 'ian.';
 
   @override
-  String get statsScreenMonthFeb => 'Feb';
+  String get statsScreenMonthFeb => 'feb.';
 
   @override
-  String get statsScreenMonthMar => 'Mar';
+  String get statsScreenMonthMar => 'mar.';
 
   @override
-  String get statsScreenMonthApr => 'Apr';
+  String get statsScreenMonthApr => 'apr.';
 
   @override
-  String get statsScreenMonthMay => 'May';
+  String get statsScreenMonthMay => 'mai';
 
   @override
-  String get statsScreenMonthJun => 'Jun';
+  String get statsScreenMonthJun => 'iun.';
 
   @override
-  String get statsScreenMonthJul => 'Jul';
+  String get statsScreenMonthJul => 'iul.';
 
   @override
-  String get statsScreenMonthAug => 'Aug';
+  String get statsScreenMonthAug => 'aug.';
 
   @override
-  String get statsScreenMonthSep => 'Sep';
+  String get statsScreenMonthSep => 'sept.';
 
   @override
-  String get statsScreenMonthOct => 'Oct';
+  String get statsScreenMonthOct => 'oct.';
 
   @override
-  String get statsScreenMonthNov => 'Nov';
+  String get statsScreenMonthNov => 'nov.';
 
   @override
-  String get statsScreenMonthDec => 'Dec';
+  String get statsScreenMonthDec => 'dec.';
 
   @override
-  String get upcomingReleasesTitle => 'Upcoming Releases';
+  String get upcomingReleasesTitle => 'Apariții viitoare';
 
   @override
-  String get upcomingReleasesRescanTitle => 'Rescan?';
+  String get upcomingReleasesRescanTitle => 'Scanezi din nou?';
 
   @override
   String upcomingReleasesRescanContent(int days) {
-    return 'These results are $days days old. Release dates may have changed - would you like to rescan?';
+    return 'Aceste rezultate au $days zile. Datele de apariție s-ar putea să se fi schimbat - vrei să scanezi din nou?';
   }
 
   @override
-  String get upcomingReleasesNotNow => 'Not now';
+  String get upcomingReleasesNotNow => 'Nu acum';
 
   @override
-  String get upcomingReleasesRescan => 'Rescan';
+  String get upcomingReleasesRescan => 'Scanează din nou';
 
   @override
-  String get upcomingReleasesRescanReleaseDate => 'Rescan Release Date';
+  String get upcomingReleasesRescanReleaseDate => 'Rescanează data apariției';
 
   @override
-  String get upcomingReleasesRescanning => 'Rescanning...';
+  String get upcomingReleasesRescanning => 'Se rescanează...';
 
   @override
   String upcomingReleasesUpdatedWithDate(String date) {
-    return 'Updated - $date';
+    return 'Actualizat - $date';
   }
 
   @override
-  String get upcomingReleasesNoReleaseDateFound => 'No release date found';
+  String get upcomingReleasesNoReleaseDateFound =>
+      'Nu s-a găsit nicio dată de apariție';
 
   @override
-  String get upcomingReleasesRescanFailed => 'Rescan failed';
+  String get upcomingReleasesRescanFailed => 'Rescanarea a eșuat';
 
   @override
-  String get upcomingReleasesRemoveFromList => 'Remove from list';
+  String get upcomingReleasesRemoveFromList => 'Elimină din listă';
 
   @override
-  String get upcomingReleasesRemovedFromList => 'Removed from list';
+  String get upcomingReleasesRemovedFromList => 'Eliminat din listă';
 
   @override
-  String get upcomingReleasesDateChip => 'Date';
+  String get upcomingReleasesDateChip => 'Dată';
 
   @override
   String upcomingReleasesCheckingSeries(String name, int processed, int total) {
-    return 'Checking $name... ($processed/$total)';
+    return 'Se verifică $name... ($processed/$total)';
   }
 
   @override
-  String get upcomingReleasesLoadingSeries => 'Loading series...';
+  String get upcomingReleasesLoadingSeries => 'Se încarcă seriile...';
 
   @override
-  String get upcomingReleasesScannedToday => '(scanned today)';
+  String get upcomingReleasesScannedToday => '(scanat astăzi)';
 
   @override
-  String get upcomingReleasesScannedYesterday => '(scanned yesterday)';
+  String get upcomingReleasesScannedYesterday => '(scanat ieri)';
 
   @override
   String upcomingReleasesScannedDaysAgo(int days) {
-    return '(scanned $days days ago)';
+    return '(scanat acum $days zile)';
   }
 
   @override
   String upcomingReleasesUpcomingCount(int count) {
-    return '$count upcoming';
+    return '$count viitoare';
   }
 
   @override
   String upcomingReleasesRecentCount(int count) {
-    return '$count recent';
+    return '$count recente';
   }
 
   @override
   String get upcomingReleasesNoneFound =>
-      'No upcoming or recent releases found';
+      'Nu s-au găsit apariții viitoare sau recente';
 
   @override
   String upcomingReleasesAcrossSeries(String summary, int count) {
-    return '$summary across $count series';
+    return '$summary din $count serii';
   }
 
   @override
   String upcomingReleasesCheckedSeries(int count) {
-    return 'Checked $count series on Audible';
+    return 'S-au verificat $count serii în Audible';
   }
 
   @override
   String upcomingReleasesDateFormat(String month, int day, int year) {
-    return '$month $day, $year';
+    return '$day $month $year';
   }
 
   @override
@@ -6946,52 +7077,54 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get upcomingReleasesBadgeUpcoming => 'UPCOMING';
+  String get upcomingReleasesBadgeUpcoming => 'VIITOR';
 
   @override
-  String get upcomingReleasesBadgeAdded => 'ADDED';
+  String get upcomingReleasesBadgeAdded => 'ADĂUGAT';
 
   @override
-  String get upcomingReleasesBadgeMissing => 'MISSING';
+  String get upcomingReleasesBadgeMissing => 'LIPSĂ';
 
   @override
-  String get upcomingReleasesScanSettingsTitle => 'Scan settings';
+  String get upcomingReleasesScanSettingsTitle => 'Setări de scanare';
 
   @override
   String get upcomingReleasesFinishedAfterTitle =>
-      'Consider a series finished after';
+      'Consideră o serie încheiată după';
 
   @override
   String get upcomingReleasesFinishedAfterDesc =>
-      'Series whose last book is older than this are skipped during scans and only re-checked every month or two.';
+      'Seriile a căror ultimă carte este mai veche de atât sunt omise la scanări și reverificate doar la una-două luni.';
 
   @override
   String upcomingReleasesFinishedAfterYears(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count years',
-      one: '1 year',
+      other: '$count de ani',
+      few: '$count ani',
+      one: '1 an',
     );
     return '$_temp0';
   }
 
   @override
-  String get upcomingReleasesFinishedAfterNever => 'Never';
+  String get upcomingReleasesFinishedAfterNever => 'Niciodată';
 
   @override
-  String get upcomingReleasesSkippedTitle => 'Skipped series';
+  String get upcomingReleasesSkippedTitle => 'Serii omise';
 
   @override
-  String get upcomingReleasesSkippedNone => 'Nothing skipped yet';
+  String get upcomingReleasesSkippedNone => 'Încă nu s-a omis nimic';
 
   @override
   String upcomingReleasesSkippedCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count skipped',
-      one: '1 skipped',
+      other: '$count de omise',
+      few: '$count omise',
+      one: '1 omisă',
     );
     return '$_temp0';
   }
@@ -7001,105 +7134,107 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Last book $count years ago',
-      one: 'Last book 1 year ago',
-      zero: 'Last book under a year ago',
+      other: 'Ultima carte are $count de ani',
+      few: 'Ultima carte are $count ani',
+      one: 'Ultima carte are 1 an',
+      zero: 'Ultima carte are sub un an',
     );
     return '$_temp0';
   }
 
   @override
   String get upcomingReleasesSkippedUnmatched =>
-      'Couldn\'t match this series on Audible';
+      'Această serie nu a putut fi potrivită în Audible';
 
   @override
-  String get upcomingReleasesSkippedScanNow => 'Scan now';
+  String get upcomingReleasesSkippedScanNow => 'Scanează acum';
 
   @override
-  String get upcomingReleasesSkippedAlwaysScan => 'Always scan';
+  String get upcomingReleasesSkippedAlwaysScan => 'Scanează mereu';
 
   @override
-  String get upcomingReleasesSkippedNeverScan => 'Never scan';
+  String get upcomingReleasesSkippedNeverScan => 'Nu scana niciodată';
 
   @override
   String upcomingReleasesSkippedScanFound(String name) {
-    return 'Found new releases in $name';
+    return 'S-au găsit apariții noi în $name';
   }
 
   @override
   String upcomingReleasesSkippedScanNone(String name) {
-    return 'Nothing new in $name';
+    return 'Nimic nou în $name';
   }
 
   @override
   String get upcomingReleasesSkippedOtherLibrary =>
-      'This list came from a different library. Run a rescan to refresh it.';
+      'Această listă provine dintr-o altă bibliotecă. Rulează o rescanare pentru a o reîmprospăta.';
 
   @override
-  String get upcomingReleasesChipUpcoming => 'Upcoming';
+  String get upcomingReleasesChipUpcoming => 'Viitoare';
 
   @override
   String upcomingReleasesChipMissing(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count missing',
-      one: '1 missing',
-      zero: 'Missing',
+      other: '$count lipsă',
+      few: '$count lipsă',
+      one: '1 lipsă',
+      zero: 'Lipsă',
     );
     return '$_temp0';
   }
 
   @override
-  String get upcomingReleasesNoMissing => 'No missing books found';
+  String get upcomingReleasesNoMissing => 'Nu s-au găsit cărți lipsă';
 
   @override
-  String get upcomingReleasesScanSeries => 'Scan series';
+  String get upcomingReleasesScanSeries => 'Scanează seriile';
 
   @override
-  String get upcomingReleasesScanUpcomingOption => 'Upcoming releases';
+  String get upcomingReleasesScanUpcomingOption => 'Apariții viitoare';
 
   @override
   String get upcomingReleasesScanUpcomingOptionDesc =>
-      'Quick scan for new and upcoming books';
+      'Scanare rapidă pentru cărți noi și viitoare';
 
   @override
-  String get upcomingReleasesScanDeepOption => 'Deep scan';
+  String get upcomingReleasesScanDeepOption => 'Scanare amănunțită';
 
   @override
   String get upcomingReleasesScanDeepOptionDesc =>
-      'Also finds missing books in every series - takes longer';
+      'Găsește și cărțile lipsă din fiecare serie - durează mai mult';
 
   @override
   String get upcomingReleasesFirstScanNote =>
-      'The first scan checks every series on Audible and can take a few minutes. Later scans get much quicker once your series are sorted.';
+      'Prima scanare verifică fiecare serie în Audible și poate dura câteva minute. Scanările următoare sunt mult mai rapide odată ce seriile sunt sortate.';
 
   @override
-  String get upcomingReleasesLastScanReport => 'Last scan report';
+  String get upcomingReleasesLastScanReport => 'Raportul ultimei scanări';
 
   @override
   String upcomingReleasesReportChecked(int count) {
-    return 'Checked on Audible: $count';
+    return 'Verificate în Audible: $count';
   }
 
   @override
   String upcomingReleasesReportSkipped(int count) {
-    return 'Skipped: $count';
+    return 'Omise: $count';
   }
 
   @override
   String upcomingReleasesReportUnmatched(int count) {
-    return 'Couldn\'t match on Audible: $count';
+    return 'Nepotrivite în Audible: $count';
   }
 
   @override
   String upcomingReleasesReportFailed(int count) {
-    return 'Failed to check: $count';
+    return 'Verificare eșuată: $count';
   }
 
   @override
   String upcomingReleasesReportFound(int upcoming, int recent) {
-    return 'Found $upcoming upcoming, $recent recent';
+    return 'S-au găsit $upcoming viitoare, $recent recente';
   }
 
   @override
@@ -7108,123 +7243,133 @@ class AppLocalizationsRo extends AppLocalizations {
     int recent,
     int missing,
   ) {
-    return 'Found $upcoming upcoming, $recent recent, $missing missing';
+    return 'S-au găsit $upcoming viitoare, $recent recente, $missing lipsă';
   }
 
   @override
   String upcomingReleasesReportMore(int count) {
-    return '+$count more';
+    return '+$count în plus';
   }
 
   @override
-  String get upcomingReleasesBadgeNew => 'NEW';
+  String get upcomingReleasesBadgeNew => 'NOU';
 
   @override
-  String get upcomingReleasesOpenLibrarySeries => 'Open series in library';
+  String get upcomingReleasesOpenSeries => 'Open series on Audible';
 
   @override
-  String get upcomingReleasesAsinCopied => 'Series ASIN copied';
+  String get upcomingReleasesOpenLibrarySeries =>
+      'Deschide seria în bibliotecă';
 
   @override
-  String get upcomingReleasesSetSeriesAsin => 'Set series ASIN';
+  String get upcomingReleasesAsinCopied => 'ASIN-ul seriei a fost copiat';
+
+  @override
+  String get upcomingReleasesSetSeriesAsin => 'Setează ASIN-ul seriei';
 
   @override
   String get upcomingReleasesSetAsinInstructions =>
-      'Find the series on audible.com and copy the page link - the ASIN is the 10-character code starting with B0 (like B08S2YN3YS). Pasting the whole link works too.';
+      'Găsește seria pe audible.com și copiază linkul paginii - ASIN-ul este codul de 10 caractere care începe cu B0 (de exemplu B08S2YN3YS). Merge și lipirea întregului link.';
 
   @override
-  String get upcomingReleasesSetAsinHint => 'B0… or audible.com link';
+  String get upcomingReleasesSetAsinHint => 'B0… sau link audible.com';
 
   @override
-  String get upcomingReleasesSetAsinSave => 'Save';
+  String get upcomingReleasesSetAsinSave => 'Salvează';
 
   @override
-  String get upcomingReleasesSetAsinInvalid => 'No ASIN found in that text';
+  String get upcomingReleasesSetAsinInvalid =>
+      'Nu s-a găsit niciun ASIN în acel text';
 
   @override
-  String get upcomingReleasesSetAsinSaved => 'Series linked - scanning now';
+  String get upcomingReleasesSetAsinSaved =>
+      'Serie asociată - se scanează acum';
 
   @override
   String upcomingReleasesRemoveTitle(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Remove $count books',
-      one: 'Remove book',
+      other: 'Elimină $count de cărți',
+      few: 'Elimină $count cărți',
+      one: 'Elimină cartea',
     );
     return '$_temp0';
   }
 
   @override
-  String get upcomingReleasesRemoveThisScan => 'Remove from this scan';
+  String get upcomingReleasesRemoveThisScan => 'Elimină din această scanare';
 
   @override
   String get upcomingReleasesRemoveThisScanDesc =>
-      'Can come back on a future scan';
+      'Poate reapărea la o scanare viitoare';
 
   @override
   String get upcomingReleasesRemoveForever =>
-      'Remove from this and future scans';
+      'Elimină din această scanare și din cele viitoare';
 
   @override
   String get upcomingReleasesRemoveForeverDesc =>
-      'Goes to the removed list, restore any time';
+      'Ajunge în lista eliminatelor, o poți restaura oricând';
 
   @override
   String get upcomingReleasesRemovedForeverToast =>
-      'Removed - won\'t show on future scans';
+      'Eliminat - nu va apărea la scanările viitoare';
 
   @override
-  String get upcomingReleasesRemovedBooksTitle => 'Removed books';
+  String get upcomingReleasesRemovedBooksTitle => 'Cărți eliminate';
 
   @override
   String upcomingReleasesRemovedCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count de cărți',
+      few: '$count cărți',
+      one: '1 carte',
     );
     return '$_temp0';
   }
 
   @override
-  String get upcomingReleasesRemovedNone => 'No removed books';
+  String get upcomingReleasesRemovedNone => 'Nicio carte eliminată';
 
   @override
-  String get upcomingReleasesRestore => 'Restore';
+  String get upcomingReleasesRestore => 'Restaurează';
 
   @override
-  String get upcomingReleasesRestoredToast => 'Restored';
+  String get upcomingReleasesRestoredToast => 'Restaurat';
 
   @override
   String get upcomingReleasesRestoredNextScan =>
-      'Restored - it will show after the next scan';
+      'Restaurat - va apărea după următoarea scanare';
 
   @override
   String upcomingReleasesSelectedCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count selected',
-      one: '1 selected',
+      other: '$count de selectate',
+      few: '$count selectate',
+      one: '1 selectată',
     );
     return '$_temp0';
   }
 
   @override
-  String get upcomingReleasesBulkRequest => 'Request';
+  String get upcomingReleasesBulkRequest => 'Solicită';
 
   @override
-  String get upcomingReleasesBulkRemove => 'Remove';
+  String get upcomingReleasesBulkRemove => 'Elimină';
 
   @override
   String upcomingReleasesBulkRemoved(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count removed',
-      one: '1 removed',
+      other: '$count de eliminate',
+      few: '$count eliminate',
+      one: '1 eliminată',
     );
     return '$_temp0';
   }
@@ -7234,15 +7379,16 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count requests sent',
-      one: '1 request sent',
+      other: '$count de solicitări trimise',
+      few: '$count solicitări trimise',
+      one: '1 solicitare trimisă',
     );
     return '$_temp0';
   }
 
   @override
   String upcomingReleasesBulkRequestSkipped(int count) {
-    return '$count skipped';
+    return '$count omise';
   }
 
   @override
@@ -7250,439 +7396,444 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count series rescanned',
-      one: '1 series rescanned',
+      other: '$count de serii rescanate',
+      few: '$count serii rescanate',
+      one: '1 serie rescanată',
     );
     return '$_temp0';
   }
 
   @override
   String upcomingReleasesBulkScanFound(int count) {
-    return '$count with new books';
+    return '$count cu cărți noi';
   }
 
   @override
-  String get seriesExcludeFromScan => 'Exclude from series scan';
+  String get seriesExcludeFromScan => 'Exclude din scanarea seriilor';
 
   @override
-  String get seriesIncludeInScan => 'Include in series scan';
+  String get seriesIncludeInScan => 'Include în scanarea seriilor';
 
   @override
-  String get homeScreenEpisodeFallback => 'Episode';
+  String get homeScreenEpisodeFallback => 'Episod';
 
   @override
-  String get libraryScreenUnknownTitle => 'Unknown Title';
+  String get libraryScreenUnknownTitle => 'Titlu necunoscut';
 
   @override
-  String get playlistDetailDefaultName => 'Playlist';
+  String get playlistDetailDefaultName => 'Listă de redare';
 
   @override
   String playlistDetailItemCount(int count) {
-    return '$count items';
+    return '$count elemente';
   }
 
   @override
-  String get playlistDetailUnfinished => 'Unfinished';
+  String get playlistDetailUnfinished => 'Neterminate';
 
   @override
-  String get playlistDetailRemoveFromPlaylist => 'Remove from playlist';
+  String get playlistDetailRemoveFromPlaylist => 'Elimină din lista de redare';
 
   @override
-  String get playlistDetailDone => 'Done';
+  String get playlistDetailDone => 'Gata';
 
   @override
   String playlistDetailItemsMarkedFinished(int count) {
-    return '$count items marked finished';
+    return '$count elemente marcate ca terminate';
   }
 
   @override
   String playlistDetailItemsMarkedUnfinished(int count) {
-    return '$count items marked unfinished';
+    return '$count elemente marcate ca neterminate';
   }
 
   @override
   String playlistDetailItemsRemoved(int count) {
-    return '$count items removed';
+    return '$count elemente eliminate';
   }
 
   @override
   String playlistDetailAddedToAbsorbing(String title) {
-    return 'Added \"$title\" to Absorbing';
+    return '„$title” a fost adăugat în Absorbing';
   }
 
   @override
-  String get collectionDetailDefaultName => 'Collection';
+  String get collectionDetailDefaultName => 'Colecție';
 
   @override
   String smartScopeBookCount(int count) {
-    return 'Smart Scope · $count books';
+    return 'Smart Scope · cărți: $count';
   }
 
   @override
-  String get smartScopeNew => 'New Smart Scope';
+  String get smartScopeNew => 'Smart Scope nou';
 
   @override
   String get smartScopeNewSubtitle =>
-      'Save a set of filters as a list that keeps itself up to date';
+      'Salvează un set de filtre ca o listă care se actualizează singură';
 
   @override
-  String get smartScopeEditTitle => 'Edit Smart Scope';
+  String get smartScopeEditTitle => 'Editează Smart Scope';
 
   @override
-  String get smartScopeIcon => 'Icon';
+  String get smartScopeIcon => 'Pictogramă';
 
   @override
-  String get smartScopePublic => 'Visible to all users';
+  String get smartScopePublic => 'Vizibil pentru toți utilizatorii';
 
   @override
-  String get smartScopeKobo => 'Sync to Kobo';
+  String get smartScopeKobo => 'Sincronizează cu Kobo';
 
   @override
-  String get smartScopeRules => 'Rules';
+  String get smartScopeRules => 'Reguli';
 
   @override
-  String get smartScopeMatchAll => 'Match all';
+  String get smartScopeMatchAll => 'Toate se potrivesc';
 
   @override
-  String get smartScopeMatchAny => 'Match any';
+  String get smartScopeMatchAny => 'Oricare se potrivește';
 
   @override
-  String get smartScopeAddRule => 'Add rule';
+  String get smartScopeAddRule => 'Adaugă regulă';
 
   @override
-  String get smartScopeAddGroup => 'Add group';
+  String get smartScopeAddGroup => 'Adaugă grup';
 
   @override
-  String get smartScopeGroup => 'Group';
+  String get smartScopeGroup => 'Grup';
 
   @override
-  String get smartScopeStartFrom => 'Start from';
+  String get smartScopeStartFrom => 'Pornește de la';
 
   @override
-  String get smartScopeFromScratch => 'Build from scratch';
+  String get smartScopeFromScratch => 'Creează de la zero';
 
   @override
-  String get smartScopeTplHasSeries => 'Has a series';
+  String get smartScopeTplHasSeries => 'Are o serie';
 
   @override
-  String get smartScopeTplRecent => 'Added recently';
+  String get smartScopeTplRecent => 'Adăugate recent';
 
   @override
-  String get smartScopeTplPdf => 'PDF only';
+  String get smartScopeTplPdf => 'Doar PDF';
 
   @override
-  String get smartScopeTplNoGenres => 'No genres';
+  String get smartScopeTplNoGenres => 'Fără genuri';
 
   @override
-  String get smartScopeTplEpub => 'EPUB only';
+  String get smartScopeTplEpub => 'Doar EPUB';
 
   @override
-  String get smartScopeCounting => 'Counting...';
+  String get smartScopeCounting => 'Se numără...';
 
   @override
-  String get smartScopeSort => 'Default sort';
+  String get smartScopeSort => 'Sortare implicită';
 
   @override
-  String get smartScopeAddSort => 'Add sort level';
+  String get smartScopeAddSort => 'Adaugă nivel de sortare';
 
   @override
-  String get smartScopeSortNone => 'No sort set, so books sort by title.';
+  String get smartScopeSortNone =>
+      'Nicio sortare setată, deci cărțile se sortează după titlu.';
 
   @override
-  String get smartScopeAscending => 'Ascending';
+  String get smartScopeAscending => 'Crescător';
 
   @override
-  String get smartScopeDescending => 'Descending';
+  String get smartScopeDescending => 'Descrescător';
 
   @override
-  String get smartScopeDelete => 'Delete Smart Scope';
+  String get smartScopeDelete => 'Șterge Smart Scope';
 
   @override
-  String get smartScopeSaveFailed => 'Couldn\'t save the Smart Scope';
+  String get smartScopeSaveFailed => 'Smart Scope nu a putut fi salvat';
 
   @override
-  String get smartScopeDeleteFailed => 'Couldn\'t delete the Smart Scope';
+  String get smartScopeDeleteFailed => 'Smart Scope nu a putut fi șters';
 
   @override
-  String get smartScopeLoadFailed => 'Couldn\'t load the Smart Scope';
+  String get smartScopeLoadFailed => 'Smart Scope nu a putut fi încărcat';
 
   @override
   String get smartScopeUnsupportedRule =>
-      'This rule can only be changed on the BookOrbit web. It\'s kept as it is.';
+      'Această regulă poate fi modificată doar în interfața web BookOrbit. Rămâne neschimbată.';
 
   @override
-  String get smartScopeAnd => 'and';
+  String get smartScopeAnd => 'și';
 
   @override
-  String get smartScopeDays => 'days';
+  String get smartScopeDays => 'zile';
 
   @override
-  String get smartScopeWeeks => 'weeks';
+  String get smartScopeWeeks => 'săptămâni';
 
   @override
-  String get smartScopeMonths => 'months';
+  String get smartScopeMonths => 'luni';
 
   @override
-  String get smartScopePickDate => 'Pick a date';
+  String get smartScopePickDate => 'Alege o dată';
 
   @override
-  String get smartScopeAddValue => 'Add a value';
+  String get smartScopeAddValue => 'Adaugă o valoare';
 
   @override
-  String get smartScopeValue => 'Value';
+  String get smartScopeValue => 'Valoare';
 
   @override
-  String get smartScopeCustomFields => 'Custom fields';
+  String get smartScopeCustomFields => 'Câmpuri personalizate';
 
   @override
-  String get smartScopeAnyProvider => 'Any provider';
+  String get smartScopeAnyProvider => 'Orice furnizor';
 
   @override
-  String get smartScopeScoreOutstanding => 'Outstanding';
+  String get smartScopeScoreOutstanding => 'Excelent';
 
   @override
-  String get smartScopeScoreGood => 'Good';
+  String get smartScopeScoreGood => 'Bun';
 
   @override
-  String get smartScopeScoreFair => 'Fair';
+  String get smartScopeScoreFair => 'Acceptabil';
 
   @override
-  String get smartScopeScorePoor => 'Poor';
+  String get smartScopeScorePoor => 'Slab';
 
   @override
   String get smartScopeMb => 'MB';
 
   @override
-  String get smartScopeMaxValues => 'Up to 20 values';
+  String get smartScopeMaxValues => 'Cel mult 20 de valori';
 
   @override
-  String get scopeFieldTitle => 'Title';
+  String get scopeFieldTitle => 'Titlu';
 
   @override
-  String get scopeFieldAuthor => 'Author';
+  String get scopeFieldAuthor => 'Autor';
 
   @override
-  String get scopeFieldSeries => 'Series';
+  String get scopeFieldSeries => 'Serie';
 
   @override
-  String get scopeFieldSeriesIndex => 'Series number';
+  String get scopeFieldSeriesIndex => 'Numărul în serie';
 
   @override
-  String get scopeFieldGenre => 'Genre';
+  String get scopeFieldGenre => 'Gen';
 
   @override
-  String get scopeFieldTag => 'Tag';
+  String get scopeFieldTag => 'Etichetă';
 
   @override
-  String get scopeFieldReadStatus => 'Read status';
+  String get scopeFieldReadStatus => 'Stare citire';
 
   @override
-  String get scopeFieldReadProgress => 'Reading progress';
+  String get scopeFieldReadProgress => 'Progres citire';
 
   @override
-  String get scopeFieldRating => 'Your rating';
+  String get scopeFieldRating => 'Nota ta';
 
   @override
   String get scopeFieldFormat => 'Format';
 
   @override
-  String get scopeFieldLibrary => 'Library';
+  String get scopeFieldLibrary => 'Bibliotecă';
 
   @override
-  String get scopeFieldCollection => 'Collection';
+  String get scopeFieldCollection => 'Colecție';
 
   @override
-  String get scopeFieldPublisher => 'Publisher';
+  String get scopeFieldPublisher => 'Editură';
 
   @override
-  String get scopeFieldLanguage => 'Language';
+  String get scopeFieldLanguage => 'Limbă';
 
   @override
-  String get scopeFieldPublishedDate => 'Published date';
+  String get scopeFieldPublishedDate => 'Data publicării';
 
   @override
-  String get scopeFieldPublishedYear => 'Published year';
+  String get scopeFieldPublishedYear => 'Anul publicării';
 
   @override
-  String get scopeFieldAddedAt => 'Date added';
+  String get scopeFieldAddedAt => 'Data adăugării';
 
   @override
-  String get scopeFieldStartedAt => 'Date started';
+  String get scopeFieldStartedAt => 'Data începerii';
 
   @override
-  String get scopeFieldFinishedAt => 'Date finished';
+  String get scopeFieldFinishedAt => 'Data terminării';
 
   @override
-  String get scopeFieldPageCount => 'Page count';
+  String get scopeFieldPageCount => 'Număr de pagini';
 
   @override
-  String get scopeFieldFileSize => 'File size';
+  String get scopeFieldFileSize => 'Dimensiune fișier';
 
   @override
-  String get scopeFieldCommunityRating => 'Community rating';
+  String get scopeFieldCommunityRating => 'Nota comunității';
 
   @override
-  String get scopeFieldCommunityRatingCount => 'Community review count';
+  String get scopeFieldCommunityRatingCount =>
+      'Număr de recenzii din comunitate';
 
   @override
-  String get scopeFieldMetadataScore => 'Metadata score';
+  String get scopeFieldMetadataScore => 'Scor metadate';
 
   @override
   String get scopeFieldIsbn => 'ISBN';
 
   @override
-  String get scopeFieldDescription => 'Description';
+  String get scopeFieldDescription => 'Descriere';
 
   @override
-  String get scopeFieldCover => 'Cover';
+  String get scopeFieldCover => 'Copertă';
 
   @override
-  String get scopeFieldAudioCover => 'Audiobook cover';
+  String get scopeFieldAudioCover => 'Coperta cărții audio';
 
   @override
-  String get scopeFieldFileAvailability => 'File availability';
+  String get scopeFieldFileAvailability => 'Disponibilitate fișier';
 
   @override
-  String get scopeFieldLockStatus => 'Lock status';
+  String get scopeFieldLockStatus => 'Stare blocare';
 
   @override
-  String get scopeFieldSeriesStatus => 'Series status';
+  String get scopeFieldSeriesStatus => 'Stare serie';
 
   @override
-  String get scopeSortUpdatedAt => 'Date updated';
+  String get scopeSortUpdatedAt => 'Data actualizării';
 
   @override
-  String get scopeSortLastReadAt => 'Last read';
+  String get scopeSortLastReadAt => 'Ultima citire';
 
   @override
-  String get scopeSortRandom => 'Random';
+  String get scopeSortRandom => 'Aleatoriu';
 
   @override
-  String get scopeOpContains => 'contains';
+  String get scopeOpContains => 'conține';
 
   @override
-  String get scopeOpNotContains => 'does not contain';
+  String get scopeOpNotContains => 'nu conține';
 
   @override
-  String get scopeOpStartsWith => 'starts with';
+  String get scopeOpStartsWith => 'începe cu';
 
   @override
-  String get scopeOpEndsWith => 'ends with';
+  String get scopeOpEndsWith => 'se termină cu';
 
   @override
-  String get scopeOpEq => 'is';
+  String get scopeOpEq => 'este';
 
   @override
-  String get scopeOpNotEq => 'is not';
+  String get scopeOpNotEq => 'nu este';
 
   @override
-  String get scopeOpIsEmpty => 'is empty';
+  String get scopeOpIsEmpty => 'este gol';
 
   @override
-  String get scopeOpIsNotEmpty => 'is not empty';
+  String get scopeOpIsNotEmpty => 'nu este gol';
 
   @override
-  String get scopeOpGt => 'greater than';
+  String get scopeOpGt => 'mai mare decât';
 
   @override
-  String get scopeOpGte => 'at least';
+  String get scopeOpGte => 'cel puțin';
 
   @override
-  String get scopeOpLt => 'less than';
+  String get scopeOpLt => 'mai mic decât';
 
   @override
-  String get scopeOpLte => 'at most';
+  String get scopeOpLte => 'cel mult';
 
   @override
-  String get scopeOpBetween => 'between';
+  String get scopeOpBetween => 'între';
 
   @override
-  String get scopeOpIncludesAny => 'includes any of';
+  String get scopeOpIncludesAny => 'include oricare dintre';
 
   @override
-  String get scopeOpIncludesAll => 'includes all of';
+  String get scopeOpIncludesAll => 'include toate';
 
   @override
-  String get scopeOpExcludesAll => 'excludes all of';
+  String get scopeOpExcludesAll => 'exclude toate';
 
   @override
-  String get scopeOpBefore => 'before';
+  String get scopeOpBefore => 'înainte de';
 
   @override
-  String get scopeOpAfter => 'after';
+  String get scopeOpAfter => 'după';
 
   @override
-  String get scopeOpWithinLast => 'within the last';
+  String get scopeOpWithinLast => 'în ultimele';
 
   @override
-  String get scopeOpIsMissing => 'is missing';
+  String get scopeOpIsMissing => 'lipsește';
 
   @override
-  String get scopeOpIsPresent => 'is present';
+  String get scopeOpIsPresent => 'este prezent';
 
   @override
-  String get scopeOpIsUnread => 'is unread';
+  String get scopeOpIsUnread => 'este necitit';
 
   @override
-  String get scopeOpIsInProgress => 'is in progress';
+  String get scopeOpIsInProgress => 'este în curs';
 
   @override
-  String get scopeOpIsFinished => 'is finished';
+  String get scopeOpIsFinished => 'este terminat';
 
   @override
-  String get scopeOpIsLocked => 'is locked';
+  String get scopeOpIsLocked => 'este blocat';
 
   @override
-  String get scopeOpIsUnlocked => 'is unlocked';
+  String get scopeOpIsUnlocked => 'este deblocat';
 
   @override
-  String get scopeOpIsUpNext => 'is up next';
+  String get scopeOpIsUpNext => 'este următorul';
 
   @override
-  String get scopeOpIsTrue => 'is yes';
+  String get scopeOpIsTrue => 'este da';
 
   @override
-  String get scopeOpIsFalse => 'is no';
+  String get scopeOpIsFalse => 'este nu';
 
   @override
   String smartScopeMatchCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books match',
-      one: '1 book matches',
-      zero: 'No books match',
+      other: '$count de cărți se potrivesc',
+      few: '$count cărți se potrivesc',
+      one: '1 carte se potrivește',
+      zero: 'Nicio carte nu se potrivește',
     );
     return '$_temp0';
   }
 
   @override
   String smartScopeDeleteConfirm(String name) {
-    return 'Delete \"$name\"? This can\'t be undone.';
+    return 'Ștergi „$name”? Acțiunea nu poate fi anulată.';
   }
 
   @override
   String collectionDetailBookCount(int count) {
-    return '$count books';
+    return '$count cărți';
   }
 
   @override
-  String get collectionDetailDone => 'Done';
+  String get collectionDetailDone => 'Gata';
 
   @override
   String collectionDetailAddedToAbsorbing(String title) {
-    return 'Added \"$title\" to Absorbing';
+    return '„$title” a fost adăugat în Absorbing';
   }
 
   @override
-  String get audibleSeriesNoBooksFound => 'No books found on Audible';
+  String get audibleSeriesNoBooksFound => 'Nu s-au găsit cărți în Audible';
 
   @override
-  String get audibleSeriesFailedToLoad => 'Failed to load series from Audible';
+  String get audibleSeriesFailedToLoad =>
+      'Seria nu a putut fi încărcată din Audible';
 
   @override
   String audibleSeriesSummary(int total, int missing) {
-    return '$total on Audible · $missing missing';
+    return '$total în Audible · $missing lipsă';
   }
 
   @override
@@ -7691,195 +7842,199 @@ class AppLocalizationsRo extends AppLocalizations {
     int missing,
     int upcoming,
   ) {
-    return '$total on Audible · $missing missing · $upcoming upcoming';
+    return '$total în Audible · $missing lipsă · $upcoming viitoare';
   }
 
   @override
   String audibleSeriesFilterMissing(int count) {
-    return 'Missing ($count)';
+    return 'Lipsă ($count)';
   }
 
   @override
   String audibleSeriesFilterUpcoming(int count) {
-    return 'Upcoming ($count)';
+    return 'Viitoare ($count)';
   }
 
   @override
   String audibleSeriesFilterAll(int count) {
-    return 'All ($count)';
+    return 'Toate ($count)';
   }
 
   @override
-  String get audibleSeriesSearching => 'Searching Audible...';
+  String get audibleSeriesSearching => 'Se caută în Audible...';
 
   @override
-  String get audibleSeriesCompleteSeries => 'You have the complete series!';
+  String get audibleSeriesCompleteSeries => 'Ai seria completă!';
 
   @override
-  String get audibleSeriesNoUpcoming => 'No upcoming releases found';
+  String get audibleSeriesNoUpcoming => 'Nu s-au găsit apariții viitoare';
 
   @override
-  String get audibleSeriesUpcomingBadge => 'UPCOMING';
+  String get audibleSeriesUpcomingBadge => 'VIITOR';
 
   @override
-  String get audibleSeriesAbridged => 'Abridged';
+  String get audibleSeriesAbridged => 'Prescurtat';
 
   @override
-  String get audibleSeriesRegionTitle => 'Audible Region';
+  String get audibleSeriesRegionTitle => 'Regiune Audible';
 
   @override
-  String get audibleSeriesOpenOnAudible => 'Open on Audible';
+  String get audibleSeriesOpenOnAudible => 'Deschide în Audible';
 
   @override
-  String get audibleSeriesAddToCalendar => 'Add to Calendar';
+  String get audibleSeriesAddToCalendar => 'Adaugă în calendar';
 
   @override
-  String get audibleSeriesAddToUpcoming => 'Add to upcoming releases';
+  String get audibleSeriesAddToUpcoming => 'Adaugă la aparițiile viitoare';
 
   @override
-  String get audibleSeriesAddedToUpcoming => 'Added to upcoming releases';
+  String get audibleSeriesAddedToUpcoming => 'Adăugat la aparițiile viitoare';
 
   @override
-  String get audibleSeriesAlreadyInUpcoming => 'Already on the upcoming page';
+  String get audibleSeriesAlreadyInUpcoming =>
+      'Deja în pagina aparițiilor viitoare';
 
   @override
-  String get audibleSeriesCouldNotOpenAudible => 'Could not open Audible';
+  String get audibleSeriesCouldNotOpenAudible =>
+      'Audible nu a putut fi deschis';
 
   @override
-  String get audibleSeriesCouldNotOpenCalendar => 'Could not open calendar';
+  String get audibleSeriesCouldNotOpenCalendar =>
+      'Calendarul nu a putut fi deschis';
 
   @override
   String audibleSeriesCalendarDescription(String seriesName) {
-    return 'New audiobook release in the $seriesName series';
+    return 'Apariție nouă de carte audio în seria $seriesName';
   }
 
   @override
-  String get authorBooksGroupBySeries => 'Group by series';
+  String get authorBooksGroupBySeries => 'Grupează pe serii';
 
   @override
-  String get authorBooksList => 'List';
+  String get authorBooksList => 'Listă';
 
   @override
-  String get authorBooksGrid => 'Grid';
+  String get authorBooksGrid => 'Grilă';
 
   @override
   String authorBooksBookCount(int count) {
-    return '$count books';
+    return '$count cărți';
   }
 
   @override
-  String get metadataLookupCover => 'Cover';
+  String get metadataLookupCover => 'Copertă';
 
   @override
-  String get metadataLookupChooseFields => 'Choose Fields to Apply';
+  String get metadataLookupChooseFields => 'Alege câmpurile de aplicat';
 
   @override
   String metadataLookupApplyFields(int count) {
-    return 'Apply $count fields';
+    return 'Aplică $count câmpuri';
   }
 
   @override
   String metadataLookupFieldsSavedLocally(int count) {
-    return '$count fields saved locally';
+    return '$count câmpuri salvate local';
   }
 
   @override
-  String get metadataLookupOverrideLocalDisplay => 'Override local display';
+  String get metadataLookupOverrideLocalDisplay => 'Suprascrie afișarea locală';
 
   @override
-  String get equalizerPresetFlat => 'Flat';
+  String get equalizerPresetFlat => 'Plat';
 
   @override
-  String get equalizerPresetVoiceBoost => 'Voice Boost';
+  String get equalizerPresetVoiceBoost => 'Voce amplificată';
 
   @override
-  String get equalizerPresetBassBoost => 'Bass Boost';
+  String get equalizerPresetBassBoost => 'Bași amplificați';
 
   @override
-  String get equalizerPresetTrebleBoost => 'Treble Boost';
+  String get equalizerPresetTrebleBoost => 'Înalte amplificate';
 
   @override
   String get equalizerPresetPodcast => 'Podcast';
 
   @override
-  String get equalizerPresetAudiobook => 'Audiobook';
+  String get equalizerPresetAudiobook => 'Carte audio';
 
   @override
-  String get equalizerPresetReduceNoise => 'Reduce Noise';
+  String get equalizerPresetReduceNoise => 'Reducere zgomot';
 
   @override
-  String get equalizerPresetLoudness => 'Loudness';
+  String get equalizerPresetLoudness => 'Intensitate';
 
   @override
   String equalizerEditingSavedNamed(String title) {
-    return 'Editing saved EQ for \"$title\"';
+    return 'Se editează egalizatorul salvat pentru „$title”';
   }
 
   @override
-  String get equalizerEditingSavedGeneric => 'Editing saved EQ';
+  String get equalizerEditingSavedGeneric => 'Se editează egalizatorul salvat';
 
   @override
-  String get equalizerPerBookEq => 'Per-book EQ';
+  String get equalizerPerBookEq => 'Egalizator per carte';
 
   @override
-  String get notesDeleteNoteQuestion => 'Delete note?';
+  String get notesDeleteNoteQuestion => 'Ștergi notița?';
 
   @override
   String notesDeleteNoteContent(String title) {
-    return 'Delete \"$title\"?';
+    return 'Ștergi „$title”?';
   }
 
   @override
-  String get notesExport => 'Export';
+  String get notesExport => 'Exportă';
 
   @override
-  String get notesNewNote => 'New note';
+  String get notesNewNote => 'Notiță nouă';
 
   @override
-  String get librarySortFilterUpcomingReleases => 'Scan Series';
+  String get librarySortFilterUpcomingReleases => 'Scanează seriile';
 
   @override
   String get librarySortFilterMatchAllAuthorsSubtitle =>
-      'Fetch a photo and bio for every author from the metadata provider';
+      'Preia o fotografie și o biografie pentru fiecare autor de la furnizorul de metadate';
 
   @override
   String get librarySortFilterUpcomingReleasesSubtitle =>
-      'Check Audible for upcoming and missing books in your series';
+      'Caută în Audible cărți viitoare și lipsă din seriile tale';
 
   @override
   String sleepTimerSheetChaptersLeft(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count chapters left',
-      one: '1 chapter left',
+      other: '$count de capitole rămase',
+      few: '$count capitole rămase',
+      one: '1 capitol rămas',
     );
     return '$_temp0';
   }
 
   @override
   String sleepTimerSheetAddMinutesChip(int minutes) {
-    return '+${minutes}m';
+    return '+$minutes min';
   }
 
   @override
   String sleepTimerSheetAddChaptersChip(int count) {
-    return '+$count ch';
+    return '+$count cap.';
   }
 
   @override
   String sleepTimerSheetMinShort(int minutes) {
-    return '${minutes}m';
+    return '$minutes min';
   }
 
   @override
   String sleepTimerSheetSecondsShort(int seconds) {
-    return '${seconds}s';
+    return '$seconds s';
   }
 
   @override
   String sleepTimerSheetMinSecShort(int minutes, int seconds) {
-    return '${minutes}m ${seconds}s';
+    return '$minutes min $seconds s';
   }
 
   @override
@@ -7887,15 +8042,16 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count chapters',
-      one: '1 chapter',
+      other: '$count de capitole',
+      few: '$count capitole',
+      one: '1 capitol',
     );
     return '$_temp0';
   }
 
   @override
   String sleepTimerSheetChaptersChip(int count) {
-    return '$count ch';
+    return '$count cap.';
   }
 
   @override
@@ -7903,66 +8059,69 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Sleep after $count chapters',
-      one: 'Sleep after 1 chapter',
+      other: 'Oprire după $count de capitole',
+      few: 'Oprire după $count capitole',
+      one: 'Oprire după 1 capitol',
     );
     return '$_temp0';
   }
 
   @override
-  String get sleepTimerSheetRewindOnSleep => 'Rewind on sleep';
+  String get sleepTimerSheetRewindOnSleep => 'Derulează înapoi la oprire';
 
   @override
-  String get sleepTimerSheetShake => 'Shake';
+  String get sleepTimerSheetShake => 'Scuturare';
 
   @override
   String sleepTimerSheetAddsMinutes(int minutes) {
-    return 'Adds $minutes min';
+    return 'Adaugă $minutes min';
   }
 
   @override
-  String get sleepTimerSheetAddsOneChapter => 'Adds 1 chapter';
+  String get sleepTimerSheetAddsOneChapter => 'Adaugă 1 capitol';
 
   @override
-  String get sleepTimerSheetResetsToFull => 'Resets to full duration';
+  String get sleepTimerSheetResetsToFull => 'Revine la durata completă';
 
   @override
-  String get sleepTimerSheetTabSpecificChapter => 'Chapter';
+  String get sleepTimerSheetTabSpecificChapter => 'Capitol';
 
   @override
-  String get sleepTimerSheetSpecificNoChapters => 'No chapters available';
+  String get sleepTimerSheetSpecificNoChapters =>
+      'Nu sunt capitole disponibile';
 
   @override
   String sleepTimerSheetSpecificChapterFallback(int number) {
-    return 'Chapter $number';
+    return 'Capitolul $number';
   }
 
   @override
-  String get sleepTimerSheetSpecificPassedShort => 'passed';
+  String get sleepTimerSheetSpecificPassedShort => 'trecut';
 
   @override
-  String get sleepTimerSheetSpecificStart => 'Chapter Start';
+  String get sleepTimerSheetSpecificStart => 'Începutul capitolului';
 
   @override
-  String get sleepTimerSheetSpecificEnd => 'Chapter End';
+  String get sleepTimerSheetSpecificEnd => 'Sfârșitul capitolului';
 
   @override
-  String get sleepTimerSheetSpecificEndsAt => 'Sleep timer will end at';
+  String get sleepTimerSheetSpecificEndsAt =>
+      'Temporizatorul de somn se va încheia la';
 
   @override
   String sleepTimerSheetSpecificCountdown(String countdown) {
-    return 'in $countdown';
+    return 'în $countdown';
   }
 
   @override
   String get sleepTimerSheetSpecificAlreadyPassed =>
-      'This point has already passed';
+      'Acest punct a trecut deja';
 
   @override
-  String get sleepTimerSheetSpecificStartButton => 'Start timer';
+  String get sleepTimerSheetSpecificStartButton => 'Pornește temporizatorul';
 
   @override
-  String get sleepTimerSheetSpecificStartButtonPassed => 'Already passed';
+  String get sleepTimerSheetSpecificStartButtonPassed => 'Deja trecut';
 
   @override
   String get timeAm => 'AM';
@@ -7971,7 +8130,7 @@ class AppLocalizationsRo extends AppLocalizations {
   String get timePm => 'PM';
 
   @override
-  String get collectionPickerCollectionFallback => 'Collection';
+  String get collectionPickerCollectionFallback => 'Colecție';
 
   @override
   String collectionPickerNameWithCount(String name, int count) {
@@ -7979,7 +8138,7 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get playlistPickerPlaylistFallback => 'Playlist';
+  String get playlistPickerPlaylistFallback => 'Listă de redare';
 
   @override
   String playlistPickerNameWithCount(String name, int count) {
@@ -7987,42 +8146,42 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get cardChaptersPlayFromChapterTitle => 'Play from chapter?';
+  String get cardChaptersPlayFromChapterTitle => 'Redai de la capitol?';
 
   @override
   String cardChaptersPlayFromChapterContent(String title) {
-    return 'Start playing from \"$title\"?';
+    return 'Începi redarea de la „$title”?';
   }
 
   @override
-  String get cardChaptersPlay => 'Play';
+  String get cardChaptersPlay => 'Redă';
 
   @override
-  String get absorbingSharedToday => 'Today';
+  String get absorbingSharedToday => 'Astăzi';
 
   @override
-  String get absorbingSharedYesterday => 'Yesterday';
+  String get absorbingSharedYesterday => 'Ieri';
 
   @override
-  String get absorbingSharedMonday => 'Monday';
+  String get absorbingSharedMonday => 'Luni';
 
   @override
-  String get absorbingSharedTuesday => 'Tuesday';
+  String get absorbingSharedTuesday => 'Marți';
 
   @override
-  String get absorbingSharedWednesday => 'Wednesday';
+  String get absorbingSharedWednesday => 'Miercuri';
 
   @override
-  String get absorbingSharedThursday => 'Thursday';
+  String get absorbingSharedThursday => 'Joi';
 
   @override
-  String get absorbingSharedFriday => 'Friday';
+  String get absorbingSharedFriday => 'Vineri';
 
   @override
-  String get absorbingSharedSaturday => 'Saturday';
+  String get absorbingSharedSaturday => 'Sâmbătă';
 
   @override
-  String get absorbingSharedSunday => 'Sunday';
+  String get absorbingSharedSunday => 'Duminică';
 
   @override
   String get absorbingSharedAm => 'AM';
@@ -8032,258 +8191,261 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String sectionDetailAddedToAbsorbing(String title) {
-    return 'Added \"$title\" to Absorbing';
+    return '„$title” a fost adăugat în Absorbing';
   }
 
   @override
-  String get sectionDetailDoneBadge => 'Done';
+  String get sectionDetailDoneBadge => 'Gata';
 
   @override
-  String get homeCustomizeAddGenreTitle => 'Add Genre Section';
+  String get homeCustomizeAddGenreTitle => 'Adaugă secțiune de gen';
 
   @override
   String get homeCustomizeAddGenreSubtitle =>
-      'Pick a genre to show on your home screen';
+      'Alege un gen de afișat pe ecranul principal';
 
   @override
-  String get homeSectionDoneBadge => 'Done';
+  String get homeSectionDoneBadge => 'Gata';
 
   @override
-  String get tipsSheetQuickBookmarksTitle => 'Quick Bookmarks';
+  String get tipsSheetQuickBookmarksTitle => 'Marcaje rapide';
 
   @override
   String get tipsSheetQuickBookmarksDesc =>
-      'Long-press the bookmark button on any card to instantly drop a bookmark at your current position without opening the bookmark sheet.';
+      'Apasă lung butonul de marcaj de pe orice card pentru a plasa instant un marcaj la poziția curentă, fără a deschide foaia de marcaje.';
 
   @override
-  String get tipsSheetCoverPlayPauseTitle => 'Cover Play/Pause';
+  String get tipsSheetCoverPlayPauseTitle => 'Redare/pauză din copertă';
 
   @override
   String get tipsSheetCoverPlayPauseDesc =>
-      'Tap the cover art on any card to play or pause. Toggle this in Settings under Absorbing Cards. A faint pause icon shows when playing so you know it\'s tappable.';
+      'Atinge coperta de pe orice card pentru a reda sau a pune pe pauză. Îl poți activa sau dezactiva în Setări, la Carduri Absorbing. O pictogramă de pauză discretă apare în timpul redării, ca să știi că poți atinge.';
 
   @override
-  String get tipsSheetFullScreenPlayerTitle => 'Full Screen Player';
+  String get tipsSheetFullScreenPlayerTitle => 'Player pe ecran complet';
 
   @override
   String get tipsSheetFullScreenPlayerDesc =>
-      'Swipe up on any absorbing card to open the full screen player. Swipe down to dismiss it.';
+      'Glisează în sus pe orice card Absorbing pentru a deschide playerul pe ecran complet. Glisează în jos pentru a-l închide.';
 
   @override
-  String get tipsSheetQuickAddAbsorbingTitle => 'Quick Add to Absorbing';
+  String get tipsSheetQuickAddAbsorbingTitle => 'Adăugare rapidă în Absorbing';
 
   @override
   String get tipsSheetQuickAddAbsorbingDesc =>
-      'Swipe right on any book in a list sheet (series, author, search results) to instantly add it to your absorbing queue.';
+      'Glisează la dreapta pe orice carte dintr-o listă (serie, autor, rezultate de căutare) pentru a o adăuga instant în coada ta Absorbing.';
 
   @override
-  String get tipsSheetShakeExtendSleepTitle => 'Shake to Extend Sleep';
+  String get tipsSheetShakeExtendSleepTitle =>
+      'Scuturare pentru prelungirea somnului';
 
   @override
   String get tipsSheetShakeExtendSleepDesc =>
-      'If you have a sleep timer running and shake your phone, it\'ll add extra minutes. Configure the amount in Settings under Sleep Timer.';
+      'Dacă ai un temporizator de somn pornit și scuturi telefonul, se adaugă minute în plus. Setezi cantitatea în Setări, la Temporizator de somn.';
 
   @override
-  String get tipsSheetSeriesNavigationTitle => 'Series Navigation';
+  String get tipsSheetSeriesNavigationTitle => 'Navigare în serie';
 
   @override
   String get tipsSheetSeriesNavigationDesc =>
-      'Tap the series name in any book\'s detail popup to see all books in the series, sorted in reading order with sequence badges on each cover.';
+      'Atinge numele seriei în fereastra de detalii a oricărei cărți pentru a vedea toate cărțile din serie, în ordinea citirii, cu insigne de număr pe fiecare copertă.';
 
   @override
-  String get tipsSheetSwipeBetweenBooksTitle => 'Swipe Between Books';
+  String get tipsSheetSwipeBetweenBooksTitle => 'Glisare între cărți';
 
   @override
   String get tipsSheetSwipeBetweenBooksDesc =>
-      'Swipe left and right on the Absorbing screen to switch between your in-progress books. With Manual queue mode on, the cards also act as your queue, so the next one auto-plays when the current one finishes.';
+      'Glisează la stânga și la dreapta pe ecranul Absorbing pentru a comuta între cărțile începute. Cu modul de coadă manuală activ, cardurile funcționează și ca o coadă, așa că următoarea se redă automat când se termină cea curentă.';
 
   @override
-  String get tipsSheetTapToSeekTitle => 'Tap to Seek';
+  String get tipsSheetTapToSeekTitle => 'Atinge pentru a derula';
 
   @override
   String get tipsSheetTapToSeekDesc =>
-      'Tap anywhere on the chapter or book progress bar to jump directly to that position. You can also drag the bars for fine-grained control.';
+      'Atinge oriunde pe bara de progres a capitolului sau a cărții pentru a sări direct la acea poziție. Poți trage și barele pentru un control mai fin.';
 
   @override
-  String get tipsSheetSpeedAdjustedTimeTitle => 'Speed-Adjusted Time';
+  String get tipsSheetSpeedAdjustedTimeTitle => 'Timp ajustat la viteză';
 
   @override
   String get tipsSheetSpeedAdjustedTimeDesc =>
-      'Every time shown - position, remaining, chapters, bookmarks - adjusts to your playback speed. Listening at 1.5x? The times shown reflect how long they\'ll actually take you.';
+      'Toate duratele afișate - poziția, timpul rămas, capitolele, marcajele - se ajustează la viteza ta de redare. Asculți la 1.5x? Duratele arată cât vor dura de fapt pentru tine.';
 
   @override
-  String get tipsSheetPlaybackHistoryTitle => 'Playback History';
+  String get tipsSheetPlaybackHistoryTitle => 'Istoricul redării';
 
   @override
   String get tipsSheetPlaybackHistoryDesc =>
-      'Tap the History button on any card to see a timeline of every play, pause, seek, and speed change. Tap any event to jump back to that position.';
+      'Atinge butonul Istoric de pe orice card pentru a vedea o cronologie a fiecărei redări, pauze, derulări și schimbări de viteză. Atinge orice eveniment pentru a reveni la acea poziție.';
 
   @override
-  String get tipsSheetAutoRewindTitle => 'Auto-Rewind';
+  String get tipsSheetAutoRewindTitle => 'Derulare automată înapoi';
 
   @override
   String get tipsSheetAutoRewindDesc =>
-      'When you resume after a pause, Absorb automatically rewinds a few seconds so you don\'t lose your place. The rewind amount scales with how long you were away. Configure it in Settings.';
+      'Când reiei după o pauză, Absorb derulează automat câteva secunde înapoi ca să nu pierzi firul. Durata derulării crește în funcție de cât ai lipsit. O configurezi în Setări.';
 
   @override
-  String get tipsSheetSeriesQueueModeTitle => 'Series Queue Mode';
+  String get tipsSheetSeriesQueueModeTitle => 'Modul coadă de serie';
 
   @override
   String get tipsSheetSeriesQueueModeDesc =>
-      'When you finish a book that\'s part of a series, Absorb can automatically play the next book. Set queue mode to \"Series\" in Settings.';
+      'Când termini o carte care face parte dintr-o serie, Absorb poate reda automat următoarea carte. Setează modul de coadă pe „Serie” în Setări.';
 
   @override
-  String get tipsSheetOfflineModeTitle => 'Offline Mode';
+  String get tipsSheetOfflineModeTitle => 'Mod offline';
 
   @override
   String get tipsSheetOfflineModeDesc =>
-      'Tap the airplane button on the Absorbing screen to enter offline mode. This stops syncing, saves data, and only shows your downloaded books. Great for flights or low signal areas.';
+      'Atinge butonul cu avion de pe ecranul Absorbing pentru a intra în modul offline. Aceasta oprește sincronizarea, economisește date și arată doar cărțile descărcate. Excelent pentru zboruri sau zone cu semnal slab.';
 
   @override
-  String get tipsSheetUpcomingReleasesTitle => 'Upcoming Releases';
+  String get tipsSheetUpcomingReleasesTitle => 'Apariții viitoare';
 
   @override
   String get tipsSheetUpcomingReleasesDesc =>
-      'On the Series tab, tap the tab again to open its sort and filter sheet, then choose Upcoming Releases to see new and upcoming books across your series, sorted by release date.';
+      'În fila Serii, atinge din nou fila pentru a deschide foaia de sortare și filtrare, apoi alege Apariții viitoare pentru a vedea cărțile noi și viitoare din seriile tale, sortate după data apariției.';
 
   @override
-  String get tipsSheetPerBookEqTitle => 'Per-Book Equalizer';
+  String get tipsSheetPerBookEqTitle => 'Egalizator per carte';
 
   @override
   String get tipsSheetPerBookEqDesc =>
-      'Each book remembers its own equalizer settings. Tweak EQ once for a sci-fi epic and the next time you play it, it sounds the same.';
+      'Fiecare carte își amintește propriile setări de egalizator. Ajustează egalizatorul o dată pentru o epopee SF și data viitoare când o redai, sună la fel.';
 
   @override
-  String get tipsSheetPerBookSpeedTitle => 'Per-Book Speed';
+  String get tipsSheetPerBookSpeedTitle => 'Viteză per carte';
 
   @override
   String get tipsSheetPerBookSpeedDesc =>
-      'Playback speed is saved per book. Run nonfiction at 1.5x and dramatic fiction at 1.0x without setting it every time.';
+      'Viteza de redare se salvează pentru fiecare carte. Ascultă non-ficțiune la 1.5x și ficțiune dramatică la 1.0x fără să o setezi de fiecare dată.';
 
   @override
-  String get tipsSheetAutoSleepWindowTitle => 'Auto Sleep Window';
+  String get tipsSheetAutoSleepWindowTitle => 'Interval de somn automat';
 
   @override
   String get tipsSheetAutoSleepWindowDesc =>
-      'Pick the hours you usually fall asleep and the sleep timer will start itself when you begin listening in that window.';
+      'Alege orele la care adormi de obicei, iar temporizatorul de somn va porni singur când începi să asculți în acel interval.';
 
   @override
-  String get tipsSheetSleepFadeChimeTitle => 'Sleep Fade and Chime';
+  String get tipsSheetSleepFadeChimeTitle => 'Estompare și sunet de somn';
 
   @override
   String get tipsSheetSleepFadeChimeDesc =>
-      'When the sleep timer ends, audio gradually fades out and an optional chime plays so it doesn\'t cut off mid-sentence.';
+      'Când temporizatorul de somn se încheie, sunetul se estompează treptat și poate fi redat un sunet opțional, ca să nu se întrerupă în mijlocul unei propoziții.';
 
   @override
-  String get tipsSheetCarModeTitle => 'Car Mode';
+  String get tipsSheetCarModeTitle => 'Mod mașină';
 
   @override
   String get tipsSheetCarModeDesc =>
-      'Tap the car icon to switch to giant-button mode designed for safer use while driving.';
+      'Atinge pictograma mașinii pentru a trece la modul cu butoane uriașe, conceput pentru o utilizare mai sigură la volan.';
 
   @override
-  String get tipsSheetAudibleSeriesTitle => 'Audible Series Discovery';
+  String get tipsSheetAudibleSeriesTitle => 'Descoperirea seriilor din Audible';
 
   @override
   String get tipsSheetAudibleSeriesDesc =>
-      'Open a series and use the overflow menu (the three dots) to pull the full series list from Audible, including missing entries and books you haven\'t started.';
+      'Deschide o serie și folosește meniul suplimentar (cele trei puncte) pentru a prelua lista completă a seriei din Audible, inclusiv intrările lipsă și cărțile pe care nu le-ai început.';
 
   @override
-  String get tipsSheetTranscribeBookmarkTitle => 'Transcribe Bookmarks';
+  String get tipsSheetTranscribeBookmarkTitle => 'Transcrie marcajele';
 
   @override
   String get tipsSheetTranscribeBookmarkDesc =>
-      'Turn the audio at any bookmark into text, fully on your device. Enable it in Settings under Advanced > Transcription and download a model, then tap Transcribe on a bookmark - the text lands in its note, ready to fix up or share.';
+      'Transformă în text, integral pe dispozitivul tău, audio de la orice marcaj. Activează opțiunea în Setări, la Avansat > Transcriere, descarcă un model, apoi atinge Transcrie la un marcaj - textul ajunge în notița lui, gata de corectat sau de distribuit.';
 
   @override
   String get tipsSheetFindBetweenFormatsTitle =>
-      'Jump Between Audiobook and Ebook';
+      'Sari între cartea audio și cartea electronică';
 
   @override
   String get tipsSheetFindBetweenFormatsDesc =>
-      'With transcription on and the book downloaded, pause and tap Find position in ebook on the player to open the ebook at the passage you just heard. In the reader, select some text and tap the headphones to start the audiobook right there.';
+      'Cu transcrierea activată și cartea descărcată, pune pe pauză și atinge Găsește poziția în cartea electronică din player pentru a deschide cartea electronică la pasajul pe care tocmai l-ai auzit. În cititor, selectează un text și atinge căștile pentru a porni cartea audio chiar de acolo.';
 
   @override
-  String get tipsSheetShareQuoteTitle => 'Share Quotes';
+  String get tipsSheetShareQuoteTitle => 'Distribuie citate';
 
   @override
   String get tipsSheetShareQuoteDesc =>
-      'Share an ebook highlight or a bookmark note as an image with the quote over the book cover. Look for the share option on highlights and in the bookmark sheet.';
+      'Distribuie o evidențiere dintr-o carte electronică sau o notiță de marcaj ca imagine, cu citatul peste coperta cărții. Caută opțiunea de distribuire la evidențieri și în foaia de marcaje.';
 
   @override
-  String get tipsSheetClipExportTitle => 'Export Audio Clips';
+  String get tipsSheetClipExportTitle => 'Exportă clipuri audio';
 
   @override
   String get tipsSheetClipExportDesc =>
-      'Open a bookmark and tap Export clip to trim and save a short audio snippet of the book, cover art included - great for sharing a favorite scene.';
+      'Deschide un marcaj și atinge Exportă clip pentru a tăia și salva un scurt fragment audio din carte, cu tot cu copertă - ideal pentru a distribui o scenă preferată.';
 
   @override
-  String get tipsSheetAllHighlightsTitle => 'All Highlights in One Place';
+  String get tipsSheetAllHighlightsTitle =>
+      'Toate evidențierile într-un singur loc';
 
   @override
   String get tipsSheetAllHighlightsDesc =>
-      'The All Bookmarks page has a Highlights tab collecting every ebook highlight from every book. Tap one to share it or jump back into the book.';
+      'Pagina Toate marcajele are o filă Evidențieri care adună toate evidențierile din toate cărțile electronice. Atinge una pentru a o distribui sau a reveni în carte.';
 
   @override
-  String get tipsSheetVolumeKeyPagesTitle => 'Volume-Key Page Turns';
+  String get tipsSheetVolumeKeyPagesTitle =>
+      'Întoarcerea paginilor cu tastele de volum';
 
   @override
   String get tipsSheetVolumeKeyPagesDesc =>
-      'Turn ebook pages with the volume keys. Enable it in the reader\'s settings - normal or mirrored direction, and it can stay on even while audio is playing.';
+      'Întoarce paginile cărții electronice cu tastele de volum. Activează opțiunea în setările cititorului - direcție normală sau inversată, și poate rămâne activă chiar și când se redă audio.';
 
   @override
-  String get tipsSheetSettingsSyncTitle => 'Settings Sync';
+  String get tipsSheetSettingsSyncTitle => 'Sincronizarea setărilor';
 
   @override
   String get tipsSheetSettingsSyncDesc =>
-      'Keep your settings, per-book speeds and Absorbing order in step across devices through your own WebDAV server. Set it up in Settings under Backup and sync.';
+      'Păstrează setările, vitezele per carte și ordinea din Absorbing sincronizate între dispozitive prin propriul tău server WebDAV. Configurează-l în Setări, la Copii de rezervă și sincronizare.';
 
   @override
-  String get tipsSheetNavLongPressTitle => 'Long-Press the Bottom Tabs';
+  String get tipsSheetNavLongPressTitle => 'Apăsare lungă pe filele de jos';
 
   @override
   String get tipsSheetNavLongPressDesc =>
-      'Hold the Home tab to switch libraries from any page. Hold the Library tab to jump straight into search.';
+      'Ține apăsată fila Acasă pentru a comuta între biblioteci de pe orice pagină. Ține apăsată fila Bibliotecă pentru a ajunge direct în căutare.';
 
   @override
-  String get bookCardUnknownTitle => 'Unknown Title';
+  String get bookCardUnknownTitle => 'Titlu necunoscut';
 
   @override
   String get bookCardExplicitBadge => 'E';
 
   @override
-  String get bookCardDone => 'Done';
+  String get bookCardDone => 'Gata';
 
   @override
-  String get bookCardSaved => 'Saved';
+  String get bookCardSaved => 'Salvat';
 
   @override
-  String get episodeRowEpisode => 'Episode';
+  String get episodeRowEpisode => 'Episod';
 
   @override
-  String get episodeRowToday => 'Today';
+  String get episodeRowToday => 'Astăzi';
 
   @override
-  String get episodeRowYesterday => 'Yesterday';
+  String get episodeRowYesterday => 'Ieri';
 
   @override
   String episodeRowDaysAgo(int count) {
-    return '${count}d ago';
+    return 'acum $count z.';
   }
 
   @override
   String episodeRowWeeksAgo(int count) {
-    return '${count}w ago';
+    return 'acum $count săpt.';
   }
 
   @override
   String episodeRowDurationHm(int hours, int minutes) {
-    return '${hours}h ${minutes}m';
+    return '$hours h $minutes min';
   }
 
   @override
   String episodeRowDurationM(int minutes) {
-    return '${minutes}m';
+    return '$minutes min';
   }
 
   @override
@@ -8300,10 +8462,10 @@ class AppLocalizationsRo extends AppLocalizations {
   String get librarySearchResultsExplicitBadge => 'E';
 
   @override
-  String get librarySearchResultsDone => 'Done';
+  String get librarySearchResultsDone => 'Gata';
 
   @override
-  String get librarySearchResultsSaved => 'Saved';
+  String get librarySearchResultsSaved => 'Salvat';
 
   @override
   String librarySearchResultsSequence(String number) {
@@ -8311,18 +8473,19 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get librarySearchResultsUnknownSeries => 'Unknown Series';
+  String get librarySearchResultsUnknownSeries => 'Serie necunoscută';
 
   @override
-  String get librarySearchResultsUnknownEpisode => 'Unknown Episode';
+  String get librarySearchResultsUnknownEpisode => 'Episod necunoscut';
 
   @override
   String librarySearchResultsBookCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count de cărți',
+      few: '$count cărți',
+      one: '1 carte',
     );
     return '$_temp0';
   }
@@ -8331,10 +8494,10 @@ class AppLocalizationsRo extends AppLocalizations {
   String get libraryGridTilesExplicitBadge => 'E';
 
   @override
-  String get libraryGridTilesDone => 'Done';
+  String get libraryGridTilesDone => 'Gata';
 
   @override
-  String get libraryGridTilesSaved => 'Saved';
+  String get libraryGridTilesSaved => 'Salvat';
 
   @override
   String libraryGridTilesSequence(String number) {
@@ -8342,133 +8505,138 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get libraryGridTilesUnknownSeries => 'Unknown Series';
+  String get libraryGridTilesUnknownSeries => 'Serie necunoscută';
 
   @override
-  String get seriesCardUnknownSeries => 'Unknown Series';
+  String get seriesCardUnknownSeries => 'Serie necunoscută';
 
   @override
   String seriesCardBookCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count de cărți',
+      few: '$count cărți',
+      one: '1 carte',
     );
     return '$_temp0';
   }
 
   @override
-  String get cardProgressFineScrubbing => 'Fine Scrubbing';
+  String get cardProgressFineScrubbing => 'Derulare fină';
 
   @override
-  String get cardProgressQuarterSpeed => 'Quarter Speed';
+  String get cardProgressQuarterSpeed => 'Un sfert de viteză';
 
   @override
-  String get cardProgressHalfSpeed => 'Half Speed';
+  String get cardProgressHalfSpeed => 'Jumătate de viteză';
 
   @override
   String cardProgressChapterPrefix(String number) {
-    return 'Chapter $number';
+    return 'Capitolul $number';
   }
 
   @override
-  String get cardEdgeProgressFineScrubbing => 'Fine Scrubbing';
+  String get cardEdgeProgressFineScrubbing => 'Derulare fină';
 
   @override
-  String get cardEdgeProgressQuarterSpeed => 'Quarter Speed';
+  String get cardEdgeProgressQuarterSpeed => 'Un sfert de viteză';
 
   @override
-  String get cardEdgeProgressHalfSpeed => 'Half Speed';
+  String get cardEdgeProgressHalfSpeed => 'Jumătate de viteză';
 
   @override
-  String get authSessionExpired => 'Session expired. Please log in again.';
+  String get authSessionExpired => 'Sesiunea a expirat. Conectează-te din nou.';
 
   @override
   String authCannotReachServer(String url) {
-    return 'Cannot reach server at $url';
+    return 'Serverul de la $url nu poate fi contactat';
   }
 
   @override
-  String get authInvalidUsernameOrPassword => 'Invalid username or password';
+  String get authInvalidUsernameOrPassword =>
+      'Nume de utilizator sau parolă incorecte';
 
   @override
-  String get authInvalidApiKey => 'Invalid API key';
+  String get authInvalidApiKey => 'Cheie API nevalidă';
 
   @override
   String get authLoginFailedDetail =>
-      'Login failed - check your server address and credentials';
+      'Conectarea a eșuat - verifică adresa serverului și datele de autentificare';
 
   @override
-  String get authUnexpectedServerResponse => 'Unexpected server response';
+  String get authUnexpectedServerResponse => 'Răspuns neașteptat de la server';
 
   @override
-  String get authSsoUnexpectedResponse => 'SSO returned an unexpected response';
+  String get authSsoUnexpectedResponse =>
+      'SSO a returnat un răspuns neașteptat';
 
   @override
-  String get authSwitchedToLocalServer => 'Switched to local server';
+  String get authSwitchedToLocalServer => 'S-a trecut la serverul local';
 
   @override
-  String get authSwitchedToRemoteServer => 'Switched to remote server';
+  String get authSwitchedToRemoteServer => 'S-a trecut la serverul la distanță';
 
   @override
-  String get lpDeletedFinishedDownload => 'Deleted finished download';
+  String get lpDeletedFinishedDownload => 'Descărcare terminată ștearsă';
 
   @override
   String lpSubscribedPodcastDownloading(String showTitle, int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count new episodes downloading',
-      one: '1 new episode downloading',
+      other: 'se descarcă $count de episoade noi',
+      few: 'se descarcă $count episoade noi',
+      one: 'se descarcă 1 episod nou',
     );
     return '$showTitle: $_temp0';
   }
 
   @override
   String lpSubscribedEpisodeAddedStart(String showTitle) {
-    return '$showTitle added to the top of your queue';
+    return '$showTitle a fost adăugat la începutul cozii';
   }
 
   @override
   String lpSubscribedEpisodeAddedSecond(String showTitle) {
-    return '$showTitle added 2nd in your queue';
+    return '$showTitle a fost adăugat pe locul 2 în coadă';
   }
 
   @override
   String lpSubscribedEpisodeAddedEnd(String showTitle) {
-    return '$showTitle added to the end of your queue';
+    return '$showTitle a fost adăugat la sfârșitul cozii';
   }
 
   @override
   String lpSubscribedEpisodeDownloaded(String showTitle) {
-    return 'New $showTitle episode downloaded';
+    return 'Episod nou $showTitle descărcat';
   }
 
   @override
-  String get statsWeekStartsOn => 'Week starts on';
+  String get statsWeekStartsOn => 'Săptămâna începe luni';
 
   @override
-  String get episodeListNewEpisodePosition => 'New episode position';
+  String get episodeListNewEpisodePosition => 'Poziția episodului nou';
 
   @override
-  String get episodeListPositionTop => 'Top of queue';
+  String get episodeListPositionTop => 'Începutul cozii';
 
   @override
-  String get episodeListPositionSecond => 'Second in queue';
+  String get episodeListPositionSecond => 'Al doilea în coadă';
 
   @override
-  String get episodeListPositionEnd => 'End of queue';
+  String get episodeListPositionEnd => 'Sfârșitul cozii';
 
   @override
-  String get episodeListPositionNone => 'Don\'t add to queue';
+  String get episodeListPositionNone => 'Nu adăuga în coadă';
 
   @override
-  String get episodeListPositionNoneDesc => 'Still notified and downloaded';
+  String get episodeListPositionNoneDesc =>
+      'Primești totuși notificări și descărcare';
 
   @override
   String sleepRewindUndoNote(int minutes) {
-    return 'Hit play within $minutes minutes and the rewind is undone';
+    return 'Apasă redare în $minutes minute și derularea înapoi este anulată';
   }
 
   @override
@@ -8476,8 +8644,9 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Queue: downloading $count items',
-      one: 'Queue: downloading 1 item',
+      other: 'Coadă: se descarcă $count de elemente',
+      few: 'Coadă: se descarcă $count elemente',
+      one: 'Coadă: se descarcă 1 element',
     );
     return '$_temp0';
   }
@@ -8487,8 +8656,9 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Downloading $count books',
-      one: 'Downloading 1 book',
+      other: 'Se descarcă $count de cărți',
+      few: 'Se descarcă $count cărți',
+      one: 'Se descarcă 1 carte',
     );
     return '$_temp0';
   }
@@ -8498,71 +8668,73 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Downloading $count episodes',
-      one: 'Downloading 1 episode',
+      other: 'Se descarcă $count de episoade',
+      few: 'Se descarcă $count episoade',
+      one: 'Se descarcă 1 episod',
     );
     return '$_temp0';
   }
 
   @override
-  String get downloadNotifProgressChannelName => 'Download Progress';
+  String get downloadNotifProgressChannelName => 'Progresul descărcărilor';
 
   @override
   String get downloadNotifProgressChannelDesc =>
-      'Shows progress during audiobook downloads';
+      'Arată progresul în timpul descărcării cărților audio';
 
   @override
-  String get downloadNotifAlertChannelName => 'Download Alerts';
+  String get downloadNotifAlertChannelName => 'Alerte de descărcare';
 
   @override
   String get downloadNotifAlertChannelDesc =>
-      'Notifications when downloads finish or fail';
+      'Notificări când descărcările se termină sau eșuează';
 
   @override
-  String get downloadNotifDownloadingTitle => 'Downloading…';
+  String get downloadNotifDownloadingTitle => 'Se descarcă…';
 
   @override
   String downloadNotifActiveCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count downloads active',
-      one: '1 download active',
+      other: '$count de descărcări active',
+      few: '$count descărcări active',
+      one: '1 descărcare activă',
     );
     return '$_temp0';
   }
 
   @override
   String downloadNotifSlotTitle(String title) {
-    return 'Downloading: $title';
+    return 'Se descarcă: $title';
   }
 
   @override
-  String get downloadNotifStartingLabel => 'Starting…';
+  String get downloadNotifStartingLabel => 'Se pornește…';
 
   @override
-  String get downloadNotifCompleteTitle => 'Download Complete';
+  String get downloadNotifCompleteTitle => 'Descărcare finalizată';
 
   @override
   String downloadNotifCompleteBody(String title) {
-    return '$title is ready to listen offline';
+    return '$title este gata de ascultat offline';
   }
 
   @override
-  String get downloadNotifFailedTitle => 'Download Failed';
+  String get downloadNotifFailedTitle => 'Descărcare eșuată';
 
   @override
-  String get upcomingNotifChannelName => 'Upcoming Release Scan';
+  String get upcomingNotifChannelName => 'Scanarea aparițiilor viitoare';
 
   @override
   String get upcomingNotifChannelDesc =>
-      'Shows progress while scanning for upcoming releases';
+      'Arată progresul la scanarea aparițiilor viitoare';
 
   @override
-  String get upcomingNotifScanTitle => 'Scanning for upcoming releases';
+  String get upcomingNotifScanTitle => 'Se scanează aparițiile viitoare';
 
   @override
-  String get upcomingNotifStartingScan => 'Starting scan…';
+  String get upcomingNotifStartingScan => 'Se pornește scanarea…';
 
   @override
   String upcomingNotifCheckingSeries(
@@ -8570,51 +8742,54 @@ class AppLocalizationsRo extends AppLocalizations {
     int current,
     int total,
   ) {
-    return 'Checking $seriesName… ($current/$total)';
+    return 'Se verifică $seriesName… ($current/$total)';
   }
 
   @override
-  String get upcomingNotifFoundTitle => 'Upcoming releases found!';
+  String get upcomingNotifFoundTitle => 'Apariții viitoare găsite!';
 
   @override
   String upcomingNotifFoundBody(int books, int series) {
     String _temp0 = intl.Intl.pluralLogic(
       series,
       locale: localeName,
-      other: '$series series',
-      one: '1 series',
+      other: '$series de serii',
+      few: '$series serii',
+      one: '1 serie',
     );
-    return '$books upcoming across $_temp0';
+    return '$books viitoare în $_temp0';
   }
 
   @override
-  String get androidAutoTabContinue => 'Continue';
+  String get androidAutoTabContinue => 'Continuă';
 
   @override
-  String get androidAutoTabLibrary => 'Library';
+  String get androidAutoTabLibrary => 'Bibliotecă';
 
   @override
-  String get androidAutoTabDownloads => 'Downloads';
+  String get androidAutoTabDownloads => 'Descărcări';
 
   @override
-  String get settingsSearchHint => 'Search settings...';
+  String get settingsSearchHint => 'Caută în setări...';
 
   @override
-  String get settingsSearchNoResults => 'No matching settings';
+  String get settingsSearchNoResults => 'Nicio setare potrivită';
 
   @override
-  String get carConnectAutoplay => 'Start playback when Android Auto connects';
+  String get carConnectAutoplay =>
+      'Pornește redarea când se conectează Android Auto';
 
   @override
-  String get carConnectAutoplayIos => 'Start playback when CarPlay connects';
+  String get carConnectAutoplayIos =>
+      'Pornește redarea când se conectează CarPlay';
 
   @override
   String get carConnectAutoplayOnSubtitle =>
-      'The last book you were listening to starts by itself when the car connects';
+      'Ultima carte pe care o ascultai pornește singură când se conectează mașina';
 
   @override
   String get carConnectAutoplayOffSubtitle =>
-      'Playback waits for you to press play';
+      'Redarea așteaptă să apeși redare';
 
   @override
   String get sectionCar => 'Android Auto';
@@ -8626,276 +8801,284 @@ class AppLocalizationsRo extends AppLocalizations {
   String get sectionSiri => 'Siri';
 
   @override
-  String get siriUseWithSiri => 'Use with Siri';
+  String get siriUseWithSiri => 'Folosește cu Siri';
 
   @override
   String get siriStatusOn =>
-      'On. Siri can find and play your books and podcasts by name.';
+      'Activat. Siri poate găsi și reda cărțile și podcasturile tale după nume.';
 
   @override
   String get siriStatusAsk =>
-      'Let Siri find and play your books and podcasts by name.';
+      'Lasă Siri să găsească și să redea cărțile și podcasturile tale după nume.';
 
   @override
   String get siriStatusOff =>
-      'Siri is turned off for Absorb. Turn it on in iOS Settings.';
+      'Siri este dezactivat pentru Absorb. Activează-l în Setările iOS.';
 
   @override
-  String get siriAllow => 'Allow';
+  String get siriAllow => 'Permite';
 
   @override
-  String get siriOpenSettings => 'Open Settings';
+  String get siriOpenSettings => 'Deschide setările';
 
   @override
-  String get siriThingsToSay => 'Things to say';
+  String get siriThingsToSay => 'Ce poți spune';
 
   @override
   String get siriExamples =>
-      '\"Play [book title] on Absorb\"\n\"Play [series name] on Absorb\"\n\"Play something by [author] on Absorb\"\n\"Play the latest episode of [podcast] on Absorb\"\n\"Resume Absorb\"\n\"Skip back in Absorb\"\n\"Next chapter in Absorb\"\n\"Set a sleep timer in Absorb\"\n\"Add a bookmark in Absorb\"\n\"What am I listening to in Absorb\"';
+      '„Redă [titlul cărții] în Absorb”\n„Redă [numele seriei] în Absorb”\n„Redă ceva de [autor] în Absorb”\n„Redă cel mai recent episod din [podcast] în Absorb”\n„Reia Absorb”\n„Derulează înapoi în Absorb”\n„Capitolul următor în Absorb”\n„Setează un temporizator de somn în Absorb”\n„Adaugă un marcaj în Absorb”\n„Ce ascult în Absorb”';
 
   @override
   String get siriShortcutsNote =>
-      'Resume, pause, skips, chapters, the sleep timer, bookmarks and what\'s playing work even without this permission. They are also in the Shortcuts app for automations and the Action button.';
+      'Reluarea, pauza, săriturile, capitolele, temporizatorul de somn, marcajele și ce se redă funcționează și fără această permisiune. Se găsesc și în aplicația Comenzi rapide, pentru automatizări și butonul Acțiune.';
 
   @override
-  String get carBookOrder => 'Book order in the car';
+  String get carBookOrder => 'Ordinea cărților în mașină';
 
   @override
-  String get carBookOrderReverse => 'Reverse book order';
+  String get carBookOrderReverse => 'Inversează ordinea cărților';
 
   @override
-  String get carBookOrderReverseSubtitle => 'Z to A, or oldest added first';
+  String get carBookOrderReverseSubtitle =>
+      'De la Z la A, sau cele mai vechi adăugate primele';
 
   @override
-  String get carPodcastOrder => 'Podcast order in the car';
+  String get carPodcastOrder => 'Ordinea podcasturilor în mașină';
 
   @override
-  String get carEpisodesOldestFirst => 'Oldest episodes first';
+  String get carEpisodesOldestFirst => 'Cele mai vechi episoade primele';
 
   @override
   String get carEpisodesOldestFirstSubtitle =>
-      'For shows you listen to from the start';
+      'Pentru emisiunile pe care le asculți de la început';
 
   @override
-  String get androidAutoCatBooks => 'Books';
+  String get androidAutoCatBooks => 'Cărți';
 
   @override
-  String get androidAutoCatSeries => 'Series';
+  String get androidAutoCatSeries => 'Serii';
 
   @override
-  String get androidAutoCatAuthors => 'Authors';
+  String get androidAutoCatAuthors => 'Autori';
 
   @override
-  String get androidAutoCatCollections => 'Collections';
+  String get androidAutoCatCollections => 'Colecții';
 
   @override
-  String get androidAutoCatPlaylists => 'Playlists';
+  String get androidAutoCatPlaylists => 'Liste de redare';
 
   @override
-  String get showTipsAgain => 'Show tips again';
+  String get showTipsAgain => 'Arată din nou sfaturile';
 
   @override
   String get showTipsAgainSubtitle =>
-      'Bring back feature tips you\'ve dismissed';
+      'Readu sfaturile despre funcții pe care le-ai închis';
 
   @override
-  String get tipsRestored => 'Tips restored';
+  String get tipsRestored => 'Sfaturi restaurate';
 
   @override
-  String get resetSpeedPresets => 'Reset speed presets';
+  String get resetSpeedPresets => 'Resetează presetările de viteză';
 
   @override
   String get resetSpeedPresetsSubtitle =>
-      'Restore the default playback speed chips';
+      'Restaurează butoanele implicite de viteză de redare';
 
   @override
-  String get speedPresetsReset => 'Speed presets reset';
+  String get speedPresetsReset => 'Presetările de viteză au fost resetate';
 
   @override
-  String get editAuthor => 'Edit author';
+  String get editAuthor => 'Editează autorul';
 
   @override
-  String get authorName => 'Name';
+  String get authorName => 'Nume';
 
   @override
-  String get authorImage => 'Author image';
+  String get authorImage => 'Imaginea autorului';
 
   @override
-  String get authorRemoveImage => 'Remove image';
+  String get authorRemoveImage => 'Elimină imaginea';
 
   @override
-  String get authorRemoveImageTitle => 'Remove author image?';
+  String get authorRemoveImageTitle => 'Elimini imaginea autorului?';
 
   @override
   String get authorRemoveImageConfirm =>
-      'This deletes the image on the server.';
+      'Aceasta șterge imaginea de pe server.';
 
   @override
-  String get authorImageRemoved => 'Image removed';
+  String get authorImageRemoved => 'Imagine eliminată';
 
   @override
-  String get authorImageFailed => 'Couldn\'t update author image';
+  String get authorImageFailed =>
+      'Imaginea autorului nu a putut fi actualizată';
 
   @override
-  String get authorUpdated => 'Author updated';
+  String get authorUpdated => 'Autor actualizat';
 
   @override
-  String get authorUpdateFailed => 'Couldn\'t update author';
+  String get authorUpdateFailed => 'Autorul nu a putut fi actualizat';
 
   @override
-  String get authorMatched => 'Author updated from match';
+  String get authorMatched => 'Autor actualizat din potrivire';
 
   @override
-  String get authorNoMatchFound => 'No match found';
+  String get authorNoMatchFound => 'Nu s-a găsit nicio potrivire';
 
   @override
   String authorMergedInto(String name) {
-    return 'Merged into $name';
+    return 'Îmbinat cu $name';
   }
 
   @override
   String get authorQuickMatchHint =>
-      'Pull name, ASIN, description and image from Audible for the chosen region.';
+      'Preia numele, ASIN-ul, descrierea și imaginea din Audible pentru regiunea aleasă.';
 
   @override
-  String get region => 'Region';
+  String get region => 'Regiune';
 
   @override
-  String get editTabDetails => 'Details';
+  String get editTabDetails => 'Detalii';
 
   @override
-  String get editTabCover => 'Cover';
+  String get editTabCover => 'Copertă';
 
   @override
-  String get editTabMatch => 'Match';
+  String get editTabMatch => 'Potrivire';
 
   @override
-  String get editTabEmbed => 'Embed';
+  String get editTabEmbed => 'Încorporare';
 
   @override
-  String get chapterEditorTitle => 'Edit Chapters';
+  String get chapterEditorTitle => 'Editează capitolele';
 
   @override
-  String get chapterNotConnected => 'Not connected to a server';
+  String get chapterNotConnected => 'Neconectat la un server';
 
   @override
-  String get chapterErrorFirstNotZero => 'First chapter must start at 0:00';
+  String get chapterErrorFirstNotZero =>
+      'Primul capitol trebuie să înceapă la 0:00';
 
   @override
   String get chapterErrorStartAfterPrevious =>
-      'Start must come after the previous chapter';
+      'Începutul trebuie să fie după capitolul anterior';
 
   @override
-  String get chapterErrorStartBeforeEnd => 'Start must be before the book ends';
+  String get chapterErrorStartBeforeEnd =>
+      'Începutul trebuie să fie înainte de sfârșitul cărții';
 
   @override
-  String get chapterErrorTitleRequired => 'Title required';
+  String get chapterErrorTitleRequired => 'Titlul este obligatoriu';
 
   @override
-  String get chapterEditStartTitle => 'Edit start time';
+  String get chapterEditStartTitle => 'Editează ora de început';
 
   @override
-  String get chapterTimeHintSeconds => 'Seconds';
+  String get chapterTimeHintSeconds => 'Secunde';
 
   @override
-  String get chapterTimeHintFull => 'HH:MM:SS or seconds';
+  String get chapterTimeHintFull => 'HH:MM:SS sau secunde';
 
   @override
-  String get chapterInvalidTime => 'Invalid time';
+  String get chapterInvalidTime => 'Oră nevalidă';
 
   @override
-  String get chapterLocked => 'Chapter is locked';
+  String get chapterLocked => 'Capitolul este blocat';
 
   @override
-  String get chapterAllLocked => 'All chapters are locked';
+  String get chapterAllLocked => 'Toate capitolele sunt blocate';
 
   @override
   String chapterTrackTitle(int number) {
-    return 'Track $number';
+    return 'Pista $number';
   }
 
   @override
-  String get chapterNoAudioForPosition => 'No audio for this position';
+  String get chapterNoAudioForPosition =>
+      'Nu există audio pentru această poziție';
 
   @override
-  String get chapterCouldNotPlayPreview => 'Could not play preview';
+  String get chapterCouldNotPlayPreview =>
+      'Previzualizarea nu a putut fi redată';
 
   @override
   String chapterStartSetTo(String time) {
-    return 'Start set to $time';
+    return 'Începutul setat la $time';
   }
 
   @override
-  String get chapterAddNumberedTitle => 'Add numbered chapters';
+  String get chapterAddNumberedTitle => 'Adaugă capitole numerotate';
 
   @override
   String chapterNextPreview(String first, String second) {
-    return 'Next: \"$first\", \"$second\", ...';
+    return 'Următoarele: „$first”, „$second”, ...';
   }
 
   @override
-  String get chapterHowMany => 'How many chapters';
+  String get chapterHowMany => 'Câte capitole';
 
   @override
-  String get add => 'Add';
+  String get add => 'Adaugă';
 
   @override
-  String get chapterCountRange => 'Enter a count between 1 and 150';
+  String get chapterCountRange => 'Introdu un număr între 1 și 150';
 
   @override
-  String get chapterTitlesUpdated => 'Chapter titles updated';
+  String get chapterTitlesUpdated =>
+      'Titlurile capitolelor au fost actualizate';
 
   @override
-  String get chaptersApplied => 'Chapters applied';
+  String get chaptersApplied => 'Capitole aplicate';
 
   @override
-  String get chapterDiscardTitle => 'Discard changes?';
+  String get chapterDiscardTitle => 'Renunți la modificări?';
 
   @override
-  String get chapterDiscardMessage => 'Revert to the saved chapters.';
+  String get chapterDiscardMessage => 'Revine la capitolele salvate.';
 
   @override
-  String get chapterRemoveAllTitle => 'Remove all chapters?';
+  String get chapterRemoveAllTitle => 'Elimini toate capitolele?';
 
   @override
   String get chapterRemoveAllMessage =>
-      'This removes every chapter from this book.';
+      'Aceasta elimină toate capitolele din această carte.';
 
   @override
-  String get chapterAllRemoved => 'All chapters removed';
+  String get chapterAllRemoved => 'Toate capitolele au fost eliminate';
 
   @override
-  String get chapterFixHighlighted => 'Fix the highlighted chapters first';
+  String get chapterFixHighlighted =>
+      'Corectează mai întâi capitolele evidențiate';
 
   @override
-  String get chaptersUpdated => 'Chapters updated';
+  String get chaptersUpdated => 'Capitole actualizate';
 
   @override
   String get ok => 'OK';
 
   @override
-  String get chapterSaveButton => 'Save chapters';
+  String get chapterSaveButton => 'Salvează capitolele';
 
   @override
-  String get chapterAddHint => 'Add chapter (e.g. \"Chapter 01\")';
+  String get chapterAddHint => 'Adaugă capitol (de ex. „Capitolul 01”)';
 
   @override
-  String get chapterAddTooltip => 'Add chapter(s)';
+  String get chapterAddTooltip => 'Adaugă capitole';
 
   @override
-  String get chapterRemoveAll => 'Remove All';
+  String get chapterRemoveAll => 'Elimină tot';
 
   @override
-  String get chapterShiftTimes => 'Shift Times';
+  String get chapterShiftTimes => 'Decalează orele';
 
   @override
-  String get chapterFromTracks => 'From Tracks';
+  String get chapterFromTracks => 'Din piste';
 
   @override
-  String get chapterLookup => 'Lookup';
+  String get chapterLookup => 'Caută';
 
   @override
-  String get chapterShowSeconds => 'Show seconds';
+  String get chapterShowSeconds => 'Arată secundele';
 
   @override
   String chapterWindowMinutes(int minutes) {
@@ -8903,194 +9086,197 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get chapterLoopCut => 'Loop the cut';
+  String get chapterLoopCut => 'Repetă tăietura';
 
   @override
-  String get chapterFindStart => 'Find the start';
+  String get chapterFindStart => 'Găsește începutul';
 
   @override
-  String get chapterFindStartListening => 'Listening around the marker';
+  String get chapterFindStartListening => 'Se ascultă în jurul marcajului';
 
   @override
-  String get chapterFindStartNone => 'Nothing here sounds like a chapter start';
+  String get chapterFindStartNone =>
+      'Nimic de aici nu sună a început de capitol';
 
   @override
-  String get chapterFindStartWider => 'Search wider';
+  String get chapterFindStartWider => 'Caută mai larg';
 
   @override
   String get chapterFindStartCeiling =>
-      'Searched half an hour around the marker. The start is further off than that, or there\'s no chapter announcement to hear.';
+      'S-a căutat o jumătate de oră în jurul marcajului. Începutul este mai departe de atât sau nu există un anunț de capitol de auzit.';
 
   @override
-  String get chapterFindStartStrong => 'Sounds like this chapter';
+  String get chapterFindStartStrong => 'Sună a acest capitol';
 
   @override
-  String get chapterFindStartMaybe => 'Chapter-like words';
+  String get chapterFindStartMaybe => 'Cuvinte de capitol';
 
   @override
   String chapterFindStartGap(String seconds) {
-    return '${seconds}s gap';
+    return 'pauză de $seconds s';
   }
 
   @override
   String chapterFindStartRange(String from, String to) {
-    return 'Searched $from to $to';
+    return 'S-a căutat de la $from la $to';
   }
 
   @override
   String get chapterFindStartNeedsModel =>
-      'Turn on transcription in Settings and download a model first';
+      'Activează mai întâi transcrierea în Setări și descarcă un model';
 
   @override
-  String get chapterFindStartUseThis => 'Use this';
+  String get chapterFindStartUseThis => 'Folosește acesta';
 
   @override
   String chapterFindStartTitle(String title) {
-    return 'Title: $title';
+    return 'Titlu: $title';
   }
 
   @override
-  String get chapterShiftBySeconds => 'Shift by (seconds)';
+  String get chapterShiftBySeconds => 'Decalează cu (secunde)';
 
   @override
   String get chapterShiftHint =>
-      'Shifts every unlocked chapter. Use a negative value to move them earlier.';
+      'Decalează toate capitolele deblocate. Folosește o valoare negativă pentru a le muta mai devreme.';
 
   @override
-  String get chapterTitleHint => 'Chapter title';
+  String get chapterTitleHint => 'Titlul capitolului';
 
   @override
-  String get chapterStopPreview => 'Stop preview';
+  String get chapterStopPreview => 'Oprește previzualizarea';
 
   @override
-  String get chapterPreviewFromHere => 'Preview from here';
+  String get chapterPreviewFromHere => 'Previzualizează de aici';
 
   @override
-  String get chapterScrubHint => 'Drag or nudge to move the start';
+  String get chapterScrubHint => 'Trage sau ajustează pentru a muta începutul';
 
   @override
   String chapterStartAt(String time) {
-    return 'Start at $time';
+    return 'Începe la $time';
   }
 
   @override
-  String get chapterUnlock => 'Unlock';
+  String get chapterUnlock => 'Deblochează';
 
   @override
-  String get chapterLock => 'Lock';
+  String get chapterLock => 'Blochează';
 
   @override
-  String get chapterInsertBelow => 'Insert below';
+  String get chapterInsertBelow => 'Inserează dedesubt';
 
   @override
-  String get chapterFindTitle => 'Find chapters';
+  String get chapterFindTitle => 'Găsește capitole';
 
   @override
   String get chapterFindSubtitle =>
-      'Looks up chapters from Audible/Audnexus by ASIN.';
+      'Caută capitole în Audible/Audnexus după ASIN.';
 
   @override
-  String get chapterEnterAsin => 'Enter an ASIN';
+  String get chapterEnterAsin => 'Introdu un ASIN';
 
   @override
-  String get chapterLookupFailed => 'Lookup failed - check the ASIN';
+  String get chapterLookupFailed => 'Căutarea a eșuat - verifică ASIN-ul';
 
   @override
-  String get chapterNoChaptersFound => 'No chapters found for that ASIN';
+  String get chapterNoChaptersFound =>
+      'Nu s-au găsit capitole pentru acel ASIN';
 
   @override
-  String get chapterRemoveBranding => 'Remove Audible branding (intro/outro)';
+  String get chapterRemoveBranding => 'Elimină marca Audible (intro/outro)';
 
   @override
   String chapterFoundCount(int count) {
-    return '$count chapters found';
+    return '$count capitole găsite';
   }
 
   @override
   String chapterAudibleVsBook(String audible, String book) {
-    return 'Audible $audible  -  Book $book';
+    return 'Audible $audible  -  Carte $book';
   }
 
   @override
   String get chapterAudibleLonger =>
-      'The Audible version is longer than your file - later chapters may not line up.';
+      'Versiunea Audible este mai lungă decât fișierul tău - capitolele de mai târziu s-ar putea să nu se potrivească.';
 
   @override
   String get chapterAudibleShorter =>
-      'The Audible version is shorter than your file - chapters may not line up.';
+      'Versiunea Audible este mai scurtă decât fișierul tău - capitolele s-ar putea să nu se potrivească.';
 
   @override
-  String get chapterTitlesOnly => 'Titles only';
+  String get chapterTitlesOnly => 'Doar titlurile';
 
   @override
-  String get chapterApplyChapters => 'Apply chapters';
+  String get chapterApplyChapters => 'Aplică capitolele';
 
   @override
-  String get coverSearchTitle => 'Search for a cover';
+  String get coverSearchTitle => 'Caută o copertă';
 
   @override
   String get coverSearchRefineHint =>
-      'Refine the title/author to clean up results - this does not change the book.';
+      'Rafinează titlul/autorul pentru a curăța rezultatele - aceasta nu modifică cartea.';
 
   @override
-  String get coverNoneFound => 'No covers found';
+  String get coverNoneFound => 'Nu s-au găsit coperte';
 
   @override
-  String get coverEnterTitleFirst => 'Enter a title first';
+  String get coverEnterTitleFirst => 'Introdu mai întâi un titlu';
 
   @override
-  String get coverUpdated => 'Cover updated';
+  String get coverUpdated => 'Copertă actualizată';
 
   @override
-  String get coverCouldNotUpdate => 'Could not update cover';
+  String get coverCouldNotUpdate => 'Coperta nu a putut fi actualizată';
 
   @override
-  String get coverApply => 'Apply cover';
+  String get coverApply => 'Aplică coperta';
 
   @override
-  String get coverUnknownResolution => 'Unknown resolution';
+  String get coverUnknownResolution => 'Rezoluție necunoscută';
 
   @override
   String get embedIntro =>
-      'Embed metadata into audio files including cover image and chapters.';
+      'Încorporează metadatele în fișierele audio, inclusiv imaginea de copertă și capitolele.';
 
   @override
-  String get embedBackupOption => 'Back up audio files first';
+  String get embedBackupOption =>
+      'Fă mai întâi o copie de rezervă a fișierelor audio';
 
   @override
   String get embedNoteInFolder =>
-      'Metadata will be embedded in the audio tracks inside your audiobook folder.';
+      'Metadatele vor fi încorporate în pistele audio din folderul cărții audio.';
 
   @override
   String get embedNoteMultiTrack =>
-      'Chapters are not embedded in multi-track audiobooks.';
+      'Capitolele nu se încorporează în cărțile audio cu mai multe piste.';
 
   @override
   String get embedNoteNavigateAway =>
-      'Once the task is started you can navigate away from this page.';
+      'După pornirea sarcinii, poți părăsi această pagină.';
 
   @override
-  String get embedStartButton => 'Start Metadata Embed';
+  String get embedStartButton => 'Pornește încorporarea metadatelor';
 
   @override
   String embedProgress(String percent) {
-    return 'Embedding $percent%';
+    return 'Se încorporează $percent%';
   }
 
   @override
-  String get embedProgressIndeterminate => 'Embedding...';
+  String get embedProgressIndeterminate => 'Se încorporează...';
 
   @override
   String taskProgressKeepsRunning(String percent) {
-    return '$percent% - keeps running if you leave this page';
+    return '$percent% - continuă să ruleze dacă părăsești această pagină';
   }
 
   @override
-  String get taskStarting => 'Starting...';
+  String get taskStarting => 'Se pornește...';
 
   @override
   String get embedBackupNoteIntro =>
-      'A backup of your original audio files will be stored on the server in ';
+      'O copie de rezervă a fișierelor audio originale va fi stocată pe server în ';
 
   @override
   String embedBackupNotePath(String itemId) {
@@ -9099,1024 +9285,1033 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get embedBackupNoteOutro =>
-      '. Make sure to periodically purge the items cache.';
+      '. Nu uita să golești periodic memoria cache a elementelor.';
 
   @override
-  String get embedDialogTitle => 'Embed metadata';
+  String get embedDialogTitle => 'Încorporează metadatele';
 
   @override
   String embedConfirmMessage(int count, String backup) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '# audio files',
-      one: '# audio file',
+      other: '# de fișiere audio',
+      few: '# fișiere audio',
+      one: '# fișier audio',
     );
-    return 'Embed metadata into $_temp0? Your audio files will be rewritten$backup.';
+    return 'Încorporezi metadatele în $_temp0? Fișierele tale audio vor fi rescrise$backup.';
   }
 
   @override
-  String get embedConfirmBackupClause => ' (originals backed up first)';
+  String get embedConfirmBackupClause =>
+      ' (originalele sunt salvate mai întâi)';
 
   @override
-  String get embedConfirmAction => 'Embed';
+  String get embedConfirmAction => 'Încorporează';
 
   @override
-  String get embedCouldNotStart => 'Could not start embed';
+  String get embedCouldNotStart => 'Încorporarea nu a putut porni';
 
   @override
-  String get embedStarted => 'Embed started';
+  String get embedStarted => 'Încorporarea a pornit';
 
   @override
-  String get embedComplete => 'Embed complete';
+  String get embedComplete => 'Încorporare finalizată';
 
   @override
-  String get embedFailed => 'Embed failed';
+  String get embedFailed => 'Încorporarea a eșuat';
 
   @override
-  String get encodeComplete => 'Encode complete';
+  String get encodeComplete => 'Codare finalizată';
 
   @override
-  String get encodeFailedTask => 'Encode failed';
+  String get encodeFailedTask => 'Codarea a eșuat';
 
   @override
   String encodeProgress(String percent) {
-    return 'Encoding $percent%';
+    return 'Se codifică $percent%';
   }
 
   @override
-  String get encodeProgressIndeterminate => 'Encoding...';
+  String get encodeProgressIndeterminate => 'Se codifică...';
 
   @override
-  String get adminApiKeys => 'API Keys';
+  String get adminApiKeys => 'Chei API';
 
   @override
-  String get adminApiKeysSubtitle => 'Programmatic access tokens';
+  String get adminApiKeysSubtitle => 'Token-uri de acces programatic';
 
   @override
-  String get adminApiKeysNewTitle => 'New API Key';
+  String get adminApiKeysNewTitle => 'Cheie API nouă';
 
   @override
-  String get adminApiKeysName => 'Name';
+  String get adminApiKeysName => 'Nume';
 
   @override
-  String get adminApiKeysNameHint => 'e.g. Home Assistant';
+  String get adminApiKeysNameHint => 'de ex. Home Assistant';
 
   @override
-  String get adminApiKeysOwner => 'User';
+  String get adminApiKeysOwner => 'Utilizator';
 
   @override
-  String get adminApiKeysExpiration => 'Expiration';
+  String get adminApiKeysExpiration => 'Expirare';
 
   @override
-  String get adminApiKeysActive => 'Active';
+  String get adminApiKeysActive => 'Activă';
 
   @override
-  String get adminApiKeysActiveSub => 'Key works as soon as it\'s created';
+  String get adminApiKeysActiveSub =>
+      'Cheia funcționează imediat ce este creată';
 
   @override
-  String get adminApiKeysInactive => 'Inactive';
+  String get adminApiKeysInactive => 'Inactivă';
 
   @override
-  String get adminApiKeysExpired => 'Expired';
+  String get adminApiKeysExpired => 'Expirată';
 
   @override
-  String get adminApiKeysCreate => 'Create Key';
+  String get adminApiKeysCreate => 'Creează cheia';
 
   @override
-  String get adminApiKeysCreated => 'API key created';
+  String get adminApiKeysCreated => 'Cheie API creată';
 
   @override
-  String get adminApiKeysTokenLabel => 'Your new API key';
+  String get adminApiKeysTokenLabel => 'Noua ta cheie API';
 
   @override
   String get adminApiKeysCopyWarning =>
-      'Copy this key now. For security it won\'t be shown again.';
+      'Copiază această cheie acum. Din motive de securitate nu va mai fi afișată.';
 
   @override
-  String get adminApiKeysCopy => 'Copy';
+  String get adminApiKeysCopy => 'Copiază';
 
   @override
-  String get adminApiKeysCopied => 'Copied to clipboard';
+  String get adminApiKeysCopied => 'Copiat în clipboard';
 
   @override
-  String get adminApiKeysDone => 'Done';
+  String get adminApiKeysDone => 'Gata';
 
   @override
-  String get adminApiKeysDeleteTitle => 'Revoke API key?';
+  String get adminApiKeysDeleteTitle => 'Revoci cheia API?';
 
   @override
-  String get adminApiKeysDeleted => 'API key revoked';
+  String get adminApiKeysDeleted => 'Cheie API revocată';
 
   @override
-  String get adminApiKeysRevoke => 'Revoke';
+  String get adminApiKeysRevoke => 'Revocă';
 
   @override
-  String get adminApiKeysSetActive => 'Set active';
+  String get adminApiKeysSetActive => 'Setează ca activă';
 
   @override
-  String get adminApiKeysSetInactive => 'Set inactive';
+  String get adminApiKeysSetInactive => 'Setează ca inactivă';
 
   @override
-  String get adminApiKeysFailedCreate => 'Couldn\'t create API key';
+  String get adminApiKeysFailedCreate => 'Cheia API nu a putut fi creată';
 
   @override
-  String get adminApiKeysFailedDelete => 'Couldn\'t revoke API key';
+  String get adminApiKeysFailedDelete => 'Cheia API nu a putut fi revocată';
 
   @override
-  String get adminApiKeysFailedUpdate => 'Couldn\'t update API key';
+  String get adminApiKeysFailedUpdate => 'Cheia API nu a putut fi actualizată';
 
   @override
-  String get adminApiKeysEmpty => 'No API keys yet';
+  String get adminApiKeysEmpty => 'Încă nu există chei API';
 
   @override
   String get adminApiKeysEmptySub =>
-      'Create one to let apps and scripts reach your server';
+      'Creează una pentru a permite aplicațiilor și scripturilor să acceseze serverul tău';
 
   @override
-  String get adminApiKeysNeverUsed => 'Never used';
+  String get adminApiKeysNeverUsed => 'Niciodată folosită';
 
   @override
-  String get adminApiKeysNeverExpires => 'No expiration';
+  String get adminApiKeysNeverExpires => 'Fără expirare';
 
   @override
-  String get adminApiKeysNameRequired => 'Enter a name';
+  String get adminApiKeysNameRequired => 'Introdu un nume';
 
   @override
-  String get adminApiKeysUserRequired => 'Pick a user';
+  String get adminApiKeysUserRequired => 'Alege un utilizator';
 
   @override
-  String get adminApiKeysExpNever => 'Never';
+  String get adminApiKeysExpNever => 'Niciodată';
 
   @override
-  String get adminApiKeysExp7d => '7 days';
+  String get adminApiKeysExp7d => '7 zile';
 
   @override
-  String get adminApiKeysExp30d => '30 days';
+  String get adminApiKeysExp30d => '30 de zile';
 
   @override
-  String get adminApiKeysExp90d => '90 days';
+  String get adminApiKeysExp90d => '90 de zile';
 
   @override
-  String get adminApiKeysExp1y => '1 year';
+  String get adminApiKeysExp1y => '1 an';
 
   @override
   String adminApiKeysLastUsed(String time) {
-    return 'Last used $time';
+    return 'Folosită ultima dată $time';
   }
 
   @override
   String adminApiKeysExpiresOn(String date) {
-    return 'Expires $date';
+    return 'Expiră $date';
   }
 
   @override
   String adminApiKeysDeleteContent(String name) {
-    return 'Revoke \"$name\"? Apps using this key will lose access immediately.';
+    return 'Revoci „$name”? Aplicațiile care folosesc această cheie își vor pierde imediat accesul.';
   }
 
   @override
-  String get endOfEpisode => 'End of Episode';
+  String get endOfEpisode => 'Sfârșitul episodului';
 
   @override
-  String get sleepTimerSheetEpisodeSleepStart => 'Sleep at end of episode';
+  String get sleepTimerSheetEpisodeSleepStart =>
+      'Oprire la sfârșitul episodului';
 
   @override
-  String get bookmarkListen => 'Listen';
+  String get bookmarkListen => 'Ascultă';
 
   @override
-  String get bookmarkPause => 'Pause';
+  String get bookmarkPause => 'Pauză';
 
   @override
-  String get bookmarkPreviewFailed => 'Couldn\'t play this spot.';
+  String get bookmarkPreviewFailed => 'Acest punct nu a putut fi redat.';
 
   @override
-  String get clipExport => 'Export clip';
+  String get clipExport => 'Exportă clip';
 
   @override
-  String get clipJumpToStart => 'Jump to start';
+  String get clipJumpToStart => 'Sari la început';
 
   @override
-  String get clipJumpToEnd => 'Jump to end';
+  String get clipJumpToEnd => 'Sari la final';
 
   @override
-  String get clipSetStart => 'Set start';
+  String get clipSetStart => 'Setează începutul';
 
   @override
-  String get clipSetEnd => 'Set end';
+  String get clipSetEnd => 'Setează finalul';
 
   @override
-  String get clipInLabel => 'In';
+  String get clipInLabel => 'Intrare';
 
   @override
-  String get clipOutLabel => 'Out';
+  String get clipOutLabel => 'Ieșire';
 
   @override
-  String get clipSave => 'Save clip';
+  String get clipSave => 'Salvează clipul';
 
   @override
   String clipExportSaved(String filename) {
-    return 'Saved $filename';
+    return '$filename salvat';
   }
 
   @override
   String get clipExportClamped =>
-      'Clip saved, shortened to the end of this track';
+      'Clip salvat, scurtat până la sfârșitul acestei piste';
 
   @override
-  String get clipExportFailed => 'Couldn\'t export the clip.';
+  String get clipExportFailed => 'Clipul nu a putut fi exportat.';
 
   @override
   String get clipDownloadToExport =>
-      'Download this book first to export a clip on iPhone.';
+      'Descarcă mai întâi această carte pentru a exporta un clip pe iPhone.';
 
   @override
-  String get fsPickerTitle => 'Select folder';
+  String get fsPickerTitle => 'Selectează folderul';
 
   @override
-  String get fsServerRoot => 'Server root';
+  String get fsServerRoot => 'Rădăcina serverului';
 
   @override
-  String get fsEmptyFolder => 'No subfolders here';
+  String get fsEmptyFolder => 'Nu există subfoldere aici';
 
   @override
-  String get fsUseThisFolder => 'Use this folder';
+  String get fsUseThisFolder => 'Folosește acest folder';
 
   @override
-  String get adminLibrariesManage => 'Libraries';
+  String get adminLibrariesManage => 'Biblioteci';
 
   @override
-  String get adminLibrariesManageSubtitle => 'Create, edit and reorder';
+  String get adminLibrariesManageSubtitle => 'Creează, editează și reordonează';
 
   @override
-  String get adminUploadTitle => 'Upload media';
+  String get adminUploadTitle => 'Încarcă media';
 
   @override
-  String get adminUploadSubtitle => 'Add books and podcasts from files';
+  String get adminUploadSubtitle => 'Adaugă cărți și podcasturi din fișiere';
 
   @override
   String get adminUploadNoLibraries =>
-      'Create a library before uploading media.';
+      'Creează o bibliotecă înainte de a încărca media.';
 
   @override
-  String get adminUploadDestination => 'Destination';
+  String get adminUploadDestination => 'Destinație';
 
   @override
-  String get adminUploadFolder => 'Library folder';
+  String get adminUploadFolder => 'Dosarul bibliotecii';
 
   @override
-  String get adminUploadDetails => 'Item details';
+  String get adminUploadDetails => 'Detaliile elementului';
 
   @override
-  String get adminUploadOptional => 'Optional';
+  String get adminUploadOptional => 'Opțional';
 
   @override
-  String get adminUploadAutoMetadata => 'Auto-fetch metadata';
+  String get adminUploadAutoMetadata => 'Preia automat metadatele';
 
   @override
   String get adminUploadAutoMetadataSubtitle =>
-      'Fill title, author and series from the best match';
+      'Completează titlul, autorul și seria din cea mai bună potrivire';
 
   @override
-  String get adminUploadMetadataProvider => 'Metadata provider';
+  String get adminUploadMetadataProvider => 'Furnizor de metadate';
 
   @override
-  String get adminUploadMetadataSearching => 'Searching for metadata...';
+  String get adminUploadMetadataSearching => 'Se caută metadate...';
 
   @override
   String get adminUploadMetadataNoResults =>
-      'No metadata match found. You can still upload this item.';
+      'Nu s-a găsit nicio potrivire de metadate. Poți încărca totuși acest element.';
 
   @override
   String get adminUploadMetadataFailed =>
-      'Couldn\'t search for metadata. You can still upload this item.';
+      'Nu s-au putut căuta metadatele. Poți încărca totuși acest element.';
 
   @override
-  String get adminUploadDestinationPreview => 'Server destination';
+  String get adminUploadDestinationPreview => 'Destinația de pe server';
 
   @override
-  String get adminUploadFiles => 'Files';
+  String get adminUploadFiles => 'Fișiere';
 
   @override
   String adminUploadSelectedFiles(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count de fișiere',
+      few: '$count fișiere',
+      one: '1 fișier',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminUploadChooseFiles => 'Choose files';
+  String get adminUploadChooseFiles => 'Alege fișiere';
 
   @override
-  String get adminUploadAddFiles => 'Add files';
+  String get adminUploadAddFiles => 'Adaugă fișiere';
 
   @override
   String get adminUploadBookFilesHint =>
-      'Choose audio or ebook files. You can also include covers and metadata files.';
+      'Alege fișiere audio sau de carte electronică. Poți include și coperte și fișiere de metadate.';
 
   @override
   String get adminUploadPodcastFilesHint =>
-      'Choose one or more audio files. You can also include covers and metadata files.';
+      'Alege unul sau mai multe fișiere audio. Poți include și coperte și fișiere de metadate.';
 
   @override
   String get adminUploadUnsupportedFiles =>
-      'Some selected files are not supported by Audiobookshelf.';
+      'Unele fișiere selectate nu sunt acceptate de Audiobookshelf.';
 
   @override
   String get adminUploadFilePickerFailed =>
-      'Couldn\'t open the selected files.';
+      'Nu s-au putut deschide fișierele selectate.';
 
   @override
-  String get adminUploadTitleRequired => 'Enter a title';
+  String get adminUploadTitleRequired => 'Introdu un titlu';
 
   @override
-  String get adminUploadLibraryRequired => 'Choose a library';
+  String get adminUploadLibraryRequired => 'Alege o bibliotecă';
 
   @override
-  String get adminUploadFolderRequired => 'Choose a library folder';
+  String get adminUploadFolderRequired => 'Alege un dosar al bibliotecii';
 
   @override
-  String get adminUploadFilesRequired => 'Choose at least one file';
+  String get adminUploadFilesRequired => 'Alege cel puțin un fișier';
 
   @override
   String get adminUploadPodcastFileRequired =>
-      'Choose at least one audio file for this podcast.';
+      'Alege cel puțin un fișier audio pentru acest podcast.';
 
   @override
   String get adminUploadBookFileRequired =>
-      'Choose at least one audio or ebook file for this book.';
+      'Alege cel puțin un fișier audio sau de carte electronică pentru această carte.';
 
   @override
   String get adminUploadPathCheckFailed =>
-      'Couldn\'t check the destination folder. Nothing was uploaded.';
+      'Nu s-a putut verifica dosarul de destinație. Nu s-a încărcat nimic.';
 
   @override
   String get adminUploadDestinationExists =>
-      'That destination folder already exists on the server.';
+      'Acest dosar de destinație există deja pe server.';
 
   @override
   String adminUploadDestinationUsedBy(String title) {
-    return 'That destination is already used by \"$title\".';
+    return 'Această destinație este deja folosită de „$title”.';
   }
 
   @override
-  String get adminUploadAddToExistingTitle => 'Folder already exists';
+  String get adminUploadAddToExistingTitle => 'Dosarul există deja';
 
   @override
   String adminUploadAddToExisting(String title) {
-    return 'That folder belongs to \"$title\". Add the files to it? The server picks them up on its next scan.';
+    return 'Acest dosar aparține de „$title”. Adaugi fișierele în el? Serverul le preia la următoarea scanare.';
   }
 
   @override
   String get adminUploadAddToExistingNoItem =>
-      'That folder already exists on the server. Add the files to it?';
+      'Acest dosar există deja pe server. Adaugi fișierele în el?';
 
   @override
-  String get adminUploadAddToBook => 'Add to an existing book';
+  String get adminUploadAddToBook => 'Adaugă la o carte existentă';
 
   @override
-  String get adminUploadAddToBookHint => 'Search this library';
+  String get adminUploadAddToBookHint => 'Caută în această bibliotecă';
 
   @override
-  String get adminUploadNoBooksFound => 'No books found';
+  String get adminUploadNoBooksFound => 'Nu s-a găsit nicio carte';
 
   @override
   String adminUploadAddingTo(String title) {
-    return 'Adding files to \"$title\"';
+    return 'Se adaugă fișiere la „$title”';
   }
 
   @override
   String adminUploadAddedTo(String title) {
-    return 'Added files to \"$title\"';
+    return 'Fișiere adăugate la „$title”';
   }
 
   @override
   String get adminUploadTargetNoFolder =>
-      'Couldn\'t find that book\'s folder on the server.';
+      'Nu s-a găsit dosarul acelei cărți pe server.';
 
   @override
   String adminUploadTargetFolderMismatch(String preview, String folder) {
-    return 'The server would put these files in \"$preview\", not in that book\'s folder \"$folder\". Nothing was uploaded.';
+    return 'Serverul ar pune aceste fișiere în „$preview”, nu în dosarul cărții „$folder”. Nu s-a încărcat nimic.';
   }
 
   @override
-  String get adminUploadUploading => 'Uploading...';
+  String get adminUploadUploading => 'Se încarcă...';
 
   @override
   String adminUploadProgress(int percent) {
-    return 'Uploading $percent%';
+    return 'Se încarcă $percent%';
   }
 
   @override
-  String get adminUploadButton => 'Upload';
+  String get adminUploadButton => 'Încarcă';
 
   @override
   String adminUploadComplete(String title) {
-    return 'Uploaded \"$title\"';
+    return '„$title” a fost încărcat';
   }
 
   @override
-  String get adminUploadFailed => 'Upload failed';
+  String get adminUploadFailed => 'Încărcarea a eșuat';
 
   @override
   String adminUploadFailedReason(String error) {
-    return 'Upload failed: $error';
+    return 'Încărcarea a eșuat: $error';
   }
 
   @override
   String get adminUploadReselectFiles =>
-      'Choose the files again before retrying.';
+      'Alege din nou fișierele înainte de a reîncerca.';
 
   @override
-  String get adminServerSettings => 'Server settings';
+  String get adminServerSettings => 'Setări server';
 
   @override
-  String get adminServerSettingsSubtitle => 'Scanner, storage and sorting';
+  String get adminServerSettingsSubtitle => 'Scanner, stocare și sortare';
 
   @override
-  String get adminAuthentication => 'Authentication';
+  String get adminAuthentication => 'Autentificare';
 
   @override
   String get adminAuthenticationSubtitle =>
-      'Password and OpenID Connect sign-in';
+      'Conectare cu parolă și OpenID Connect';
 
   @override
-  String get adminStats => 'Statistics';
+  String get adminStats => 'Statistici';
 
   @override
-  String get adminStatsSubtitle => 'Library and listening totals';
+  String get adminStatsSubtitle => 'Totaluri pentru bibliotecă și ascultare';
 
   @override
-  String get adminAllSessions => 'All sessions';
+  String get adminAllSessions => 'Toate sesiunile';
 
   @override
   String get adminAllSessionsSubtitle =>
-      'View and manage all listening sessions';
+      'Vezi și gestionează toate sesiunile de ascultare';
 
   @override
-  String get adminSessionsAllUsers => 'All users';
+  String get adminSessionsAllUsers => 'Toți utilizatorii';
 
   @override
-  String get adminSessionsEmpty => 'No sessions';
+  String get adminSessionsEmpty => 'Nicio sesiune';
 
   @override
-  String get statsLibraryTotals => 'Library totals';
+  String get statsLibraryTotals => 'Totaluri bibliotecă';
 
   @override
-  String get statsTotalItems => 'Items';
+  String get statsTotalItems => 'Elemente';
 
   @override
-  String get statsAudioFiles => 'Audio files';
+  String get statsAudioFiles => 'Fișiere audio';
 
   @override
-  String get statsTotalSize => 'Total size';
+  String get statsTotalSize => 'Dimensiune totală';
 
   @override
-  String get statsBooks => 'Books';
+  String get statsBooks => 'Cărți';
 
   @override
-  String get statsPodcasts => 'Podcasts';
+  String get statsPodcasts => 'Podcasturi';
 
   @override
-  String get statsBooksSize => 'Books size';
+  String get statsBooksSize => 'Dimensiunea cărților';
 
   @override
-  String get statsYearReview => 'Year in review';
+  String get statsYearReview => 'Anul în retrospectivă';
 
   @override
-  String get statsNoYearData => 'No data for this year';
+  String get statsNoYearData => 'Nu există date pentru acest an';
 
   @override
-  String get statsListeningTime => 'Listening time';
+  String get statsListeningTime => 'Timp de ascultare';
 
   @override
-  String get statsSessions => 'Sessions';
+  String get statsSessions => 'Sesiuni';
 
   @override
-  String get statsBooksAdded => 'Books added';
+  String get statsBooksAdded => 'Cărți adăugate';
 
   @override
-  String get statsAuthorsAdded => 'Authors added';
+  String get statsAuthorsAdded => 'Autori adăugați';
 
   @override
-  String get statsTopAuthors => 'Top authors';
+  String get statsTopAuthors => 'Top autori';
 
   @override
-  String get statsTopNarrators => 'Top narrators';
+  String get statsTopNarrators => 'Top naratori';
 
   @override
-  String get statsTopGenres => 'Top genres';
+  String get statsTopGenres => 'Top genuri';
 
   @override
   String get srvScannerSection => 'Scanner';
 
   @override
-  String get srvFindCovers => 'Find covers';
+  String get srvFindCovers => 'Caută coperte';
 
   @override
-  String get srvCoverProvider => 'Cover provider';
+  String get srvCoverProvider => 'Furnizor de coperte';
 
   @override
-  String get srvParseSubtitles => 'Parse subtitles from filename';
+  String get srvParseSubtitles => 'Extrage subtitlurile din numele fișierului';
 
   @override
-  String get srvPreferMatched => 'Prefer matched metadata';
+  String get srvPreferMatched => 'Preferă metadatele potrivite';
 
   @override
-  String get srvDisableWatcher => 'Disable folder watcher';
+  String get srvDisableWatcher => 'Dezactivează monitorizarea dosarelor';
 
   @override
-  String get srvStorageSection => 'Storage';
+  String get srvStorageSection => 'Stocare';
 
   @override
-  String get srvStoreCover => 'Store cover with item';
+  String get srvStoreCover => 'Păstrează coperta împreună cu elementul';
 
   @override
-  String get srvStoreMetadata => 'Store metadata with item';
+  String get srvStoreMetadata => 'Păstrează metadatele împreună cu elementul';
 
   @override
-  String get srvMetadataFormat => 'Metadata file format';
+  String get srvMetadataFormat => 'Formatul fișierului de metadate';
 
   @override
-  String get srvFormatSection => 'Display and format';
+  String get srvFormatSection => 'Afișare și format';
 
   @override
-  String get srvDateFormat => 'Date format';
+  String get srvDateFormat => 'Format dată';
 
   @override
-  String get srvTimeFormat => 'Time format';
+  String get srvTimeFormat => 'Format oră';
 
   @override
-  String get srvLanguage => 'Server language';
+  String get srvLanguage => 'Limba serverului';
 
   @override
-  String get srvChromecast => 'Chromecast support';
+  String get srvChromecast => 'Suport Chromecast';
 
   @override
-  String get srvAllowIframe => 'Allow iframe embedding';
+  String get srvAllowIframe => 'Permite încorporarea în iframe';
 
   @override
-  String get srvSortingSection => 'Sorting';
+  String get srvSortingSection => 'Sortare';
 
   @override
-  String get srvIgnorePrefixes => 'Ignore prefixes when sorting';
+  String get srvIgnorePrefixes => 'Ignoră prefixele la sortare';
 
   @override
-  String get srvSortingPrefixes => 'Sorting prefixes';
+  String get srvSortingPrefixes => 'Prefixe de sortare';
 
   @override
-  String get srvAddPrefix => 'Add prefix';
+  String get srvAddPrefix => 'Adaugă prefix';
 
   @override
-  String get srvSave => 'Save settings';
+  String get srvSave => 'Salvează setările';
 
   @override
-  String get srvSavePrefixes => 'Save prefixes';
+  String get srvSavePrefixes => 'Salvează prefixele';
 
   @override
-  String get srvSaved => 'Settings saved';
+  String get srvSaved => 'Setări salvate';
 
   @override
-  String get srvSaveFailed => 'Couldn\'t save settings';
+  String get srvSaveFailed => 'Nu s-au putut salva setările';
 
   @override
-  String get srvPrefixesSaved => 'Sorting prefixes updated';
+  String get srvPrefixesSaved => 'Prefixele de sortare au fost actualizate';
 
   @override
-  String get authSetLoadFailed => 'Couldn\'t load authentication settings';
+  String get authSetLoadFailed =>
+      'Nu s-au putut încărca setările de autentificare';
 
   @override
-  String get authSetCustomMessage => 'Custom message on login';
+  String get authSetCustomMessage => 'Mesaj personalizat la conectare';
 
   @override
-  String get authSetMessage => 'Message';
+  String get authSetMessage => 'Mesaj';
 
   @override
-  String get authSetPasswordAuth => 'Password authentication';
+  String get authSetPasswordAuth => 'Autentificare cu parolă';
 
   @override
-  String get authSetOpenId => 'OpenID Connect authentication';
+  String get authSetOpenId => 'Autentificare OpenID Connect';
 
   @override
-  String get authSetGuide => 'Setup guide';
+  String get authSetGuide => 'Ghid de configurare';
 
   @override
-  String get authSetIssuerUrl => 'Issuer URL';
+  String get authSetIssuerUrl => 'URL emitent';
 
   @override
-  String get authSetAutoPopulate => 'Auto-populate';
+  String get authSetAutoPopulate => 'Completare automată';
 
   @override
-  String get authSetAuthorizeUrl => 'Authorize URL';
+  String get authSetAuthorizeUrl => 'URL de autorizare';
 
   @override
-  String get authSetTokenUrl => 'Token URL';
+  String get authSetTokenUrl => 'URL token';
 
   @override
-  String get authSetUserinfoUrl => 'Userinfo URL';
+  String get authSetUserinfoUrl => 'URL userinfo';
 
   @override
-  String get authSetJwksUrl => 'JWKS URL';
+  String get authSetJwksUrl => 'URL JWKS';
 
   @override
-  String get authSetLogoutUrl => 'Logout URL';
+  String get authSetLogoutUrl => 'URL de deconectare';
 
   @override
-  String get authSetClientId => 'Client ID';
+  String get authSetClientId => 'ID client';
 
   @override
-  String get authSetClientSecret => 'Client secret';
+  String get authSetClientSecret => 'Secret client';
 
   @override
-  String get authSetSigningAlgorithm => 'Signing algorithm';
+  String get authSetSigningAlgorithm => 'Algoritm de semnare';
 
   @override
-  String get authSetRedirectUris => 'Allowed mobile redirect URIs';
+  String get authSetRedirectUris => 'URI-uri de redirecționare mobile permise';
 
   @override
   String get authSetRedirectUrisInfo =>
-      'Apps can only return to these addresses after sign-in. Absorb uses absorb://oauth. An asterisk (*) as the only entry allows any address.';
+      'Aplicațiile se pot întoarce doar la aceste adrese după conectare. Absorb folosește absorb://oauth. Un asterisc (*) ca unică intrare permite orice adresă.';
 
   @override
-  String get authSetAddRedirectUri => 'Add URI';
+  String get authSetAddRedirectUri => 'Adaugă URI';
 
   @override
-  String get authSetAddAbsorbRedirect => 'Add absorb://oauth';
+  String get authSetAddAbsorbRedirect => 'Adaugă absorb://oauth';
 
   @override
-  String get authSetSubfolder => 'Subfolder for redirect URLs';
+  String get authSetSubfolder => 'Subdosar pentru URL-urile de redirecționare';
 
   @override
-  String get authSetSubfolderNone => 'None';
+  String get authSetSubfolderNone => 'Niciunul';
 
   @override
   String get authSetWebRedirectInfo =>
-      'Allow these URLs in your OAuth provider so sign-in can return to the web app:';
+      'Permite aceste URL-uri la furnizorul tău OAuth, ca să se poată reveni în aplicația web după conectare:';
 
   @override
-  String get authSetButtonText => 'Button text';
+  String get authSetButtonText => 'Textul butonului';
 
   @override
-  String get authSetMatchExisting => 'Match existing users by';
+  String get authSetMatchExisting => 'Potrivește utilizatorii existenți după';
 
   @override
-  String get authSetMatchNone => 'Do not match';
+  String get authSetMatchNone => 'Nu potrivi';
 
   @override
-  String get authSetMatchEmail => 'Email';
+  String get authSetMatchEmail => 'E-mail';
 
   @override
-  String get authSetMatchUsername => 'Username';
+  String get authSetMatchUsername => 'Nume de utilizator';
 
   @override
   String get authSetMatchExistingInfo =>
-      'Used to link existing users. Once linked, users are matched by their unique ID from the provider.';
+      'Se folosește pentru a asocia utilizatorii existenți. După asociere, utilizatorii sunt potriviți după ID-ul lor unic de la furnizor.';
 
   @override
-  String get authSetAutoLaunch => 'Auto launch';
+  String get authSetAutoLaunch => 'Lansare automată';
 
   @override
   String get authSetAutoLaunchInfo =>
-      'Open the provider automatically from the web login page. /login?autoLaunch=0 skips it.';
+      'Deschide automat furnizorul din pagina de conectare web. /login?autoLaunch=0 o omite.';
 
   @override
-  String get authSetAutoRegister => 'Auto register';
+  String get authSetAutoRegister => 'Înregistrare automată';
 
   @override
   String get authSetAutoRegisterInfo =>
-      'Create new users automatically after they sign in';
+      'Creează utilizatori noi automat după ce se conectează';
 
   @override
   String get authSetClaimsInfo =>
-      'Leave these empty to turn off group and permission assignment. New users then get the User role.';
+      'Lasă-le goale pentru a dezactiva atribuirea grupurilor și a permisiunilor. Utilizatorii noi primesc atunci rolul de utilizator.';
 
   @override
-  String get authSetGroupClaim => 'Group claim';
+  String get authSetGroupClaim => 'Claim de grup';
 
   @override
   String get authSetGroupClaimInfo =>
-      'Claim that lists the user\'s groups, usually groups. Groups named admin, user or guest set the role, and the highest one wins. If no group matches, sign-in is refused.';
+      'Claim-ul care listează grupurile utilizatorului, de obicei groups. Grupurile numite admin, user sau guest stabilesc rolul, iar cel mai înalt are prioritate. Dacă niciun grup nu se potrivește, conectarea este refuzată.';
 
   @override
-  String get authSetPermsClaim => 'Advanced permission claim';
+  String get authSetPermsClaim => 'Claim avansat de permisiuni';
 
   @override
   String get authSetPermsClaimInfo =>
-      'Claim with permissions for non-admin users. If the claim is missing, sign-in is refused, and a missing option counts as off. Expected format:';
+      'Claim cu permisiuni pentru utilizatorii non-admin. Dacă lipsește claim-ul, conectarea este refuzată, iar o opțiune lipsă se consideră dezactivată. Format așteptat:';
 
   @override
   String get authSetRestartNote =>
-      'Restart the server after saving to apply OpenID Connect changes.';
+      'Repornește serverul după salvare pentru a aplica modificările OpenID Connect.';
 
   @override
-  String get authSetNoChanges => 'No changes to save';
+  String get authSetNoChanges => 'Nu există modificări de salvat';
 
   @override
-  String get authSetNeedOneMethod => 'Turn on at least one sign-in method';
+  String get authSetNeedOneMethod =>
+      'Activează cel puțin o metodă de conectare';
 
   @override
   String authSetFieldRequired(String field) {
-    return '$field is required';
+    return '$field este obligatoriu';
   }
 
   @override
   String authSetInvalidRedirectUri(String uri) {
-    return 'Invalid redirect URI: $uri';
+    return 'URI de redirecționare nevalid: $uri';
   }
 
   @override
   String get authSetAsteriskAlone =>
-      'An asterisk (*) must be the only redirect URI';
+      'Un asterisc (*) trebuie să fie singurul URI de redirecționare';
 
   @override
   String authSetInvalidClaim(String field) {
-    return '$field is not a valid claim name';
+    return '$field nu este un nume de claim valid';
   }
 
   @override
   String authSetIssuerFailed(String error) {
-    return 'Couldn\'t read the issuer: $error';
+    return 'Nu s-a putut citi emitentul: $error';
   }
 
   @override
-  String get libNoneYet => 'No libraries yet';
+  String get libNoneYet => 'Încă nu există biblioteci';
 
   @override
-  String get libReorderFailed => 'Couldn\'t save the new order';
+  String get libReorderFailed => 'Nu s-a putut salva noua ordine';
 
   @override
-  String get libDeleteTitle => 'Delete library?';
+  String get libDeleteTitle => 'Ștergi biblioteca?';
 
   @override
   String get libDeleteBody =>
-      'This permanently removes the library and all of its items from the server.';
+      'Aceasta elimină definitiv biblioteca și toate elementele ei de pe server.';
 
   @override
-  String get libDeleted => 'Library deleted';
+  String get libDeleted => 'Bibliotecă ștearsă';
 
   @override
-  String get libDeleteFailed => 'Couldn\'t delete library';
+  String get libDeleteFailed => 'Nu s-a putut șterge biblioteca';
 
   @override
   String libFolderCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count folders',
-      one: '1 folder',
+      other: '$count de dosare',
+      few: '$count dosare',
+      one: '1 dosar',
     );
     return '$_temp0';
   }
 
   @override
-  String get libNewTitle => 'New library';
+  String get libNewTitle => 'Bibliotecă nouă';
 
   @override
-  String get libEditTitle => 'Edit library';
+  String get libEditTitle => 'Editează biblioteca';
 
   @override
-  String get libName => 'Library name';
+  String get libName => 'Numele bibliotecii';
 
   @override
-  String get libMediaType => 'Media type';
+  String get libMediaType => 'Tip media';
 
   @override
-  String get libMediaBook => 'Books';
+  String get libMediaBook => 'Cărți';
 
   @override
-  String get libMediaPodcast => 'Podcasts';
+  String get libMediaPodcast => 'Podcasturi';
 
   @override
-  String get libProvider => 'Metadata provider';
+  String get libProvider => 'Furnizor de metadate';
 
   @override
-  String get libIcon => 'Icon';
+  String get libIcon => 'Pictogramă';
 
   @override
-  String get libFolders => 'Folders';
+  String get libFolders => 'Dosare';
 
   @override
-  String get libAddFolder => 'Add folder';
+  String get libAddFolder => 'Adaugă dosar';
 
   @override
-  String get libNoFolders => 'Add at least one folder';
+  String get libNoFolders => 'Adaugă cel puțin un dosar';
 
   @override
-  String get libAdvanced => 'Advanced settings';
+  String get libAdvanced => 'Setări avansate';
 
   @override
-  String get libCoverShape => 'Cover shape';
+  String get libCoverShape => 'Forma copertei';
 
   @override
-  String get libCoverSquare => 'Square';
+  String get libCoverSquare => 'Pătrată';
 
   @override
   String get libCoverStandard => 'Standard';
 
   @override
-  String get libDisableWatcher => 'Disable folder watcher';
+  String get libDisableWatcher => 'Dezactivează monitorizarea dosarelor';
 
   @override
-  String get libSkipAsin => 'Skip matching books that have an ASIN';
+  String get libSkipAsin => 'Omite potrivirea cărților care au ASIN';
 
   @override
-  String get libSkipIsbn => 'Skip matching books that have an ISBN';
+  String get libSkipIsbn => 'Omite potrivirea cărților care au ISBN';
 
   @override
-  String get libHideSingleSeries => 'Hide single-book series';
+  String get libHideSingleSeries => 'Ascunde seriile cu o singură carte';
 
   @override
-  String get libAudiobooksOnly => 'Audiobooks only';
+  String get libAudiobooksOnly => 'Doar cărți audio';
 
   @override
-  String get libEpubScripted => 'Allow scripted ePub content';
+  String get libEpubScripted => 'Permite conținut ePub cu scripturi';
 
   @override
-  String get libLaterBooksOnly => 'Only show later books in Continue Series';
+  String get libLaterBooksOnly =>
+      'Arată doar cărțile următoare în Continuă seria';
 
   @override
-  String get libPodcastRegion => 'Podcast search region';
+  String get libPodcastRegion => 'Regiunea de căutare a podcasturilor';
 
   @override
-  String get libMarkPercent => 'Finished at % complete';
+  String get libMarkPercent => 'Terminat la % parcurs';
 
   @override
-  String get libMarkTime => 'Finished with seconds left';
+  String get libMarkTime => 'Terminat cu secunde rămase';
 
   @override
-  String get libAutoScan => 'Auto-scan schedule (cron)';
+  String get libAutoScan => 'Program de scanare automată (cron)';
 
   @override
-  String get libCreate => 'Create library';
+  String get libCreate => 'Creează biblioteca';
 
   @override
-  String get libUpdate => 'Save changes';
+  String get libUpdate => 'Salvează modificările';
 
   @override
-  String get libNameRequired => 'Enter a library name';
+  String get libNameRequired => 'Introdu un nume pentru bibliotecă';
 
   @override
-  String get libCreated => 'Library created';
+  String get libCreated => 'Bibliotecă creată';
 
   @override
-  String get libCreateFailed => 'Couldn\'t create library';
+  String get libCreateFailed => 'Nu s-a putut crea biblioteca';
 
   @override
-  String get libUpdated => 'Library updated';
+  String get libUpdated => 'Bibliotecă actualizată';
 
   @override
-  String get libUpdateFailed => 'Couldn\'t update library';
+  String get libUpdateFailed => 'Nu s-a putut actualiza biblioteca';
 
   @override
-  String get libRemoveFoldersTitle => 'Remove folders?';
+  String get libRemoveFoldersTitle => 'Elimini dosarele?';
 
   @override
   String get libRemoveFoldersBody =>
-      'Removing a folder deletes its items from the library. This can\'t be undone.';
+      'Eliminarea unui dosar șterge elementele lui din bibliotecă. Acțiunea nu poate fi anulată.';
 
   @override
-  String get readEbook => 'Read';
+  String get readEbook => 'Citește';
 
   @override
-  String get ebookDownload => 'Download';
+  String get ebookDownload => 'Descarcă';
 
   @override
-  String get ebookDownloaded => 'Downloaded';
+  String get ebookDownloaded => 'Descărcat';
 
   @override
-  String get ebookSavedOffline => 'Saved for offline reading';
+  String get ebookSavedOffline => 'Salvată pentru citire offline';
 
   @override
-  String get ebookRemovedOffline => 'Removed from offline';
+  String get ebookRemovedOffline => 'Eliminată din offline';
 
   @override
-  String get ebookOfflineFailed => 'Couldn\'t download the ebook';
+  String get ebookOfflineFailed => 'Nu s-a putut descărca cartea electronică';
 
   @override
-  String get ebookSaveToDevice => 'Save to device';
+  String get ebookSaveToDevice => 'Salvează pe dispozitiv';
 
   @override
-  String get ebookSaveToDeviceTitle => 'Save to device?';
+  String get ebookSaveToDeviceTitle => 'Salvezi pe dispozitiv?';
 
   @override
   String get ebookSaveToDeviceBody =>
-      'This saves a copy of the ebook file somewhere on your device (you pick where). It won\'t make the book available offline in the reader - use Download for that.';
+      'Aceasta salvează o copie a fișierului cărții electronice undeva pe dispozitiv (tu alegi unde). Nu face cartea disponibilă offline în cititor - folosește Descarcă pentru asta.';
 
   @override
   String get readerFormatUnsupported =>
-      'This ebook format can\'t be opened in the reader yet';
+      'Acest format de carte electronică nu poate fi deschis încă în cititor';
 
   @override
   String get readerCouldNotOpen =>
-      'This ebook couldn\'t be opened. The file may be damaged.';
+      'Această carte electronică nu a putut fi deschisă. Este posibil ca fișierul să fie deteriorat.';
 
   @override
-  String get moreActions => 'More';
+  String get moreActions => 'Mai multe';
 
   @override
-  String get readerChapters => 'Chapters';
+  String get readerChapters => 'Capitole';
 
   @override
-  String get readerSettings => 'Reader Settings';
+  String get readerSettings => 'Setări cititor';
 
   @override
-  String get readerFontSize => 'Font Size';
+  String get readerFontSize => 'Dimensiune font';
 
   @override
-  String get readerLineSpacing => 'Line Spacing';
+  String get readerLineSpacing => 'Spațiere între rânduri';
 
   @override
-  String get readerTextAlignment => 'Alignment';
+  String get readerTextAlignment => 'Aliniere';
 
   @override
-  String get readerAlignJustified => 'Justified';
+  String get readerAlignJustified => 'Aliniat stânga-dreapta';
 
   @override
-  String get readerAlignLeft => 'Left';
+  String get readerAlignLeft => 'Stânga';
 
   @override
-  String get readerSideMargins => 'Side margins';
+  String get readerSideMargins => 'Margini laterale';
 
   @override
-  String get readerTopBottom => 'Top & bottom';
+  String get readerTopBottom => 'Sus și jos';
 
   @override
-  String get readerPageLayout => 'Page layout';
+  String get readerPageLayout => 'Aspectul paginii';
 
   @override
-  String get readerPinTopBar => 'Keep the title and progress bar on screen';
+  String get readerPinTopBar => 'Păstrează titlul și bara de progres pe ecran';
 
   @override
   String get readerPinTopBarHint =>
-      'Pins them above the page instead of showing them on tap. The page gets a little shorter so no text is covered.';
+      'Le fixează deasupra paginii în loc să le arate la atingere. Pagina devine puțin mai scurtă, ca să nu fie acoperit niciun text.';
 
   @override
-  String get readerTopBarProgress => 'Top bar progress';
+  String get readerTopBarProgress => 'Progres în bara de sus';
 
   @override
-  String get readerTopBarProgressBook => 'Book';
+  String get readerTopBarProgressBook => 'Carte';
 
   @override
-  String get readerTopBarProgressChapter => 'Chapter';
+  String get readerTopBarProgressChapter => 'Capitol';
 
   @override
-  String get readerTopBarProgressBoth => 'Both';
+  String get readerTopBarProgressBoth => 'Ambele';
 
   @override
   String get readerSectionText => 'Text';
 
   @override
-  String get readerSectionPage => 'Page';
+  String get readerSectionPage => 'Pagină';
 
   @override
-  String get readerSectionTopBar => 'Top bar and screen';
+  String get readerSectionTopBar => 'Bara de sus și ecranul';
 
   @override
-  String get readerSectionControls => 'Controls';
+  String get readerSectionControls => 'Comenzi';
 
   @override
-  String get readerSectionStats => 'Stats';
+  String get readerSectionStats => 'Statistici';
 
   @override
-  String get readerParagraphSpacing => 'Paragraph spacing';
+  String get readerParagraphSpacing => 'Spațiere între paragrafe';
 
   @override
-  String get readerParagraphSpacingBook => 'Book\'s own';
+  String get readerParagraphSpacingBook => 'Cea a cărții';
 
   @override
-  String get readerTapZones => 'Tap zones';
+  String get readerTapZones => 'Zone de atingere';
 
   @override
   String get readerTapZonesHint =>
-      'Drag the lines to resize the squares. Tap a square to change what it does, or start from a layout.';
+      'Trage liniile pentru a redimensiona pătratele. Atinge un pătrat pentru a schimba ce face sau pornește de la un aspect gata făcut.';
 
   @override
-  String get readerTapPrev => 'Previous page';
+  String get readerTapPrev => 'Pagina anterioară';
 
   @override
-  String get readerTapNext => 'Next page';
+  String get readerTapNext => 'Pagina următoare';
 
   @override
-  String get readerTapMenu => 'Show controls';
+  String get readerTapMenu => 'Arată comenzile';
 
   @override
-  String get readerTapNothing => 'Nothing';
+  String get readerTapNothing => 'Nimic';
 
   @override
-  String get readerTapKeepMenu => 'One square has to show the controls';
+  String get readerTapKeepMenu => 'Un pătrat trebuie să arate comenzile';
 
   @override
-  String get readerHideControls => 'Hide controls after';
+  String get readerHideControls => 'Ascunde comenzile după';
 
   @override
-  String get readerHideControlsNever => 'Never';
+  String get readerHideControlsNever => 'Niciodată';
 
   @override
-  String get readerBarNotes => 'Notes and highlights';
+  String get readerBarNotes => 'Notițe și evidențieri';
 
   @override
   String readerHideControlsAfter(int seconds) {
@@ -10125,100 +10320,102 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get playerDownloadStreamingInstead =>
-      'This download couldn\'t be played, so it\'s streaming from the server. Downloading it again may fix it.';
+      'Această descărcare nu a putut fi redată, așa că se redă în flux de pe server. Descărcarea ei din nou poate rezolva problema.';
 
   @override
-  String get readerPageTurn => 'Page turn';
+  String get readerPageTurn => 'Întoarcerea paginii';
 
   @override
-  String get readerPageTurnNone => 'None';
+  String get readerPageTurnNone => 'Fără';
 
   @override
-  String get readerPageTurnSlide => 'Slide';
+  String get readerPageTurnSlide => 'Glisare';
 
   @override
-  String get readerPageTurnCurl => 'Curl';
+  String get readerPageTurnCurl => 'Răsfoire';
 
   @override
-  String get readerPageTurnRipple => 'Ripple';
+  String get readerPageTurnRipple => 'Ondulare';
 
   @override
-  String get readerScrollMode => 'Scroll mode';
+  String get readerScrollMode => 'Mod derulare';
 
   @override
   String get readerScrollModeHint =>
-      'Scroll down through the book instead of turning pages. Applies to every book.';
+      'Derulează în jos prin carte în loc să întorci paginile. Se aplică tuturor cărților.';
 
   @override
-  String get readerKeepAwake => 'Keep the screen on';
+  String get readerKeepAwake => 'Menține ecranul pornit';
 
   @override
   String get readerKeepAwakeHint =>
-      'Stops the screen timing out while you read at your own pace. Auto scroll and read along always keep it on.';
+      'Împiedică stingerea ecranului cât timp citești în ritmul tău. Derularea automată și citirea în paralel îl mențin mereu pornit.';
 
   @override
-  String get readerLayoutAuto => 'Auto';
+  String get readerLayoutAuto => 'Automat';
 
   @override
-  String get readerLayoutSingle => 'Single';
+  String get readerLayoutSingle => 'O pagină';
 
   @override
-  String get readerLayoutTwoPage => 'Two-page';
+  String get readerLayoutTwoPage => 'Două pagini';
 
   @override
-  String get readerTheme => 'Theme';
+  String get readerTheme => 'Temă';
 
   @override
   String get readerFont => 'Font';
 
   @override
-  String get readerVolumeNav => 'Volume keys turn pages';
+  String get readerVolumeNav => 'Tastele de volum întorc paginile';
 
   @override
-  String get readerVolumeNavOff => 'Off';
+  String get readerVolumeNavOff => 'Oprit';
 
   @override
   String get readerVolumeNavNormal => 'Normal';
 
   @override
-  String get readerVolumeNavMirrored => 'Mirrored';
+  String get readerVolumeNavMirrored => 'Inversat';
 
   @override
-  String get readerAutoScroll => 'Auto scroll';
+  String get readerAutoScroll => 'Derulare automată';
 
   @override
   String get readerAutoScrollSubtitle =>
-      'The next page paints over this one from the top down - drag the middle of the screen to change speed, tap to stop';
+      'Pagina următoare se desenează peste aceasta de sus în jos - trage de mijlocul ecranului pentru a schimba viteza, atinge pentru a opri';
 
   @override
-  String get readerAutoScrollStarted => 'Auto scroll started';
+  String get readerAutoScrollStarted => 'Derulare automată pornită';
 
   @override
-  String get readerAutoScrollPaused => 'Paused - press and hold to stop';
+  String get readerAutoScrollPaused => 'În pauză - ține apăsat pentru a opri';
 
   @override
-  String get readerAutoScrollResumed => 'Auto scroll resumed';
+  String get readerAutoScrollResumed => 'Derulare automată reluată';
 
   @override
-  String get readerAutoScrollStopped => 'Auto scroll off';
+  String get readerAutoScrollStopped => 'Derulare automată oprită';
 
   @override
-  String get readerAutoScrollEndOfBook => 'End of book - auto scroll off';
+  String get readerAutoScrollEndOfBook =>
+      'Sfârșitul cărții - derulare automată oprită';
 
   @override
   String readerAutoScrollSpeed(int percent) {
-    return 'Speed $percent%';
+    return 'Viteză $percent%';
   }
 
   @override
-  String get readerMoreControls => 'More controls';
+  String get readerMoreControls => 'Mai multe comenzi';
 
   @override
-  String get readerAutoScrollSleep => 'Auto scroll sleep timer';
+  String get readerAutoScrollSleep =>
+      'Temporizator de somn pentru derularea automată';
 
   @override
   String get readerAutoScrollSleepHint =>
-      'Stops the scrolling after a while and lets the screen go dark.';
+      'Oprește derularea după un timp și lasă ecranul să se stingă.';
 
   @override
   String readerAutoScrollSleepMinutes(int minutes) {
@@ -10227,41 +10424,44 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String readerAutoScrollSleepLeft(int minutes) {
-    return '$minutes min left';
+    return '$minutes min rămase';
   }
 
   @override
   String readerAutoScrollSleepIn(int minutes) {
-    return 'Auto scroll stops in $minutes min';
+    return 'Derularea automată se oprește în $minutes min';
   }
 
   @override
-  String get readerAutoScrollSleepOff => 'Auto scroll sleep timer off';
+  String get readerAutoScrollSleepOff =>
+      'Temporizator de somn pentru derularea automată oprit';
 
   @override
-  String get readerAutoScrollSleepEnded => 'Sleep timer - auto scroll off';
+  String get readerAutoScrollSleepEnded =>
+      'Temporizator de somn - derulare automată oprită';
 
   @override
-  String get readerDownloadStarted => 'Download started';
+  String get readerDownloadStarted => 'Descărcare pornită';
 
   @override
-  String get detailChaptersJumpTitle => 'Jump to this chapter?';
+  String get detailChaptersJumpTitle => 'Sari la acest capitol?';
 
   @override
   String detailChaptersJumpContent(String title) {
-    return 'Playback moves to \"$title\".';
+    return 'Redarea trece la „$title”.';
   }
 
   @override
-  String get detailChaptersJump => 'Jump';
+  String get detailChaptersJump => 'Sari';
 
   @override
   String detailChaptersFinished(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count chapters finished',
-      one: '1 chapter finished',
+      other: '$count de capitole terminate',
+      few: '$count capitole terminate',
+      one: '1 capitol terminat',
     );
     return '$_temp0';
   }
@@ -10271,439 +10471,445 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count other listeners',
-      one: '1 other listener',
-      zero: 'No other listeners',
+      other: '$count de alți ascultători',
+      few: '$count alți ascultători',
+      one: '1 alt ascultător',
+      zero: 'Niciun alt ascultător',
     );
     return '$_temp0';
   }
 
   @override
-  String get seriesUpNext => 'Up next';
+  String get seriesUpNext => 'Urmează';
 
   @override
-  String get seriesJumpToUpNext => 'Jump to up next';
+  String get seriesJumpToUpNext => 'Sari la următoarea';
 
   @override
-  String get seriesStatsFinished => 'Finished';
+  String get seriesStatsFinished => 'Terminate';
 
   @override
-  String get seriesStatsListened => 'Listened';
+  String get seriesStatsListened => 'Ascultate';
 
   @override
-  String get seriesStatsLeft => 'Left';
+  String get seriesStatsLeft => 'Rămase';
 
   @override
   String seriesFinishedOf(int done, int total) {
-    return '$done of $total';
+    return '$done din $total';
   }
 
   @override
-  String get detailSessionsNone => 'No listening sessions yet';
+  String get detailSessionsNone => 'Încă nu există sesiuni de ascultare';
 
   @override
   String detailSessionsAll(int count) {
-    return 'All $count sessions';
+    return 'Toate cele $count sesiuni';
   }
 
   @override
-  String get readerVolumeNavWhilePlaying => 'Even while audio is playing';
+  String get readerVolumeNavWhilePlaying => 'Chiar și când se redă audio';
 
   @override
-  String get readerTranslateWith => 'Translate with';
+  String get readerTranslateWith => 'Tradu cu';
 
   @override
-  String get readerTranslateApp => 'App on this device';
+  String get readerTranslateApp => 'Aplicație de pe acest dispozitiv';
 
   @override
-  String get readerTranslateApple => 'Built into iOS';
+  String get readerTranslateApple => 'Integrat în iOS';
 
   @override
-  String get readerTranslateWeb => 'Opens in your browser';
+  String get readerTranslateWeb => 'Se deschide în browser';
 
   @override
   String get readerTranslateHint =>
-      'Selected text is sent to the translator you pick.';
+      'Textul selectat este trimis traducătorului ales.';
 
   @override
-  String get readerMoreFonts => 'Download more fonts';
+  String get readerMoreFonts => 'Descarcă mai multe fonturi';
 
   @override
-  String get readerFontRemove => 'Remove download';
+  String get readerFontRemove => 'Elimină descărcarea';
 
   @override
   String readerFontDownloadFailed(String font) {
-    return 'Couldn\'t download $font';
+    return 'Nu s-a putut descărca $font';
   }
 
   @override
-  String get readerAnnotations => 'Annotations';
+  String get readerAnnotations => 'Adnotări';
 
   @override
   String readerHighlights(int count) {
-    return 'Highlights ($count)';
+    return 'Evidențieri ($count)';
   }
 
   @override
   String readerBookmarks(int count) {
-    return 'Bookmarks ($count)';
+    return 'Marcaje ($count)';
   }
 
   @override
-  String get readerNoHighlights => 'No highlights yet';
+  String get readerNoHighlights => 'Încă nu există evidențieri';
 
   @override
-  String get readerHistory => 'History';
+  String get readerHistory => 'Istoric';
 
   @override
-  String get sessionReading => 'Reading';
+  String get sessionReading => 'Citire';
 
   @override
   String get readerHistoryEmpty =>
-      'Pages you leave are listed here, so you can always get back to them.';
+      'Paginile pe care le părăsești sunt listate aici, ca să te poți întoarce oricând la ele.';
 
   @override
-  String get readerHistoryClosed => 'Closed the book';
+  String get readerHistoryClosed => 'Cartea a fost închisă';
 
   @override
-  String get readerHistoryBeforeJump => 'Before a jump';
+  String get readerHistoryBeforeJump => 'Înainte de un salt';
 
   @override
-  String get readerHistoryBeforeSync => 'Before matching the audio';
+  String get readerHistoryBeforeSync => 'Înainte de potrivirea cu audio';
 
   @override
-  String get readerLogReading => 'Count reading time in stats';
+  String get readerLogReading => 'Include timpul de citire în statistici';
 
   @override
   String get readerLogReadingHint =>
-      'Logs your time in the reader as a session so it shows in your stats. On Audiobookshelf it counts as listening time.';
+      'Înregistrează timpul petrecut în cititor ca sesiune, ca să apară în statisticile tale. În Audiobookshelf se numără ca timp de ascultare.';
 
   @override
-  String get readerNoBookmarks => 'No bookmarks yet';
+  String get readerNoBookmarks => 'Încă nu există marcaje';
 
   @override
-  String get readerBookmarkDefault => 'Bookmark';
+  String get readerBookmarkDefault => 'Marcaj';
 
   @override
-  String get readerNoteTitle => 'Note';
+  String get readerNoteTitle => 'Notiță';
 
   @override
-  String get readerNoteHint => 'Add a note...';
+  String get readerNoteHint => 'Adaugă o notiță...';
 
   @override
-  String get backupAndSync => 'Backup and sync';
+  String get backupAndSync => 'Copie de siguranță și sincronizare';
 
   @override
   String get backupAndSyncSubtitle =>
-      'Save a backup file, or keep settings in step across devices';
+      'Salvează un fișier de rezervă sau păstrează setările la fel pe toate dispozitivele';
 
   @override
   String get syncSettingsExperimental => 'Experimental';
 
   @override
   String get syncSettingsExperimentalBody =>
-      'Sync is new and still being worked on. If two devices change things while they are apart, one side can lose its changes. Keep a backup file as your safe copy.';
+      'Sincronizarea este nouă și încă în lucru. Dacă două dispozitive modifică lucruri cât timp sunt separate, o parte își poate pierde modificările. Păstrează un fișier de rezervă drept copie sigură.';
 
   @override
-  String get syncSettingsNeedServer => 'Need a server?';
+  String get syncSettingsNeedServer => 'Ai nevoie de un server?';
 
   @override
   String get syncSettingsNeedServerSub =>
-      'Any WebDAV server works. Nextcloud is a free self-hosted one.';
+      'Funcționează orice server WebDAV. Nextcloud este unul gratuit, auto-găzduit.';
 
   @override
-  String get syncSettingsConnection => 'Connection';
+  String get syncSettingsConnection => 'Conexiune';
 
   @override
-  String get syncSettingsConnectionNotSet => 'Not set up yet';
+  String get syncSettingsConnectionNotSet => 'Încă nu este configurată';
 
   @override
-  String get syncSettingsBackupFile => 'Backup file';
+  String get syncSettingsBackupFile => 'Fișier de rezervă';
 
   @override
   String get syncSettingsBackupFilePlain =>
-      'Save everything to a file you keep.';
+      'Salvează totul într-un fișier pe care îl păstrezi tu.';
 
   @override
   String get syncSettingsBackupFileWithSync =>
-      'Save everything to a file you keep. Include login info and restoring it on another phone turns sync on there too.';
+      'Salvează totul într-un fișier pe care îl păstrezi tu. Include datele de conectare, iar restaurarea lui pe alt telefon activează și acolo sincronizarea.';
 
   @override
-  String get syncSettingsStatusOff => 'Not syncing';
+  String get syncSettingsStatusOff => 'Nu se sincronizează';
 
   @override
-  String get syncSettingsStatusProblem => 'Could not reach your server';
+  String get syncSettingsStatusProblem => 'Nu s-a putut contacta serverul';
 
   @override
-  String get syncSettings => 'Sync settings between devices';
+  String get syncSettings => 'Sincronizează setările între dispozitive';
 
   @override
-  String get syncSettingsExtras => 'Also sync';
+  String get syncSettingsExtras => 'Sincronizează și';
 
   @override
-  String get syncSettingsIncludeRmab => 'ReadMeABook settings';
+  String get syncSettingsIncludeRmab => 'Setările ReadMeABook';
 
   @override
   String get syncSettingsIncludeRmabSub =>
-      'Puts your ReadMeABook API token in the synced file';
+      'Pune tokenul tău API ReadMeABook în fișierul sincronizat';
 
   @override
   String get syncSettingsSubtitle =>
-      'Keep your settings in step through your own WebDAV server';
+      'Păstrează setările la fel prin propriul tău server WebDAV';
 
   @override
-  String get syncSettingsEnable => 'Sync settings';
+  String get syncSettingsEnable => 'Sincronizează setările';
 
   @override
-  String get syncSettingsServerUrl => 'WebDAV folder URL';
+  String get syncSettingsServerUrl => 'URL-ul dosarului WebDAV';
 
   @override
   String get syncSettingsServerUrlHint =>
       'https://cloud.example.com/remote.php/dav/files/you/Absorb';
 
   @override
-  String get syncSettingsUsername => 'Username';
+  String get syncSettingsUsername => 'Nume de utilizator';
 
   @override
-  String get syncSettingsPassword => 'Password';
+  String get syncSettingsPassword => 'Parolă';
 
   @override
-  String get syncSettingsHeaders => 'Custom headers (optional)';
+  String get syncSettingsHeaders => 'Antete personalizate (opțional)';
 
   @override
   String get syncSettingsHeadersHint =>
-      'One per line, like CF-Access-Client-Id: abc123';
+      'Câte unul pe rând, de exemplu CF-Access-Client-Id: abc123';
 
   @override
-  String get syncSettingsTest => 'Test connection';
+  String get syncSettingsTest => 'Testează conexiunea';
 
   @override
-  String get syncSettingsHoldToUpload => 'Hold to upload now';
+  String get syncSettingsHoldToUpload => 'Ține apăsat pentru a încărca acum';
 
   @override
-  String get syncSettingsUploadNow => 'Upload now';
+  String get syncSettingsUploadNow => 'Încarcă acum';
 
   @override
-  String get syncSettingsDownloadNow => 'Download now';
+  String get syncSettingsDownloadNow => 'Descarcă acum';
 
   @override
-  String get syncSettingsOk => 'Connected';
+  String get syncSettingsOk => 'Conectat';
 
   @override
-  String get syncSettingsNoRemote => 'Connected - nothing synced yet';
+  String get syncSettingsNoRemote => 'Conectat - încă nu s-a sincronizat nimic';
 
   @override
-  String get syncSettingsAuthFailed => 'Wrong username or password';
+  String get syncSettingsAuthFailed => 'Nume de utilizator sau parolă greșite';
 
   @override
-  String get syncSettingsNetworkError => 'Could not reach that address';
+  String get syncSettingsNetworkError => 'Adresa nu a putut fi contactată';
 
   @override
   String get syncSettingsNotConfigured =>
-      'Fill in the address, username and password first';
+      'Completează mai întâi adresa, numele de utilizator și parola';
 
   @override
-  String get syncSettingsTooLarge => 'Your settings are too big to sync';
+  String get syncSettingsTooLarge =>
+      'Setările tale sunt prea mari pentru a fi sincronizate';
 
   @override
-  String get syncSettingsUploaded => 'Settings uploaded';
+  String get syncSettingsUploaded => 'Setări încărcate';
 
   @override
-  String get syncSettingsApplied => 'Settings updated from your other device';
+  String get syncSettingsApplied =>
+      'Setări actualizate de pe celălalt dispozitiv';
 
   @override
   String syncSettingsAppliedCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count settings updated from your other device',
-      one: '1 setting updated from your other device',
+      other: '$count de setări actualizate de pe celălalt dispozitiv',
+      few: '$count setări actualizate de pe celălalt dispozitiv',
+      one: '1 setare actualizată de pe celălalt dispozitiv',
     );
     return '$_temp0';
   }
 
   @override
-  String get syncSettingsUpToDate => 'Already up to date';
+  String get syncSettingsUpToDate => 'Deja la zi';
 
   @override
   String syncSettingsLastSynced(String when) {
-    return 'Last synced $when';
+    return 'Ultima sincronizare: $when';
   }
 
   @override
-  String get syncSettingsNever => 'Not synced yet';
+  String get syncSettingsNever => 'Încă nesincronizat';
 
   @override
   String navHoldPickTitle(String tab) {
-    return 'Holding $tab will...';
+    return 'Ținerea apăsată pe $tab va...';
   }
 
   @override
   String get navHoldPickBody =>
-      'Choose what a long press on this tab does. You can change it later in Settings.';
+      'Alege ce face o apăsare lungă pe această filă. Poți schimba mai târziu în Setări.';
 
   @override
-  String get navHoldSettingTitle => 'Tab hold shortcuts';
+  String get navHoldSettingTitle => 'Scurtături la ținere apăsată pe file';
 
   @override
-  String get navHoldSettingSubtitle => 'What holding each tab does';
+  String get navHoldSettingSubtitle =>
+      'Ce face ținerea apăsată pe fiecare filă';
 
   @override
-  String get navHoldAskNextTime => 'Ask next time';
+  String get navHoldAskNextTime => 'Întreabă data viitoare';
 
   @override
-  String get navHoldNothing => 'Nothing';
+  String get navHoldNothing => 'Nimic';
 
   @override
-  String get navHoldPlayPause => 'Play / pause';
+  String get navHoldPlayPause => 'Redare / pauză';
 
   @override
-  String get navHoldOfflineMode => 'Offline mode';
+  String get navHoldOfflineMode => 'Mod offline';
 
   @override
-  String get navHoldOfflineOn => 'Offline mode on';
+  String get navHoldOfflineOn => 'Mod offline activat';
 
   @override
-  String get navHoldOfflineOff => 'Offline mode off';
+  String get navHoldOfflineOff => 'Mod offline dezactivat';
 
   @override
-  String get navHoldMenu => 'Always show menu';
+  String get navHoldMenu => 'Arată mereu meniul';
 
   @override
-  String get navHoldStop => 'Stop playback';
+  String get navHoldStop => 'Oprește redarea';
 
   @override
-  String get navHoldRmabSearch => 'ReadMeABook search';
+  String get navHoldRmabSearch => 'Căutare ReadMeABook';
 
   @override
-  String get navHoldRmabRequests => 'My book requests';
+  String get navHoldRmabRequests => 'Cererile mele de cărți';
 
   @override
-  String get navHoldRmabWeb => 'ReadMeABook site';
+  String get navHoldRmabWeb => 'Site-ul ReadMeABook';
 
   @override
-  String get navHoldAdd => 'Add';
+  String get navHoldAdd => 'Adaugă';
 
   @override
-  String get navHoldMoveLeft => 'Move left';
+  String get navHoldMoveLeft => 'Mută la stânga';
 
   @override
-  String get navHoldMoveRight => 'Move right';
+  String get navHoldMoveRight => 'Mută la dreapta';
 
   @override
-  String get navHoldRemoveFromMenu => 'Remove from menu';
+  String get navHoldRemoveFromMenu => 'Elimină din meniu';
 
   @override
-  String get navHoldEditHint => 'Hold an item to move or remove it';
+  String get navHoldEditHint =>
+      'Ține apăsat pe un element pentru a-l muta sau elimina';
 
   @override
-  String get navHoldResetMenu => 'Reset the hold menu items';
+  String get navHoldResetMenu =>
+      'Resetează elementele meniului de ținere apăsată';
 
   @override
-  String get navHoldMenuReset => 'Menu items reset';
+  String get navHoldMenuReset => 'Elementele meniului au fost resetate';
 
   @override
-  String get bookStatsAction => 'Listening stats';
+  String get bookStatsAction => 'Statistici de ascultare';
 
   @override
-  String get bookStatsYou => 'You';
+  String get bookStatsYou => 'Tu';
 
   @override
-  String get bookStatsEveryone => 'Everyone';
+  String get bookStatsEveryone => 'Toată lumea';
 
   @override
-  String get bookStatsListened => 'Time listened';
+  String get bookStatsListened => 'Timp ascultat';
 
   @override
-  String get bookStatsSessions => 'Sessions';
+  String get bookStatsSessions => 'Sesiuni';
 
   @override
-  String get bookStatsFirst => 'First listened';
+  String get bookStatsFirst => 'Prima ascultare';
 
   @override
-  String get bookStatsLast => 'Last listened';
+  String get bookStatsLast => 'Ultima ascultare';
 
   @override
-  String get bookStatsListeners => 'People who started it';
+  String get bookStatsListeners => 'Persoane care au început-o';
 
   @override
-  String get bookStatsFinishedCount => 'People who finished it';
+  String get bookStatsFinishedCount => 'Persoane care au terminat-o';
 
   @override
-  String get bookStatsTotalTime => 'Time listened by everyone';
+  String get bookStatsTotalTime => 'Timp ascultat de toată lumea';
 
   @override
-  String get bookStatsNobody => 'Nobody has started this yet';
+  String get bookStatsNobody => 'Nimeni nu a început-o încă';
 
   @override
-  String get bookStatsScanning =>
-      'Scanning through sessions, this could take a while...';
+  String get bookStatsScanning => 'Se parcurg sesiunile, poate dura o vreme...';
 
   @override
   String bookStatsScanningCount(int done, int total) {
-    return 'Scanning through sessions, $done of $total people...';
+    return 'Se parcurg sesiunile, $done din $total persoane...';
   }
 
   @override
   String bookStatsLastChecked(String when) {
-    return 'Checked $when';
+    return 'Verificat $when';
   }
 
   @override
-  String get activityYourReading => 'Your reading';
+  String get activityYourReading => 'Citirea ta';
 
   @override
-  String get activityYourListening => 'Your listening';
+  String get activityYourListening => 'Ascultarea ta';
 
   @override
   String activityLastRead(String when) {
-    return 'Last read $when';
+    return 'Ultima citire $when';
   }
 
   @override
   String activityLastListened(String when) {
-    return 'Last listened $when';
+    return 'Ultima ascultare $when';
   }
 
   @override
-  String get activityNotStarted => 'Not started';
+  String get activityNotStarted => 'Neînceput';
 
   @override
-  String get activityNoReading => 'No reading sessions yet';
+  String get activityNoReading => 'Încă nu există sesiuni de citire';
 
   @override
-  String get activityTime => 'Time';
+  String get activityTime => 'Timp';
 
   @override
-  String get activityAverage => 'Avg';
+  String get activityAverage => 'Med.';
 
   @override
-  String get activityProgress => 'Progress';
+  String get activityProgress => 'Progres';
 
   @override
   String activityReached(String percent) {
-    return '$percent reached';
+    return '$percent atins';
   }
 
   @override
-  String get readingLogTitle => 'Reading log';
+  String get readingLogTitle => 'Jurnal de citire';
 
   @override
-  String get readingLogTotalTime => 'Total time';
+  String get readingLogTotalTime => 'Timp total';
 
   @override
-  String get readingLogAverageSession => 'Average session';
+  String get readingLogAverageSession => 'Sesiune medie';
 
   @override
-  String get readingLogActiveDays => 'Active days';
+  String get readingLogActiveDays => 'Zile active';
 
   @override
   String readingLogActiveDaysOf(int active, int total) {
-    return '$active of $total';
+    return '$active din $total';
   }
 
   @override
-  String get readingLogPace => 'Pace';
+  String get readingLogPace => 'Ritm';
 
   @override
   String readingLogPacePerHour(String percent) {
@@ -10711,169 +10917,172 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get readingLogLastRead => 'Last read';
+  String get readingLogLastRead => 'Ultima citire';
 
   @override
-  String get readingLogStarted => 'Started';
+  String get readingLogStarted => 'Început';
 
   @override
-  String get readingLogFinished => 'Finished';
+  String get readingLogFinished => 'Terminat';
 
   @override
-  String get readingLogNotSet => 'Not set';
+  String get readingLogNotSet => 'Nesetat';
 
   @override
   String readingLogLeftMinutes(int m) {
-    return 'About ${m}m to finish';
+    return 'Aproximativ $m min până la final';
   }
 
   @override
   String readingLogLeftHours(int h) {
-    return 'About ${h}h to finish';
+    return 'Aproximativ $h h până la final';
   }
 
   @override
   String readingLogLeftHoursMinutes(int h, int m) {
-    return 'About ${h}h ${m}m to finish';
+    return 'Aproximativ $h h $m min până la final';
   }
 
   @override
-  String get readingLogLeftMax => 'Over 99h to finish';
+  String get readingLogLeftMax => 'Peste 99 h până la final';
 
   @override
   String readingLogUpOnLastWeek(int percent) {
-    return 'Up $percent% on the week before';
+    return 'Cu $percent% mai mult decât săptămâna anterioară';
   }
 
   @override
   String readingLogDownOnLastWeek(int percent) {
-    return 'Down $percent% on the week before';
+    return 'Cu $percent% mai puțin decât săptămâna anterioară';
   }
 
   @override
-  String get readingLogNewThisWeek => 'New this week';
+  String get readingLogNewThisWeek => 'Nou în această săptămână';
 
   @override
-  String get readingLogSameAsLastWeek => 'Same as the week before';
+  String get readingLogSameAsLastWeek => 'La fel ca săptămâna anterioară';
 
   @override
-  String get readingLogQuietTwoWeeks => 'Nothing in the last two weeks';
+  String get readingLogQuietTwoWeeks => 'Nimic în ultimele două săptămâni';
 
   @override
-  String get readingLogWhereYouRead => 'Where you read it';
+  String get readingLogWhereYouRead => 'Unde ai citit-o';
 
   @override
-  String get readingLogSourceIos => 'iOS app';
+  String get readingLogSourceIos => 'Aplicația iOS';
 
   @override
-  String get readingLogSourceAndroid => 'Android app';
+  String get readingLogSourceAndroid => 'Aplicația Android';
 
   @override
-  String get readingLogChartTitle => 'Progress over time';
+  String get readingLogChartTitle => 'Progres în timp';
 
   @override
-  String get readingLogChartPosition => 'Position reached';
+  String get readingLogChartPosition => 'Poziția atinsă';
 
   @override
-  String get readingLogChartMinutes => 'Minutes';
+  String get readingLogChartMinutes => 'Minute';
 
   @override
-  String get readingLogRecords => 'Records';
+  String get readingLogRecords => 'Recorduri';
 
   @override
-  String get readingLogLongestSession => 'Longest session';
+  String get readingLogLongestSession => 'Cea mai lungă sesiune';
 
   @override
-  String get readingLogBestDay => 'Best day';
+  String get readingLogBestDay => 'Cea mai bună zi';
 
   @override
-  String get readingLogLongestStreak => 'Longest streak';
+  String get readingLogLongestStreak => 'Cea mai lungă serie';
 
   @override
   String readingLogStreakDays(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count days',
-      one: '1 day',
+      other: '$count de zile',
+      few: '$count zile',
+      one: '1 zi',
     );
     return '$_temp0';
   }
 
   @override
-  String get readingLogJumpedBack => 'Jumped back';
+  String get readingLogJumpedBack => 'Reveniri înapoi';
 
   @override
   String readingLogJumpedBackTimes(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count times',
-      one: '1 time',
+      other: '$count de ori',
+      few: '$count ori',
+      one: '1 dată',
     );
     return '$_temp0';
   }
 
   @override
-  String get readingLogFirstOpened => 'First opened';
+  String get readingLogFirstOpened => 'Prima deschidere';
 
   @override
-  String get readingLogAttempts => 'Attempts';
+  String get readingLogAttempts => 'Încercări';
 
   @override
   String readingLogAttempt(int index) {
-    return 'Attempt $index';
+    return 'Încercarea $index';
   }
 
   @override
   String readingLogAttemptBegan(int index) {
-    return 'Attempt $index began';
+    return 'Încercarea $index a început';
   }
 
   @override
-  String get readingLogOutcomeCompleted => 'Completed';
+  String get readingLogOutcomeCompleted => 'Finalizată';
 
   @override
-  String get readingLogOutcomeSkimmed => 'Skimmed';
+  String get readingLogOutcomeSkimmed => 'Răsfoită';
 
   @override
-  String get readingLogOutcomeAbandoned => 'Abandoned';
+  String get readingLogOutcomeAbandoned => 'Abandonată';
 
   @override
-  String get readingLogOutcomeInProgress => 'In progress';
+  String get readingLogOutcomeInProgress => 'În curs';
 
   @override
   String readingLogSpanRange(String from, String to) {
-    return '$from to $to';
+    return '$from - $to';
   }
 
   @override
   String readingLogSpanSince(String from) {
-    return 'Since $from';
+    return 'Din $from';
   }
 
   @override
   String readingLogSpanEnded(String to) {
-    return 'Ended $to';
+    return 'Încheiată $to';
   }
 
   @override
-  String get readingLogSpanUnknown => 'No dates recorded';
+  String get readingLogSpanUnknown => 'Nicio dată înregistrată';
 
   @override
   String readingLogSessionCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count sessions',
-      one: '1 session',
+      other: '$count de sesiuni',
+      few: '$count sesiuni',
+      one: '1 sesiune',
     );
     return '$_temp0';
   }
 
   @override
   String readingLogShowing(int shown, int total) {
-    return '$shown of $total';
+    return '$shown din $total';
   }
 
   @override
@@ -10881,96 +11090,97 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count days without reading',
-      one: '1 day without reading',
+      other: '$count de zile fără citit',
+      few: '$count zile fără citit',
+      one: '1 zi fără citit',
     );
     return '$_temp0';
   }
 
   @override
-  String get readingLogEmpty => 'No sessions recorded yet';
+  String get readingLogEmpty => 'Încă nu există sesiuni înregistrate';
 
   @override
   String get readingLogEmptyHint =>
-      'Sessions show up here as you read or listen, from any app or device that syncs with BookOrbit.';
+      'Sesiunile apar aici pe măsură ce citești sau asculți, din orice aplicație sau dispozitiv care se sincronizează cu BookOrbit.';
 
   @override
-  String get readingLogNoMatches => 'No sessions in this range';
+  String get readingLogNoMatches => 'Nicio sesiune în acest interval';
 
   @override
-  String get readingLogAllTime => 'All time';
+  String get readingLogAllTime => 'Din totdeauna';
 
   @override
-  String get readingLogLast30 => 'Last 30 days';
+  String get readingLogLast30 => 'Ultimele 30 de zile';
 
   @override
-  String get readingLogLast90 => 'Last 90 days';
+  String get readingLogLast90 => 'Ultimele 90 de zile';
 
   @override
-  String get readingLogThisYear => 'This year';
+  String get readingLogThisYear => 'Anul acesta';
 
   @override
-  String get readingLogAllFormats => 'All formats';
+  String get readingLogAllFormats => 'Toate formatele';
 
   @override
-  String get readingLogSortBy => 'Sort by';
+  String get readingLogSortBy => 'Sortează după';
 
   @override
-  String get readingLogSortDay => 'Day';
+  String get readingLogSortDay => 'Zi';
 
   @override
-  String get readingLogSortLength => 'Length';
+  String get readingLogSortLength => 'Durată';
 
   @override
-  String get readingLogSortChange => 'Change';
+  String get readingLogSortChange => 'Schimbare';
 
   @override
-  String get readingLogSortReached => 'Reached';
+  String get readingLogSortReached => 'Atins';
 
   @override
-  String get readingLogNewestFirst => 'Newest first';
+  String get readingLogNewestFirst => 'Cele mai noi mai întâi';
 
   @override
-  String get readingLogOldestFirst => 'Oldest first';
+  String get readingLogOldestFirst => 'Cele mai vechi mai întâi';
 
   @override
-  String get readingLogMostFirst => 'Most first';
+  String get readingLogMostFirst => 'Cele mai multe mai întâi';
 
   @override
-  String get readingLogLeastFirst => 'Least first';
+  String get readingLogLeastFirst => 'Cele mai puține mai întâi';
 
   @override
-  String get readingLogDeleteTitle => 'Delete this session?';
+  String get readingLogDeleteTitle => 'Ștergi această sesiune?';
 
   @override
   String get readingLogDeleteBody =>
-      'It comes off the book\'s reading log and your stats on BookOrbit.';
+      'Va fi eliminată din jurnalul de citire al cărții și din statisticile tale din BookOrbit.';
 
   @override
-  String get readingLogDeleteFailed => 'Couldn\'t delete the session';
+  String get readingLogDeleteFailed => 'Nu s-a putut șterge sesiunea';
 
   @override
-  String get readingLogLoadFailed => 'Couldn\'t load the reading log';
+  String get readingLogLoadFailed => 'Nu s-a putut încărca jurnalul de citire';
 
   @override
-  String get navHoldServerScan => 'Server scan';
+  String get navHoldServerScan => 'Scanare server';
 
   @override
-  String get navHoldScanAll => 'Scan all libraries';
+  String get navHoldScanAll => 'Scanează toate bibliotecile';
 
   @override
   String navHoldScanLibrary(String name) {
-    return 'Scan $name';
+    return 'Scanează $name';
   }
 
   @override
-  String get navHoldScanStarted => 'Scan started';
+  String get navHoldScanStarted => 'Scanare pornită';
 
   @override
-  String get navHoldScanFailed => 'Could not start the scan';
+  String get navHoldScanFailed => 'Nu s-a putut porni scanarea';
 
   @override
-  String get navHoldAdminLogs => 'Server logs';
+  String get navHoldAdminLogs => 'Jurnalele serverului';
 
   @override
   String navHoldAdminPage(String page) {
@@ -10978,651 +11188,669 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get navHoldNothingPlaying => 'Nothing to play yet';
+  String get navHoldNothingPlaying => 'Încă nu e nimic de redat';
 
   @override
-  String get navHoldReadBook => 'Read current book';
+  String get navHoldReadBook => 'Citește cartea curentă';
 
   @override
-  String get navHoldBookDetails => 'Current book details';
+  String get navHoldBookDetails => 'Detaliile cărții curente';
 
   @override
-  String get syncSourceTitle => 'Which copy should sync keep?';
+  String get syncSourceTitle => 'Ce copie să păstreze sincronizarea?';
 
   @override
   String get syncSourceBody =>
-      'This backup turned settings sync on. Use the server\'s last sync, or make this backup the source of truth? Choosing the backup replaces the copy on the server for all your synced devices.';
+      'Această copie de rezervă a activat sincronizarea setărilor. Folosești ultima sincronizare de pe server sau faci din această copie sursa de adevăr? Alegerea copiei de rezervă înlocuiește copia de pe server pentru toate dispozitivele tale sincronizate.';
 
   @override
-  String get syncSourceUseServer => 'Server\'s last sync';
+  String get syncSourceUseServer => 'Ultima sincronizare de pe server';
 
   @override
-  String get syncSourceUseBackup => 'This backup';
+  String get syncSourceUseBackup => 'Această copie de rezervă';
 
   @override
   String get syncSettingsWhatTravels =>
-      'Your preferences, per-book speeds, home layout, Absorbing order, notes and ebook highlights travel. Logins, download folders, auto-download switches, reader looks and anything not yet sent to your server stay on this device.';
+      'Se sincronizează preferințele, vitezele pe carte, aspectul paginii Acasă, ordinea din Absorbing, notițele și evidențierile din cărțile electronice. Datele de conectare, dosarele de descărcare, comutatoarele de descărcare automată, aspectul cititorului și tot ce nu a fost încă trimis pe server rămân pe acest dispozitiv.';
 
   @override
   String get syncSettingsDownloadWarnTitle =>
-      'Replace this device\'s settings?';
+      'Înlocuiești setările acestui dispozitiv?';
 
   @override
   String get syncSettingsDownloadWarnBody =>
-      'The synced copy will overwrite the settings on this device.';
+      'Copia sincronizată va suprascrie setările de pe acest dispozitiv.';
 
   @override
-  String get syncSettingsDownloadWarnConfirm => 'Replace';
+  String get syncSettingsDownloadWarnConfirm => 'Înlocuiește';
 
   @override
-  String get readerCopied => 'Copied to clipboard';
+  String get readerCopied => 'Copiat în clipboard';
 
   @override
-  String get dictionaryNotFound => 'No definition found for this word.';
+  String get dictionaryNotFound =>
+      'Nu s-a găsit nicio definiție pentru acest cuvânt.';
 
   @override
   String get dictionaryError =>
-      'Couldn\'t reach the dictionary. Check your connection.';
+      'Dicționarul nu a putut fi contactat. Verifică conexiunea.';
 
   @override
-  String get dictionaryRetry => 'Retry';
+  String get dictionaryRetry => 'Reîncearcă';
 
   @override
-  String get dictionarySearchWeb => 'Search the web';
+  String get dictionarySearchWeb => 'Caută pe web';
 
   @override
-  String get readerTooltipCopy => 'Copy';
+  String get readerTooltipCopy => 'Copiază';
 
   @override
-  String get readerTooltipSearch => 'Search';
+  String get readerTooltipSearch => 'Caută';
 
   @override
-  String get readerTooltipDefine => 'Define';
+  String get readerTooltipDefine => 'Definește';
 
   @override
-  String get readerTooltipTranslate => 'Translate';
+  String get readerTooltipTranslate => 'Tradu';
 
   @override
-  String get readerSearchHint => 'Search this book…';
+  String get readerSearchHint => 'Caută în această carte…';
 
   @override
   String readerSearchMatches(int count, String query) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count matches for \"$query\"',
-      one: '$count match for \"$query\"',
+      other: '$count de rezultate pentru „$query”',
+      few: '$count rezultate pentru „$query”',
+      one: '$count rezultat pentru „$query”',
     );
     return '$_temp0';
   }
 
   @override
-  String get readerSearchEmpty => 'Type a word or phrase and tap search.';
+  String get readerSearchEmpty =>
+      'Scrie un cuvânt sau o expresie și atinge căutare.';
 
   @override
   String readerSearchNoResults(String query) {
-    return 'No matches for \"$query\".';
+    return 'Niciun rezultat pentru „$query”.';
   }
 
   @override
-  String get transcriptionTitle => 'Transcription';
+  String get transcriptionTitle => 'Transcriere';
 
   @override
   String get transcriptionAdvancedSubtitle =>
-      'For transcribing bookmarks and finding your spot between audiobook and ebook';
+      'Pentru transcrierea marcajelor și găsirea locului între cartea audio și cea electronică';
 
   @override
-  String get transcriptionEnable => 'Enable transcription';
+  String get transcriptionEnable => 'Activează transcrierea';
 
   @override
   String get transcriptionEnableSubtitle =>
-      'Adds Transcribe to bookmarks, Find position in ebook to the player, and Find in audiobook to the reader';
+      'Adaugă Transcrie la marcaje, Găsește poziția în cartea electronică în player și Găsește în cartea audio în cititor';
 
   @override
   String get transcriptionDisclaimer =>
-      'Runs entirely on your device, nothing is sent anywhere. It uses extra battery and processing while it works, and only downloaded books can be transcribed.';
+      'Rulează integral pe dispozitivul tău, nimic nu este trimis nicăieri. Folosește mai multă baterie și putere de procesare cât timp lucrează, iar doar cărțile descărcate pot fi transcrise.';
 
   @override
   String get transcriptionNeedModelHint =>
-      'Download a model below to start transcribing.';
+      'Descarcă un model mai jos pentru a începe transcrierea.';
 
   @override
-  String get transcriptionModelSection => 'Models';
+  String get transcriptionModelSection => 'Modele';
 
   @override
-  String get transcriptionModelTiny => 'Tiny';
+  String get transcriptionModelTiny => 'Foarte mic';
 
   @override
   String get transcriptionModelTinyDesc =>
-      'Quickest, less accurate. About 31 MB.';
+      'Cel mai rapid, mai puțin precis. Aproximativ 31 MB.';
 
   @override
-  String get transcriptionModelBase => 'Base';
+  String get transcriptionModelBase => 'De bază';
 
   @override
-  String get transcriptionModelBaseDesc => 'A good middle ground. About 57 MB.';
+  String get transcriptionModelBaseDesc =>
+      'Un compromis bun. Aproximativ 57 MB.';
 
   @override
-  String get transcriptionModelSmall => 'Small';
+  String get transcriptionModelSmall => 'Mic';
 
   @override
   String get transcriptionModelSmallDesc =>
-      'Slower but most accurate - best on a high-end phone. About 182 MB.';
+      'Mai lent, dar cel mai precis - cel mai bun pe un telefon performant. Aproximativ 182 MB.';
 
   @override
   String get transcriptionAutoHint =>
-      'With more than one downloaded, each job picks between them. Books with an ebook get the quickest one, since the exact words come from the ebook anyway. Books without one get the most accurate - except read along, which stays below Small so it can keep up with the narration.';
+      'Dacă ai descărcat mai multe, fiecare lucrare alege dintre ele. Cărțile cu carte electronică primesc cel mai rapid model, deoarece cuvintele exacte vin oricum din cartea electronică. Cele fără carte electronică primesc cel mai precis - cu excepția citirii în paralel, care rămâne sub Mic, ca să țină pasul cu naratorul.';
 
   @override
-  String get transcriptionDownload => 'Download';
+  String get transcriptionDownload => 'Descarcă';
 
   @override
   String get transcriptionDownloadFailed =>
-      'Download failed. Check your connection and try again.';
+      'Descărcarea a eșuat. Verifică conexiunea și încearcă din nou.';
 
   @override
-  String get transcribe => 'Transcribe';
+  String get transcribe => 'Transcrie';
 
   @override
-  String get transcribing => 'Transcribing...';
+  String get transcribing => 'Se transcrie...';
 
   @override
-  String get transcriptionResultTitle => 'Transcript';
+  String get transcriptionResultTitle => 'Transcriere';
 
   @override
-  String get transcriptionSaveToNote => 'Save to note';
+  String get transcriptionSaveToNote => 'Salvează în notiță';
 
   @override
-  String get transcriptionSavedToNote => 'Saved to bookmark note';
+  String get transcriptionSavedToNote => 'Salvat în notița marcajului';
 
   @override
   String get transcriptionDisabledHint =>
-      'Turn on bookmark transcription in Settings, under Advanced.';
+      'Activează transcrierea marcajelor în Setări, la Avansat.';
 
   @override
   String get transcriptionNoModelDownloaded =>
-      'Download a transcription model in Settings first.';
+      'Descarcă mai întâi un model de transcriere în Setări.';
 
   @override
   String get transcriptionNotDownloadedBook =>
-      'Download this book or connect to your server to transcribe it.';
+      'Descarcă această carte sau conectează-te la server pentru a o transcrie.';
 
   @override
   String get transcriptionNoMetadataMsg =>
-      'Can\'t locate this spot in the download. Try re-downloading the book.';
+      'Nu se poate localiza acest loc în descărcare. Încearcă să descarci din nou cartea.';
 
   @override
   String get transcriptionBusyMsg =>
-      'Already transcribing something. Give it a moment.';
+      'Se transcrie deja altceva. Mai așteaptă puțin.';
 
   @override
-  String get transcriptionEmptyMsg => 'No speech was found at this spot.';
+  String get transcriptionEmptyMsg => 'Nu s-a găsit vorbire în acest loc.';
 
   @override
   String get transcriptionFailedMsg =>
-      'Couldn\'t transcribe this spot. Please try again.';
+      'Nu s-a putut transcrie acest loc. Încearcă din nou.';
 
   @override
-  String get transcriptionPlaySnippet => 'Listen';
+  String get transcriptionPlaySnippet => 'Ascultă';
 
   @override
-  String get transcriptionPauseSnippet => 'Pause';
+  String get transcriptionPauseSnippet => 'Pauză';
 
   @override
   String get transcriptionIntroBody =>
-      'This listens to the chosen amount of audio, starting just before the bookmark, and turns it into text on your device. Longer clips take longer, and transcription isn\'t 100% accurate. The text is saved into the bookmark\'s note when it\'s done, ready to fix up or share.';
+      'Aceasta ascultă cantitatea de audio aleasă, începând chiar înainte de marcaj, și o transformă în text pe dispozitivul tău. Fragmentele mai lungi durează mai mult, iar transcrierea nu este precisă 100%. Textul este salvat în notița marcajului când e gata, pregătit de corectat sau de partajat.';
 
   @override
   String get transcriptionUseEbookText =>
-      'Use the ebook\'s exact text when it can be matched';
+      'Folosește textul exact al cărții electronice când poate fi potrivit';
 
   @override
-  String get lyricsMode => 'Live transcript';
+  String get lyricsMode => 'Transcriere în direct';
 
   @override
-  String get lyricsListeningAhead => 'Listening ahead...';
+  String get lyricsListeningAhead => 'Se ascultă în avans...';
 
   @override
-  String get lyricsDisplaySection => 'Live transcript';
+  String get lyricsDisplaySection => 'Transcriere în direct';
 
   @override
-  String get lyricsFontSize => 'Line size';
+  String get lyricsFontSize => 'Dimensiunea rândului';
 
   @override
-  String get lyricsMaxLines => 'Lines shown';
+  String get lyricsMaxLines => 'Rânduri afișate';
 
   @override
-  String get lyricsFullCover => 'Use the whole cover';
+  String get lyricsFullCover => 'Folosește toată coperta';
 
   @override
   String get lyricsFullCoverHint =>
-      'Shows the transcript in place of the artwork while it runs, fitting as many lines as there is room for.';
+      'Arată transcrierea în locul imaginii cât timp rulează, încadrând cât mai multe rânduri încap.';
 
   @override
   String get lyricsBatteryInfo =>
-      'Live transcript and read along use extra battery and processing while they run. On phones with slower processors, lines can take longer to appear.';
+      'Transcrierea în direct și citirea în paralel folosesc mai multă baterie și putere de procesare cât timp rulează. Pe telefoanele cu procesoare mai lente, rândurile pot apărea mai greu.';
 
   @override
-  String get lyricsClearCache => 'Clear transcript cache';
+  String get lyricsClearCache => 'Golește memoria cache a transcrierilor';
 
   @override
   String lyricsClearCacheHint(String size) {
-    return '$size of saved transcript lines. Cleared books and episodes are transcribed again as you listen.';
+    return '$size de rânduri de transcriere salvate. Cărțile și episoadele șterse sunt transcrise din nou pe măsură ce asculți.';
   }
 
   @override
   String get lyricsClearCacheConfirm =>
-      'Delete the saved transcripts for every book and episode? They rebuild automatically as you listen.';
+      'Ștergi transcrierile salvate pentru fiecare carte și episod? Se refac automat pe măsură ce asculți.';
 
   @override
-  String get lyricsCacheCleared => 'Transcript cache cleared';
+  String get lyricsCacheCleared =>
+      'Memoria cache a transcrierilor a fost golită';
 
   @override
   String get lyricsIntroBody =>
-      'This listens a little ahead of the narration and shows each line as it is spoken, transcribed on your phone - nothing leaves the device. After turning it on, hold off on pressing play for a few seconds while it gets ahead. The transcript appears once its head start is ready, and starting paused gives it the smoothest run. It uses extra battery and processing while it runs.';
+      'Aceasta ascultă puțin înaintea naratorului și arată fiecare rând pe măsură ce este rostit, transcris pe telefonul tău - nimic nu părăsește dispozitivul. După activare, așteaptă câteva secunde înainte de a apăsa redare, cât timp ia avans. Transcrierea apare când avansul este gata, iar pornirea din pauză îi oferă cea mai fluentă rulare. Folosește mai multă baterie și putere de procesare cât timp rulează.';
 
   @override
   String lyricsBuildingLead(String percent) {
-    return 'Getting ahead of the narration... $percent';
+    return 'Se ia avans față de narator... $percent';
   }
 
   @override
   String lyricsCantKeepUp(String speed) {
-    return 'Can\'t transcribe as fast as you\'re listening at $speed';
+    return 'Nu se poate transcrie la fel de repede cât asculți la $speed';
   }
 
   @override
-  String get lyricsTurnOn => 'Turn on';
+  String get lyricsTurnOn => 'Activează';
 
   @override
-  String get readAlong => 'Read along';
+  String get readAlong => 'Citire în paralel';
 
   @override
-  String get readAlongNeedsPlaying => 'Play this book\'s audiobook first';
+  String get readAlongNeedsPlaying =>
+      'Redă mai întâi cartea audio a acestei cărți';
 
   @override
-  String get narrationListen => 'Listen';
+  String get narrationListen => 'Ascultă';
 
   @override
-  String get narrationPlayFromHere => 'Play from here';
+  String get narrationPlayFromHere => 'Redă de aici';
 
   @override
-  String get narrationPreparing => 'Getting the narration ready';
+  String get narrationPreparing => 'Se pregătește narațiunea';
 
   @override
-  String get narrationNone => 'This ebook has no narration to play';
+  String get narrationNone =>
+      'Această carte electronică nu are narațiune de redat';
 
   @override
-  String get narrationDownloadTitle => 'Download to listen';
+  String get narrationDownloadTitle => 'Descarcă pentru a asculta';
 
   @override
   String get narrationDownloadBody =>
-      'This book is an EPUB3 that reads itself aloud. Audiobookshelf can\'t stream its narration, so the audio needs to be downloaded before it plays.';
+      'Această carte este un EPUB3 care se citește singur cu voce tare. Audiobookshelf nu poate transmite narațiunea în flux, așa că audio trebuie descărcat înainte de redare.';
 
   @override
   String get narrationDownloadStarted =>
-      'Downloading the narration. Tap Absorb when it finishes.';
+      'Se descarcă narațiunea. Atinge Absorb când se termină.';
 
   @override
   String get narrationTextBody =>
-      'This book\'s EPUB has its own words for every moment of the audio, so the text is copied straight from the book. Pick how much to add to the bookmark\'s note.';
+      'EPUB-ul acestei cărți are propriile cuvinte pentru fiecare moment din audio, așa că textul este copiat direct din carte. Alege cât să adaugi în notița marcajului.';
 
   @override
-  String get narrationTextLoading => 'Getting the words from the book';
+  String get narrationTextLoading => 'Se preiau cuvintele din carte';
 
   @override
-  String get downloadToAbsorb => 'Download to Absorb';
+  String get downloadToAbsorb => 'Descarcă în Absorb';
 
   @override
-  String get narrationUpNextTitle => 'Download what\'s up next';
+  String get narrationUpNextTitle => 'Descarcă ce urmează';
 
   @override
   String narrationUpNextBody(String title) {
-    return '$title is next in your queue. It\'s an EPUB3 that reads itself aloud, so it needs to be downloaded before it can play.';
+    return '$title este următoarea din coada ta. Este un EPUB3 care se citește singur cu voce tare, așa că trebuie descărcată înainte de redare.';
   }
 
   @override
   String narrationQueueStopped(String title) {
-    return 'Stopped before $title. Download it to keep going.';
+    return 'S-a oprit înainte de $title. Descarcă-o pentru a continua.';
   }
 
   @override
   String get transcriptionNeedsDownload =>
-      'This needs the audio on your phone. Download it now?';
+      'Aceasta are nevoie de audio pe telefonul tău. Îl descarci acum?';
 
   @override
   String get transcriptionDownloadStarted =>
-      'Downloading. Turn this on again when it finishes';
+      'Se descarcă. Activează din nou aceasta când se termină';
 
   @override
-  String get readAlongFollow => 'Read along follows';
+  String get readAlongFollow => 'Citirea în paralel urmărește';
 
   @override
-  String get syncReadingListening => 'Keep reading and listening in sync';
+  String get syncReadingListening =>
+      'Păstrează citirea și ascultarea sincronizate';
 
   @override
   String get syncReadingListeningHint =>
-      'For books with an audiobook and an ebook. When you stop listening, the ebook moves to where you stopped. When you leave the reader, the audiobook moves to your page. Only moves forward.';
+      'Pentru cărțile cu versiune audio și electronică. Când oprești ascultarea, cartea electronică trece la locul unde ai rămas. Când părăsești cititorul, cartea audio trece la pagina ta. Merge doar înainte.';
 
   @override
-  String get syncEbookMoved => 'Ebook moved to where you stopped listening';
+  String get syncEbookMoved =>
+      'Cartea electronică a trecut la locul unde ai oprit ascultarea';
 
   @override
-  String get syncAudioMoved => 'Audiobook moved to where you stopped reading';
+  String get syncAudioMoved =>
+      'Cartea audio a trecut la locul unde ai oprit citirea';
 
   @override
-  String get syncAudioOffer => 'Tap to jump to where you stopped reading';
+  String get syncAudioOffer =>
+      'Atinge pentru a sări la locul unde ai oprit citirea';
 
   @override
-  String get syncFindingAudio => 'Finding your page in the audiobook';
+  String get syncFindingAudio => 'Se caută pagina ta în cartea audio';
 
   @override
-  String get syncFindingEbook => 'Finding your spot in the ebook';
+  String get syncFindingEbook => 'Se caută locul tău în cartea electronică';
 
   @override
-  String get syncFailed => 'Couldn\'t sync your place';
+  String get syncFailed => 'Nu s-a putut sincroniza poziția';
 
   @override
-  String get syncAlreadyTogether => 'Already in sync';
+  String get syncAlreadyTogether => 'Deja sincronizate';
 
   @override
-  String get syncPosition => 'Sync position';
+  String get syncPosition => 'Sincronizează poziția';
 
   @override
   String get readAlongFollowHint =>
-      'Word timing is worked out between the transcript\'s timestamps, so it can drift slightly inside a sentence.';
+      'Momentul fiecărui cuvânt este calculat între marcajele de timp ale transcrierii, așa că poate devia ușor în interiorul unei propoziții.';
 
   @override
-  String get readAlongFollowWord => 'Word';
+  String get readAlongFollowWord => 'Cuvânt';
 
   @override
-  String get readAlongFollowSentence => 'Sentence';
+  String get readAlongFollowSentence => 'Propoziție';
 
   @override
-  String get readAlongColor => 'Read along color';
+  String get readAlongColor => 'Culoarea citirii în paralel';
 
   @override
-  String get readAlongLost => 'Can\'t find the narration on the page';
+  String get readAlongLost => 'Nu se găsește narațiunea pe pagină';
 
   @override
-  String get readAlongBackToNarration => 'Back to narration';
+  String get readAlongBackToNarration => 'Înapoi la narațiune';
 
   @override
-  String get findInEbook => 'Find in ebook';
+  String get findInEbook => 'Găsește în cartea electronică';
 
   @override
-  String get findInEbookSearching => 'Finding this spot in the ebook...';
+  String get findInEbookSearching =>
+      'Se caută acest loc în cartea electronică...';
 
   @override
-  String get findInEbookNotFound => 'Couldn\'t find this spot in the ebook.';
+  String get findInEbookNotFound =>
+      'Nu s-a găsit acest loc în cartea electronică.';
 
   @override
-  String get findInEbookNeedsEpub => 'Find in ebook needs an EPUB ebook.';
+  String get findInEbookNeedsEpub =>
+      'Găsește în cartea electronică necesită o carte electronică EPUB.';
 
   @override
-  String get findInEbookNoEbook => 'This book doesn\'t have an ebook.';
+  String get findInEbookNoEbook =>
+      'Această carte nu are o versiune electronică.';
 
   @override
-  String get findInAudiobook => 'Find in audiobook';
+  String get findInAudiobook => 'Găsește în cartea audio';
 
   @override
   String get findInAudiobookSearching =>
-      'Finding this spot in the audiobook...';
+      'Se caută acest loc în cartea audio...';
 
   @override
   String get findInAudiobookStillSearching =>
-      'Still searching the audio for this spot...';
+      'Se mai caută acest loc în audio...';
 
   @override
   String get findInAudiobookSearchingLong =>
-      'Long chapter, still searching. This can take a minute or two...';
+      'Capitol lung, încă se caută. Poate dura un minut sau două...';
 
   @override
   String get findInAudiobookNotFound =>
-      'Couldn\'t find this spot in the audiobook.';
+      'Nu s-a găsit acest loc în cartea audio.';
 
   @override
   String get transcriptionWhisperInfo =>
-      'Transcription is powered by Whisper, an open speech recognition model that listens to the narration and writes out the words - all on this device.';
+      'Transcrierea este realizată de Whisper, un model deschis de recunoaștere a vorbirii care ascultă narațiunea și scrie cuvintele - totul pe acest dispozitiv.';
 
   @override
-  String get transcriptionWhisperLearnMore => 'Learn more about Whisper';
+  String get transcriptionWhisperLearnMore => 'Află mai multe despre Whisper';
 
   @override
   String get findInAudiobookIntroBody =>
-      'This listens to the audiobook near where you\'re reading and matches it to this passage, all on your device. It can take up to a minute. If the spot can\'t be matched confidently, nothing moves.';
+      'Aceasta ascultă cartea audio în apropierea locului unde citești și o potrivește cu acest pasaj, totul pe dispozitivul tău. Poate dura până la un minut. Dacă locul nu poate fi potrivit cu încredere, nu se mișcă nimic.';
 
   @override
-  String get findInAudiobookAfterLabel => 'When the spot is found';
+  String get findInAudiobookAfterLabel => 'Când locul este găsit';
 
   @override
-  String get findInAudiobookStay => 'Keep reading';
+  String get findInAudiobookStay => 'Continuă să citești';
 
   @override
-  String get findInAudiobookGoPlayer => 'Open the player';
+  String get findInAudiobookGoPlayer => 'Deschide playerul';
 
   @override
-  String get findInAudiobookPlaying => 'Playing this passage in the audiobook';
+  String get findInAudiobookPlaying => 'Se redă acest pasaj din cartea audio';
 
   @override
   String get catchUpAudioAhead =>
-      'The audiobook is further along. Tap to go there.';
+      'Cartea audio este mai avansată. Atinge pentru a merge acolo.';
 
   @override
   String get catchUpPageAhead =>
-      'This page is ahead of the audiobook. Tap to move the audiobook here.';
+      'Această pagină este înaintea cărții audio. Atinge pentru a muta cartea audio aici.';
 
   @override
-  String get readerShortcutButton => 'Shortcut button';
+  String get readerShortcutButton => 'Buton de comandă rapidă';
 
   @override
-  String get keepScreenOn => 'Keep screen on';
+  String get keepScreenOn => 'Menține ecranul pornit';
 
   @override
-  String get keepScreenOnActive => 'Screen stays on';
+  String get keepScreenOnActive => 'Ecranul rămâne pornit';
 
   @override
   String get keepScreenOnUntilClosed =>
-      'Screen stays on until you close the app';
+      'Ecranul rămâne pornit până închizi aplicația';
 
   @override
-  String get keepScreenOnOff => 'Screen can turn off again';
+  String get keepScreenOnOff => 'Ecranul se poate stinge din nou';
 
   @override
   String get keepScreenOnOffUntilRestart =>
-      'Off until the app restarts. The Settings switch stays on';
+      'Oprit până la repornirea aplicației. Comutatorul din Setări rămâne activat';
 
   @override
-  String get keepScreenOnPlayer => 'Keep the screen on in the player';
+  String get keepScreenOnPlayer => 'Menține ecranul pornit în player';
 
   @override
   String get keepScreenOnPlayerSubtitle =>
-      'The screen stays on while the player is open';
+      'Ecranul rămâne pornit cât timp playerul este deschis';
 
   @override
-  String get keepScreenOnCarMode => 'Keep the screen on in car mode';
+  String get keepScreenOnCarMode => 'Menține ecranul pornit în modul mașină';
 
   @override
   String get keepScreenOnCarModeSubtitle =>
-      'The screen stays on while car mode is open';
+      'Ecranul rămâne pornit cât timp modul mașină este deschis';
 
   @override
-  String get loginServerType => 'Server type';
+  String get loginServerType => 'Tip de server';
 
   @override
   String get authBookOrbitDefaultPassword =>
-      'This account still has its default password. Change it in BookOrbit, then sign in again.';
+      'Acest cont are încă parola implicită. Schimb-o în BookOrbit, apoi conectează-te din nou.';
 
   @override
   String get authBookOrbitPasswordOff =>
-      'Password sign-in is turned off on this server. Sign in with a magic link or single sign-on.';
+      'Conectarea cu parolă este dezactivată pe acest server. Conectează-te cu un link magic sau prin autentificare unică.';
 
   @override
   String get authServerIsBookOrbit =>
-      'This is a BookOrbit server. Choose BookOrbit above the server address.';
+      'Acesta este un server BookOrbit. Alege BookOrbit deasupra adresei serverului.';
 
   @override
   String get authServerIsAudiobookshelf =>
-      'This is an Audiobookshelf server. Choose Audiobookshelf above the server address.';
+      'Acesta este un server Audiobookshelf. Alege Audiobookshelf deasupra adresei serverului.';
 
   @override
   String get castNotAvailableBookOrbit =>
-      'Casting is not available with BookOrbit servers';
+      'Proiectarea (cast) nu este disponibilă cu serverele BookOrbit';
 
   @override
-  String get loginMagicLink => 'Magic link';
+  String get loginMagicLink => 'Link magic';
 
   @override
   String get loginMagicLinkDescription =>
-      'Sign in with a BookOrbit magic link, or paste a password link to set your password.';
+      'Conectează-te cu un link magic BookOrbit sau lipește un link de parolă pentru a-ți seta parola.';
 
   @override
-  String get collectionPublicTitle => 'Public';
+  String get collectionPublicTitle => 'Publică';
 
   @override
   String get collectionPublicSubtitle =>
-      'Everyone on this server can see this collection';
+      'Toți cei de pe acest server pot vedea această colecție';
 
   @override
   String loginSignInWithProvider(String provider) {
-    return 'Sign in with $provider';
+    return 'Conectează-te cu $provider';
   }
 
   @override
-  String get loginSignInWithSso => 'Sign in with SSO';
+  String get loginSignInWithSso => 'Conectează-te cu SSO';
 
   @override
-  String get loginChooseSsoProvider => 'Choose how to sign in';
+  String get loginChooseSsoProvider => 'Alege cum te conectezi';
 
   @override
   String get loginRedirectUriBookOrbit =>
-      'Redirect URI: bookorbit://oauth2-callback';
+      'URI de redirecționare: bookorbit://oauth2-callback';
 
   @override
-  String get readStatusTitle => 'Reading status';
+  String get readStatusTitle => 'Stare de citire';
 
   @override
   String get readStatusHint =>
-      'BookOrbit keeps a status you pick here until you change it.';
+      'BookOrbit păstrează o stare pe care o alegi aici până o schimbi.';
 
   @override
-  String get readStatusUnread => 'Unread';
+  String get readStatusUnread => 'Necitită';
 
   @override
-  String get readStatusWantToRead => 'Want to read';
+  String get readStatusWantToRead => 'Vreau să o citesc';
 
   @override
-  String get readStatusReading => 'Reading';
+  String get readStatusReading => 'În citire';
 
   @override
-  String get readStatusOnHold => 'On hold';
+  String get readStatusOnHold => 'În așteptare';
 
   @override
-  String get readStatusRereading => 'Rereading';
+  String get readStatusRereading => 'Recitită';
 
   @override
-  String get readStatusRead => 'Read';
+  String get readStatusRead => 'Citită';
 
   @override
-  String get readStatusSkimmed => 'Skimmed';
+  String get readStatusSkimmed => 'Răsfoită';
 
   @override
-  String get readStatusAbandoned => 'Abandoned';
+  String get readStatusAbandoned => 'Abandonată';
 
   @override
-  String get personalNoteTitle => 'Your note';
+  String get personalNoteTitle => 'Notița ta';
 
   @override
-  String get personalNoteAdd => 'Add a private note';
+  String get personalNoteAdd => 'Adaugă o notiță privată';
 
   @override
-  String get personalNoteHint => 'Only you can see this note.';
+  String get personalNoteHint => 'Doar tu poți vedea această notiță.';
 
   @override
-  String get moreLikeThis => 'More like this';
+  String get moreLikeThis => 'Mai multe ca aceasta';
 
   @override
-  String get coverSlotAudiobook => 'Audiobook cover';
+  String get coverSlotAudiobook => 'Coperta cărții audio';
 
   @override
-  String get coverSlotBook => 'Book cover';
+  String get coverSlotBook => 'Coperta cărții';
 
   @override
-  String get cardButtonFill => 'Button background';
+  String get cardButtonFill => 'Fundalul butoanelor';
 
   @override
   String get cardButtonFillSubtitle =>
-      'How the buttons on the player card are filled';
+      'Cum sunt umplute butoanele de pe cardul playerului';
 
   @override
-  String get cardButtonFillClear => 'Clear';
+  String get cardButtonFillClear => 'Transparent';
 
   @override
-  String get cardButtonFillSubtle => 'Subtle';
+  String get cardButtonFillSubtle => 'Discret';
 
   @override
-  String get cardButtonFillSolid => 'Solid';
+  String get cardButtonFillSolid => 'Plin';
 
   @override
   String get loginBookOrbitPreview =>
-      'BookOrbit support is new. Playback, downloads and browsing work, but some screens may still look or act like Audiobookshelf. Follow the progress on GitHub, and let us know if something seems off.';
+      'Suportul pentru BookOrbit este nou. Redarea, descărcările și navigarea funcționează, dar unele ecrane pot arăta sau funcționa încă precum Audiobookshelf. Urmărește progresul pe GitHub și spune-ne dacă ceva nu pare în regulă.';
 
   @override
-  String get signedOutTapToSignIn => 'Signed out. Tap to sign in again.';
+  String get signedOutTapToSignIn =>
+      'Deconectat. Atinge pentru a te conecta din nou.';
 
   @override
   String get authSignedOutKeepListening =>
-      'You\'ve been signed out. Downloads still play. Tap the red cloud to sign in again.';
+      'Ai fost deconectat. Descărcările se redau în continuare. Atinge norul roșu pentru a te conecta din nou.';
 
   @override
   String signedOutSyncNote(String username, String server) {
-    return 'What you listen to while signed out is kept on this phone and syncs when you sign back in as $username on $server. Any way of signing in to that account works.';
+    return 'Ce asculți cât timp ești deconectat se păstrează pe acest telefon și se sincronizează când te conectezi din nou ca $username pe $server. Orice mod de conectare la acel cont funcționează.';
   }
 
   @override
-  String get comicReadingDirection => 'Reading direction';
+  String get comicReadingDirection => 'Direcția de citire';
 
   @override
   String comicPageNumber(int page) {
-    return 'Page $page';
+    return 'Pagina $page';
   }
 
   @override
   String get comicBookmarkRemoveFailed =>
-      'Couldn\'t remove the bookmark from the server. Try again when you\'re online.';
+      'Nu s-a putut elimina marcajul de pe server. Încearcă din nou când ești online.';
 
   @override
-  String get comicLeftToRight => 'Left to right';
+  String get comicLeftToRight => 'De la stânga la dreapta';
 
   @override
-  String get comicRightToLeft => 'Right to left (manga)';
+  String get comicRightToLeft => 'De la dreapta la stânga (manga)';
 
   @override
   String get comicNeedsConnection =>
-      'This comic opens page by page from your server, so it needs a connection.';
+      'Această bandă desenată se deschide pagină cu pagină de pe server, deci necesită o conexiune.';
 
   @override
-  String get comicNoPages => 'No pages found in this comic.';
+  String get comicNoPages => 'Nu s-au găsit pagini în această bandă desenată.';
 
   @override
-  String get boAdminTitle => 'Server admin';
+  String get boAdminTitle => 'Administrare server';
 
   @override
-  String get boAdminSubtitle => 'Users and libraries on this BookOrbit server';
+  String get boAdminSubtitle =>
+      'Utilizatorii și bibliotecile de pe acest server BookOrbit';
 
   @override
-  String get boAdminUsers => 'Users';
+  String get boAdminUsers => 'Utilizatori';
 
   @override
-  String get boAdminLibraries => 'Libraries';
+  String get boAdminLibraries => 'Biblioteci';
 
   @override
   String boAdminUserCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count people',
-      one: '1 person',
+      other: '$count de persoane',
+      few: '$count persoane',
+      one: '1 persoană',
     );
     return '$_temp0';
   }
@@ -11632,851 +11860,858 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count libraries',
-      one: '1 library',
+      other: '$count de biblioteci',
+      few: '$count biblioteci',
+      one: '1 bibliotecă',
     );
     return '$_temp0';
   }
 
   @override
-  String get boAdminSaved => 'Saved';
+  String get boAdminSaved => 'Salvat';
 
   @override
-  String get boAdminFailed => 'That didn\'t work. Try again.';
+  String get boAdminFailed => 'Nu a funcționat. Încearcă din nou.';
 
   @override
-  String get boAdminOffline => 'Couldn\'t reach the server.';
+  String get boAdminOffline => 'Serverul nu a putut fi contactat.';
 
   @override
-  String get boUsersSearch => 'Search users';
+  String get boUsersSearch => 'Caută utilizatori';
 
   @override
-  String get boUsersNone => 'No users here';
+  String get boUsersNone => 'Niciun utilizator aici';
 
   @override
-  String get boUsersFilterAll => 'All';
+  String get boUsersFilterAll => 'Toți';
 
   @override
-  String get boUsersFilterAdmins => 'Admins';
+  String get boUsersFilterAdmins => 'Administratori';
 
   @override
-  String get boUsersFilterActive => 'Active';
+  String get boUsersFilterActive => 'Activi';
 
   @override
-  String get boUsersFilterInactive => 'Inactive';
+  String get boUsersFilterInactive => 'Inactivi';
 
   @override
-  String get boUsersFilterAttention => 'Needs attention';
+  String get boUsersFilterAttention => 'Necesită atenție';
 
   @override
   String get boUserBadgeAdmin => 'Admin';
 
   @override
-  String get boUserBadgeInactive => 'Inactive';
+  String get boUserBadgeInactive => 'Inactiv';
 
   @override
-  String get boUserBadgeLocked => 'Locked';
+  String get boUserBadgeLocked => 'Blocat';
 
   @override
-  String get boUserBadgeNoPassword => 'No password yet';
+  String get boUserBadgeNoPassword => 'Încă fără parolă';
 
   @override
   String boUserLastActive(String date) {
-    return 'Last active $date';
+    return 'Ultima activitate $date';
   }
 
   @override
-  String get boUserNeverSignedIn => 'Never signed in';
+  String get boUserNeverSignedIn => 'Nu s-a conectat niciodată';
 
   @override
-  String get boUserNew => 'New user';
+  String get boUserNew => 'Utilizator nou';
 
   @override
-  String get boUserCreate => 'Create';
+  String get boUserCreate => 'Creează';
 
   @override
-  String get boUserUsername => 'Username';
+  String get boUserUsername => 'Nume de utilizator';
 
   @override
   String get boUserUsernameHint =>
-      'At least 3 characters. It cannot be changed later.';
+      'Cel puțin 3 caractere. Nu poate fi schimbat ulterior.';
 
   @override
-  String get boUserName => 'Name';
+  String get boUserName => 'Nume';
 
   @override
-  String get boUserEmail => 'Email';
+  String get boUserEmail => 'E-mail';
 
   @override
-  String get boUserEmailInvalid => 'Enter a valid email address';
+  String get boUserEmailInvalid => 'Introdu o adresă de e-mail validă';
 
   @override
-  String get boUserActive => 'Active';
+  String get boUserActive => 'Activ';
 
   @override
-  String get boUserActiveSubtitle => 'Inactive users can\'t sign in';
+  String get boUserActiveSubtitle => 'Utilizatorii inactivi nu se pot conecta';
 
   @override
   String get boUserAdmin => 'Administrator';
 
   @override
-  String get boUserAdminSubtitle => 'Full access to everything on the server';
+  String get boUserAdminSubtitle => 'Acces complet la tot ce este pe server';
 
   @override
   String get boUserAdminHasAll =>
-      'Administrators have every permission and see every library.';
+      'Administratorii au toate permisiunile și văd toate bibliotecile.';
 
   @override
-  String get boUserPermissions => 'Permissions';
+  String get boUserPermissions => 'Permisiuni';
 
   @override
-  String get boUserPresetNone => 'None';
+  String get boUserPresetNone => 'Niciuna';
 
   @override
   String get boUserPresetStandard => 'Standard';
 
   @override
-  String get boUserPresetEverything => 'Everything';
+  String get boUserPresetEverything => 'Toate';
 
   @override
-  String get boUserLibraries => 'Libraries';
+  String get boUserLibraries => 'Biblioteci';
 
   @override
-  String get boUserLibrariesHint => 'The libraries this person can see.';
+  String get boUserLibrariesHint =>
+      'Bibliotecile pe care le poate vedea această persoană.';
 
   @override
-  String get boUserPasswordLink => 'Send password link';
+  String get boUserPasswordLink => 'Trimite link de parolă';
 
   @override
   String get boUserPasswordLinkSubtitle =>
-      'A link to set a new password, valid for 15 minutes';
+      'Un link pentru setarea unei parole noi, valabil 15 minute';
 
   @override
   String get boUserExternal =>
-      'Signs in through single sign-on, so the password is managed there.';
+      'Se conectează prin autentificare unică, așa că parola este gestionată acolo.';
 
   @override
-  String get boUserUnlock => 'Unlock account';
+  String get boUserUnlock => 'Deblochează contul';
 
   @override
-  String get boUserUnlocked => 'Account unlocked';
+  String get boUserUnlocked => 'Cont deblocat';
 
   @override
-  String get boUserDelete => 'Delete user';
+  String get boUserDelete => 'Șterge utilizatorul';
 
   @override
   String boUserDeleteTitle(String name) {
-    return 'Delete $name?';
+    return 'Ștergi $name?';
   }
 
   @override
   String get boUserDeleteBody =>
-      'Their account and everything they have on this server are removed. This cannot be undone.';
+      'Contul și tot ce are pe acest server vor fi eliminate. Acțiunea nu poate fi anulată.';
 
   @override
-  String get boUserDeleted => 'User deleted';
+  String get boUserDeleted => 'Utilizator șters';
 
   @override
-  String get boUserLinkTitle => 'Password link';
+  String get boUserLinkTitle => 'Link de parolă';
 
   @override
   String boUserLinkBody(String name) {
-    return 'Share this link with $name. It lets them set a password and works for 15 minutes.';
+    return 'Trimite acest link lui $name. Îi permite să seteze o parolă și este valabil 15 minute.';
   }
 
   @override
   String get boPasswordRules =>
-      'At least 8 characters, with an uppercase letter, a lowercase letter and a number.';
+      'Cel puțin 8 caractere, cu o literă mare, o literă mică și o cifră.';
 
   @override
-  String get boSetPasswordTitle => 'Set your password';
+  String get boSetPasswordTitle => 'Setează-ți parola';
 
   @override
-  String get boSetPasswordSubmit => 'Set password and sign in';
+  String get boSetPasswordSubmit => 'Setează parola și conectează-te';
 
   @override
   String boSetPasswordLinkBody(String username, String server) {
-    return 'Choose a password for $username on $server.';
+    return 'Alege o parolă pentru $username pe $server.';
   }
 
   @override
   String boSetPasswordLinkBodyNoName(String server) {
-    return 'Choose a password for your account on $server.';
+    return 'Alege o parolă pentru contul tău de pe $server.';
   }
 
   @override
   String get boSetPasswordStartingBody =>
-      'This account still has the password it was created with. Choose a new one to finish signing in.';
+      'Acest cont are încă parola cu care a fost creat. Alege una nouă pentru a încheia conectarea.';
 
   @override
   String get boSetPasswordTrust =>
-      'Only continue if you trust who sent this link.';
+      'Continuă doar dacă ai încredere în cine ți-a trimis acest link.';
 
   @override
   String get boPasswordLinkExpired =>
-      'This link has expired or was already used. Ask your server admin for a new one.';
+      'Acest link a expirat sau a fost deja folosit. Cere administratorului serverului unul nou.';
 
   @override
   String boPasswordSetSignInFailed(String error) {
-    return 'Your password is set, but signing in failed: $error';
+    return 'Parola ta a fost setată, dar conectarea a eșuat: $error';
   }
 
   @override
-  String get boChangePasswordSubtitle => 'Update your BookOrbit password';
+  String get boChangePasswordSubtitle => 'Actualizează-ți parola BookOrbit';
 
   @override
   String get boPasswordChangeEffect =>
-      'Changing your password signs out your other BookOrbit sessions. This device stays signed in.';
+      'Schimbarea parolei te deconectează de pe celelalte sesiuni BookOrbit. Acest dispozitiv rămâne conectat.';
 
   @override
   String get boPasswordChanged =>
-      'Password changed. Other signed-in devices were signed out.';
+      'Parola a fost schimbată. Celelalte dispozitive conectate au fost deconectate.';
 
   @override
   String boPasswordShareDescription(String username) {
-    return 'Send this link or have $username scan the QR code to choose a password and sign in to Absorb. It works for 15 minutes.';
+    return 'Trimite acest link sau cere-i lui $username să scaneze codul QR pentru a alege o parolă și a se conecta la Absorb. Este valabil 15 minute.';
   }
 
   @override
   String boPasswordShareWarning(String username) {
-    return 'Anyone with this link can choose the password for $username until it is used or expires.';
+    return 'Oricine are acest link poate alege parola pentru $username până când este folosit sau expiră.';
   }
 
   @override
-  String get setupLinkCopyWebLink => 'Copy web link';
+  String get setupLinkCopyWebLink => 'Copiază linkul web';
 
   @override
-  String get boUserLinkCopy => 'Copy link';
+  String get boUserLinkCopy => 'Copiază linkul';
 
   @override
-  String get boUserLinkCopied => 'Link copied';
+  String get boUserLinkCopied => 'Link copiat';
 
   @override
-  String get boUserLinkShare => 'Share';
+  String get boUserLinkShare => 'Partajează';
 
   @override
   String get boUserNoLink =>
-      'The user was added, but the server sent no password link. Send one from their page.';
+      'Utilizatorul a fost adăugat, dar serverul nu a trimis niciun link de parolă. Trimite unul de pe pagina lui.';
 
   @override
-  String get boPermGroupLibrary => 'Library and books';
+  String get boPermGroupLibrary => 'Bibliotecă și cărți';
 
   @override
-  String get boPermGroupRequests => 'Book requests';
+  String get boPermGroupRequests => 'Cereri de cărți';
 
   @override
-  String get boPermGroupDevices => 'Devices';
+  String get boPermGroupDevices => 'Dispozitive';
 
   @override
-  String get boPermGroupIntegrations => 'Reading integrations';
+  String get boPermGroupIntegrations => 'Integrări de citire';
 
   @override
   String get boPermGroupDock => 'Book Dock';
 
   @override
-  String get boPermGroupEmail => 'Email and notifications';
+  String get boPermGroupEmail => 'E-mail și notificări';
 
   @override
-  String get boPermGroupAdmin => 'Administration';
+  String get boPermGroupAdmin => 'Administrare';
 
   @override
-  String get boPermLibraryDownload => 'Download books';
+  String get boPermLibraryDownload => 'Descarcă cărți';
 
   @override
-  String get boPermLibraryUpload => 'Upload books';
+  String get boPermLibraryUpload => 'Încarcă cărți';
 
   @override
-  String get boPermLibraryEditMetadata => 'Edit metadata';
+  String get boPermLibraryEditMetadata => 'Editează metadatele';
 
   @override
-  String get boPermLibraryDeleteBooks => 'Delete books';
+  String get boPermLibraryDeleteBooks => 'Șterge cărți';
 
   @override
-  String get boPermBookRequestAccess => 'Request books';
+  String get boPermBookRequestAccess => 'Cere cărți';
 
   @override
-  String get boPermBookRequestAutoApprove => 'Requests approved automatically';
+  String get boPermBookRequestAutoApprove => 'Cereri aprobate automat';
 
   @override
-  String get boPermBookRequestSelfFulfill =>
-      'Download requested books directly';
+  String get boPermBookRequestSelfFulfill => 'Descarcă direct cărțile cerute';
 
   @override
-  String get boPermManageBookRequests => 'Manage book requests';
+  String get boPermManageBookRequests => 'Gestionează cererile de cărți';
 
   @override
-  String get boPermKoboSync => 'Kobo sync';
+  String get boPermKoboSync => 'Sincronizare Kobo';
 
   @override
-  String get boPermKoreaderSync => 'KOReader sync';
+  String get boPermKoreaderSync => 'Sincronizare KOReader';
 
   @override
-  String get boPermOpdsAccess => 'OPDS access';
+  String get boPermOpdsAccess => 'Acces OPDS';
 
   @override
-  String get boPermHardcoverSync => 'Hardcover sync';
+  String get boPermHardcoverSync => 'Sincronizare Hardcover';
 
   @override
-  String get boPermReadwiseSync => 'Readwise sync';
+  String get boPermReadwiseSync => 'Sincronizare Readwise';
 
   @override
-  String get boPermStorygraphSync => 'StoryGraph sync';
+  String get boPermStorygraphSync => 'Sincronizare StoryGraph';
 
   @override
-  String get boPermBookDockAccess => 'Use the Book Dock';
+  String get boPermBookDockAccess => 'Folosește Book Dock';
 
   @override
-  String get boPermManageBookDock => 'Manage the Book Dock';
+  String get boPermManageBookDock => 'Gestionează Book Dock';
 
   @override
-  String get boPermEmailSend => 'Send books by email';
+  String get boPermEmailSend => 'Trimite cărți prin e-mail';
 
   @override
-  String get boPermNotificationAccess => 'Notifications';
+  String get boPermNotificationAccess => 'Notificări';
 
   @override
-  String get boPermManageEmail => 'Manage email';
+  String get boPermManageEmail => 'Gestionează e-mailul';
 
   @override
-  String get boPermManageLibraries => 'Manage libraries';
+  String get boPermManageLibraries => 'Gestionează bibliotecile';
 
   @override
-  String get boPermManageMetadataConfig => 'Metadata settings';
+  String get boPermManageMetadataConfig => 'Setări de metadate';
 
   @override
-  String get boPermManageIcons => 'Manage icons';
+  String get boPermManageIcons => 'Gestionează pictogramele';
 
   @override
-  String get boPermManageUsers => 'Manage users';
+  String get boPermManageUsers => 'Gestionează utilizatorii';
 
   @override
-  String get boPermViewUserActivity => 'View user activity';
+  String get boPermViewUserActivity => 'Vezi activitatea utilizatorilor';
 
   @override
-  String get boPermViewAuditLog => 'View the audit log';
+  String get boPermViewAuditLog => 'Vezi jurnalul de audit';
 
   @override
-  String get boPermManageAppSettings => 'App settings';
+  String get boPermManageAppSettings => 'Setările aplicației';
 
   @override
-  String get boLibsNone => 'No libraries yet';
+  String get boLibsNone => 'Încă nu există biblioteci';
 
   @override
   String boLibBookCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count de cărți',
+      few: '$count cărți',
+      one: '1 carte',
     );
     return '$_temp0';
   }
 
   @override
-  String get boLibScanNow => 'Scan now';
+  String get boLibScanNow => 'Scanează acum';
 
   @override
-  String get boLibScanStarted => 'Scan started';
+  String get boLibScanStarted => 'Scanare pornită';
 
   @override
-  String get boLibScanning => 'Scanning';
+  String get boLibScanning => 'Se scanează';
 
   @override
   String boLibLastScan(String date, int added, int updated, int missing) {
-    return 'Scanned $date: $added added, $updated updated, $missing missing';
+    return 'Scanat $date: $added adăugate, $updated actualizate, $missing lipsă';
   }
 
   @override
-  String get boLibScanFailed => 'The last scan failed';
+  String get boLibScanFailed => 'Ultima scanare a eșuat';
 
   @override
-  String get boLibNeverScanned => 'Not scanned yet';
+  String get boLibNeverScanned => 'Încă nescanată';
 
   @override
-  String get boLibNew => 'New library';
+  String get boLibNew => 'Bibliotecă nouă';
 
   @override
-  String get boLibName => 'Name';
+  String get boLibName => 'Nume';
 
   @override
-  String get boLibNeedName => 'Give the library a name';
+  String get boLibNeedName => 'Dă un nume bibliotecii';
 
   @override
-  String get boLibIcon => 'Icon';
+  String get boLibIcon => 'Pictogramă';
 
   @override
-  String get boLibFolders => 'Folders';
+  String get boLibFolders => 'Dosare';
 
   @override
   String get boLibFoldersHint =>
-      'Folders on the server where this library\'s books live.';
+      'Dosarele de pe server în care se află cărțile acestei biblioteci.';
 
   @override
-  String get boLibNeedFolder => 'Add at least one folder';
+  String get boLibNeedFolder => 'Adaugă cel puțin un dosar';
 
   @override
-  String get boLibAddFolder => 'Add folder';
+  String get boLibAddFolder => 'Adaugă dosar';
 
   @override
   String boLibFolderFiles(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count de fișiere',
+      few: '$count fișiere',
+      one: '1 fișier',
     );
     return '$_temp0';
   }
 
   @override
   String boLibFolderInUse(String library) {
-    return 'Already in $library';
+    return 'Deja în $library';
   }
 
   @override
-  String get boLibFolderUnreadable => 'The server can\'t read this folder';
+  String get boLibFolderUnreadable => 'Serverul nu poate citi acest dosar';
 
   @override
-  String get boLibFolderRescan => 'Changing the folders rescans the library.';
+  String get boLibFolderRescan => 'Schimbarea dosarelor rescanează biblioteca.';
 
   @override
-  String get boLibOrganization => 'Books are stored as';
+  String get boLibOrganization => 'Cărțile sunt stocate ca';
 
   @override
-  String get boLibPerFolder => 'One book per folder';
+  String get boLibPerFolder => 'O carte pe dosar';
 
   @override
-  String get boLibPerFile => 'One book per file';
+  String get boLibPerFile => 'O carte pe fișier';
 
   @override
   String get boLibOrganizationFixed =>
-      'This cannot be changed after the library is created.';
+      'Aceasta nu poate fi schimbată după crearea bibliotecii.';
 
   @override
-  String get boLibWatch => 'Watch for changes';
+  String get boLibWatch => 'Urmărește modificările';
 
   @override
   String get boLibWatchSubtitle =>
-      'Pick up new and changed files as they appear';
+      'Preia fișierele noi și modificate pe măsură ce apar';
 
   @override
-  String get boLibSchedule => 'Scheduled scan';
+  String get boLibSchedule => 'Scanare programată';
 
   @override
-  String get boLibScheduleOff => 'Off';
+  String get boLibScheduleOff => 'Oprită';
 
   @override
-  String get boLibScheduleDaily => 'Daily';
+  String get boLibScheduleDaily => 'Zilnic';
 
   @override
-  String get boLibScheduleWeekly => 'Weekly';
+  String get boLibScheduleWeekly => 'Săptămânal';
 
   @override
   String boLibScheduleCustom(String cron) {
-    return 'Custom ($cron)';
+    return 'Personalizat ($cron)';
   }
 
   @override
-  String get boLibScheduleHint => 'Runs at 3 AM server time.';
+  String get boLibScheduleHint => 'Rulează la ora 3:00, ora serverului.';
 
   @override
-  String get boLibCovers => 'Cover shape';
+  String get boLibCovers => 'Forma copertei';
 
   @override
-  String get boLibCoverBook => 'Book (2:3)';
+  String get boLibCoverBook => 'Carte (2:3)';
 
   @override
-  String get boLibCoverSquare => 'Square (1:1)';
+  String get boLibCoverSquare => 'Pătrată (1:1)';
 
   @override
-  String get boLibAccess => 'Who can see it';
+  String get boLibAccess => 'Cine o poate vedea';
 
   @override
   String get boLibAccessHint =>
-      'Administrators see every library. Others need access here.';
+      'Administratorii văd toate bibliotecile. Ceilalți au nevoie de acces aici.';
 
   @override
-  String get boLibAccessNone => 'Only administrators so far';
+  String get boLibAccessNone => 'Deocamdată doar administratorii';
 
   @override
-  String get boLibAccessAdd => 'Add person';
+  String get boLibAccessAdd => 'Adaugă persoană';
 
   @override
-  String get boLibAccessEveryoneHas => 'Everyone already has access';
+  String get boLibAccessEveryoneHas => 'Toată lumea are deja acces';
 
   @override
-  String get boLibLevelViewer => 'Viewer';
+  String get boLibLevelViewer => 'Vizualizare';
 
   @override
-  String get boLibLevelEditor => 'Editor';
+  String get boLibLevelEditor => 'Editare';
 
   @override
-  String get boLibLevelOwner => 'Owner';
+  String get boLibLevelOwner => 'Proprietar';
 
   @override
-  String get boLibAccessRemove => 'Remove access';
+  String get boLibAccessRemove => 'Elimină accesul';
 
   @override
-  String get boLibDelete => 'Delete library';
+  String get boLibDelete => 'Șterge biblioteca';
 
   @override
   String boLibDeleteTitle(String name) {
-    return 'Delete $name?';
+    return 'Ștergi $name?';
   }
 
   @override
   String get boLibDeleteBody =>
-      'The library is removed from BookOrbit, with its books\' progress and highlights. The files on the server stay where they are.';
+      'Biblioteca este eliminată din BookOrbit, împreună cu progresul și evidențierile cărților ei. Fișierele de pe server rămân unde sunt.';
 
   @override
-  String get boLibDeleted => 'Library deleted';
+  String get boLibDeleted => 'Bibliotecă ștearsă';
 
   @override
-  String get boFolderPickTitle => 'Choose a folder';
+  String get boFolderPickTitle => 'Alege un dosar';
 
   @override
-  String get boFolderUseThis => 'Use this folder';
+  String get boFolderUseThis => 'Folosește acest dosar';
 
   @override
-  String get boFolderEmpty => 'No folders inside';
+  String get boFolderEmpty => 'Niciun dosar înăuntru';
 
   @override
-  String get statsTotalTime => 'TOTAL TIME';
+  String get statsTotalTime => 'TIMP TOTAL';
 
   @override
-  String get statsTotalReadingTime => 'TOTAL READING TIME';
+  String get statsTotalReadingTime => 'TIMP TOTAL DE CITIRE';
 
   @override
   String statsDaysOfTime(String days) {
-    return 'That\'s $days days';
+    return 'Adică $days zile';
   }
 
   @override
   String statsHoursOfTime(String hours) {
-    return 'That\'s $hours hours';
+    return 'Adică $hours ore';
   }
 
   @override
-  String get statsMediaAll => 'All';
+  String get statsMediaAll => 'Toate';
 
   @override
-  String get statsMediaListening => 'Listening';
+  String get statsMediaListening => 'Ascultare';
 
   @override
-  String get statsMediaReading => 'Reading';
+  String get statsMediaReading => 'Citire';
 
   @override
   String statsZoneMismatch(String server, String phone) {
-    return 'BookOrbit counts your days in $server, but this phone is set to $phone. Time late in the day can land on the wrong day.';
+    return 'BookOrbit îți numără zilele în $server, dar acest telefon este setat pe $phone. Orele târzii din zi pot ajunge în ziua greșită.';
   }
 
   @override
   String statsZoneUse(String zone) {
-    return 'Use $zone';
+    return 'Folosește $zone';
   }
 
   @override
   String statsZoneSaved(String zone) {
-    return 'BookOrbit now uses $zone. Older days can take a few minutes to catch up.';
+    return 'BookOrbit folosește acum $zone. Zilele mai vechi pot dura câteva minute până se actualizează.';
   }
 
   @override
-  String get statsZoneFailed => 'Couldn\'t change the time zone on BookOrbit';
+  String get statsZoneFailed => 'Nu s-a putut schimba fusul orar în BookOrbit';
 
   @override
-  String get statsTimeOfDay => 'Time of day';
+  String get statsTimeOfDay => 'Ora din zi';
 
   @override
   String statsBusiestAround(String time) {
-    return 'Busiest around $time';
+    return 'Cea mai aglomerată în jurul orei $time';
   }
 
   @override
-  String get statsFinishedByMonth => 'Books finished by month';
+  String get statsFinishedByMonth => 'Cărți terminate pe luni';
 
   @override
   String statsFinishedLast12(int count) {
-    return '$count in the last 12 months';
+    return '$count în ultimele 12 luni';
   }
 
   @override
-  String get statsWhereTitle => 'Where you listen and read';
+  String get statsWhereTitle => 'Unde asculți și citești';
 
   @override
-  String get statsLast12Months => 'Last 12 months';
+  String get statsLast12Months => 'Ultimele 12 luni';
 
   @override
-  String get statsHabits => 'Habits';
+  String get statsHabits => 'Obiceiuri';
 
   @override
-  String get statsTypicalSession => 'Typical session';
+  String get statsTypicalSession => 'Sesiune tipică';
 
   @override
-  String get statsProgressPerSession => 'Progress per session';
+  String get statsProgressPerSession => 'Progres pe sesiune';
 
   @override
-  String get statsTimeToFinish => 'Time to finish';
+  String get statsTimeToFinish => 'Timp până la final';
 
   @override
   String statsDayCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count days',
-      one: '1 day',
+      other: '$count de zile',
+      few: '$count zile',
+      one: '1 zi',
     );
     return '$_temp0';
   }
 
   @override
-  String get statsBooksStarted => 'Books started';
+  String get statsBooksStarted => 'Cărți începute';
 
   @override
-  String get statsBooksInProgress => 'In progress';
+  String get statsBooksInProgress => 'În curs';
 
   @override
-  String get statsAverageProgress => 'Average progress';
+  String get statsAverageProgress => 'Progres mediu';
 
   @override
-  String get statsTopBooks => 'Top books';
+  String get statsTopBooks => 'Top cărți';
 
   @override
-  String get statsYearRead => 'Read';
+  String get statsYearRead => 'Citit';
 
   @override
   String boNotificationsUnread(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count unread',
-      one: '1 unread',
-      zero: 'Nothing new',
+      other: '$count de necitite',
+      few: '$count necitite',
+      one: '1 necitită',
+      zero: 'Nimic nou',
     );
     return '$_temp0';
   }
 
   @override
-  String get boNotificationsMarkAllRead => 'Mark all read';
+  String get boNotificationsMarkAllRead => 'Marchează toate ca citite';
 
   @override
-  String get boNotificationsClearAll => 'Clear all';
+  String get boNotificationsClearAll => 'Șterge toate';
 
   @override
-  String get boNotificationsClearTitle => 'Clear all notifications?';
+  String get boNotificationsClearTitle => 'Ștergi toate notificările?';
 
   @override
   String get boNotificationsClearBody =>
-      'This removes every notification from your BookOrbit account.';
+      'Aceasta elimină toate notificările din contul tău BookOrbit.';
 
   @override
-  String get boNotificationsEmpty => 'No notifications yet';
+  String get boNotificationsEmpty => 'Încă nu există notificări';
 
   @override
-  String get boNotificationsLoadFailed => 'Couldn\'t load notifications';
+  String get boNotificationsLoadFailed => 'Nu s-au putut încărca notificările';
 
   @override
   String get boNotificationsUpdateFailed =>
-      'Couldn\'t update notifications on BookOrbit';
+      'Nu s-au putut actualiza notificările în BookOrbit';
 
   @override
   String boNotificationsOccurrences(int count) {
-    return 'Happened $count times';
+    return 'S-a întâmplat de $count ori';
   }
 
   @override
-  String get boNotificationsSettings => 'Notification settings';
+  String get boNotificationsSettings => 'Setări notificări';
 
   @override
   String get boNotificationsSettingsIntro =>
-      'Choose which notifications BookOrbit keeps for you.';
+      'Alege ce notificări păstrează BookOrbit pentru tine.';
 
   @override
   String get boNotificationsProblemsHint =>
-      'Problems only notifies you when something fails or needs attention.';
+      'Problemele te notifică doar când ceva eșuează sau necesită atenție.';
 
   @override
-  String get boNotificationLevelOff => 'Off';
+  String get boNotificationLevelOff => 'Oprite';
 
   @override
-  String get boNotificationLevelProblems => 'Problems';
+  String get boNotificationLevelProblems => 'Probleme';
 
   @override
-  String get boNotificationLevelAll => 'All';
+  String get boNotificationLevelAll => 'Toate';
 
   @override
-  String get boNotificationsSaved => 'Notification settings saved';
+  String get boNotificationsSaved => 'Setările notificărilor au fost salvate';
 
   @override
   String get boNotificationsSaveFailed =>
-      'Couldn\'t save notification settings';
+      'Nu s-au putut salva setările notificărilor';
 
   @override
-  String get boNotificationGroupLibrary => 'Library';
+  String get boNotificationGroupLibrary => 'Bibliotecă';
 
   @override
-  String get boNotificationGroupFiles => 'Files';
+  String get boNotificationGroupFiles => 'Fișiere';
 
   @override
-  String get boNotificationGroupIntegrations => 'Integrations';
+  String get boNotificationGroupIntegrations => 'Integrări';
 
   @override
-  String get boNotificationGroupPersonal => 'Personal';
+  String get boNotificationGroupPersonal => 'Personale';
 
   @override
-  String get boNotifyScanning => 'Library scanning';
+  String get boNotifyScanning => 'Scanarea bibliotecii';
 
   @override
   String get boNotifyScanningDesc =>
-      'When a library scan finishes, fails, or finds missing books.';
+      'Când o scanare a bibliotecii se termină, eșuează sau găsește cărți lipsă.';
 
   @override
-  String get boNotifyMetadata => 'Metadata fetching';
+  String get boNotifyMetadata => 'Preluarea metadatelor';
 
   @override
   String get boNotifyMetadataDesc =>
-      'When metadata lookups for your books finish or fail.';
+      'Când căutările de metadate pentru cărțile tale se termină sau eșuează.';
 
   @override
-  String get boNotifyAuthorEnrichment => 'Author details';
+  String get boNotifyAuthorEnrichment => 'Detalii despre autori';
 
   @override
   String get boNotifyAuthorEnrichmentDesc =>
-      'When author biographies and photos finish downloading.';
+      'Când biografiile și fotografiile autorilor se termină de descărcat.';
 
   @override
-  String get boNotifyFileWriteBack => 'Saving to files';
+  String get boNotifyFileWriteBack => 'Salvarea în fișiere';
 
   @override
   String get boNotifyFileWriteBackDesc =>
-      'When edited details are saved into the book files on disk.';
+      'Când detaliile editate sunt salvate în fișierele cărților de pe disc.';
 
   @override
-  String get boNotifyFileRename => 'File renaming';
+  String get boNotifyFileRename => 'Redenumirea fișierelor';
 
   @override
   String get boNotifyFileRenameDesc =>
-      'When a book file is renamed to match your naming pattern.';
+      'Când un fișier de carte este redenumit conform modelului tău de denumire.';
 
   @override
-  String get boNotifyBulkRename => 'Bulk renaming';
+  String get boNotifyBulkRename => 'Redenumire în masă';
 
   @override
   String get boNotifyBulkRenameDesc =>
-      'When renaming many books, or moving books between libraries, finishes or fails.';
+      'Când redenumirea mai multor cărți sau mutarea cărților între biblioteci se termină sau eșuează.';
 
   @override
-  String get boNotifyMigration => 'Imports';
+  String get boNotifyMigration => 'Importuri';
 
   @override
   String get boNotifyMigrationDesc =>
-      'When an import from another library app finishes or fails.';
+      'Când un import din altă aplicație de biblioteci se termină sau eșuează.';
 
   @override
   String get boNotifyBookDock => 'Book Dock';
 
   @override
   String get boNotifyBookDockDesc =>
-      'When Book Dock finishes adding books or runs into problems.';
+      'Când Book Dock termină de adăugat cărți sau întâmpină probleme.';
 
   @override
-  String get boNotifyBookRequests => 'Book requests';
+  String get boNotifyBookRequests => 'Cereri de cărți';
 
   @override
   String get boNotifyBookRequestsDesc =>
-      'When a book request is submitted or decided, or the book becomes available.';
+      'Când o cerere de carte este trimisă sau soluționată ori cartea devine disponibilă.';
 
   @override
-  String get boNotifyEmail => 'Email delivery';
+  String get boNotifyEmail => 'Trimiterea e-mailurilor';
 
   @override
   String get boNotifyEmailDesc =>
-      'When sending a book by email works or fails.';
+      'Când trimiterea unei cărți prin e-mail reușește sau eșuează.';
 
   @override
-  String get boNotifyAchievements => 'Achievements';
+  String get boNotifyAchievements => 'Realizări';
 
   @override
-  String get boNotifyAchievementsDesc => 'When you unlock a new achievement.';
+  String get boNotifyAchievementsDesc => 'Când deblochezi o realizare nouă.';
 
   @override
-  String get achievementsTitle => 'Achievements';
+  String get achievementsTitle => 'Realizări';
 
   @override
   String achievementsEarnedSummary(int earned, int total) {
-    return '$earned of $total earned';
+    return '$earned din $total obținute';
   }
 
   @override
-  String get achievementsFilterAll => 'All';
+  String get achievementsFilterAll => 'Toate';
 
   @override
-  String get achievementsFilterEarned => 'Earned';
+  String get achievementsFilterEarned => 'Obținute';
 
   @override
-  String get achievementsFilterInProgress => 'In progress';
+  String get achievementsFilterInProgress => 'În curs';
 
   @override
-  String get achievementsFilterLocked => 'Locked';
+  String get achievementsFilterLocked => 'Blocate';
 
   @override
-  String get achievementsCategoryReading => 'Reading';
+  String get achievementsCategoryReading => 'Citire';
 
   @override
-  String get achievementsCategoryLibrary => 'Library';
+  String get achievementsCategoryLibrary => 'Bibliotecă';
 
   @override
-  String get achievementsCategoryExploration => 'Exploration';
+  String get achievementsCategoryExploration => 'Explorare';
 
   @override
-  String get achievementsCategoryDedication => 'Dedication';
+  String get achievementsCategoryDedication => 'Dedicare';
 
   @override
-  String get achievementsCategoryDevices => 'Devices';
+  String get achievementsCategoryDevices => 'Dispozitive';
 
   @override
-  String get achievementsRarityCommon => 'Common';
+  String get achievementsRarityCommon => 'Comună';
 
   @override
-  String get achievementsRarityRare => 'Rare';
+  String get achievementsRarityRare => 'Rară';
 
   @override
-  String get achievementsRarityEpic => 'Epic';
+  String get achievementsRarityEpic => 'Epică';
 
   @override
-  String get achievementsRarityLegendary => 'Legendary';
+  String get achievementsRarityLegendary => 'Legendară';
 
   @override
-  String get achievementsLoadFailed => 'Couldn\'t load achievements';
+  String get achievementsLoadFailed => 'Nu s-au putut încărca realizările';
 
   @override
-  String get achievementsNoneMatch => 'No achievements match this filter';
+  String get achievementsNoneMatch =>
+      'Nicio realizare nu se potrivește cu acest filtru';
 
   @override
-  String get achievementsSecretName => 'Secret achievement';
+  String get achievementsSecretName => 'Realizare secretă';
 
   @override
-  String get achievementsSecretHint => 'Keep reading to reveal this one.';
+  String get achievementsSecretHint =>
+      'Continuă să citești pentru a o dezvălui.';
 
   @override
   String achievementsEarnedOn(String date) {
-    return 'Earned $date';
+    return 'Obținută $date';
   }
 
   @override
   String achievementsWhileReading(String title) {
-    return 'While reading $title';
+    return 'În timp ce citeai $title';
   }
 
   @override
   String achievementsTierOf(int earned, int total) {
-    return 'Tier $earned of $total';
+    return 'Nivelul $earned din $total';
   }
 
   @override
-  String get achievementsTiers => 'Tiers';
+  String get achievementsTiers => 'Niveluri';
 
   @override
-  String get achievementsAllTiers => 'Every tier earned';
+  String get achievementsAllTiers => 'Toate nivelurile obținute';
 
   @override
   String achievementsProgress(String current, String threshold) {
@@ -12485,54 +12720,55 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String achievementsProgressBooks(String current, String threshold) {
-    return '$current / $threshold books';
+    return '$current / $threshold cărți';
   }
 
   @override
   String achievementsProgressPages(String current, String threshold) {
-    return '$current / $threshold pages';
+    return '$current / $threshold pagini';
   }
 
   @override
   String achievementsProgressHours(String current, String threshold) {
-    return '$current / $threshold hours';
+    return '$current / $threshold ore';
   }
 
   @override
   String achievementsProgressAnnotations(String current, String threshold) {
-    return '$current / $threshold highlights and notes';
+    return '$current / $threshold evidențieri și notițe';
   }
 
   @override
   String achievementsProgressRatings(String current, String threshold) {
-    return '$current / $threshold ratings';
+    return '$current / $threshold evaluări';
   }
 
   @override
   String achievementsProgressGenres(String current, String threshold) {
-    return '$current / $threshold genres';
+    return '$current / $threshold genuri';
   }
 
   @override
   String achievementsProgressLanguages(String current, String threshold) {
-    return '$current / $threshold languages';
+    return '$current / $threshold limbi';
   }
 
   @override
   String achievementsProgressDays(String current, String threshold) {
-    return '$current / $threshold days';
+    return '$current / $threshold zile';
   }
 
   @override
-  String get achievementsHowToGetIt => 'How to get it';
+  String get achievementsHowToGetIt => 'Cum o obții';
 
   @override
   String achievementsHintReadingPace(int count, int days) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'You read $count hours in the last $days days.',
-      one: 'You read 1 hour in the last $days days.',
+      other: 'Ai citit $count de ore în ultimele $days zile.',
+      few: 'Ai citit $count ore în ultimele $days zile.',
+      one: 'Ai citit 1 oră în ultimele $days zile.',
     );
     return '$_temp0';
   }
@@ -12542,8 +12778,9 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'About $count days at this pace.',
-      one: 'About 1 day at this pace.',
+      other: 'Aproximativ $count de zile în acest ritm.',
+      few: 'Aproximativ $count zile în acest ritm.',
+      one: 'Aproximativ 1 zi în acest ritm.',
     );
     return '$_temp0';
   }
@@ -12553,8 +12790,9 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'About $count weeks at this pace.',
-      one: 'About 1 week at this pace.',
+      other: 'Aproximativ $count de săptămâni în acest ritm.',
+      few: 'Aproximativ $count săptămâni în acest ritm.',
+      one: 'Aproximativ 1 săptămână în acest ritm.',
     );
     return '$_temp0';
   }
@@ -12564,8 +12802,9 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'About $count months at this pace.',
-      one: 'About 1 month at this pace.',
+      other: 'Aproximativ $count de luni în acest ritm.',
+      few: 'Aproximativ $count luni în acest ritm.',
+      one: 'Aproximativ 1 lună în acest ritm.',
     );
     return '$_temp0';
   }
@@ -12575,8 +12814,9 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books from the ${decade}s are waiting on your shelves.',
-      one: '1 book from the ${decade}s is waiting on your shelves.',
+      other: '$count de cărți din anii $decade te așteaptă pe rafturi.',
+      few: '$count cărți din anii $decade te așteaptă pe rafturi.',
+      one: 'O carte din anii $decade te așteaptă pe rafturi.',
     );
     return '$_temp0';
   }
@@ -12586,32 +12826,34 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books from the ${century}s are waiting on your shelves.',
-      one: '1 book from the ${century}s is waiting on your shelves.',
+      other: '$count de cărți din secolul $century te așteaptă pe rafturi.',
+      few: '$count cărți din secolul $century te așteaptă pe rafturi.',
+      one: 'O carte din secolul $century te așteaptă pe rafturi.',
     );
     return '$_temp0';
   }
 
   @override
   String achievementsHintStalled(String title, String percent, String date) {
-    return '$title is $percent read and was started on $date.';
+    return '$title este citită $percent și a fost începută pe $date.';
   }
 
   @override
   String achievementsHintStalledNoProgress(String title, String date) {
-    return '$title was started on $date.';
+    return '$title a fost începută pe $date.';
   }
 
   @override
-  String get achievementsHintUntitledBook => 'A book in progress';
+  String get achievementsHintUntitledBook => 'O carte în curs';
 
   @override
   String achievementsHintNearlyFinished(int count, String percent) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books in progress are past $percent.',
-      one: '1 book in progress is past $percent.',
+      other: '$count de cărți în curs au depășit $percent.',
+      few: '$count cărți în curs au depășit $percent.',
+      one: 'O carte în curs a depășit $percent.',
     );
     return '$_temp0';
   }
@@ -12621,8 +12863,10 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books you finished have no rating yet.',
-      one: '1 book you finished has no rating yet.',
+      other:
+          '$count de cărți pe care le-ai terminat nu au încă nicio evaluare.',
+      few: '$count cărți pe care le-ai terminat nu au încă nicio evaluare.',
+      one: 'O carte pe care ai terminat-o nu are încă nicio evaluare.',
     );
     return '$_temp0';
   }
@@ -12632,8 +12876,9 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books under $pages pages are waiting on your shelves.',
-      one: '1 book under $pages pages is waiting on your shelves.',
+      other: '$count de cărți sub $pages de pagini te așteaptă pe rafturi.',
+      few: '$count cărți sub $pages de pagini te așteaptă pe rafturi.',
+      one: 'O carte sub $pages de pagini te așteaptă pe rafturi.',
     );
     return '$_temp0';
   }
@@ -12643,8 +12888,9 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count are already in progress.',
-      one: '1 is already in progress.',
+      other: '$count sunt deja în curs.',
+      few: '$count sunt deja în curs.',
+      one: 'Una este deja în curs.',
     );
     return '$_temp0';
   }
@@ -12655,8 +12901,9 @@ class AppLocalizationsRo extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          '$count books of $pages pages or more are waiting on your shelves.',
-      one: '1 book of $pages pages or more is waiting on your shelves.',
+          '$count de cărți de $pages pagini sau mai mult te așteaptă pe rafturi.',
+      few: '$count cărți de $pages pagini sau mai mult te așteaptă pe rafturi.',
+      one: 'O carte de $pages pagini sau mai mult te așteaptă pe rafturi.',
     );
     return '$_temp0';
   }
@@ -12666,15 +12913,17 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books published before $year are waiting on your shelves.',
-      one: '1 book published before $year is waiting on your shelves.',
+      other:
+          '$count de cărți publicate înainte de $year te așteaptă pe rafturi.',
+      few: '$count cărți publicate înainte de $year te așteaptă pe rafturi.',
+      one: 'O carte publicată înainte de $year te așteaptă pe rafturi.',
     );
     return '$_temp0';
   }
 
   @override
   String achievementsHintAuthorUnread(String author, int finished, int count) {
-    return '$author: $finished finished, $count more on your shelves.';
+    return '$author: $finished terminate, încă $count pe rafturile tale.';
   }
 
   @override
@@ -12682,8 +12931,9 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books in $language are waiting on your shelves.',
-      one: '1 book in $language is waiting on your shelves.',
+      other: '$count de cărți în $language te așteaptă pe rafturi.',
+      few: '$count cărți în $language te așteaptă pe rafturi.',
+      one: 'O carte în $language te așteaptă pe rafturi.',
     );
     return '$_temp0';
   }
@@ -12693,8 +12943,9 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'You have read in $count months of $year so far.',
-      one: 'You have read in 1 month of $year so far.',
+      other: 'Ai citit până acum în $count de luni din $year.',
+      few: 'Ai citit până acum în $count luni din $year.',
+      one: 'Ai citit până acum într-o lună din $year.',
     );
     return '$_temp0';
   }
@@ -12704,20 +12955,21 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$months are left.',
-      one: '$months is left.',
+      other: 'Au mai rămas $months.',
+      few: 'Au mai rămas $months.',
+      one: 'Mai rămâne $months.',
     );
     return '$_temp0';
   }
 
   @override
   String achievementsHintNoLongBook(String pages) {
-    return 'No book on your shelves has $pages pages or more yet.';
+    return 'Nicio carte de pe rafturile tale nu are $pages pagini sau mai mult.';
   }
 
   @override
   String achievementsHintNothingBefore(String year) {
-    return 'Nothing on your shelves was published before $year.';
+    return 'Nimic de pe rafturile tale nu a fost publicat înainte de $year.';
   }
 
   @override
@@ -12725,8 +12977,9 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Your shelves span only $count decades so far.',
-      one: 'Your shelves span only 1 decade so far.',
+      other: 'Rafturile tale acoperă până acum doar $count de decenii.',
+      few: 'Rafturile tale acoperă până acum doar $count decenii.',
+      one: 'Rafturile tale acoperă până acum doar 1 deceniu.',
     );
     return '$_temp0';
   }
@@ -12736,437 +12989,2106 @@ class AppLocalizationsRo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Your shelves span only $count centuries so far.',
-      one: 'Your shelves span only 1 century so far.',
+      other: 'Rafturile tale acoperă până acum doar $count de secole.',
+      few: 'Rafturile tale acoperă până acum doar $count secole.',
+      one: 'Rafturile tale acoperă până acum doar 1 secol.',
     );
     return '$_temp0';
   }
 
   @override
   String achievementsHintMissedMonth(String month, String year) {
-    return 'You did not read in $month, so $year is out of reach. The count starts again in January.';
+    return 'Nu ai citit în $month, deci $year este departe de atins. Numărătoarea reîncepe în ianuarie.';
   }
 
   @override
-  String get achievementsSwitch => 'Achievements';
+  String get achievementsSwitch => 'Realizări';
 
   @override
   String get achievementsSwitchSubtitle =>
-      'Track achievements on BookOrbit. Turning this off hides them here and on the web.';
+      'Urmărește realizările în BookOrbit. Dezactivarea lor le ascunde aici și pe web.';
 
   @override
-  String get achievementsTurnedOn => 'Achievements turned on';
+  String get achievementsTurnedOn => 'Realizări activate';
 
   @override
-  String get achievementsTurnedOff => 'Achievements turned off';
+  String get achievementsTurnedOff => 'Realizări dezactivate';
 
   @override
   String get achievementsSwitchFailed =>
-      'Couldn\'t change achievements on BookOrbit';
+      'Nu s-au putut schimba realizările în BookOrbit';
 
   @override
-  String get downloadsFailed => 'Failed downloads';
+  String get boNotifyReadAlong => 'Citiri sincronizate';
 
   @override
-  String get absorbingReorderQueue => 'Reorder queue';
+  String get boNotifyReadAlongDesc =>
+      'Când o citire sincronizată pornită de tine este gata, necesită verificare sau eșuează.';
 
   @override
-  String get playAction => 'Play';
+  String get readAlongCreate => 'Creează citire sincronizată';
 
   @override
-  String get pauseAction => 'Pause';
+  String get readAlongLoadFailed =>
+      'Nu s-a putut verifica dacă se poate crea o citire sincronizată pentru această carte.';
 
   @override
-  String get rmabImportBooks => 'Import books';
+  String get readAlongCheckAgain => 'Verifică din nou';
+
+  @override
+  String get readAlongWhyWorkerOffline =>
+      'Procesorul de citiri sincronizate din BookOrbit este offline acum.';
+
+  @override
+  String get readAlongWhyWorkerOutdated =>
+      'Procesorul de citiri sincronizate din BookOrbit trebuie actualizat pentru a funcționa cu acest server.';
+
+  @override
+  String get readAlongWhyFilesMissing =>
+      'Restaurează fișierele lipsă ale acestei cărți pentru a crea o citire sincronizată.';
+
+  @override
+  String get readAlongWhyNoEpub =>
+      'Adaugă un EPUB simplu la această carte pentru a crea o citire sincronizată.';
+
+  @override
+  String get readAlongWhyNoEpubHasOne =>
+      'Această carte are deja o citire sincronizată și niciun EPUB simplu din care să se creeze alta.';
+
+  @override
+  String get readAlongWhyTooManyTracks =>
+      'Acest audiobook are mai multe fișiere decât poate folosi o citire sincronizată.';
+
+  @override
+  String get readAlongWhyEpubNotAllowed =>
+      'Această bibliotecă nu acceptă fișiere EPUB, deci nu se poate adăuga o citire sincronizată.';
+
+  @override
+  String get readAlongWhyNotMounted =>
+      'Procesorul de citiri sincronizate din BookOrbit nu poate accesa folderul acestei biblioteci.';
+
+  @override
+  String get readAlongWhyRunning =>
+      'Se creează deja o citire sincronizată pentru această carte.';
+
+  @override
+  String get readAlongWhyUnknown =>
+      'Momentan nu se poate crea o citire sincronizată pentru această carte.';
+
+  @override
+  String get readAlongSheetTitle => 'Creează o citire sincronizată';
+
+  @override
+  String get readAlongSheetIntro =>
+      'BookOrbit potrivește narațiunea cu textul cărții electronice și adaugă un EPUB care evidențiază textul în ritmul audio.';
+
+  @override
+  String get readAlongEbook => 'Carte electronică';
+
+  @override
+  String get readAlongEbookHint =>
+      'Alege EPUB-ul simplu care corespunde narațiunii.';
+
+  @override
+  String get readAlongAudio => 'Audiobook';
+
+  @override
+  String readAlongTracks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de piste',
+      few: '$count piste',
+      one: '1 pistă',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String readAlongExistingTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Această carte are deja $count de citiri sincronizate',
+      few: 'Această carte are deja $count citiri sincronizate',
+      one: 'Această carte are deja o citire sincronizată',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String readAlongReplace(String name) {
+    return 'Înlocuiește $name';
+  }
+
+  @override
+  String readAlongKeepBoth(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Păstrează-le pe toate',
+      one: 'Păstrează ambele',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readAlongKeepHint =>
+      'Noua citire sincronizată este adăugată ca fișier separat.';
+
+  @override
+  String get readAlongReplaceHint =>
+      'Fișierul vechi este înlocuit abia după ce cel nou trece verificările, iar pozițiile de citire se păstrează.';
+
+  @override
+  String get readAlongReplaceNotAllowed =>
+      'Înlocuirea unei citiri sincronizate necesită permisiunea de a șterge cărți, așa că cea nouă este adăugată ca fișier separat.';
+
+  @override
+  String get readAlongMadeByBookOrbit => 'Creată de BookOrbit';
+
+  @override
+  String get readAlongImported => 'Importată';
+
+  @override
+  String get readAlongLanguage => 'Limba narațiunii';
+
+  @override
+  String get readAlongPickLanguage => 'Alege o limbă';
+
+  @override
+  String readAlongLanguageUnsupported(String language) {
+    return 'Modelul vocal nu cunoaște limba acestei cărți ($language).';
+  }
+
+  @override
+  String get readAlongLanguageFromBook => 'Din detaliile acestei cărți.';
+
+  @override
+  String get readAlongLanguageIsDefault => 'Limba ta implicită.';
+
+  @override
+  String get readAlongLanguageSaved => 'Salvată ca limbă implicită.';
+
+  @override
+  String get readAlongSetDefault => 'Setează ca implicită';
+
+  @override
+  String get readAlongDefaultFailed => 'Limba implicită nu a putut fi salvată.';
+
+  @override
+  String get readAlongHighlighting => 'Evidențiere';
+
+  @override
+  String get readAlongSentence => 'Propoziție';
+
+  @override
+  String get readAlongSentenceHint =>
+      'Evidențiază câte o propoziție. Recomandat.';
+
+  @override
+  String get readAlongWord => 'Cuvânt';
+
+  @override
+  String get readAlongWordHint =>
+      'Evidențiază fiecare cuvânt. Durează mai mult și produce un fișier mai mare. Încă experimental.';
+
+  @override
+  String readAlongEstimatedSize(String size) {
+    return 'Dimensiune estimată: $size';
+  }
+
+  @override
+  String get readAlongBackgroundNote =>
+      'Rulează pe server, deci poți închide această fereastră. Audiobookurile lungi pot dura ore, iar prima rulare pentru o limbă descarcă modelul vocal.';
+
+  @override
+  String readAlongLowDisk(String needed, String free) {
+    return 'Spațiu pe disc insuficient: sunt necesari aproximativ $needed de spațiu de lucru pe procesor, care are $free liberi.';
+  }
+
+  @override
+  String get readAlongStart => 'Începe';
+
+  @override
+  String get readAlongStartFailed =>
+      'Citirea sincronizată nu a putut porni. Încearcă din nou.';
+
+  @override
+  String get readAlongStartInvalid =>
+      'Unele fișiere alese nu se mai află la această carte. Verifică-le și încearcă din nou.';
+
+  @override
+  String get readAlongStartOffline =>
+      'Procesorul de citiri sincronizate din BookOrbit este offline. Încearcă mai târziu.';
+
+  @override
+  String get readAlongNotAllowed => 'Nu ai permisiunea de a face asta.';
+
+  @override
+  String get readAlongGone =>
+      'Această lucrare de citire sincronizată nu mai există.';
+
+  @override
+  String get readAlongMovedOn =>
+      'Această lucrare avansase deja. Acum se afișează starea ei curentă.';
+
+  @override
+  String get readAlongActionFailed => 'Nu a funcționat. Încearcă din nou.';
+
+  @override
+  String readAlongStartedBy(String name) {
+    return 'Pornită de $name';
+  }
+
+  @override
+  String get readAlongStartedByOther => 'Pornită de alt utilizator';
+
+  @override
+  String get readAlongWaiting => 'Așteaptă să înceapă';
+
+  @override
+  String get readAlongNextInLine => 'Următoarea la rând';
+
+  @override
+  String readAlongJobsAhead(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de lucrări înainte',
+      few: '$count lucrări înainte',
+      one: '1 lucrare înainte',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readAlongStopping => 'Se oprește';
+
+  @override
+  String get readAlongStoppingHint =>
+      'Se termină pasul curent, apoi se oprește. Nimic nu va fi adăugat la această carte.';
+
+  @override
+  String get readAlongStagePreparingAudio => 'Se pregătește audio';
+
+  @override
+  String get readAlongStageDownloadingModel => 'Se descarcă modelul vocal';
+
+  @override
+  String get readAlongStageListening => 'Se ascultă narațiunea';
+
+  @override
+  String get readAlongStageMarkingUp =>
+      'Se marchează textul cărții electronice';
+
+  @override
+  String get readAlongStageAligning => 'Se potrivește textul cu narațiunea';
+
+  @override
+  String get readAlongStageChecking => 'Se verifică rezultatul';
+
+  @override
+  String get readAlongStagePublishing =>
+      'Se adaugă citirea sincronizată la această carte';
+
+  @override
+  String get readAlongStageWorking => 'Se lucrează';
+
+  @override
+  String readAlongFileOf(int current, int total) {
+    return 'Fișierul $current din $total';
+  }
+
+  @override
+  String readAlongTrackOf(int current, int total) {
+    return 'Pista $current din $total';
+  }
+
+  @override
+  String readAlongChapterOf(int current, int total) {
+    return 'Capitolul $current din $total';
+  }
+
+  @override
+  String readAlongStepOf(int current, int total) {
+    return 'Pasul $current din $total';
+  }
+
+  @override
+  String get readAlongFirstRun => 'Prima rulare pentru această limbă';
+
+  @override
+  String get readAlongJustStarted => 'Abia a început';
+
+  @override
+  String readAlongRunningFor(String duration) {
+    return 'Rulează de $duration';
+  }
+
+  @override
+  String get readAlongStepAudio => 'Audio';
+
+  @override
+  String get readAlongStepSpeech => 'Voce';
+
+  @override
+  String get readAlongStepText => 'Text';
+
+  @override
+  String get readAlongStepAlign => 'Aliniere';
+
+  @override
+  String get readAlongStepCheck => 'Verificare';
+
+  @override
+  String get readAlongStepAdd => 'Adăugare';
+
+  @override
+  String get readAlongReviewTitle => 'Gata de verificare';
+
+  @override
+  String readAlongReviewMatched(String percent) {
+    return '$percent din text s-a potrivit cu narațiunea. Verific-o înainte de a o adăuga la carte.';
+  }
+
+  @override
+  String get readAlongReviewPlain =>
+      'Verific-o înainte de a o adăuga la carte.';
+
+  @override
+  String get readAlongReviewWeb =>
+      'Pentru a omite capitole și a potrivi din nou, deschide această carte în BookOrbit pe web.';
+
+  @override
+  String readAlongReviewExpires(String date) {
+    return 'Va fi aruncată automat pe $date dacă nu o verifici.';
+  }
+
+  @override
+  String get readAlongAddAnyway => 'Adaug-o oricum';
+
+  @override
+  String get readAlongDiscard => 'Aruncă';
+
+  @override
+  String get readAlongDiscardPrompt => 'Arunci această citire sincronizată?';
+
+  @override
+  String get readAlongKeepIt => 'Păstreaz-o';
+
+  @override
+  String get readAlongReady => 'Citire sincronizată gata';
+
+  @override
+  String get readAlongReadyWarnings =>
+      'Citire sincronizată gata, cu avertismente';
+
+  @override
+  String get readAlongAdded => 'Adăugată la această carte ca EPUB nou.';
+
+  @override
+  String get readAlongReplaced =>
+      'Citirea sincronizată veche a fost înlocuită. Pozițiile de citire se păstrează.';
+
+  @override
+  String readAlongMatchedSentences(String matched, String total) {
+    return '$matched din $total propoziții s-au potrivit cu narațiunea';
+  }
+
+  @override
+  String readAlongAudioUsed(String percent) {
+    return '$percent din audio folosit';
+  }
+
+  @override
+  String readAlongOutside(String chapters) {
+    return 'Nu fac parte din narațiune, deci rămân fără audio: $chapters.';
+  }
+
+  @override
+  String readAlongOutsideMore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'încă $count de capitole',
+      few: 'încă $count capitole',
+      one: 'încă 1 capitol',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readAlongWarnUnaligned =>
+      'Una sau mai multe piste audio nu au putut fi potrivite.';
+
+  @override
+  String get readAlongWarnUnmatched =>
+      'O parte considerabilă din textul cărții electronice nu s-a potrivit cu narațiunea.';
+
+  @override
+  String get readAlongWarnInterpolated =>
+      'Sincronizarea unor texte a fost estimată între potrivirile sigure.';
+
+  @override
+  String get readAlongWarnDropped =>
+      'Unele texte din cartea electronică au fost omise din evidențiere.';
+
+  @override
+  String get readAlongFailed => 'Citirea sincronizată a eșuat';
+
+  @override
+  String get readAlongCancelled => 'Citire sincronizată anulată';
+
+  @override
+  String get readAlongDiscarded => 'Citire sincronizată aruncată';
+
+  @override
+  String get readAlongNothingAdded =>
+      'Nimic nu a fost adăugat la această carte.';
+
+  @override
+  String get readAlongExpired =>
+      'Nu a fost verificată în 14 zile, deci nimic nu a fost adăugat la această carte.';
+
+  @override
+  String readAlongRetryUntil(String date) {
+    return 'Reîncercarea reia de la ultimul pas terminat până pe $date.';
+  }
+
+  @override
+  String get readAlongStartOver => 'Reîncepe';
+
+  @override
+  String get readAlongCancel => 'Anulează citirea sincronizată';
+
+  @override
+  String get readAlongCancelPrompt => 'Anulezi această citire sincronizată?';
+
+  @override
+  String get readAlongKeepRunning => 'Lasă să ruleze';
+
+  @override
+  String get readAlongErrorWorkerOffline =>
+      'BookOrbit nu a putut contacta procesorul de citiri sincronizate.';
+
+  @override
+  String get readAlongErrorWorkerCrashed =>
+      'Procesorul de citiri sincronizate s-a oprit neașteptat.';
+
+  @override
+  String get readAlongErrorSourceMissing => 'Un fișier ales nu mai există.';
+
+  @override
+  String get readAlongErrorSourceChanged =>
+      'Un fișier ales s-a schimbat după pornirea lucrării.';
+
+  @override
+  String get readAlongErrorInvalidSource =>
+      'EPUB-ul sau audiobookul nu a putut fi citit.';
+
+  @override
+  String get readAlongErrorLanguage =>
+      'Modelul vocal nu cunoaște limba aleasă.';
+
+  @override
+  String get readAlongErrorStorage =>
+      'Nu există suficient spațiu liber pe disc pe procesor pentru a termina.';
+
+  @override
+  String get readAlongErrorAudio => 'Audiobookul nu a putut fi pregătit.';
+
+  @override
+  String get readAlongErrorModel => 'Modelul vocal nu a putut fi descărcat.';
+
+  @override
+  String get readAlongErrorListening =>
+      'Recunoașterea vocală a eșuat în timpul ascultării narațiunii.';
+
+  @override
+  String get readAlongErrorMarkup =>
+      'Textul cărții electronice nu a putut fi pregătit pentru potrivire.';
+
+  @override
+  String get readAlongErrorAlignment =>
+      'Textul nu a putut fi potrivit cu narațiunea.';
+
+  @override
+  String get readAlongErrorOutput => 'Noul EPUB nu a trecut verificările.';
+
+  @override
+  String get readAlongErrorPublish =>
+      'Noul EPUB nu a putut fi adăugat la această carte.';
+
+  @override
+  String get readAlongErrorDiscarded => 'A fost aruncată la verificare.';
+
+  @override
+  String get readAlongErrorCancelled => 'A fost anulată.';
+
+  @override
+  String get readAlongErrorUnknown =>
+      'Ceva nu a mers bine la crearea citirii sincronizate.';
+
+  @override
+  String get fileInfoNoAudiobook => 'Încă niciun audiobook';
+
+  @override
+  String get fileInfoNoEbook => 'Încă nicio carte electronică';
+
+  @override
+  String get fileInfoRequestedBySomeone => 'Solicitată de altcineva';
+
+  @override
+  String get fileInfoOwnedSeparately => 'În biblioteca ta ca o carte separată';
+
+  @override
+  String get fileInfoCopyPath => 'Copiază calea';
+
+  @override
+  String get fileInfoDeleteTitle => 'Ștergi fișierul?';
+
+  @override
+  String fileInfoDeletePrompt(String name) {
+    return '„$name” va fi șters de pe server. Această acțiune nu poate fi anulată.';
+  }
+
+  @override
+  String get fileInfoDeleteLast =>
+      'Este ultimul fișier audio sau de carte electronică al cărții, deci cartea va apărea ca lipsă.';
+
+  @override
+  String get fileInfoDeleteNotAllowed =>
+      'Nu ai permisiunea de a șterge fișiere';
+
+  @override
+  String get chapterSourceEmbedded => 'Citite din fișierele audio';
+
+  @override
+  String get chapterSourceTracks => 'Un capitol pe fișier audio, nesalvat';
+
+  @override
+  String get chapterSourceProvider => 'Din metadatele preluate';
+
+  @override
+  String get chapterSourceMigration => 'Importate din Audiobookshelf';
+
+  @override
+  String get chapterSourceManual => 'Editate în BookOrbit';
+
+  @override
+  String chapterSourceManualBy(String name) {
+    return 'Editate de $name';
+  }
+
+  @override
+  String get chapterSourceNone => 'Încă niciun capitol';
+
+  @override
+  String get chapterProtected => 'Protejate la rescanări';
+
+  @override
+  String get chapterNotProtected => 'O rescanare le poate înlocui';
+
+  @override
+  String get chapterProtectOnSave => 'Protejează la rescanări';
+
+  @override
+  String get chapterGetFrom => 'Preia capitolele din';
+
+  @override
+  String get chapterFromFiles => 'Fișierele audio';
+
+  @override
+  String get chapterFromEbookToc => 'Cuprinsul cărții electronice';
+
+  @override
+  String get chapterFromReadAlong => 'Citirea sincronizată';
+
+  @override
+  String get chapterFromHistory => 'Versiuni anterioare';
+
+  @override
+  String get chapterHistoryTitle => 'Versiuni anterioare';
+
+  @override
+  String get chapterHistoryEmpty => 'Versiunile salvate apar aici.';
+
+  @override
+  String chapterHistoryBy(String source, String name) {
+    return '$source de $name';
+  }
+
+  @override
+  String get chapterReadingFiles => 'Se citesc fișierele audio...';
+
+  @override
+  String get chapterRevertToFiles => 'Revino la fișiere';
+
+  @override
+  String get chapterRevertTitle => 'Revii la capitolele din fișiere?';
+
+  @override
+  String get chapterRevertMessage =>
+      'BookOrbit citește din nou capitolele din fișierele audio și nu le mai protejează la rescanări. Modificările nesalvate se pierd. Lista curentă rămâne în versiunile anterioare.';
+
+  @override
+  String get chapterReverted =>
+      'Capitolele au fost readuse la cele din fișierele audio';
+
+  @override
+  String get chapterWriteFiles => 'Scrie în fișiere';
+
+  @override
+  String get chapterWriteTitle => 'Scrii capitolele în fișierele audio?';
+
+  @override
+  String chapterWriteMessage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Cele $count de fișiere audio ale cărții vor fi rescrise cu aceste capitole.',
+      few:
+          'Cele $count fișiere audio ale cărții vor fi rescrise cu aceste capitole.',
+      one: 'Fișierul audio al cărții va fi rescris cu aceste capitole.',
+    );
+    return '$_temp0 Sunetul în sine este copiat nemodificat. Telefoanele care au descărcat deja cartea își păstrează copia până la o nouă descărcare.';
+  }
+
+  @override
+  String get chapterWriteConfirm => 'Scrie';
+
+  @override
+  String get chapterWriting => 'Se scriu capitolele în fișierele audio...';
+
+  @override
+  String chapterWritten(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Capitole scrise în toate cele $count de fișiere audio',
+      few: 'Capitole scrise în toate cele $count fișiere audio',
+      one: 'Capitole scrise în fișierul audio',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String chapterWrittenPartly(int written, int total) {
+    return 'Capitole scrise în $written din $total fișiere. Restul au rămas neschimbate.';
+  }
+
+  @override
+  String get chapterStaleTitle => 'Aceste capitole s-au schimbat';
+
+  @override
+  String get chapterStaleMessage =>
+      'Altcineva a salvat aceste capitole după ce le-ai deschis. Reîncarcă pentru a vedea versiunea lui. Modificările tale rămân până atunci.';
+
+  @override
+  String get chapterReload => 'Reîncarcă';
+
+  @override
+  String get chapterKeepEditing => 'Continuă editarea';
+
+  @override
+  String get matchExplicitYes => 'Marcată explicit';
+
+  @override
+  String get matchExplicitNo => 'Nu este explicită';
+
+  @override
+  String get matchAbridgedYes => 'Prescurtată';
+
+  @override
+  String get matchAbridgedNo => 'Integrală';
+
+  @override
+  String boQuickMatchBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'aceste $count de cărți',
+      few: 'aceste $count cărți',
+      one: 'această carte',
+    );
+    return 'BookOrbit caută $_temp0 și completează ce găsește, conform setărilor sale de metadate.';
+  }
+
+  @override
+  String get boQuickMatchIgnoreCache => 'Întreabă din nou toate sursele';
+
+  @override
+  String get boQuickMatchIgnoreCacheHint =>
+      'Ignoră răspunsurile salvate. Mai lent și folosește mai mult din limita de cereri a fiecărei surse.';
+
+  @override
+  String boAdminServerCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de servere de e-mail',
+      few: '$count servere de e-mail',
+      one: '1 server de e-mail',
+      zero: 'Niciunul încă',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get boEmailTitle => 'Trimite prin e-mail';
+
+  @override
+  String get boEmailSubtitle =>
+      'Dispozitive, servere de e-mail și șabloane pentru trimiterea cărților';
+
+  @override
+  String get boEmailTabDevices => 'Dispozitive';
+
+  @override
+  String get boEmailTabServers => 'Servere de e-mail';
+
+  @override
+  String get boEmailTabTemplates => 'Șabloane';
+
+  @override
+  String get boEmailTabHistory => 'Istoric';
+
+  @override
+  String get boEmailName => 'Nume';
+
+  @override
+  String boEmailDeleteTitle(String name) {
+    return 'Ștergi $name?';
+  }
+
+  @override
+  String get boEmailMakeDefault => 'Setează ca implicit';
+
+  @override
+  String get boEmailBadgeDefault => 'Implicit';
+
+  @override
+  String get boEmailBadgeShared => 'Partajat';
+
+  @override
+  String get boEmailBadgeSystem => 'Resetări de parolă';
+
+  @override
+  String get boEmailBadgeBuiltIn => 'Încorporat';
+
+  @override
+  String get boEmailDevicesEmpty =>
+      'Încă niciun dispozitiv. Adaugă adresa de e-mail a e-readerului pentru a-i trimite cărți.';
+
+  @override
+  String get boEmailAddDevice => 'Adaugă dispozitiv';
+
+  @override
+  String get boEmailNewDevice => 'Dispozitiv nou';
+
+  @override
+  String get boEmailDeviceNameHint => 'Kindle-ul meu';
+
+  @override
+  String get boEmailDeviceAddress => 'Adresă de e-mail';
+
+  @override
+  String get boEmailDeviceType => 'Dispozitiv';
+
+  @override
+  String get boEmailDeviceNone => 'Persoană sau inbox';
+
+  @override
+  String get boEmailDeviceKindle => 'Kindle';
+
+  @override
+  String get boEmailDeviceKobo => 'Kobo';
+
+  @override
+  String get boEmailDeviceOther => 'Alt e-reader';
+
+  @override
+  String get boEmailKindleHint =>
+      'Kindle primește subiectul „convert” și acceptă prin e-mail doar EPUB și PDF.';
+
+  @override
+  String boEmailKindleApprove(String address) {
+    return 'Kindle ignoră e-mailurile de la adrese necunoscute. În Personal Document Settings din Amazon, adaugă $address în lista aprobată.';
+  }
+
+  @override
+  String get boEmailKindleApproveNoServer =>
+      'Adaugă mai întâi un server de e-mail pentru a vedea adresa pe care Kindle trebuie s-o aprobe.';
+
+  @override
+  String get boEmailFormat => 'Format';
+
+  @override
+  String get boEmailFormatPrimary => 'Fișierul principal al cărții';
+
+  @override
+  String get boEmailFormatHint =>
+      'O carte fără acest format primește fișierul principal.';
+
+  @override
+  String get boEmailReadAlong => 'Cărți cu citire sincronizată';
+
+  @override
+  String get boEmailReadAlongAuto => 'Automat';
+
+  @override
+  String get boEmailReadAlongAutoHint =>
+      'Doar text când se poate face o copie, altfel originalul.';
+
+  @override
+  String get boEmailReadAlongText => 'Doar text';
+
+  @override
+  String get boEmailReadAlongTextHint =>
+      'Fără narațiune. Suficient de mic pentru e-mail.';
+
+  @override
+  String get boEmailReadAlongOriginal => 'Cu narațiune';
+
+  @override
+  String get boEmailReadAlongOriginalHint =>
+      'Păstrează narațiunea. Adesea 100 MB sau mai mult, peste limita majorității serverelor de e-mail.';
+
+  @override
+  String get boEmailTemplate => 'Șablon';
+
+  @override
+  String get boEmailTemplateYourDefault => 'Cel implicit al tău';
+
+  @override
+  String get boEmailTemplateKindleHint =>
+      'Kindle nu afișează niciodată mesajul, deci omite șablonul.';
+
+  @override
+  String get boEmailDefaultDevice => 'Dispozitiv implicit';
+
+  @override
+  String get boEmailDefaultDeviceHint => 'Ales primul când trimiți o carte.';
+
+  @override
+  String get boEmailSendTest => 'Trimite un e-mail de test';
+
+  @override
+  String get boEmailTestSubject => 'E-mail de test de la Absorb';
+
+  @override
+  String boEmailTestBody(String name) {
+    return 'Acesta este un test de la Absorb. Dacă îl poți citi, cărțile trimise la $name vor ajunge și ele aici.';
+  }
+
+  @override
+  String boEmailTestSent(String name) {
+    return 'E-mail de test trimis la $name';
+  }
+
+  @override
+  String boEmailTestFailed(String error) {
+    return 'E-mailul de test nu a fost trimis: $error';
+  }
+
+  @override
+  String get boEmailDeleteDevice => 'Șterge dispozitivul';
+
+  @override
+  String get boEmailDeleteDeviceBody => 'Istoricul trimiterilor rămâne.';
+
+  @override
+  String get boEmailDeviceRequired => 'Introdu un nume și o adresă de e-mail';
+
+  @override
+  String get boEmailLastSendFailed => 'Ultima trimitere a eșuat';
+
+  @override
+  String get boEmailGroups => 'Grupuri';
+
+  @override
+  String get boEmailGroupsHint => 'Trimite la mai multe dispozitive deodată.';
+
+  @override
+  String get boEmailNewGroup => 'Grup nou';
+
+  @override
+  String get boEmailGroupNameHint => 'Club de lectură';
+
+  @override
+  String get boEmailGroupMembers => 'Dispozitive din acest grup';
+
+  @override
+  String get boEmailGroupMembersEmpty => 'Adaugă mai întâi un dispozitiv.';
+
+  @override
+  String boEmailGroupMemberCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de dispozitive',
+      few: '$count dispozitive',
+      one: '1 dispozitiv',
+      zero: 'Niciun dispozitiv',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get boEmailDeleteGroup => 'Șterge grupul';
+
+  @override
+  String get boEmailDeleteGroupBody => 'Dispozitivele din el rămân.';
+
+  @override
+  String get boEmailGroupRequired => 'Introdu un nume de grup';
+
+  @override
+  String get boEmailServersEmptyManage =>
+      'Încă niciun server de e-mail. Adaugă unul pentru a începe să trimiți cărți.';
+
+  @override
+  String get boEmailServersEmpty =>
+      'Încă niciun server de e-mail. Roagă un administrator să adauge unul.';
+
+  @override
+  String get boEmailAddServer => 'Adaugă server de e-mail';
+
+  @override
+  String get boEmailNewServer => 'Server de e-mail nou';
+
+  @override
+  String get boEmailServerPresetOther => 'Altul';
+
+  @override
+  String get boEmailServerPresetHint =>
+      'Un set predefinit completează gazda, portul și securitatea. Le poți totuși modifica.';
+
+  @override
+  String get boEmailServerHost => 'Gazdă';
+
+  @override
+  String get boEmailServerPort => 'Port';
+
+  @override
+  String get boEmailServerSecurity => 'Securitate';
+
+  @override
+  String get boEmailServerSecurityNone => 'Niciuna';
+
+  @override
+  String get boEmailServerSecurityHint =>
+      'STARTTLS pe portul 587, SSL/TLS pe 465.';
+
+  @override
+  String get boEmailServerNeedsPassword => 'Se conectează cu o parolă';
+
+  @override
+  String get boEmailServerUsername => 'Nume de utilizator';
+
+  @override
+  String get boEmailServerPassword => 'Parolă';
+
+  @override
+  String get boEmailServerAppPassword => 'Parolă de aplicație';
+
+  @override
+  String get boEmailServerPasswordKeep => 'Salvată. Scrie pentru a o înlocui';
+
+  @override
+  String get boEmailServerAppPasswordHint =>
+      'Gmail și iCloud necesită o parolă de aplicație, nu parola contului.';
+
+  @override
+  String get boEmailServerFromName => 'Nume expeditor';
+
+  @override
+  String get boEmailServerFromAddress => 'Adresă expeditor';
+
+  @override
+  String get boEmailServerFromAddressHint =>
+      'Proprietarii de Kindle trebuie să aprobe această adresă.';
+
+  @override
+  String get boEmailServerShare => 'Partajează cu toată lumea';
+
+  @override
+  String get boEmailServerShareHint =>
+      'Alte persoane pot trimite cărți prin acest server fără să vadă parola.';
+
+  @override
+  String get boEmailServerSystem =>
+      'Trimite resetări de parolă și linkuri de conectare';
+
+  @override
+  String get boEmailServerSystemHint =>
+      'Serverul pe care BookOrbit îl folosește pentru propriile e-mailuri.';
+
+  @override
+  String get boEmailServerVerifyTls => 'Verifică certificatul serverului';
+
+  @override
+  String get boEmailServerVerifyTlsHint =>
+      'Dezactivează doar pentru un server din rețeaua ta cu certificat autosemnat.';
+
+  @override
+  String get boEmailServerTest => 'Testează conexiunea';
+
+  @override
+  String get boEmailServerTestSaveFirst => 'Salvează întâi, apoi testează';
+
+  @override
+  String get boEmailServerTestOk => 'Conectat';
+
+  @override
+  String boEmailServerTestFailed(String error) {
+    return 'Nu se poate conecta: $error';
+  }
+
+  @override
+  String get boEmailServerDelete => 'Șterge serverul de e-mail';
+
+  @override
+  String get boEmailServerDeleteBody =>
+      'Toți cei cu care este partajat îl pierd.';
+
+  @override
+  String get boEmailServerSystemFirst =>
+      'Dezactivează resetările de parolă pe acest server înainte de a-l șterge.';
+
+  @override
+  String get boEmailServerRequired => 'Introdu un nume și o gazdă';
+
+  @override
+  String get boEmailServerNotYours =>
+      'Acest server a fost adăugat de altcineva. Doar acea persoană îl poate modifica.';
+
+  @override
+  String get boEmailTemplatesEmpty => 'Încă niciun șablon.';
+
+  @override
+  String get boEmailNewTemplate => 'Șablon nou';
+
+  @override
+  String get boEmailTemplateSubject => 'Subiect';
+
+  @override
+  String get boEmailTemplateMessage => 'Mesaj';
+
+  @override
+  String get boEmailTemplateInsert => 'Inserează';
+
+  @override
+  String get boEmailTemplateInsertHint =>
+      'Se inserează unde se află cursorul. Detaliile pe care o carte nu le are nu afișează nimic.';
+
+  @override
+  String get boEmailVarBook => 'Carte';
+
+  @override
+  String get boEmailVarFile => 'Fișier';
+
+  @override
+  String get boEmailVarOther => 'Altele';
+
+  @override
+  String get boEmailTemplatePreview => 'Previzualizare';
+
+  @override
+  String get boEmailTemplatePreviewNone =>
+      'Trimite o carte o dată pentru a previzualiza un șablon cu ea.';
+
+  @override
+  String boEmailTemplateAttached(String name) {
+    return 'Atașat: $name';
+  }
+
+  @override
+  String get boEmailTemplateBuiltIn =>
+      'Încorporat. Doar un administrator îl poate modifica.';
+
+  @override
+  String get boEmailTemplateKindleNote =>
+      'Kindle nu afișează niciodată un șablon. Primește întotdeauna subiectul „convert”.';
+
+  @override
+  String get boEmailTemplateDelete => 'Șterge șablonul';
+
+  @override
+  String get boEmailTemplateDeleteBody =>
+      'Dispozitivele care îl folosesc revin la șablonul tău implicit.';
+
+  @override
+  String get boEmailTemplateRequired => 'Introdu un nume și un subiect';
+
+  @override
+  String get boEmailHistoryEmpty => 'Încă nu s-a trimis nimic.';
+
+  @override
+  String get boEmailHistoryAll => 'Toate';
+
+  @override
+  String get boEmailHistoryEveryone => 'Toți';
+
+  @override
+  String get boEmailStatusSent => 'Trimis';
+
+  @override
+  String get boEmailStatusSending => 'Se trimite';
+
+  @override
+  String boEmailStatusRetrying(int attempt) {
+    return 'Se reîncearcă ($attempt)';
+  }
+
+  @override
+  String get boEmailStatusFailed => 'Eșuat';
+
+  @override
+  String boEmailTo(String name) {
+    return 'Către $name';
+  }
+
+  @override
+  String get boEmailResend => 'Trimite din nou';
+
+  @override
+  String get boEmailResent => 'Se trimite din nou';
+
+  @override
+  String get boEmailForget => 'Elimină din istoric';
+
+  @override
+  String get boEmailLoadMore => 'Încarcă mai multe';
+
+  @override
+  String get boEmailUnknownBook => 'Carte ștearsă';
+
+  @override
+  String get boEmailSendNoServer =>
+      'Încă nu este configurat niciun server de e-mail pe acest server.';
+
+  @override
+  String get boEmailSendAskAdmin => 'Roagă un administrator să adauge unul.';
+
+  @override
+  String get boEmailSendNoDevices =>
+      'Adaugă un dispozitiv la care să trimiți această carte.';
+
+  @override
+  String get boEmailSendOptions => 'Opțiuni';
+
+  @override
+  String get boEmailSendFormatEach => 'Cel propriu fiecărui dispozitiv';
+
+  @override
+  String get boEmailSendServer => 'Server de e-mail';
+
+  @override
+  String get boEmailSendButton => 'Trimite';
+
+  @override
+  String boEmailSendGets(String format, String size) {
+    return 'Primește $format · $size';
+  }
+
+  @override
+  String boEmailSendMissing(String format, String got) {
+    return 'Fără $format, primește $got';
+  }
+
+  @override
+  String boEmailSendKindleRejects(String format) {
+    return 'Kindle nu acceptă $format prin e-mail';
+  }
+
+  @override
+  String boEmailSendOverKindle(String size) {
+    return '$size, peste limita de 50 MB a Kindle';
+  }
+
+  @override
+  String boEmailSendOverGmail(String size) {
+    return '$size, peste limita de 25 MB a Gmail';
+  }
+
+  @override
+  String boEmailSendNarrated(String size) {
+    return 'Primește copia cu narațiune · $size';
+  }
+
+  @override
+  String boEmailSendHanding(String server) {
+    return 'Se trimite prin $server';
+  }
+
+  @override
+  String boEmailSendAccepted(String server) {
+    return 'Trimis prin $server';
+  }
+
+  @override
+  String boEmailSendFailedLine(String error) {
+    return 'Nu s-a trimis: $error';
+  }
+
+  @override
+  String get boEmailSendStillGoing =>
+      'Încă se trimite. Vei primi o notificare când se termină.';
+
+  @override
+  String get boEmailKindleOriginal =>
+      'Un Kindle nu acceptă copia cu narațiune. Setează „Doar text”.';
+
+  @override
+  String get boEmailNoCopy => 'Nu s-a putut crea o copie fără narațiune.';
+
+  @override
+  String get boForgotLink => 'Forgot password?';
+
+  @override
+  String get boForgotTitle => 'Reset your password';
+
+  @override
+  String get boForgotBody =>
+      'Enter the email on your account and the server will send you a link to choose a new password.';
+
+  @override
+  String get boForgotSend => 'Send link';
+
+  @override
+  String get boForgotSent =>
+      'If that email is on an account, a link is on its way. Open it to choose a new password, then sign in here.';
+
+  @override
+  String get boForgotNotSetUp =>
+      'This server isn\'t set up to send email. Ask whoever runs it for a password link.';
+
+  @override
+  String get boForgotTooMany => 'Too many tries. Wait a while and try again.';
+
+  @override
+  String get boActivityTitle => 'Reading activity';
+
+  @override
+  String get boActivityPrivate => 'Keeps their reading activity private';
+
+  @override
+  String get boActivitySharesSummary =>
+      'Shares a summary. They can see when you view it.';
+
+  @override
+  String get boActivitySharesDetails =>
+      'Shares details, including books. They can see when you view it.';
+
+  @override
+  String get boActivityNotice => 'This person can see that you viewed this.';
+
+  @override
+  String get boActivityNowPrivate =>
+      'This person isn\'t sharing their reading activity anymore.';
+
+  @override
+  String get boActivityLoadFailed => 'Couldn\'t load reading activity.';
+
+  @override
+  String get boActivityEmpty => 'No reading in this period';
+
+  @override
+  String get boActivityReadingTime => 'Reading time';
+
+  @override
+  String get boActivitySessions => 'Sessions';
+
+  @override
+  String get boActivityActiveDays => 'Active days';
+
+  @override
+  String get boActivityStarted => 'Books started';
+
+  @override
+  String get boActivityFinished => 'Books finished';
+
+  @override
+  String get boActivityTrend => 'Daily reading';
+
+  @override
+  String get boActivitySources => 'Read on';
+
+  @override
+  String get boActivityFormats => 'Formats';
+
+  @override
+  String get boActivityGenres => 'Genres';
+
+  @override
+  String get boActivityTopBooks => 'Most read';
+
+  @override
+  String get boActivityRecentBooks => 'Recently read';
+
+  @override
+  String get boActivityTopAuthors => 'Top authors';
+
+  @override
+  String get boActivityTopGenres => 'Top genres';
+
+  @override
+  String get boActivityTopSeries => 'Top series';
+
+  @override
+  String get boActivityTopNarrators => 'Top narrators';
+
+  @override
+  String get boActivityUntitled => 'Untitled book';
+
+  @override
+  String get boActivitySourceWeb => 'Web reader';
+
+  @override
+  String get boActivitySourceIos => 'iOS app';
+
+  @override
+  String get boActivitySourceWatch => 'Apple Watch';
+
+  @override
+  String get boActivitySourceAndroid => 'Android app';
+
+  @override
+  String get boActivitySourceManual => 'Manual';
+
+  @override
+  String get boActivitySourceUnknown => 'Unknown';
+
+  @override
+  String get boActivityGenreSciFi => 'Science fiction';
+
+  @override
+  String get boActivityGenreFantasy => 'Fantasy';
+
+  @override
+  String get boActivityGenreMystery => 'Mystery and thriller';
+
+  @override
+  String get boActivityGenreRomance => 'Romance';
+
+  @override
+  String get boActivityGenreHorror => 'Horror';
+
+  @override
+  String get boActivityGenreHistory => 'History and biography';
+
+  @override
+  String get boActivityGenreScience => 'Science and technology';
+
+  @override
+  String get boActivityGenreBusiness => 'Business and economics';
+
+  @override
+  String get boActivityGenreSelf => 'Self-development';
+
+  @override
+  String get boActivityGenreSociety => 'Society and culture';
+
+  @override
+  String get boActivityGenreChildren => 'Children and young adult';
+
+  @override
+  String get boActivityGenreComics => 'Comics and graphic novels';
+
+  @override
+  String get boActivityGenrePoetry => 'Poetry';
+
+  @override
+  String get boActivityGenreOther => 'Other';
+
+  @override
+  String boActivityDays(int count) {
+    return '$count days';
+  }
+
+  @override
+  String boActivityMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String boActivityHours(double count) {
+    return '$count h';
+  }
+
+  @override
+  String get recentSearchesTitle => 'Căutări recente';
+
+  @override
+  String get recentSearchesClear => 'Golește';
+
+  @override
+  String get recentSearchesRemove => 'Elimină';
+
+  @override
+  String get removedSeriesTapToUndo =>
+      'Eliminat din Continuă seria. Atinge pentru a anula.';
+
+  @override
+  String get seriesBackOnContinueSeries => 'Înapoi în Continuă seria';
+
+  @override
+  String get desktopShortcutPlayPause => 'Redare / pauză';
+
+  @override
+  String get desktopShortcutRewind => 'Derulare înapoi';
+
+  @override
+  String get desktopShortcutForward => 'Derulare înainte';
+
+  @override
+  String get desktopShortcutSlower => 'Redu viteza de redare';
+
+  @override
+  String get desktopShortcutFaster => 'Crește viteza de redare';
+
+  @override
+  String get desktopShortcutNormalSpeed => 'Resetează viteza de redare';
+
+  @override
+  String get desktopShortcutSearch => 'Deschide căutarea';
+
+  @override
+  String get desktopShortcutLibrary => 'Deschide biblioteca';
+
+  @override
+  String get desktopShortcutNowPlaying => 'Deschide redarea curentă';
+
+  @override
+  String get desktopShortcutFullScreen => 'Ecran complet';
+
+  @override
+  String get desktopShortcutClosePlayer => 'Închide playerul pe ecran complet';
+
+  @override
+  String get desktopShortcutBack => 'Înapoi (închide pagina sau panoul de sus)';
+
+  @override
+  String get desktopShortcutRefresh => 'Reîmprospătează lista de pe ecran';
+
+  @override
+  String get desktopShortcutPreviousCard => 'Cardul Absorbing anterior';
+
+  @override
+  String get desktopShortcutNextCard => 'Cardul Absorbing următor';
+
+  @override
+  String get desktopShortcutContextMenu => 'Deschide meniul de apăsare lungă';
+
+  @override
+  String get desktopShortcutMouseBack => 'Butonul Înapoi al mouse-ului';
+
+  @override
+  String get desktopShortcutRightClick => 'Clic dreapta';
+
+  @override
+  String get desktopShortcutDragShelves =>
+      'Trage rafturile și cardurile lateral';
+
+  @override
+  String get desktopShortcutMouseDrag => 'Clic și tragere';
+
+  @override
+  String get fileHealthAction => 'Verifică fișierele';
+
+  @override
+  String get fileHealthTitle => 'Verifică fișierele';
+
+  @override
+  String fileHealthAllFine(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Toate cele $count de fișiere par în regulă',
+      few: 'Toate cele $count fișiere par în regulă',
+      one: 'Fișierul pare în regulă',
+      zero: 'Nu pare să fie nimic în neregulă',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fileHealthProblems(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de probleme găsite',
+      few: '$count probleme găsite',
+      one: '1 problemă găsită',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fileHealthReadOnlyNote =>
+      'Aceasta doar citește ce raportează deja serverul. Nu se modifică nimic.';
+
+  @override
+  String get fileHealthLocalChecked =>
+      'Au fost verificate și fișierele descărcate pe acest dispozitiv.';
+
+  @override
+  String get fileHealthItemMissing => 'Folderul cărții lipsește';
+
+  @override
+  String get fileHealthItemMissingInfo =>
+      'Serverul nu mai găsește folderul acestei cărți. Poate că a fost mutat, redenumit sau șters, ori unitatea lui este offline. O scanare a bibliotecii pe server îl poate găsi din nou.';
+
+  @override
+  String get fileHealthItemInvalid => 'Carte marcată ca nevalidă';
+
+  @override
+  String get fileHealthItemInvalidInfo =>
+      'Serverul nu a găsit fișiere audio sau de carte electronică utilizabile pentru această carte.';
+
+  @override
+  String get fileHealthInvalidFiles => 'Fișiere ilizibile';
+
+  @override
+  String get fileHealthInvalidFilesInfo =>
+      'Serverul nu a putut citi aceste fișiere. Pot fi deteriorate sau într-un format neacceptat, iar redarea se poate opri sau le poate sări.';
+
+  @override
+  String get fileHealthEmptyFiles => 'Fișiere fără durată';
+
+  @override
+  String get fileHealthEmptyFilesInfo =>
+      'Aceste fișiere raportează durata zero, deci nu au nimic de redat. Adesea sunt goale sau trunchiate.';
+
+  @override
+  String get fileHealthTrackGaps => 'Goluri între fișiere';
+
+  @override
+  String get fileHealthTrackGapsInfo =>
+      'Cronologia cărții sare înainte între aceste fișiere și lasă o porțiune în care nu se redă nimic.';
+
+  @override
+  String get fileHealthTrackOverlaps => 'Fișiere suprapuse';
+
+  @override
+  String get fileHealthTrackOverlapsInfo =>
+      'Aceste fișiere se suprapun în cronologia cărții, așa că o parte dintr-unul poate fi sărită sau poziția poate sări.';
+
+  @override
+  String get fileHealthDurationMismatch => 'Durata nu se potrivește';
+
+  @override
+  String fileHealthDurationMismatchInfo(String actual, String expected) {
+    return 'Fișierele însumează $actual, dar cartea indică o durată de $expected. Progresul și capitolele pot fi decalate. O rescanare pe server de obicei rezolvă asta.';
+  }
+
+  @override
+  String get fileHealthLowBitrate => 'Audio de calitate scăzută';
+
+  @override
+  String get fileHealthLowBitrateInfo =>
+      'Aceste fișiere sunt codate sub 32 kbps și pot suna înfundat.';
+
+  @override
+  String get fileHealthMixedSampleRates => 'Rate de eșantionare diferite';
+
+  @override
+  String get fileHealthMixedSampleRatesInfo =>
+      'Fișierele au fost înregistrate cu rate de eșantionare diferite. Majoritatea playerelor se descurcă, dar unele pot produce pocnituri sau schimba viteza acolo unde se termină un fișier și începe următorul.';
+
+  @override
+  String get fileHealthMixedChannels => 'Mono și stereo amestecate';
+
+  @override
+  String get fileHealthMixedChannelsInfo =>
+      'Unele fișiere au un număr diferit de canale față de altele, deci sunetul se poate schimba între fișiere.';
+
+  @override
+  String get fileHealthChaptersPastEnd => 'Capitole după final';
+
+  @override
+  String get fileHealthChaptersPastEndInfo =>
+      'Aceste capitole încep sau se termină după ce se încheie audio, așa că salturile la ele pot să nu ducă nicăieri.';
+
+  @override
+  String get fileHealthLocalMissing => 'Fișiere descărcate lipsă';
+
+  @override
+  String get fileHealthLocalMissingInfo =>
+      'Aceste fișiere descărcate nu mai există pe acest dispozitiv. Redarea offline va eșua acolo unde ar trebui să fie.';
+
+  @override
+  String get fileHealthLocalSizeMismatch => 'Fișiere descărcate diferite';
+
+  @override
+  String get fileHealthLocalSizeMismatchInfo =>
+      'Aceste fișiere descărcate nu au aceeași dimensiune ca copiile de pe server, deci pot fi incomplete sau deteriorate.';
+
+  @override
+  String fileHealthStartsAt(String time) {
+    return 'începe la $time';
+  }
+
+  @override
+  String fileHealthSizeHere(String local, String server) {
+    return '$local aici, $server pe server';
+  }
+
+  @override
+  String fileHealthSampleRate(String value) {
+    return '$value kHz';
+  }
+
+  @override
+  String get fileHealthMono => 'Mono';
+
+  @override
+  String get fileHealthStereo => 'Stereo';
+
+  @override
+  String get fileHealthRedownload => 'Descarcă din nou această carte';
+
+  @override
+  String get fileHealthRedownloadQuestion => 'Descarci din nou această carte?';
+
+  @override
+  String get fileHealthRedownloadInfo =>
+      'Copia de pe acest dispozitiv este ștearsă și descărcată din nou de pe server. Dacă cartea se redă, redarea se oprește. Nimic nu se schimbă pe server.';
+
+  @override
+  String get fileHealthNotAvailableOffline =>
+      'Conectează-te la server pentru a descărca din nou';
+
+  @override
+  String get playerReconnecting => 'Conexiune pierdută, se reconectează…';
+
+  @override
+  String get playerReconnectFailed =>
+      'Nu s-a putut reconecta la server, așa că redarea s-a oprit.';
+
+  @override
+  String get downloadsFailed => 'Descărcări eșuate';
+
+  @override
+  String get absorbingReorderQueue => 'Reordonează coada';
+
+  @override
+  String get playAction => 'Redă';
+
+  @override
+  String get pauseAction => 'Pauză';
+
+  @override
+  String get rmabImportBooks => 'Importă cărți';
 
   @override
   String get rmabImportBooksSubtitle =>
-      'Search ReadMeABook and choose books to request';
+      'Caută în ReadMeABook și alege cărțile de cerut';
 
   @override
   String get rmabImportBooksConnectSubtitle =>
-      'Connect ReadMeABook with a URL and token first';
+      'Conectează mai întâi ReadMeABook cu un URL și un token';
 
   @override
-  String get windowsSettingsTitle => 'Windows Settings';
+  String get windowsSettingsTitle => 'Setări Windows';
 
   @override
-  String get updateCheckFrequency => 'Automatic update checks';
+  String get updateCheckFrequency => 'Verificări automate de actualizări';
 
   @override
   String get updateCheckFrequencySubtitle =>
-      'Checks for updates only; installation is always manual.';
+      'Doar verifică actualizările; instalarea este întotdeauna manuală.';
 
   @override
-  String get updateCheckOnStartup => 'On startup (once per 12 hours)';
+  String get updateCheckOnStartup => 'La pornire (o dată la 12 ore)';
 
   @override
-  String get updateCheckEverySixHours => 'Every 6 hours';
+  String get updateCheckEverySixHours => 'La fiecare 6 ore';
 
   @override
-  String get updateCheckEveryTwelveHours => 'Every 12 hours';
+  String get updateCheckEveryTwelveHours => 'La fiecare 12 ore';
 
   @override
-  String get updateCheckDaily => 'Daily';
+  String get updateCheckDaily => 'Zilnic';
 
   @override
-  String get updateCheckNever => 'Never automatically';
+  String get updateCheckNever => 'Niciodată automat';
 
   @override
   String onLatestVersionDetail(String version) {
-    return 'You\'re on the latest version ($version)';
+    return 'Ai cea mai recentă versiune ($version)';
   }
 
   @override
   String get updateCheckFailed =>
-      'Couldn\'t reach GitHub to check for updates. Check your connection and try again.';
+      'Nu s-a putut contacta GitHub pentru a verifica actualizările. Verifică conexiunea și încearcă din nou.';
 
   @override
-  String get playlistDetailAddBooks => 'Add books to playlist';
+  String get playlistDetailAddBooks => 'Adaugă cărți în lista de redare';
 
   @override
-  String get playlistDetailSwitchToList => 'Switch to list view';
+  String get playlistDetailSwitchToList => 'Treci la vizualizarea listă';
 
   @override
-  String get playlistDetailSwitchToGrid => 'Switch to grid view';
+  String get playlistDetailSwitchToGrid => 'Treci la vizualizarea grilă';
 
   @override
   String get adminUploadIndexing =>
-      'Upload complete; waiting for Audiobookshelf to index...';
+      'Încărcare finalizată; se așteaptă ca Audiobookshelf să indexeze...';
 
   @override
   String adminUploadCompletePendingIndex(String title) {
-    return 'Uploaded \"$title\"; Audiobookshelf is still indexing it';
+    return '„$title” a fost încărcat; Audiobookshelf îl indexează încă';
   }
 
   @override
   String get adminUploadPermissionDenied =>
-      'Your Audiobookshelf account does not have upload permission. Ask a server administrator to enable upload access for your account.';
+      'Contul tău Audiobookshelf nu are permisiunea de încărcare. Cere unui administrator al serverului să activeze accesul la încărcare pentru contul tău.';
 
   @override
-  String get uiThemeLabel => 'UI theme';
+  String get uiThemeLabel => 'Temă de interfață';
 
   @override
-  String get uiThemePickerTitle => 'Choose a look';
+  String get uiThemePickerTitle => 'Alege un aspect';
 
   @override
   String get uiThemePickerIntro =>
-      'You can change this any time in Settings > Appearance > UI theme.';
+      'Poți schimba oricând din Setări > Aspect > Temă de interfață.';
 
   @override
   String get uiThemePlusName => 'Standard';
 
   @override
   String get uiThemePlusDescription =>
-      'The usual Absorb Plus look, with filled panels and a soft glow from your cover colors.';
+      'Aspectul obișnuit Absorb Plus, cu panouri pline și o lumină discretă din culorile coperților tale.';
 
   @override
-  String get uiThemeMidnightName => 'Midnight';
+  String get uiThemeMidnightName => 'Miezul nopții';
 
   @override
   String get uiThemeMidnightDescription =>
-      'Pure black with thin outlines and no glow, made for OLED screens.';
+      'Negru pur, cu contururi subțiri și fără strălucire, creat pentru ecranele OLED.';
 
   @override
-  String get uiThemeContinue => 'Continue';
+  String get uiThemeContinue => 'Continuă';
 
   @override
-  String get uiThemeFrostedName => 'Frosted';
+  String get uiThemeFrostedName => 'Sticlă mată';
 
   @override
   String get uiThemeFrostedDescription =>
-      'Soft frosted-glass panels with your cover colors glowing through.';
+      'Panouri moi din sticlă mată, prin care strălucesc culorile coperților tale.';
 
   @override
-  String get uiThemeColorTitle => 'Choose a color';
+  String get uiThemeColorTitle => 'Alege o culoare';
 
   @override
   String get uiThemeColorIntro =>
-      'This is the same setting as Settings > Appearance > Color source.';
+      'Este aceeași setare ca Setări > Aspect > Sursa culorii.';
 
   @override
-  String get uiThemeColorFromCover => 'From cover';
+  String get uiThemeColorFromCover => 'Din copertă';
 
   @override
-  String get uiThemeBack => 'Back';
+  String get uiThemeBack => 'Înapoi';
 
   @override
-  String get uiThemeTryIt => 'Try it';
+  String get uiThemeTryIt => 'Încearcă';
 
   @override
   String uiThemePreviewing(String name) {
-    return 'Previewing $name';
+    return 'Previzualizare $name';
   }
 
   @override
-  String get uiThemeKeep => 'Keep';
+  String get uiThemeKeep => 'Păstrează';
 
   @override
-  String get uiThemeGoBack => 'Go back';
+  String get uiThemeGoBack => 'Înapoi';
 
   @override
-  String get uiThemeGlass => 'Glass';
+  String get uiThemeGlass => 'Sticlă';
 
   @override
-  String get uiThemeGlassLight => 'Light';
+  String get uiThemeGlassLight => 'Ușoară';
 
   @override
-  String get uiThemeGlassMedium => 'Medium';
+  String get uiThemeGlassMedium => 'Medie';
 
   @override
-  String get uiThemeGlassStrong => 'Strong';
+  String get uiThemeGlassStrong => 'Intensă';
 
   @override
-  String get uiThemeDetails => 'Look details';
+  String get uiThemeDetails => 'Detalii aspect';
 
   @override
-  String get uiThemeFullCovers => 'Full-quality covers';
+  String get uiThemeFullCovers => 'Coperți la calitate maximă';
 
   @override
-  String get uiThemeFullCoversSubtitle => 'Sharper covers that use more memory';
+  String get uiThemeFullCoversSubtitle =>
+      'Coperți mai clare, care folosesc mai multă memorie';
 
   @override
-  String get uiThemeExtraBadges => 'Extra cover badges';
+  String get uiThemeExtraBadges => 'Insigne suplimentare pe coperți';
 
   @override
   String get uiThemeExtraBadgesSubtitle =>
-      'Ebook badge and the saved strip on Continue Listening';
+      'Insigna de carte electronică și banda de salvat din Continuă ascultarea';
 
   @override
-  String get uiThemeReadingShelf => 'Continue Reading as a shelf';
+  String get uiThemeReadingShelf => 'Continuă citirea ca raft';
 
   @override
   String get uiThemeReadingShelfSubtitle =>
-      'A normal Home shelf instead of big cards';
+      'Un raft obișnuit pe Acasă în loc de carduri mari';
 
   @override
-  String get uiThemeCompactHeader => 'Compact header buttons';
+  String get uiThemeCompactHeader => 'Butoane compacte în antet';
 
   @override
   String get uiThemeCompactHeaderSubtitle =>
-      'Page header buttons keep their small size';
+      'Butoanele din antetul paginii își păstrează dimensiunea mică';
 
   @override
-  String get uiThemePlainWording => 'Plain wording';
+  String get uiThemePlainWording => 'Formulări simple';
 
   @override
   String get uiThemePlainWordingOnSubtitle =>
-      'Using \"Play\", \"Now Playing\", \"Finished\"';
+      'Se folosesc „Redă”, „Se redă acum”, „Terminat”';
 
   @override
   String get uiThemePlainWordingOffSubtitle =>
-      'Using \"Absorb\", \"Absorbing\", \"Fully Absorbed\"';
+      'Se folosesc „Absorb”, „Absorbing”, „Fully Absorbed”';
 
   @override
-  String get uiThemeSearchClassic => 'Classic';
+  String get uiThemeSearchClassic => 'Clasic';
 
   @override
   String whatsNewSheetTitle(String name) {
-    return 'What\'s new in $name';
+    return 'Ce e nou în $name';
   }
 
   @override
   String whatsNewUpdatedFrom(String name) {
-    return 'Updated from $name';
+    return 'Actualizat de la $name';
   }
 
   @override
   String whatsNewBuildLabel(int number) {
-    return 'build $number';
+    return 'versiunea $number';
   }
 
   @override
-  String get whatsNewFullNotes => 'Full notes on GitHub';
+  String get whatsNewFullNotes => 'Notele complete pe GitHub';
 
   @override
-  String get whatsNewLoading => 'Loading what\'s new';
+  String get whatsNewLoading => 'Se încarcă noutățile';
 
   @override
-  String get whatsNewLoadFailed => 'Couldn\'t load the notes';
+  String get whatsNewLoadFailed => 'Nu s-au putut încărca notele';
 
   @override
   String get whatsNewLoadFailedHint =>
-      'Check your connection, or read them on GitHub.';
+      'Verifică conexiunea sau citește-le pe GitHub.';
 
   @override
-  String get whatsNewOpenGitHub => 'Open on GitHub';
+  String get whatsNewOpenGitHub => 'Deschide pe GitHub';
 
   @override
-  String get settingsSeeWhatsNew => 'See what\'s new';
+  String get settingsSeeWhatsNew => 'Vezi ce e nou';
 
   @override
   String get settingsSeeWhatsNewSubtitle =>
-      'The release notes for this version';
+      'Notele de lansare pentru această versiune';
 
   @override
-  String get windowsCloseToTray => 'Close to tray';
+  String get windowsCloseToTray => 'Închide în bara de sistem';
 
   @override
   String get windowsCloseToTraySubtitle =>
-      'Closing the window keeps Absorb Plus running in the notification area. Quit from the tray icon.';
+      'Închiderea ferestrei păstrează Absorb Plus rulând în zona de notificare. Ieși din pictograma din bara de sistem.';
 
   @override
-  String get windowsStartWithWindows => 'Start with Windows';
+  String get windowsStartWithWindows => 'Pornește cu Windows';
 
   @override
   String get windowsStartWithWindowsSubtitle =>
-      'Open Absorb Plus when you sign in to Windows';
+      'Deschide Absorb Plus când te conectezi la Windows';
 
   @override
   String windowsStartWithWindowsRegistered(String command) {
-    return 'Starts: $command';
+    return 'Pornește: $command';
   }
 
   @override
   String windowsStartWithWindowsOtherCopy(String command) {
-    return 'Another copy is set to start: $command. Turn on to use this copy instead.';
+    return 'O altă copie este setată să pornească: $command. Activează pentru a folosi această copie în schimb.';
   }
 
   @override
   String get windowsStartupDisabledBySystem =>
-      'Switched off in Task Manager\'s Startup apps. Turn it back on there.';
+      'Dezactivată din Aplicații la pornire din Task Manager. Reactivează-o acolo.';
 
   @override
-  String get windowsStartMinimized => 'Start minimized';
+  String get windowsStartMinimized => 'Pornește minimizat';
 
   @override
   String get windowsStartMinimizedSubtitle =>
-      'When it starts with Windows, keep it in the tray (or minimized if Close to tray is off)';
+      'Când pornește cu Windows, îl păstrează în bara de sistem (sau minimizat dacă Închide în bara de sistem este dezactivat)';
 
   @override
-  String get windowsAlwaysOnTop => 'Always on top';
+  String get windowsAlwaysOnTop => 'Mereu deasupra';
 
   @override
   String get windowsAlwaysOnTopSubtitle =>
-      'Keep the window above other windows';
+      'Păstrează fereastra deasupra celorlalte ferestre';
 
   @override
-  String get windowsKeepAwake => 'Keep PC awake while playing or downloading';
+  String get windowsKeepAwake =>
+      'Menține PC-ul treaz cât timp redă sau descarcă';
 
   @override
   String get windowsKeepAwakeSubtitle =>
-      'Stops the PC from going to sleep. The screen can still turn off.';
+      'Împiedică intrarea PC-ului în repaus. Ecranul se poate stinge în continuare.';
 
   @override
-  String get windowsSettingFailed => 'Windows didn\'t accept that change';
+  String get windowsSettingFailed => 'Windows nu a acceptat această modificare';
 
   @override
-  String get windowsTrayShow => 'Show Absorb Plus';
+  String get windowsGlobalHotkeys => 'Comenzi rapide globale';
 
   @override
-  String get windowsTrayQuit => 'Quit Absorb Plus';
+  String get windowsGlobalHotkeysSubtitle =>
+      'Funcționează cât timp Absorb Plus este în fundal: Ctrl+Alt+Space redare/pauză, Ctrl+Alt+Left/Right salt înapoi/înainte, Ctrl+Alt+Up/Down volum, Ctrl+Alt+B adaugă marcaj';
 
   @override
-  String get windowsTaskbarPlay => 'Play';
+  String windowsGlobalHotkeysUnavailable(String keys) {
+    return 'Ocupate de altă aplicație, indisponibile: $keys';
+  }
 
   @override
-  String get windowsTaskbarPause => 'Pause';
+  String get windowsTrayShow => 'Arată Absorb Plus';
 
   @override
-  String get windowsTaskbarRewind => 'Rewind';
+  String get windowsTrayQuit => 'Închide Absorb Plus';
 
   @override
-  String get windowsTaskbarForward => 'Fast-forward';
+  String get windowsTaskbarPlay => 'Redă';
 
   @override
-  String get supportContactSubtitle =>
-      'Ask a question on the Absorb Plus GitHub';
+  String get windowsTaskbarPause => 'Pauză';
 
   @override
-  String get githubProjectTitle => 'Absorb Plus on GitHub';
+  String get windowsTaskbarRewind => 'Derulează înapoi';
 
   @override
-  String get precacheTitle => 'Pre-load covers and book pages';
+  String get windowsTaskbarForward => 'Derulează înainte';
+
+  @override
+  String windowsJumpListResume(String title) {
+    return 'Reia $title';
+  }
+
+  @override
+  String get githubProjectTitle => 'Absorb Plus pe GitHub';
+
+  @override
+  String get precacheTitle => 'Preîncarcă coperțile și paginile cărților';
 
   @override
   String get precacheSubtitle =>
-      'Fetches them in the background on Wi-Fi or a wired connection, so screens open instantly. Uses a little disk space, not memory.';
+      'Le preia în fundal prin Wi-Fi sau conexiune prin cablu, ca ecranele să se deschidă instant. Folosește puțin spațiu pe disc, nu memorie.';
 
   @override
-  String get githubProjectSubtitle => 'Releases, source code and project news';
+  String get githubProjectSubtitle =>
+      'Lansări, cod sursă și noutăți despre proiect';
 
   @override
   String get supportSaveLogsSubtitle =>
-      'Save the log file to attach to a GitHub issue';
+      'Salvează fișierul jurnal pentru a-l atașa la un raport pe GitHub';
 
   @override
-  String get supportSaveLogsDialogTitle => 'Save Absorb Plus logs';
+  String get supportSaveLogsDialogTitle => 'Salvează jurnalele Absorb Plus';
 
   @override
   String supportLogsSaved(String path) {
-    return 'Logs saved to $path';
+    return 'Jurnale salvate în $path';
   }
 
   @override
   String supportLogsSaveFailed(String error) {
-    return 'Couldn\'t save the logs: $error';
+    return 'Nu s-au putut salva jurnalele: $error';
   }
 
   @override
-  String get supportOpenLogsFolder => 'Open logs folder';
+  String get supportOpenLogsFolder => 'Deschide dosarul de jurnale';
 
   @override
   String get supportOpenLogsFolderSubtitle =>
-      'Show the log file in your file manager';
+      'Arată fișierul jurnal în managerul de fișiere';
 
   @override
-  String get supportOpenLogsFolderFailed => 'Couldn\'t open the logs folder';
+  String get supportOpenLogsFolderFailed =>
+      'Nu s-a putut deschide dosarul de jurnale';
 
   @override
-  String get desktopDownloadFolderOpen => 'Open in Explorer';
+  String get desktopDownloadFolderOpen => 'Deschide în Explorer';
 
   @override
-  String get desktopDownloadFolderOpenLinux => 'Open folder';
+  String get desktopDownloadFolderOpenLinux => 'Deschide dosarul';
 
   @override
-  String get desktopDownloadFolderOpenFailed => 'Couldn\'t open the folder';
+  String get desktopDownloadFolderOpenFailed => 'Nu s-a putut deschide dosarul';
 
   @override
   String get desktopDownloadFolderNotWritable =>
-      'Absorb can\'t save files in that folder. Choose another one.';
+      'Absorb nu poate salva fișiere în acel dosar. Alege altul.';
 
   @override
   String get desktopDownloadFolderPickFailed =>
-      'Couldn\'t show the folder picker';
+      'Nu s-a putut afișa selectorul de dosare';
 
   @override
   String get desktopDownloadFolderNetworkPath =>
-      'Network folders (\\\\server\\share) can\'t hold downloads. Map the share to a drive letter in File Explorer, such as Z:, and choose that instead.';
+      'Dosarele de rețea (\\\\server\\share) nu pot conține descărcări. Mapează resursa partajată la o literă de unitate în File Explorer, de exemplu Z:, și alege aceea.';
 
   @override
-  String get desktopDownloadFolderDefault => 'Default folder';
+  String get desktopDownloadFolderDefault => 'Dosar implicit';
 
   @override
-  String get bookSettingsTitle => 'Book settings';
+  String get bookSettingsTitle => 'Setări carte';
 
   @override
   String bookSettingsSeries(String name) {
-    return 'Series: $name';
+    return 'Serie: $name';
   }
 
   @override
-  String get bookSettingsSpeed => 'Speed';
+  String get bookSettingsSpeed => 'Viteză';
 
   @override
   String get bookSettingsSpeedFromSeries =>
-      'From the last book you played in this series';
+      'De la ultima carte redată din această serie';
 
   @override
-  String get bookSettingsSkipIntro => 'Skip intro';
+  String get bookSettingsSkipIntro => 'Omite introducerea';
 
   @override
   String get bookSettingsSkipIntroHint =>
-      'Only when the book starts from the beginning';
+      'Doar când cartea pornește de la început';
 
   @override
-  String get bookSettingsSkipOutro => 'Skip outro';
+  String get bookSettingsSkipOutro => 'Omite finalul';
 
   @override
   String get bookSettingsSkipOutroHint =>
-      'Ends the book early and marks it finished';
+      'Încheie cartea mai devreme și o marchează ca terminată';
 
   @override
-  String get bookSettingsSkipOff => 'Off';
+  String get bookSettingsSkipOff => 'Oprit';
 
   @override
   String bookSettingsSeconds(int seconds) {
@@ -13174,27 +15096,27 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get bookSettingsWholeSeries => 'Use for the whole series';
+  String get bookSettingsWholeSeries => 'Folosește pentru toată seria';
 
   @override
   String get bookSettingsWholeSeriesHint =>
-      'Intro and outro apply to every book in this series';
+      'Introducerea și finalul se aplică fiecărei cărți din această serie';
 
   @override
-  String get bookSettingsReset => 'Reset';
+  String get bookSettingsReset => 'Resetează';
 
   @override
-  String get bookSettingsResetDone => 'Book settings reset';
+  String get bookSettingsResetDone => 'Setările cărții au fost resetate';
 
   @override
-  String get adminDashTitle => 'Dashboard';
+  String get adminDashTitle => 'Panou de control';
 
   @override
   String get adminDashSubtitle =>
-      'Who\'s listening, libraries, users and server warnings at a glance';
+      'Cine ascultă, biblioteci, utilizatori și avertismente de server dintr-o privire';
 
   @override
-  String get adminDashNobodyListening => 'Nobody is listening right now';
+  String get adminDashNobodyListening => 'Nimeni nu ascultă acum';
 
   @override
   String adminDashOnlineNames(String names) {
@@ -13202,186 +15124,1557 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get adminDashListeningHistory => 'Listening history';
+  String get adminDashListeningHistory => 'Istoric de ascultare';
 
   @override
-  String get adminDashCouldNotLoad => 'Couldn\'t load this from the server';
+  String get adminDashCouldNotLoad => 'Nu s-a putut încărca de pe server';
 
   @override
   String adminDashItemCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count items',
-      one: '1 item',
+      other: '$count de elemente',
+      few: '$count elemente',
+      one: '1 element',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminDashScanAll => 'Scan all';
+  String get adminDashScanAll => 'Scanează tot';
 
   @override
-  String get adminDashScanAllTitle => 'Scan all libraries?';
+  String get adminDashScanAllTitle => 'Scanezi toate bibliotecile?';
 
   @override
   String get adminDashScanAllContent =>
-      'Audiobookshelf will look for new, changed and missing files in every library. This can take a while on big libraries.';
+      'Audiobookshelf va căuta fișiere noi, modificate și lipsă în fiecare bibliotecă. Poate dura o vreme la bibliotecile mari.';
 
   @override
   String adminDashScanAllStarted(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Scan started for $count libraries',
-      one: 'Scan started for 1 library',
+      other: 'Scanare pornită pentru $count de biblioteci',
+      few: 'Scanare pornită pentru $count biblioteci',
+      one: 'Scanare pornită pentru 1 bibliotecă',
     );
     return '$_temp0';
   }
 
   @override
   String adminDashScanAllPartial(int failed, int total) {
-    return '$failed of $total scans couldn\'t start';
+    return '$failed din $total scanări nu au putut porni';
   }
 
   @override
-  String get adminDashNoLibraries => 'No libraries yet';
+  String get adminDashNoLibraries => 'Încă nu există biblioteci';
 
   @override
-  String get adminDashBackUpNow => 'Back up now';
+  String get adminDashBackUpNow => 'Fă o copie de siguranță acum';
 
   @override
   String adminDashLastBackup(String time) {
-    return 'Last backup $time';
+    return 'Ultima copie de siguranță $time';
   }
 
   @override
-  String get adminDashNoBackups => 'No backups yet';
+  String get adminDashNoBackups => 'Încă nu există copii de siguranță';
 
   @override
-  String get adminDashManageUsers => 'Manage users';
+  String get adminDashManageUsers => 'Gestionează utilizatorii';
 
   @override
-  String get adminDashNeverSeen => 'Never signed in';
+  String get adminDashNeverSeen => 'Nu s-a conectat niciodată';
 
   @override
-  String get adminDashDisabled => 'Disabled';
+  String get adminDashDisabled => 'Dezactivat';
 
   @override
-  String get adminDashLocked => 'Locked';
+  String get adminDashLocked => 'Blocat';
 
   @override
-  String get adminDashServerWarnings => 'Server warnings';
+  String get adminDashServerWarnings => 'Avertismente server';
 
   @override
-  String get adminDashNoProblems => 'No warnings or errors in today\'s log';
+  String get adminDashNoProblems =>
+      'Fără avertismente sau erori în jurnalul de azi';
 
   @override
-  String get adminDashAllLogs => 'All server logs';
+  String get adminDashAllLogs => 'Toate jurnalele serverului';
 
   @override
-  String get tailscaleBuiltInTitle => 'Tailscale (built-in)';
+  String get tailscaleBuiltInTitle => 'Tailscale (integrat)';
 
   @override
   String get tailscaleChip => 'Tailscale';
 
   @override
-  String get desktopShortcutsTitle => 'Keyboard shortcuts';
+  String get desktopShortcutsTitle => 'Comenzi rapide de la tastatură';
 
   @override
   String get desktopShortcutsSubtitle =>
-      'Playback, speed, search, and navigation controls';
+      'Comenzi pentru redare, viteză, căutare și navigare';
 
   @override
-  String get desktopShortcutsClose => 'Close';
+  String get desktopShortcutsClose => 'Închide';
 
   @override
-  String get tailscaleConnect => 'Connect with Tailscale';
+  String get tailscaleConnect => 'Conectează-te cu Tailscale';
 
   @override
-  String get tailscaleConnectHint =>
-      'Opens the Tailscale login in your browser';
+  String get tailscaleConnectHint => 'Deschide conectarea Tailscale în browser';
 
   @override
-  String get tailscaleTurnOff => 'Turn off';
+  String get tailscaleTurnOff => 'Dezactivează';
 
   @override
   String get tailscaleCardPitch =>
-      'Reach your server on your tailnet without turning on the Tailscale VPN';
+      'Ajungi la serverul tău în tailnet fără a activa VPN-ul Tailscale';
 
   @override
   String get tailscaleIntro =>
-      'Reach a server on your tailnet without turning on the Tailscale app\'s VPN. Absorb joins your tailnet as its own device, for its own connections only. Test feature, off by default.';
+      'Ajungi la un server din tailnet fără a activa VPN-ul aplicației Tailscale. Absorb se alătură tailnetului tău ca dispozitiv propriu, doar pentru propriile conexiuni. Funcție de test, dezactivată implicit.';
 
   @override
-  String get tailscaleUseSwitch => 'Use built-in Tailscale';
+  String get tailscaleUseSwitch => 'Folosește Tailscale integrat';
 
   @override
-  String get tailscaleStatusOff => 'Off';
+  String get tailscaleStatusOff => 'Oprit';
 
   @override
-  String get tailscaleStatusStarting => 'Connecting…';
+  String get tailscaleStatusStarting => 'Se conectează…';
 
   @override
   String get tailscaleStatusNeedsLogin =>
-      'Sign in to add this device to your tailnet';
+      'Conectează-te pentru a adăuga acest dispozitiv în tailnet';
 
   @override
   String get tailscaleStatusNeedsApproval =>
-      'Waiting for an admin to approve this device';
+      'Se așteaptă ca un administrator să aprobe acest dispozitiv';
 
   @override
   String tailscaleStatusConnected(String user) {
-    return 'Connected as $user';
+    return 'Conectat ca $user';
   }
 
   @override
-  String get tailscaleStatusConnectedNoUser => 'Connected';
+  String get tailscaleStatusConnectedNoUser => 'Conectat';
 
   @override
   String tailscaleStatusError(String error) {
-    return 'Problem: $error';
+    return 'Problemă: $error';
   }
 
   @override
-  String get tailscaleNotIncluded => 'Not included in this build';
+  String get tailscaleNotIncluded => 'Neinclus în această versiune';
 
   @override
-  String get tailscaleSignIn => 'Sign in with Tailscale';
+  String get tailscaleSignIn => 'Conectează-te cu Tailscale';
 
   @override
   String get tailscaleSignInNoLink =>
-      'No sign-in link yet. Try again in a moment.';
+      'Încă nu există un link de conectare. Încearcă din nou peste puțin timp.';
 
   @override
   String get tailscaleToggleFailed =>
-      'Couldn\'t turn built-in Tailscale on or off. Try again.';
+      'Nu s-a putut activa sau dezactiva Tailscale integrat. Încearcă din nou.';
 
   @override
-  String get tailscaleSignOut => 'Sign out of Tailscale';
+  String get tailscaleSignOut => 'Deconectează-te de la Tailscale';
 
   @override
   String tailscaleDeviceAddress(String address) {
-    return 'This device: $address';
+    return 'Acest dispozitiv: $address';
   }
 
   @override
   String tailscaleServerRouted(String server) {
-    return 'Your server ($server) is reached through Tailscale.';
+    return 'Serverul tău ($server) este accesat prin Tailscale.';
   }
 
   @override
   String tailscaleServerNotRouted(String server) {
-    return 'Your server ($server) isn\'t a tailnet address, so it\'s reached as usual. If it is on your tailnet, add its host name below.';
+    return 'Serverul tău ($server) nu este o adresă din tailnet, așa că este accesat ca de obicei. Dacă se află în tailnetul tău, adaugă mai jos numele lui de gazdă.';
   }
 
   @override
-  String get tailscaleExtraHostsLabel => 'Other tailnet host names';
+  String get tailscaleExtraHostsLabel => 'Alte nume de gazdă din tailnet';
 
   @override
   String get tailscaleExtraHostsHint => 'nas, abs.example.com';
 
   @override
   String get tailscaleExtraHostsHelp =>
-      'Addresses in 100.64.0.0/10 and names ending in .ts.net or your tailnet\'s MagicDNS name always go through Tailscale. Separate names with commas.';
+      'Adresele din 100.64.0.0/10 și numele care se termină în .ts.net sau numele MagicDNS al tailnetului tău trec mereu prin Tailscale. Separă numele prin virgule.';
+
+  @override
+  String playerChapterEndsAt(String time) {
+    return 'Capitolul se termină la $time';
+  }
+
+  @override
+  String playerEndsAt(String time) {
+    return 'Se termină la $time';
+  }
+
+  @override
+  String lastPlayedOnDevice(String device, String ago) {
+    return 'Ultima redare pe $device · $ago';
+  }
+
+  @override
+  String lastPlayedElsewhere(String ago) {
+    return 'Ultima redare pe alt dispozitiv · $ago';
+  }
+
+  @override
+  String get opmlExportAction => 'Exportă OPML';
+
+  @override
+  String get opmlExportDialogTitle => 'Salvează fluxurile de podcast ca OPML';
+
+  @override
+  String opmlExportSaved(String path) {
+    return 'OPML salvat în $path';
+  }
+
+  @override
+  String get opmlExportDownloaded => 'OPML descărcat';
+
+  @override
+  String get opmlExportFailed => 'Nu s-a putut exporta fișierul OPML';
+
+  @override
+  String get bookCopySaveAction => 'Salvează o copie…';
+
+  @override
+  String get bookCopyDialogTitle => 'Salvează o copie a acestei cărți';
+
+  @override
+  String get bookCopySaving => 'Se salvează o copie…';
+
+  @override
+  String bookCopySaved(String path) {
+    return 'Copie salvată în $path';
+  }
+
+  @override
+  String get bookCopyFailed => 'Nu s-a putut salva o copie a acestei cărți';
+
+  @override
+  String get exclusiveAudioTitle => 'Audio exclusiv';
+
+  @override
+  String get exclusiveAudioSubtitle =>
+      'Elimină trosnetele sau volumul sacadat omițând efectele sonore Windows. Celelalte aplicații sunt puse pe mut cât timp Absorb redă. Repornește Absorb pentru a aplica.';
+
+  @override
+  String get exclusiveAudioFallback =>
+      'Dispozitivul tău audio a refuzat modul audio exclusiv, deci Absorb redă în modul normal';
+
+  @override
+  String homeRecentlyAddedNewBadge(int count) {
+    return '$count noi';
+  }
+
+  @override
+  String seekUndoBackTo(String time) {
+    return 'Înapoi la $time';
+  }
+
+  @override
+  String get goToTime => 'Mergi la moment';
+
+  @override
+  String get goToTimeLabel => 'Timp';
+
+  @override
+  String get goToTimeHint => 'h:mm:ss, mm:ss sau minute';
+
+  @override
+  String get goToTimeGo => 'Mergi';
+
+  @override
+  String goToTimeLength(String time) {
+    return 'Durată $time';
+  }
+
+  @override
+  String get goToTimeInvalid => 'Scrie un timp precum 1:23:45, 23:45 sau 90';
+
+  @override
+  String goToTimePastEnd(String time) {
+    return 'Depășește sfârșitul ($time)';
+  }
+
+  @override
+  String get desktopShortcutGoToTime =>
+      'Mergi la un moment în playerul deschis';
+
+  @override
+  String fellAsleepJumpBack(String time) {
+    return 'Adormit în jurul orei $time · Revino';
+  }
+
+  @override
+  String get surpriseMe => 'Surprinde-mă';
+
+  @override
+  String get surpriseMeNoneLeft =>
+      'Ai terminat toate cărțile din această bibliotecă';
+
+  @override
+  String get surpriseMeFailed =>
+      'Nu s-a putut alege o carte. Încearcă din nou.';
+
+  @override
+  String get surpriseMeOffline => 'Surprinde-mă necesită conexiune la server';
+
+  @override
+  String get surpriseMeBooksOnly =>
+      'Surprinde-mă alege cărți. Treci la o bibliotecă de cărți.';
+
+  @override
+  String get autoDownloadNextInSeries =>
+      'Descarcă automat următoarea carte din serie';
+
+  @override
+  String get autoDownloadNextInSeriesSubtitle =>
+      'Când cartea pe care o asculți este parcursă în proporție de 80% sau mai are sub o oră. Respectă setarea doar prin Wi-Fi.';
+
+  @override
+  String get emptyStateBrowseLibrary => 'Răsfoiește biblioteca';
+
+  @override
+  String get emptyStateClearSearch => 'Șterge căutarea';
+
+  @override
+  String get statsNoListeningYet => 'Încă nu ai ascultat nimic';
+
+  @override
+  String get desktopShortcutQuickSwitcher =>
+      'Comutator rapid: găsește cărți sau mergi oriunde';
+
+  @override
+  String get desktopShortcutHelp => 'Arată comenzile rapide de la tastatură';
+
+  @override
+  String get quickSwitcherTooltip => 'Comutator rapid (Ctrl+K)';
+
+  @override
+  String get quickSwitcherHint =>
+      'Caută în această bibliotecă sau scrie o comandă';
+
+  @override
+  String get quickSwitcherNoResults => 'Niciun rezultat';
+
+  @override
+  String get quickSwitcherGoHome => 'Mergi la Acasă';
+
+  @override
+  String get quickSwitcherGoLibrary => 'Mergi la Bibliotecă';
+
+  @override
+  String get quickSwitcherGoAbsorbing => 'Mergi la Absorbing';
+
+  @override
+  String get quickSwitcherGoStats => 'Mergi la Statistici';
+
+  @override
+  String get quickSwitcherGoSettings => 'Mergi la Setări';
+
+  @override
+  String get quickSwitcherGoDownloads => 'Mergi la Descărcări';
+
+  @override
+  String get quickSwitcherPlayPause => 'Redare / pauză';
+
+  @override
+  String get quickSwitcherSleepTimer => 'Temporizator de somn';
+
+  @override
+  String get quickSwitcherKeywordsAbsorbing =>
+      'în curs de redare player now playing';
+
+  @override
+  String get quickSwitcherKeywordsSettings =>
+      'preferințe opțiuni preferences options';
+
+  @override
+  String get quickSwitcherKeywordsDownloads => 'descărcări offline';
+
+  @override
+  String get quickSwitcherKeywordsPlayPause =>
+      'redare pauză reluare resume pause';
+
+  @override
+  String get quickSwitcherKeywordsSleepTimer => 'temporizator somn timer';
+
+  @override
+  String get quickSwitcherKeywordsShortcuts =>
+      'scurtături taste ajutor tastatură keys help hotkeys keyboard';
+
+  @override
+  String get quickSwitcherKindAction => 'Acțiune';
+
+  @override
+  String get quickSwitcherKindBook => 'Carte';
+
+  @override
+  String get quickSwitcherKindPodcast => 'Podcast';
+
+  @override
+  String get quickSwitcherKindSeries => 'Serie';
+
+  @override
+  String get quickSwitcherKindAuthor => 'Autor';
+
+  @override
+  String get alphabetScrollerLabel => 'Sari la o literă';
+
+  @override
+  String get stepperDecrease => 'Scade';
+
+  @override
+  String get stepperIncrease => 'Crește';
+
+  @override
+  String get statsStreakKeepGoing =>
+      'Ascultă 5 minute astăzi pentru a continua seria';
+
+  @override
+  String get statsStreakHowTo =>
+      'Ascultă 5 minute pe zi pentru a construi o serie';
+
+  @override
+  String get statsDailyGoalSheetTitle => 'Obiectiv zilnic de ascultare';
+
+  @override
+  String get statsDailyGoalSheetBody =>
+      'Un inel de pe cardul seriei se umple pe măsură ce asculți astăzi.';
+
+  @override
+  String get statsDailyGoalSet => 'Setează un obiectiv zilnic';
+
+  @override
+  String get statsMonthListened => 'Ascultat';
+
+  @override
+  String get statsMonthTime => 'Timp';
+
+  @override
+  String get statsMonthTopBook => 'Cartea de top';
+
+  @override
+  String bookmarksSearchResults(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de rezultate',
+      few: '$count rezultate',
+      one: '1 rezultat',
+      zero: 'Niciun rezultat',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bookmarksViewMenu => 'Sortează și grupează';
+
+  @override
+  String get bookmarksViewByBook => 'După carte';
+
+  @override
+  String get bookmarksViewNewest => 'Cele mai noi mai întâi';
+
+  @override
+  String get bookmarksViewPosition => 'După poziție';
+
+  @override
+  String get bookmarksExportAction => 'Exportă marcajele';
+
+  @override
+  String get bookmarksExportDialogTitle => 'Salvează marcajele ca Markdown';
+
+  @override
+  String bookmarksExportSaved(String path) {
+    return 'Marcaje salvate în $path';
+  }
+
+  @override
+  String get bookmarksExportDownloaded => 'Marcaje descărcate';
+
+  @override
+  String get bookmarksExportFailed => 'Nu s-au putut exporta marcajele';
+
+  @override
+  String get chapterSearchHint => 'Caută capitole sau scrie un timp (1:23:00)';
+
+  @override
+  String get chapterSearchNoResults => 'Niciun capitol nu corespunde';
+
+  @override
+  String get dropUploadNotAllowed =>
+      'Contul tău nu poate încărca pe acest server';
+
+  @override
+  String get dropUploadNothingUsable =>
+      'Niciunul dintre fișierele trase nu poate fi încărcat';
+
+  @override
+  String get dropUploadAlreadyOpen =>
+      'Termină sau închide mai întâi încărcarea deschisă';
+
+  @override
+  String get remoteHostTitle => 'Controlează de pe telefon';
+
+  @override
+  String get remoteHostSubtitleOff =>
+      'Folosește telefonul ca telecomandă pentru Absorb de pe acest PC';
+
+  @override
+  String remoteHostSubtitleOn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de telefoane conectate',
+      few: '$count telefoane conectate',
+      one: '1 telefon conectat',
+      zero: 'niciun telefon conectat',
+    );
+    return 'Activat · $_temp0';
+  }
+
+  @override
+  String get remoteHostSheetBody =>
+      'Folosește telefonul ca telecomandă pentru acest PC. Sunetul continuă să se redea pe PC, iar telefonul arată ce se redă, împreună cu butoanele. Telefonul și acest PC trebuie să fie în aceeași rețea Wi-Fi.';
+
+  @override
+  String get remoteHostSwitch => 'Activează';
+
+  @override
+  String get remoteHostSwitchSubtitle =>
+      'Windows poate cere prima dată să permiți Absorb Plus prin firewall. Permite.';
+
+  @override
+  String get remoteHostKeepOn => 'Păstrează activ la pornirea Absorb';
+
+  @override
+  String get remoteHostKeepOnSubtitle =>
+      'Când este dezactivat, se oprește de fiecare dată când închizi Absorb.';
+
+  @override
+  String remoteHostPortsBusy(int first, int last) {
+    return 'Nu a putut porni: porturile $first–$last sunt toate ocupate.';
+  }
+
+  @override
+  String get remoteHostPairTitle => 'Asociază telefonul';
+
+  @override
+  String get remoteHostStep1 => '1. Activează-l aici.';
+
+  @override
+  String get remoteHostStep2 =>
+      '2. Scanează codul cu camera telefonului sau deschide Absorb pe telefon și mergi la Setări > Controlează calculatorul.';
+
+  @override
+  String get remoteHostStep3 =>
+      '3. Introdu codul pe telefon, apoi alege Permite aici.';
+
+  @override
+  String get remoteHostCodeLabel => 'Cod';
+
+  @override
+  String remoteHostCodeExpires(String time) {
+    return 'Valabil $time';
+  }
+
+  @override
+  String get remoteHostPairFirst => 'Asociază un telefon';
+
+  @override
+  String get remoteHostPairAnother => 'Asociază alt dispozitiv';
+
+  @override
+  String get remoteHostPairingClosed =>
+      'Asocierea este închisă. Apasă butonul pentru un cod nou; este valabil 2 minute și pentru un singur dispozitiv.';
+
+  @override
+  String get remoteHostFull =>
+      'Sunt asociate 5 dispozitive, maximul permis. Uită unul pentru a asocia altul.';
+
+  @override
+  String remoteHostAddresses(String addresses) {
+    return 'Adresa acestui PC: $addresses';
+  }
+
+  @override
+  String get remoteHostNoAddress =>
+      'Acest PC nu are acum nicio adresă de rețea.';
+
+  @override
+  String get remoteHostNoDiscovery =>
+      'Telefonul poate să nu găsească singur acest PC; introdu pe telefon adresa acestui PC.';
+
+  @override
+  String get remoteHostConnectedTitle => 'Conectate acum';
+
+  @override
+  String get remoteHostPairedTitle => 'Dispozitive asociate';
+
+  @override
+  String get remoteHostNoDevices => 'Încă niciun dispozitiv asociat';
+
+  @override
+  String get remoteHostUnusedNote =>
+      'Un dispozitiv nefolosit 90 de zile este uitat.';
+
+  @override
+  String remoteHostLastUsed(String date) {
+    return 'Folosit ultima dată $date';
+  }
+
+  @override
+  String remoteHostConnectedFrom(String address, String time) {
+    return '$address, conectat din $time';
+  }
+
+  @override
+  String get remoteHostForget => 'Uită';
+
+  @override
+  String get remoteHostForgetAll => 'Uită-le pe toate';
+
+  @override
+  String get remoteHostForgetAllConfirm =>
+      'Uiți toate dispozitivele asociate? Fiecare trebuie să se asocieze din nou pentru a controla acest PC.';
+
+  @override
+  String get remoteHostDisconnect => 'Deconectează';
+
+  @override
+  String remoteHostAllowTitle(String name) {
+    return 'Permiți lui „$name” să controleze Absorb pe acest PC?';
+  }
+
+  @override
+  String get remoteHostAllowBody =>
+      'Permite doar un dispozitiv pe care îl cunoști. Poate reda, pune pe pauză și schimba ce se redă aici. Lipsa unui răspuns înseamnă refuz.';
+
+  @override
+  String get remoteHostAllow => 'Permite';
+
+  @override
+  String get remoteHostDeny => 'Refuză';
+
+  @override
+  String get remoteControlAnother => 'Controlează calculatorul';
+
+  @override
+  String get remoteControlAnotherSubtitle =>
+      'Folosește acest telefon ca telecomandă pentru Absorb de pe PC';
+
+  @override
+  String get remoteConnectIntro =>
+      'Folosește acest telefon ca telecomandă pentru Absorb de pe PC. Sunetul continuă să se redea pe PC. Telefonul și PC-ul trebuie să fie în aceeași rețea Wi-Fi. Pe PC, deschide Setări > Controlează de pe telefon și activează opțiunea.';
+
+  @override
+  String get remoteConnectSearching =>
+      'Se caută calculatoare în rețeaua Wi-Fi…';
+
+  @override
+  String get remoteConnectNoneFound =>
+      'Nu s-a găsit niciun calculator. Pe PC, deschide Setări > Controlează de pe telefon și activează opțiunea, sau introdu adresa lui.';
+
+  @override
+  String get remoteConnectSearchAgain => 'Caută din nou';
+
+  @override
+  String get remoteConnectPaired => 'Asociat';
+
+  @override
+  String get remoteConnectFound => 'În rețeaua ta Wi-Fi';
+
+  @override
+  String get remoteConnectEnterAddress => 'Introdu o adresă';
+
+  @override
+  String get remoteConnectAddressHint => '192.168.1.20:47390';
+
+  @override
+  String get remoteConnectAddressInvalid =>
+      'Introdu o adresă precum 192.168.1.20 sau 192.168.1.20:47390';
+
+  @override
+  String get remoteConnectNext => 'Înainte';
+
+  @override
+  String remoteConnectCodeTitle(String name) {
+    return 'Asociază cu $name';
+  }
+
+  @override
+  String get remoteConnectCodeHelp =>
+      'Introdu codul din 6 cifre afișat pe PC la Controlează de pe telefon.';
+
+  @override
+  String get remoteConnectWaiting => 'Acum alege Permite pe PC…';
+
+  @override
+  String get remoteConnectPair => 'Asociază';
+
+  @override
+  String get remoteConnectForget => 'Uită acest calculator';
+
+  @override
+  String get remotePairBadCode =>
+      'Codul nu este corect. Verifică PC-ul și încearcă din nou.';
+
+  @override
+  String get remotePairExpired =>
+      'Codul a expirat. Obține unul nou pe PC cu Asociază alt dispozitiv.';
+
+  @override
+  String get remotePairClosed =>
+      'Asocierea nu este deschisă pe PC. Pe PC, apasă Asociază alt dispozitiv pentru un cod nou.';
+
+  @override
+  String get remotePairDenied =>
+      'PC-ul nu a permis acest telefon. Încearcă din nou și alege Permite pe PC.';
+
+  @override
+  String get remotePairTooManyDevices =>
+      'Acel PC are deja 5 dispozitive asociate. Uită mai întâi unul pe PC.';
+
+  @override
+  String get remotePairTooMany =>
+      'Prea multe încercări. Așteaptă un minut și încearcă din nou.';
+
+  @override
+  String get remotePairUnreachable =>
+      'Telefonul și PC-ul nu sunt în aceeași rețea Wi-Fi sau PC-ul nu a activat opțiunea. Verifică ambele și încearcă din nou.';
+
+  @override
+  String get remotePairFailed => 'Asocierea nu a funcționat. Încearcă din nou.';
+
+  @override
+  String get remoteVersionMismatch =>
+      'Actualizează Absorb Plus pe ambele dispozitive pentru a folosi telecomanda.';
+
+  @override
+  String get remoteConnecting => 'Se conectează…';
+
+  @override
+  String get remoteReconnecting => 'Se reconectează…';
+
+  @override
+  String get remoteUnreachableHint =>
+      'PC-ul nu poate fi contactat. Verifică dacă este pornit, dacă Absorb este deschis și dacă ambele sunt în aceeași rețea Wi-Fi.';
+
+  @override
+  String remoteNothingPlaying(String name) {
+    return 'Nimic nu se redă pe $name';
+  }
+
+  @override
+  String get remoteNothingLoaded => 'Pornește mai întâi ceva pe PC.';
+
+  @override
+  String get remoteCommandFailed => 'PC-ul nu a putut face asta.';
+
+  @override
+  String get remoteNotOnList => 'Această carte nu mai este în lista PC-ului.';
+
+  @override
+  String get remoteDisconnectedByHost => 'PC-ul a deconectat acest dispozitiv.';
+
+  @override
+  String get remoteUnauthorized =>
+      'PC-ul nu mai recunoaște acest dispozitiv. Asociază-l din nou.';
+
+  @override
+  String get remotePairAgain => 'Asociază din nou';
+
+  @override
+  String get remoteConnectAgain => 'Conectează din nou';
+
+  @override
+  String get remotePlay => 'Redă';
+
+  @override
+  String get remotePause => 'Pauză';
+
+  @override
+  String get remoteStop => 'Oprește';
+
+  @override
+  String get remotePreviousChapter => 'Capitolul anterior';
+
+  @override
+  String get remoteNextChapter => 'Capitolul următor';
+
+  @override
+  String remoteSkipBack(int seconds) {
+    return 'Înapoi $seconds secunde';
+  }
+
+  @override
+  String remoteSkipForward(int seconds) {
+    return 'Înainte $seconds secunde';
+  }
+
+  @override
+  String get remoteSpeed => 'Viteză';
+
+  @override
+  String get remoteSpeedSlower => 'Mai lent';
+
+  @override
+  String get remoteSpeedFaster => 'Mai rapid';
+
+  @override
+  String get remoteSleepTimer => 'Temporizator de somn';
+
+  @override
+  String remoteSleepMinutes(int minutes) {
+    return '$minutes minute';
+  }
+
+  @override
+  String get remoteSleepEndOfChapter => 'Sfârșitul capitolului';
+
+  @override
+  String get remoteSleepEndOfEpisode => 'Sfârșitul episodului';
+
+  @override
+  String remoteSleepChapters(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de capitole',
+      few: '$count capitole',
+      one: '1 capitol',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get remoteSleepCancel => 'Oprește temporizatorul de somn';
+
+  @override
+  String get remoteVolume => 'Volum';
+
+  @override
+  String get remoteMute => 'Dezactivează sunetul';
+
+  @override
+  String get remoteUnmute => 'Activează sunetul';
+
+  @override
+  String get remoteChapters => 'Capitole';
+
+  @override
+  String get remoteBookmark => 'Marcaj';
+
+  @override
+  String get remoteBookmarkTitle => 'Adaugă un marcaj aici';
+
+  @override
+  String get remoteBookmarkNoteHint => 'Notă (opțional)';
+
+  @override
+  String get remoteBookmarkAdd => 'Adaugă';
+
+  @override
+  String get remoteBookmarkAdded => 'Marcaj adăugat pe PC';
+
+  @override
+  String get remoteContinueListening => 'Continuă ascultarea';
+
+  @override
+  String get remoteContinueEmpty => 'Nimic în curs pe PC.';
+
+  @override
+  String remoteTimeLeft(String time) {
+    return '$time rămase';
+  }
+
+  @override
+  String remoteChapterTimeLeft(String time) {
+    return '$time rămase în capitol';
+  }
+
+  @override
+  String get remoteLockScreenControls => 'Show controls on the lock screen';
+
+  @override
+  String get remoteMoreOptions => 'More options';
+
+  @override
+  String remoteHostBrowserAddress(String url) {
+    return 'Or open $url in any browser on the same Wi-Fi (iPhone, tablet, laptop) and type the code there.';
+  }
+
+  @override
+  String get remoteHostBrowserDevice => 'Web browser';
+
+  @override
+  String get remoteCustomize => 'Personalizează';
+
+  @override
+  String get remoteCustomizeTitle => 'Personalizează telecomanda';
+
+  @override
+  String get remoteCustomizeHintPortrait =>
+      'Editezi aspectul vertical. Trage un bloc de mâner sau ține-l apăsat pentru a-l muta. Rotește telefonul pentru a edita aspectul orizontal.';
+
+  @override
+  String get remoteCustomizeHintLandscape =>
+      'Editezi aspectul orizontal. Trage blocurile în cadrul unei coloane sau între cele două. Rotește telefonul pentru a edita aspectul vertical.';
+
+  @override
+  String get remoteCustomizeReset => 'Resetează la implicit';
+
+  @override
+  String get remoteCustomizePresets => 'Presetări';
+
+  @override
+  String get remoteCustomizeAddTitle => 'Adaugă pe ecran';
+
+  @override
+  String get remoteCustomizeDropHere => 'Plasează blocurile aici';
+
+  @override
+  String get remoteCustomizeMove => 'Trage pentru a muta';
+
+  @override
+  String get remoteCustomizeEmpty =>
+      'Nimic pe acest ecran. Atinge Personalizează pentru a adăuga controale.';
+
+  @override
+  String get remotePresetDefault => 'Implicit';
+
+  @override
+  String get remotePresetMinimal => 'Minimal';
+
+  @override
+  String get remotePresetNightstand => 'Noptieră';
+
+  @override
+  String get remotePresetFull => 'Complet';
+
+  @override
+  String get remoteBlockCover => 'Copertă';
+
+  @override
+  String get remoteBlockTitle => 'Titlu și autor';
+
+  @override
+  String get remoteBlockChapterTitle => 'Titlul capitolului';
+
+  @override
+  String get remoteBlockProgress => 'Bară de progres';
+
+  @override
+  String get remoteBlockTimeLeft => 'Timp rămas';
+
+  @override
+  String get remoteBlockTransport => 'Butoane de redare';
+
+  @override
+  String get remoteBlockClock => 'Ceas';
+
+  @override
+  String get remoteBlockSpacer => 'Spațiu';
+
+  @override
+  String get remoteSizeSmall => 'Mic';
+
+  @override
+  String get remoteSizeMedium => 'Mediu';
+
+  @override
+  String get remoteSizeLarge => 'Mare';
+
+  @override
+  String get remoteSizeCompact => 'Compact';
+
+  @override
+  String get remoteSizeNormal => 'Normal';
+
+  @override
+  String get remoteDisplayBackground => 'Fundal';
+
+  @override
+  String get remoteDisplayBackgroundTheme => 'Temă';
+
+  @override
+  String get remoteDisplayBackgroundCover => 'Copertă estompată';
+
+  @override
+  String get remoteDisplayBackgroundBlack => 'Negru';
+
+  @override
+  String get remoteDisplayTextSize => 'Dimensiune text';
+
+  @override
+  String get remoteDisplayTextHuge => 'Uriaș';
+
+  @override
+  String get remoteDisplay24Hour => 'Ceas de 24 de ore';
+
+  @override
+  String get remoteDisplayDim => 'Estompează ecranul după';
+
+  @override
+  String get remoteDisplayDimNever => 'Niciodată';
+
+  @override
+  String get remoteFullScreen => 'Full screen';
+
+  @override
+  String get remoteFullScreenHint => 'Tap empty space to exit full screen';
+
+  @override
+  String get remoteBlockOptions => 'Options';
+
+  @override
+  String get remoteOptSize => 'Size';
+
+  @override
+  String get remoteOptAlign => 'Alignment';
+
+  @override
+  String get remoteOptAlignLeft => 'Left';
+
+  @override
+  String get remoteOptAlignCenter => 'Center';
+
+  @override
+  String get remoteOptAlignRight => 'Right';
+
+  @override
+  String get remoteOptGap => 'Space above';
+
+  @override
+  String get remoteOptDefault => 'Default';
+
+  @override
+  String get remoteOptNone => 'None';
+
+  @override
+  String get remoteOptCorners => 'Corners';
+
+  @override
+  String get remoteOptCornersSquare => 'Square';
+
+  @override
+  String get remoteOptCornersRounded => 'Rounded';
+
+  @override
+  String get remoteOptCornersCircle => 'Circle';
+
+  @override
+  String get remoteOptShadow => 'Shadow';
+
+  @override
+  String get remoteOptLines => 'Lines';
+
+  @override
+  String get remoteOptTime => 'Time on the right';
+
+  @override
+  String get remoteOptTimeTotal => 'Total length';
+
+  @override
+  String get remoteOptSpan => 'Range';
+
+  @override
+  String get remoteOptSpanChapter => 'Chapter';
+
+  @override
+  String get remoteOptSpanBook => 'Whole book';
+
+  @override
+  String get remoteOptButtons => 'Buttons';
+
+  @override
+  String get remoteOptButtonBack => 'Skip back';
+
+  @override
+  String get remoteOptButtonPlay => 'Play/pause';
+
+  @override
+  String get remoteOptButtonForward => 'Skip forward';
+
+  @override
+  String get remoteOptSkipSeconds => 'Show the skip seconds';
+
+  @override
+  String get remoteOptStyle => 'Style';
+
+  @override
+  String get remoteOptStyleSlider => 'Slider';
+
+  @override
+  String get remoteOptStyleButtons => '− and + buttons';
+
+  @override
+  String get remoteOptPresets => 'Choices';
+
+  @override
+  String get remoteOptHours => 'Clock format';
+
+  @override
+  String get remoteOptHoursPhone => 'Phone setting';
+
+  @override
+  String get remoteOpt12Hour => '12-hour clock';
+
+  @override
+  String get remoteOptDate => 'Show the date';
+
+  @override
+  String get remoteVolumeDown => 'Volume down';
+
+  @override
+  String get remoteVolumeUp => 'Volume up';
+
+  @override
+  String get remoteLook => 'Look';
+
+  @override
+  String get remoteLookAccent => 'Accent color';
+
+  @override
+  String get remoteLookAccentCover => 'From cover';
+
+  @override
+  String get remoteLookAccentTheme => 'App theme';
+
+  @override
+  String remoteLookSwatch(int number) {
+    return 'Color $number';
+  }
+
+  @override
+  String get remoteLookBackgroundGradient => 'Soft gradient';
+
+  @override
+  String get remoteLookButtons => 'Button style';
+
+  @override
+  String get remoteLookButtonsFilled => 'Filled';
+
+  @override
+  String get remoteLookButtonsOutlined => 'Outlined';
+
+  @override
+  String get remoteLookButtonsPlain => 'Plain';
+
+  @override
+  String get remoteLookCornersSharp => 'Sharp';
+
+  @override
+  String get remoteLookCornersExtra => 'Extra round';
+
+  @override
+  String get remoteLookSpacing => 'Spacing';
+
+  @override
+  String get remoteLookSpacingComfortable => 'Comfortable';
+
+  @override
+  String get remoteLookReset => 'Reset look';
+
+  @override
+  String get quickSwitcherKeywordsRemote =>
+      'telecomandă telefon control pc legătură asociere remote phone pair';
+
+  @override
+  String get quickSwitcherKeywordsSurprise =>
+      'aleatoriu surpriză random pick shuffle';
+
+  @override
+  String get developerModeOn => 'Modul dezvoltator activat';
+
+  @override
+  String get developerModeAlreadyOn => 'Modul dezvoltator este deja activat';
+
+  @override
+  String get developerTitle => 'Dezvoltator';
+
+  @override
+  String get developerSubtitle =>
+      'Versiuni de test și instrumente pentru dezvoltare';
+
+  @override
+  String get developerModeSwitch => 'Mod dezvoltator';
+
+  @override
+  String get developerModeSwitchSubtitle =>
+      'Dezactivarea ascunde această pagină. Atinge versiunea de 7 ori pentru a o readuce.';
+
+  @override
+  String get testChannelTitle => 'Canal de test';
+
+  @override
+  String get testChannelSubtitle =>
+      'Instalează cea mai recentă versiune de test';
+
+  @override
+  String get testChannelUnavailable =>
+      'Versiunile de test sunt doar pentru versiunea Android de pe GitHub.';
+
+  @override
+  String get testChannelCodeLabel => 'Cod canal de test';
+
+  @override
+  String get testChannelUnlock => 'Deblochează';
+
+  @override
+  String get testChannelUnlocked => 'Canal de test deblocat';
+
+  @override
+  String get testChannelWrongCode => 'Codul nu este corect';
+
+  @override
+  String get testChannelLaunchCheck => 'Caută versiuni de test la pornire';
+
+  @override
+  String get testChannelLaunchCheckSubtitle =>
+      'Cere să instalezi o versiune de test mai nouă la pornirea aplicației';
+
+  @override
+  String get testChannelWarning =>
+      'Versiunile de test sunt neterminate și pot strica lucruri. Ele înlocuiesc aplicația instalată și îți păstrează datele.';
+
+  @override
+  String testChannelInstalled(String version) {
+    return 'Instalată: $version';
+  }
+
+  @override
+  String testChannelNewest(String version) {
+    return 'Cea mai recentă versiune de test: $version';
+  }
+
+  @override
+  String get testChannelNone => 'Încă nu există nicio versiune de test';
+
+  @override
+  String get testChannelUpToDate => 'La zi';
+
+  @override
+  String get testChannelInstall => 'Instalează';
+
+  @override
+  String get testChannelCheckNow => 'Verifică acum';
+
+  @override
+  String get testChannelNotes => 'Ce conține';
+
+  @override
+  String testBuildNotesTitle(int build) {
+    return 'What\'s new in build $build';
+  }
+
+  @override
+  String get patchNotesTitle => 'Patch notes';
+
+  @override
+  String get patchNotesSubtitle =>
+      'What changed in each test build on this phone';
+
+  @override
+  String get patchNotesEmpty =>
+      'No patch notes yet. They show up here after the next test build is installed.';
+
+  @override
+  String patchNotesBuild(int build) {
+    return 'Build $build';
+  }
+
+  @override
+  String get testBuildAvailable => 'Versiune de test disponibilă';
+
+  @override
+  String testBuildDialogContent(String latest, String current) {
+    return 'Versiunea de test $latest este disponibilă.\n\nFolosești $current.';
+  }
+
+  @override
+  String testBuildPackageLabel(int build) {
+    return 'Versiune de test $build';
+  }
+
+  @override
+  String get githubSignIn => 'Conectare cu GitHub';
+
+  @override
+  String get githubSignInSubtitle =>
+      'Versiunile de test sunt private: conectează-te pentru a le primi';
+
+  @override
+  String get githubSignInNotSetUp =>
+      'Conectarea cu GitHub nu este încă configurată în această versiune';
+
+  @override
+  String get githubSignInAgain => 'Conectează-te din nou';
+
+  @override
+  String get githubSignInExpired => 'Conectarea ta GitHub a expirat';
+
+  @override
+  String githubSignedInAs(String login) {
+    return 'Conectat la GitHub ca $login';
+  }
+
+  @override
+  String get githubSignedIn => 'Conectat la GitHub';
+
+  @override
+  String get githubSignOut => 'Deconectare';
+
+  @override
+  String get githubSignInEnterCode => 'Introdu acest cod pe GitHub:';
+
+  @override
+  String get githubSignInOpen => 'Deschide github.com/login/device';
+
+  @override
+  String get githubSignInCopyCode => 'Copiază codul';
+
+  @override
+  String get githubSignInCodeCopied => 'Cod copiat';
+
+  @override
+  String get githubSignInWaiting => 'Se așteaptă aprobarea ta pe GitHub...';
+
+  @override
+  String get githubSignInDenied => 'Conectarea a fost anulată pe GitHub.';
+
+  @override
+  String get githubSignInCodeExpired => 'Codul a expirat. Încearcă din nou.';
+
+  @override
+  String get githubSignInFailed =>
+      'Nu te-ai putut conecta la GitHub. Încearcă din nou.';
+
+  @override
+  String get githubSignInTryAgain => 'Încearcă din nou';
+
+  @override
+  String get testChannelSignInNeeded =>
+      'Conectează-te cu GitHub pentru a primi versiunile de test';
+
+  @override
+  String get downloadEtaUnderMinute => '<1 min rămas';
+
+  @override
+  String downloadEtaMinutes(int minutes) {
+    return '$minutes min rămase';
+  }
+
+  @override
+  String downloadEtaHours(int hours) {
+    return '$hours h rămase';
+  }
+
+  @override
+  String downloadEtaHoursMinutes(int hours, int minutes) {
+    return '$hours h $minutes min rămase';
+  }
+
+  @override
+  String get sameSpeedAllBooksTitle => 'Aceeași viteză pentru fiecare carte';
+
+  @override
+  String get sameSpeedAllBooksSubtitle =>
+      'Fiecare carte se redă la viteza implicită, iar schimbarea vitezei în player o schimbă pentru toate cărțile. Dezactivat: fiecare carte (sau seria ei) își păstrează propria viteză.';
+
+  @override
+  String setupStepOf(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get setupNext => 'Next';
+
+  @override
+  String get setupBack => 'Back';
+
+  @override
+  String get setupSkip => 'Skip';
+
+  @override
+  String get setupWelcomeBody =>
+      'Listen to the audiobooks and podcasts on your own Audiobookshelf server. A few quick steps and you\'re in.';
+
+  @override
+  String get setupConnectTitle => 'Connect to your server';
+
+  @override
+  String setupSignedInAs(String user) {
+    return 'Signed in as $user';
+  }
+
+  @override
+  String get setupLookIntro => 'Tap a look or a color to use it right away.';
+
+  @override
+  String get setupListeningTitle => 'Listening';
+
+  @override
+  String get setupListeningIntro =>
+      'The basics. Settings > Playback has the rest.';
+
+  @override
+  String get setupDownloadsTitle => 'Downloads';
+
+  @override
+  String get setupDownloadsIntro =>
+      'Download books to listen without a connection.';
+
+  @override
+  String get setupPermissionsTitle => 'Permissions';
+
+  @override
+  String get setupPermissionsIntro =>
+      'Android asks you before Absorb can do these.';
+
+  @override
+  String get setupAllow => 'Allow';
+
+  @override
+  String get setupAllowed => 'Allowed';
+
+  @override
+  String get setupDoneTitle => 'You\'re all set';
+
+  @override
+  String get setupDoneLater => 'Change any of this later in Settings.';
+
+  @override
+  String get setupDoneStart => 'Start listening';
+
+  @override
+  String setupSummaryLook(String name) {
+    return 'Look: $name';
+  }
+
+  @override
+  String setupSummarySpeed(String speed) {
+    return 'Default speed: ${speed}x';
+  }
+
+  @override
+  String setupSummarySkip(int back, int forward) {
+    return 'Skip back ${back}s, forward ${forward}s';
+  }
+
+  @override
+  String get setupRunAgain => 'Run setup again';
+
+  @override
+  String get setupRunAgainSubtitle =>
+      'The look, playback basics and more, step by step';
+
+  @override
+  String get loginDesignTitle => 'Sign-in screen design';
+
+  @override
+  String get loginDesignPreviewTitle => 'Preview sign-in designs';
+
+  @override
+  String get loginDesignClassic => 'Current';
+
+  @override
+  String get loginDesignClassicName => 'Classic';
+
+  @override
+  String get loginDesignSteps => 'B · Two steps';
+
+  @override
+  String get loginDesignStepsGlass => 'B2 · Glass steps';
+
+  @override
+  String get loginDesignStepsDesktop => 'B3 · Desktop steps';
+
+  @override
+  String get loginStepLibrary => 'Your library';
+
+  @override
+  String get loginStepSignIn => 'Sign in';
+
+  @override
+  String get loginStepsKeyboardHint => 'Enter to continue, Esc to go back';
+
+  @override
+  String get loginDesignUse => 'Use this design';
+
+  @override
+  String get loginDesignInUse => 'In use';
+
+  @override
+  String get loginDesignPreviewNote =>
+      'Preview: this design would sign you in here';
+
+  @override
+  String get loginDesignAdvancedSubtitle =>
+      'Custom headers, API key and certificates';
+
+  @override
+  String get loginMoreWays => 'More ways to sign in';
+
+  @override
+  String get loginRecentServers => 'Recent servers';
+
+  @override
+  String get loginWhereIsLibrary => 'Where is your library?';
+
+  @override
+  String get loginWhereIsLibraryIntro =>
+      'Enter your server\'s address, the same one you open in a browser.';
+
+  @override
+  String get loginContinue => 'Continue';
+
+  @override
+  String get loginChangeServer => 'Change server';
+
+  @override
+  String loginSignInToNamed(String server) {
+    return 'Sign in to $server';
+  }
+
+  @override
+  String get loginSignInToNamedIntro =>
+      'Use the account you have on this server.';
+
+  @override
+  String get quickSwitcherKeywordsLoginDesign =>
+      'login sign in screen design layout preview';
+
+  @override
+  String get appBackgroundLabel => 'Background';
+
+  @override
+  String get appBackgroundGlow => 'Soft glow';
+
+  @override
+  String get appBackgroundCover => 'Book colors';
+
+  @override
+  String get appBackgroundGradient => 'Gradient';
+
+  @override
+  String get appBackgroundPlain => 'Plain';
+
+  @override
+  String get appBackgroundCoverHint =>
+      'Follows the cover of the book you\'re listening to. Soft glow while nothing is playing.';
 }

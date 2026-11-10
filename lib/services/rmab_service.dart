@@ -309,7 +309,7 @@ class RmabService {
         final msg = body['message'] ?? body['error'];
         if (msg is String && msg.isNotEmpty) return msg;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[RMAB] _safeServerMessage failed: ${e.runtimeType}'); }
     return null;
   }
 }

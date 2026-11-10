@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../screens/library_screen.dart';
+import '../utils/desktop_workspace.dart';
 import 'books_sheet_shared.dart';
 import 'library_grid_tiles.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'text_scale_room.dart';
+import 'empty_state.dart'; // Absorb Plus
+import 'loading_placeholders.dart'; // Absorb Plus
+import 'alphabet_scroller.dart'; // Absorb Plus
 
 class LibraryBooksTab extends StatelessWidget {
   final List<Map<String, dynamic>> items;
@@ -20,6 +25,10 @@ class LibraryBooksTab extends StatelessWidget {
   final bool rectangleCovers;
   final bool showSubtitles;
   final double coverAspectRatio;
+  final double desktopMaxCrossAxisExtent;
+  final bool selectionMode;
+  final Set<String> selectedItemIds;
+  final void Function(Map<String, dynamic> item, int index)? onSelectionToggle;
   final Future<void> Function() onRefresh;
   final VoidCallback onClearFilter;
 
@@ -43,9 +52,6 @@ class LibraryBooksTab extends StatelessWidget {
   /// IndexedStack each one needs its own controller so scroll positions don't
   /// collide on the PrimaryScrollController.
   final ScrollController? scrollController;
-  final bool selectionMode;
-  final Set<String> selectedItemIds;
-  final void Function(Map<String, dynamic> item, int index)? onSelectionToggle;
 
   const LibraryBooksTab({
     super.key,
@@ -60,14 +66,15 @@ class LibraryBooksTab extends StatelessWidget {
     required this.rectangleCovers,
     required this.showSubtitles,
     required this.coverAspectRatio,
+    this.desktopMaxCrossAxisExtent = kDesktopLibraryTileMaxExtent,
+    this.selectionMode = false,
+    this.selectedItemIds = const {},
+    this.onSelectionToggle,
     required this.onRefresh,
     required this.onClearFilter,
     required this.onLoadMore,
     this.headerSliver,
     this.scrollController,
-    this.selectionMode = false,
-    this.selectedItemIds = const {},
-    this.onSelectionToggle,
   });
 
   @override
@@ -85,9 +92,12 @@ class LibraryBooksTab extends StatelessWidget {
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           ...headers,
-          const SliverFillRemaining(
-            hasScrollBody: false,
-            child: Center(child: CircularProgressIndicator()),
+          // Absorb Plus: placeholder tiles instead of a bare spinner.
+          LibraryGridPlaceholder(
+            columns: responsiveGridCount(context),
+            rectangleCovers: rectangleCovers,
+            showSubtitles: showSubtitles,
+            coverAspectRatio: coverAspectRatio,
           ),
         ],
       );
@@ -122,36 +132,40 @@ class LibraryBooksTab extends StatelessWidget {
       final filterMsg = isPodcastLibrary && filter != LibraryFilter.none
           ? l.libraryNoItemsMatchingFilter
           : switch (filter) {
-        LibraryFilter.notFinished => l.libraryNoUnfinishedBooks,
-        LibraryFilter.inProgress => l.libraryNoBooksInProgress,
-        LibraryFilter.finished => l.libraryNoFinishedBooks,
-        LibraryFilter.notStarted => l.libraryAllBooksStarted,
-        LibraryFilter.downloaded => l.libraryNoDownloadedBooks,
-        LibraryFilter.subscribed => l.libraryNoItemsMatchingFilter,
-        LibraryFilter.inASeries => l.libraryNoSeriesFound,
-        LibraryFilter.hasEbook => l.libraryNoBooksWithEbooks,
-        LibraryFilter.noEbook ||
-        LibraryFilter.hasSupplementaryEbook ||
-        LibraryFilter.noSupplementaryEbook ||
-        LibraryFilter.series ||
-        LibraryFilter.author ||
-        LibraryFilter.narrator ||
-        LibraryFilter.language ||
-        LibraryFilter.publisher ||
-        LibraryFilter.publishedDecade ||
-        LibraryFilter.noTracks ||
-        LibraryFilter.singleTrack ||
-        LibraryFilter.multipleTracks ||
-        LibraryFilter.abridged ||
-        LibraryFilter.issues ||
-        LibraryFilter.feedOpen ||
-        LibraryFilter.explicit ||
-        LibraryFilter.readStatus => l.libraryNoItemsMatchingFilter,
-        LibraryFilter.missingMetadata => l.libraryNoBooksMissingMetadata,
-        LibraryFilter.genre => l.libraryNoBooksInGenre(genreFilter ?? l.genre.toLowerCase()),
-        LibraryFilter.tag => l.libraryNoBooksWithTag(tagFilter ?? l.tag.toLowerCase()),
-        LibraryFilter.none => l.libraryNoBooks,
-      };
+              LibraryFilter.notFinished => l.libraryNoUnfinishedBooks,
+              LibraryFilter.inProgress => l.libraryNoBooksInProgress,
+              LibraryFilter.finished => l.libraryNoFinishedBooks,
+              LibraryFilter.notStarted => l.libraryAllBooksStarted,
+              LibraryFilter.downloaded => l.libraryNoDownloadedBooks,
+              LibraryFilter.subscribed => l.libraryNoItemsMatchingFilter,
+              LibraryFilter.inASeries => l.libraryNoSeriesFound,
+              LibraryFilter.hasEbook => l.libraryNoBooksWithEbooks,
+              LibraryFilter.noEbook ||
+              LibraryFilter.hasSupplementaryEbook ||
+              LibraryFilter.noSupplementaryEbook ||
+              LibraryFilter.series ||
+              LibraryFilter.author ||
+              LibraryFilter.narrator ||
+              LibraryFilter.language ||
+              LibraryFilter.publisher ||
+              LibraryFilter.publishedDecade ||
+              LibraryFilter.noTracks ||
+              LibraryFilter.singleTrack ||
+              LibraryFilter.multipleTracks ||
+              LibraryFilter.abridged ||
+              LibraryFilter.issues ||
+              LibraryFilter.feedOpen ||
+              LibraryFilter.explicit ||
+              LibraryFilter.readStatus => l.libraryNoItemsMatchingFilter,
+              LibraryFilter.missingMetadata => l.libraryNoBooksMissingMetadata,
+              LibraryFilter.genre => l.libraryNoBooksInGenre(
+                genreFilter ?? l.genre.toLowerCase(),
+              ),
+              LibraryFilter.tag => l.libraryNoBooksWithTag(
+                tagFilter ?? l.tag.toLowerCase(),
+              ),
+              LibraryFilter.none => l.libraryNoBooks,
+            };
       body = CustomScrollView(
         controller: scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
@@ -159,25 +173,17 @@ class LibraryBooksTab extends StatelessWidget {
           ...headers,
           SliverFillRemaining(
             hasScrollBody: false,
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.library_books_outlined,
-                      size: 56, color: cs.onSurfaceVariant.withValues(alpha: 0.3)),
-                  const SizedBox(height: 12),
-                  Text(filterMsg,
-                      style: tt.bodyLarge?.copyWith(color: cs.onSurfaceVariant)),
-                  if (filter != LibraryFilter.none) ...[
-                    const SizedBox(height: 8),
-                    GestureDetector(
-                      onTap: onClearFilter,
-                      child: Text(l.libraryClearFilter,
-                          style: tt.bodySmall?.copyWith(color: cs.primary)),
-                    ),
-                  ],
-                ],
-              ),
+            // Absorb Plus: shared empty state; Clear filter or Refresh.
+            child: AbsorbEmptyState(
+              icon: Icons.library_books_outlined,
+              message: filterMsg,
+              actionLabel: filter != LibraryFilter.none
+                  ? l.libraryClearFilter
+                  : l.refreshTooltip,
+              actionIcon: filter != LibraryFilter.none
+                  ? Icons.filter_alt_off_rounded
+                  : Icons.refresh_rounded,
+              onAction: filter != LibraryFilter.none ? onClearFilter : onRefresh,
             ),
           ),
         ],
@@ -210,24 +216,40 @@ class LibraryBooksTab extends StatelessWidget {
         controller: scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          ...headers,
+          // Absorb Plus: the A-Z rail reads the header and grid layout.
+          for (final h in headers) AlphabetGridLayout.reportHeader(context, h),
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, libraryGridBottomPadding),
-            sliver: SliverGrid(
-              gridDelegate: LabelRoomGridDelegate(
-                labelRoom: textScaleRoom(context, 30),
-                crossAxisCount: cols,
-                childAspectRatio: rectangleCovers ? 0.48 : 0.68,
-                // Subtitles add a line under every title, and how much room
-                // that needs depends on the cover size, so size the cell from
-                // the tile itself rather than from a second fixed ratio.
-                mainAxisExtent: showSubtitles
-                    ? coverGridTileWidth(context) / (rectangleCovers ? 0.48 : 0.68)
-                        + coverGridSubtitleHeight(context)
-                    : null,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
+            padding: EdgeInsets.fromLTRB(
+              16,
+              8,
+              16,
+              libraryGridBottomPadding(context),
+            ),
+            sliver: AlphabetGridLayout.reportGrid(context, SliverGrid(
+              gridDelegate: isDesktopWorkspace(context)
+                  ? CoverTileGridDelegate(
+                      maxCrossAxisExtent: desktopMaxCrossAxisExtent,
+                      coverAspectRatio: coverAspectRatio,
+                      labelHeight:
+                          coverTileLabelHeight(context, subtitle: showSubtitles),
+                    )
+                  // Absorb Plus: phone cells grow with the text size.
+                  : LabelRoomGridDelegate(
+                      labelRoom: textScaleRoom(context, 30),
+                      crossAxisCount: cols,
+                      childAspectRatio: rectangleCovers ? 0.48 : 0.68,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      // Subtitles add a line under every title, and how much
+                      // room that needs depends on the cover size, so size
+                      // the cell from the tile itself rather than from a
+                      // second fixed ratio.
+                      mainAxisExtent: showSubtitles
+                          ? coverGridTileWidth(context) /
+                                  (rectangleCovers ? 0.48 : 0.68) +
+                              coverGridSubtitleHeight(context)
+                          : null,
+                    ),
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   maybeLoadAhead(index);
@@ -272,12 +294,16 @@ class LibraryBooksTab extends StatelessWidget {
                 },
                 childCount: items.length + (hasMore ? 1 : 0),
               ),
-            ),
+            )),
           ),
         ],
       );
     }
 
-    return RefreshIndicator(onRefresh: onRefresh, child: body);
+      // Paging is index-driven (maybeLoadAhead above); only the pull to
+      // refresh differs, and the desktop workspace has a refresh chip instead.
+      return isDesktopWorkspace(context)
+          ? body
+          : RefreshIndicator(onRefresh: onRefresh, child: body);
   }
 }

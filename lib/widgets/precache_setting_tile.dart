@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
@@ -18,9 +19,9 @@ class _PrecacheSettingTileState extends State<PrecacheSettingTile> {
   @override
   void initState() {
     super.initState();
-    PrecacheService.isEnabled().then((on) {
+    unawaited(PrecacheService.isEnabled().then((on) {
       if (mounted) setState(() => _enabled = on);
-    });
+    }));
   }
 
   @override
@@ -38,7 +39,7 @@ class _PrecacheSettingTileState extends State<PrecacheSettingTile> {
           ? null
           : (v) {
               setState(() => _enabled = v);
-              PrecacheService.setEnabled(v);
+              unawaited(PrecacheService.setEnabled(v));
             },
     );
   }

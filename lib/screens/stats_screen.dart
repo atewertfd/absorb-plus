@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -9,19 +11,27 @@ import '../providers/auth_provider.dart';
 import '../providers/library_provider.dart';
 import '../services/audio_player_service.dart';
 import '../services/device_time_zone.dart';
-import '../services/stats_cache_store.dart';
 import '../services/user_account_service.dart';
+import '../utils/desktop_workspace.dart';
 import '../widgets/absorb_page_header.dart';
+import '../widgets/adaptive_modal.dart';
 import '../widgets/finished_books_this_year_sheet.dart';
 import '../widgets/stats_charts.dart';
 import '../widgets/day_sessions_sheet.dart';
 import '../widgets/listening_session_card.dart';
 import '../widgets/overlay_toast.dart';
 import '../main.dart' show flatNotifier, gradientIntensityNotifier;
-import '../ui_themes/ui_theme_hooks.dart';
 import 'app_shell.dart';
 import '../l10n/app_localizations.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../services/stats_cache_store.dart';
+import '../ui_themes/ui_theme_hooks.dart';
 import 'stats_tab_refresh.dart';
+import '../widgets/empty_state.dart'; // Absorb Plus
+import '../services/listening_streaks.dart'; // Absorb Plus
+import '../widgets/listening_streak_card.dart'; // Absorb Plus
+import '../ui_themes/app_backdrop.dart'; // Absorb Plus
+import '../utils/calendar_days.dart'; // Absorb Plus
 
 class StatsScreen extends StatefulWidget {
   const StatsScreen({super.key});
@@ -38,6 +48,7 @@ class _StatsScreenState extends State<StatsScreen>
   int _episodesFinished = 0;
   int _booksFinishedThisYear = 0;
   int _episodesFinishedThisYear = 0;
+  int _booksFinishedThisMonth = 0; // Absorb Plus
   final Map<String, int> _goalMinutes = {
     for (final p in PlayerSettings.statsGoalPeriods) p: 0
   };
@@ -381,6 +392,7 @@ class _StatsScreenState extends State<StatsScreen>
             _episodesFinished = lib.finishedEpisodesCount;
             _booksFinishedThisYear = lib.finishedBooksThisYearCount;
             _episodesFinishedThisYear = lib.finishedEpisodesThisYearCount;
+            _booksFinishedThisMonth = _finishedThisMonth(lib); // Absorb Plus
             _isLoading = false;
           });
           _animController.reset();
@@ -401,6 +413,13 @@ class _StatsScreenState extends State<StatsScreen>
       return;
     }
 
+    // Absorb Plus: ask for the sessions now too; they are still applied after
+    // the stats, below.
+    final sessionsRequest =
+        api.getListeningSessions(page: 0, itemsPerPage: _sessionsPerPage);
+    // An early return below leaves it unawaited; this keeps a failure from
+    // being unhandled. (The awaited result still sees any error.)
+    unawaited(sessionsRequest.then((_) {}, onError: (Object _) {}));
     // Phase 1: load core stats from network and cache them.
     final stats = await api.getListeningStats();
     if (!mounted || !isActiveAccount()) return;
@@ -422,6 +441,7 @@ class _StatsScreenState extends State<StatsScreen>
         _episodesFinished = finishedEpisodes;
         _booksFinishedThisYear = finishedBooksYear;
         _episodesFinishedThisYear = finishedEpisodesYear;
+        _booksFinishedThisMonth = _finishedThisMonth(lib); // Absorb Plus
         _isLoading = false;
       });
       if (_animController.status != AnimationStatus.forward &&
@@ -432,8 +452,7 @@ class _StatsScreenState extends State<StatsScreen>
     }
 
     // Phase 2: load heavier sessions list in background and cache.
-    final sessionsData =
-        await api.getListeningSessions(page: 0, itemsPerPage: _sessionsPerPage);
+    final sessionsData = await sessionsRequest; // Absorb Plus
     if (!mounted || !isActiveAccount()) return;
     final sessions = sessionsData?['sessions'] as List<dynamic>? ?? [];
     if (sessions.isNotEmpty) {
@@ -459,7 +478,7 @@ class _StatsScreenState extends State<StatsScreen>
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Container(
-        decoration: flatNotifier.value ? null : BoxDecoration(
+        decoration: flatNotifier.value || AppBackdrop.isActive(context) ? null : BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -530,8 +549,7 @@ class _StatsScreenState extends State<StatsScreen>
     final today = _todaySeconds(dailyMap);
     final thisWeek = _weekSeconds(dailyMap);
     final thisMonth = _monthSeconds(dailyMap);
-    final streak = _currentStreak(dailyMap);
-    final longestStreak = _longestStreak(dailyMap);
+    final streaks = computeStreaks(dailyMap, now: DateTime.now()); // Absorb Plus
     final chartData = _lastNDays(dailyMap, _chartRange);
     final activeDays = _activeDayCount(dailyMap);
     final avgDaily = _averageDailySeconds(dailyMap);
@@ -551,12 +569,13 @@ class _StatsScreenState extends State<StatsScreen>
         const SizedBox(height: 16),
       ],
       'goals': [
-        if (_goalMinutes.values.any((m) => m > 0) || _bookGoalOrServer > 0) ...[
+        if (_goalCardPeriods.isNotEmpty || _bookGoalOrServer > 0) ...[ // Absorb Plus
           _goalCard(cs, tt, l, today, thisWeek, thisMonth),
           const SizedBox(height: 16),
         ],
       ],
       'periods': [
+        ..._streakCards(streaks), // Absorb Plus
         Row(children: [
           Expanded(child: _periodCard(tt, cs, l.statsToday, today)),
           const SizedBox(width: 8),
@@ -564,89 +583,53 @@ class _StatsScreenState extends State<StatsScreen>
           const SizedBox(width: 8),
           Expanded(child: _periodCard(tt, cs, l.statsThisMonth, thisMonth)),
         ]),
+        ..._monthSummary(dailyMap, bo), // Absorb Plus
         const SizedBox(height: 24),
       ],
       'activity': [
         _sectionTitle(tt, cs, l.statsActivity),
         const SizedBox(height: 10),
-        Row(children: [
-          Expanded(
-              child: _accentStatCard(
-                  tt,
-                  cs,
-                  Icons.local_fire_department_rounded,
-                  Colors.orange,
-                  l.statsScreenStreakDays(streak),
-                  l.statsCurrentStreak)),
-          const SizedBox(width: 8),
-          Expanded(
-              child: _accentStatCard(tt, cs, Icons.emoji_events_rounded,
-                  Colors.amber.shade600, l.statsScreenStreakDays(longestStreak), l.statsBestStreak)),
+        _responsiveStatsGrid([
+          _accentStatCard(tt, cs, Icons.menu_book_rounded,
+              Colors.green, '$_booksFinished', l.statsBooksFinished),
+          if (_episodesFinished > 0)
+            _accentStatCard(tt, cs, Icons.podcasts_rounded,
+                Colors.purple, '$_episodesFinished', l.statsEpisodesFinished),
+          _accentStatCard(tt, cs, Icons.auto_stories_rounded,
+              Colors.teal, '$_booksFinishedThisYear', l.statsBooksThisYear,
+              onTap: _booksFinishedThisYear > 0
+                  ? () async {
+                      await showFinishedBooksThisYearSheet(context);
+                      if (mounted) {
+                        setState(() => _booksFinishedThisYear = context
+                            .read<LibraryProvider>()
+                            .finishedBooksThisYearCount);
+                      }
+                    }
+                  : null),
+          if (_episodesFinishedThisYear > 0)
+            _accentStatCard(tt, cs, Icons.graphic_eq_rounded,
+                Colors.deepPurple, '$_episodesFinishedThisYear',
+                l.statsEpisodesThisYear),
+          _accentStatCard(tt, cs, Icons.calendar_today_rounded,
+              cs.primary, '$activeDays', l.statsDaysActive),
+          _accentStatCard(tt, cs, Icons.speed_rounded, cs.tertiary,
+              _formatDuration(avgDaily), l.statsDailyAverage),
+          if (_timeSavedSeconds >= 60)
+            _accentStatCard(tt, cs, Icons.fast_forward_rounded,
+                Colors.cyan, _formatDuration(_timeSavedSeconds),
+                l.statsTimeSavedLabel,
+                subtitle: _timeSavedSince != null
+                    ? l.statsTimeSavedSince(
+                        MaterialLocalizations.of(context).formatMediumDate(_timeSavedSince!))
+                    : null,
+                trailing: IconButton(
+                  icon: Icon(Icons.restart_alt_rounded,
+                      size: 20, color: cs.onSurfaceVariant),
+                  tooltip: l.statsTimeSavedReset,
+                  onPressed: _confirmResetTimeSaved,
+                )),
         ]),
-        const SizedBox(height: 8),
-        Row(children: [
-          Expanded(
-              child: _accentStatCard(tt, cs, Icons.menu_book_rounded,
-                  Colors.green, '$_booksFinished', l.statsBooksFinished)),
-          if (_episodesFinished > 0) ...[
-            const SizedBox(width: 8),
-            Expanded(
-                child: _accentStatCard(tt, cs, Icons.podcasts_rounded,
-                    Colors.purple, '$_episodesFinished', l.statsEpisodesFinished)),
-          ],
-        ]),
-        const SizedBox(height: 8),
-        Row(children: [
-          Expanded(
-              child: _accentStatCard(tt, cs, Icons.auto_stories_rounded,
-                  Colors.teal, '$_booksFinishedThisYear', l.statsBooksThisYear,
-                  onTap: _booksFinishedThisYear > 0
-                      ? () async {
-                          await showFinishedBooksThisYearSheet(context);
-                          if (mounted) {
-                            setState(() => _booksFinishedThisYear = context
-                                .read<LibraryProvider>()
-                                .finishedBooksThisYearCount);
-                          }
-                        }
-                      : null)),
-          if (_episodesFinishedThisYear > 0) ...[
-            const SizedBox(width: 8),
-            Expanded(
-                child: _accentStatCard(tt, cs, Icons.graphic_eq_rounded,
-                    Colors.deepPurple, '$_episodesFinishedThisYear',
-                    l.statsEpisodesThisYear)),
-          ],
-        ]),
-        const SizedBox(height: 8),
-        Row(children: [
-          Expanded(
-              child: _accentStatCard(tt, cs, Icons.calendar_today_rounded,
-                  cs.primary, '$activeDays', l.statsDaysActive)),
-          const SizedBox(width: 8),
-          Expanded(
-              child: _accentStatCard(tt, cs, Icons.speed_rounded, cs.tertiary,
-                  _formatDuration(avgDaily), l.statsDailyAverage)),
-        ]),
-        if (_timeSavedSeconds >= 60) ...[
-          const SizedBox(height: 8),
-          Row(children: [
-            Expanded(
-                child: _accentStatCard(tt, cs, Icons.fast_forward_rounded,
-                    Colors.cyan, _formatDuration(_timeSavedSeconds),
-                    l.statsTimeSavedLabel,
-                    subtitle: _timeSavedSince != null
-                        ? l.statsTimeSavedSince(
-                            MaterialLocalizations.of(context).formatMediumDate(_timeSavedSince!))
-                        : null,
-                    trailing: IconButton(
-                      icon: Icon(Icons.restart_alt_rounded,
-                          size: 20, color: cs.onSurfaceVariant),
-                      tooltip: l.statsTimeSavedReset,
-                      onPressed: _confirmResetTimeSaved,
-                    ))),
-          ]),
-        ],
         const SizedBox(height: 28),
       ],
       'chart': [
@@ -683,7 +666,9 @@ class _StatsScreenState extends State<StatsScreen>
           // BookOrbit's per-book totals take in reading as well.
           _sectionTitle(tt, cs, bo != null ? l.statsTopBooks : l.statsMostListened),
           const SizedBox(height: 10),
-          ...topItems.map((item) => _topItemCard(tt, cs, l, item)),
+          _responsiveTwoColumnList(
+            topItems.map((item) => _topItemCard(tt, cs, l, item)).toList(),
+          ),
           SizedBox(height: genres.isEmpty ? 28 : 14),
         ],
         if (genres.isNotEmpty) ...[
@@ -727,37 +712,108 @@ class _StatsScreenState extends State<StatsScreen>
       ..._defaultSectionOrder.where((id) => !_statsOrder.contains(id)),
     ];
 
-    return ListView(
-      controller: _scrollController,
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
-      children: [
-        AbsorbPageHeader(
-          title: l.statsTitle,
-          padding: const EdgeInsets.only(top: 12),
-        ),
-        const SizedBox(height: 24),
-        if (bo != null) _mediaPicker(cs, tt, l, bo),
-        for (final id in order)
-          if (!_statsHidden.contains(id)) ...sections[id]!,
-        if (_sessions.isNotEmpty) ...[
-          _sectionTitle(tt, cs, l.statsRecentSessions),
-          const SizedBox(height: 10),
-          ..._buildSessions(),
-          if (_isLoadingMoreSessions)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Center(
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: cs.onSurface.withValues(alpha: 0.24)),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isWide = constraints.maxWidth >= 900;
+        final desktopWorkspace = isDesktopWorkspace(context);
+        final horizontalPadding = isWide ? 32.0 : 20.0;
+        return ListView(
+          controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.fromLTRB(
+              horizontalPadding, 0, horizontalPadding, 32),
+          children: [
+            Align(
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1180),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    AbsorbPageHeader(
+                      title: l.statsTitle,
+                      showBranding: !desktopWorkspace,
+                      padding: EdgeInsets.only(top: isWide ? 24 : 12),
+                    ),
+                    const SizedBox(height: 24),
+                    if (bo != null) _mediaPicker(cs, tt, l, bo),
+                    for (final id in order)
+                      if (!_statsHidden.contains(id)) ...sections[id]!,
+                    if (_sessions.isEmpty && totalSeconds <= 0) // Absorb Plus
+                      AbsorbEmptyState(
+                        icon: Icons.insights_rounded,
+                        message: l.statsNoListeningYet,
+                        actionLabel: l.emptyStateBrowseLibrary,
+                        actionIcon: Icons.library_books_rounded,
+                        onAction: () => browseLibraryFrom(context),
+                      ),
+                    if (_sessions.isNotEmpty) ...[
+                      _sectionTitle(tt, cs, l.statsRecentSessions),
+                      const SizedBox(height: 10),
+                      _responsiveTwoColumnList(_buildSessions()),
+                      if (_isLoadingMoreSessions)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: Center(
+                            child: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: cs.onSurface.withValues(alpha: 0.24)),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ],
                 ),
               ),
             ),
-        ],
-      ],
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _responsiveStatsGrid(List<Widget> cards) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final columns = constraints.maxWidth >= 1080
+            ? 4
+            : constraints.maxWidth >= 900
+                ? 3
+                : 2;
+        const spacing = 12.0;
+        final cardWidth =
+            (constraints.maxWidth - (spacing * (columns - 1))) / columns;
+        return Wrap(
+          spacing: spacing,
+          runSpacing: spacing,
+          children: [
+            for (final card in cards)
+              SizedBox(width: cardWidth, child: card),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _responsiveTwoColumnList(List<Widget> cards) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 900) {
+          return Column(children: cards);
+        }
+        const spacing = 12.0;
+        final cardWidth = (constraints.maxWidth - spacing) / 2;
+        return Wrap(
+          spacing: spacing,
+          children: [
+            for (final card in cards)
+              SizedBox(width: cardWidth, child: card),
+          ],
+        );
+      },
     );
   }
 
@@ -1319,7 +1375,7 @@ class _StatsScreenState extends State<StatsScreen>
             separatorBuilder: (_, __) => const SizedBox(width: 8),
             itemBuilder: (_, i) => ClipRRect(
               borderRadius: BorderRadius.circular(6),
-              child: CachedNetworkImage(
+              child: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                 imageUrl: api.getCoverUrl(coverIds[i], width: 120),
                 width: 64,
                 height: 64,
@@ -1533,10 +1589,7 @@ class _StatsScreenState extends State<StatsScreen>
     final hasBookGoal = bookGoal > 0;
 
     final elapsed = {'daily': today, 'weekly': thisWeek, 'monthly': thisMonth};
-    final activeGoals = [
-      for (final p in PlayerSettings.statsGoalPeriods)
-        if (_goalMinutes[p]! > 0) p
-    ];
+    final activeGoals = _goalCardPeriods; // Absorb Plus
     // Shrink the ring once more than one goal is on, so three still sit
     // comfortably in the card.
     final ringSize = activeGoals.length > 1 ? 44.0 : 56.0;
@@ -2064,10 +2117,12 @@ class _StatsScreenState extends State<StatsScreen>
   }
 
   Future<void> _showDaySessions(DateTime day) async {
-    final changed = await showModalBottomSheet<bool>(
+    final changed = await showAdaptiveActionMenu<bool>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      desktopWidth: 520,
+      desktopScrollWrap: false,
       builder: (_) => DaySessionsSheet(
         initialDate: day,
         loadSessions: _loadSessionsForDay,
@@ -2087,10 +2142,12 @@ class _StatsScreenState extends State<StatsScreen>
     Map<String, dynamic> s, {
     bool refreshStats = true,
   }) async {
-    final changed = await showModalBottomSheet<bool>(
+    final changed = await showAdaptiveActionMenu<bool>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      desktopWidth: 520,
+      desktopScrollWrap: false,
       builder: (_) => SessionDetailsSheet(session: s),
     );
     if (changed == true && mounted && refreshStats) {
@@ -2141,7 +2198,7 @@ class _StatsScreenState extends State<StatsScreen>
     final now = DateTime.now();
     double total = 0;
     for (int i = 0; i < 30; i++) {
-      total += _daySeconds(dailyMap, _dateKey(now.subtract(Duration(days: i))));
+      total += _daySeconds(dailyMap, _dateKey(addCalendarDays(now, -i)));
     }
     return total;
   }
@@ -2156,38 +2213,66 @@ class _StatsScreenState extends State<StatsScreen>
     return 0;
   }
 
-  int _currentStreak(Map<String, dynamic> dailyMap) {
-    int streak = 0;
-    final now = DateTime.now();
-    int startOffset = _daySeconds(dailyMap, _dateKey(now)) > 0 ? 0 : 1;
-    for (int i = startOffset; i < 365; i++) {
-      if (_daySeconds(dailyMap, _dateKey(now.subtract(Duration(days: i)))) >
-          0) {
-        streak++;
-      } else {
-        break;
-      }
-    }
-    return streak;
+  // Absorb Plus: streaks, the daily goal and the month summary
+  // (services/listening_streaks.dart, widgets/listening_streak_card.dart).
+
+  /// Time goals the goal card shows. The daily one sits on the streak card
+  /// instead whenever that card is on screen.
+  List<String> get _goalCardPeriods => [
+        for (final p in PlayerSettings.statsGoalPeriods)
+          if (_goalMinutes[p]! > 0 && !(p == 'daily' && !_statsHidden.contains('periods'))) p
+      ];
+
+  int _finishedThisMonth(LibraryProvider lib) => countFinishedInMonth([
+        for (final id in lib.finishedBooksThisYearIds)
+          if (lib.getProgressData(id)?['finishedAt'] case final num at) at
+      ], now: DateTime.now());
+
+  List<Widget> _streakCards(StreakSummary streaks) {
+    return [
+      ListeningStreakCard(
+        streak: streaks,
+        goalMinutes: _goalMinutes['daily'] ?? 0,
+        onEditGoal: _editDailyGoal,
+        formatDuration: _formatDuration,
+      ),
+      const SizedBox(height: 8),
+    ];
   }
 
-  int _longestStreak(Map<String, dynamic> dailyMap) {
-    int longest = 0, current = 0;
-    final keys = dailyMap.keys.toList()..sort();
-    DateTime? lastDate;
-    for (final key in keys) {
-      if (_daySeconds(dailyMap, key) <= 0) continue;
-      final date = DateTime.tryParse(key);
-      if (date == null) continue;
-      if (lastDate != null && date.difference(lastDate).inDays == 1) {
-        current++;
-      } else {
-        current = 1;
-      }
-      longest = max(longest, current);
-      lastDate = date;
-    }
-    return longest;
+  Future<void> _editDailyGoal() async {
+    final minutes = await showDailyGoalSheet(context,
+        currentMinutes: _goalMinutes['daily'] ?? 0, formatDuration: _formatDuration);
+    if (minutes == null || !mounted) return;
+    setState(() => _goalMinutes['daily'] = minutes);
+    // Per account, and the same daily goal Settings > Stats edits.
+    await PlayerSettings.setStatsGoalMinutesFor('daily', minutes);
+  }
+
+  List<Widget> _monthSummary(Map<String, dynamic> dailyMap, Map<String, dynamic>? bo) {
+    final l = AppLocalizations.of(context)!;
+    final now = DateTime.now();
+    final seconds = monthSecondsFrom(dailyMap, now: now);
+    // BookOrbit sends its own finished counts per month; elsewhere they come
+    // from the library's progress.
+    final int? books = bo == null
+        ? _booksFinishedThisMonth
+        : bo['finishedMonths'] is List
+            ? _finishedMonths(bo).last.count
+            : null;
+    final top = topBookThisMonth(_sessions, now: now, allLoaded: !_hasMoreSessions);
+    if (seconds <= 0 && (books ?? 0) == 0 && top == null) return const [];
+    return [
+      const SizedBox(height: 8),
+      MonthSummaryCard(
+        title: MaterialLocalizations.of(context).formatMonthYear(now),
+        listenedSeconds: seconds,
+        listenedLabel: bo != null && _media != 'listening' ? l.statsMonthTime : null,
+        booksFinished: books,
+        topBook: top,
+        formatDuration: _formatDuration,
+      ),
+    ];
   }
 
   int _activeDayCount(Map<String, dynamic> dailyMap) {
@@ -2205,7 +2290,7 @@ class _StatsScreenState extends State<StatsScreen>
     int daysWithData = 0;
     for (int i = 0; i < 30; i++) {
       final s =
-          _daySeconds(dailyMap, _dateKey(now.subtract(Duration(days: i))));
+          _daySeconds(dailyMap, _dateKey(addCalendarDays(now, -i)));
       if (s > 0) {
         total += s;
         daysWithData++;
@@ -2218,7 +2303,7 @@ class _StatsScreenState extends State<StatsScreen>
     final l = AppLocalizations.of(context)!;
     final now = DateTime.now();
     return List.generate(n, (i) {
-      final date = now.subtract(Duration(days: n - 1 - i));
+      final date = addCalendarDays(now, -(n - 1 - i));
       return _DayData(
         label: n <= 7 ? _dayLabel(date, l) : '${date.day}',
         fullLabel: _dateKey(date),
@@ -2782,6 +2867,7 @@ class SessionDetailsSheetState extends State<SessionDetailsSheet> {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
     final l = AppLocalizations.of(context)!;
+    final desktopMode = ModalSurface.isDesktopOf(context);
     final s = widget.session;
 
     final meta = s['mediaMetadata'] as Map<String, dynamic>? ?? {};
@@ -2823,7 +2909,7 @@ class SessionDetailsSheetState extends State<SessionDetailsSheet> {
     final lib = context.read<LibraryProvider>();
     final coverUrl = itemId != null ? lib.getCoverUrl(itemId) : null;
 
-    return DraggableScrollableSheet(
+    return AdaptiveDraggableScrollableSheet(
       initialChildSize: 0.7,
       minChildSize: 0.4,
       maxChildSize: 0.95,
@@ -2832,20 +2918,37 @@ class SessionDetailsSheetState extends State<SessionDetailsSheet> {
         return Container(
           decoration: BoxDecoration(
             color: cs.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            borderRadius: desktopMode
+                ? BorderRadius.zero
+                : const BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: Column(children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 10, bottom: 4),
-              child: Container(
-                width: 36,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: cs.onSurface.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(2),
+            if (desktopMode)
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 6, 8, 0),
+                  child: IconButton(
+                    tooltip: MaterialLocalizations.of(
+                      context,
+                    ).closeButtonTooltip,
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close_rounded),
+                  ),
+                ),
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 4),
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: cs.onSurface.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-            ),
             Expanded(
               child: ListView(
                 controller: scrollController,
@@ -2859,7 +2962,7 @@ class SessionDetailsSheetState extends State<SessionDetailsSheet> {
                         height: 88,
                         color: cs.onSurface.withValues(alpha: 0.06),
                         child: coverUrl != null
-                            ? CachedNetworkImage(
+                            ? CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                                 imageUrl: coverUrl,
                                 fit: BoxFit.cover,
                                 errorWidget: (_, __, ___) => Icon(

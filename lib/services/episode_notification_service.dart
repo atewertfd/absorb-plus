@@ -1,5 +1,4 @@
 import 'dart:convert';
-import '../utils/web_safe_platform.dart'; // web-safe Platform
 
 import 'dart:async';
 
@@ -21,6 +20,8 @@ import 'player_settings.dart';
 import 'scoped_prefs.dart';
 import 'user_account_service.dart';
 import 'package:provider/provider.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/web_safe_platform.dart'; // web-safe Platform
 
 /// Background new-episode notifications. On Android a WorkManager periodic job
 /// polls the subscribed shows and notifies about episodes it hasn't notified
@@ -195,7 +196,7 @@ class EpisodeNotificationService {
                   builder: (_) => const UpcomingReleasesScreen()));
               return;
             }
-          } catch (_) {}
+          } catch (e) { debugPrint('[EpisodeNotif] _handleTap failed: ${e.runtimeType}'); }
         }
         await Future.delayed(const Duration(milliseconds: 500));
       }
@@ -218,7 +219,7 @@ class EpisodeNotificationService {
             }
             return;
           }
-        } catch (_) {}
+        } catch (e) { debugPrint('[EpisodeNotif] _handleTap failed: ${e.runtimeType}'); }
       }
       await Future.delayed(const Duration(milliseconds: 500));
     }
@@ -487,7 +488,7 @@ Future<ApiService?> _buildApiService() async {
   if (headersJson != null) {
     try {
       customHeaders = Map<String, String>.from(jsonDecode(headersJson) as Map);
-    } catch (_) {}
+    } catch (e) { debugPrint('[EpisodeNotif] _buildApiService failed: ${e.runtimeType}'); }
   }
   final headers = customHeaders ?? const <String, String>{};
 

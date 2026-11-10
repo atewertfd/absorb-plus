@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../providers/library_provider.dart';
+import 'adaptive_modal.dart';
 import 'overlay_toast.dart';
 
 class CollectionPickerSheet extends StatefulWidget {
@@ -14,7 +15,7 @@ class CollectionPickerSheet extends StatefulWidget {
   });
 
   static void show(BuildContext context, String libraryItemId) {
-    showModalBottomSheet(
+    showAdaptiveActionMenu(
       context: context,
       backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
       shape: const RoundedRectangleBorder(
@@ -51,8 +52,9 @@ class _CollectionPickerSheetState extends State<CollectionPickerSheet> {
         showOverlayToast(context, l.addedToName(name), icon: Icons.bookmark_added_rounded);
         Navigator.pop(context);
       }
-    } else {
+    } else if (mounted) {
       setState(() => _adding = false);
+      showOverlayToast(context, AppLocalizations.of(context)!.failedToAdd, icon: Icons.error_outline_rounded); // Absorb Plus
     }
   }
 

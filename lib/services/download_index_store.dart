@@ -164,13 +164,18 @@ class PrefsDownloadIndexStore implements DownloadIndexStore {
 ///
 /// Migration ([load]):
 /// - the file is read first (falling back to its backup);
-/// - when the legacy keys still exist (first launch after the update, a
-///   move that was interrupted, or an older build that ran in between), their
-///   entries are merged in without replacing any the file has;
+/// - the legacy keys are merged in, without replacing any entry the file
+///   has, when the move isn't confirmed yet (first launch after the update,
+///   or a move that was interrupted), when the file is lost, or when they
+///   changed since the move: an older build sharing the data folder (the
+///   installed release) wrote them in between, and the downloads it made
+///   would otherwise be missing here;
 /// - the result is written, read back and compared, and only when it matches
-///   are the legacy keys removed. Until then they stay as the fallback, and
-///   go after the next write that lands (so a later launch cannot merge back
-///   entries deleted in between).
+///   is the move marked confirmed ([migratedKey]) with a stamp of the legacy
+///   keys ([legacyStampKey]). Until then the next write that lands confirms
+///   it. The legacy keys themselves are not removed (see [migratedKey]), so
+///   books an older build deleted can come back until the startup check
+///   drops the ones whose files are gone.
 class FileDownloadIndexStore implements DownloadIndexStore {
   FileDownloadIndexStore(
     this.file, {
@@ -190,19 +195,40 @@ class FileDownloadIndexStore implements DownloadIndexStore {
   /// Removing it is a later, owner-approved step.
   static const migratedKey = 'fork_downloads_in_file';
 
-  Future<void> _removeLegacy(SharedPreferences prefs) async {
+  /// A fingerprint of the legacy keys when the move was last confirmed. A
+  /// different one later means an older build wrote them (audit D8).
+  static const legacyStampKey = 'fork_downloads_legacy_stamp';
+
+  /// FNV-1a over the raw legacy values: stable across runs, unlike hashCode.
+  static String legacyStamp(SharedPreferences prefs) {
+    var h = 0x811c9dc5;
+    for (final key in const [
+      DownloadIndexStore.legacyDownloadsKey,
+      DownloadIndexStore.legacyKeptEbooksKey,
+      DownloadIndexStore.legacyOriginsKey,
+    ]) {
+      final value = prefs.get(key);
+      for (final unit in '$key=${value ?? ''};'.codeUnits) {
+        h = ((h ^ unit) * 0x01000193) & 0xffffffff;
+      }
+    }
+    return h.toRadixString(16);
+  }
+
+  Future<void> _markMigrated(SharedPreferences prefs) async {
     _legacyPending = false;
     await prefs.setBool(migratedKey, true);
+    await prefs.setString(legacyStampKey, legacyStamp(prefs));
   }
 
   // Everything loaded (legacy entries included) is in memory and so in what
-  // was just written: the preferences copy is no longer needed.
+  // was just written: the move is confirmed.
   void _onWritten() {
     if (!_legacyPending) return;
     unawaited(() async {
-      await _removeLegacy(await _prefs());
+      await _markMigrated(await _prefs());
       debugPrint(
-        '[DownloadIndex] preferences copy removed after a later write',
+        '[DownloadIndex] move to the file confirmed after a later write',
       );
     }());
   }
@@ -214,8 +240,21 @@ class FileDownloadIndexStore implements DownloadIndexStore {
     final read = await file.read();
     final fromFile = DownloadIndex.fromJson(read.value);
     // After the move the frozen preferences copy is ignored (merging it back
-    // would revive downloads deleted since), except as a last resort.
-    final legacy = !migrated || fromFile == null
+    // would revive downloads deleted since), except as a last resort or when
+    // an older build changed it since (Absorb Plus, audit D8).
+    final stamp = prefs.getString(legacyStampKey);
+    final olderBuildWrote =
+        migrated && stamp != null && stamp != legacyStamp(prefs);
+    if (migrated && stamp == null) {
+      await prefs.setString(legacyStampKey, legacyStamp(prefs));
+    }
+    if (olderBuildWrote) {
+      debugPrint(
+        '[DownloadIndex] an older build changed the preferences copy - '
+        'adding the downloads it made',
+      );
+    }
+    final legacy = !migrated || fromFile == null || olderBuildWrote
         ? readLegacyDownloadIndex(prefs)
         : null;
     if (read.value != null && fromFile == null) {
@@ -243,7 +282,7 @@ class FileDownloadIndexStore implements DownloadIndexStore {
     // to the next write that lands.
     _legacyPending = false;
     if (await _persistAndVerify(index)) {
-      await _removeLegacy(prefs);
+      await _markMigrated(prefs);
       debugPrint(
         '[DownloadIndex] moved ${index.downloads.length} download(s) '
         'to ${file.fileName}',

@@ -1,6 +1,13 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:just_audio_media_kit/just_audio_media_kit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'desktop_equalizer.dart';
+import 'exclusive_audio_fallback.dart';
+
+const _exclusiveAudioKey = 'fork_windows_exclusive_audio';
 
 bool _initialized = false;
 
@@ -17,11 +24,59 @@ void initializeDesktopAudio() {
   // Crackling and pops on Windows: mpv's audio output buffer (0.2 s by
   // default) ran dry for a moment. A second of buffer rides out short
   // stalls; pause and seek stay instant (mpv drops the buffer for those).
-  JustAudioMediaKit.mpvProperties = const {'audio-buffer': '1.0'};
+  _applyMpvProperties(exclusive: false);
+  // The saved choice lands long before the first book opens; mpv reads
+  // these properties when the player is created.
+  unawaited(desktopExclusiveAudio()
+      .then((on) => _applyMpvProperties(exclusive: on))
+      .catchError((Object _) {}));
+  // A device that refuses exclusive mode falls back to shared mode, so there
+  // is always sound (lib/services/exclusive_audio_fallback.dart).
+  final fallback = ExclusiveAudioFallback.instance;
+  fallback.onFallBack = () => _applyMpvProperties(exclusive: false);
+  JustAudioMediaKit.audioOutputFallback = fallback.decide;
   // mpv's warnings and errors reach the app log (debugPrint, see the
   // vendored plugin's PATCHES.md). `MPVLogLevel.info` also logs the audio
   // output it opens; it was used to diagnose crackling on 2026-10-31.
   JustAudioMediaKit.mpvLogLevel = MPVLogLevel.warn;
   JustAudioMediaKit.ensureInitialized(windows: true, linux: true);
+  DesktopEqualizer.attach(); // the equalizer as an mpv filter chain
   _initialized = true;
+}
+
+/// Windows only, off by default: mpv opens the output device in WASAPI
+/// exclusive mode, bypassing the Windows mixer, its resampling and any
+/// "audio enhancements" on the device. Other apps go silent while Absorb
+/// plays. Applies to the next player mpv creates (next app start).
+Future<bool> desktopExclusiveAudio() async {
+  if (!Platform.isWindows) return false;
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getBool(_exclusiveAudioKey) ?? false;
+}
+
+Future<void> setDesktopExclusiveAudio(bool on) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setBool(_exclusiveAudioKey, on);
+  if (on) ExclusiveAudioFallback.instance.reset();
+  _applyMpvProperties(exclusive: on);
+}
+
+/// ffmpeg options for streamed books. `reconnect` lets ffmpeg reopen an
+/// HTTP stream that broke off before its Content-Length (a Wi-Fi blip, a
+/// reset connection) at the same byte offset, a few times over about four
+/// seconds (`reconnect_delay_max`), while mpv plays from its buffer. Without
+/// it libmpv reports such a drop as the end of the file. Longer outages
+/// still fail and reach the app's reconnect. `reconnect_streamed` is left
+/// off on purpose: for a server that doesn't allow ranges it would restart
+/// the file from byte 0.
+const desktopStreamReconnectOptions = 'reconnect=1,reconnect_delay_max=5';
+
+void _applyMpvProperties({required bool exclusive}) {
+  exclusive = exclusive && Platform.isWindows;
+  ExclusiveAudioFallback.instance.exclusiveRequested = exclusive;
+  JustAudioMediaKit.mpvProperties = {
+    'audio-buffer': '1.0',
+    'stream-lavf-o': desktopStreamReconnectOptions,
+    if (exclusive) 'audio-exclusive': 'yes',
+  };
 }

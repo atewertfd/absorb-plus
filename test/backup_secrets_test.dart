@@ -1,28 +1,17 @@
 import 'package:absorb/services/backup_service.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/fakes.dart';
 
 /// A settings-only backup is a file people hand around: it must not carry the
 /// ReadMeABook token or any custom auth headers.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const packageInfo = MethodChannel('dev.fluttercommunity.plus/package_info');
 
   setUp(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-      packageInfo,
-      (call) async => {
-        'appName': 'Absorb',
-        'packageName': 'com.example.absorb',
-        'version': 'fixture',
-        'buildNumber': '1',
-        'buildSignature': '',
-        'installerStore': null,
-      },
-    );
+    fakePackageInfo();
     SharedPreferences.setMockInitialValues({
       'rmab_base_url': 'https://rmab.example',
       'rmab_api_token': 'rmab-fixture-token',
@@ -35,8 +24,7 @@ void main() {
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(packageInfo, null);
+    clearFakePackageInfo();
   });
 
   test('a settings-only backup leaves tokens and headers out', () async {

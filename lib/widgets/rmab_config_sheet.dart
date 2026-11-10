@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,6 +15,7 @@ import '../utils/desktop_workspace.dart';
 import 'adaptive_modal.dart';
 import 'rmab_request_status_chip.dart';
 import 'stackable_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/fork_platform.dart';
 
 /// ScopedPrefs keys used by the RMAB integration.
@@ -1058,7 +1061,7 @@ class _RequestRow extends StatelessWidget {
                             child: Icon(Icons.menu_book_rounded,
                                 color: cs.onSurfaceVariant, size: 20),
                           )
-                        : CachedNetworkImage(
+                        : CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                             imageUrl: book.coverArtUrl!,
                             fit: BoxFit.cover,
                             placeholder: (_, __) => Container(
@@ -1166,7 +1169,7 @@ class _RequestDetailSheet extends StatelessWidget {
                         child: Icon(Icons.menu_book_rounded,
                             color: cs.onSurfaceVariant, size: 28),
                       )
-                    : CachedNetworkImage(
+                    : CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                         imageUrl: book.coverArtUrl!,
                         fit: BoxFit.cover,
                         placeholder: (_, __) => Container(

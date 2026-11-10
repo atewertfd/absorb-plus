@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import '../l10n/app_localizations.dart';
 import 'cover_badges.dart';
 import '../services/wording.dart';
@@ -14,6 +16,7 @@ import 'episode_detail_sheet.dart';
 import 'absorb_placement.dart';
 import 'swipe_action.dart';
 import 'stackable_sheet.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
 
 /// Open the right detail sheet for a section entity: episode detail for
@@ -332,7 +335,7 @@ class _SectionDetailSheetState extends State<SectionDetailSheet> {
       return Image.file(File(coverUrl), fit: BoxFit.cover,
           errorBuilder: (_, __, ___) => _placeholder(cs));
     }
-    return CachedNetworkImage(
+    return CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
       imageUrl: coverUrl, fit: BoxFit.cover,
       httpHeaders: lib.mediaHeaders,
       placeholder: (_, __) => _placeholder(cs),

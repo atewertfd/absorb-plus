@@ -12,907 +12,897 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appTitle => 'A B S O R B';
 
   @override
-  String get online => 'Online';
+  String get online => 'オンライン';
 
   @override
-  String get offline => 'Offline';
+  String get offline => 'オフライン';
 
   @override
-  String get stillOffline => 'Still offline. Tap to try again.';
+  String get stillOffline => 'まだオフラインです。タップして再試行してください。';
 
   @override
-  String get retry => 'Retry';
+  String get retry => '再試行';
 
   @override
-  String get listsNone => 'No collections or playlists';
+  String get listsNone => 'コレクションやプレイリストはありません';
 
   @override
   String get listsNoneHint =>
-      'Collections and playlists are made on your Audiobookshelf server, and show up here.';
+      'コレクションとプレイリストは Audiobookshelf サーバーで作成すると、ここに表示されます。';
 
   @override
-  String get listsLoadFailed => 'Couldn\'t load your lists';
+  String get listsLoadFailed => 'リストを読み込めませんでした';
 
   @override
   String get listsLoadFailedHint =>
-      'Absorb couldn\'t reach your server for collections and playlists.';
+      'Absorb がコレクションとプレイリストを取得するためにサーバーへ接続できませんでした。';
 
   @override
-  String get listsNoneBookOrbit => 'No collections or Smart Scopes';
+  String get listsNoneBookOrbit => 'コレクションやスマートスコープはありません';
 
   @override
   String get listsNoneHintBookOrbit =>
-      'Collections and Smart Scopes are made on your BookOrbit server, and show up here.';
+      'コレクションとスマートスコープは BookOrbit サーバーで作成すると、ここに表示されます。';
 
   @override
   String get listsLoadFailedHintBookOrbit =>
-      'Absorb couldn\'t reach your server for collections and Smart Scopes.';
+      'Absorb がコレクションとスマートスコープを取得するためにサーバーへ接続できませんでした。';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'キャンセル';
 
   @override
-  String get delete => 'Delete';
+  String get delete => '削除';
 
   @override
-  String get remove => 'Remove';
+  String get remove => '削除';
 
   @override
-  String get save => 'Save';
+  String get save => '保存';
 
   @override
-  String get done => 'Done';
+  String get done => '完了';
 
   @override
-  String get edit => 'Edit';
+  String get edit => '編集';
 
   @override
-  String get search => 'Search';
+  String get search => '検索';
 
   @override
-  String get apply => 'Apply';
+  String get apply => '適用';
 
   @override
-  String get enable => 'Enable';
+  String get enable => '有効にする';
 
   @override
-  String get clear => 'Clear';
+  String get clear => 'クリア';
 
   @override
-  String get off => 'Off';
+  String get off => 'オフ';
 
   @override
-  String get disabled => 'Disabled';
+  String get disabled => '無効';
 
   @override
-  String get later => 'Later';
+  String get later => '後で';
 
   @override
-  String get whatsNewTitle => 'Absorb was updated';
+  String get whatsNewTitle => 'Absorb が更新されました';
 
   @override
   String whatsNewContent(String version) {
-    return 'You\'re now on $version.';
+    return '現在のバージョンは $version です。';
   }
 
   @override
-  String get whatsNewButton => 'See what\'s new';
+  String get whatsNewButton => '新機能を見る';
 
   @override
-  String get whatsNewKeepShowing => 'Show this after every update';
+  String get whatsNewKeepShowing => '更新のたびに表示する';
 
   @override
-  String get whatsNewKeepShowingHint => 'You can turn it back on in Settings';
+  String get whatsNewKeepShowingHint => '設定でいつでもオンに戻せます';
 
   @override
-  String get settingsWhatsNew => 'Show what\'s new after updates';
+  String get settingsWhatsNew => '更新後に新機能を表示';
 
   @override
-  String get settingsWhatsNewSubtitle =>
-      'After an update, show what\'s new in the app';
+  String get settingsWhatsNewSubtitle => '更新後、アプリ内で新機能を表示します';
 
   @override
-  String get gotIt => 'Got it';
+  String get gotIt => '了解';
 
   @override
-  String get betaLoggingTitle => 'Logs are on';
+  String get betaLoggingTitle => 'ログがオンです';
 
   @override
   String get betaLoggingContent =>
-      'Since this is a beta, Absorb now keeps logs to help track down problems. They stay on this device unless you share them.\n\nYou can send them or turn them off in Settings, under Issues & Support. If you turn them off, later betas leave them off.';
+      'これはベータ版のため、問題の原因を調べやすいよう Absorb がログを保存しています。共有しない限り、ログはこのデバイスにのみ残ります。\n\nログの送信やオフへの切り替えは、設定の「問題とサポート」で行えます。オフにすると、以降のベータ版でもオフのままになります。';
 
   @override
-  String get preview => 'Preview';
+  String get preview => 'プレビュー';
 
   @override
-  String get or => 'or';
+  String get or => 'または';
 
   @override
-  String get file => 'File';
+  String get file => 'ファイル';
 
   @override
-  String get more => 'More';
+  String get more => 'その他';
 
   @override
-  String get unknown => 'Unknown';
+  String get unknown => '不明';
 
   @override
-  String get untitled => 'Untitled';
+  String get untitled => '無題';
 
   @override
-  String get noThanks => 'No Thanks';
+  String get noThanks => 'いいえ';
 
   @override
-  String get stay => 'Stay';
+  String get stay => 'とどまる';
 
   @override
-  String get homeTitle => 'Home';
+  String get homeTitle => 'ホーム';
 
   @override
-  String get continueListening => 'Continue Listening';
+  String get continueListening => '続きを聴く';
 
   @override
-  String get continueReading => 'Continue Reading';
+  String get continueReading => '続きを読む';
 
   @override
-  String get continueSeries => 'Continue Series';
+  String get continueSeries => 'シリーズの続き';
 
   @override
-  String get recentlyAdded => 'Recently Added';
+  String get recentlyAdded => '最近追加';
 
   @override
-  String get listenAgain => 'Listen Again';
+  String get listenAgain => 'もう一度聴く';
 
   @override
-  String get discover => 'Discover';
+  String get discover => '見つける';
 
   @override
-  String get newEpisodes => 'New Episodes';
+  String get newEpisodes => '新着エピソード';
 
   @override
-  String get downloads => 'Downloads';
+  String get downloads => 'ダウンロード';
 
   @override
-  String get noDownloadedBooks => 'No downloaded books';
+  String get noDownloadedBooks => 'ダウンロード済みの本はありません';
 
   @override
-  String get yourLibraryIsEmpty => 'Your library is empty';
+  String get yourLibraryIsEmpty => 'ライブラリは空です';
 
   @override
-  String get downloadBooksWhileOnline =>
-      'Download books while online to listen offline';
+  String get downloadBooksWhileOnline => 'オンライン中に本をダウンロードすると、オフラインで聴けます';
 
   @override
-  String get customizeHome => 'Customize Home';
+  String get customizeHome => 'ホームをカスタマイズ';
 
   @override
-  String get dragToReorderTapEye => 'Drag to reorder, tap eye to show/hide';
+  String get dragToReorderTapEye => 'ドラッグで並べ替え、目のアイコンで表示/非表示';
 
   @override
-  String get loginTagline => 'Start Absorbing';
+  String get loginTagline => 'Absorbing を始めよう';
 
   @override
-  String get loginConnectToServer => 'Connect to your server';
+  String get loginConnectToServer => 'サーバーに接続';
 
   @override
-  String get loginServerAddress => 'Server address';
+  String get loginServerAddress => 'サーバーアドレス';
 
   @override
   String get loginServerHint => 'my.server.com';
 
   @override
-  String get loginServerHelper => 'IP:port works too (e.g. 192.168.1.5:13378)';
+  String get loginServerHelper => 'IP:ポートも使えます(例: 192.168.1.5:13378)';
 
   @override
-  String get loginCouldNotReachServer => 'Could not reach server';
+  String get loginCouldNotReachServer => 'サーバーに接続できませんでした';
 
   @override
-  String get loginAdvanced => 'Advanced';
+  String get loginAdvanced => '詳細設定';
 
   @override
-  String get loginCustomHttpHeaders => 'Custom HTTP Headers';
+  String get loginCustomHttpHeaders => 'カスタム HTTP ヘッダー';
 
   @override
   String get loginCustomHeadersDescription =>
-      'For Cloudflare tunnels or reverse proxies that require extra headers. Add headers before entering your server URL.';
+      '追加ヘッダーが必要な Cloudflare トンネルやリバースプロキシ向けです。サーバー URL を入力する前にヘッダーを追加してください。';
 
   @override
-  String get loginHeaderName => 'Header name';
+  String get loginHeaderName => 'ヘッダー名';
 
   @override
-  String get loginHeaderValue => 'Value';
+  String get loginHeaderValue => '値';
 
   @override
-  String get loginAddHeader => 'Add Header';
+  String get loginAddHeader => 'ヘッダーを追加';
 
   @override
-  String get loginSelfSignedCertificates => 'Self-signed Certificates';
+  String get loginSelfSignedCertificates => '自己署名証明書';
 
   @override
-  String get loginTrustAllCertificates =>
-      'Trust all certificates (for self-signed / custom CA setups)';
+  String get loginTrustAllCertificates => 'すべての証明書を信頼する(自己署名/独自 CA 環境向け)';
 
   @override
-  String get loginApiKey => 'API Key';
+  String get loginApiKey => 'API キー';
 
   @override
   String get loginApiKeyDescription =>
-      'Use an admin-generated API key instead of username/password. Useful when token refresh fails for your account.';
+      'ユーザー名とパスワードの代わりに、管理者が発行した API キーを使います。アカウントでトークンの更新に失敗する場合に便利です。';
 
   @override
-  String get loginWaitingForSso => 'Waiting for SSO...';
+  String get loginWaitingForSso => 'SSO を待機中...';
 
   @override
-  String get loginRedirectUri => 'Redirect URI: absorb://oauth';
+  String get loginRedirectUri => 'リダイレクト URI: absorb://oauth';
 
   @override
-  String get loginOrSignInManually => 'or sign in manually';
+  String get loginOrSignInManually => 'または手動でサインイン';
 
   @override
-  String get loginUsername => 'Username';
+  String get loginUsername => 'ユーザー名';
 
   @override
-  String get loginUsernameRequired => 'Please enter your username';
+  String get loginUsernameRequired => 'ユーザー名を入力してください';
 
   @override
-  String get loginPassword => 'Password';
+  String get loginPassword => 'パスワード';
 
   @override
-  String get loginSignIn => 'Sign In';
+  String get loginSignIn => 'サインイン';
 
   @override
   String loginSignInAs(String username) {
-    return 'Sign in as $username?';
+    return '$username としてサインインしますか?';
   }
 
   @override
-  String get loginSignInToServer => 'Sign in to this server?';
+  String get loginSignInToServer => 'このサーバーにサインインしますか?';
 
   @override
   String loginSignedInAs(String username) {
-    return 'Signed in as $username';
+    return '$username としてサインイン済み';
   }
 
   @override
-  String get adminCreateSetupFile => 'Share sign-in';
+  String get adminCreateSetupFile => 'サインインを共有';
 
   @override
   String adminSetupFileDescription(String username) {
-    return 'Creates a private sign-in link for $username that only works in the Absorb app.';
+    return '$username 用の非公開サインインリンクを作成します。このリンクは Absorb アプリでのみ使えます。';
   }
 
   @override
-  String get adminSetupFileServerUrl => 'Server URL the new user will use';
+  String get adminSetupFileServerUrl => '新しいユーザーが使うサーバー URL';
 
   @override
   String get adminSetupFileNoteWithHeaders =>
-      'A dedicated API key and your custom headers will be included so they can reach the server. Treat the link like a password.';
+      'サーバーに接続できるよう、専用の API キーとカスタムヘッダーが含まれます。リンクはパスワードと同様に扱ってください。';
 
   @override
-  String get adminSetupFileNote =>
-      'A dedicated API key will be included. Treat the link like a password.';
+  String get adminSetupFileNote => '専用の API キーが含まれます。リンクはパスワードと同様に扱ってください。';
 
   @override
-  String get adminSetupFileCreate => 'Create link';
+  String get adminSetupFileCreate => 'リンクを作成';
 
   @override
-  String get adminSetupFileSaveTitle => 'Save setup file';
+  String get adminSetupFileSaveTitle => 'セットアップファイルを保存';
 
   @override
-  String get adminSetupFileKeyError =>
-      'Could not create an API key for this user';
+  String get adminSetupFileKeyError => 'このユーザーの API キーを作成できませんでした';
 
   @override
   String adminSetupFileSaved(String username) {
-    return 'Setup file for $username saved';
+    return '$username 用のセットアップファイルを保存しました';
   }
 
   @override
   String adminSetupFileFailed(String error) {
-    return 'Failed to create sign-in: $error';
+    return 'サインインの作成に失敗しました: $error';
   }
 
   @override
-  String get setupLinkShareTitle => 'Share sign-in';
+  String get setupLinkShareTitle => 'サインインを共有';
 
   @override
   String setupLinkShareDescription(String username) {
-    return 'Send this private link or have them scan the QR code to sign in as $username.';
+    return 'この非公開リンクを送るか、QR コードを読み取ってもらうと、$username としてサインインできます。';
   }
 
   @override
   String setupLinkPrivateWarning(String username) {
-    return 'Anyone with this link can sign in as $username. Treat it like a password.';
+    return 'このリンクを知っている人は誰でも $username としてサインインできます。パスワードと同様に扱ってください。';
   }
 
   @override
-  String get setupLinkShare => 'Share link';
+  String get setupLinkShare => 'リンクを共有';
 
   @override
-  String get setupLinkCopy => 'Copy link';
+  String get setupLinkCopy => 'リンクをコピー';
 
   @override
-  String get setupLinkCopied => 'Sign-in link copied';
+  String get setupLinkCopied => 'サインインリンクをコピーしました';
 
   @override
-  String get setupLinkSaveFile => 'Save setup file';
+  String get setupLinkSaveFile => 'セットアップファイルを保存';
 
   @override
-  String get setupLinkQrError =>
-      'This setup link is too large for a QR code. Share the link instead.';
+  String get setupLinkQrError => 'このセットアップリンクは QR コードには長すぎます。代わりにリンクを共有してください。';
 
   @override
   String setupLinkShareSubject(String username) {
-    return 'Absorb sign-in for $username';
+    return '$username 用の Absorb サインイン';
   }
 
   @override
-  String get setupLinkConfirmTitle => 'Sign in with this link?';
+  String get setupLinkConfirmTitle => 'このリンクでサインインしますか?';
 
   @override
   String setupLinkConfirmBody(String server, String username) {
-    return 'Sign in to $server as $username? Only continue if you trust who sent this link.';
+    return '$server に $username としてサインインしますか?このリンクの送信元を信頼できる場合のみ続行してください。';
   }
 
   @override
-  String get setupLinkInvalid => 'This sign-in link is invalid or incomplete';
+  String get setupLinkInvalid => 'このサインインリンクは無効か、不完全です';
 
   @override
-  String get setupLinkSigningIn => 'Checking sign-in link...';
+  String get setupLinkSigningIn => 'サインインリンクを確認中...';
 
   @override
-  String get loginPlayDownloads => 'Play your downloads';
+  String get loginPlayDownloads => 'ダウンロードを再生';
 
   @override
   String signedOutDownloadsNote(String username) {
-    return 'You\'re signed out. Anything you listen to here syncs to $username when you sign back in.';
+    return 'サインアウト中です。ここで聴いた内容は、再度サインインしたときに $username に同期されます。';
   }
 
   @override
-  String get loginPasteLink => 'Paste login link';
+  String get loginPasteLink => 'ログインリンクを貼り付け';
 
   @override
   String get loginPasteLinkHelp =>
-      'Paste the complete sign-in link you received. Treat it like a password.';
+      '受け取ったサインインリンクを完全な形で貼り付けてください。パスワードと同様に扱ってください。';
 
   @override
-  String get loginFailed => 'Login failed';
+  String get loginFailed => 'ログインに失敗しました';
 
   @override
-  String get loginSsoFailed => 'SSO login failed or was cancelled';
+  String get loginSsoFailed => 'SSO ログインに失敗したか、キャンセルされました';
 
   @override
-  String get loginSsoAuthFailed =>
-      'SSO authentication failed. Please try again.';
+  String get loginSsoAuthFailed => 'SSO 認証に失敗しました。もう一度お試しください。';
 
   @override
-  String get loginRestoreFromBackup => 'Import';
+  String get loginRestoreFromBackup => 'インポート';
 
   @override
-  String get loginInvalidBackupFile => 'Invalid backup file';
+  String get loginInvalidBackupFile => 'バックアップファイルが無効です';
 
   @override
-  String get loginRestoreBackupTitle => 'Restore backup?';
+  String get loginRestoreBackupTitle => 'バックアップを復元しますか?';
 
   @override
   String loginRestoreBackupWithAccounts(int count) {
-    return 'This will restore all settings and $count saved account(s). You\'ll be signed in automatically.';
+    return 'すべての設定と保存済みアカウント $count 件を復元します。自動的にサインインされます。';
   }
 
   @override
   String get loginRestoreBackupNoAccounts =>
-      'This will restore all settings. No accounts were included in this backup.';
+      'すべての設定を復元します。このバックアップにはアカウントが含まれていません。';
 
   @override
-  String get loginRestore => 'Restore';
+  String get loginRestore => '復元';
 
   @override
   String loginRestoredAndSignedIn(String username) {
-    return 'Restored settings and signed in as $username';
+    return '設定を復元し、$username としてサインインしました';
   }
 
   @override
   String get loginSessionExpired =>
-      'Settings restored. Session expired - sign in to continue.';
+      '設定を復元しました。セッションの有効期限が切れています。続けるにはサインインしてください。';
 
   @override
-  String get loginSettingsRestored => 'Settings restored';
+  String get loginSettingsRestored => '設定を復元しました';
 
   @override
   String loginRestoreFailed(String error) {
-    return 'Restore failed: $error';
+    return '復元に失敗しました: $error';
   }
 
   @override
-  String get loginSavedAccounts => 'saved accounts';
+  String get loginSavedAccounts => '保存済みアカウント';
 
   @override
-  String get libraryTitle => 'Library';
+  String get libraryTitle => 'ライブラリ';
 
   @override
-  String get librarySearchBooksHint =>
-      'Search books, series, authors, narrators...';
+  String get librarySearchBooksHint => '本、シリーズ、著者、ナレーターを検索...';
 
   @override
-  String get librarySearchShowsHint => 'Search shows and episodes...';
+  String get librarySearchShowsHint => '番組とエピソードを検索...';
 
   @override
-  String get libraryTabLibrary => 'Library';
+  String get libraryTabLibrary => 'ライブラリ';
 
   @override
-  String get libraryTabSeries => 'Series';
+  String get libraryTabSeries => 'シリーズ';
 
   @override
-  String get libraryTabAuthors => 'Authors';
+  String get libraryTabAuthors => '著者';
 
   @override
-  String get libraryTabNarrators => 'Narrators';
+  String get libraryTabNarrators => 'ナレーター';
 
   @override
-  String get libraryNoBooks => 'No books found';
+  String get libraryNoBooks => '本が見つかりません';
 
   @override
-  String get libraryNoUnfinishedBooks => 'No unfinished books';
+  String get libraryNoUnfinishedBooks => '未完了の本はありません';
 
   @override
-  String get libraryNoBooksInProgress => 'No books in progress';
+  String get libraryNoBooksInProgress => '進行中の本はありません';
 
   @override
-  String get libraryNoFinishedBooks => 'No finished books';
+  String get libraryNoFinishedBooks => '完了した本はありません';
 
   @override
-  String get libraryAllBooksStarted => 'All books have been started';
+  String get libraryAllBooksStarted => 'すべての本を開始済みです';
 
   @override
-  String get libraryNoDownloadedBooks => 'No downloaded books';
+  String get libraryNoDownloadedBooks => 'ダウンロード済みの本はありません';
 
   @override
-  String get libraryNoSeriesFound => 'No series found';
+  String get libraryNoSeriesFound => 'シリーズが見つかりません';
 
   @override
-  String get libraryNoBooksWithEbooks => 'No books with eBooks';
+  String get libraryNoBooksWithEbooks => '電子書籍付きの本はありません';
 
   @override
-  String get libraryNoBooksMissingMetadata =>
-      'No books are missing this metadata';
+  String get libraryNoBooksMissingMetadata => 'このメタデータが不足している本はありません';
 
   @override
-  String get libraryNoItemsMatchingFilter => 'No items match this filter';
+  String get libraryNoItemsMatchingFilter => 'このフィルターに一致する項目はありません';
 
   @override
   String libraryNoBooksInGenre(String genre) {
-    return 'No books in \"$genre\"';
+    return '「$genre」の本はありません';
   }
 
   @override
   String libraryNoBooksWithTag(String tag) {
-    return 'No books tagged \"$tag\"';
+    return 'タグ「$tag」の本はありません';
   }
 
   @override
-  String get libraryClearFilter => 'Clear filter';
+  String get libraryClearFilter => 'フィルターを解除';
 
   @override
-  String get libraryNoAuthorsFound => 'No authors found';
+  String get libraryNoAuthorsFound => '著者が見つかりません';
 
   @override
-  String get libraryNoNarratorsFound => 'No narrators found';
+  String get libraryNoNarratorsFound => 'ナレーターが見つかりません';
 
   @override
-  String get libraryNoResults => 'No results found';
+  String get libraryNoResults => '結果が見つかりません';
 
   @override
-  String get librarySearchBooks => 'Books';
+  String get librarySearchBooks => '本';
 
   @override
-  String get librarySearchShows => 'Shows';
+  String get librarySearchShows => '番組';
 
   @override
-  String get librarySearchEpisodes => 'Episodes';
+  String get librarySearchEpisodes => 'エピソード';
 
   @override
-  String get librarySearchSeries => 'Series';
+  String get librarySearchSeries => 'シリーズ';
 
   @override
-  String get librarySearchAuthors => 'Authors';
+  String get librarySearchAuthors => '著者';
 
   @override
-  String get librarySearchTags => 'Tags';
+  String get librarySearchTags => 'タグ';
 
   @override
-  String get librarySearchGenres => 'Genres';
+  String get librarySearchGenres => 'ジャンル';
 
   @override
   String librarySeriesCount(int count) {
-    return '$count series';
+    return '$count シリーズ';
   }
 
   @override
   String libraryAuthorsCount(int count) {
-    return '$count authors';
+    return '$count 人の著者';
   }
 
   @override
   String libraryNarratorsCount(int count) {
-    return '$count narrators';
+    return '$count 人のナレーター';
   }
 
   @override
   String libraryBooksCount(int loaded, int total) {
-    return '$loaded/$total books';
+    return '$loaded/$total 冊';
   }
 
   @override
-  String get sort => 'Sort';
+  String get sort => '並べ替え';
 
   @override
-  String get filter => 'Filter';
+  String get filter => 'フィルター';
 
   @override
-  String get filterActive => 'Filter ●';
+  String get filterActive => 'フィルター ●';
 
   @override
-  String get name => 'Name';
+  String get name => '名前';
 
   @override
-  String get title => 'Title';
+  String get title => 'タイトル';
 
   @override
-  String get author => 'Author';
+  String get author => '著者';
 
   @override
-  String get dateAdded => 'Date Added';
+  String get dateAdded => '追加日';
 
   @override
-  String get numberOfBooks => 'Number of Books';
+  String get numberOfBooks => '本の数';
 
   @override
-  String get sortTotalDuration => 'Total duration';
+  String get sortTotalDuration => '合計時間';
 
   @override
-  String get sortLastBookAdded => 'Last book added';
+  String get sortLastBookAdded => '最後に本が追加された日';
 
   @override
-  String get sortLastBookUpdated => 'Last book updated';
+  String get sortLastBookUpdated => '最後に本が更新された日';
 
   @override
-  String get publishedYear => 'Published Year';
+  String get publishedYear => '発行年';
 
   @override
-  String get duration => 'Duration';
+  String get duration => '再生時間';
 
   @override
-  String get random => 'Random';
+  String get random => 'ランダム';
 
   @override
-  String get collapseSeries => 'Collapse Series';
+  String get collapseSeries => 'シリーズをまとめる';
 
   @override
-  String get notFinished => 'Not Finished';
+  String get notFinished => '未完了';
 
   @override
-  String get inProgress => 'In Progress';
+  String get inProgress => '進行中';
 
   @override
-  String get filterFinished => 'Finished';
+  String get filterFinished => '完了';
 
   @override
-  String get notStarted => 'Not Started';
+  String get notStarted => '未開始';
 
   @override
-  String get downloaded => 'Downloaded';
+  String get downloaded => 'ダウンロード済み';
 
   @override
-  String get hasEbook => 'Has eBook';
+  String get hasEbook => '電子書籍あり';
 
   @override
-  String get noEbook => 'No eBook';
+  String get noEbook => '電子書籍なし';
 
   @override
-  String get hasSupplementaryEbook => 'Has Supplementary eBook';
+  String get hasSupplementaryEbook => '補助の電子書籍あり';
 
   @override
-  String get noSupplementaryEbook => 'No Supplementary eBook';
+  String get noSupplementaryEbook => '補助の電子書籍なし';
 
   @override
-  String get noSeries => 'No Series';
+  String get noSeries => 'シリーズなし';
 
   @override
-  String get publishedDecade => 'Published Decade';
+  String get publishedDecade => '発行年代';
 
   @override
-  String get tracks => 'Tracks';
+  String get tracks => 'トラック';
 
   @override
-  String get noTracks => 'No Tracks';
+  String get noTracks => 'トラックなし';
 
   @override
-  String get singleTrack => 'Single Track';
+  String get singleTrack => '単一トラック';
 
   @override
-  String get multipleTracks => 'Multiple Tracks';
+  String get multipleTracks => '複数トラック';
 
   @override
-  String get abridged => 'Abridged';
+  String get abridged => '抄録版';
 
   @override
-  String get issues => 'Issues';
+  String get issues => '問題';
 
   @override
-  String get rssFeedOpen => 'RSS Feed Open';
+  String get rssFeedOpen => 'RSS フィード公開中';
 
   @override
-  String get explicitContent => 'Explicit';
+  String get explicitContent => '露骨な表現';
 
   @override
-  String get missingMetadata => 'Missing Metadata';
+  String get missingMetadata => 'メタデータ不足';
 
   @override
-  String get genre => 'Genre';
+  String get genre => 'ジャンル';
 
   @override
-  String get tag => 'Tag';
+  String get tag => 'タグ';
 
   @override
-  String get clearFilter => 'Clear Filter';
+  String get clearFilter => 'フィルターを解除';
 
   @override
-  String get noGenresFound => 'No genres found';
+  String get noGenresFound => 'ジャンルが見つかりません';
 
   @override
-  String get noTagsFound => 'No tags found';
+  String get noTagsFound => 'タグが見つかりません';
 
   @override
-  String get asc => 'ASC';
+  String get asc => '昇順';
 
   @override
-  String get desc => 'DESC';
+  String get desc => '降順';
 
   @override
-  String get fileSize => 'File Size';
+  String get fileSize => 'ファイルサイズ';
 
   @override
-  String get lastUpdated => 'Last Updated';
+  String get lastUpdated => '最終更新';
 
   @override
-  String get fileCreated => 'File Created';
+  String get fileCreated => 'ファイル作成日';
 
   @override
-  String get lastModified => 'Last Modified';
+  String get lastModified => '最終変更';
 
   @override
-  String get authorFirstLast => 'Author (First Last)';
+  String get authorFirstLast => '著者(名 姓)';
 
   @override
-  String get authorLastFirst => 'Author (Last, First)';
+  String get authorLastFirst => '著者(姓, 名)';
 
   @override
-  String get progressSort => 'Progress';
+  String get progressSort => '進捗';
 
   @override
-  String get dateStarted => 'Date Started';
+  String get dateStarted => '開始日';
 
   @override
-  String get dateFinished => 'Date Finished';
+  String get dateFinished => '完了日';
 
   @override
-  String get episodeCount => 'Episode Count';
+  String get episodeCount => 'エピソード数';
 
   @override
-  String get sequence => 'Series Sequence';
+  String get sequence => 'シリーズ内の順番';
 
   @override
   String get absorbingTitle => 'Absorbing';
 
   @override
-  String get absorbingStop => 'Stop';
+  String get absorbingStop => '停止';
 
   @override
-  String get absorbingManageQueue => 'Manage Queue';
+  String get absorbingManageQueue => 'キューを管理';
 
   @override
-  String get absorbingDone => 'Done';
+  String get desktopAbsorbingQueueHint =>
+      'Use Add to Absorbing on a book or episode to put it here. Items play in this order.';
 
   @override
-  String get absorbingNoDownloadedEpisodes => 'No downloaded episodes';
+  String get absorbingDone => '完了';
 
   @override
-  String get absorbingNoDownloadedBooks => 'No downloaded books';
+  String get absorbingNoDownloadedEpisodes => 'ダウンロード済みのエピソードはありません';
 
   @override
-  String get absorbingNothingPlayingYet => 'Nothing playing yet';
+  String get absorbingNoDownloadedBooks => 'ダウンロード済みの本はありません';
 
   @override
-  String get absorbingNothingAbsorbingYet => 'Nothing absorbing yet';
+  String get absorbingNothingPlayingYet => '再生中のものはありません';
 
   @override
-  String get absorbingDownloadEpisodesToListen =>
-      'Download episodes to listen offline';
+  String get absorbingNothingAbsorbingYet => 'Absorbing 中のものはありません';
 
   @override
-  String get absorbingDownloadBooksToListen =>
-      'Download books to listen offline';
+  String get absorbingDownloadEpisodesToListen => 'エピソードをダウンロードするとオフラインで聴けます';
 
   @override
-  String get absorbingStartEpisodeFromShows =>
-      'Start an episode from the Shows tab';
+  String get absorbingDownloadBooksToListen => '本をダウンロードするとオフラインで聴けます';
 
   @override
-  String get absorbingStartBookFromLibrary =>
-      'Start a book from the Library tab';
+  String get absorbingStartEpisodeFromShows => '「番組」タブからエピソードを再生しましょう';
 
   @override
-  String get carModeTitle => 'Car Mode';
+  String get absorbingStartBookFromLibrary => '「ライブラリ」タブから本を再生しましょう';
 
   @override
-  String get carModeNoBookLoaded => 'No book loaded';
+  String get carModeTitle => 'カーモード';
 
   @override
-  String get carModeBookLabel => 'Book';
+  String get carModeNoBookLoaded => '本が読み込まれていません';
 
   @override
-  String get carModeChapterLabel => 'Chapter';
+  String get carModeBookLabel => '本';
 
   @override
-  String get carModeBookmarkDefault => 'Bookmark';
+  String get carModeChapterLabel => 'チャプター';
 
   @override
-  String get carModeBookmarkAdded => 'Bookmark added';
+  String get carModeBookmarkDefault => 'ブックマーク';
 
   @override
-  String get downloadsTitle => 'Downloads';
+  String get carModeBookmarkAdded => 'ブックマークを追加しました';
 
   @override
-  String get downloadsCancelSelection => 'Cancel selection';
+  String get downloadsTitle => 'ダウンロード';
 
   @override
-  String get downloadsSelect => 'Select';
+  String get downloadsCancelSelection => '選択を解除';
 
   @override
-  String get downloadsNoDownloads => 'No downloads';
+  String get downloadsSelect => '選択';
 
   @override
-  String get downloadsDownloading => 'Downloading';
+  String get downloadsNoDownloads => 'ダウンロードはありません';
 
   @override
-  String get downloadsQueued => 'Queued';
+  String get downloadsDownloading => 'ダウンロード中';
 
   @override
-  String get downloadsCompleted => 'Completed';
+  String get downloadsQueued => '待機中';
 
   @override
-  String get downloadsEbooks => 'Ebooks';
+  String get downloadsCompleted => '完了';
 
   @override
-  String get downloadsWaiting => 'Waiting...';
+  String get downloadsEbooks => '電子書籍';
 
   @override
-  String get downloadsCancel => 'Cancel';
+  String get downloadsWaiting => '待機中...';
 
   @override
-  String get downloadsDelete => 'Delete';
+  String get downloadsCancel => 'キャンセル';
+
+  @override
+  String get downloadsDelete => '削除';
 
   @override
   String downloadsDeleteCount(int count) {
-    return 'Delete $count download(s)?';
+    return 'ダウンロード $count 件を削除しますか?';
   }
 
   @override
-  String get downloadsDeleteContent =>
-      'Downloaded files will be removed from this device.';
+  String get downloadsDeleteContent => 'ダウンロードしたファイルはこのデバイスから削除されます。';
 
   @override
   String downloadsDeletedCount(int count) {
-    return 'Deleted $count download(s)';
+    return 'ダウンロード $count 件を削除しました';
   }
 
   @override
-  String get downloadsRemoveTitle => 'Remove download?';
+  String get downloadsRemoveTitle => 'ダウンロードを削除しますか?';
 
   @override
   String downloadsRemoveContent(String title) {
-    return 'Delete \"$title\" from this device?';
+    return '「$title」をこのデバイスから削除しますか?';
   }
 
   @override
   String downloadsRemovedTitle(String title) {
-    return '\"$title\" removed';
+    return '「$title」を削除しました';
   }
 
   @override
   String downloadFailedMissingFile(String title) {
-    return 'Couldn\'t download \"$title\" - one of its files isn\'t on the server. A library scan may fix it.';
+    return '「$title」をダウンロードできませんでした。ファイルの 1 つがサーバーにありません。ライブラリをスキャンすると解決する場合があります。';
   }
 
   @override
   String downloadFailedNoSpace(String title) {
-    return 'Couldn\'t download \"$title\" - not enough storage space';
+    return '「$title」をダウンロードできませんでした。ストレージの空き容量が足りません';
   }
 
   @override
   String downloadFailedPermission(String title) {
-    return 'Couldn\'t download \"$title\" - check the download location in Settings';
+    return '「$title」をダウンロードできませんでした。設定でダウンロード先を確認してください';
   }
 
   @override
   String downloadFailedGeneric(String title) {
-    return 'Couldn\'t download \"$title\"';
+    return '「$title」をダウンロードできませんでした';
   }
 
   @override
   String downloadsSelectedCount(int count) {
-    return '$count selected';
+    return '$count 件を選択中';
   }
 
   @override
-  String get bookmarksTitle => 'All Bookmarks';
+  String get bookmarksTitle => 'すべてのブックマーク';
 
   @override
-  String get bookmarksTabBookmarks => 'Bookmarks';
+  String get bookmarksTabBookmarks => 'ブックマーク';
 
   @override
-  String get bookmarksTabHighlights => 'Highlights';
+  String get bookmarksTabHighlights => 'ハイライト';
 
   @override
-  String get highlightOpenInBook => 'Open in book';
+  String get highlightOpenInBook => '本で開く';
 
   @override
-  String get highlightDeleteAction => 'Delete highlight';
+  String get highlightDeleteAction => 'ハイライトを削除';
 
   @override
-  String get highlightDeleted => 'Highlight deleted';
+  String get highlightDeleted => 'ハイライトを削除しました';
 
   @override
   String highlightsDeleteCount(int count) {
-    return 'Delete $count highlight(s)?';
+    return 'ハイライト $count 件を削除しますか?';
   }
 
   @override
   String highlightsDeletedCount(int count) {
-    return 'Deleted $count highlight(s)';
+    return 'ハイライト $count 件を削除しました';
   }
 
   @override
-  String get quoteShareTitle => 'Share quote';
+  String get quoteShareTitle => '引用を共有';
 
   @override
-  String get quoteShareAction => 'Share';
+  String get quoteShareAction => '共有';
 
   @override
-  String get quoteShareFailed => 'Couldn\'t make the quote image';
+  String get quoteShareFailed => '引用画像を作成できませんでした';
 
   @override
-  String get quoteShapePortrait => 'Portrait';
+  String get quoteShapePortrait => '縦長';
 
   @override
-  String get quoteShapeSquare => 'Square';
+  String get quoteShapeSquare => '正方形';
 
   @override
-  String get quoteShapeStory => 'Story';
+  String get quoteShapeStory => 'ストーリー';
 
   @override
-  String get quoteStyleBlur => 'Blurred';
+  String get quoteStyleBlur => 'ぼかし';
 
   @override
-  String get quoteStyleDim => 'Dimmed';
+  String get quoteStyleDim => '暗め';
 
   @override
-  String get quoteStyleNone => 'Plain cover';
+  String get quoteStyleNone => 'そのままのカバー';
 
   @override
-  String get quoteTextLight => 'Light text';
+  String get quoteTextLight => '明るい文字';
 
   @override
-  String get quoteTextDark => 'Dark text';
+  String get quoteTextDark => '暗い文字';
 
   @override
-  String get quoteFieldTitle => 'Title';
+  String get quoteFieldTitle => 'タイトル';
 
   @override
-  String get quoteFieldDetail => 'Details';
+  String get quoteFieldDetail => '詳細';
 
   @override
-  String get quoteFieldDetailHint => 'Author, chapter, page, who said it';
+  String get quoteFieldDetailHint => '著者、チャプター、ページ、発言者';
 
   @override
   String highlightsMeta(String chapter, String date) {
@@ -920,218 +910,218 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get bookmarksCancelSelection => 'Cancel selection';
+  String get bookmarksCancelSelection => '選択を解除';
 
   @override
-  String get bookmarksSortedByNewest => 'Sorted by newest';
+  String get bookmarksSortedByNewest => '新しい順';
 
   @override
-  String get bookmarksSortedByPosition => 'Sorted by position';
+  String get bookmarksSortedByPosition => '位置順';
 
   @override
-  String get bookmarksSelect => 'Select';
+  String get bookmarksSelect => '選択';
 
   @override
-  String get bookmarksNoBookmarks => 'No bookmarks yet';
+  String get bookmarksNoBookmarks => 'ブックマークはまだありません';
 
   @override
-  String get bookmarksSearchHint => 'Search bookmarks';
+  String get bookmarksSearchHint => 'ブックマークを検索';
 
   @override
-  String get bookmarksNoMatches => 'No bookmarks match your search';
+  String get bookmarksNoMatches => '検索に一致するブックマークはありません';
 
   @override
   String batchDownloadQueued(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Downloading $count books',
-      one: 'Downloading 1 book',
+      other: '$count 冊をダウンロード中',
+      one: '1 冊をダウンロード中',
     );
     return '$_temp0';
   }
 
   @override
-  String get batchDownloadNothingNew => 'Already downloaded';
+  String get batchDownloadNothingNew => 'すべてダウンロード済みです';
 
   @override
   String bookmarksDeleteCount(int count) {
-    return 'Delete $count bookmark(s)?';
+    return 'ブックマーク $count 件を削除しますか?';
   }
 
   @override
-  String get bookmarksDeleteContent => 'This cannot be undone.';
+  String get bookmarksDeleteContent => 'この操作は元に戻せません。';
 
   @override
   String bookmarksDeletedCount(int count) {
-    return 'Deleted $count bookmark(s)';
+    return 'ブックマーク $count 件を削除しました';
   }
 
   @override
-  String get bookmarksJumpTitle => 'Jump to bookmark?';
+  String get bookmarksJumpTitle => 'ブックマークに移動しますか?';
 
   @override
   String bookmarksJumpContent(String title, String position, String bookTitle) {
-    return '\"$title\" at $position\nin $bookTitle';
+    return '「$title」 $position\n$bookTitle';
   }
 
   @override
-  String get bookmarksJump => 'Jump';
+  String get bookmarksJump => '移動';
 
   @override
-  String get bookmarksNotConnected => 'Not connected to server';
+  String get bookmarksNotConnected => 'サーバーに接続されていません';
 
   @override
-  String get bookmarksCouldNotLoad => 'Could not load book';
+  String get bookmarksCouldNotLoad => '本を読み込めませんでした';
 
   @override
   String bookmarksSelectedCount(int count) {
-    return '$count selected';
+    return '$count 件を選択中';
   }
 
   @override
-  String get statsTitle => 'Your Stats';
+  String get statsTitle => '統計';
 
   @override
-  String get statsCouldNotLoad => 'Couldn\'t load stats';
+  String get statsCouldNotLoad => '統計を読み込めませんでした';
 
   @override
-  String get statsTotalListeningTime => 'TOTAL LISTENING TIME';
+  String get statsTotalListeningTime => '合計再生時間';
 
   @override
-  String get statsHoursUnit => 'h';
+  String get statsHoursUnit => '時間';
 
   @override
-  String get statsMinutesUnit => 'm';
+  String get statsMinutesUnit => '分';
 
   @override
-  String get statsSecondsUnit => 's';
+  String get statsSecondsUnit => '秒';
 
   @override
   String statsDaysOfAudio(String days) {
-    return 'That\'s $days days of audio';
+    return '音声にして $days 日分です';
   }
 
   @override
   String statsHoursOfAudio(String hours) {
-    return 'That\'s $hours hours of audio';
+    return '音声にして $hours 時間分です';
   }
 
   @override
-  String get statsToday => 'Today';
+  String get statsToday => '今日';
 
   @override
-  String get statsThisWeek => 'This Week';
+  String get statsThisWeek => '今週';
 
   @override
-  String get statsThisMonth => 'This Month';
+  String get statsThisMonth => '今月';
 
   @override
-  String get statsActivity => 'Activity';
+  String get statsActivity => 'アクティビティ';
 
   @override
-  String get statsCurrentStreak => 'Current Streak';
+  String get statsCurrentStreak => '現在の連続日数';
 
   @override
-  String get statsBestStreak => 'Best Streak';
+  String get statsBestStreak => '最長の連続日数';
 
   @override
-  String get statsFinished => 'Finished';
+  String get statsFinished => '完了';
 
   @override
-  String get statsBooksFinished => 'Books';
+  String get statsBooksFinished => '本';
 
   @override
-  String get statsEpisodesFinished => 'Episodes';
+  String get statsEpisodesFinished => 'エピソード';
 
   @override
-  String get statsBooksThisYear => 'Books this year';
+  String get statsBooksThisYear => '今年の本';
 
   @override
-  String get statsEpisodesThisYear => 'Episodes this year';
+  String get statsEpisodesThisYear => '今年のエピソード';
 
   @override
-  String get statsRemoveFromYearTitle => 'Remove from this year';
+  String get statsRemoveFromYearTitle => '今年から削除';
 
   @override
   String statsRemoveFromYearWithDate(String date, String title) {
-    return 'The finished date will still be $date on the server. This only removes \"$title\" from your Absorb books-this-year list.';
+    return 'サーバー上の完了日は $date のままです。Absorb の「今年の本」リストから「$title」を削除するだけです。';
   }
 
   @override
   String statsRemoveFromYearNoDate(String title) {
-    return 'The finished date stays on the server. This only removes \"$title\" from your Absorb books-this-year list.';
+    return 'サーバー上の完了日は変わりません。Absorb の「今年の本」リストから「$title」を削除するだけです。';
   }
 
   @override
-  String get statsRemovedFromYear => 'Removed from this year';
+  String get statsRemovedFromYear => '今年から削除しました';
 
   @override
-  String get statsAddBackToYearTitle => 'Add back to this year';
+  String get statsAddBackToYearTitle => '今年に戻す';
 
   @override
   String statsAddBackToYearBody(String title) {
-    return 'Add \"$title\" back to your Absorb books-this-year list?';
+    return '「$title」を Absorb の「今年の本」リストに戻しますか?';
   }
 
   @override
-  String get statsAddBack => 'Add back';
+  String get statsAddBack => '戻す';
 
   @override
-  String get statsAddedBackToYear => 'Added back to this year';
+  String get statsAddedBackToYear => '今年に戻しました';
 
   @override
-  String get statsHiddenFromYear => 'Hidden from this year';
+  String get statsHiddenFromYear => '今年から非表示';
 
   @override
-  String get statsNothingHidden => 'Nothing hidden';
+  String get statsNothingHidden => '非表示のものはありません';
 
   @override
-  String get settingsCustomizeStats => 'Customize stats';
+  String get settingsCustomizeStats => '統計をカスタマイズ';
 
   @override
-  String get statsGoalTitle => 'Listening goal';
+  String get statsGoalTitle => '再生目標';
 
   @override
-  String get statsGoalOff => 'Off';
+  String get statsGoalOff => 'オフ';
 
   @override
-  String get statsGoalDaily => 'Daily';
+  String get statsGoalDaily => '毎日';
 
   @override
-  String get statsGoalWeekly => 'Weekly';
+  String get statsGoalWeekly => '毎週';
 
   @override
-  String get statsGoalMonthly => 'Monthly';
+  String get statsGoalMonthly => '毎月';
 
   @override
-  String get statsGoalTarget => 'Target';
+  String get statsGoalTarget => '目標';
 
   @override
-  String get statsGoalEnterTitle => 'Set target';
+  String get statsGoalEnterTitle => '目標を設定';
 
   @override
-  String get statsGoalEnterTimeHint => 'Minutes or h:mm';
+  String get statsGoalEnterTimeHint => '分または h:mm';
 
   @override
   String statsBooksShort(int count) {
-    return '$count books';
+    return '$count 冊';
   }
 
   @override
-  String get statsBookChallengeTitle => 'Reading challenge';
+  String get statsBookChallengeTitle => '読書チャレンジ';
 
   @override
-  String get statsBookChallengeDesc => 'Books to finish this year';
+  String get statsBookChallengeDesc => '今年完了する本の数';
 
   @override
-  String get statsDailyGoal => 'Daily goal';
+  String get statsDailyGoal => '1 日の目標';
 
   @override
-  String get statsWeeklyGoal => 'Weekly goal';
+  String get statsWeeklyGoal => '週間目標';
 
   @override
-  String get statsMonthlyGoal => 'Monthly goal';
+  String get statsMonthlyGoal => '月間目標';
 
   @override
   String statsGoalProgress(String done, String target) {
@@ -1140,695 +1130,694 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String statsBookChallengeProgress(int done, int target) {
-    return '$done of $target books';
+    return '$target 冊中 $done 冊';
   }
 
   @override
-  String get statsGoalReached => 'Goal reached';
+  String get statsGoalReached => '目標達成';
 
   @override
-  String get statsChartTitle => 'Listening chart';
+  String get statsChartTitle => '再生チャート';
 
   @override
-  String get statsChartBar => 'Bar';
+  String get statsChartBar => '棒';
 
   @override
-  String get statsChartLine => 'Line';
+  String get statsChartLine => '折れ線';
 
   @override
-  String get statsChartHeatmap => 'Heatmap';
+  String get statsChartHeatmap => 'ヒートマップ';
 
   @override
-  String get statsChartDays7 => '7 days';
+  String get statsChartDays7 => '7 日間';
 
   @override
-  String get statsChartDays30 => '30 days';
+  String get statsChartDays30 => '30 日間';
 
   @override
-  String get statsLast30Days => 'Last 30 days';
+  String get statsLast30Days => '過去 30 日間';
 
   @override
-  String get statsThisYearTitle => 'This year';
+  String get statsThisYearTitle => '今年';
 
   @override
-  String get statsSectionsTitle => 'Sections';
+  String get statsSectionsTitle => 'セクション';
 
   @override
-  String get statsSectionTimePeriods => 'Time periods';
+  String get statsSectionTimePeriods => '期間';
 
   @override
-  String get statsHeatmapLess => 'Less';
+  String get statsHeatmapLess => '少';
 
   @override
-  String get statsHeatmapMore => 'More';
+  String get statsHeatmapMore => '多';
 
   @override
-  String get statsDayOfWeek => 'Average by day of week';
+  String get statsDayOfWeek => '曜日別の平均';
 
   @override
-  String get statsTimeSavedLabel => 'Saved by speed';
+  String get statsTimeSavedLabel => '速度で節約';
 
   @override
   String statsTimeSavedSince(String date) {
-    return 'since $date';
+    return '$date 以降';
   }
 
   @override
-  String get statsTimeSavedReset => 'Reset time saved';
+  String get statsTimeSavedReset => '節約した時間をリセット';
 
   @override
-  String get statsTimeSavedResetConfirm =>
-      'Time saved will start counting again from today.';
+  String get statsTimeSavedResetConfirm => '節約した時間は今日から再びカウントされます。';
 
   @override
-  String get statsTimeSavedResetDone => 'Time saved reset';
+  String get statsTimeSavedResetDone => '節約した時間をリセットしました';
 
   @override
   String statsOnPaceFor(int count) {
-    return 'On pace for $count books';
+    return 'このペースなら $count 冊';
   }
 
   @override
-  String get statsDaysActive => 'Days Active';
+  String get statsDaysActive => '利用日数';
 
   @override
-  String get statsDailyAverage => 'Daily Average';
+  String get statsDailyAverage => '1 日の平均';
 
   @override
-  String get statsLast7Days => 'Last 7 Days';
+  String get statsLast7Days => '過去 7 日間';
 
   @override
-  String get statsMostListened => 'Most Listened';
+  String get statsMostListened => 'よく聴いたもの';
 
   @override
-  String get statsRecentSessions => 'Recent Sessions';
+  String get statsRecentSessions => '最近のセッション';
 
   @override
-  String get appShellHomeTab => 'Home';
+  String get appShellHomeTab => 'ホーム';
 
   @override
-  String get appShellLibraryTab => 'Library';
+  String get appShellLibraryTab => 'ライブラリ';
 
   @override
   String get appShellAbsorbingTab => 'Absorbing';
 
   @override
-  String get appShellStatsTab => 'Stats';
+  String get appShellStatsTab => '統計';
 
   @override
-  String get appShellSettingsTab => 'Settings';
+  String get appShellSettingsTab => '設定';
 
   @override
-  String get appShellDiscoverTab => 'Discover';
+  String get appShellDiscoverTab => '見つける';
 
   @override
-  String get appShellShowsTab => 'Shows';
+  String get appShellShowsTab => '番組';
 
   @override
-  String get appShellPodcastsTab => 'Podcasts';
+  String get appShellPodcastsTab => 'ポッドキャスト';
 
   @override
-  String get libraryTabEpisodes => 'Episodes';
+  String get libraryTabEpisodes => 'エピソード';
 
   @override
-  String get filterAllEpisodes => 'All';
+  String get filterAllEpisodes => 'すべて';
 
   @override
-  String get filterUnplayed => 'Unplayed';
+  String get filterUnplayed => '未再生';
 
   @override
-  String get episodeFeedEmpty => 'No episodes match this filter';
+  String get episodeFeedEmpty => 'このフィルターに一致するエピソードはありません';
 
   @override
-  String get podcastFilterUpNext => 'Up Next';
+  String get podcastFilterUpNext => '次に再生';
 
   @override
-  String get podcastFilterNew => 'New';
+  String get podcastFilterNew => '新着';
 
   @override
-  String get settingsPodcastTab => 'Podcasts tab';
+  String get settingsPodcastTab => 'ポッドキャストタブ';
 
   @override
-  String get settingsPodcastTabDesc =>
-      'Give one podcast library its own tab in the bottom bar';
+  String get settingsPodcastTabDesc => '1 つのポッドキャストライブラリを下部バーの専用タブにします';
 
   @override
-  String get settingsPodcastTabLibrary => 'Podcasts tab library';
+  String get settingsPodcastTabLibrary => 'ポッドキャストタブのライブラリ';
 
   @override
-  String get settingsMergeImpliedByPodcastTab =>
-      'Always on while the Podcasts tab is enabled';
+  String get settingsMergeImpliedByPodcastTab => 'ポッドキャストタブが有効な間は常にオンです';
 
   @override
-  String get settingsEpisodeNotifs => 'Notification settings';
+  String get settingsEpisodeNotifs => '通知設定';
 
   @override
   String get settingsEpisodeNotifsDesc =>
-      'New podcast episodes and upcoming book releases, checked in the background';
+      'ポッドキャストの新エピソードと本の発売予定をバックグラウンドで確認します';
 
   @override
-  String get notifIntervalOff => 'Off';
+  String get notifIntervalOff => 'オフ';
 
   @override
   String notifIntervalMinutes(int n) {
-    return 'Every $n minutes';
+    return '$n 分ごと';
   }
 
   @override
-  String get notifIntervalHour => 'Every hour';
+  String get notifIntervalHour => '1 時間ごと';
 
   @override
   String notifIntervalHours(int n) {
-    return 'Every $n hours';
+    return '$n 時間ごと';
   }
 
   @override
-  String get settingsBatteryUnrestricted => 'Allow unrestricted battery use';
+  String get settingsBatteryUnrestricted => 'バッテリー使用を制限しない';
 
   @override
   String get settingsBatteryUnrestrictedDesc =>
-      'Keeps the system from pausing background checks on some phones';
+      '一部のスマートフォンで、システムがバックグラウンドの確認を停止するのを防ぎます';
 
   @override
-  String get appShellPressBackToExit => 'Press back again to exit';
+  String get appShellPressBackToExit => 'もう一度戻るを押すと終了します';
 
   @override
-  String get settingsTitle => 'Settings';
+  String get settingsTitle => '設定';
 
   @override
-  String get sectionAppearance => 'Appearance';
+  String get sectionAppearance => '外観';
 
   @override
-  String get languageLabel => 'Language';
+  String get languageLabel => '言語';
 
   @override
-  String get languageSystemDefault => 'System default';
+  String get languageSystemDefault => 'システムのデフォルト';
 
   @override
-  String get languageHelpTranslateInvite =>
-      'Want to help translate Absorb into your language?';
+  String get languageHelpTranslateInvite => 'Absorb をあなたの言語に翻訳するお手伝いをしませんか?';
 
   @override
-  String get themeLabel => 'Theme';
+  String get themeLabel => 'テーマ';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => 'ダーク';
 
   @override
   String get themeOled => 'OLED';
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => 'ライト';
 
   @override
-  String get themeAuto => 'Auto';
+  String get themeAuto => '自動';
 
   @override
-  String get colorSourceLabel => 'Color source';
+  String get colorSourceLabel => 'カラーの取得元';
 
   @override
-  String get colorSourceCoverDescription =>
-      'App colors follow the currently playing book cover';
+  String get colorSourceCoverDescription => 'アプリの色は再生中の本のカバーに合わせます';
 
   @override
-  String get colorSourceWallpaperDescription =>
-      'App colors follow your system wallpaper';
+  String get colorSourceWallpaperDescription => 'アプリの色はシステムの壁紙に合わせます';
 
   @override
-  String get colorSourceWallpaper => 'Wallpaper';
+  String get colorSourceWallpaper => '壁紙';
 
   @override
-  String get colorSourceNowPlaying => 'Now Playing';
+  String get colorSourceNowPlaying => '再生中';
 
   @override
-  String get colorSourceDynamic => 'Dynamic';
+  String get colorSourceDynamic => 'ダイナミック';
 
   @override
-  String get colorSourceManual => 'Manual';
+  String get colorSourceManual => '手動';
 
   @override
-  String get colorSourceManualDescription =>
-      'Use a fixed app color you choose below';
+  String get colorSourceManualDescription => '下で選んだ固定色をアプリに使います';
 
   @override
-  String get colorSourceCustom => 'Custom';
+  String get colorSourceCustom => 'カスタム';
 
   @override
-  String get useColorEverywhereLabel => 'Use this color everywhere';
+  String get useColorEverywhereLabel => 'この色をすべてに使う';
 
   @override
   String get useColorEverywhereSubtitle =>
-      'Also color book detail pages and the player card with your set color instead of each book\'s cover';
+      '本の詳細ページとプレーヤーカードも、各本のカバーではなく設定した色にします';
 
   @override
-  String get flatBackgroundLabel => 'Flat background';
+  String get flatBackgroundLabel => 'フラットな背景';
 
   @override
   String get flatBackgroundSubtitle =>
-      'Remove the background gradient. Pure black in dark mode for OLED screens.';
+      '背景のグラデーションをなくします。ダークモードでは OLED 画面向けに純粋な黒になります。';
 
   @override
-  String get einkModeLabel => 'E-ink mode';
+  String get einkModeLabel => 'E-ink モード';
 
   @override
-  String get einkModeSubtitle =>
-      'High-contrast black and white with no animations, made for e-ink screens';
+  String get einkModeSubtitle => 'E-ink 画面向けの、アニメーションなしの高コントラスト白黒表示';
 
   @override
   String get einkModeIntroBody =>
-      'Made for e-ink screens. The app switches to a flat black-and-white look with high contrast, animations are turned off, the playing card loses its background, and the live server connection stays off to save battery. Playback and progress still sync normally. Your appearance settings are kept and come back when you turn this off.';
+      'E-ink 画面向けのモードです。アプリは高コントラストのフラットな白黒表示に切り替わり、アニメーションがオフになり、再生カードの背景がなくなり、バッテリー節約のためサーバーとのライブ接続もオフになります。再生と進捗は通常どおり同期されます。外観の設定は保持され、オフにすると元に戻ります。';
 
   @override
-  String get einkModeIntroConfirm => 'Turn on';
+  String get einkModeIntroConfirm => 'オンにする';
 
   @override
-  String get backgroundIntensityLabel => 'Background intensity';
+  String get backgroundIntensityLabel => '背景の濃さ';
 
   @override
-  String get startScreenLabel => 'Start screen';
+  String get startScreenLabel => '起動時の画面';
 
   @override
-  String get startScreenSubtitle => 'Which tab to open when the app launches';
+  String get startScreenSubtitle => 'アプリ起動時に開くタブ';
 
   @override
-  String get startScreenHome => 'Home';
+  String get startScreenHome => 'ホーム';
 
   @override
-  String get startScreenLibrary => 'Library';
+  String get startScreenLibrary => 'ライブラリ';
 
   @override
   String get startScreenAbsorb => 'Absorb';
 
   @override
-  String get startScreenStats => 'Stats';
+  String get startScreenStats => '統計';
 
   @override
-  String get disablePageFade => 'Disable page fade';
+  String get disablePageFade => 'ページのフェードを無効にする';
 
   @override
-  String get disablePageFadeOnSubtitle => 'Pages switch instantly';
+  String get disablePageFadeOnSubtitle => 'ページはすぐに切り替わります';
 
   @override
-  String get disablePageFadeOffSubtitle => 'Pages fade when switching tabs';
+  String get disablePageFadeOffSubtitle => 'タブ切り替え時にページがフェードします';
 
   @override
-  String get rectangleBookCovers => 'Rectangle book covers';
+  String get rectangleBookCovers => '長方形の本のカバー';
 
   @override
-  String get progressTextSize => 'Progress text size';
+  String get progressTextSize => '進捗テキストのサイズ';
 
   @override
-  String get rectangleBookCoversOnSubtitle =>
-      'Covers display in 2:3 book proportion';
+  String get rectangleBookCoversOnSubtitle => 'カバーは 2:3 の本の比率で表示されます';
 
   @override
-  String get rectangleBookCoversOffSubtitle => 'Covers are square';
+  String get rectangleBookCoversOffSubtitle => 'カバーは正方形です';
 
   @override
-  String get coverSize => 'Cover size';
+  String get coverSize => 'カバーのサイズ';
 
   @override
-  String get coverSizeSubtitle => 'How many covers fit across the library grid';
+  String get coverSizeSubtitle => 'ライブラリのグリッドに横に並ぶカバーの数';
 
   @override
-  String get coverSizeSmall => 'Small';
+  String get coverSizeSmall => '小';
 
   @override
-  String get coverSizeMedium => 'Medium';
+  String get coverSizeMedium => '中';
 
   @override
-  String get coverSizeLarge => 'Large';
+  String get coverSizeLarge => '大';
 
   @override
-  String get sectionAbsorbingCards => 'Absorbing Cards';
+  String get sectionAbsorbingCards => 'Absorbing カード';
 
   @override
-  String get fullScreenPlayer => 'Full screen player';
+  String get fullScreenPlayer => '全画面プレーヤー';
 
   @override
-  String get fullScreenPlayerOnSubtitle =>
-      'On - books open in full screen when played';
+  String get fullScreenPlayerOnSubtitle => 'オン - 再生時に本を全画面で開きます';
 
   @override
-  String get fullScreenPlayerOffSubtitle => 'Off - play within card view';
+  String get fullScreenPlayerOffSubtitle => 'オフ - カード表示のまま再生します';
 
   @override
-  String get fullBookScrubber => 'Full book scrubber';
+  String get fullBookScrubber => '本全体のスクラバー';
 
   @override
-  String get fullBookScrubberOnSubtitle =>
-      'On - seekable slider across entire book';
+  String get fullBookScrubberOnSubtitle => 'オン - 本全体をシークできるスライダー';
 
   @override
-  String get fullBookScrubberOffSubtitle => 'Off - progress bar only';
+  String get fullBookScrubberOffSubtitle => 'オフ - 進捗バーのみ';
 
   @override
-  String get cardScrubbers => 'Card scrubbers';
+  String get cardScrubbers => 'カードのスクラバー';
 
   @override
-  String get cardScrubbersBoth => 'Both';
+  String get cardScrubbersBoth => '両方';
 
   @override
-  String get cardScrubbersChapter => 'Chapter';
+  String get cardScrubbersChapter => 'チャプター';
 
   @override
-  String get cardScrubbersLocked => 'Locked';
+  String get cardScrubbersLocked => 'ロック';
 
   @override
-  String get cardScrubbersBothSubtitle => 'Full book and chapter bars can seek';
+  String get cardScrubbersBothSubtitle => '本全体とチャプターのバーでシークできます';
 
   @override
-  String get cardScrubbersChapterSubtitle => 'Only the chapter bar can seek';
+  String get cardScrubbersChapterSubtitle => 'チャプターのバーのみシークできます';
 
   @override
-  String get cardScrubbersLockedSubtitle => 'Progress is shown without seeking';
+  String get cardScrubbersLockedSubtitle => '進捗は表示のみで、シークできません';
 
   @override
-  String get speedAdjustedTime => 'Speed-adjusted time';
+  String get speedAdjustedTime => '速度に合わせた時間';
 
   @override
-  String get speedAdjustedTimeOnSubtitle =>
-      'On - all times reflect your playback speed';
+  String get speedAdjustedTimeOnSubtitle => 'オン - すべての時間に再生速度を反映します';
 
   @override
-  String get speedAdjustedTimeOffSubtitle => 'Off - showing raw audio duration';
+  String get speedAdjustedTimeOffSubtitle => 'オフ - 音声そのままの長さを表示します';
 
   @override
-  String get buttonLayout => 'Button layout';
+  String get buttonLayout => 'ボタンのレイアウト';
 
   @override
-  String get buttonLayoutSubtitle =>
-      'How action buttons are arranged on the card';
+  String get buttonLayoutSubtitle => 'カード上の操作ボタンの並べ方';
 
   @override
-  String get whenAbsorbed => 'When absorbed';
+  String get whenAbsorbed => 'Absorb 完了時';
 
   @override
-  String get whenAbsorbedInfoTitle => 'When Absorbed';
+  String get whenAbsorbedInfoTitle => 'Absorb 完了時';
 
   @override
   String get whenAbsorbedInfoContent =>
-      'Controls what happens to an absorbing card when you finish a book or episode.\n\nFinished cards are automatically removed from your Absorbing screen.';
+      '本やエピソードを最後まで聴いたときに、Absorbing カードをどうするかを設定します。\n\n完了したカードは Absorbing 画面から自動的に削除されます。';
 
   @override
-  String get whenAbsorbedSubtitle =>
-      'What happens to the absorbing card when a book or episode finishes';
+  String get whenAbsorbedSubtitle => '本やエピソードが完了したときの Absorbing カードの動作';
 
   @override
-  String get whenAbsorbedShowOverlay => 'Show Overlay';
+  String get whenAbsorbedShowOverlay => 'オーバーレイを表示';
 
   @override
-  String get whenAbsorbedAutoRelease => 'Auto-release';
+  String get whenAbsorbedAutoRelease => '自動で解除';
 
   @override
-  String get mergeLibraries => 'Unified Absorbing page';
+  String get mergeLibraries => '統合 Absorbing ページ';
 
   @override
-  String get mergeLibrariesInfoTitle => 'Unified Absorbing Page';
+  String get mergeLibrariesInfoTitle => '統合 Absorbing ページ';
 
   @override
   String get mergeLibrariesInfoContent =>
-      'When enabled, the Absorbing screen shows all your in-progress books and podcasts from every library in a single view. When disabled, only items from the library you currently have selected are shown.';
+      'オンにすると、Absorbing 画面にすべてのライブラリの進行中の本とポッドキャストが 1 つの画面にまとめて表示されます。オフの場合は、現在選択中のライブラリの項目のみ表示されます。';
 
   @override
-  String get mergeLibrariesOnSubtitle =>
-      'Absorbing page shows items from all libraries';
+  String get mergeLibrariesOnSubtitle => 'Absorbing ページにすべてのライブラリの項目を表示します';
 
   @override
-  String get mergeLibrariesOffSubtitle =>
-      'Absorbing page shows current library only';
+  String get mergeLibrariesOffSubtitle => 'Absorbing ページに現在のライブラリのみ表示します';
 
   @override
-  String get queueMode => 'Queue mode';
+  String get queueMode => 'キューモード';
 
   @override
-  String get queueModeInfoTitle => 'Queue Mode';
+  String get queueModeInfoTitle => 'キューモード';
 
   @override
-  String get queueModeInfoOff => 'Off';
+  String get queueModeInfoOff => 'オフ';
 
   @override
-  String get queueModeInfoOffDesc =>
-      'Playback stops when the current book or episode finishes.';
+  String get queueModeInfoOffDesc => '現在の本やエピソードが終わると再生が止まります。';
 
   @override
-  String get queueModeInfoManual => 'Manual Queue';
+  String get queueModeInfoManual => '手動キュー';
 
   @override
   String get queueModeInfoManualDesc =>
-      'Your absorbing cards act as a playlist. When one finishes, the next non-finished card auto-plays. Add items with the \"Add to Absorbing\" button on a book or episode and reorder from the absorbing screen.';
+      'Absorbing カードがプレイリストとして動作します。1 つ終わると、次の未完了のカードが自動で再生されます。本やエピソードの「Absorbing に追加」ボタンで項目を追加し、Absorbing 画面で並べ替えます。';
 
   @override
-  String get queueModeOff => 'Off';
+  String get queueModeOff => 'オフ';
 
   @override
-  String get queueModeManual => 'Manual';
+  String get queueModeManual => '手動';
 
   @override
-  String get queueModeAuto => 'Auto';
+  String get queueModeAuto => '自動';
 
   @override
-  String get queueModePlaylist => 'Playlist';
+  String get queueModePlaylist => 'プレイリスト';
 
   @override
-  String get queueModeCollection => 'Collection';
+  String get queueModeCollection => 'コレクション';
 
   @override
-  String get queueModeInfoPlaylist => 'Playlist Queue';
+  String get queueModeInfoPlaylist => 'プレイリストキュー';
 
   @override
   String get queueModeInfoPlaylistDesc =>
-      'Plays items in order from a chosen playlist, skipping anything already finished. Stops at the end of the list.';
+      '選んだプレイリストの項目を順に再生し、完了済みのものはスキップします。リストの最後で停止します。';
 
   @override
-  String get queuePlaylistPickerTitle => 'Choose a playlist';
+  String get queuePlaylistPickerTitle => 'プレイリストを選択';
 
   @override
-  String get queuePlaylistNone => 'No playlist selected';
+  String get queuePlaylistNone => 'プレイリストが選択されていません';
 
   @override
   String queuePlaylistActiveLabel(String name) {
-    return 'Playlist: $name';
+    return 'プレイリスト: $name';
   }
 
   @override
-  String get queueModePlaylistHint =>
-      'Start a playlist queue by opening a playlist on the home page.';
+  String get queueModePlaylistHint => 'ホームでプレイリストを開くと、プレイリストキューを開始できます。';
 
   @override
-  String get exit => 'Exit';
+  String get exit => '終了';
 
   @override
   String upNext(String label) {
-    return 'Up next: $label';
+    return '次: $label';
   }
 
   @override
-  String get nothingUpNext => 'Nothing up next';
+  String get nothingUpNext => '次に再生するものはありません';
 
   @override
-  String get showUpNextLabel => 'Show Up next on the absorbing page';
+  String get showUpNextLabel => 'Absorbing ページに「次」を表示';
 
   @override
-  String get openSeries => 'Open series';
+  String get openSeries => 'シリーズを開く';
 
   @override
-  String get openPlaylist => 'Open playlist';
+  String get openPlaylist => 'プレイリストを開く';
 
   @override
-  String get openCollection => 'Open collection';
+  String get openCollection => 'コレクションを開く';
 
   @override
-  String get playlistPlayAction => 'Play playlist';
+  String get playlistPlayAction => 'プレイリストを再生';
 
   @override
-  String get playlistAllFinished => 'All finished';
+  String get playlistAllFinished => 'すべて完了';
 
   @override
-  String get queueModeBooks => 'Books';
+  String get queueModeBooks => '本';
 
   @override
-  String get queueModePodcasts => 'Podcasts';
+  String get queueModePodcasts => 'ポッドキャスト';
 
   @override
-  String get autoDownloadQueue => 'Auto-download queue';
+  String get autoDownloadQueue => 'キューを自動ダウンロード';
 
   @override
-  String get autoDownloadThisSeriesLabel => 'Auto-download this series';
+  String get autoDownloadThisSeriesLabel => 'このシリーズを自動ダウンロード';
 
   @override
-  String get autoDownloadThisShowLabel => 'Auto-download this podcast';
+  String get autoDownloadThisShowLabel => 'このポッドキャストを自動ダウンロード';
 
   @override
-  String get autoDownloadThisPlaylistLabel => 'Auto-download this playlist';
+  String get autoDownloadThisPlaylistLabel => 'このプレイリストを自動ダウンロード';
 
   @override
-  String get autoDownloadThisCollectionLabel => 'Auto-download this collection';
+  String get autoDownloadThisCollectionLabel => 'このコレクションを自動ダウンロード';
 
   @override
   String autoDownloadQueueOnSubtitle(int count) {
-    return 'Keep next $count items downloaded';
+    return '次の $count 件をダウンロードしておきます';
   }
 
   @override
-  String get autoDownloadQueueOffSubtitle => 'Off - manual downloads only';
+  String get autoDownloadQueueOffSubtitle => 'オフ - 手動ダウンロードのみ';
 
   @override
-  String get sectionPlayback => 'Playback';
+  String get sectionPlayback => '再生';
 
   @override
-  String get sectionMediaControls => 'Media Controls';
+  String get sectionMediaControls => 'メディアコントロール';
 
   @override
-  String get defaultSpeed => 'Default speed';
+  String get defaultSpeed => 'デフォルトの速度';
 
   @override
-  String get defaultSpeedSubtitle =>
-      'New books start at this speed - each book remembers its own';
+  String get defaultSpeedSubtitle => '新しい本はこの速度で始まります。速度は本ごとに記憶されます';
 
   @override
-  String get skipBack => 'Skip back';
+  String get skipBack => '戻る';
 
   @override
-  String get skipForward => 'Skip forward';
+  String get skipForward => '進む';
 
   @override
   String get iosLockScreenSkipHint =>
-      'The lock screen only draws the numbers iOS has icons for (5, 10, 15, 30, 45, 60, 75, 90). Other amounts show + on the button but still skip by your setting.';
+      'ロック画面には、iOS にアイコンがある数字(5、10、15、30、45、60、75、90)のみ表示されます。それ以外の秒数はボタンに + と表示されますが、設定した秒数でスキップします。';
 
   @override
-  String get longSkipButtons => 'Long skip buttons';
+  String get longSkipButtons => '長いスキップボタン';
 
   @override
-  String get longSkipButtonsOnSubtitle =>
-      'On - the player shows a second, bigger skip pair';
+  String get longSkipButtonsOnSubtitle => 'オン - プレーヤーに大きめのスキップボタンをもう 1 組表示します';
 
   @override
-  String get longSkipButtonsOffSubtitle =>
-      'Off - just the regular skip buttons';
+  String get longSkipButtonsOffSubtitle => 'オフ - 通常のスキップボタンのみ';
 
   @override
-  String get longSkipBack => 'Long skip back';
+  String get longSkipBack => '長く戻る';
 
   @override
-  String get longSkipForward => 'Long skip forward';
+  String get longSkipForward => '長く進む';
 
   @override
-  String get coverShapeDefault => 'Default';
+  String get coverShapeDefault => 'デフォルト';
 
   @override
-  String get coverShapeSquare => 'Square';
+  String get coverShapeSquare => '正方形';
 
   @override
-  String get coverShapeRectangle => 'Rectangle';
+  String get coverShapeRectangle => '長方形';
 
   @override
-  String get coverShapeLabel => 'Cover shape';
+  String get coverShapeLabel => 'カバーの形';
 
   @override
-  String get showSubtitles => 'Show subtitles';
+  String get showSubtitles => 'サブタイトルを表示';
 
   @override
-  String get showSubtitlesOnSubtitle =>
-      'Subtitles show under book titles in the library and on home';
+  String get showSubtitlesOnSubtitle => 'ライブラリとホームで、本のタイトルの下にサブタイトルを表示します';
 
   @override
-  String get showSubtitlesOffSubtitle =>
-      'Off - subtitles only on the book details sheet';
+  String get showSubtitlesOffSubtitle => 'オフ - サブタイトルは本の詳細シートにのみ表示します';
 
   @override
-  String get subtitleVisibilityLabel => 'Subtitles';
+  String get subtitleVisibilityLabel => 'サブタイトル';
 
   @override
-  String get subtitleVisibilityDefault => 'Default';
+  String get subtitleVisibilityDefault => 'デフォルト';
 
   @override
-  String get subtitleVisibilityShow => 'Show';
+  String get subtitleVisibilityShow => '表示';
 
   @override
-  String get subtitleVisibilityHide => 'Hide';
+  String get subtitleVisibilityHide => '非表示';
 
   @override
   String currentLibrarySettingsTitle(String name) {
-    return 'Current library: $name';
+    return '現在のライブラリ: $name';
   }
 
   @override
-  String get currentLibrarySkipOverride => 'Custom skip amounts';
+  String get currentLibrarySkipOverride => 'スキップ秒数をカスタマイズ';
 
   @override
   String get currentLibrarySkipOverrideOnSubtitle =>
-      'On - this library uses its own skip amounts';
+      'オン - このライブラリ独自のスキップ秒数を使います';
 
   @override
   String get currentLibrarySkipOverrideOffSubtitle =>
-      'Off - this library uses the global skip amounts';
+      'オフ - このライブラリも共通のスキップ秒数を使います';
 
   @override
-  String get currentLibrarySkipBack => 'Skip back';
+  String get currentLibrarySpeedOverride => 'Custom default speed';
 
   @override
-  String get currentLibrarySkipForward => 'Skip forward';
+  String get currentLibrarySpeedOverrideOnSubtitle =>
+      'On - new items in this library start at their own speed';
 
   @override
-  String get chapterProgressInNotification =>
-      'Chapter progress in notification & Android Auto';
+  String get currentLibrarySpeedOverrideOffSubtitle =>
+      'Off - new items in this library start at the global default speed';
+
+  @override
+  String get currentLibrarySpeed => 'Default speed';
+
+  @override
+  String get currentLibrarySkipBack => '戻る';
+
+  @override
+  String get currentLibrarySkipForward => '進む';
+
+  @override
+  String get chapterProgressInNotification => '通知と Android Auto にチャプターの進捗を表示';
 
   @override
   String get chapterProgressOnSubtitle =>
-      'On - notification & Android Auto show chapter progress';
+      'オン - 通知と Android Auto にチャプターの進捗を表示します';
 
   @override
-  String get chapterProgressOffSubtitle => 'Off - they show full book progress';
+  String get chapterProgressOffSubtitle => 'オフ - 本全体の進捗を表示します';
 
   @override
-  String get chapterProgressInNotificationIos =>
-      'Chapter progress on lock screen & CarPlay';
+  String get chapterProgressInNotificationIos => 'ロック画面と CarPlay にチャプターの進捗を表示';
 
   @override
   String get chapterProgressOnSubtitleIos =>
-      'On - lock screen & CarPlay show chapter progress';
+      'オン - ロック画面と CarPlay にチャプターの進捗を表示します';
 
   @override
-  String get nowPlayingText => 'Now playing text';
+  String get chapterProgressInNowPlayingBar =>
+      'Chapter progress in now playing bar';
 
   @override
-  String get nowPlayingTextSubtitle =>
-      'Choose what the media controls show on each line';
+  String get chapterProgressInNowPlayingBarOnSubtitle =>
+      'On - the bottom player shows current chapter progress';
 
   @override
-  String get nowPlayingTopLine => 'Top line';
+  String get chapterProgressInNowPlayingBarOffSubtitle =>
+      'Off - the bottom player shows full book progress';
 
   @override
-  String get nowPlayingSecondLine => 'Second line';
+  String get nowPlayingText => '再生中のテキスト';
 
   @override
-  String get nowPlayingNotShown => 'Not shown';
+  String get nowPlayingTextSubtitle => 'メディアコントロールの各行に表示する内容を選びます';
 
   @override
-  String get nowPlayingTopLineRequired =>
-      'The top line needs at least one item';
+  String get nowPlayingTopLine => '上の行';
 
   @override
-  String get nowPlayingPieceChapter => 'Chapter';
+  String get nowPlayingSecondLine => '2 行目';
 
   @override
-  String get nowPlayingPieceTitle => 'Book title';
+  String get nowPlayingNotShown => '表示しない';
 
   @override
-  String get nowPlayingPieceNarrator => 'Narrator';
+  String get nowPlayingTopLineRequired => '上の行には少なくとも 1 つの項目が必要です';
 
   @override
-  String get nowPlayingPieceSeries => 'Series';
+  String get nowPlayingPieceChapter => 'チャプター';
 
   @override
-  String get nowPlayingPiecePercent => 'Book percentage';
+  String get nowPlayingPieceTitle => '本のタイトル';
 
   @override
-  String get nowPlayingPieceChapterNumber => 'Chapter number';
+  String get nowPlayingPieceNarrator => 'ナレーター';
 
   @override
-  String get nowPlayingPieceTimeLeft => 'Time left';
+  String get nowPlayingPieceSeries => 'シリーズ';
+
+  @override
+  String get nowPlayingPiecePercent => '本の進捗率';
+
+  @override
+  String get nowPlayingPieceChapterNumber => 'チャプター番号';
+
+  @override
+  String get nowPlayingPieceTimeLeft => '残り時間';
 
   @override
   String nowPlayingChapterNumber(int number, int total) {
@@ -1837,96 +1826,96 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String nowPlayingTimeLeft(String time) {
-    return '$time left';
+    return '残り $time';
   }
 
   @override
-  String get bookDockBadgePending => 'Pending';
+  String get bookDockBadgePending => '保留中';
 
   @override
-  String get bookDockBadgeExtracting => 'Reading file';
+  String get bookDockBadgeExtracting => 'ファイルを読み取り中';
 
   @override
-  String get bookDockBadgeFetching => 'Looking up';
+  String get bookDockBadgeFetching => '検索中';
 
   @override
-  String get bookDockBadgeError => 'Error';
+  String get bookDockBadgeError => 'エラー';
 
   @override
-  String get bookDockNeedsReview => 'Needs review';
+  String get bookDockNeedsReview => '要確認';
 
   @override
-  String get bookDockNoMatch => 'No match';
+  String get bookDockNoMatch => '一致なし';
 
   @override
-  String get bookDockApplied => 'Applied';
+  String get bookDockApplied => '適用済み';
 
   @override
-  String get bookDockNotApplied => 'Found details not used';
+  String get bookDockNotApplied => '見つかった詳細は未使用';
 
   @override
-  String get bookDockNoDestination => 'No destination set';
+  String get bookDockNoDestination => '追加先が未設定';
 
   @override
-  String get bookDockNoAuthor => 'No author yet';
+  String get bookDockNoAuthor => '著者がまだありません';
 
   @override
-  String get bookDockLookUpAgain => 'Look up again';
+  String get bookDockLookUpAgain => '再検索';
 
   @override
-  String get bookDockLookingUp => 'Looking up details again';
+  String get bookDockLookingUp => '詳細を再検索中';
 
   @override
-  String get bookDockLookUpFailed => 'Couldn\'t look up details';
+  String get bookDockLookUpFailed => '詳細を検索できませんでした';
 
   @override
-  String get bookDockProposedChanges => 'Proposed changes';
+  String get bookDockProposedChanges => '変更の提案';
 
   @override
-  String get bookDockNoChanges => 'No details found online yet';
+  String get bookDockNoChanges => 'オンラインでまだ詳細が見つかっていません';
 
   @override
-  String get bookDockStillReading => 'The server is still reading this file';
+  String get bookDockStillReading => 'サーバーがこのファイルをまだ読み取り中です';
 
   @override
-  String get bookDockRoleBook => 'Book';
+  String get bookDockRoleBook => '本';
 
   @override
-  String get bookDockRoleCover => 'Cover';
+  String get bookDockRoleCover => 'カバー';
 
   @override
-  String get bookDockRoleMetadata => 'Metadata';
+  String get bookDockRoleMetadata => 'メタデータ';
 
   @override
-  String get bookDockRoleExtra => 'Extra';
+  String get bookDockRoleExtra => 'その他';
 
   @override
-  String get bookDockFieldTitle => 'Title';
+  String get bookDockFieldTitle => 'タイトル';
 
   @override
-  String get bookDockFieldSubtitle => 'Subtitle';
+  String get bookDockFieldSubtitle => 'サブタイトル';
 
   @override
-  String get bookDockFieldAuthors => 'Authors';
+  String get bookDockFieldAuthors => '著者';
 
   @override
-  String get bookDockFieldSeries => 'Series';
+  String get bookDockFieldSeries => 'シリーズ';
 
   @override
-  String get bookDockFieldPublisher => 'Publisher';
+  String get bookDockFieldPublisher => '出版社';
 
   @override
-  String get bookDockFieldYear => 'Year';
+  String get bookDockFieldYear => '年';
 
   @override
-  String get bookDockFieldLanguage => 'Language';
+  String get bookDockFieldLanguage => '言語';
 
   @override
   String get bookDockFieldIsbn => 'ISBN';
 
   @override
   String bookDockMatch(int percent) {
-    return '$percent% match';
+    return '$percent% 一致';
   }
 
   @override
@@ -1934,15 +1923,15 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count ファイル',
+      one: '1 ファイル',
     );
     return '$_temp0';
   }
 
   @override
   String bookDockGoesTo(String library) {
-    return 'Goes to $library';
+    return '追加先: $library';
   }
 
   @override
@@ -1950,8 +1939,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count fields',
-      one: '1 field',
+      other: '$count 項目',
+      one: '1 項目',
     );
     return '$_temp0';
   }
@@ -1961,169 +1950,167 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files in this entry',
-      one: 'File in this entry',
+      other: 'このエントリのファイル($count 件)',
+      one: 'このエントリのファイル',
     );
     return '$_temp0';
   }
 
   @override
   String bookDockAdded(String date) {
-    return 'Added $date';
+    return '$date に追加';
   }
 
   @override
-  String get bookDockAddToLibrary => 'Add to library';
+  String get bookDockAddToLibrary => 'ライブラリに追加';
 
   @override
-  String get bookDockUseFound => 'Use found details';
+  String get bookDockUseFound => '見つかった詳細を使う';
 
   @override
-  String get bookDockRemoveTitle => 'Remove from Book Dock?';
+  String get bookDockRemoveTitle => 'Book Dock から削除しますか?';
 
   @override
-  String get bookDockRemoveFailed => 'Couldn\'t remove this file';
+  String get bookDockRemoveFailed => 'このファイルを削除できませんでした';
 
   @override
-  String get bookDockPickLibrary => 'Add to which library?';
+  String get bookDockPickLibrary => 'どのライブラリに追加しますか?';
 
   @override
-  String get bookDockNoLibraries =>
-      'Your account can\'t add books to a library';
+  String get bookDockNoLibraries => 'お使いのアカウントでは、ライブラリに本を追加できません';
 
   @override
-  String get bookDockFileFailed => 'Couldn\'t add this file to the library';
+  String get bookDockFileFailed => 'このファイルをライブラリに追加できませんでした';
 
   @override
   String get bookDockDuplicateBody =>
-      'A file with this name is already in that library. Remove it from Book Dock?';
+      '同じ名前のファイルがそのライブラリにすでにあります。Book Dock から削除しますか?';
 
   @override
-  String get bookDockDetailsUpdated => 'Details updated';
+  String get bookDockDetailsUpdated => '詳細を更新しました';
 
   @override
-  String get bookDockUseFoundFailed => 'No found details to use';
+  String get bookDockUseFoundFailed => '使用できる詳細が見つかっていません';
 
   @override
   String bookDockRemoveBody(String title) {
-    return 'This deletes $title from the server.';
+    return 'サーバーから $title を削除します。';
   }
 
   @override
   String bookDockRemoved(String title) {
-    return 'Removed $title from Book Dock';
+    return '$title を Book Dock から削除しました';
   }
 
   @override
   String bookDockFiled(String title, String library) {
-    return 'Added $title to $library';
+    return '$title を $library に追加しました';
   }
 
   @override
   String bookDockFileFailedReason(String reason) {
-    return 'Couldn\'t add this file: $reason';
+    return 'このファイルを追加できませんでした: $reason';
   }
 
   @override
   String bookDockDuplicateTitle(String library) {
-    return 'Already in $library';
+    return '$library に登録済み';
   }
 
   @override
-  String get bomatchSearchAll => 'Search all sources';
+  String get bomatchSearchAll => 'すべてのソースを検索';
 
   @override
-  String get bomatchSearching => 'Searching...';
+  String get bomatchSearching => '検索中...';
 
   @override
-  String get bomatchSearchFailed =>
-      'Couldn\'t search for matches. Check your connection and try again.';
+  String get bomatchSearchFailed => '一致する候補を検索できませんでした。接続を確認して、もう一度お試しください。';
 
   @override
-  String get bomatchNoResults => 'No matches found';
+  String get bomatchNoResults => '一致する候補が見つかりません';
 
   @override
-  String get bomatchStrong => 'Strong matches';
+  String get bomatchStrong => '有力な候補';
 
   @override
-  String get bomatchPossible => 'Possible matches';
+  String get bomatchPossible => '可能性のある候補';
 
   @override
-  String get bomatchSourceTimeout => 'timed out';
+  String get bomatchSourceTimeout => 'タイムアウト';
 
   @override
-  String get bomatchSourceBusy => 'busy';
+  String get bomatchSourceBusy => '混雑中';
 
   @override
-  String get bomatchSourceFailed => 'failed';
+  String get bomatchSourceFailed => '失敗';
 
   @override
-  String get bomatchLinked => 'Linked';
+  String get bomatchLinked => 'リンク済み';
 
   @override
-  String get bomatchSameIsbn => 'Same ISBN';
+  String get bomatchSameIsbn => 'ISBN が同じ';
 
   @override
-  String get bomatchFewDetails => 'Few details';
+  String get bomatchFewDetails => '詳細が少ない';
 
   @override
-  String get bomatchBack => 'All results';
+  String get bomatchBack => 'すべての結果';
 
   @override
-  String get bomatchFillEmpty => 'Fill empty';
+  String get bomatchFillEmpty => '空欄を埋める';
 
   @override
-  String get bomatchTakeAll => 'Take all';
+  String get bomatchTakeAll => 'すべて採用';
 
   @override
-  String get bomatchOnlyDifferences => 'Only differences';
+  String get bomatchOnlyDifferences => '差分のみ';
 
   @override
-  String get bomatchNow => 'Now';
+  String get bomatchNow => '現在';
 
   @override
-  String get bomatchEmpty => 'Empty';
+  String get bomatchEmpty => '空';
 
   @override
-  String get bomatchKindNew => 'New';
+  String get bomatchKindNew => '新規';
 
   @override
-  String get bomatchKindChange => 'Change';
+  String get bomatchKindChange => '変更';
 
   @override
-  String get bomatchKindSmall => 'Small change';
+  String get bomatchKindSmall => '軽微な変更';
 
   @override
-  String get bomatchKindSame => 'Same';
+  String get bomatchKindSame => '同じ';
 
   @override
-  String get bomatchKindNone => 'Not in result';
+  String get bomatchKindNone => '結果にありません';
 
   @override
-  String get bomatchKeep => 'Keep';
+  String get bomatchKeep => '維持';
 
   @override
-  String get bomatchUse => 'Use';
+  String get bomatchUse => '使う';
 
   @override
-  String get bomatchMerge => 'Merge';
+  String get bomatchMerge => '統合';
 
   @override
-  String get bomatchReplace => 'Replace';
+  String get bomatchReplace => '置き換え';
 
   @override
-  String get bomatchUseThis => 'Use this';
+  String get bomatchUseThis => 'これを使う';
 
   @override
-  String get bomatchChosen => 'Chosen';
+  String get bomatchChosen => '選択済み';
 
   @override
   String bomatchOther(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count other books',
-      one: '1 other book',
+      other: '他 $count 冊',
+      one: '他 1 冊',
     );
     return '$_temp0';
   }
@@ -2133,8 +2120,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count changes',
-      one: '1 change',
+      other: '$count 件の変更',
+      one: '1 件の変更',
     );
     return '$_temp0';
   }
@@ -2144,8 +2131,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count new',
-      one: '1 new',
+      other: '新規 $count 件',
+      one: '新規 1 件',
     );
     return '$_temp0';
   }
@@ -2155,9 +2142,9 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Apply $count changes',
-      one: 'Apply 1 change',
-      zero: 'Apply',
+      other: '$count 件の変更を適用',
+      one: '1 件の変更を適用',
+      zero: '適用',
     );
     return '$_temp0';
   }
@@ -2167,330 +2154,335 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count other sources',
-      one: '1 other source',
+      other: '他の $count ソース',
+      one: '他の 1 ソース',
     );
     return '$_temp0';
   }
 
   @override
   String bomatchFrom(String source) {
-    return 'From $source';
+    return '$source から';
   }
 
   @override
-  String get breqTitle => 'Book requests';
+  String get breqTitle => '本のリクエスト';
 
   @override
-  String get breqTabRequest => 'Request a book';
+  String get breqTabRequest => '本をリクエスト';
 
   @override
-  String get breqTabMine => 'My requests';
+  String get breqTabMine => '自分のリクエスト';
 
   @override
-  String get breqTabAll => 'All requests';
+  String get breqTabAll => 'すべてのリクエスト';
 
   @override
-  String get breqNoAccess =>
-      'Your account can\'t request books on this server.';
+  String get breqNoAccess => 'お使いのアカウントでは、このサーバーで本をリクエストできません。';
 
   @override
-  String get breqTitleHint => 'Book title';
+  String get breqTitleHint => '本のタイトル';
 
   @override
-  String get breqAuthorHint => 'Author';
+  String get breqAuthorHint => '著者';
 
   @override
-  String get breqKindAudiobook => 'Audiobook';
+  String get breqKindAudiobook => 'オーディオブック';
 
   @override
-  String get breqKindEbook => 'E-book';
+  String get breqKindEbook => '電子書籍';
 
   @override
-  String get breqKindComic => 'Comic';
+  String get breqKindComic => 'コミック';
 
   @override
-  String get breqSearch => 'Search';
+  String get breqSearch => '検索';
 
   @override
-  String get breqSearching => 'Searching...';
+  String get breqSearching => '検索中...';
 
   @override
-  String get breqSearchFailed =>
-      'Couldn\'t search. Check your connection and try again.';
+  String get breqSearchFailed => '検索できませんでした。接続を確認して、もう一度お試しください。';
 
   @override
-  String get breqSearchPrompt =>
-      'Search for a book the library does not have yet to request it.';
+  String get breqSearchPrompt => 'ライブラリにまだない本を検索して、リクエストしましょう。';
 
   @override
-  String get breqNoResults => 'No matching books found';
+  String get breqNoResults => '一致する本が見つかりません';
 
   @override
-  String get breqInLibrary => 'In your library';
+  String get breqInLibrary => 'ライブラリにあります';
 
   @override
-  String get breqYouAsked => 'You requested this';
+  String get breqYouAsked => 'リクエスト済みです';
 
   @override
-  String get breqSomeoneAsked => 'Already requested by someone else';
+  String get breqSomeoneAsked => 'ほかのユーザーがリクエスト済みです';
 
   @override
-  String get breqView => 'View';
+  String get breqView => '表示';
 
   @override
-  String get breqRequest => 'Request';
+  String get breqRequest => 'リクエスト';
 
   @override
-  String get breqRequested => 'Requested';
+  String get breqRequested => 'リクエスト済み';
 
   @override
-  String get breqAddMeToo => 'Add me too';
+  String get breqAddMeToo => '自分も追加';
 
   @override
-  String get breqLibrary => 'Library';
+  String get breqLibrary => 'ライブラリ';
 
   @override
-  String get breqLibraryApprover => 'Let the approver decide';
+  String get breqLibraryApprover => '承認者に任せる';
 
   @override
-  String get breqLibraryChoose => 'Choose a library';
+  String get breqLibraryChoose => 'ライブラリを選択';
 
   @override
-  String get breqNote => 'Note for the approver';
+  String get breqNote => '承認者へのメモ';
 
   @override
-  String get breqNoteHint => 'Anything worth knowing about this request';
+  String get breqNoteHint => 'このリクエストについて伝えておきたいこと';
 
   @override
-  String get breqAutoApproved => 'Your requests are approved right away.';
+  String get breqAutoApproved => 'リクエストはすぐに承認されます。';
 
   @override
-  String get breqSubmitted => 'Request submitted';
+  String get breqSubmitted => 'リクエストを送信しました';
 
   @override
-  String get breqJoined => 'Added you to the existing request';
+  String get breqJoined => '既存のリクエストに追加しました';
 
   @override
-  String get breqFailed => 'Couldn\'t send the request';
+  String get breqFailed => 'リクエストを送信できませんでした';
 
   @override
-  String get breqStatusPending => 'Pending';
+  String get breqStatusPending => '保留中';
 
   @override
-  String get breqStatusApproved => 'Approved';
+  String get breqStatusApproved => '承認済み';
 
   @override
-  String get breqStatusRejected => 'Rejected';
+  String get breqStatusRejected => '却下';
 
   @override
-  String get breqStatusCancelled => 'Cancelled';
+  String get breqStatusCancelled => 'キャンセル済み';
 
   @override
-  String get breqStatusSearching => 'Searching';
+  String get breqStatusSearching => '検索中';
 
   @override
-  String get breqStatusGrabbed => 'Release found';
+  String get breqStatusGrabbed => 'リリースが見つかりました';
 
   @override
-  String get breqStatusDownloading => 'Downloading';
+  String get breqStatusDownloading => 'ダウンロード中';
 
   @override
-  String get breqStatusImporting => 'Importing';
+  String get breqStatusImporting => 'インポート中';
 
   @override
-  String get breqStatusNeedsReview => 'Needs review';
+  String get breqStatusNeedsReview => '要確認';
 
   @override
-  String get breqStatusAvailable => 'Available';
+  String get breqStatusAvailable => '利用可能';
 
   @override
-  String get breqStatusFailed => 'Failed';
+  String get breqStatusFailed => '失敗';
 
   @override
-  String get breqWaitingApproval => 'Waiting for approval';
+  String get breqWaitingApproval => '承認待ち';
 
   @override
-  String get breqWaitingRelease => 'Waiting for a release to be picked';
+  String get breqWaitingRelease => 'リリースの選択待ち';
 
   @override
-  String get breqLookingForRelease => 'Looking for a release';
+  String get breqLookingForRelease => 'リリースを探しています';
 
   @override
-  String get breqStartingDownload => 'Starting the download';
+  String get breqStartingDownload => 'ダウンロードを開始しています';
 
   @override
-  String get breqAddingToLibrary => 'Adding to the library';
+  String get breqAddingToLibrary => 'ライブラリに追加しています';
 
   @override
-  String get breqWaitingCheck => 'Waiting for a manual check';
+  String get breqWaitingCheck => '手動確認待ち';
 
   @override
-  String get breqReady => 'Ready in your library';
+  String get breqReady => 'ライブラリに追加されました';
 
   @override
-  String get breqSomethingWrong => 'Something went wrong';
+  String get breqSomethingWrong => '問題が発生しました';
 
   @override
-  String get breqShowHidden => 'Show hidden';
+  String get breqShowHidden => '非表示を表示';
 
   @override
-  String get breqHidden => 'Hidden';
+  String get breqHidden => '非表示';
 
   @override
-  String get breqMineEmpty => 'You haven\'t requested any books yet.';
+  String get breqMineEmpty => 'まだ本をリクエストしていません。';
 
   @override
-  String get breqAllEmpty => 'No requests yet.';
+  String get breqAllEmpty => 'リクエストはまだありません。';
 
   @override
-  String get breqLoadFailed => 'Couldn\'t load requests.';
+  String get breqLoadFailed => 'リクエストを読み込めませんでした。';
 
   @override
-  String get breqLoadMore => 'Load more';
+  String get breqLoadMore => 'さらに読み込む';
 
   @override
-  String get breqApprove => 'Approve';
+  String get breqApprove => '承認';
 
   @override
-  String get breqReject => 'Reject';
+  String get breqReject => '却下';
 
   @override
-  String get breqCancel => 'Cancel request';
+  String get breqCancel => 'リクエストをキャンセル';
 
   @override
-  String get breqHide => 'Hide from my list';
+  String get breqHide => '自分のリストから隠す';
 
   @override
-  String get breqUnhide => 'Show in my list';
+  String get breqUnhide => '自分のリストに表示';
 
   @override
-  String get breqLeave => 'Leave request';
+  String get breqLeave => 'リクエストから抜ける';
 
   @override
-  String get breqDelete => 'Delete request';
+  String get breqDelete => 'リクエストを削除';
 
   @override
-  String get breqOpenBook => 'Open book';
+  String get breqOpenBook => '本を開く';
 
   @override
-  String get breqCancelConfirm =>
-      'Cancel this request? A download in progress stops too.';
+  String get breqCancelConfirm => 'このリクエストをキャンセルしますか?進行中のダウンロードも停止します。';
 
   @override
-  String get breqDeleteConfirm => 'Delete this request? This can\'t be undone.';
+  String get breqDeleteConfirm => 'このリクエストを削除しますか?この操作は元に戻せません。';
 
   @override
-  String get breqRejectTitle => 'Reject request';
+  String get breqRejectTitle => 'リクエストを却下';
 
   @override
-  String get breqRejectReason => 'Reason (optional)';
+  String get breqRejectReason => '理由(任意)';
 
   @override
-  String get breqApproveTitle => 'Approve request';
+  String get breqApproveTitle => 'リクエストを承認';
 
   @override
-  String get breqApproveLibraryNeeded =>
-      'Choose the library this book goes into.';
+  String get breqApproveLibraryNeeded => 'この本を追加するライブラリを選択してください。';
 
   @override
-  String get breqApprovedToast => 'Request approved';
+  String get breqApprovedToast => 'リクエストを承認しました';
 
   @override
-  String get breqRejectedToast => 'Request rejected';
+  String get breqRejectedToast => 'リクエストを却下しました';
 
   @override
-  String get breqCancelledToast => 'Request cancelled';
+  String get breqCancelledToast => 'リクエストをキャンセルしました';
 
   @override
-  String get breqHiddenToast => 'Hidden from your list';
+  String get breqHiddenToast => 'リストから隠しました';
 
   @override
-  String get breqRestoredToast => 'Back on your list';
+  String get breqRestoredToast => 'リストに戻しました';
 
   @override
-  String get breqDeletedToast => 'Request deleted';
+  String get breqDeletedToast => 'リクエストを削除しました';
 
   @override
-  String get breqLeftToast => 'You left this request';
+  String get breqLeftToast => 'このリクエストから抜けました';
 
   @override
-  String get breqActionFailed => 'Couldn\'t update the request';
+  String get breqActionFailed => 'リクエストを更新できませんでした';
 
   @override
-  String get breqFactRequestedBy => 'Requested by';
+  String get breqFactRequestedBy => 'リクエストしたユーザー';
 
   @override
-  String get breqFactRequestedOn => 'Requested on';
+  String get breqFactRequestedOn => 'リクエスト日';
 
   @override
-  String get breqFactLibrary => 'Library';
+  String get breqFactLibrary => 'ライブラリ';
 
   @override
-  String get breqFactDecidedBy => 'Decided by';
+  String get breqFactDecidedBy => '判断したユーザー';
 
   @override
-  String get breqFactNote => 'Note from the requester';
+  String get breqFactNote => 'リクエストしたユーザーからのメモ';
 
   @override
-  String get breqFactDecisionNote => 'Decision note';
+  String get breqFactDecisionNote => '判断メモ';
 
   @override
-  String get breqFactAlsoWanted => 'Also wanted by';
+  String get breqFactAlsoWanted => 'ほかの希望者';
 
   @override
-  String get breqLibraryCta => 'Request a book';
+  String get breqLibraryCta => '本をリクエスト';
 
   @override
-  String get breqSettingsSubtitle =>
-      'Ask for books the library does not have yet';
+  String get breqSettingsSubtitle => 'ライブラリにまだない本をリクエストします';
 
   @override
-  String get navHoldBookRequests => 'Book requests';
+  String get navHoldBookRequests => '本のリクエスト';
 
   @override
   String breqLibraryDefault(String library) {
-    return 'Default ($library)';
+    return 'デフォルト($library)';
   }
 
   @override
   String breqFailedReason(String reason) {
-    return 'Couldn\'t send the request: $reason';
+    return 'リクエストを送信できませんでした: $reason';
+  }
+
+  @override
+  String breqBookCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 冊',
+      one: '1 冊',
+    );
+    return '$_temp0';
   }
 
   @override
   String breqDownloadingPercent(int percent) {
-    return 'Downloading, $percent%';
+    return 'ダウンロード中、$percent%';
   }
 
   @override
   String breqAddedTo(String library) {
-    return 'Added to $library';
+    return '$library に追加しました';
   }
 
   @override
   String breqRejectedWithNote(String note) {
-    return 'Rejected: $note';
+    return '却下: $note';
   }
 
   @override
   String breqFailedWithReason(String reason) {
-    return 'Failed: $reason';
+    return '失敗: $reason';
   }
 
   @override
   String breqRequestedBy(String name) {
-    return 'Requested by $name';
+    return 'リクエスト: $name';
   }
 
   @override
   String breqActionFailedReason(String reason) {
-    return 'Couldn\'t update the request: $reason';
+    return 'リクエストを更新できませんでした: $reason';
   }
 
   @override
   String breqFooterCta(String query) {
-    return 'Request \"$query\"';
+    return '「$query」をリクエスト';
   }
 
   @override
@@ -2498,206 +2490,200 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count requests',
-      one: '1 request',
-      zero: 'No requests',
+      other: '$count 件のリクエスト',
+      one: '1 件のリクエスト',
+      zero: 'リクエストなし',
     );
     return '$_temp0';
   }
 
   @override
-  String get breqFindRelease => 'Find a release';
+  String get breqFindRelease => 'リリースを探す';
 
   @override
-  String get breqTryAnotherRelease => 'Try another release';
+  String get breqTryAnotherRelease => '別のリリースを試す';
 
   @override
-  String get breqApproveAndFind => 'Approve and find a release';
+  String get breqApproveAndFind => '承認してリリースを探す';
 
   @override
-  String get breqReviewButton => 'Review download';
+  String get breqReviewButton => 'ダウンロードを確認';
 
   @override
-  String get breqStopDownload => 'Stop download';
+  String get breqStopDownload => 'ダウンロードを停止';
 
   @override
   String get breqStopDownloadConfirm =>
-      'Stop this download? The request goes back to approved so another release can be picked.';
+      'このダウンロードを停止しますか?リクエストは承認済みに戻り、別のリリースを選べます。';
 
   @override
-  String get breqDiscardImport => 'Discard download';
+  String get breqDiscardImport => 'ダウンロードを破棄';
 
   @override
   String get breqDiscardConfirm =>
-      'Discard this download? The request is marked failed and can be tried again with another release.';
+      'このダウンロードを破棄しますか?リクエストは失敗として記録され、別のリリースで再試行できます。';
 
   @override
-  String get breqFileAnyway => 'Add to library';
+  String get breqFileAnyway => 'ライブラリに追加';
 
   @override
-  String get breqFiledToast => 'Added to the library';
+  String get breqFiledToast => 'ライブラリに追加しました';
 
   @override
-  String get breqDiscardedToast => 'Download discarded';
+  String get breqDiscardedToast => 'ダウンロードを破棄しました';
 
   @override
-  String get breqStoppedToast => 'Download stopped';
+  String get breqStoppedToast => 'ダウンロードを停止しました';
 
   @override
-  String get breqGrabTitle => 'Download this release?';
+  String get breqGrabTitle => 'このリリースをダウンロードしますか?';
 
   @override
-  String get breqGrab => 'Download';
+  String get breqGrab => 'ダウンロード';
 
   @override
-  String get breqGrabbed => 'Download started';
+  String get breqGrabbed => 'ダウンロードを開始しました';
 
   @override
-  String get breqGrabFailed => 'Couldn\'t start that download';
+  String get breqGrabFailed => 'ダウンロードを開始できませんでした';
 
   @override
-  String get breqReleaseVipWarning =>
-      'This tracker only lets VIP accounts download it.';
+  String get breqReleaseVipWarning => 'このトラッカーは VIP アカウントのみダウンロードできます。';
 
   @override
   String get breqReleaseNoBookFile =>
-      'This release has no book file BookOrbit can add to a library.';
+      'このリリースには、BookOrbit がライブラリに追加できる本のファイルがありません。';
 
   @override
   String get breqReleaseCheckFailed =>
-      'Couldn\'t check what\'s in this release. Try again or pick another one.';
+      'このリリースの内容を確認できませんでした。もう一度試すか、別のものを選んでください。';
 
   @override
-  String get breqCheckingRelease => 'Checking the files...';
+  String get breqCheckingRelease => 'ファイルを確認中...';
 
   @override
-  String get breqSearchAgain => 'Search again';
+  String get breqSearchAgain => '再検索';
 
   @override
-  String get breqSearchTerms => 'Search terms';
+  String get breqSearchTerms => '検索語';
 
   @override
-  String get breqIsbnHint => 'Leave empty to search by title and author';
+  String get breqIsbnHint => '空欄の場合はタイトルと著者で検索します';
 
   @override
-  String get breqSearchingIndexers =>
-      'Searching your indexers. This can take up to a minute.';
+  String get breqSearchingIndexers => 'インデクサーを検索中です。最大 1 分ほどかかることがあります。';
 
   @override
-  String get breqReleasesFailed => 'Couldn\'t search for releases.';
+  String get breqReleasesFailed => 'リリースを検索できませんでした。';
 
   @override
-  String get breqNoSourcesSetUp => 'No search sources are set up in BookOrbit.';
+  String get breqNoSourcesSetUp => 'BookOrbit に検索ソースが設定されていません。';
 
   @override
-  String get breqNoSourcesOn =>
-      'Every search source is switched off in BookOrbit.';
+  String get breqNoSourcesOn => 'BookOrbit のすべての検索ソースがオフになっています。';
 
   @override
-  String get breqNoSourceCarries =>
-      'None of your search sources carry this kind of book.';
+  String get breqNoSourceCarries => 'この種類の本を扱う検索ソースがありません。';
 
   @override
-  String get breqNoReleases => 'No releases found. Try different search terms.';
+  String get breqNoReleases => 'リリースが見つかりません。別の検索語をお試しください。';
 
   @override
-  String get breqFromCache => 'from a recent search';
+  String get breqFromCache => '最近の検索結果から';
 
   @override
-  String get breqIndexerUnauthorized => 'sign-in failed';
+  String get breqIndexerUnauthorized => 'サインインに失敗しました';
 
   @override
-  String get breqIndexerThrottled => 'busy';
+  String get breqIndexerThrottled => '混雑中';
 
   @override
-  String get breqIndexerTimeout => 'timed out';
+  String get breqIndexerTimeout => 'タイムアウトしました';
 
   @override
-  String get breqIndexerUnreachable => 'unreachable';
+  String get breqIndexerUnreachable => '接続できません';
 
   @override
-  String get breqIndexerNoMedium => 'does not carry this';
+  String get breqIndexerNoMedium => '取り扱いなし';
 
   @override
-  String get breqIndexerError => 'failed';
+  String get breqIndexerError => '失敗しました';
 
   @override
-  String get breqSortBest => 'Best match';
+  String get breqSortBest => '一致度順';
 
   @override
-  String get breqSortSeeders => 'Seeders';
+  String get breqSortSeeders => 'シーダー数';
 
   @override
-  String get breqSortSize => 'Size';
+  String get breqSortSize => 'サイズ';
 
   @override
-  String get breqSortNewest => 'Newest';
+  String get breqSortNewest => '新しい順';
 
   @override
-  String get breqFreeleech => 'Freeleech';
+  String get breqFreeleech => 'フリーリーチ';
 
   @override
-  String get breqVipOnly => 'VIP only';
+  String get breqVipOnly => 'VIP限定';
 
   @override
-  String get breqAlreadyGrabbed => 'Downloaded before';
+  String get breqAlreadyGrabbed => 'ダウンロード済み';
 
   @override
   String get breqReasonIsbn => 'ISBN';
 
   @override
-  String get breqReasonTitle => 'Title';
+  String get breqReasonTitle => 'タイトル';
 
   @override
-  String get breqReasonAuthor => 'Author';
+  String get breqReasonAuthor => '著者';
 
   @override
-  String get breqReasonUnknownFormat => 'Unknown format';
+  String get breqReasonUnknownFormat => '不明な形式';
 
   @override
-  String get breqReasonExpectedSize => 'Size';
+  String get breqReasonExpectedSize => 'サイズ';
 
   @override
-  String get breqReasonSuspiciousSize => 'Unusual size';
+  String get breqReasonSuspiciousSize => '通常と異なるサイズ';
 
   @override
-  String get breqReasonFreeleech => 'Freeleech';
+  String get breqReasonFreeleech => 'フリーリーチ';
 
   @override
-  String get breqReasonSeveralBooks => 'Several books';
+  String get breqReasonSeveralBooks => '複数の本';
 
   @override
-  String get breqReviewTitle => 'Download waiting for a check';
+  String get breqReviewTitle => '確認待ちのダウンロード';
 
   @override
-  String get breqReviewFailed => 'Couldn\'t load the download details.';
+  String get breqReviewFailed => 'ダウンロードの詳細を読み込めませんでした。';
 
   @override
-  String get breqReviewDockGone =>
-      'The downloaded files are no longer in the Book Dock.';
+  String get breqReviewDockGone => 'ダウンロードしたファイルがBook Dockにありません。';
 
   @override
-  String get breqReviewNoLibrary =>
-      'This request has no library to add the book to.';
+  String get breqReviewNoLibrary => 'このリクエストには、本の追加先ライブラリがありません。';
 
   @override
   String breqGrabFailedReason(String reason) {
-    return 'Couldn\'t start that download: $reason';
+    return 'ダウンロードを開始できませんでした: $reason';
   }
 
   @override
   String breqReleaseCheckFailedReason(String reason) {
-    return 'Couldn\'t check what\'s in this release: $reason';
+    return 'このリリースの内容を確認できませんでした: $reason';
   }
 
   @override
   String breqReleasesFailedReason(String reason) {
-    return 'Couldn\'t search for releases: $reason';
+    return 'リリースを検索できませんでした: $reason';
   }
 
   @override
   String breqReviewFailedReason(String reason) {
-    return 'Couldn\'t load the download details: $reason';
+    return 'ダウンロードの詳細を読み込めませんでした: $reason';
   }
 
   @override
@@ -2705,9 +2691,9 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count releases',
-      one: '1 release',
-      zero: 'No releases',
+      other: '$count件のリリース',
+      one: '1件のリリース',
+      zero: 'リリースなし',
     );
     return '$_temp0';
   }
@@ -2717,8 +2703,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count個のファイル',
+      one: '1個のファイル',
     );
     return '$_temp0';
   }
@@ -2728,25 +2714,25 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count個のファイル',
+      one: '1個のファイル',
     );
     return '$_temp0';
   }
 
   @override
   String breqSeeders(int seeders, int leechers) {
-    return '$seeders seeders, $leechers leechers';
+    return 'シーダー $seeders、リーチャー $leechers';
   }
 
   @override
   String breqScore(int score) {
-    return 'Score $score';
+    return 'スコア $score';
   }
 
   @override
   String breqReasonPreferredFormat(String format) {
-    return 'Preferred $format';
+    return '優先形式 $format';
   }
 
   @override
@@ -2756,611 +2742,596 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String breqReasonSeeders(String count) {
-    return '$count seeders';
+    return 'シーダー $count';
   }
 
   @override
   String breqReviewScore(int score, int threshold) {
-    return 'Match score $score. Downloads scoring $threshold or more are added on their own.';
+    return '一致スコア $score。スコアが $threshold 以上のダウンロードは自動で追加されます。';
   }
 
   @override
   String breqReviewRequested(String value) {
-    return 'Requested: $value';
+    return 'リクエスト: $value';
   }
 
   @override
   String breqReviewImported(String value) {
-    return 'Downloaded: $value';
+    return 'ダウンロード: $value';
   }
 
   @override
-  String get breqKindBoth => 'Both';
+  String get breqKindBoth => '両方';
 
   @override
-  String get breqEbookLibrary => 'E-book library';
+  String get breqEbookLibrary => '電子書籍ライブラリ';
 
   @override
-  String get breqAudiobookLibrary => 'Audiobook library';
+  String get breqAudiobookLibrary => 'オーディオブックライブラリ';
 
   @override
-  String get breqRequestBoth => 'Request both';
+  String get breqRequestBoth => '両方をリクエスト';
 
   @override
-  String get breqAddMeToBoth => 'Add me to both';
+  String get breqAddMeToBoth => '両方に参加';
 
   @override
-  String get breqRequestEbook => 'Request e-book';
+  String get breqRequestEbook => '電子書籍をリクエスト';
 
   @override
-  String get breqRequestAudiobook => 'Request audiobook';
+  String get breqRequestAudiobook => 'オーディオブックをリクエスト';
 
   @override
-  String get breqAddMeEbook => 'Add me to the e-book request';
+  String get breqAddMeEbook => '電子書籍のリクエストに参加';
 
   @override
-  String get breqAddMeAudiobook => 'Add me to the audiobook request';
+  String get breqAddMeAudiobook => 'オーディオブックのリクエストに参加';
 
   @override
-  String get breqPairSubmitted => 'Requested the e-book and the audiobook';
+  String get breqPairSubmitted => '電子書籍とオーディオブックをリクエストしました';
 
   @override
-  String get breqPairOneJoined =>
-      'Requested both. One was already on its way, so you were added to that request';
+  String get breqPairOneJoined => '両方をリクエストしました。一方はすでに進行中だったため、そのリクエストに参加しました';
 
   @override
-  String get breqJoinedBoth => 'Added you to both requests';
+  String get breqJoinedBoth => '両方のリクエストに参加しました';
 
   @override
-  String get breqJoinsOwned =>
-      'Requested. It will join the copy already in your library';
+  String get breqJoinsOwned => 'リクエストしました。ライブラリにある既存のコピーに追加されます';
 
   @override
-  String get speedBookmarkInControls => 'Speed & bookmark in media controls';
+  String get speedBookmarkInControls => 'メディアコントロールに速度とブックマークを表示';
 
   @override
   String get speedBookmarkOnSubtitle =>
-      'On - notification shows speed & bookmark; chapter skip stays in Android Auto';
+      'オン - 通知に速度とブックマークを表示。チャプタースキップはAndroid Autoに残ります';
 
   @override
   String get speedBookmarkOffSubtitle =>
-      'Off - notification shows chapter skip; speed & bookmark stay in Android Auto';
+      'オフ - 通知にチャプタースキップを表示。速度とブックマークはAndroid Autoに残ります';
 
   @override
-  String get lockSeekBar => 'Lock the seek bar';
+  String get lockSeekBar => 'シークバーをロック';
 
   @override
   String get lockSeekBarOnSubtitle =>
-      'On - the scrubber in the notification, lockscreen and car shows progress but can\'t be dragged';
+      'オン - 通知、ロック画面、車載画面のスライダーは進捗を表示するだけで、ドラッグできません';
 
   @override
-  String get lockSeekBarOffSubtitle =>
-      'Off - drag the scrubber in the notification, lockscreen and car to jump around';
+  String get lockSeekBarOffSubtitle => 'オフ - 通知、ロック画面、車載画面のスライダーをドラッグして移動できます';
 
   @override
-  String get autoRewindOnResume => 'Auto-rewind on resume';
+  String get autoRewindOnResume => '再開時に自動巻き戻し';
 
   @override
   String autoRewindOnSubtitle(String min, String max) {
-    return 'On - ${min}s to ${max}s based on pause length';
+    return 'オン - 一時停止の長さに応じて$min秒～$max秒';
   }
 
   @override
-  String get autoRewindOffSubtitle => 'Off';
+  String get autoRewindOffSubtitle => 'オフ';
 
   @override
-  String get rewindRange => 'Rewind range';
+  String get rewindRange => '巻き戻しの範囲';
 
   @override
-  String get rewindAfterPausedFor => 'Rewind after paused for';
+  String get rewindAfterPausedFor => '一時停止後の巻き戻し条件';
 
   @override
-  String get rewindAnyPause => 'Any pause';
+  String get rewindAnyPause => 'どの一時停止でも';
 
   @override
-  String get rewindAlwaysLabel => 'Always';
+  String get rewindAlwaysLabel => '常に';
 
   @override
-  String get rewindAlwaysDescription =>
-      'Rewinds every time you resume, even after quick interruptions';
+  String get rewindAlwaysDescription => 'ちょっとした中断の後でも、再開のたびに巻き戻します';
 
   @override
   String rewindAfterDescription(String seconds) {
-    return 'Only rewinds if paused for $seconds+ seconds';
+    return '$seconds秒以上一時停止した場合のみ巻き戻します';
   }
 
   @override
-  String get chapterBarrier => 'Chapter barrier';
+  String get chapterBarrier => 'チャプター境界';
 
   @override
-  String get chapterBarrierSubtitle =>
-      'Don\'t auto-rewind past the start of the current chapter';
+  String get chapterBarrierSubtitle => '現在のチャプターの先頭より前には自動で巻き戻さない';
 
   @override
-  String get rewindInstant => 'Instant';
+  String get rewindInstant => '即時';
 
   @override
   String rewindPause(String duration) {
-    return '$duration pause';
+    return '$durationの一時停止';
   }
 
   @override
-  String get rewindNoRewind => 'no rewind';
+  String get rewindNoRewind => '巻き戻しなし';
 
   @override
   String rewindSeconds(String seconds) {
-    return '${seconds}s rewind';
+    return '$seconds秒巻き戻し';
   }
 
   @override
-  String get sectionSleepTimer => 'Sleep Timer';
+  String get sectionSleepTimer => 'スリープタイマー';
 
   @override
-  String get sleep => 'Sleep';
+  String get sleep => 'スリープ';
 
   @override
-  String get sleepTimer => 'Sleep Timer';
+  String get sleepTimer => 'スリープタイマー';
 
   @override
-  String get shakeDuringSleepTimer => 'Shake during sleep timer';
+  String get shakeDuringSleepTimer => 'スリープタイマー中のシェイク';
 
   @override
-  String get shakeOff => 'Off';
+  String get shakeOff => 'オフ';
 
   @override
-  String get shakeAddTime => 'Add Time';
+  String get shakeAddTime => '時間を追加';
 
   @override
-  String get shakeReset => 'Reset';
+  String get shakeReset => 'リセット';
 
   @override
-  String get shakeAdds => 'Shake adds';
+  String get shakeAdds => 'シェイクで追加';
 
   @override
-  String get sleepAddAmount => 'Add time amount';
+  String get sleepAddAmount => '追加する時間';
 
   @override
   String shakeAddsValue(int minutes) {
-    return '$minutes min';
+    return '$minutes分';
   }
 
   @override
-  String get shakeSensitivity => 'Shake sensitivity';
+  String get shakeSensitivity => 'シェイクの感度';
 
   @override
-  String get shakeSensitivityVeryLow => 'Very low';
+  String get shakeSensitivityVeryLow => '非常に低い';
 
   @override
-  String get shakeSensitivityLow => 'Low';
+  String get shakeSensitivityLow => '低い';
 
   @override
-  String get shakeSensitivityMedium => 'Medium';
+  String get shakeSensitivityMedium => '普通';
 
   @override
-  String get shakeSensitivityHigh => 'High';
+  String get shakeSensitivityHigh => '高い';
 
   @override
-  String get shakeSensitivityVeryHigh => 'Very high';
+  String get shakeSensitivityVeryHigh => '非常に高い';
 
   @override
-  String get buttonDuringSleepTimer => 'Headphone button during wind-down';
+  String get buttonDuringSleepTimer => '終了直前のヘッドホンボタン';
 
   @override
   String get buttonDuringSleepTimerHint =>
-      'In the final wind-down moments, one press resets the timer instead of pausing. Double press still skips.';
+      '終了直前は、1回押すと一時停止ではなくタイマーをリセットします。2回押しは引き続きスキップです。';
 
   @override
-  String get resetTimerOnPause => 'Reset timer on pause';
+  String get resetTimerOnPause => '一時停止時にタイマーをリセット';
 
   @override
-  String get resetTimerOnPauseOnSubtitle =>
-      'Timer restarts from full duration when you resume';
+  String get resetTimerOnPauseOnSubtitle => '再開すると、タイマーが最初の長さから再スタートします';
 
   @override
-  String get resetTimerOnPauseOffSubtitle =>
-      'Timer continues from where it left off';
+  String get resetTimerOnPauseOffSubtitle => 'タイマーは中断した続きから進みます';
 
   @override
-  String get fadeVolumeBeforeSleep => 'Fade volume before sleep';
+  String get fadeVolumeBeforeSleep => 'スリープ前に音量をフェード';
 
   @override
-  String get fadeVolumeOnSubtitle =>
-      'Gradually lowers volume during the last 30 seconds';
+  String get fadeVolumeOnSubtitle => '最後の30秒間で徐々に音量を下げます';
 
   @override
-  String get fadeVolumeOffSubtitle =>
-      'Playback stops immediately when timer ends';
+  String get fadeVolumeOffSubtitle => 'タイマー終了と同時に再生を停止します';
 
   @override
-  String get autoSleepTimer => 'Auto sleep timer';
+  String get autoSleepTimer => '自動スリープタイマー';
 
   @override
   String autoSleepTimerOnSubtitle(String start, String end, int duration) {
-    return '$start - $end - $duration min';
+    return '$start - $end - $duration分';
   }
 
   @override
-  String get autoSleepTimerOffSubtitle =>
-      'Automatically start a sleep timer during a time window';
+  String get autoSleepTimerOffSubtitle => '指定した時間帯にスリープタイマーを自動で開始します';
 
   @override
-  String get windowStart => 'Window start';
+  String get windowStart => '開始時刻';
 
   @override
-  String get windowEnd => 'Window end';
+  String get windowEnd => '終了時刻';
 
   @override
-  String get timerDuration => 'Timer duration';
+  String get timerDuration => 'タイマーの長さ';
 
   @override
-  String get timer => 'Timer';
+  String get timer => 'タイマー';
 
   @override
-  String get endOfChapter => 'End of Chapter';
+  String get endOfChapter => 'チャプターの終わり';
 
   @override
   String startMinTimer(int minutes) {
-    return 'Start $minutes min timer';
+    return '$minutes分タイマーを開始';
   }
 
   @override
   String sleepAfterChapters(int count, String label) {
-    return 'Sleep after $count $label';
+    return '$count$label後にスリープ';
   }
 
   @override
-  String get addMoreTime => 'Add more time';
+  String get addMoreTime => '時間を追加';
 
   @override
-  String get cancelTimer => 'Cancel timer';
+  String get cancelTimer => 'タイマーをキャンセル';
 
   @override
   String chaptersLeftCount(int count) {
-    return '$count ch left';
+    return '残り$countチャプター';
   }
 
   @override
-  String get sectionDownloadsAndStorage => 'Downloads & Storage';
+  String get sectionDownloadsAndStorage => 'ダウンロードとストレージ';
 
   @override
-  String get downloadOverWifiOnly => 'Download network';
+  String get downloadOverWifiOnly => 'ダウンロード時のネットワーク';
 
   @override
-  String get downloadOverWifiOnSubtitle => 'Wi-Fi only';
+  String get downloadOverWifiOnSubtitle => 'Wi-Fiのみ';
 
   @override
-  String get downloadOverWifiOffSubtitle => 'Any connection';
+  String get downloadOverWifiOffSubtitle => 'すべての接続';
 
   @override
-  String get autoDownloadOnWifi => 'Auto-download books you start';
+  String get autoDownloadOnWifi => '再生を始めた本を自動ダウンロード';
 
   @override
-  String get autoDownloadOnWifiInfoTitle => 'Auto-Download Books You Start';
+  String get autoDownloadOnWifiInfoTitle => '再生を始めた本を自動ダウンロード';
 
   @override
   String get autoDownloadOnWifiInfoContent =>
-      'When you start streaming a book, the full book downloads in the background so you\'ll have it offline without starting the download yourself. These downloads follow your Download network setting above, so set it to Any connection if you want them to run on mobile data too.';
+      '本のストリーミング再生を始めると、本全体がバックグラウンドでダウンロードされ、自分でダウンロードしなくてもオフラインで聴けるようになります。このダウンロードは上の「ダウンロード時のネットワーク」設定に従うため、モバイルデータでも実行したい場合は「すべての接続」に設定してください。';
 
   @override
   String get autoDownloadOnWifiOnSubtitle =>
-      'Streamed books download in the background automatically';
+      'ストリーミング再生した本をバックグラウンドで自動ダウンロードします';
 
   @override
-  String get autoDownloadOnWifiOffSubtitle => 'Off';
+  String get autoDownloadOnWifiOffSubtitle => 'オフ';
 
   @override
-  String get concurrentDownloads => 'Concurrent downloads';
+  String get concurrentDownloads => '同時ダウンロード数';
 
   @override
-  String get autoDownload => 'Auto-download';
+  String get autoDownload => '自動ダウンロード';
 
   @override
   String get autoDownloadSubtitle =>
-      'Enable per series, podcast, playlist or collection from their detail pages';
+      'シリーズ、ポッドキャスト、プレイリスト、コレクションの詳細ページごとに有効にできます';
 
   @override
-  String get autoDownloadEnabledFor => 'Turned on for';
+  String get autoDownloadEnabledFor => 'オンにしている項目';
 
   @override
-  String get autoDownloadEnabledForNone => 'Nothing yet';
+  String get autoDownloadEnabledForNone => 'まだありません';
 
   @override
-  String get autoDownloadSourceUnnamed => 'Not loaded yet';
+  String get autoDownloadSourceUnnamed => 'まだ読み込まれていません';
 
   @override
-  String get keepNext => 'Keep next';
+  String get keepNext => '保持する件数';
 
   @override
-  String get keepNextInfoTitle => 'Keep Next';
+  String get keepNextInfoTitle => '保持する件数';
 
   @override
   String get keepNextInfoContent =>
-      'The number of items to keep downloaded, including the one you\'re currently listening to. For example, \"Keep next 3\" means the current book plus the next 2 in that series, podcast, playlist or collection will stay downloaded. This applies to every auto-download you turn on.';
+      '再生中のものを含めて、ダウンロードしたままにする項目の数です。たとえば「3件保持」の場合、現在の本と、そのシリーズ、ポッドキャスト、プレイリスト、コレクションの次の2件がダウンロードされたままになります。オンにしたすべての自動ダウンロードに適用されます。';
 
   @override
-  String get deleteAbsorbedDownloads => 'Delete absorbed downloads';
+  String get deleteAbsorbedDownloads => '聴き終えたダウンロードを削除';
 
   @override
-  String get deleteAbsorbedDownloadsInfoTitle => 'Delete Absorbed Downloads';
+  String get deleteAbsorbedDownloadsInfoTitle => '聴き終えたダウンロードを削除';
 
   @override
   String get deleteAbsorbedDownloadsInfoContent =>
-      'When enabled, downloaded books or episodes are automatically deleted from this device after you finish them in Absorb. Finishing an item on the web or another device won’t delete its download here.';
+      'オンにすると、Absorbで聴き終えた本やエピソードのダウンロードがこのデバイスから自動で削除されます。ウェブや他のデバイスで完了にした場合、ここのダウンロードは削除されません。';
 
   @override
-  String get deleteAbsorbedOnSubtitle =>
-      'Finished items are removed to save space';
+  String get deleteAbsorbedOnSubtitle => '容量節約のため、完了した項目は削除されます';
 
   @override
-  String get deleteAbsorbedOffSubtitle => 'Off - finished downloads kept';
+  String get deleteAbsorbedOffSubtitle => 'オフ - 完了したダウンロードを保持';
 
   @override
-  String get downloadLocation => 'Download location';
+  String get downloadLocation => 'ダウンロード先';
 
   @override
-  String get storageUsed => 'Storage used';
+  String get storageUsed => '使用中のストレージ';
 
   @override
   String storageUsedByDownloads(String size) {
-    return '$size used by downloads';
+    return 'ダウンロードで $size を使用中';
   }
 
   @override
   String storageFreeOfTotal(String free, String total) {
-    return '$free free of $total';
+    return '$total 中 $free が空き';
   }
 
   @override
-  String get manageDownloads => 'Manage downloads';
+  String get manageDownloads => 'ダウンロードを管理';
 
   @override
-  String get streamingCache => 'Streaming cache';
+  String get streamingCache => 'ストリーミングキャッシュ';
 
   @override
-  String get streamingCacheInfoTitle => 'Streaming Cache';
+  String get streamingCacheInfoTitle => 'ストリーミングキャッシュ';
 
   @override
   String get streamingCacheInfoContent =>
-      'Caches streamed audio to disk so it doesn\'t need to be re-downloaded if you seek back or re-listen to sections. The cache is automatically managed - oldest files are removed when the size limit is reached. This is separate from fully downloaded books.';
+      'ストリーミング再生した音声をディスクにキャッシュし、巻き戻したり同じ部分を聴き直したりするときに再ダウンロードしなくて済むようにします。キャッシュは自動で管理され、サイズ上限に達すると古いファイルから削除されます。完全にダウンロードした本とは別のものです。';
 
   @override
-  String get streamingCacheOff => 'Off';
+  String get streamingCacheOff => 'オフ';
 
   @override
-  String get streamingCacheOffSubtitle =>
-      'Off - audio is streamed without caching';
+  String get streamingCacheOffSubtitle => 'オフ - キャッシュせずにストリーミング再生';
 
   @override
   String streamingCacheOnSubtitle(int size) {
-    return '$size MB - recently streamed audio is cached to disk';
+    return '$size MB - 最近ストリーミング再生した音声をディスクにキャッシュ';
   }
 
   @override
-  String get clearCache => 'Clear cache';
+  String get clearCache => 'キャッシュを消去';
 
   @override
-  String get streamingCacheCleared => 'Streaming cache cleared';
+  String get streamingCacheCleared => 'ストリーミングキャッシュを消去しました';
 
   @override
-  String get sectionLibrary => 'Library';
+  String get sectionLibrary => 'ライブラリ';
 
   @override
-  String get hideEbookOnlyTitles => 'Hide eBook-only titles';
+  String get hideEbookOnlyTitles => '電子書籍のみの作品を非表示';
 
   @override
-  String get hideEbookOnlyOnSubtitle => 'Books with no audio files are hidden';
+  String get hideEbookOnlyOnSubtitle => '音声ファイルのない本は非表示になります';
 
   @override
-  String get hideEbookOnlyOffSubtitle => 'Off - all library items shown';
+  String get hideEbookOnlyOffSubtitle => 'オフ - すべてのライブラリ項目を表示';
 
   @override
-  String get homeCardsOpenDetails => 'Open details from Home';
+  String get audibleRatings => 'Audible ratings';
+
+  @override
+  String get audibleRatingsOnSubtitle =>
+      'On - book details show the Audible rating';
+
+  @override
+  String get audibleRatingsOffSubtitle => 'Off - no Audible lookup or stars';
+
+  @override
+  String get homeCardsOpenDetails => 'ホームから詳細を開く';
 
   @override
   String get homeCardsOpenDetailsOnSubtitle =>
-      'Tapping a Continue Listening or Continue Reading card opens its details';
+      '「続きを聴く」や「続きを読む」のカードをタップすると詳細が開きます';
 
   @override
   String get homeCardsOpenDetailsOffSubtitle =>
-      'Tapping a Continue Listening or Continue Reading card picks up where you left off';
+      '「続きを聴く」や「続きを読む」のカードをタップすると、前回の続きから再開します';
 
   @override
-  String get showGoodreadsButton => 'Show Goodreads button';
+  String get showGoodreadsButton => 'Goodreadsボタンを表示';
 
   @override
-  String get showGoodreadsOnSubtitle =>
-      'Book detail sheet shows a link to Goodreads';
+  String get showGoodreadsOnSubtitle => '本の詳細シートにGoodreadsへのリンクを表示します';
 
   @override
-  String get showGoodreadsOffSubtitle => 'Off - Goodreads button hidden';
+  String get showGoodreadsOffSubtitle => 'オフ - Goodreadsボタンを非表示';
 
   @override
-  String get sectionPermissions => 'Permissions';
+  String get sectionPermissions => '権限';
 
   @override
-  String get notifications => 'Notifications';
+  String get notifications => '通知';
 
   @override
-  String get notificationsSubtitle =>
-      'For download progress and playback controls';
+  String get notificationsSubtitle => 'ダウンロードの進捗と再生コントロール用';
 
   @override
-  String get notificationsAlreadyEnabled => 'Notifications already enabled';
+  String get notificationsAlreadyEnabled => '通知はすでに有効です';
 
   @override
-  String get unrestrictedBattery => 'Unrestricted battery';
+  String get unrestrictedBattery => 'バッテリーの制限なし';
 
   @override
-  String get unrestrictedBatterySubtitle =>
-      'Prevents Android from killing background playback';
+  String get unrestrictedBatterySubtitle => 'Androidによるバックグラウンド再生の強制終了を防ぎます';
 
   @override
-  String get batteryAlreadyUnrestricted => 'Battery already unrestricted';
+  String get batteryAlreadyUnrestricted => 'バッテリーはすでに制限なしです';
 
   @override
-  String get sectionIssuesAndSupport => 'Issues & Support';
+  String get sectionIssuesAndSupport => '問題とサポート';
 
   @override
-  String get bugsAndFeatureRequests => 'Bugs & Feature Requests';
+  String get bugsAndFeatureRequests => '不具合と機能のリクエスト';
 
   @override
-  String get bugsAndFeatureRequestsSubtitle => 'Open an issue on GitHub';
+  String get bugsAndFeatureRequestsSubtitle => 'GitHubでIssueを作成';
 
   @override
-  String get joinDiscord => 'Join Discord';
+  String get joinDiscord => 'Discordに参加';
 
   @override
-  String get joinDiscordSubtitle => 'Community, support, and updates';
+  String get joinDiscordSubtitle => 'コミュニティ、サポート、最新情報';
 
   @override
-  String get contact => 'Contact';
+  String get contact => 'お問い合わせ';
 
   @override
-  String get contactSubtitle => 'Send device info via email';
+  String get contactSubtitle => 'デバイス情報をメールで送信';
 
   @override
-  String get enableLogging => 'Enable logging';
+  String get enableLogging => 'ログを有効にする';
 
   @override
-  String get enableLoggingOnSubtitle =>
-      'On - logs saved to file (restart to apply)';
+  String get enableLoggingOnSubtitle => 'オン - ログをファイルに保存(再起動で反映)';
 
   @override
-  String get enableLoggingOffSubtitle => 'Off - no logs captured';
+  String get enableLoggingOffSubtitle => 'オフ - ログを記録しません';
 
   @override
-  String get loggingEnabledSnackbar =>
-      'Logging enabled - restart app to start capturing';
+  String get loggingEnabledSnackbar => 'ログを有効にしました - アプリを再起動すると記録を開始します';
 
   @override
-  String get loggingDisabledSnackbar =>
-      'Logging disabled - restart app to stop capturing';
+  String get loggingDisabledSnackbar => 'ログを無効にしました - アプリを再起動すると記録を停止します';
 
   @override
-  String get sendLogs => 'Send logs';
+  String get sendLogs => 'ログを送信';
 
   @override
-  String get sendLogsSubtitle => 'Share log file as attachment';
+  String get sendLogsSubtitle => 'ログファイルを添付ファイルとして共有';
 
   @override
   String failedToShare(String error) {
-    return 'Failed to share: $error';
+    return '共有に失敗しました: $error';
   }
 
   @override
-  String get clearLogs => 'Clear logs';
+  String get clearLogs => 'ログを消去';
 
   @override
-  String get logsCleared => 'Logs cleared';
+  String get logsCleared => 'ログを消去しました';
 
   @override
-  String get clearLogsQuestion => 'Clear logs?';
+  String get clearLogsQuestion => 'ログを消去しますか?';
 
   @override
-  String get clearLogsContent =>
-      'This can\'t be undone. Send them first if you might want them.';
+  String get clearLogsContent => 'この操作は元に戻せません。必要な場合は先に送信してください。';
 
   @override
-  String get sectionAdvanced => 'Advanced';
+  String get sectionAdvanced => '詳細設定';
 
   @override
-  String get localServer => 'Local server';
+  String get localServer => 'ローカルサーバー';
 
   @override
-  String get localServerInfoTitle => 'Local Server';
+  String get localServerInfoTitle => 'ローカルサーバー';
 
   @override
   String get localServerInfoContent =>
-      'If you run your Audiobookshelf server at home, you can set a local/LAN URL here. Absorb will automatically switch to the faster local connection when it detects you\'re on your home network, and fall back to your remote URL when you\'re away.';
+      'Audiobookshelfサーバーを自宅で運用している場合は、ここにローカル/LANのURLを設定できます。ホームネットワークにいることを検出すると、Absorbが自動的により高速なローカル接続に切り替え、外出中はリモートURLに戻します。';
 
   @override
-  String get localServerOnConnectedSubtitle => 'Connected via local server';
+  String get localServerOnConnectedSubtitle => 'ローカルサーバー経由で接続中';
 
   @override
-  String get localServerOnRemoteSubtitle => 'Enabled - using remote server';
+  String get localServerOnRemoteSubtitle => '有効 - リモートサーバーを使用中';
 
   @override
-  String get localServerOffSubtitle =>
-      'Auto-switch to a LAN server on your home WiFi';
+  String get localServerOffSubtitle => '自宅のWi-Fiにいるときに、LANサーバーへ自動で切り替えます';
 
   @override
-  String get localServerUrlLabel => 'Local server URL';
+  String get localServerUrlLabel => 'ローカルサーバーのURL';
 
   @override
   String get localServerUrlHint => 'http://192.168.1.100:13378';
 
   @override
   String get localServerUrlSetSnackbar =>
-      'Local server URL set - will connect automatically when on your home network';
+      'ローカルサーバーのURLを設定しました - ホームネットワークにいるときに自動で接続します';
 
   @override
-  String get disableAudioFocus => 'Disable audio focus';
+  String get disableAudioFocus => 'オーディオフォーカスを無効にする';
 
   @override
-  String get disableAudioFocusInfoTitle => 'Audio Focus';
+  String get disableAudioFocusInfoTitle => 'オーディオフォーカス';
 
   @override
   String get disableAudioFocusInfoContent =>
-      'By default, Android gives audio \"focus\" to one app at a time - when Absorb plays, other audio (music, videos) will pause. Disabling audio focus lets Absorb play alongside other apps. Phone calls will still pause playback regardless of this setting.';
+      '通常、Androidは一度に1つのアプリにだけ音声の「フォーカス」を与えるため、Absorbの再生中は他の音声(音楽や動画)が一時停止します。オーディオフォーカスを無効にすると、Absorbを他のアプリと同時に再生できます。通話中は、この設定に関係なく再生が一時停止されます。';
 
   @override
-  String get disableAudioFocusOnSubtitle =>
-      'On - plays alongside other audio (still pauses for calls)';
+  String get disableAudioFocusOnSubtitle => 'オン - 他の音声と同時に再生(通話中は一時停止)';
 
   @override
-  String get disableAudioFocusOffSubtitle =>
-      'Off - other audio pauses when Absorb plays';
+  String get disableAudioFocusOffSubtitle => 'オフ - Absorbの再生中は他の音声が一時停止';
 
   @override
-  String get restartRequired => 'Restart Required';
+  String get restartRequired => '再起動が必要です';
 
   @override
   String get restartRequiredContent =>
-      'Audio focus change requires a full restart to take effect. Close the app now?';
+      'オーディオフォーカスの変更を反映するには、完全に再起動する必要があります。今すぐアプリを閉じますか?';
 
   @override
-  String get closeApp => 'Close App';
+  String get closeApp => 'アプリを閉じる';
 
   @override
-  String get trustAllCertificates => 'Trust all certificates';
+  String get trustAllCertificates => 'すべての証明書を信頼';
 
   @override
-  String get trustAllCertificatesInfoTitle => 'Self-signed Certificates';
+  String get trustAllCertificatesInfoTitle => '自己署名証明書';
 
   @override
-  String get mp3IndexSeeking => 'MP3 index seeking';
+  String get mp3IndexSeeking => 'MP3インデックスシーク';
 
   @override
-  String get mp3IndexSeekingInfoTitle => 'MP3 Index Seeking';
+  String get mp3IndexSeekingInfoTitle => 'MP3インデックスシーク';
 
   @override
   String get mp3IndexSeekingInfoContent =>
-      'Only enable this if you have MP3 files that don\'t seek to the right position. Inaccurate seeking usually comes from variable bitrate (VBR) MP3s. Index seeking builds an exact time map as the file is read, so jumping near the end of a large MP3 can take a moment - especially when streaming, since the file has to be read up to that point. Takes effect the next time a book or podcast episode starts.';
+      '正しい位置にシークできないMP3ファイルがある場合のみ有効にしてください。シークのずれは、多くの場合、可変ビットレート(VBR)のMP3が原因です。インデックスシークはファイルの読み込み中に正確な時間マップを作成するため、大きなMP3の終盤へ移動するのに時間がかかることがあります。特にストリーミング再生では、その位置までファイルを読み込む必要があります。次に本またはポッドキャストのエピソードを開始したときから有効になります。';
 
   @override
-  String get mp3IndexSeekingOnSubtitle =>
-      'On - exact seeking for VBR MP3 files';
+  String get mp3IndexSeekingOnSubtitle => 'オン - VBRのMP3ファイルを正確にシーク';
 
   @override
-  String get mp3IndexSeekingOffSubtitle => 'Off - normal seeking';
+  String get mp3IndexSeekingOffSubtitle => 'オフ - 通常のシーク';
 
   @override
   String get trustAllCertificatesInfoContent =>
-      'Enable this if your Audiobookshelf server uses a self-signed certificate or a custom root CA. When enabled, Absorb will skip TLS certificate verification for all connections. Only enable this if you trust your network.';
+      'Audiobookshelfサーバーが自己署名証明書やカスタムルートCAを使用している場合に有効にしてください。有効にすると、Absorbはすべての接続でTLS証明書の検証をスキップします。ネットワークを信頼できる場合のみ有効にしてください。';
 
   @override
-  String get trustAllCertificatesOnSubtitle =>
-      'On - accepting all certificates';
+  String get trustAllCertificatesOnSubtitle => 'オン - すべての証明書を受け入れます';
 
   @override
-  String get trustAllCertificatesOffSubtitle =>
-      'Off - only trusted certificates accepted';
+  String get trustAllCertificatesOffSubtitle => 'オフ - 信頼できる証明書のみ受け入れます';
 
   @override
-  String get supportTheDev => 'Support the Dev';
+  String get supportTheDev => '開発者を応援';
 
   @override
-  String get buyMeACoffee => 'Buy me a coffee';
+  String get buyMeACoffee => 'コーヒーをおごる';
 
   @override
   String appVersionFormat(String version) {
@@ -3369,1220 +3340,1212 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String betaLabel(int number) {
-    return 'Beta $number';
+    return 'ベータ $number';
   }
 
   @override
   String appVersionWithServerFormat(String version, String serverVersion) {
-    return 'Absorb v$version  -  Server $serverVersion';
+    return 'Absorb v$version  -  サーバー $serverVersion';
   }
 
   @override
-  String get backupAndRestore => 'Backup & Restore';
+  String get backupAndRestore => 'バックアップと復元';
 
   @override
-  String get backupAndRestoreSubtitle =>
-      'Save or restore all your settings to a file';
+  String get backupAndRestoreSubtitle => 'すべての設定をファイルに保存、またはファイルから復元';
 
   @override
-  String get backUp => 'Back up';
+  String get backUp => 'バックアップ';
 
   @override
-  String get restore => 'Restore';
+  String get restore => '復元';
 
   @override
-  String get allBookmarks => 'All Bookmarks';
+  String get allBookmarks => 'すべてのブックマーク';
 
   @override
-  String get allBookmarksSubtitle => 'View bookmarks across all books';
+  String get allBookmarksSubtitle => 'すべての本のブックマークを表示';
 
   @override
-  String get switchAccount => 'Switch Account';
+  String get switchAccount => 'アカウントを切り替え';
 
   @override
-  String get addAccount => 'Add Account';
+  String get addAccount => 'アカウントを追加';
 
   @override
-  String get logOut => 'Log out';
+  String get logOut => 'ログアウト';
 
   @override
-  String get includeLoginInfoTitle => 'Include login info?';
+  String get includeLoginInfoTitle => 'ログイン情報を含めますか?';
 
   @override
   String get includeLoginInfoContent =>
-      'Would you like to include login credentials for all your saved accounts in the backup?\n\nThis makes it easy to restore on a new device, but the file will contain your auth tokens.';
+      '保存されているすべてのアカウントのログイン情報をバックアップに含めますか?\n\n新しいデバイスでの復元が簡単になりますが、ファイルに認証トークンが含まれます。';
 
   @override
-  String get noSettingsOnly => 'No, settings only';
+  String get noSettingsOnly => 'いいえ、設定のみ';
 
   @override
-  String get yesIncludeAccounts => 'Yes, include accounts';
+  String get yesIncludeAccounts => 'はい、アカウントも含める';
 
   @override
-  String get backupSavedWithAccounts => 'Backup saved (with accounts)';
+  String get backupSavedWithAccounts => 'バックアップを保存しました(アカウント込み)';
 
   @override
-  String get backupSavedSettingsOnly => 'Backup saved (settings only)';
+  String get backupSavedSettingsOnly => 'バックアップを保存しました(設定のみ)';
 
   @override
   String backupFailed(String error) {
-    return 'Backup failed: $error';
+    return 'バックアップに失敗しました: $error';
   }
 
   @override
-  String get restoreBackupTitle => 'Restore backup?';
+  String get restoreBackupTitle => 'バックアップを復元しますか?';
 
   @override
-  String get restoreBackupContent =>
-      'This will replace all your current settings with the backup values.';
+  String get restoreBackupContent => '現在の設定がすべてバックアップの値に置き換えられます。';
 
   @override
   String fromAbsorbVersion(String version) {
-    return 'From Absorb v$version';
+    return 'Absorb v$version から';
   }
 
   @override
   String restoreAccountsChip(int count) {
-    return '$count account(s)';
+    return 'アカウント $count 件';
   }
 
   @override
   String restoreBookmarksChip(int count) {
-    return 'Bookmarks for $count book(s)';
+    return '$count 冊分のブックマーク';
   }
 
   @override
-  String get restoreCustomHeadersChip => 'Custom headers';
+  String get restoreCustomHeadersChip => 'カスタムヘッダー';
 
   @override
-  String get invalidBackupFile => 'Invalid backup file';
+  String get invalidBackupFile => '無効なバックアップファイルです';
 
   @override
-  String get settingsRestoredSuccessfully => 'Settings restored successfully';
+  String get settingsRestoredSuccessfully => '設定を復元しました';
 
   @override
   String restoreFailed(String error) {
-    return 'Restore failed: $error';
+    return '復元に失敗しました: $error';
   }
 
   @override
-  String get logOutTitle => 'Log out?';
+  String get logOutTitle => 'ログアウトしますか?';
 
   @override
-  String get logOutContent =>
-      'This will sign you out. Your downloads will stay on this device.';
+  String get logOutContent => 'サインアウトします。ダウンロードはこのデバイスに残ります。';
 
   @override
-  String get signOut => 'Sign Out';
+  String get signOut => 'サインアウト';
 
   @override
-  String get changePasswordTitle => 'Change Password';
+  String get changePasswordTitle => 'パスワードを変更';
 
   @override
-  String get changePasswordSubtitle =>
-      'Update your Audiobookshelf password safely';
+  String get changePasswordSubtitle => 'Audiobookshelfのパスワードを安全に更新';
 
   @override
-  String get currentPassword => 'Current password';
+  String get currentPassword => '現在のパスワード';
 
   @override
-  String get newPassword => 'New password';
+  String get newPassword => '新しいパスワード';
 
   @override
-  String get confirmNewPassword => 'Confirm new password';
+  String get confirmNewPassword => '新しいパスワードを確認';
 
   @override
   String get passwordChangeEffect =>
-      'Changing your password signs out your other Audiobookshelf sessions. This device stays signed in.';
+      'パスワードを変更すると、他のAudiobookshelfセッションがサインアウトされます。このデバイスはサインインしたままです。';
 
   @override
-  String get passwordFieldsRequired => 'Fill in all password fields';
+  String get passwordFieldsRequired => 'すべてのパスワード欄を入力してください';
 
   @override
-  String get passwordsDoNotMatch => 'New passwords do not match';
+  String get passwordsDoNotMatch => '新しいパスワードが一致しません';
 
   @override
-  String get passwordChanged =>
-      'Password changed. Other signed-in devices were disconnected.';
+  String get passwordChanged => 'パスワードを変更しました。サインインしていた他のデバイスは切断されました。';
 
   @override
-  String get passwordInvalid => 'The current password is incorrect';
+  String get passwordInvalid => '現在のパスワードが正しくありません';
 
   @override
   String get passwordChangeUnsupported =>
-      'This server version does not support safe password changes in Absorb';
+      'このサーバーのバージョンは、Absorbからの安全なパスワード変更に対応していません';
 
   @override
-  String get passwordChangeFailed => 'Could not change your password';
+  String get passwordChangeFailed => 'パスワードを変更できませんでした';
 
   @override
   String get otherUserPasswordResetWarning =>
-      'Changing this password signs the user out on every device.';
+      'このパスワードを変更すると、そのユーザーはすべてのデバイスでサインアウトされます。';
 
   @override
-  String get manageSessionsTitle => 'Signed-in Devices';
+  String get manageSessionsTitle => 'サインイン中のデバイス';
 
   @override
-  String get manageSessionsSubtitle =>
-      'Review and remove Audiobookshelf sessions';
+  String get manageSessionsSubtitle => 'Audiobookshelfのセッションを確認・削除';
 
   @override
-  String get sessionsCurrent => 'Current device';
+  String get sessionsCurrent => 'このデバイス';
 
   @override
-  String get sessionsUnknownDevice => 'Unknown device';
+  String get sessionsUnknownDevice => '不明なデバイス';
 
   @override
   String sessionsLastActive(String date) {
-    return 'Last active $date';
+    return '最終アクティブ: $date';
   }
 
   @override
-  String get sessionsNone => 'No active sessions';
+  String get sessionsNone => '有効なセッションはありません';
 
   @override
-  String get sessionsLoadMore => 'Load more';
+  String get sessionsLoadMore => 'さらに読み込む';
 
   @override
-  String get sessionsUnsupported =>
-      'Session management requires Audiobookshelf 2.36 or newer.';
+  String get sessionsUnsupported => 'セッション管理にはAudiobookshelf 2.36以降が必要です。';
 
   @override
-  String get sessionsLoadFailed => 'Could not load signed-in devices';
+  String get sessionsLoadFailed => 'サインイン中のデバイスを読み込めませんでした';
 
   @override
   String get sessionsLegacyNotice =>
-      'This login does not have a refresh session, so Absorb cannot identify this device in the list.';
+      'このログインにはリフレッシュセッションがないため、Absorbは一覧でこのデバイスを特定できません。';
 
   @override
-  String get sessionsRemove => 'Sign out device';
+  String get sessionsRemove => 'デバイスをサインアウト';
 
   @override
-  String get sessionsRemoveTitle => 'Sign out this device?';
+  String get sessionsRemoveTitle => 'このデバイスをサインアウトしますか?';
 
   @override
   String get sessionsRemoveContent =>
-      'This removes its refresh session. Its current access may keep working until that short-lived token expires.';
+      'このデバイスのリフレッシュセッションを削除します。有効期限の短いトークンが切れるまで、現在のアクセスは使える場合があります。';
 
   @override
-  String get sessionsRemoved => 'Device signed out';
+  String get sessionsRemoved => 'デバイスをサインアウトしました';
 
   @override
-  String get sessionsRemoveFailed => 'Could not sign out that device';
+  String get sessionsRemoveFailed => 'そのデバイスをサインアウトできませんでした';
 
   @override
-  String get sessionsSignOutAll => 'Sign out all devices';
+  String get sessionsSignOutAll => 'すべてのデバイスをサインアウト';
 
   @override
-  String get sessionsSignOutAllTitle => 'Sign out everywhere?';
+  String get sessionsSignOutAllTitle => 'すべての場所でサインアウトしますか?';
 
   @override
   String get sessionsSignOutAllContent =>
-      'This removes every refresh session, including this device. Existing access tokens may work until they expire.';
+      'このデバイスを含め、すべてのリフレッシュセッションを削除します。既存のアクセストークンは、期限が切れるまで使える場合があります。';
 
   @override
   String podcastScheduleServerTime(String timeZone) {
-    return 'Schedule uses server time ($timeZone)';
+    return 'スケジュールはサーバー時刻($timeZone)を使用します';
   }
 
   @override
-  String get podcastScheduleServerTimeUnknown => 'Schedule uses server time';
+  String get podcastScheduleServerTimeUnknown => 'スケジュールはサーバー時刻を使用します';
 
   @override
-  String get editServerAddressTitle => 'Edit Server Address';
+  String get editServerAddressTitle => 'サーバーアドレスを編集';
 
   @override
   String editServerAddressSubtitle(String username) {
-    return 'Update the address for $username. Use this if your server\'s address changed - it\'s still the same server, just a new URL. Your stats and downloads are kept.';
+    return '$usernameのアドレスを更新します。サーバーのアドレスが変わった場合にお使いください。同じサーバーで、URLが新しくなるだけです。統計とダウンロードは保持されます。';
   }
 
   @override
-  String get editServerAddressField => 'Server Address';
+  String get editServerAddressField => 'サーバーアドレス';
 
   @override
-  String get editServerAddressUpdated => 'Server address updated';
+  String get editServerAddressUpdated => 'サーバーアドレスを更新しました';
 
   @override
-  String get editServerAddressFailed => 'Couldn\'t update server address';
+  String get editServerAddressFailed => 'サーバーアドレスを更新できませんでした';
 
   @override
-  String get editServerAddressAction => 'Edit server address';
+  String get editServerAddressAction => 'サーバーアドレスを編集';
 
   @override
-  String get editServerConnectionTitle => 'Edit Server Connection';
+  String get editServerConnectionTitle => 'サーバー接続を編集';
 
   @override
   String editServerConnectionSubtitle(String username) {
-    return 'Update the server address and custom headers for $username. Your stats and downloads are kept.';
+    return '$usernameのサーバーアドレスとカスタムヘッダーを更新します。統計とダウンロードは保持されます。';
   }
 
   @override
-  String get editServerConnectionAction => 'Edit server connection';
+  String get editServerConnectionAction => 'サーバー接続を編集';
 
   @override
-  String get editServerConnectionUpdated => 'Server connection updated';
+  String get editServerConnectionUpdated => 'サーバー接続を更新しました';
 
   @override
-  String get editServerConnectionFailed => 'Couldn\'t update server connection';
+  String get editServerConnectionFailed => 'サーバー接続を更新できませんでした';
 
   @override
   String get editCustomHeadersDescription =>
-      'Used for Cloudflare tunnels or reverse proxies. These headers apply only to this saved account.';
+      'Cloudflareトンネルやリバースプロキシで使用します。このヘッダーは、この保存済みアカウントにのみ適用されます。';
 
   @override
-  String get removeAccountAction => 'Remove account';
+  String get removeAccountAction => 'アカウントを削除';
 
   @override
-  String get removeAccountTitle => 'Remove Account?';
+  String get removeAccountTitle => 'アカウントを削除しますか?';
 
   @override
   String removeAccountContent(String username, String server) {
-    return 'Remove $username on $server from saved accounts?\n\nYou can always add it back later by signing in again.';
+    return '$serverの$usernameを保存済みアカウントから削除しますか?\n\n後でもう一度サインインすれば、いつでも追加し直せます。';
   }
 
   @override
-  String get switchAccountTitle => 'Switch Account?';
+  String get switchAccountTitle => 'アカウントを切り替えますか?';
 
   @override
   String switchAccountContent(String username, String server) {
-    return 'Switch to $username on $server?\n\nYour current playback will be stopped and the app will reload with the other account\'s data.';
+    return '$serverの$usernameに切り替えますか?\n\n現在の再生は停止され、アプリは別のアカウントのデータで再読み込みされます。';
   }
 
   @override
-  String get switchButton => 'Switch';
+  String get switchButton => '切り替え';
 
   @override
-  String get downloadLocationSheetTitle => 'Download Location';
+  String get downloadLocationSheetTitle => 'ダウンロード先';
 
   @override
-  String get downloadLocationSheetSubtitle =>
-      'Choose where audiobooks are saved';
+  String get downloadLocationSheetSubtitle => 'オーディオブックの保存先を選択';
 
   @override
-  String get currentLocation => 'Current location';
+  String get currentLocation => '現在の保存先';
 
   @override
   String get existingDownloadsWarning =>
-      'Existing downloads stay in their current location. Only new downloads use the new path.';
+      '既存のダウンロードは現在の場所に残ります。新しいパスが使われるのは新規のダウンロードのみです。';
 
   @override
-  String get chooseFolder => 'Choose folder';
+  String get chooseFolder => 'フォルダーを選択';
 
   @override
-  String get chooseDownloadFolder => 'Choose download folder';
+  String get chooseDownloadFolder => 'ダウンロードフォルダーを選択';
 
   @override
   String get storagePermissionDenied =>
-      'Storage permission permanently denied - enable it in app settings';
+      'ストレージの権限が完全に拒否されています - アプリの設定で有効にしてください';
 
   @override
-  String get openSettings => 'Open Settings';
+  String get openSettings => '設定を開く';
 
   @override
-  String get storagePermissionRequired =>
-      'Storage permission is required for custom download locations';
+  String get storagePermissionRequired => 'カスタムのダウンロード先を使うにはストレージの権限が必要です';
 
   @override
   String get cannotWriteToFolder =>
-      'Cannot write to that folder - choose another location or grant file access in system settings';
+      'そのフォルダーには書き込めません - 別の場所を選ぶか、システム設定でファイルへのアクセスを許可してください';
 
   @override
   String downloadLocationSetTo(String label) {
-    return 'Download location set to $label';
+    return 'ダウンロード先を$labelに設定しました';
   }
 
   @override
-  String get resetToDefault => 'Reset to default';
+  String get resetToDefault => 'デフォルトに戻す';
 
   @override
-  String get resetToDefaultStorage => 'Reset to default storage';
+  String get resetToDefaultStorage => 'デフォルトのストレージに戻す';
 
   @override
   String legacyDownloadsNotice(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other:
-          '$count downloads are in an old custom folder that can no longer be opened. Re-download them or dismiss this notice.',
-      one:
-          '1 download is in an old custom folder that can no longer be opened. Re-download it or dismiss this notice.',
+      other: '$count件のダウンロードが、開けなくなった古いカスタムフォルダーにあります。再ダウンロードするか、この通知を閉じてください。',
+      one: '1件のダウンロードが、開けなくなった古いカスタムフォルダーにあります。再ダウンロードするか、この通知を閉じてください。',
     );
     return '$_temp0';
   }
 
   @override
-  String get redownload => 'Re-download';
+  String get redownload => '再ダウンロード';
 
   @override
-  String get redownloadStarted => 'Re-downloading';
+  String get redownloadStarted => '再ダウンロード中';
 
   @override
-  String get dismiss => 'Dismiss';
+  String get dismiss => '閉じる';
 
   @override
-  String get tipsAndHiddenFeatures => 'Tips & Hidden Features';
+  String get tipsAndHiddenFeatures => 'ヒントと隠れた機能';
 
   @override
-  String get tipsSubtitle => 'Get the most out of Absorb';
+  String get tipsSubtitle => 'Absorbを使いこなそう';
 
   @override
-  String get adminTitle => 'Server Admin';
+  String get adminTitle => 'サーバー管理';
 
   @override
-  String get adminTasksTitle => 'Server activity';
+  String get adminTasksTitle => 'サーバーのアクティビティ';
 
   @override
   String adminTasksRunning(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count tasks running',
-      one: '1 task running',
+      other: '$count件のタスクを実行中',
+      one: '1件のタスクを実行中',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminTasksRecent => 'Recent server activity';
+  String get adminTasksRecent => '最近のサーバーアクティビティ';
 
   @override
-  String get adminTasksEmpty => 'No server tasks are running';
+  String get adminTasksEmpty => '実行中のサーバータスクはありません';
 
   @override
   String adminTaskScanSummary(int added, int updated, int missing) {
-    return '$added added - $updated updated - $missing missing';
+    return '追加 $added - 更新 $updated - 欠落 $missing';
   }
 
   @override
-  String get adminServer => 'Server';
+  String get adminServer => 'サーバー';
 
   @override
-  String get adminVersion => 'Version';
+  String get adminVersion => 'バージョン';
 
   @override
-  String get adminUsers => 'Users';
+  String get adminUsers => 'ユーザー';
 
   @override
-  String get adminOnline => 'Online';
+  String get adminOnline => 'オンライン';
 
   @override
-  String get adminBackup => 'Backup';
+  String get adminBackup => 'バックアップ';
 
   @override
-  String get adminPurgeCache => 'Purge Cache';
+  String get adminPurgeCache => 'キャッシュを消去';
 
   @override
-  String get adminManage => 'Manage';
+  String get adminManage => '管理';
 
   @override
   String adminUsersSubtitle(int userCount, int onlineCount) {
-    return '$userCount accounts - $onlineCount online';
+    return '$userCount アカウント - $onlineCount オンライン';
   }
 
   @override
-  String get adminPodcasts => 'Podcasts';
+  String get adminPodcasts => 'ポッドキャスト';
 
   @override
-  String get adminPodcastsSubtitle => 'Search, add & manage shows';
+  String get adminPodcastsSubtitle => '番組の検索・追加・管理';
 
   @override
-  String get adminScan => 'Scan';
+  String get adminScan => 'スキャン';
 
   @override
-  String get adminScanning => 'Scanning...';
+  String get adminScanning => 'スキャン中...';
 
   @override
-  String get adminMatchAll => 'Match All';
+  String get adminMatchAll => 'すべてマッチ';
 
   @override
-  String get adminMatching => 'Matching...';
+  String get adminMatching => 'マッチ中...';
 
   @override
-  String get adminMatchAllTitle => 'Match All Items?';
+  String get adminMatchAllTitle => 'すべての項目をマッチしますか?';
 
   @override
   String adminMatchAllContent(String name) {
-    return 'Match metadata for all items in $name? This can take a while.';
+    return '$name内のすべての項目のメタデータをマッチしますか? 時間がかかることがあります。';
   }
 
   @override
   String adminScanStarted(String name) {
-    return 'Scan started for $name';
+    return '$nameのスキャンを開始しました';
   }
 
   @override
-  String get adminBackupCreated => 'Backup created';
+  String get adminBackupCreated => 'バックアップを作成しました';
 
   @override
-  String get adminBackupFailed => 'Backup failed';
+  String get adminBackupFailed => 'バックアップに失敗しました';
 
   @override
-  String get adminCachePurged => 'Cache purged';
+  String get adminCachePurged => 'キャッシュを消去しました';
 
   @override
   String get adminRmab => 'ReadMeABook';
 
   @override
-  String get adminRmabSubtitle => 'Open in app';
+  String get adminRmabSubtitle => 'アプリ内で開く';
 
   @override
-  String get adminRmabAdd => 'Add ReadMeABook integration';
+  String get adminRmabAdd => 'ReadMeABook連携を追加';
 
   @override
-  String get adminRmabUrlTitle => 'ReadMeABook URL';
+  String get adminRmabUrlTitle => 'ReadMeABookのURL';
 
   @override
   String get adminRmabUrlHelp =>
-      'Paste your URL with login token. Generate one in RMAB, Admin, Users.';
+      'ログイントークン付きのURLを貼り付けてください。RMABの管理、ユーザーで生成できます。';
 
   @override
   String get adminRmabUrlHint => 'https://rmab.example.com/?token=...';
 
   @override
-  String get adminRmabInvalidUrl => 'Enter a valid http(s) URL';
+  String get adminRmabInvalidUrl => '有効なhttp(s)のURLを入力してください';
 
   @override
-  String get adminRmabSaved => 'ReadMeABook saved';
+  String get adminRmabSaved => 'ReadMeABookを保存しました';
 
   @override
-  String get adminRmabRemoved => 'ReadMeABook removed';
+  String get adminRmabRemoved => 'ReadMeABookを削除しました';
 
   @override
-  String get adminRmabReload => 'Reload';
+  String get adminRmabReload => '再読み込み';
 
   @override
-  String get adminRmabLoadFailed =>
-      'Couldn\'t load ReadMeABook. Check your URL.';
+  String get adminRmabLoadFailed => 'ReadMeABookを読み込めませんでした。URLを確認してください。';
 
   @override
-  String get adminRmabConnected => 'Connected';
+  String get adminRmabConnected => '接続済み';
 
   @override
-  String get adminRmabAskAdmin => 'Get a login URL from your server admin';
+  String get adminRmabAskAdmin => 'ログインURLはサーバー管理者から入手してください';
 
   @override
   String get adminRmabUrlHelpUser =>
-      'Get a login URL from your server admin. They generate one in RMAB > Admin > Users.';
+      'ログインURLはサーバー管理者から入手してください。管理者はRMABの管理 > ユーザーで生成できます。';
 
   @override
   String get adminRmabSettingsInfo =>
-      'ReadMeABook is a self-hosted service for requesting and downloading audiobooks. It must be installed and set up by your server admin.';
+      'ReadMeABookは、オーディオブックのリクエストとダウンロードを行うセルフホスト型のサービスです。サーバー管理者がインストールして設定する必要があります。';
 
   @override
-  String get rmabConfigTitle => 'Connect ReadMeABook';
+  String get rmabConfigTitle => 'ReadMeABookに接続';
 
   @override
   String get rmabConfigExplainerAdmin =>
-      'ReadMeABook is a self-hosted service for requesting audiobooks. Generate an API token in RMAB under Admin Dashboard > Settings > API, then paste the server URL and token below. Absorb doesn\'t host or download any content, it just sends requests to your server.';
+      'ReadMeABookは、オーディオブックをリクエストするためのセルフホスト型のサービスです。RMABの管理ダッシュボード > 設定 > APIでAPIトークンを生成し、サーバーのURLとトークンを下に貼り付けてください。Absorbはコンテンツのホスティングやダウンロードを行わず、お使いのサーバーにリクエストを送るだけです。';
 
   @override
   String get rmabConfigExplainerUser =>
-      'ReadMeABook is a self-hosted service for requesting audiobooks. Ask your server admin for the RMAB URL and an API token. Absorb doesn\'t host or download any content, it just sends requests to your server.';
+      'ReadMeABookは、オーディオブックをリクエストするためのセルフホスト型のサービスです。RMABのURLとAPIトークンをサーバー管理者に尋ねてください。Absorbはコンテンツのホスティングやダウンロードを行わず、お使いのサーバーにリクエストを送るだけです。';
 
   @override
-  String get rmabConfigLearnMore => 'Learn more about ReadMeABook';
+  String get rmabConfigLearnMore => 'ReadMeABookについて詳しく見る';
 
   @override
-  String get rmabConfigBaseUrlLabel => 'RMAB server URL';
+  String get rmabConfigBaseUrlLabel => 'RMABサーバーのURL';
 
   @override
   String get rmabConfigBaseUrlHint => 'https://rmab.example.com';
 
   @override
-  String get rmabConfigTokenLabel => 'API token';
+  String get rmabConfigTokenLabel => 'APIトークン';
 
   @override
   String get rmabConfigTokenHint => 'rmab_...';
 
   @override
-  String get rmabConfigLegacyUrlLabel => 'Web UI login URL (optional)';
+  String get rmabConfigLegacyUrlLabel => 'Web UIのログインURL(任意)';
 
   @override
   String get rmabConfigLegacyUrlHint => 'https://rmab.example.com/?token=...';
 
   @override
   String get rmabConfigLegacyUrlHelp =>
-      'Paste your auto-login URL so \'Open in browser view\' lands you signed in. Leave blank to use a regular login.';
+      '自動ログインURLを貼り付けると、「ブラウザビューで開く」でサインイン済みの状態で開けます。空欄の場合は通常のログインになります。';
 
   @override
   String get rmabConfigHeadersHelp =>
-      'Extra headers sent with every ReadMeABook request, for reverse proxies like Cloudflare Access.';
+      'Cloudflare Accessなどのリバースプロキシ向けに、すべてのReadMeABookリクエストに付加する追加ヘッダーです。';
 
   @override
-  String get rmabConfigConnect => 'Connect';
+  String get rmabConfigConnect => '接続';
 
   @override
-  String get rmabConfigDisconnect => 'Disconnect';
+  String get rmabConfigDisconnect => '切断';
 
   @override
-  String get rmabConfigOpenWebView => 'Open in browser view';
+  String get rmabConfigOpenWebView => 'ブラウザビューで開く';
 
   @override
   String rmabConfigConnectedAs(String name) {
-    return 'Connected as $name';
+    return '$nameとして接続中';
   }
 
   @override
-  String get rmabConfigErrorInvalidUrl => 'Enter a valid http(s) URL';
+  String get rmabConfigErrorInvalidUrl => '有効なhttp(s)のURLを入力してください';
 
   @override
-  String get rmabConfigErrorMissingToken => 'Enter your API token';
+  String get rmabConfigErrorMissingToken => 'APIトークンを入力してください';
 
   @override
-  String get rmabConfigErrorUnauthorized => 'Token rejected by server';
+  String get rmabConfigErrorUnauthorized => 'サーバーがトークンを拒否しました';
 
   @override
-  String get rmabConfigErrorForbidden =>
-      'This token isn\'t allowed for that action';
+  String get rmabConfigErrorForbidden => 'このトークンではその操作は許可されていません';
 
   @override
-  String get rmabConfigErrorNetwork => 'Couldn\'t reach RMAB. Check the URL.';
+  String get rmabConfigErrorNetwork => 'RMABに接続できませんでした。URLを確認してください。';
 
   @override
-  String get rmabConfigErrorGeneric => 'Couldn\'t connect';
+  String get rmabConfigErrorGeneric => '接続できませんでした';
 
   @override
-  String get rmabConfigSavedSnackbar => 'ReadMeABook connected';
+  String get rmabConfigSavedSnackbar => 'ReadMeABookに接続しました';
 
   @override
-  String get rmabConfigDisconnectedSnackbar => 'ReadMeABook disconnected';
+  String get rmabConfigDisconnectedSnackbar => 'ReadMeABookを切断しました';
 
   @override
-  String get rmabRequestCta => 'Request via ReadMeABook';
+  String get rmabRequestCta => 'ReadMeABookでリクエスト';
 
   @override
-  String get rmabSearchHeader => 'Request via ReadMeABook';
+  String get rmabSearchHeader => 'ReadMeABookでリクエスト';
 
   @override
-  String get rmabSearchHint => 'Search by title or author';
+  String get rmabSearchHint => 'タイトルまたは著者で検索';
 
   @override
-  String get rmabSearchEmpty => 'No matches on your ReadMeABook server';
+  String get rmabSearchEmpty => 'ReadMeABookサーバーに一致するものはありません';
 
   @override
-  String get rmabSearchError => 'Couldn\'t search ReadMeABook';
+  String get rmabSearchError => 'ReadMeABookを検索できませんでした';
 
   @override
-  String get rmabSearchPrompt => 'Type a title or author to search';
+  String get rmabSearchPrompt => 'タイトルまたは著者を入力して検索';
 
   @override
-  String get rmabSearchFooterPrompt => 'Looking for something else?';
+  String get rmabSearchFooterPrompt => '他のものをお探しですか?';
 
   @override
   String rmabSearchFooterCta(String query) {
-    return 'Search ReadMeABook for \"$query\"';
+    return 'ReadMeABookで「$query」を検索';
   }
 
   @override
   String get rmabBookDetailExplainer =>
-      'This request will be sent through your ReadMeABook server. The admin will review and process it. You can track it under My Requests on the ReadMeABook tile.';
+      'このリクエストはReadMeABookサーバー経由で送信されます。管理者が確認して処理します。ReadMeABookタイルの「マイリクエスト」で状況を確認できます。';
 
   @override
-  String get rmabBookAlreadyAvailable => 'Already in your library';
+  String get rmabBookAlreadyAvailable => 'すでにライブラリにあります';
 
   @override
-  String get rmabBookAlreadyRequested => 'Already requested';
+  String get rmabBookAlreadyRequested => 'リクエスト済み';
 
   @override
-  String get rmabRequestSubmitting => 'Submitting…';
+  String get rmabRequestSubmitting => '送信中…';
 
   @override
-  String get rmabRequestSent => 'Request sent';
+  String get rmabRequestSent => 'リクエストを送信しました';
 
   @override
-  String get rmabRequestErrorAlreadyAvailable => 'Already in your library';
+  String get rmabRequestErrorAlreadyAvailable => 'すでにライブラリにあります';
 
   @override
-  String get rmabRequestErrorBeingProcessed => 'Already being processed';
+  String get rmabRequestErrorBeingProcessed => 'すでに処理中です';
 
   @override
-  String get rmabRequestErrorDuplicate => 'You\'ve already requested this';
+  String get rmabRequestErrorDuplicate => 'すでにリクエスト済みです';
 
   @override
-  String get rmabRequestErrorValidation => 'Couldn\'t send the request';
+  String get rmabRequestErrorValidation => 'リクエストを送信できませんでした';
 
   @override
   String get rmabRequestErrorUserNotFound =>
-      'Token user no longer exists. Reconnect ReadMeABook.';
+      'トークンのユーザーが存在しません。ReadMeABookに再接続してください。';
 
   @override
-  String get rmabRequestErrorIgnored => 'This book is on your ignore list';
+  String get rmabRequestErrorIgnored => 'この本は無視リストに入っています';
 
   @override
-  String get rmabRequestErrorGeneric => 'Couldn\'t send the request';
+  String get rmabRequestErrorGeneric => 'リクエストを送信できませんでした';
 
   @override
   String get rmabRequestErrorTokenRejected =>
-      'Token rejected by server. Reconnect ReadMeABook.';
+      'サーバーがトークンを拒否しました。ReadMeABookに再接続してください。';
 
   @override
-  String get rmabMyRequestsTab => 'My Requests';
+  String get rmabMyRequestsTab => 'マイリクエスト';
 
   @override
-  String get rmabSetupTab => 'Setup';
+  String get rmabSetupTab => 'セットアップ';
 
   @override
-  String get rmabMyRequestsEmpty => 'You haven\'t requested any books yet';
+  String get rmabMyRequestsEmpty => 'まだ本をリクエストしていません';
 
   @override
-  String get rmabMyRequestsError => 'Couldn\'t load requests';
+  String get rmabMyRequestsError => 'リクエストを読み込めませんでした';
 
   @override
-  String get rmabMyRequestsRefresh => 'Refresh';
+  String get rmabMyRequestsRefresh => '更新';
 
   @override
-  String get rmabRequestDetailTitle => 'Request details';
+  String get rmabRequestDetailTitle => 'リクエストの詳細';
 
   @override
-  String get rmabRequestDetailStatus => 'Status';
+  String get rmabRequestDetailStatus => 'ステータス';
 
   @override
-  String get rmabRequestDetailRequestedOn => 'Requested on';
+  String get rmabRequestDetailRequestedOn => 'リクエスト日';
 
   @override
-  String get rmabRequestDetailCompletedOn => 'Completed on';
+  String get rmabRequestDetailCompletedOn => '完了日';
 
   @override
-  String get rmabRequestDetailProgress => 'Progress';
+  String get rmabRequestDetailProgress => '進捗';
 
   @override
-  String get rmabStatusActive => 'In progress';
+  String get rmabStatusActive => '進行中';
 
   @override
-  String get rmabStatusWaiting => 'Waiting';
+  String get rmabStatusWaiting => '待機中';
 
   @override
-  String get rmabStatusAvailable => 'Available';
+  String get rmabStatusAvailable => '利用可能';
 
   @override
-  String get rmabStatusDownloaded => 'Downloaded';
+  String get rmabStatusDownloaded => 'ダウンロード済み';
 
   @override
-  String get rmabStatusFailed => 'Failed';
+  String get rmabStatusFailed => '失敗';
 
   @override
-  String get rmabStatusCancelled => 'Cancelled';
+  String get rmabStatusCancelled => 'キャンセル済み';
 
   @override
-  String get rmabStatusDenied => 'Denied';
+  String get rmabStatusDenied => '却下';
 
   @override
-  String get rmabStatusUnknown => 'Unknown';
+  String get rmabStatusUnknown => '不明';
 
   @override
   String narratedBy(String narrator) {
-    return 'Narrated by $narrator';
+    return 'ナレーター: $narrator';
   }
 
   @override
-  String get onAudible => 'on Audible';
+  String get onAudible => 'Audibleで';
 
   @override
   String percentComplete(String percent) {
-    return '$percent% complete';
+    return '$percent% 完了';
   }
 
   @override
-  String get absorbing => 'Absorbing...';
+  String get absorbing => 'Absorb 中...';
 
   @override
-  String get absorbAgain => 'Absorb Again';
+  String get absorbAgain => 'もう一度 Absorb';
 
   @override
   String get absorb => 'Absorb';
 
   @override
-  String get ebookOnlyNoAudio => 'eBook Only - No Audio';
+  String get ebookOnlyNoAudio => '電子書籍のみ - 音声なし';
 
   @override
-  String get absorbAudioNotDownloaded => 'Audio not downloaded';
+  String get absorbAudioNotDownloaded => '音声は未ダウンロードです';
 
   @override
-  String get absorbAudioNotDownloadedEbookOnly =>
-      'Audio not downloaded, ebook only';
+  String get absorbAudioNotDownloadedEbookOnly => '音声は未ダウンロードです(電子書籍のみ)';
 
   @override
-  String get fullyAbsorbed => 'Fully Absorbed';
+  String get fullyAbsorbed => 'Absorb 完了';
 
   @override
-  String get fullyAbsorbAction => 'Fully Absorb';
+  String get fullyAbsorbAction => '完全に Absorb';
 
   @override
-  String get removeFromAbsorbing => 'Remove from Absorbing';
+  String get removeFromAbsorbing => 'Absorbing から削除';
 
   @override
-  String get addToAbsorbing => 'Add to Absorbing';
+  String get addToAbsorbing => 'Absorbing に追加';
 
   @override
-  String get absorbNext => 'Absorb Next';
+  String get absorbNext => '次に Absorb';
 
   @override
-  String get absorbNextAdded => 'Up next in Absorbing';
+  String get absorbNextAdded => 'Absorbing の次に再生';
 
   @override
-  String get absorbLast => 'Absorb Last';
+  String get absorbLast => '最後に Absorb';
 
   @override
-  String get absorbNextHint => 'Right after what\'s playing now';
+  String get absorbNextHint => '再生中のものの直後';
 
   @override
-  String get absorbLastHint => 'At the end of the list';
+  String get absorbLastHint => 'リストの末尾';
 
   @override
-  String get removedFromAbsorbing => 'Removed from Absorbing';
+  String get removedFromAbsorbing => 'Absorbing から削除しました';
 
   @override
-  String get addedToAbsorbing => 'Added to Absorbing';
+  String get addedToAbsorbing => 'Absorbing に追加しました';
 
   @override
-  String get removeFromContinueListening => 'Remove from Continue Listening';
+  String get removeFromContinueListening => '「続きを聴く」から削除';
 
   @override
-  String get removedFromContinueListening => 'Removed from Continue Listening';
+  String get removedFromContinueListening => '「続きを聴く」から削除しました';
 
   @override
-  String get removeFromContinueReading => 'Remove from Continue Reading';
+  String get removeFromContinueReading => '「続きを読む」から削除';
 
   @override
-  String get removedFromContinueReading => 'Removed from Continue Reading';
+  String get removedFromContinueReading => '「続きを読む」から削除しました';
 
   @override
-  String get sessionAdd => 'Add session';
+  String get sessionAdd => 'セッションを追加';
 
   @override
-  String get sessionStartLabel => 'Started at';
+  String get sessionStartLabel => '開始時刻';
 
   @override
-  String get sessionAdded => 'Session added';
+  String get sessionAdded => 'セッションを追加しました';
 
   @override
-  String get sessionAddFailed => 'Could not add the session';
+  String get sessionAddFailed => 'セッションを追加できませんでした';
 
   @override
-  String get removeSeriesFromContinueSeries => 'Remove from Continue Series';
+  String get removeSeriesFromContinueSeries => '「シリーズの続き」から削除';
 
   @override
-  String get removedSeriesFromContinueSeries => 'Removed from Continue Series';
+  String get removedSeriesFromContinueSeries => '「シリーズの続き」から削除しました';
 
   @override
-  String get couldNotUpdate => 'Could not update, try again';
+  String get couldNotUpdate => '更新できませんでした。もう一度お試しください';
 
   @override
-  String get addToPlaylist => 'Add to Playlist';
+  String get addToPlaylist => 'プレイリストに追加';
 
   @override
-  String get addToCollection => 'Add to Collection';
+  String get addToCollection => 'コレクションに追加';
 
   @override
-  String get downloadEbook => 'Download eBook';
+  String get downloadEbook => '電子書籍をダウンロード';
 
   @override
-  String get downloadEbookAgain => 'Download eBook Again';
+  String get downloadEbookAgain => '電子書籍を再ダウンロード';
 
   @override
-  String get resetProgress => 'Reset Progress';
+  String get resetProgress => '進捗をリセット';
 
   @override
-  String get lookupLocalMetadata => 'Lookup Local Metadata';
+  String get lookupLocalMetadata => 'ローカルメタデータを検索';
 
   @override
-  String get reLookupLocalMetadata => 'Re-Lookup Local Metadata';
+  String get reLookupLocalMetadata => 'ローカルメタデータを再検索';
 
   @override
-  String get clearLocalMetadata => 'Clear Local Metadata';
+  String get clearLocalMetadata => 'ローカルメタデータを消去';
 
   @override
-  String get searchOnGoodreads => 'Search on Goodreads';
+  String get searchOnGoodreads => 'Goodreadsで検索';
 
   @override
-  String get editServerDetails => 'Edit Server Details';
+  String get editServerDetails => 'サーバー情報を編集';
 
   @override
-  String get encodeTab => 'Encode';
+  String get encodeTab => 'エンコード';
 
   @override
-  String get codec => 'Codec';
+  String get codec => 'コーデック';
 
   @override
-  String get bitrate => 'Bitrate';
+  String get bitrate => 'ビットレート';
 
   @override
-  String get channels => 'Channels';
+  String get channels => 'チャンネル';
 
   @override
-  String get mono => 'Mono';
+  String get mono => 'モノラル';
 
   @override
-  String get stereo => 'Stereo';
+  String get stereo => 'ステレオ';
 
   @override
-  String get startM4bEncode => 'Start M4B Encode';
+  String get startM4bEncode => 'M4Bエンコードを開始';
 
   @override
-  String get encodeStarted => 'M4B encode started';
+  String get encodeStarted => 'M4Bのエンコードを開始しました';
 
   @override
-  String get encodeFailed => 'Failed to start encode';
+  String get encodeFailed => 'エンコードを開始できませんでした';
 
   @override
-  String get encodeFinished => 'M4B encode finished';
+  String get encodeFinished => 'M4Bのエンコードが完了しました';
 
   @override
-  String get currentlyLabel => 'Currently:';
+  String get currentlyLabel => '現在:';
 
   @override
   String encodeOutputPathNote(String path) {
-    return 'Finished M4B will be put into your audiobook folder at: $path/';
+    return '完成したM4Bはオーディオブックフォルダーの次の場所に保存されます: $path/';
   }
 
   @override
   String encodeBackupNote(String itemId) {
-    return 'A backup of your original audio files will be stored in: /metadata/cache/items/$itemId/. Make sure to periodically purge items cache.';
+    return '元の音声ファイルのバックアップは /metadata/cache/items/$itemId/ に保存されます。アイテムのキャッシュを定期的に消去してください。';
   }
 
   @override
-  String get encodeTimeNote => 'Encoding can take up to 30 minutes.';
+  String get encodeTimeNote => 'エンコードには最大30分かかることがあります。';
 
   @override
   String get encodeRescanNote =>
-      'If you have the watcher disabled you will need to re-scan this audiobook afterwards.';
+      'ウォッチャーを無効にしている場合は、完了後にこのオーディオブックを再スキャンする必要があります。';
 
   @override
-  String get aboutSection => 'About';
+  String get aboutSection => '概要';
 
   @override
   String chaptersCount(int count) {
-    return 'Chapters ($count)';
+    return 'チャプター ($count)';
   }
 
   @override
   String audioTracksCount(int count) {
-    return 'Audio Tracks ($count)';
+    return 'オーディオトラック ($count)';
   }
 
   @override
   String libraryFilesCount(int count) {
-    return 'Library Files ($count)';
+    return 'ライブラリファイル ($count)';
   }
 
   @override
-  String get chapters => 'Chapters';
+  String get chapters => 'チャプター';
 
   @override
-  String get noChaptersBook => 'This book has no chapters';
+  String get noChaptersBook => 'この本にはチャプターがありません';
 
   @override
-  String get noChaptersPodcast => 'This podcast has no chapters';
+  String get noChaptersPodcast => 'このポッドキャストにはチャプターがありません';
 
   @override
-  String get failedToLoad => 'Failed to load';
+  String get failedToLoad => '読み込みに失敗しました';
 
   @override
   String startedDate(String date) {
-    return 'Started $date';
+    return '開始: $date';
   }
 
   @override
   String finishedDate(String date) {
-    return 'Finished $date';
+    return '完了: $date';
   }
 
   @override
   String andCountMore(int count) {
-    return 'and $count more';
+    return 'ほか$count件';
   }
 
   @override
-  String get markAsFullyAbsorbedQuestion => 'Mark as Fully Absorbed?';
+  String get markAsFullyAbsorbedQuestion => 'Absorb 完了にしますか?';
 
   @override
-  String get markAsFullyAbsorbedContent =>
-      'This will set your progress to 100% and stop playback if this book is playing.';
+  String get markAsFullyAbsorbedContent => '進捗を100%に設定し、この本を再生中の場合は再生を停止します。';
 
   @override
-  String get markedAsFinishedNiceWork => 'Marked as finished - nice work!';
+  String get markedAsFinishedNiceWork => '完了にしました - お疲れさまです!';
 
   @override
-  String get failedToUpdateCheckConnection =>
-      'Failed to update - check your connection';
+  String get failedToUpdateCheckConnection => '更新に失敗しました - 接続を確認してください';
 
   @override
-  String get markAsNotFinishedQuestion => 'Mark as Not Finished?';
+  String get markedFinishedWillSync =>
+      'Marked as finished - will sync when you\'re back online';
 
   @override
-  String get markAsNotFinishedContent =>
-      'This will clear the finished status and put your position back at the start.';
+  String get markAsNotFinishedQuestion => '未完了にしますか?';
 
   @override
-  String get unmark => 'Unmark';
+  String get markAsNotFinishedContent => '完了の状態を解除し、位置を先頭に戻します。';
 
   @override
-  String get markedAsNotFinishedBackAtIt =>
-      'Marked as not finished - back at it!';
+  String get unmark => '解除';
 
   @override
-  String get resetProgressQuestion => 'Reset Progress?';
+  String get markedAsNotFinishedBackAtIt => '未完了にしました - また続けましょう!';
 
   @override
-  String get resetProgressContent =>
-      'This will erase all progress for this book and set it back to the beginning. This can\'t be undone.';
+  String get resetProgressQuestion => '進捗をリセットしますか?';
 
   @override
-  String get progressResetFreshStart => 'Progress reset - fresh start!';
+  String get resetProgressListeningAndReading => '聴取と読書の進捗がどちらも 0% に戻ります。';
 
   @override
-  String get clearLocalMetadataQuestion => 'Clear Local Metadata?';
+  String get resetProgressListening => '聴取の進捗が 0% に戻ります。';
 
   @override
-  String get clearLocalMetadataContent =>
-      'This will remove the locally stored metadata and revert to whatever the server has.';
+  String get resetProgressReading => '読書の進捗が 0% に戻ります。';
 
   @override
-  String get localMetadataCleared => 'Local metadata cleared';
+  String get resetProgressMarksUnread => 'この本は未読にもなります。';
 
   @override
-  String get saveEbook => 'Save eBook';
+  String get resetProgressCantUndo => 'この操作は元に戻せません。';
 
   @override
-  String get noEbookFileFound => 'No ebook file found';
+  String get progressResetFreshStart => '進捗をリセットしました - 新たなスタートです!';
 
   @override
-  String get bookmark => 'Bookmark';
+  String get clearLocalMetadataQuestion => 'ローカルメタデータを消去しますか?';
 
   @override
-  String get bookmarks => 'Bookmarks';
+  String get clearLocalMetadataContent => 'ローカルに保存されたメタデータを削除し、サーバーにある内容に戻します。';
+
+  @override
+  String get localMetadataCleared => 'ローカルメタデータを消去しました';
+
+  @override
+  String get saveEbook => '電子書籍を保存';
+
+  @override
+  String get noEbookFileFound => '電子書籍ファイルが見つかりません';
+
+  @override
+  String get bookmark => 'ブックマーク';
+
+  @override
+  String get bookmarks => 'ブックマーク';
 
   @override
   String bookmarksWithCount(int count) {
-    return 'Bookmarks ($count)';
+    return 'ブックマーク ($count)';
   }
 
   @override
-  String get playbackSpeed => 'Playback Speed';
+  String get playbackSpeed => '再生速度';
 
   @override
-  String get noBookmarksYet => 'No bookmarks yet';
+  String get noBookmarksYet => 'ブックマークはまだありません';
 
   @override
-  String get longPressBookmarkHint =>
-      'Long-press the bookmark button to quick save';
+  String get longPressBookmarkHint => 'ブックマークボタンを長押しするとすぐに保存できます';
 
   @override
-  String get addBookmark => 'Add Bookmark';
+  String get addBookmark => 'ブックマークを追加';
 
   @override
-  String get editBookmark => 'Edit Bookmark';
+  String get editBookmark => 'ブックマークを編集';
 
   @override
-  String get titleLabel => 'Title';
+  String get titleLabel => 'タイトル';
 
   @override
-  String get noteOptionalLabel => 'Note (optional)';
+  String get noteOptionalLabel => 'メモ(任意)';
 
   @override
-  String get editLayout => 'Edit Layout';
+  String get editLayout => 'レイアウトを編集';
 
   @override
-  String get inMenu => 'In menu';
+  String get inMenu => 'メニュー内';
 
   @override
-  String get bookmarkAdded => 'Bookmark added';
+  String get bookmarkAdded => 'ブックマークを追加しました';
 
   @override
-  String get startPlayingSomethingFirst => 'Start playing something first';
+  String get startPlayingSomethingFirst => '先に何かを再生してください';
 
   @override
-  String get playbackHistory => 'Playback History';
+  String get playbackHistory => '再生履歴';
 
   @override
-  String get historyLocalTab => 'History';
+  String get historyLocalTab => '履歴';
 
   @override
-  String get historyServerTab => 'Sessions';
+  String get historyServerTab => 'セッション';
 
   @override
-  String get historyNoServerSessions => 'No server sessions for this item yet';
+  String get historyNoServerSessions => 'この項目のサーバーセッションはまだありません';
 
   @override
-  String get historyServerLoadFailed => 'Could not load server sessions';
+  String get historyServerLoadFailed => 'サーバーセッションを読み込めませんでした';
 
   @override
-  String get clearHistoryTooltip => 'Clear history';
+  String get clearHistoryTooltip => '履歴を消去';
 
   @override
-  String get tapEventToJump => 'Tap an event to jump to that position';
+  String get tapEventToJump => 'イベントをタップすると、その位置に移動します';
 
   @override
-  String get noHistoryYet => 'No history yet';
+  String get noHistoryYet => '履歴はまだありません';
 
   @override
   String jumpedToPosition(String position) {
-    return 'Jumped to $position';
+    return '$positionに移動しました';
   }
 
   @override
   String booksInSeriesCount(int count) {
-    return '$count books in this series';
+    return 'このシリーズには$count冊あります';
   }
 
   @override
   String bookNumber(String number) {
-    return 'Book $number';
+    return '第$number巻';
   }
 
   @override
   String downloadRemainingCount(int count) {
-    return 'Download Remaining ($count)';
+    return '残りをダウンロード ($count)';
   }
 
   @override
-  String get downloadAll => 'Download All';
+  String get downloadAll => 'すべてダウンロード';
 
   @override
-  String get markAllNotFinished => 'Mark All Not Finished';
+  String get markAllNotFinished => 'すべて未完了にする';
 
   @override
-  String get markAllFinished => 'Mark All Finished';
+  String get markAllFinished => 'すべて完了にする';
 
   @override
-  String get markAllNotFinishedQuestion => 'Mark All Not Finished?';
+  String get markAllNotFinishedQuestion => 'すべて未完了にしますか?';
 
   @override
-  String get fullyAbsorbSeries => 'Fully Absorb Series?';
+  String get fullyAbsorbSeries => 'シリーズを完全に Absorb しますか?';
 
   @override
-  String get turnAutoDownloadOff => 'Turn Auto-Download Off';
+  String get turnAutoDownloadOff => '自動ダウンロードをオフにする';
 
   @override
-  String get turnAutoDownloadOn => 'Turn Auto-Download On';
+  String get turnAutoDownloadOn => '自動ダウンロードをオンにする';
 
   @override
-  String get autoDownloadThisSeries => 'Auto-Download This Series?';
+  String get autoDownloadThisSeries => 'このシリーズを自動ダウンロードしますか?';
 
   @override
-  String get autoDownloadSeriesContent =>
-      'Automatically download the next books as you listen.';
+  String get autoDownloadSeriesContent => '聴き進めるのに合わせて、次の本を自動でダウンロードします。';
 
   @override
-  String get standalone => 'Standalone';
+  String get standalone => '単巻';
 
   @override
-  String get episodes => 'Episodes';
+  String get episodes => 'エピソード';
 
   @override
-  String get noEpisodesFound => 'No episodes found';
+  String get noEpisodesFound => 'エピソードが見つかりません';
 
   @override
-  String get markFinished => 'Mark Finished';
+  String get markFinished => '完了にする';
 
   @override
-  String get markUnfinished => 'Mark Unfinished';
+  String get markUnfinished => '未完了にする';
 
   @override
-  String get allEpisodes => 'All Episodes';
+  String get allEpisodes => 'すべてのエピソード';
 
   @override
-  String get aboutThisEpisode => 'About This Episode';
+  String get aboutThisEpisode => 'このエピソードについて';
 
   @override
-  String get reversePlayOrder => 'Reverse play order';
+  String get reversePlayOrder => '再生順を逆にする';
 
   @override
   String selectedCount(int count) {
-    return '$count selected';
+    return '$count件を選択中';
   }
 
   @override
-  String get selectAll => 'Select All';
+  String get selectAll => 'すべて選択';
 
   @override
-  String get deselectAll => 'Deselect All';
+  String get deselectAll => 'すべて選択解除';
 
   @override
-  String get autoDownloadThisPodcast => 'Auto-Download This Podcast?';
+  String get autoDownloadThisPodcast => 'このポッドキャストを自動ダウンロードしますか?';
 
   @override
-  String get autoDownloadPodcastContent =>
-      'Automatically download the next episodes as you listen.';
+  String get autoDownloadPodcastContent => '聴き進めるのに合わせて、次のエピソードを自動でダウンロードします。';
 
   @override
-  String get download => 'Download';
+  String get download => 'ダウンロード';
 
   @override
-  String get deleteDownload => 'Delete Download';
+  String get deleteDownload => 'ダウンロードを削除';
 
   @override
-  String get casting => 'Casting';
+  String get casting => 'キャスト中';
 
   @override
-  String get castingTo => 'Casting to';
+  String get castingTo => 'キャスト先';
 
   @override
-  String get editDetails => 'Edit Details';
+  String get editDetails => '詳細を編集';
 
   @override
-  String get quickMatch => 'Quick Match';
+  String get quickMatch => 'クイックマッチ';
 
   @override
-  String get quickMatchNoUpdates => 'No updates necessary';
+  String get quickMatchNoUpdates => '更新の必要はありません';
 
   @override
-  String get custom => 'Custom';
+  String get custom => 'カスタム';
 
   @override
-  String get authorOptionalLabel => 'Author (optional)';
+  String get authorOptionalLabel => '著者(任意)';
 
   @override
-  String get noResultsFound =>
-      'No results found.\nTry adjusting your search or provider.';
+  String get noResultsFound => '結果が見つかりません。\n検索語やプロバイダーを変えてお試しください。';
 
   @override
-  String get searchForMetadataAbove => 'Search for metadata above';
+  String get searchForMetadataAbove => '上でメタデータを検索してください';
 
   @override
-  String get applyThisMatch => 'Apply This Match?';
+  String get applyThisMatch => 'このマッチを適用しますか?';
 
   @override
-  String get metadataUpdated => 'Metadata updated';
+  String get metadataUpdated => 'メタデータを更新しました';
 
   @override
-  String get failedToUpdateMetadata => 'Failed to update metadata';
+  String get failedToUpdateMetadata => 'メタデータを更新できませんでした';
 
   @override
-  String get subtitleLabel => 'Subtitle';
+  String get subtitleLabel => 'サブタイトル';
 
   @override
-  String get authorLabel => 'Author';
+  String get authorLabel => '著者';
 
   @override
-  String get narratorLabel => 'Narrator';
+  String get narratorLabel => 'ナレーター';
 
   @override
-  String get seriesLabel => 'Series';
+  String get seriesLabel => 'シリーズ';
 
   @override
-  String get addSeries => 'Add series';
+  String get addSeries => 'シリーズを追加';
 
   @override
-  String get removeSeries => 'Remove series';
+  String get removeSeries => 'シリーズを削除';
 
   @override
-  String get descriptionLabel => 'Description';
+  String get descriptionLabel => '説明';
 
   @override
-  String get publisherLabel => 'Publisher';
+  String get publisherLabel => '出版社';
 
   @override
-  String get yearLabel => 'Year';
+  String get yearLabel => '年';
 
   @override
-  String get genresLabel => 'Genres';
+  String get genresLabel => 'ジャンル';
 
   @override
-  String get tagsLabel => 'Tags';
+  String get tagsLabel => 'タグ';
 
   @override
-  String get commaSeparated => 'Comma separated';
+  String get commaSeparated => 'カンマ区切り';
 
   @override
   String get asinLabel => 'ASIN';
@@ -4591,347 +4554,352 @@ class AppLocalizationsJa extends AppLocalizations {
   String get isbnLabel => 'ISBN';
 
   @override
-  String get coverImage => 'Cover Image';
+  String get coverImage => 'カバー画像';
 
   @override
-  String get coverRemove => 'Remove cover';
+  String get coverRemove => 'カバーを削除';
 
   @override
-  String get coverRemoveConfirm =>
-      'Remove this book\'s cover? It will show the generated title card instead.';
+  String get coverRemoveConfirm => 'この本のカバーを削除しますか? 代わりに自動生成されたタイトルカードが表示されます。';
 
   @override
-  String get coverRemoved => 'Cover removed';
+  String get coverRemoved => 'カバーを削除しました';
 
   @override
-  String get coverRemoveFailed => 'Could not remove the cover';
+  String get coverRemoveFailed => 'カバーを削除できませんでした';
 
   @override
-  String get coverUrlLabel => 'Cover URL';
+  String get coverUrlLabel => 'カバーのURL';
 
   @override
   String get coverUrlHint => 'https://...';
 
   @override
-  String get localMetadata => 'Local Metadata';
+  String get localMetadata => 'ローカルメタデータ';
 
   @override
-  String get overrideLocalDisplay => 'Override local display';
+  String get overrideLocalDisplay => 'ローカルの表示を上書き';
 
   @override
-  String get metadataSavedLocally => 'Metadata saved locally';
+  String get metadataSavedLocally => 'メタデータをローカルに保存しました';
 
   @override
-  String get notes => 'Notes';
+  String get notes => 'メモ';
 
   @override
-  String get newNote => 'New Note';
+  String get newNote => '新規メモ';
 
   @override
-  String get editNote => 'Edit Note';
+  String get editNote => 'メモを編集';
 
   @override
-  String get noNotesYet => 'No notes yet';
+  String get noNotesYet => 'メモはまだありません';
 
   @override
-  String get markdownIsSupported => 'Markdown is supported';
+  String get markdownIsSupported => 'Markdownに対応しています';
 
   @override
   String get markdownMd => 'Markdown (.md)';
 
   @override
-  String get keepsFormattingIntact => 'Keeps formatting intact';
+  String get keepsFormattingIntact => '書式を保持します';
 
   @override
-  String get plainTextTxt => 'Plain Text (.txt)';
+  String get plainTextTxt => 'プレーンテキスト (.txt)';
 
   @override
-  String get simpleTextNoFormatting => 'Simple text, no formatting';
+  String get simpleTextNoFormatting => '書式のないシンプルなテキスト';
 
   @override
-  String get untitledNote => 'Untitled note';
+  String get untitledNote => '無題のメモ';
 
   @override
-  String get titleHint => 'Title';
+  String get titleHint => 'タイトル';
 
   @override
-  String get noteBodyHint => 'Write your note... (supports markdown)';
+  String get noteBodyHint => 'メモを書く...(Markdown対応)';
 
   @override
-  String get nothingToPreview => 'Nothing to preview';
+  String get nothingToPreview => 'プレビューする内容がありません';
 
   @override
-  String get audioEnhancements => 'Audio Enhancements';
+  String get audioEnhancements => '音質調整';
 
   @override
-  String get presets => 'PRESETS';
+  String get presets => 'プリセット';
 
   @override
-  String get equalizer => 'EQUALIZER';
+  String get equalizer => 'イコライザー';
 
   @override
-  String get effects => 'EFFECTS';
+  String get effects => 'エフェクト';
 
   @override
-  String get bassBoost => 'Bass Boost';
+  String get bassBoost => '低音ブースト';
 
   @override
-  String get surround => 'Surround';
+  String get surround => 'サラウンド';
 
   @override
-  String get loudness => 'Loudness';
+  String get loudness => 'ラウドネス';
 
   @override
-  String get monoAudio => 'Mono Audio';
+  String get pitch => 'Pitch';
 
   @override
-  String get skipSilence => 'Skip Silence';
+  String get monoAudio => 'モノラル音声';
 
   @override
-  String get resetAll => 'Reset All';
+  String get skipSilence => '無音をスキップ';
 
   @override
-  String get collectionNotFound => 'Collection not found';
+  String get resetAll => 'すべてリセット';
 
   @override
-  String get deleteCollection => 'Delete Collection';
+  String get collectionNotFound => 'コレクションが見つかりません';
 
   @override
-  String get deleteCollectionContent =>
-      'Are you sure you want to delete this collection?';
+  String get deleteCollection => 'コレクションを削除';
 
   @override
-  String get deleteCollectionFailed => 'Couldn\'t delete the collection';
+  String get deleteCollectionContent => 'このコレクションを削除してもよろしいですか?';
 
   @override
-  String get deletePermissionRequired =>
-      'Delete permission required. Ask the root admin to grant you the delete permission.';
+  String get deleteCollectionFailed => 'コレクションを削除できませんでした';
 
   @override
-  String get deleteFilesCheckbox => 'Also delete the files on the server';
+  String get deletePlaylistFailed => 'Couldn\'t delete the playlist';
 
   @override
-  String get deleteFilesCheckedHint =>
-      'The files are deleted from the server for good.';
+  String get deletePermissionRequired => '削除権限が必要です。ルート管理者に削除権限の付与を依頼してください。';
+
+  @override
+  String get deleteFilesCheckbox => 'サーバー上のファイルも削除する';
+
+  @override
+  String get deleteFilesCheckedHint => 'ファイルはサーバーから完全に削除されます。';
 
   @override
   String get deleteFilesUncheckedHint =>
-      'The files stay on the server, so the next library scan can add this back.';
+      'ファイルはサーバーに残るため、次回のライブラリスキャンで再び追加される場合があります。';
 
   @override
-  String get deleteFromServerAction => 'Delete from Server';
+  String get deleteFromServerAction => 'サーバーから削除';
 
   @override
-  String get deleteFromServerTitle => 'Delete from server';
+  String get deleteFromServerTitle => 'サーバーから削除';
 
   @override
   String deleteFromServerContent(String title) {
-    return 'Delete \"$title\" from Audiobookshelf?';
+    return '「$title」をAudiobookshelfから削除しますか?';
   }
 
   @override
   String deletedFromServer(String title) {
-    return 'Deleted \"$title\"';
+    return '「$title」を削除しました';
   }
 
   @override
-  String get deleteFromServerFailed =>
-      'Couldn\'t delete that. Check the server logs.';
+  String get deleteFromServerFailed => '削除できませんでした。サーバーのログを確認してください。';
 
   @override
-  String get playlistNotFound => 'Playlist not found';
+  String get playlistNotFound => 'プレイリストが見つかりません';
 
   @override
-  String get deletePlaylist => 'Delete Playlist';
+  String get deletePlaylist => 'プレイリストを削除';
 
   @override
-  String get deletePlaylistContent =>
-      'Are you sure you want to delete this playlist?';
+  String get deletePlaylistContent => 'このプレイリストを削除してもよろしいですか?';
 
   @override
-  String get newPlaylist => 'New Playlist';
+  String get newPlaylist => '新規プレイリスト';
 
   @override
-  String get playlistNameHint => 'Playlist name';
+  String get playlistNameHint => 'プレイリスト名';
 
   @override
   String addedToName(String name) {
-    return 'Added to \"$name\"';
+    return '「$name」に追加しました';
   }
 
   @override
-  String get failedToAdd => 'Failed to add';
+  String get failedToAdd => '追加できませんでした';
 
   @override
-  String get newCollection => 'New Collection';
+  String get newCollection => '新規コレクション';
 
   @override
-  String get collectionNameHint => 'Collection name';
+  String get collectionNameHint => 'コレクション名';
 
   @override
-  String get listsNewCollectionSubtitle => 'Group books into a list you keep';
+  String get listsNewCollectionSubtitle => '本をまとめて、自分のリストにします';
 
   @override
-  String get listsNewCollectionNeedsBookSubtitle =>
-      'Start it with at least one book';
+  String get listsNewCollectionNeedsBookSubtitle => '最初に1冊以上の本が必要です';
 
   @override
-  String get listsNewPlaylistSubtitle => 'Line up books to listen to in order';
+  String get listsNewPlaylistSubtitle => '聴きたい本を順番に並べます';
 
   @override
-  String get listsAddBooksNow => 'Add books now';
+  String get listsAddBooksNow => '今すぐ本を追加';
 
   @override
-  String get listsPickBooksNext =>
-      'You\'ll pick books next. A collection on this server needs at least one.';
+  String get listsPickBooksNext => '次に本を選びます。このサーバーのコレクションには1冊以上の本が必要です。';
 
   @override
-  String get listsCreate => 'Create';
+  String get listsCreate => '作成';
 
   @override
-  String get listsCollectionNeedsBook =>
-      'A collection needs at least one book, so nothing was created.';
+  String get listsCollectionNeedsBook => 'コレクションには1冊以上の本が必要なため、何も作成されませんでした。';
 
   @override
-  String get listsCreateFailed => 'Couldn\'t create it';
+  String get listsCreateFailed => '作成できませんでした';
 
   @override
-  String get castToDevice => 'Cast to Device';
+  String get castToDevice => 'デバイスにキャスト';
 
   @override
-  String get searchingForCastDevices => 'Searching for Cast devices...';
+  String get searchingForCastDevices => 'キャストデバイスを検索中...';
 
   @override
-  String get castDevice => 'Cast Device';
+  String get castDevice => 'キャストデバイス';
 
   @override
-  String get stopCasting => 'Stop Casting';
+  String get stopCasting => 'キャストを停止';
 
   @override
-  String get disconnect => 'Disconnect';
+  String get disconnect => '切断';
 
   @override
-  String get audioOutput => 'Audio Output';
+  String get audioOutput => '音声出力';
 
   @override
-  String get noOutputDevicesFound => 'No output devices found';
+  String get noOutputDevicesFound => '出力デバイスが見つかりません';
 
   @override
-  String get welcomeToAbsorb => 'Welcome to Absorb Plus';
+  String get welcomeToAbsorb => 'Absorb Plusへようこそ';
 
   @override
-  String get welcomeTagline => 'An Audiobookshelf client.';
+  String get welcomeTagline => 'Audiobookshelfクライアント。';
 
   @override
   String get welcomeAbsorbingTitle => 'Absorbing';
 
   @override
   String get welcomeAbsorbingIntro =>
-      'We use \"absorb\" in place of \"play\" and \"listen\". Prefer the classic wording? Switch it in Settings.';
+      'Absorbでは「再生」や「聴く」の代わりに「absorb」という言葉を使います。従来の表現がよければ、設定で切り替えられます。';
 
   @override
-  String get welcomeAbsorbingTabBullet =>
-      'Absorbing tab - what you\'re currently listening to';
+  String get welcomeAbsorbingTabBullet => 'Absorbing タブ - 現在聴いているもの';
 
   @override
-  String get welcomeAbsorbButtonBullet => 'Absorb button - start playback';
+  String get welcomeAbsorbButtonBullet => 'Absorb ボタン - 再生を開始';
 
   @override
-  String get welcomeFullyAbsorbBullet => 'Fully Absorb - mark as finished';
+  String get welcomeFullyAbsorbBullet => '完全に Absorb - 完了にする';
 
   @override
-  String get welcomeGettingAroundTitle => 'Getting around';
+  String get welcomeGettingAroundTitle => '基本的な使い方';
 
   @override
   String get welcomeGettingAroundBody =>
-      'Tap any cover to open its details. Continue Listening cards are different - tap to play right away, press and hold to open details.';
+      'カバーをタップすると詳細が開きます。ただし「続きを聴く」のカードは別で、タップするとすぐに再生、長押しすると詳細が開きます。';
 
   @override
-  String get welcomeMakeItYoursTitle => 'Make it yours';
+  String get welcomeMakeItYoursTitle => '自分好みに';
 
   @override
   String get welcomeMakeItYoursBody =>
-      'Mess around in Settings to tune Absorb to your taste. The Tips & Hidden Features section in there is worth a look.';
+      '設定をいろいろ試して、Absorbを好みに合わせて調整しましょう。中にある「ヒントと隠れた機能」もぜひご覧ください。';
 
   @override
-  String get getStarted => 'Get Started';
+  String get getStarted => 'はじめる';
 
   @override
-  String get showMore => 'Show more';
+  String get showMore => 'もっと見る';
 
   @override
-  String get showLess => 'Show less';
+  String get showLess => '一部を表示';
 
   @override
-  String get readMore => 'Read more';
+  String get readMore => '続きを読む';
 
   @override
-  String get removeDownloadQuestion => 'Remove download?';
+  String get removeDownloadQuestion => 'ダウンロードを削除しますか?';
 
   @override
-  String get removeDownloadContent => 'This will be removed from your device.';
+  String get removeDownloadContent => 'デバイスから削除されます。';
 
   @override
   String get removeWhichDownload =>
-      'The audiobook and the ebook are both on this device. Choose what to remove.';
+      'オーディオブックと電子書籍の両方がこのデバイスにあります。削除するものを選んでください。';
 
   @override
-  String get downloadRemoved => 'Download removed';
+  String get downloadRemoved => 'ダウンロードを削除しました';
 
   @override
-  String get finished => 'Finished';
+  String get finished => '完了';
 
   @override
-  String get saved => 'Downloaded';
+  String get saved => 'ダウンロード済み';
 
   @override
-  String get selectLibrary => 'Select Library';
+  String get selectLibrary => 'ライブラリを選択';
 
   @override
-  String get switchLibraryTooltip => 'Switch library';
+  String get switchLibraryTooltip => 'ライブラリを切り替え';
 
   @override
-  String get refreshTooltip => 'Refresh';
+  String get refreshTooltip => '更新';
 
   @override
-  String get noBooksFound => 'No books found';
+  String get openNowPlayingTooltip => 'Open Now Playing';
 
   @override
-  String get userFallback => 'User';
+  String get previousChapterTooltip => 'Previous chapter';
 
   @override
-  String get rootAdmin => 'Root Admin';
+  String get nextChapterTooltip => 'Next chapter';
 
   @override
-  String get admin => 'Admin';
+  String get noBooksFound => '本が見つかりません';
 
   @override
-  String get serverAdmin => 'Server Admin';
+  String get userFallback => 'ユーザー';
 
   @override
-  String get serverAdminSubtitle => 'Manage users, libraries & server settings';
+  String get rootAdmin => 'ルート管理者';
+
+  @override
+  String get admin => '管理者';
+
+  @override
+  String get serverAdmin => 'サーバー管理';
+
+  @override
+  String get serverAdminSubtitle => 'ユーザー、ライブラリ、サーバー設定を管理';
 
   @override
   String serverUpdateAvailable(String version) {
-    return 'Server update $version available';
+    return 'サーバーの更新 $version が利用可能です';
   }
 
   @override
-  String get justNow => 'Just now';
+  String get justNow => 'たった今';
 
   @override
   String minutesAgo(int count) {
-    return '${count}m ago';
+    return '$count分前';
   }
 
   @override
   String hoursAgo(int count) {
-    return '${count}h ago';
+    return '$count時間前';
   }
 
   @override
   String daysAgo(int count) {
-    return '${count}d ago';
+    return '$count日前';
   }
 
   @override
@@ -4944,122 +4912,117 @@ class AppLocalizationsJa extends AppLocalizations {
   String get openLibrary => 'Open Library';
 
   @override
-  String get root => 'Root';
+  String get root => 'ルート';
 
   @override
-  String get coverPlayPause => 'Cover play/pause';
+  String get coverPlayPause => 'カバーで再生/一時停止';
 
   @override
-  String get coverPlayPauseOnSubtitle => 'On - tap cover art to play/pause';
+  String get coverPlayPauseOnSubtitle => 'オン - カバーアートをタップして再生/一時停止';
 
   @override
-  String get coverPlayPauseOffSubtitle =>
-      'Off - dedicated play/pause button in controls';
+  String get coverPlayPauseOffSubtitle => 'オフ - コントロールに専用の再生/一時停止ボタンを表示';
 
   @override
-  String get cardBackground => 'Card background';
+  String get cardBackground => 'カードの背景';
 
   @override
-  String get cardBackgroundBlurred => 'Blurred';
+  String get cardBackgroundBlurred => 'ぼかし';
 
   @override
-  String get cardBackgroundGradient => 'Gradient';
+  String get cardBackgroundGradient => 'グラデーション';
 
   @override
-  String get queueModeMergedSubtitle =>
-      'Playback stops, manual queue, or auto-plays next item';
+  String get queueModeMergedSubtitle => '再生を停止、手動のキュー、または次の項目を自動再生';
 
   @override
-  String get queueModeSeriesLabel => 'Series';
+  String get queueModeSeriesLabel => 'シリーズ';
 
   @override
-  String get queueModeShowLabel => 'Show';
+  String get queueModeShowLabel => '番組';
 
   @override
-  String get queueModeInfoSeries => 'Series';
+  String get queueModeInfoSeries => 'シリーズ';
 
   @override
   String get queueModeInfoSeriesDesc =>
-      'Automatically plays the next book in a series or the next episode in a podcast show.';
+      'シリーズの次の本、またはポッドキャスト番組の次のエピソードを自動で再生します。';
 
   @override
-  String get resetButtonGridQuestion => 'Reset button grid?';
+  String get resetButtonGridQuestion => 'ボタン配置をリセットしますか?';
 
   @override
-  String get resetButtonGridContent =>
-      'This will restore the default button layout, order, and toggle settings.';
+  String get resetButtonGridContent => 'ボタンのレイアウト、順序、オン/オフの設定をデフォルトに戻します。';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'リセット';
 
   @override
-  String get buttonGridReset => 'Button grid reset';
+  String get buttonGridReset => 'ボタン配置をリセットしました';
 
   @override
-  String get resetButtonGrid => 'Reset button grid';
+  String get resetButtonGrid => 'ボタン配置をリセット';
 
   @override
-  String get chapterBarrierOnRewind => 'Chapter barrier on rewind';
+  String get chapterBarrierOnRewind => '巻き戻し時のチャプター境界';
 
   @override
-  String get chapterBarrierInfoTitle => 'Chapter barrier';
+  String get chapterBarrierInfoTitle => 'チャプター境界';
 
   @override
   String get chapterBarrierInfoContent =>
-      'When skipping back, the playback will snap to the start of the current chapter instead of crossing into the previous one.\n\nDouble-tap the skip back button within 2 seconds to break through the barrier.';
+      'スキップバックすると、前のチャプターに入らず、現在のチャプターの先頭で止まります。\n\n2秒以内にスキップバックボタンをダブルタップすると、境界を越えられます。';
 
   @override
-  String get chapterBarrierOnRewindOnSubtitle =>
-      'On - rewind snaps to chapter start';
+  String get chapterBarrierOnRewindOnSubtitle => 'オン - 巻き戻しはチャプターの先頭で止まります';
 
   @override
-  String get chapterBarrierOnRewindOffSubtitle =>
-      'Off - rewind crosses chapter boundaries';
+  String get chapterBarrierOnRewindOffSubtitle => 'オフ - 巻き戻しはチャプターの境界を越えます';
 
   @override
   String autoRewindOnSubtitleFormat(String min, String max) {
-    return 'On -${min}s to ${max}s based on pause length';
+    return 'オン - 一時停止の長さに応じて$min秒～$max秒';
   }
 
   @override
-  String get rewindOnSessionStart => 'Rewind on session start';
+  String get rewindOnSessionStart => 'セッション開始時に巻き戻し';
 
   @override
   String get rewindOnSessionStartInfoContent =>
-      'Normal auto-rewind triggers when you resume from a pause within an active session. This setting adds a rewind when starting a completely new session - for example after the app was closed, playback was stopped, or you open the app fresh.\n\nWhen enabled, playback rewinds by the full max rewind amount at the start of every new session so you can re-hear where you left off.';
+      '通常の自動巻き戻しは、アクティブなセッション中に一時停止から再開したときに働きます。この設定では、まったく新しいセッションを開始するとき(アプリを閉じた後、再生を停止した後、アプリを起動し直したときなど)にも巻き戻します。\n\n有効にすると、新しいセッションの開始時に最大巻き戻し量だけ巻き戻すので、中断した場面をもう一度聴けます。';
 
   @override
   String rewindOnSessionStartOnSubtitle(String seconds) {
-    return 'On - rewinds ${seconds}s when starting a new session';
+    return 'オン - 新しいセッションの開始時に$seconds秒巻き戻します';
   }
 
   @override
   String rewindActivationDelayValue(String seconds) {
-    return '${seconds}s+';
+    return '$seconds秒以上';
   }
 
   @override
   String rewindRangeValue(String min, String max) {
-    return '${min}s – ${max}s';
+    return '$min秒 – $max秒';
   }
 
   @override
   String rewindSecondsPause(String seconds) {
-    return '${seconds}s pause';
+    return '$seconds秒の一時停止';
   }
 
   @override
   String rewindMinPause(String minutes) {
-    return '$minutes min pause';
+    return '$minutes分の一時停止';
   }
 
   @override
   String rewindHrPause(String hours) {
-    return '$hours hr pause';
+    return '$hours時間の一時停止';
   }
 
   @override
-  String get rewindOneHrPause => '1 hr pause';
+  String get rewindOneHrPause => '1時間の一時停止';
 
   @override
   String speedValue(String speed) {
@@ -5068,35 +5031,34 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String secondsValue(String seconds) {
-    return '${seconds}s';
+    return '$seconds秒';
   }
 
   @override
   String minutesValue(int minutes) {
-    return '$minutes min';
+    return '$minutes分';
   }
 
   @override
-  String get chimeBeforeSleep => 'Chime before sleep';
+  String get chimeBeforeSleep => 'スリープ前にチャイム';
 
   @override
-  String get chimeBeforeSleepOnSubtitle =>
-      'Plays a gentle bell when the timer is about to end';
+  String get chimeBeforeSleepOnSubtitle => 'タイマー終了の直前にやさしいベルを鳴らします';
 
   @override
-  String get chimeBeforeSleepOffSubtitle => 'No sound warning before sleep';
+  String get chimeBeforeSleepOffSubtitle => 'スリープ前の音による予告なし';
 
   @override
-  String get windDownDuration => 'Wind-down duration';
+  String get windDownDuration => '終了前の時間';
 
   @override
   String windDownDurationSubtitle(int seconds) {
-    return 'Fade and chime start ${seconds}s before sleep';
+    return 'スリープの$seconds秒前にフェードとチャイムを開始します';
   }
 
   @override
   String fadeVolumeOnSubtitleDynamic(int seconds) {
-    return 'Gradually lowers volume over the last ${seconds}s';
+    return '最後の$seconds秒間で徐々に音量を下げます';
   }
 
   @override
@@ -5109,372 +5071,308 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get endOfChapterShort => 'End of chapter';
+  String get endOfChapterShort => 'チャプターの終わり';
 
   @override
-  String get endOfChapterOnSubtitle => 'Stop at the end of the current chapter';
+  String get endOfChapterOnSubtitle => '現在のチャプターの終わりで停止';
 
   @override
-  String get endOfChapterOffSubtitle => 'Use a timed sleep timer';
+  String get endOfChapterOffSubtitle => '時間指定のスリープタイマーを使用';
 
   @override
-  String get showExplicitBadge => 'Show explicit badge';
+  String get showExplicitBadge => '露骨な表現バッジを表示';
 
   @override
-  String get showExplicitBadgeOnSubtitle =>
-      'Explicit items show an \"E\" badge';
+  String get showExplicitBadgeOnSubtitle => '露骨な表現を含む項目に「E」バッジを表示します';
 
   @override
-  String get showExplicitBadgeOffSubtitle => 'Off - explicit badge hidden';
+  String get showExplicitBadgeOffSubtitle => 'オフ - 露骨な表現バッジを非表示';
 
   @override
-  String get showEbookBadge => 'Show ebook badge';
+  String get showEbookBadge => '電子書籍バッジを表示';
 
   @override
-  String get showEbookBadgeOnSubtitle =>
-      'Books with an ebook show a book icon on the cover';
+  String get showEbookBadgeOnSubtitle => '電子書籍のある本のカバーに本のアイコンを表示します';
 
   @override
-  String get showEbookBadgeOffSubtitle => 'Off - ebook badge hidden';
+  String get showEbookBadgeOffSubtitle => 'オフ - 電子書籍バッジを非表示';
 
   @override
-  String get libraryFallback => 'Library';
+  String get libraryFallback => 'ライブラリ';
 
   @override
-  String get preReleaseUpdatesInfoTitle => 'Pre-release Updates';
+  String get preReleaseUpdatesInfoTitle => 'プレリリース版の更新';
 
   @override
   String get preReleaseUpdatesInfoContent =>
-      'When enabled, the update checker will also notify you about alpha and pre-release builds from GitHub. These may be less stable but include the latest features and fixes.';
+      '有効にすると、アップデートの確認時に、GitHubのアルファ版やプレリリース版のビルドも通知されます。安定性は劣る場合がありますが、最新の機能や修正が含まれます。';
 
   @override
-  String get includePreReleases => 'Include pre-releases';
+  String get includePreReleases => 'プレリリース版を含める';
 
   @override
-  String get includePreReleasesOnSubtitle =>
-      'On - checking for alpha & pre-release builds';
+  String get includePreReleasesOnSubtitle => 'オン - アルファ版とプレリリース版も確認';
 
   @override
-  String get includePreReleasesOffSubtitle => 'Off - stable releases only';
+  String get includePreReleasesOffSubtitle => 'オフ - 安定版のみ';
 
   @override
-  String get setTooltip => 'Set';
+  String get setTooltip => '設定';
 
   @override
-  String get saveAbsorbBackup => 'Save Absorb backup';
+  String get saveAbsorbBackup => 'Absorbのバックアップを保存';
 
   @override
-  String get checkForUpdate => 'Check for update';
+  String get checkForUpdate => 'アップデートを確認';
 
   @override
-  String get onLatestVersion => 'You\'re on the latest version';
+  String get onLatestVersion => '最新バージョンです';
 
   @override
-  String get updateAvailable => 'Update available';
+  String get updateAvailable => 'アップデートがあります';
 
   @override
-  String get preReleaseAvailable => 'Pre-release available';
+  String get preReleaseAvailable => 'プレリリース版があります';
 
   @override
   String updateDialogContent(String kind, String latest, String current) {
-    return 'A new $kind of Absorb is available: $latest\n\nYou are on $current.';
+    return 'Absorbの新しい$kindが利用可能です: $latest\n\n現在のバージョン: $current';
   }
 
   @override
-  String get updateKindPreRelease => 'pre-release';
+  String get updateKindPreRelease => 'プレリリース版';
 
   @override
-  String get updateKindVersion => 'version';
+  String get updateKindVersion => 'バージョン';
 
   @override
-  String get downloadButton => 'Download';
+  String get downloadButton => 'ダウンロード';
 
   @override
-  String get updateDownloading => 'Downloading update...';
+  String get updateDownloading => 'アップデートをダウンロード中...';
 
   @override
   String get updateInstallPermissionDenied =>
-      'Install permission denied. Enable \"Install unknown apps\" for Absorb in system settings.';
+      'インストールが許可されていません。システム設定で Absorb の「不明なアプリのインストール」を有効にしてください。';
 
   @override
-  String get updateOpeningInBrowser => 'In-app update failed, opening browser';
+  String get updateOpeningInBrowser => 'アプリ内アップデートに失敗しました。ブラウザーで開きます';
 
   @override
-  String get sendToEreader => 'Send to E-Reader';
+  String get sendToEreader => '電子書籍リーダーに送信';
 
   @override
   String sendingToEreader(String device) {
-    return 'Sending to $device...';
+    return '$device に送信中...';
   }
 
   @override
   String sendToEreaderSuccess(String device) {
-    return 'Sent to $device';
+    return '$device に送信しました';
   }
 
   @override
-  String get sendToEreaderFailed => 'Couldn\'t send the ebook';
+  String get sendToEreaderFailed => '電子書籍を送信できませんでした';
 
   @override
-  String get pickEreaderDevice => 'Pick a device';
+  String get pickEreaderDevice => 'デバイスを選択';
 
   @override
-  String get adminEmail => 'Email';
+  String get adminEmail => 'メール';
 
   @override
-  String get adminEmailSubtitle => 'SMTP and e-reader devices';
+  String get adminEmailSubtitle => 'SMTP と電子書籍リーダーのデバイス';
 
   @override
   String get smtpSection => 'SMTP';
 
   @override
-  String get smtpSetupGuide => 'Setup guide';
+  String get smtpSetupGuide => 'セットアップガイド';
 
   @override
-  String get smtpHost => 'Host';
+  String get smtpHost => 'ホスト';
 
   @override
-  String get smtpPort => 'Port';
+  String get smtpPort => 'ポート';
 
   @override
-  String get smtpSecure => 'Secure';
+  String get smtpSecure => 'セキュア';
 
   @override
-  String get smtpRejectUnauthorized => 'Reject unauthorized TLS';
+  String get smtpRejectUnauthorized => '未承認の TLS を拒否';
 
   @override
-  String get smtpUser => 'Username';
+  String get smtpUser => 'ユーザー名';
 
   @override
-  String get smtpPass => 'Password';
+  String get smtpPass => 'パスワード';
 
   @override
-  String get smtpFromAddress => 'From address';
+  String get smtpFromAddress => '送信元アドレス';
 
   @override
-  String get smtpTestAddress => 'Test address';
+  String get smtpTestAddress => 'テスト用アドレス';
 
   @override
-  String get smtpSendTest => 'Send test';
+  String get smtpSendTest => 'テスト送信';
 
   @override
-  String get smtpSaveSettings => 'Save';
+  String get smtpSaveSettings => '保存';
 
   @override
-  String get smtpSaved => 'Email settings saved';
+  String get smtpSaved => 'メール設定を保存しました';
 
   @override
-  String get smtpSaveFailed => 'Couldn\'t save email settings';
+  String get smtpSaveFailed => 'メール設定を保存できませんでした';
 
   @override
-  String get smtpTestSent => 'Test email sent';
+  String get smtpTestSent => 'テストメールを送信しました';
 
   @override
-  String get smtpTestFailed => 'Test email failed';
+  String get smtpTestFailed => 'テストメールの送信に失敗しました';
 
   @override
-  String get ereaderDevicesTitle => 'E-Reader devices';
+  String get ereaderDevicesTitle => '電子書籍リーダーのデバイス';
 
   @override
-  String get ereaderDevicesEmpty => 'No devices yet. Add one below.';
+  String get ereaderDevicesEmpty => 'デバイスはまだありません。下から追加してください。';
 
   @override
-  String get addEreaderDevice => 'Add device';
+  String get addEreaderDevice => 'デバイスを追加';
 
   @override
-  String get editEreaderDevice => 'Edit device';
+  String get editEreaderDevice => 'デバイスを編集';
 
   @override
-  String get deleteEreaderDevice => 'Delete';
+  String get deleteEreaderDevice => '削除';
 
   @override
-  String get ereaderDeviceName => 'Name';
+  String get ereaderDeviceName => '名前';
 
   @override
-  String get ereaderDeviceEmail => 'Email';
+  String get ereaderDeviceEmail => 'メール';
 
   @override
-  String get ereaderAvailability => 'Who can use this device';
+  String get ereaderAvailability => 'このデバイスを使えるユーザー';
 
   @override
-  String get ereaderAvailAdminOrUp => 'Admins only';
+  String get ereaderAvailAdminOrUp => '管理者のみ';
 
   @override
-  String get ereaderAvailUserOrUp => 'All users';
+  String get ereaderAvailUserOrUp => 'すべてのユーザー';
 
   @override
-  String get ereaderAvailGuestOrUp => 'Everyone';
+  String get ereaderAvailGuestOrUp => '全員';
 
   @override
-  String get ereaderAvailSpecificUsers => 'Specific users';
+  String get ereaderAvailSpecificUsers => '特定のユーザー';
 
   @override
   String ereaderSpecificUsersN(int count) {
-    return 'Specific users ($count)';
+    return '特定のユーザー ($count)';
   }
 
   @override
-  String get ereaderDevicesSaved => 'Devices saved';
+  String get ereaderDevicesSaved => 'デバイスを保存しました';
 
   @override
-  String get ereaderDevicesSaveFailed => 'Couldn\'t save devices';
+  String get ereaderDevicesSaveFailed => 'デバイスを保存できませんでした';
 
   @override
   String libraryCountOne(int count) {
-    return '$count library';
+    return 'ライブラリ $count 件';
   }
 
   @override
   String libraryCountOther(int count) {
-    return '$count libraries';
+    return 'ライブラリ $count 件';
   }
 
   @override
   String serverVersionLabel(String version) {
-    return 'Server $version';
+    return 'サーバー $version';
   }
 
   @override
   String appVersionServerSuffix(String version) {
-    return '  ·  Server $version';
+    return '  ·  サーバー $version';
   }
 
   @override
   String backupDateFormat(int month, int day, int year) {
-    return '$month/$day/$year';
+    return '$year/$month/$day';
   }
 
   @override
   String get backupDetailsSeparator => ' · ';
 
   @override
-  String get bookmarksSortedByPositionReversed =>
-      'Sorted by position (reversed)';
+  String get bookmarksSortedByPositionReversed => '位置順 (逆順)';
 
   @override
   String bookmarksJumpShortContent(String title, String position) {
-    return '\"$title\" at $position';
+    return '「$title」の $position';
   }
 
   @override
-  String get deleteBookmarkQuestion => 'Delete bookmark?';
+  String get deleteBookmarkQuestion => 'ブックマークを削除しますか?';
 
   @override
-  String get cardIconsOnlyChip => 'Icons only';
+  String get cardIconsOnlyChip => 'アイコンのみ';
 
   @override
-  String get cardMoreInGridChip => '\"More\" in grid';
+  String get cardMoreInGridChip => 'グリッドに「その他」';
 
   @override
-  String get cardLayoutHidden => 'Hidden';
+  String get cardLayoutHidden => '非表示';
 
   @override
-  String get speed => 'Speed';
+  String get speed => '速度';
 
   @override
-  String get desktopShortcutPlayPause => 'Play / pause';
+  String get details => '詳細';
 
   @override
-  String get desktopShortcutRewind => 'Rewind';
+  String get episodeDetailsLabel => 'エピソードの詳細';
 
   @override
-  String get desktopShortcutForward => 'Fast-forward';
-
-  @override
-  String get desktopShortcutSlower => 'Decrease playback speed';
-
-  @override
-  String get desktopShortcutFaster => 'Increase playback speed';
-
-  @override
-  String get desktopShortcutNormalSpeed => 'Reset playback speed';
-
-  @override
-  String get desktopShortcutSearch => 'Open search';
-
-  @override
-  String get desktopShortcutLibrary => 'Open library';
-
-  @override
-  String get desktopShortcutNowPlaying => 'Open now playing';
-
-  @override
-  String get desktopShortcutFullScreen => 'Full screen';
-
-  @override
-  String get desktopShortcutClosePlayer => 'Close the full-screen player';
-
-  @override
-  String get desktopShortcutBack => 'Go back (close the top page or sheet)';
-
-  @override
-  String get desktopShortcutRefresh => 'Refresh the list on screen';
-
-  @override
-  String get desktopShortcutPreviousCard => 'Previous Absorbing card';
-
-  @override
-  String get desktopShortcutNextCard => 'Next Absorbing card';
-
-  @override
-  String get desktopShortcutContextMenu => 'Open the long-press menu';
-
-  @override
-  String get desktopShortcutMouseBack => 'Mouse back button';
-
-  @override
-  String get desktopShortcutRightClick => 'Right-click';
-
-  @override
-  String get desktopShortcutDragShelves => 'Drag shelves and cards sideways';
-
-  @override
-  String get desktopShortcutMouseDrag => 'Click and drag';
-
-  @override
-  String get details => 'Details';
-
-  @override
-  String get episodeDetailsLabel => 'Episode Details';
-
-  @override
-  String get bookDetailsLabel => 'Book Details';
+  String get bookDetailsLabel => '本の詳細';
 
   @override
   String get equalizerShort => 'EQ';
 
   @override
-  String get equalizerLabel => 'Equalizer';
+  String get equalizerLabel => 'イコライザー';
 
   @override
-  String get cast => 'Cast';
+  String get cast => 'キャスト';
 
   @override
   String castingToDevice(String device) {
-    return 'Casting to $device';
+    return '$device にキャスト中';
   }
 
   @override
   String castToDeviceNamed(String device) {
-    return 'Cast to $device';
+    return '$device にキャスト';
   }
 
   @override
-  String get historyShort => 'History';
+  String get historyShort => '履歴';
 
   @override
   String atPosition(String position) {
-    return 'at $position';
+    return '$position の位置';
   }
 
   @override
   String chaptersChip(int count) {
-    return '$count chapters';
+    return '$count チャプター';
   }
 
   @override
   String chapterNumber(int number) {
-    return 'Chapter $number';
+    return 'チャプター $number';
   }
 
   @override
@@ -5483,156 +5381,153 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get fileInfoTitle => 'File info';
+  String get fileInfoTitle => 'ファイル情報';
 
   @override
   String fileInfoFileCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count ファイル',
+      one: '1 ファイル',
     );
     return '$_temp0';
   }
 
   @override
-  String get fileInfoNone => 'This book has no file details.';
+  String get fileInfoNone => 'この本にはファイルの詳細がありません。';
 
   @override
-  String get fileInfoAudio => 'Audio';
+  String get fileInfoAudio => 'オーディオ';
 
   @override
-  String get fileInfoEbook => 'Ebook';
+  String get fileInfoEbook => '電子書籍';
 
   @override
-  String get fileInfoOther => 'Other files';
+  String get fileInfoOther => 'その他のファイル';
 
   @override
-  String get fileInfoBookOrbitNote =>
-      'BookOrbit doesn\'t report codec or bitrate.';
+  String get fileInfoBookOrbitNote => 'BookOrbit はコーデックとビットレートを報告しません。';
 
   @override
   String fileInfoChannels(int count) {
-    return '$count channels';
+    return '$count チャンネル';
   }
 
   @override
-  String get fileInfoCover => 'Cover';
+  String get fileInfoCover => 'カバー';
 
   @override
-  String get fileInfoMetadata => 'Metadata';
+  String get fileInfoMetadata => 'メタデータ';
 
   @override
-  String get fileInfoSupplement => 'Extra';
+  String get fileInfoSupplement => '付属';
 
   @override
-  String get fileInfoPathCopied => 'Path copied';
+  String get fileInfoPathCopied => 'パスをコピーしました';
 
   @override
-  String get resetMayNotHaveSynced =>
-      'Reset may not have synced - check your server';
+  String get resetMayNotHaveSynced => 'リセットが同期されていない可能性があります。サーバーを確認してください';
 
   @override
   String failedToDownloadEbook(int code) {
-    return 'Failed to download ebook ($code)';
+    return '電子書籍のダウンロードに失敗しました ($code)';
   }
 
   @override
-  String get serverReturnedErrorPage =>
-      'Server returned an error page instead of the ebook file';
+  String get serverReturnedErrorPage => 'サーバーが電子書籍ファイルではなくエラーページを返しました';
 
   @override
   String ebookSaved(String filename) {
-    return 'Saved: $filename';
+    return '保存しました: $filename';
   }
 
   @override
   String errorSavingEbook(String error) {
-    return 'Error saving ebook: $error';
+    return '電子書籍の保存中にエラーが発生しました: $error';
   }
 
   @override
   String failedToSaveError(String error) {
-    return 'Failed to save: $error';
+    return '保存に失敗しました: $error';
   }
 
   @override
-  String get adminBackupsLabel => 'Backups';
+  String get adminBackupsLabel => 'バックアップ';
 
   @override
-  String get adminListeningNow => 'Listening Now';
+  String get adminListeningNow => '現在再生中';
 
   @override
-  String get adminLibraries => 'Libraries';
+  String get adminLibraries => 'ライブラリ';
 
   @override
-  String get adminLibraryShows => 'shows';
+  String get adminLibraryShows => '番組';
 
   @override
-  String get adminLibraryBooks => 'books';
+  String get adminLibraryBooks => '冊';
 
   @override
-  String get adminLibraryFolders => 'folders';
+  String get adminLibraryFolders => 'フォルダー';
 
   @override
-  String get adminLibrarySize => 'size';
+  String get adminLibrarySize => 'サイズ';
 
   @override
-  String get adminLibraryDuration => 'duration';
+  String get adminLibraryDuration => '再生時間';
 
   @override
   String adminLibraryIssues(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count missing or invalid items',
-      one: '1 missing or invalid item',
+      other: '見つからない/無効なアイテム $count 件',
+      one: '見つからない/無効なアイテム 1 件',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminLibraryReview => 'Review';
+  String get adminLibraryReview => '確認';
 
   @override
-  String get adminMissingTitle => 'Missing Items';
+  String get adminMissingTitle => '見つからないアイテム';
 
   @override
   String adminMissingSubtitle(String library) {
-    return 'Entries in $library whose files are missing or unreadable';
+    return '$library のうち、ファイルが見つからない、または読み取れないエントリー';
   }
 
   @override
-  String get adminMissingNone => 'No missing or invalid items';
+  String get adminMissingNone => '見つからない/無効なアイテムはありません';
 
   @override
-  String get adminMissingBadge => 'Missing';
+  String get adminMissingBadge => '不明';
 
   @override
-  String get adminInvalidBadge => 'Invalid';
+  String get adminInvalidBadge => '無効';
 
   @override
-  String get adminMissingDeleteTitle => 'Remove entry';
+  String get adminMissingDeleteTitle => 'エントリーを削除';
 
   @override
   String adminMissingDeleteOneContent(String title) {
-    return 'Remove \"$title\" from Audiobookshelf?';
+    return '「$title」を Audiobookshelf から削除しますか?';
   }
 
   @override
   String adminMissingDeleteManyContent(int count) {
-    return 'Remove $count entries from Audiobookshelf?';
+    return '$count 件のエントリーを Audiobookshelf から削除しますか?';
   }
 
   @override
   String adminMissingDeleteCount(int count) {
-    return 'Delete $count';
+    return '$count 件を削除';
   }
 
   @override
   String adminMissingRemovedOne(String title) {
-    return 'Removed $title';
+    return '$title を削除しました';
   }
 
   @override
@@ -5640,719 +5535,713 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Removed $count entries',
-      one: 'Removed 1 entry',
+      other: 'エントリー $count 件を削除しました',
+      one: 'エントリー 1 件を削除しました',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminMissingDeleteFailed => 'Failed to delete entry';
+  String get adminMissingDeleteFailed => 'エントリーを削除できませんでした';
 
   @override
-  String get adminMatchAction => 'Match';
+  String get adminMatchAction => '照合';
 
   @override
   String adminMatchingStarted(String name) {
-    return 'Matching started for $name';
+    return '$name の照合を開始しました';
   }
 
   @override
-  String get adminMatchFailed => 'Failed';
+  String get adminMatchFailed => '失敗しました';
 
   @override
   String adminScanFailed(String name) {
-    return 'Failed to scan $name';
+    return '$name をスキャンできませんでした';
   }
 
   @override
-  String get adminPurgeCacheFailed => 'Failed';
+  String get adminPurgeCacheFailed => '失敗しました';
 
   @override
   String get adminUsersRootBadge => 'root';
 
   @override
-  String get adminUsersAdminBadge => 'admin';
+  String get adminUsersAdminBadge => '管理者';
 
   @override
-  String get adminUsersDisabledBadge => 'disabled';
+  String get adminUsersDisabledBadge => '無効';
 
   @override
-  String get adminUsersEditUserTooltip => 'Edit user';
+  String get adminUsersEditUserTooltip => 'ユーザーを編集';
 
   @override
-  String get adminUsersOnlineNow => 'Online now';
+  String get adminUsersOnlineNow => 'オンライン';
 
   @override
   String adminUsersLastSeen(String time) {
-    return 'Last seen $time';
+    return '最終ログイン $time';
   }
 
   @override
-  String get adminUsersNever => 'Never';
+  String get adminUsersNever => 'なし';
 
   @override
-  String get adminUsersTotal => 'Total';
+  String get adminUsersTotal => '合計';
 
   @override
-  String get adminUsersNoReadingActivity => 'No reading activity';
+  String get adminUsersNoReadingActivity => '閲覧履歴はありません';
 
   @override
-  String get adminUsersLoadingDots => 'Loading...';
+  String get adminUsersLoadingDots => '読み込み中...';
 
   @override
-  String get adminUsersLoadMoreSessions => 'Load more sessions';
+  String get adminUsersLoadMoreSessions => 'セッションをさらに読み込む';
 
   @override
-  String get adminUsersNoRecentSessions => 'No recent sessions';
+  String get adminUsersNoRecentSessions => '最近のセッションはありません';
 
   @override
-  String get adminUsersLibraryProgress => 'Library Progress';
+  String get adminUsersLibraryProgress => 'ライブラリの進捗';
 
   @override
   String adminUsersLoadMoreRemaining(int count) {
-    return 'Load More ($count remaining)';
+    return 'さらに読み込む (残り $count 件)';
   }
 
   @override
   String adminUsersMonthsAgo(int count) {
-    return '${count}mo ago';
+    return '$count か月前';
   }
 
   @override
-  String get adminUsersNewUser => 'New User';
+  String get adminUsersNewUser => '新規ユーザー';
 
   @override
-  String get adminUsersEditUser => 'Edit User';
+  String get adminUsersEditUser => 'ユーザーを編集';
 
   @override
-  String get adminUsersUsername => 'Username';
+  String get adminUsersUsername => 'ユーザー名';
 
   @override
-  String get adminUsersEnterUsername => 'Enter username';
+  String get adminUsersEnterUsername => 'ユーザー名を入力';
 
   @override
-  String get adminUsersPassword => 'Password';
+  String get adminUsersPassword => 'パスワード';
 
   @override
-  String get adminUsersNewPassword => 'New Password';
+  String get adminUsersNewPassword => '新しいパスワード';
 
   @override
-  String get adminUsersEnterPassword => 'Enter password';
+  String get adminUsersEnterPassword => 'パスワードを入力';
 
   @override
-  String get adminUsersLeaveBlankToKeep => 'Leave blank to keep current';
+  String get adminUsersLeaveBlankToKeep => '変更しない場合は空欄のまま';
 
   @override
-  String get adminUsersAccountType => 'Account Type';
+  String get adminUsersAccountType => 'アカウントの種類';
 
   @override
-  String get adminUsersTypeGuest => 'Guest';
+  String get adminUsersTypeGuest => 'ゲスト';
 
   @override
-  String get adminUsersTypeUser => 'User';
+  String get adminUsersTypeUser => 'ユーザー';
 
   @override
-  String get adminUsersTypeAdmin => 'Admin';
+  String get adminUsersTypeAdmin => '管理者';
 
   @override
-  String get adminUsersStatus => 'Status';
+  String get adminUsersStatus => 'ステータス';
 
   @override
-  String get adminUsersAccountActive => 'Account Active';
+  String get adminUsersAccountActive => 'アカウント有効';
 
   @override
-  String get adminUsersAccountActiveSub => 'Disabled accounts cannot log in';
+  String get adminUsersAccountActiveSub => '無効なアカウントはログインできません';
 
   @override
-  String get adminUsersLocked => 'Locked';
+  String get adminUsersLocked => 'ロック';
 
   @override
-  String get adminUsersLockedSub => 'Prevents password changes';
+  String get adminUsersLockedSub => 'パスワードの変更を禁止します';
 
   @override
-  String get adminUsersPermissions => 'Permissions';
+  String get adminUsersPermissions => '権限';
 
   @override
-  String get adminUsersPermDownload => 'Download';
+  String get adminUsersPermDownload => 'ダウンロード';
 
   @override
-  String get adminUsersPermUpdate => 'Update';
+  String get adminUsersPermUpdate => '更新';
 
   @override
-  String get adminUsersPermUpdateSub => 'Edit metadata and library items';
+  String get adminUsersPermUpdateSub => 'メタデータとライブラリアイテムを編集';
 
   @override
-  String get adminUsersPermDelete => 'Delete';
+  String get adminUsersPermDelete => '削除';
 
   @override
-  String get adminUsersPermUpload => 'Upload';
+  String get adminUsersPermUpload => 'アップロード';
 
   @override
-  String get adminUsersPermExplicit => 'Explicit Content';
+  String get adminUsersPermExplicit => '露骨なコンテンツ';
 
   @override
-  String get adminUsersLibraryAccess => 'Library Access';
+  String get adminUsersLibraryAccess => 'ライブラリへのアクセス';
 
   @override
-  String get adminUsersAccessAllLibraries => 'Access All Libraries';
+  String get adminUsersAccessAllLibraries => 'すべてのライブラリにアクセス';
 
   @override
-  String get adminUsersCreateUser => 'Create User';
+  String get adminUsersCreateUser => 'ユーザーを作成';
 
   @override
-  String get adminUsersSaveChanges => 'Save Changes';
+  String get adminUsersSaveChanges => '変更を保存';
 
   @override
-  String get adminUsersUsernameRequired => 'Username is required';
+  String get adminUsersUsernameRequired => 'ユーザー名は必須です';
 
   @override
-  String get adminUsersPasswordRequired => 'Password is required';
+  String get adminUsersPasswordRequired => 'パスワードは必須です';
 
   @override
-  String get adminUsersUserCreated => 'User created';
+  String get adminUsersUserCreated => 'ユーザーを作成しました';
 
   @override
-  String get adminUsersUserUpdated => 'User updated';
+  String get adminUsersUserUpdated => 'ユーザーを更新しました';
 
   @override
-  String get adminUsersFailedCreate => 'Failed to create user';
+  String get adminUsersFailedCreate => 'ユーザーを作成できませんでした';
 
   @override
-  String get adminUsersFailedUpdate => 'Failed to update user';
+  String get adminUsersFailedUpdate => 'ユーザーを更新できませんでした';
 
   @override
-  String get adminUsersThisUser => 'this user';
+  String get adminUsersThisUser => 'このユーザー';
 
   @override
-  String get adminUsersDeleteUserTitle => 'Delete User?';
+  String get adminUsersDeleteUserTitle => 'ユーザーを削除しますか?';
 
   @override
   String adminUsersDeleteUserContent(String name) {
-    return 'Permanently delete $name?';
+    return '$name を完全に削除しますか?';
   }
 
   @override
   String adminUsersUserDeleted(String name) {
-    return '$name deleted';
+    return '$name を削除しました';
   }
 
   @override
-  String get adminUsersFailedDelete => 'Failed to delete user';
+  String get adminUsersFailedDelete => 'ユーザーを削除できませんでした';
 
   @override
-  String get adminUsersUnlinkOpenId => 'Unlink OpenID';
+  String get adminUsersUnlinkOpenId => 'OpenID の連携を解除';
 
   @override
-  String get adminUsersUnlinkOpenIdTitle => 'Unlink OpenID?';
+  String get adminUsersUnlinkOpenIdTitle => 'OpenID の連携を解除しますか?';
 
   @override
   String adminUsersUnlinkOpenIdContent(String name) {
-    return 'Remove the OpenID connection for $name? They\'ll need to sign in with OpenID again to re-link.';
+    return '$name の OpenID 連携を解除しますか? 再連携するには、もう一度 OpenID でサインインする必要があります。';
   }
 
   @override
-  String get adminUsersOpenIdUnlinked => 'OpenID unlinked';
+  String get adminUsersOpenIdUnlinked => 'OpenID の連携を解除しました';
 
   @override
-  String get adminUsersFailedUnlinkOpenId => 'Failed to unlink OpenID';
+  String get adminUsersFailedUnlinkOpenId => 'OpenID の連携を解除できませんでした';
 
   @override
   String adminUsersByAuthor(String author) {
-    return 'by $author';
+    return '$author 著';
   }
 
   @override
-  String get adminUsersListened => 'Listened';
+  String get adminUsersListened => '再生時間';
 
   @override
-  String get adminUsersStartedAtPosition => 'Started at position';
+  String get adminUsersStartedAtPosition => '開始位置';
 
   @override
-  String get adminUsersEndedAtPosition => 'Ended at position';
+  String get adminUsersEndedAtPosition => '終了位置';
 
   @override
-  String get adminUsersTotalDuration => 'Total duration';
+  String get adminUsersTotalDuration => '合計時間';
 
   @override
-  String get adminUsersStarted => 'Started';
+  String get adminUsersStarted => '開始';
 
   @override
-  String get adminUsersUpdated => 'Updated';
+  String get adminUsersUpdated => '更新';
 
   @override
-  String get adminUsersClient => 'Client';
+  String get adminUsersClient => 'クライアント';
 
   @override
-  String get adminUsersDevice => 'Device';
+  String get adminUsersDevice => 'デバイス';
 
   @override
   String get adminUsersOs => 'OS';
 
   @override
-  String get adminUsersPlayMethod => 'Play method';
+  String get adminUsersPlayMethod => '再生方式';
 
   @override
-  String get adminUsersPlayDirect => 'Direct play';
+  String get adminUsersPlayDirect => 'ダイレクト再生';
 
   @override
-  String get adminUsersPlayDirectStream => 'Direct stream';
+  String get adminUsersPlayDirectStream => 'ダイレクトストリーム';
 
   @override
-  String get adminUsersPlayTranscode => 'Transcode';
+  String get adminUsersPlayTranscode => 'トランスコード';
 
   @override
-  String get adminUsersPlayLocal => 'Local';
+  String get adminUsersPlayLocal => 'ローカル';
 
   @override
-  String get adminPodcastsCheckNewEpisodesTitle => 'Check for New Episodes';
+  String get adminPodcastsCheckNewEpisodesTitle => '新しいエピソードを確認';
 
   @override
   String get adminPodcastsCheckNewEpisodesContent =>
-      'This will check RSS feeds for all podcasts and download any new episodes found (if auto-download is enabled).';
+      'すべてのポッドキャストの RSS フィードを確認し、新しいエピソードが見つかればダウンロードします (自動ダウンロードが有効な場合)。';
 
   @override
   String get adminPodcastsCheckNewEpisodesSubtitle =>
-      'Scan RSS feed and download new episodes';
+      'RSS フィードをスキャンして新しいエピソードをダウンロード';
 
   @override
-  String get adminPodcastsCheck => 'Check';
+  String get adminPodcastsCheck => '確認';
 
   @override
-  String get adminPodcastsCheckingForNew => 'Checking for new episodes…';
+  String get adminPodcastsCheckingForNew => '新しいエピソードを確認中…';
 
   @override
-  String get adminPodcastsCheckingForNewDots => 'Checking for new episodes...';
+  String get adminPodcastsCheckingForNewDots => '新しいエピソードを確認中...';
 
   @override
-  String get adminPodcastsFailedCheckEpisodes => 'Failed to check episodes';
+  String get adminPodcastsFailedCheckEpisodes => 'エピソードを確認できませんでした';
 
   @override
-  String get adminPodcastsCheckFeedsTooltip => 'Check feeds for new episodes';
+  String get adminPodcastsCheckFeedsTooltip => 'フィードの新しいエピソードを確認';
 
   @override
-  String get adminPodcastsNoPodcastsYet => 'No podcasts yet';
+  String get adminPodcastsNoPodcastsYet => 'ポッドキャストはまだありません';
 
   @override
-  String get adminPodcastsTapPlusHint => 'Tap + to search and add shows';
+  String get adminPodcastsTapPlusHint => '+ をタップして番組を検索・追加';
 
   @override
   String adminPodcastsEpisodesCount(int count) {
-    return '$count episodes';
+    return '$count エピソード';
   }
 
   @override
-  String get adminPodcastsAddPodcast => 'Add Podcast';
+  String get adminPodcastsAddPodcast => 'ポッドキャストを追加';
 
   @override
-  String get adminPodcastsCouldNotFindFeed => 'Could not find podcast feed';
+  String get adminPodcastsCouldNotFindFeed => 'ポッドキャストのフィードが見つかりませんでした';
 
   @override
-  String get adminPodcastsSearchHint => 'Search for podcasts…';
+  String get adminPodcastsSearchHint => 'ポッドキャストを検索…';
 
   @override
-  String get adminPodcastsSearchItunesHint => 'Search iTunes...';
+  String get adminPodcastsSearchItunesHint => 'iTunes を検索...';
 
   @override
   String adminPodcastsSearchItunesFor(String query) {
-    return 'Search iTunes for \"$query\"';
+    return 'iTunes で「$query」を検索';
   }
 
   @override
-  String get adminPodcastsNoPodcastsFound => 'No podcasts found';
+  String get adminPodcastsNoPodcastsFound => 'ポッドキャストが見つかりません';
 
   @override
-  String get adminPodcastsRelToday => 'Today';
+  String get adminPodcastsRelToday => '今日';
 
   @override
   String adminPodcastsWeeksAgo(int count) {
-    return '${count}w ago';
+    return '$count 週間前';
   }
 
   @override
   String adminPodcastsMonthsAgo(int count) {
-    return '${count}mo ago';
+    return '$count か月前';
   }
 
   @override
   String adminPodcastsYearsAgo(int count) {
-    return '${count}y ago';
+    return '$count 年前';
   }
 
   @override
   String adminPodcastsUpdated(String when) {
-    return 'Updated $when';
+    return '更新: $when';
   }
 
   @override
-  String get adminPodcastsGenreAll => 'All';
+  String get adminPodcastsGenreAll => 'すべて';
 
   @override
-  String get adminPodcastsGenreArts => 'Arts';
+  String get adminPodcastsGenreArts => 'アート';
 
   @override
-  String get adminPodcastsGenreComedy => 'Comedy';
+  String get adminPodcastsGenreComedy => 'コメディ';
 
   @override
-  String get adminPodcastsGenreEducation => 'Education';
+  String get adminPodcastsGenreEducation => '教育';
 
   @override
-  String get adminPodcastsGenreTvFilm => 'TV & Film';
+  String get adminPodcastsGenreTvFilm => 'テレビ・映画';
 
   @override
-  String get adminPodcastsGenreMusic => 'Music';
+  String get adminPodcastsGenreMusic => '音楽';
 
   @override
-  String get adminPodcastsGenreNews => 'News';
+  String get adminPodcastsGenreNews => 'ニュース';
 
   @override
-  String get adminPodcastsGenreReligion => 'Religion';
+  String get adminPodcastsGenreReligion => '宗教';
 
   @override
-  String get adminPodcastsGenreScience => 'Science';
+  String get adminPodcastsGenreScience => '科学';
 
   @override
-  String get adminPodcastsGenreSports => 'Sports';
+  String get adminPodcastsGenreSports => 'スポーツ';
 
   @override
-  String get adminPodcastsGenreTechnology => 'Technology';
+  String get adminPodcastsGenreTechnology => 'テクノロジー';
 
   @override
-  String get adminPodcastsGenreBusiness => 'Business';
+  String get adminPodcastsGenreBusiness => 'ビジネス';
 
   @override
-  String get adminPodcastsGenreFiction => 'Fiction';
+  String get adminPodcastsGenreFiction => 'フィクション';
 
   @override
-  String get adminPodcastsGenreSocietyCulture => 'Society & Culture';
+  String get adminPodcastsGenreSocietyCulture => '社会・文化';
 
   @override
-  String get adminPodcastsGenreHealthFitness => 'Health & Fitness';
+  String get adminPodcastsGenreHealthFitness => '健康・フィットネス';
 
   @override
-  String get adminPodcastsGenreTrueCrime => 'True Crime';
+  String get adminPodcastsGenreTrueCrime => '実録犯罪';
 
   @override
-  String get adminPodcastsGenreHistory => 'History';
+  String get adminPodcastsGenreHistory => '歴史';
 
   @override
-  String get adminPodcastsGenreKidsFamily => 'Kids & Family';
+  String get adminPodcastsGenreKidsFamily => 'キッズ・ファミリー';
 
   @override
-  String get adminPodcastsPodcastFallback => 'Podcast';
+  String get adminPodcastsPodcastFallback => 'ポッドキャスト';
 
   @override
-  String get adminPodcastsEpisodeFallback => 'Episode';
+  String get adminPodcastsEpisodeFallback => 'エピソード';
 
   @override
-  String get adminPodcastsNoFeedFound => 'No feed URL found';
+  String get adminPodcastsNoFeedFound => 'フィード URL が見つかりません';
 
   @override
-  String get adminPodcastsNoFeedAvailable => 'No feed URL available';
+  String get adminPodcastsNoFeedAvailable => 'フィード URL がありません';
 
   @override
   String adminPodcastsAddedToLibrary(String title) {
-    return '$title added to library';
+    return '$title をライブラリに追加しました';
   }
 
   @override
   String adminPodcastsFailedToAdd(String title) {
-    return 'Failed to add $title';
+    return '$title を追加できませんでした';
   }
 
   @override
   String adminPodcastsEpisodesInFeed(int count) {
-    return '$count episodes in feed';
+    return 'フィード内に $count エピソード';
   }
 
   @override
   String adminPodcastsMoreEpisodes(int count) {
-    return '+ $count more episodes';
+    return '+ ほか $count エピソード';
   }
 
   @override
-  String get adminPodcastsAdding => 'Adding…';
+  String get adminPodcastsAdding => '追加中…';
 
   @override
-  String get adminPodcastsAddToLibrary => 'Add to Library';
+  String get adminPodcastsAddToLibrary => 'ライブラリに追加';
 
   @override
-  String get adminPodcastsRemoveShowTitle => 'Remove Show?';
+  String get adminPodcastsRemoveShowTitle => '番組を削除しますか?';
 
   @override
   String adminPodcastsRemoveShowContent(String title) {
-    return 'Remove \"$title\" and all its episodes from the server? This cannot be undone.';
+    return '「$title」とそのすべてのエピソードをサーバーから削除しますか? この操作は元に戻せません。';
   }
 
   @override
   String adminPodcastsRemovedShow(String title) {
-    return 'Removed \"$title\"';
+    return '「$title」を削除しました';
   }
 
   @override
-  String get adminPodcastsFailedRemoveShow => 'Failed to remove show';
+  String get adminPodcastsFailedRemoveShow => '番組を削除できませんでした';
 
   @override
-  String get adminPodcastsRemoveShowTooltip => 'Remove show';
+  String get adminPodcastsRemoveShowTooltip => '番組を削除';
 
   @override
-  String get adminPodcastsSelectMultipleTooltip => 'Select multiple';
+  String get adminPodcastsSelectMultipleTooltip => '複数選択';
 
   @override
   String adminPodcastsDownloadedCount(int count) {
-    return '$count downloaded';
+    return '$count 件ダウンロード済み';
   }
 
   @override
-  String get adminPodcastsTabDownloaded => 'Downloaded';
+  String get adminPodcastsTabDownloaded => 'ダウンロード済み';
 
   @override
-  String get adminPodcastsTabFeed => 'Feed';
+  String get adminPodcastsTabFeed => 'フィード';
 
   @override
-  String get adminPodcastsTabSettings => 'Settings';
+  String get adminPodcastsTabSettings => '設定';
 
   @override
   String adminPodcastsDownloadingEpisode(String title) {
-    return 'Downloading \"$title\"';
+    return '「$title」をダウンロード中';
   }
 
   @override
-  String get adminPodcastsFailedDownload => 'Failed to download';
+  String get adminPodcastsFailedDownload => 'ダウンロードに失敗しました';
 
   @override
-  String get adminPodcastsDeleteEpisodeTitle => 'Delete Episode?';
+  String get adminPodcastsDeleteEpisodeTitle => 'エピソードを削除しますか?';
 
   @override
   String adminPodcastsDeleteEpisodeContent(String title) {
-    return 'Delete \"$title\"?';
+    return '「$title」を削除しますか?';
   }
 
   @override
-  String get adminPodcastsDeleted => 'Deleted';
+  String get adminPodcastsDeleted => '削除しました';
 
   @override
-  String get adminPodcastsFailed => 'Failed';
+  String get adminPodcastsFailed => '失敗しました';
 
   @override
-  String get adminPodcastsDeleteEpisodesTitle => 'Delete Episodes?';
+  String get adminPodcastsDeleteEpisodesTitle => 'エピソードを削除しますか?';
 
   @override
   String adminPodcastsDeleteEpisodesContent(int count) {
-    return 'Delete $count episode(s) from the server?';
+    return '$count 件のエピソードをサーバーから削除しますか?';
   }
 
   @override
   String adminPodcastsDeletedEpisodes(int count) {
-    return 'Deleted $count episode(s)';
+    return '$count 件のエピソードを削除しました';
   }
 
   @override
-  String get adminPodcastsBrowseFeedToDownload => 'Browse feed to download';
+  String get adminPodcastsBrowseFeedToDownload => 'フィードを閲覧してダウンロード';
 
   @override
-  String get adminPodcastsDownloadingDots => 'Downloading...';
+  String get adminPodcastsDownloadingDots => 'ダウンロード中...';
 
   @override
   String adminPodcastsDeleteEpisodesCount(int count) {
-    return 'Delete $count episode(s)';
+    return '$count 件のエピソードを削除';
   }
 
   @override
   String adminPodcastsDownloadingCount(int count) {
-    return 'Downloading $count episode(s)';
+    return '$count 件のエピソードをダウンロード中';
   }
 
   @override
   String adminPodcastsDownloadEpisodesCount(int count) {
-    return 'Download $count episode(s)';
+    return '$count 件のエピソードをダウンロード';
   }
 
   @override
-  String get adminPodcastsLookForEpisodesAfter => 'Look for episodes after';
+  String get adminPodcastsLookForEpisodesAfter => 'この日以降のエピソードを探す';
 
   @override
-  String get adminPodcastsSelectDate => 'Select date';
+  String get adminPodcastsSelectDate => '日付を選択';
 
   @override
-  String get adminPodcastsMaxEpisodes => 'Max episodes to download';
+  String get adminPodcastsMaxEpisodes => 'ダウンロードするエピソードの最大数';
 
   @override
   String adminPodcastsNoNewEpisodesAfter(String date) {
-    return 'No new episodes found after $date';
+    return '$date 以降の新しいエピソードはありません';
   }
 
   @override
   String adminPodcastsFoundNewEpisodes(int count) {
-    return 'Found $count new episode(s) - downloading';
+    return '新しいエピソードが $count 件見つかりました。ダウンロード中';
   }
 
   @override
-  String get adminPodcastsFailedToCheckNew =>
-      'Failed to check for new episodes';
+  String get adminPodcastsFailedToCheckNew => '新しいエピソードを確認できませんでした';
 
   @override
-  String get adminPodcastsCheckAndDownload => 'Check & Download';
+  String get adminPodcastsCheckAndDownload => '確認してダウンロード';
 
   @override
-  String get adminPodcastsMatchPodcast => 'Match Podcast';
+  String get adminPodcastsMatchPodcast => 'ポッドキャストを照合';
 
   @override
-  String get adminPodcastsMatchPodcastSubtitle =>
-      'Search iTunes to update cover and metadata';
+  String get adminPodcastsMatchPodcastSubtitle => 'iTunes を検索してカバーとメタデータを更新';
 
   @override
-  String get adminPodcastsAutoDownloadNewEpisodes =>
-      'Auto-Download New Episodes';
+  String get adminPodcastsAutoDownloadNewEpisodes => '新しいエピソードを自動ダウンロード';
 
   @override
   String get adminPodcastsAutoDownloadOnSubtitle =>
-      'Server downloads new episodes automatically';
+      'サーバーが新しいエピソードを自動でダウンロードします';
 
   @override
-  String get adminPodcastsAutoDownloadOffSubtitle =>
-      'New episodes are not auto-downloaded';
+  String get adminPodcastsAutoDownloadOffSubtitle => '新しいエピソードは自動ダウンロードされません';
 
   @override
-  String get adminPodcastsFailedAutoDownloadUpdate =>
-      'Failed to update auto-download setting';
+  String get adminPodcastsFailedAutoDownloadUpdate => '自動ダウンロード設定を更新できませんでした';
 
   @override
-  String get adminPodcastsMaxEpisodesToKeep => 'Max episodes to keep';
+  String get adminPodcastsMaxEpisodesToKeep => '保持するエピソードの最大数';
 
   @override
   String get adminPodcastsMaxEpisodesToKeepHelp =>
-      '0 keeps every episode. After a new episode is auto-downloaded, Audiobookshelf removes the oldest episode when the show is over this limit.';
+      '0 ならすべてのエピソードを保持します。新しいエピソードが自動ダウンロードされた後、番組がこの上限を超えていると、Audiobookshelf が最も古いエピソードを削除します。';
 
   @override
-  String get adminPodcastsNoEpisodeLimit => 'No limit';
+  String get adminPodcastsNoEpisodeLimit => '上限なし';
 
   @override
-  String get adminPodcastsEpisodeLimitInvalid => 'Enter 0 or a whole number';
+  String get adminPodcastsEpisodeLimitInvalid => '0 または整数を入力してください';
 
   @override
-  String get adminPodcastsCheckSchedule => 'Check Schedule';
+  String get adminPodcastsCheckSchedule => '確認スケジュール';
 
   @override
-  String get adminPodcastsFrequency => 'Frequency';
+  String get adminPodcastsFrequency => '頻度';
 
   @override
-  String get adminPodcastsFreqHourly => 'Hourly';
+  String get adminPodcastsFreqHourly => '毎時';
 
   @override
-  String get adminPodcastsFreqDaily => 'Daily';
+  String get adminPodcastsFreqDaily => '毎日';
 
   @override
-  String get adminPodcastsFreqWeekly => 'Weekly';
+  String get adminPodcastsFreqWeekly => '毎週';
 
   @override
-  String get adminPodcastsDay => 'Day';
+  String get adminPodcastsDay => '曜日';
 
   @override
-  String get adminPodcastsTime => 'Time';
+  String get adminPodcastsTime => '時刻';
 
   @override
-  String get adminPodcastsDaySun => 'Sun';
+  String get adminPodcastsDaySun => '日';
 
   @override
-  String get adminPodcastsDayMon => 'Mon';
+  String get adminPodcastsDayMon => '月';
 
   @override
-  String get adminPodcastsDayTue => 'Tue';
+  String get adminPodcastsDayTue => '火';
 
   @override
-  String get adminPodcastsDayWed => 'Wed';
+  String get adminPodcastsDayWed => '水';
 
   @override
-  String get adminPodcastsDayThu => 'Thu';
+  String get adminPodcastsDayThu => '木';
 
   @override
-  String get adminPodcastsDayFri => 'Fri';
+  String get adminPodcastsDayFri => '金';
 
   @override
-  String get adminPodcastsDaySat => 'Sat';
+  String get adminPodcastsDaySat => '土';
 
   @override
-  String get adminPodcastsFeedUrl => 'Feed URL';
+  String get adminPodcastsFeedUrl => 'フィード URL';
 
   @override
-  String get adminPodcastsBack => 'Back';
+  String get adminPodcastsBack => '戻る';
 
   @override
-  String get adminPodcastsRootOnly => 'Root Only';
+  String get adminPodcastsRootOnly => 'root のみ';
 
   @override
-  String get adminPodcastsDeleting => 'Deleting...';
+  String get adminPodcastsDeleting => '削除中...';
 
   @override
-  String get adminPodcastsDeleteEpisode => 'Delete Episode';
+  String get adminPodcastsDeleteEpisode => 'エピソードを削除';
 
   @override
   String adminPodcastsSeasonChip(String season) {
-    return 'Season $season';
+    return 'シーズン $season';
   }
 
   @override
   String adminPodcastsEpChip(String number) {
-    return 'Ep. $number';
+    return '第 $number 話';
   }
 
   @override
-  String get adminPodcastsApplyingMatch => 'Applying match...';
+  String get adminPodcastsApplyingMatch => '照合を適用中...';
 
   @override
-  String get adminPodcastsNoResults => 'No results';
+  String get adminPodcastsNoResults => '結果なし';
 
   @override
-  String get adminPodcastsPodcastMatched => 'Podcast matched and updated';
+  String get adminPodcastsPodcastMatched => 'ポッドキャストを照合して更新しました';
 
   @override
-  String get adminPodcastsFailedMatch => 'Failed to match podcast';
+  String get adminPodcastsFailedMatch => 'ポッドキャストを照合できませんでした';
 
   @override
-  String get adminPodcastsSelectAll => 'Select all';
+  String get adminPodcastsSelectAll => 'すべて選択';
 
   @override
-  String get adminPodcastsSelectAllNew => 'New only';
+  String get adminPodcastsSelectAllNew => '新規のみ';
 
   @override
-  String get adminPodcastsSortNewestFirst => 'Newest first';
+  String get adminPodcastsSortNewestFirst => '新しい順';
 
   @override
-  String get adminPodcastsSortOldestFirst => 'Oldest first';
+  String get adminPodcastsSortOldestFirst => '古い順';
 
   @override
-  String get adminPodcastsEditInfo => 'Edit Info';
+  String get adminPodcastsEditInfo => '情報を編集';
 
   @override
-  String get adminPodcastsEditInfoSubtitle =>
-      'Change title, description, cover and more';
+  String get adminPodcastsEditInfoSubtitle => 'タイトル、説明、カバーなどを変更';
 
   @override
-  String get adminPodcastsEditTitle => 'Edit Podcast';
+  String get adminPodcastsEditTitle => 'ポッドキャストを編集';
 
   @override
-  String get adminPodcastsReleaseDate => 'Release date';
+  String get adminPodcastsReleaseDate => '公開日';
 
   @override
-  String get adminPodcastsExplicit => 'Explicit';
+  String get adminPodcastsExplicit => '露骨な内容';
 
   @override
-  String get adminPodcastsExplicitSubtitle => 'Mark this podcast as explicit';
+  String get adminPodcastsExplicitSubtitle => 'このポッドキャストを露骨な内容としてマーク';
 
   @override
-  String get episodeListEpisodeFallback => 'Episode';
+  String get episodeListEpisodeFallback => 'エピソード';
 
   @override
-  String get episodeListUnknownPodcast => 'Unknown Podcast';
+  String get episodeListUnknownPodcast => '不明なポッドキャスト';
 
   @override
   String episodeListMarkedFinished(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count episodes marked as finished',
-      one: '1 episode marked as finished',
+      other: 'エピソード $count 件を完了にしました',
+      one: 'エピソード 1 件を完了にしました',
     );
     return '$_temp0';
   }
@@ -6362,51 +6251,50 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count episodes marked as unfinished',
-      one: '1 episode marked as unfinished',
+      other: 'エピソード $count 件を未完了にしました',
+      one: 'エピソード 1 件を未完了にしました',
     );
     return '$_temp0';
   }
 
   @override
-  String get episodeListUnsubscribeFromNewEpisodes =>
-      'Unsubscribe from New Episodes';
+  String get episodeListUnsubscribeFromNewEpisodes => '新しいエピソードの購読を解除';
 
   @override
-  String get episodeListSubscribeToNewEpisodes => 'Subscribe to New Episodes';
+  String get episodeListSubscribeToNewEpisodes => '新しいエピソードを購読';
 
   @override
-  String get episodeListSubscribeTitle => 'Subscribe to this podcast?';
+  String get episodeListSubscribeTitle => 'このポッドキャストを購読しますか?';
 
   @override
   String get episodeListSubscribeContent =>
-      'New episodes will be automatically downloaded and added to your absorbing queue when they appear on the server.';
+      '新しいエピソードがサーバーに公開されると、自動的にダウンロードされ、Absorbing キューに追加されます。';
 
   @override
-  String get episodeListSubscribe => 'Subscribe';
+  String get episodeListSubscribe => '購読';
 
   @override
-  String get episodeListShowFinishedEpisodes => 'Show Finished Episodes';
+  String get episodeListShowFinishedEpisodes => '完了したエピソードを表示';
 
   @override
-  String get episodeListHideFinishedEpisodes => 'Hide Finished Episodes';
+  String get episodeListHideFinishedEpisodes => '完了したエピソードを非表示';
 
   @override
-  String get episodeListShowSettings => 'Show Settings';
+  String get episodeListShowSettings => '設定を表示';
 
   @override
-  String get episodeListPlaysNewerToOlder => 'Plays newer to older episodes';
+  String get episodeListPlaysNewerToOlder => '新しいエピソードから古いエピソードの順に再生します';
 
   @override
-  String get episodeListPlaysOlderToNewer => 'Plays older to newer episodes';
+  String get episodeListPlaysOlderToNewer => '古いエピソードから新しいエピソードの順に再生します';
 
   @override
   String episodeListEpisodeCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count episodes',
-      one: '1 episode',
+      other: '$count エピソード',
+      one: '1 エピソード',
     );
     return '$_temp0';
   }
@@ -6416,144 +6304,141 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count unfinished',
-      one: '1 unfinished',
+      other: '未完了 $count 件',
+      one: '未完了 1 件',
     );
     return '$_temp0';
   }
 
   @override
-  String get episodeListAutoDownloadChip => 'Auto-Download';
+  String get episodeListAutoDownloadChip => '自動ダウンロード';
 
   @override
-  String get episodeListSubscribedChip => 'Subscribed';
+  String get episodeListSubscribedChip => '購読中';
 
   @override
-  String get episodeListExplicitChip => 'Explicit';
+  String get episodeListExplicitChip => '露骨な内容';
 
   @override
-  String get episodeListSortNewest => 'Newest';
+  String get episodeListSortNewest => '新しい順';
 
   @override
-  String get episodeListSortOldest => 'Oldest';
+  String get episodeListSortOldest => '古い順';
 
   @override
-  String get episodeListSortBy => 'Sort episodes';
+  String get episodeListSortBy => 'エピソードを並べ替え';
 
   @override
-  String get episodeListSortPubDate => 'Publish date';
+  String get episodeListSortPubDate => '公開日';
 
   @override
-  String get episodeListSortTitle => 'Title';
+  String get episodeListSortTitle => 'タイトル';
 
   @override
-  String get episodeListSortSeason => 'Season';
+  String get episodeListSortSeason => 'シーズン';
 
   @override
-  String get episodeListSortEpisode => 'Episode number';
+  String get episodeListSortEpisode => 'エピソード番号';
 
   @override
-  String get episodeListSortFileName => 'File name';
+  String get episodeListSortFileName => 'ファイル名';
 
   @override
-  String get episodeListSortReverseHint => 'Tap again to reverse the order';
+  String get episodeListSortReverseHint => 'もう一度タップすると順序が逆になります';
 
   @override
   String episodeListAddedToAbsorbing(String title) {
-    return 'Added \"$title\" to Absorbing';
+    return '「$title」を Absorbing に追加しました';
   }
 
   @override
-  String get episodeDetailEpisodeFallback => 'Episode';
+  String get episodeDetailEpisodeFallback => 'エピソード';
 
   @override
-  String get episodeDetailMarkedNotFinished => 'Marked as not finished';
+  String get episodeDetailMarkedNotFinished => '未完了にしました';
 
   @override
-  String get episodeDetailMarkedFinishedNice => 'Marked as finished - nice!';
+  String get episodeDetailMarkedFinishedNice => '完了にしました。お疲れさまです!';
 
   @override
-  String get episodeDetailMarkAbsorbedContent =>
-      'This will set your progress to 100% for this episode.';
+  String get episodeDetailMarkAbsorbedContent => 'このエピソードの進捗が 100% になります。';
 
   @override
   String get episodeDetailResetProgressContent =>
-      'This will erase all progress for this episode and set it back to the beginning. This can\'t be undone.';
+      'このエピソードの進捗をすべて消去し、最初に戻します。この操作は元に戻せません。';
 
   @override
-  String get episodeDetailToday => 'Today';
+  String get episodeDetailToday => '今日';
 
   @override
-  String get episodeDetailYesterday => 'Yesterday';
+  String get episodeDetailYesterday => '昨日';
 
   @override
   String episodeDetailDaysAgo(int count) {
-    return '${count}d ago';
+    return '$count 日前';
   }
 
   @override
   String episodeDetailWeeksAgo(int count) {
-    return '${count}w ago';
+    return '$count 週間前';
   }
 
   @override
   String episodeDetailDurationHm(int hours, int minutes) {
-    return '${hours}h ${minutes}m';
+    return '$hours 時間 $minutes 分';
   }
 
   @override
   String episodeDetailDurationM(int minutes) {
-    return '${minutes}m';
+    return '$minutes 分';
   }
 
   @override
-  String get episodeDetailResume => 'Resume';
+  String get episodeDetailResume => '再開';
 
   @override
-  String get episodeDetailPlayEpisode => 'Play Episode';
+  String get episodeDetailPlayEpisode => 'エピソードを再生';
 
   @override
   String episodeDetailEpisodeNumber(String number) {
-    return 'Episode $number';
+    return 'エピソード $number';
   }
 
   @override
   String episodeDetailSeasonNumber(String number) {
-    return 'Season $number';
+    return 'シーズン $number';
   }
 
   @override
-  String get editMetadataUpdatedFromMatch => 'Metadata updated from match';
+  String get editMetadataUpdatedFromMatch => '照合結果からメタデータを更新しました';
 
   @override
   String editMetadataConfirmMatch(String title) {
-    return 'This will update the server metadata for this book using:\n\n\"$title\"\n\nAll fields and the cover will be overwritten on the server.';
+    return '次の内容で、この本のサーバー上のメタデータを更新します。\n\n「$title」\n\nすべての項目とカバーがサーバー上で上書きされます。';
   }
 
   @override
   String editMetadataConfirmMatchWithAuthor(String title, String author) {
-    return 'This will update the server metadata for this book using:\n\n\"$title\" by $author\n\nAll fields and the cover will be overwritten on the server.';
+    return '次の内容で、この本のサーバー上のメタデータを更新します。\n\n「$title」 ($author 著)\n\nすべての項目とカバーがサーバー上で上書きされます。';
   }
 
   @override
-  String get seriesBooksFindMissingTitle => 'Find Missing Books';
+  String get seriesBooksFindMissingTitle => '不足している本を探す';
 
   @override
   String get seriesBooksFindMissingContent =>
-      'This searches Audible to find books in this series that may be missing from your library.\n\nBooks are matched by ASIN first (depending on whether your server has ASINs for its books), then falls back to title matching. Results may not be perfectly accurate.';
+      'Audible を検索して、このシリーズのうちライブラリにない本を探します。\n\nまず ASIN で照合し (サーバーが本の ASIN を持っている場合)、見つからなければタイトルで照合します。結果が完全に正確とは限りません。';
 
   @override
-  String get seriesBooksCouldNotFindOnAudible =>
-      'Could not find this series on Audible';
+  String get seriesBooksCouldNotFindOnAudible => 'Audible でこのシリーズが見つかりませんでした';
 
   @override
   String seriesBooksMarkAllNotFinishedContent(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other:
-          'This will clear the finished status for all $count books in this series.',
-      one: 'This will clear the finished status for the 1 book in this series.',
+      other: 'このシリーズの全 $count 冊の完了状態を解除します。',
+      one: 'このシリーズの本 1 冊の完了状態を解除します。',
     );
     return '$_temp0';
   }
@@ -6563,243 +6448,241 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'This will mark all $count books in this series as finished.',
-      one: 'This will mark the 1 book in this series as finished.',
+      other: 'このシリーズの全 $count 冊を完了にします。',
+      one: 'このシリーズの本 1 冊を完了にします。',
     );
     return '$_temp0';
   }
 
   @override
-  String get seriesBooksUnmarkAll => 'Unmark All';
+  String get seriesBooksUnmarkAll => 'すべて解除';
 
   @override
-  String get seriesBooksShowAllBooks => 'Show all books';
+  String get seriesBooksShowAllBooks => 'すべての本を表示';
 
   @override
-  String get seriesBooksGroupBySubSeries => 'Group by sub-series';
+  String get seriesBooksGroupBySubSeries => 'サブシリーズでグループ化';
 
   @override
-  String get seriesBooksLoadingSubSeries => 'Loading sub-series...';
+  String get seriesBooksLoadingSubSeries => 'サブシリーズを読み込み中...';
 
   @override
   String seriesBooksBookCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count 冊',
+      one: '1 冊',
     );
     return '$_temp0';
   }
 
   @override
-  String get seriesBooksDone => 'Done';
+  String get seriesBooksDone => '完了';
 
   @override
   String get seriesBooksExplicitBadge => 'E';
 
   @override
-  String get expandedCardStreaming => 'Streaming';
+  String get expandedCardStreaming => 'ストリーミング';
 
   @override
-  String get expandedCardDeviceFallback => 'Device';
+  String get expandedCardDeviceFallback => 'デバイス';
 
   @override
   String bookmarksScreenPositionInBook(String position, String bookTitle) {
-    return '$position in $bookTitle';
+    return '$bookTitle の $position';
   }
 
   @override
-  String get bookmarksScreenClose => 'Close';
+  String get bookmarksScreenClose => '閉じる';
 
   @override
-  String get bookmarksScreenSortNewest => 'Newest';
+  String get bookmarksScreenSortNewest => '新しい順';
 
   @override
-  String get bookmarksScreenSortPosition => 'Position';
+  String get bookmarksScreenSortPosition => '位置';
 
   @override
   String statsScreenStreakDays(int count) {
-    return '${count}d';
+    return '$count日';
   }
 
   @override
   String statsScreenSessionCountOne(int count) {
-    return '$count session';
+    return '$count セッション';
   }
 
   @override
   String statsScreenSessionCountOther(int count) {
-    return '$count sessions';
+    return '$count セッション';
   }
 
   @override
-  String get statsScreenDayMon => 'Mon';
+  String get statsScreenDayMon => '月';
 
   @override
-  String get statsScreenDayTue => 'Tue';
+  String get statsScreenDayTue => '火';
 
   @override
-  String get statsScreenDayWed => 'Wed';
+  String get statsScreenDayWed => '水';
 
   @override
-  String get statsScreenDayThu => 'Thu';
+  String get statsScreenDayThu => '木';
 
   @override
-  String get statsScreenDayFri => 'Fri';
+  String get statsScreenDayFri => '金';
 
   @override
-  String get statsScreenDaySat => 'Sat';
+  String get statsScreenDaySat => '土';
 
   @override
-  String get statsScreenDaySun => 'Sun';
+  String get statsScreenDaySun => '日';
 
   @override
   String statsScreenDurationHm(int h, int m) {
-    return '${h}h ${m}m';
+    return '$h時間$m分';
   }
 
   @override
   String statsScreenDurationM(int m) {
-    return '${m}m';
+    return '$m分';
   }
 
   @override
-  String get statsScreenDurationLessThanMin => '<1m';
+  String get statsScreenDurationLessThanMin => '<1分';
 
   @override
-  String get statsScreenDurationZero => '0m';
+  String get statsScreenDurationZero => '0分';
 
   @override
   String statsScreenDurationShortH(int h) {
-    return '${h}h';
+    return '$h時間';
   }
 
   @override
   String statsScreenDurationShortM(int m) {
-    return '${m}m';
+    return '$m分';
   }
 
   @override
-  String get statsScreenCouldNotLoadItem => 'Could not load item';
+  String get statsScreenCouldNotLoadItem => 'アイテムを読み込めませんでした';
 
   @override
-  String get statsScreenCouldNotFindEpisode => 'Could not find episode';
+  String get statsScreenCouldNotFindEpisode => 'エピソードが見つかりませんでした';
 
   @override
   String statsScreenByAuthor(String author) {
-    return 'by $author';
+    return '$author 著';
   }
 
   @override
-  String get statsScreenListened => 'Listened';
+  String get statsScreenListened => '再生時間';
 
   @override
-  String get sessionEditTitle => 'Edit session';
+  String get sessionEditTitle => 'セッションを編集';
 
   @override
-  String get sessionDayLabel => 'Day';
+  String get sessionDayLabel => '日付';
 
   @override
-  String get sessionEndPosition => 'Ending position';
+  String get sessionEndPosition => '終了位置';
 
   @override
-  String get sessionEndPositionHint =>
-      'Changing this may also update your current progress.';
+  String get sessionEndPositionHint => '変更すると、現在の進捗も更新される場合があります。';
 
   @override
-  String get statsViewSessions => 'View sessions';
+  String get statsViewSessions => 'セッションを表示';
 
   @override
   String statsSessionsForDate(String date) {
-    return 'Sessions for $date';
+    return '$date のセッション';
   }
 
   @override
-  String get statsNoSessionsForDate =>
-      'No listening sessions found for this day';
+  String get statsNoSessionsForDate => 'この日の再生セッションはありません';
 
   @override
-  String get statsSearchSessions => 'Search sessions';
+  String get statsSearchSessions => 'セッションを検索';
 
   @override
-  String get statsNoSessionSearchResults => 'No sessions match your search';
+  String get statsNoSessionSearchResults => '検索に一致するセッションはありません';
 
   @override
-  String get statsSessionsLoadFailed => 'Could not load sessions for this day';
+  String get statsSessionsLoadFailed => 'この日のセッションを読み込めませんでした';
 
   @override
-  String get sessionDeleteConfirmTitle => 'Delete session?';
+  String get sessionDeleteConfirmTitle => 'セッションを削除しますか?';
 
   @override
   String get sessionDeleteConfirmBody =>
-      'This removes the session and lowers your listening totals by its time. It cannot be undone.';
+      'セッションを削除し、その時間の分だけ再生時間の合計が減ります。この操作は元に戻せません。';
 
   @override
-  String get sessionSaved => 'Session updated';
+  String get sessionSaved => 'セッションを更新しました';
 
   @override
-  String get sessionDeleted => 'Session deleted';
+  String get sessionDeleted => 'セッションを削除しました';
 
   @override
-  String get sessionSaveFailed => 'Could not save changes';
+  String get sessionSaveFailed => '変更を保存できませんでした';
 
   @override
-  String get sessionDeleteFailed => 'Could not delete this session';
+  String get sessionDeleteFailed => 'このセッションを削除できませんでした';
 
   @override
-  String get statsScreenStartedAtPosition => 'Started at position';
+  String get statsScreenStartedAtPosition => '開始位置';
 
   @override
-  String get statsScreenEndedAtPosition => 'Ended at position';
+  String get statsScreenEndedAtPosition => '終了位置';
 
   @override
-  String get statsScreenTotalDuration => 'Total duration';
+  String get statsScreenTotalDuration => '合計時間';
 
   @override
-  String get statsScreenStarted => 'Started';
+  String get statsScreenStarted => '開始';
 
   @override
-  String get statsScreenUpdated => 'Updated';
+  String get statsScreenUpdated => '更新';
 
   @override
-  String get statsScreenClient => 'Client';
+  String get statsScreenClient => 'クライアント';
 
   @override
-  String get statsScreenDevice => 'Device';
+  String get statsScreenDevice => 'デバイス';
 
   @override
   String get statsScreenOs => 'OS';
 
   @override
-  String get statsScreenPlayMethod => 'Play method';
+  String get statsScreenPlayMethod => '再生方式';
 
   @override
-  String get statsScreenLoading => 'Loading...';
+  String get statsScreenLoading => '読み込み中...';
 
   @override
-  String get statsScreenJumpToStart => 'Jump to start';
+  String get statsScreenJumpToStart => '開始位置へ移動';
 
   @override
-  String get statsScreenJumpToEnd => 'Jump to end';
+  String get statsScreenJumpToEnd => '終了位置へ移動';
 
   @override
-  String get statsScreenPlayMethodDirect => 'Direct play';
+  String get statsScreenPlayMethodDirect => 'ダイレクト再生';
 
   @override
-  String get statsScreenPlayMethodDirectStream => 'Direct stream';
+  String get statsScreenPlayMethodDirectStream => 'ダイレクトストリーム';
 
   @override
-  String get statsScreenPlayMethodTranscode => 'Transcode';
+  String get statsScreenPlayMethodTranscode => 'トランスコード';
 
   @override
-  String get statsScreenPlayMethodLocal => 'Local';
+  String get statsScreenPlayMethodLocal => 'ローカル';
 
   @override
-  String get statsScreenAmLabel => 'AM';
+  String get statsScreenAmLabel => '午前';
 
   @override
-  String get statsScreenPmLabel => 'PM';
+  String get statsScreenPmLabel => '午後';
 
   @override
   String statsScreenDateAtTime(
@@ -6810,134 +6693,133 @@ class AppLocalizationsJa extends AppLocalizations {
     String minute,
     String ampm,
   ) {
-    return '$month $day, $year at $hour:$minute $ampm';
+    return '$year年$month$day日 $ampm$hour:$minute';
   }
 
   @override
-  String get statsScreenMonthJan => 'Jan';
+  String get statsScreenMonthJan => '1月';
 
   @override
-  String get statsScreenMonthFeb => 'Feb';
+  String get statsScreenMonthFeb => '2月';
 
   @override
-  String get statsScreenMonthMar => 'Mar';
+  String get statsScreenMonthMar => '3月';
 
   @override
-  String get statsScreenMonthApr => 'Apr';
+  String get statsScreenMonthApr => '4月';
 
   @override
-  String get statsScreenMonthMay => 'May';
+  String get statsScreenMonthMay => '5月';
 
   @override
-  String get statsScreenMonthJun => 'Jun';
+  String get statsScreenMonthJun => '6月';
 
   @override
-  String get statsScreenMonthJul => 'Jul';
+  String get statsScreenMonthJul => '7月';
 
   @override
-  String get statsScreenMonthAug => 'Aug';
+  String get statsScreenMonthAug => '8月';
 
   @override
-  String get statsScreenMonthSep => 'Sep';
+  String get statsScreenMonthSep => '9月';
 
   @override
-  String get statsScreenMonthOct => 'Oct';
+  String get statsScreenMonthOct => '10月';
 
   @override
-  String get statsScreenMonthNov => 'Nov';
+  String get statsScreenMonthNov => '11月';
 
   @override
-  String get statsScreenMonthDec => 'Dec';
+  String get statsScreenMonthDec => '12月';
 
   @override
-  String get upcomingReleasesTitle => 'Upcoming Releases';
+  String get upcomingReleasesTitle => '発売予定';
 
   @override
-  String get upcomingReleasesRescanTitle => 'Rescan?';
+  String get upcomingReleasesRescanTitle => '再スキャンしますか?';
 
   @override
   String upcomingReleasesRescanContent(int days) {
-    return 'These results are $days days old. Release dates may have changed - would you like to rescan?';
+    return 'この結果は $days 日前のものです。発売日が変わっている可能性があります。再スキャンしますか?';
   }
 
   @override
-  String get upcomingReleasesNotNow => 'Not now';
+  String get upcomingReleasesNotNow => '後で';
 
   @override
-  String get upcomingReleasesRescan => 'Rescan';
+  String get upcomingReleasesRescan => '再スキャン';
 
   @override
-  String get upcomingReleasesRescanReleaseDate => 'Rescan Release Date';
+  String get upcomingReleasesRescanReleaseDate => '発売日を再スキャン';
 
   @override
-  String get upcomingReleasesRescanning => 'Rescanning...';
+  String get upcomingReleasesRescanning => '再スキャン中...';
 
   @override
   String upcomingReleasesUpdatedWithDate(String date) {
-    return 'Updated - $date';
+    return '更新しました: $date';
   }
 
   @override
-  String get upcomingReleasesNoReleaseDateFound => 'No release date found';
+  String get upcomingReleasesNoReleaseDateFound => '発売日が見つかりません';
 
   @override
-  String get upcomingReleasesRescanFailed => 'Rescan failed';
+  String get upcomingReleasesRescanFailed => '再スキャンに失敗しました';
 
   @override
-  String get upcomingReleasesRemoveFromList => 'Remove from list';
+  String get upcomingReleasesRemoveFromList => 'リストから削除';
 
   @override
-  String get upcomingReleasesRemovedFromList => 'Removed from list';
+  String get upcomingReleasesRemovedFromList => 'リストから削除しました';
 
   @override
-  String get upcomingReleasesDateChip => 'Date';
+  String get upcomingReleasesDateChip => '日付';
 
   @override
   String upcomingReleasesCheckingSeries(String name, int processed, int total) {
-    return 'Checking $name... ($processed/$total)';
+    return '$name を確認中... ($processed/$total)';
   }
 
   @override
-  String get upcomingReleasesLoadingSeries => 'Loading series...';
+  String get upcomingReleasesLoadingSeries => 'シリーズを読み込み中...';
 
   @override
-  String get upcomingReleasesScannedToday => '(scanned today)';
+  String get upcomingReleasesScannedToday => '(今日スキャン)';
 
   @override
-  String get upcomingReleasesScannedYesterday => '(scanned yesterday)';
+  String get upcomingReleasesScannedYesterday => '(昨日スキャン)';
 
   @override
   String upcomingReleasesScannedDaysAgo(int days) {
-    return '(scanned $days days ago)';
+    return '($days 日前にスキャン)';
   }
 
   @override
   String upcomingReleasesUpcomingCount(int count) {
-    return '$count upcoming';
+    return '予定 $count 件';
   }
 
   @override
   String upcomingReleasesRecentCount(int count) {
-    return '$count recent';
+    return '最近 $count 件';
   }
 
   @override
-  String get upcomingReleasesNoneFound =>
-      'No upcoming or recent releases found';
+  String get upcomingReleasesNoneFound => '発売予定や最近の発売はありません';
 
   @override
   String upcomingReleasesAcrossSeries(String summary, int count) {
-    return '$summary across $count series';
+    return '$count シリーズで $summary';
   }
 
   @override
   String upcomingReleasesCheckedSeries(int count) {
-    return 'Checked $count series on Audible';
+    return 'Audible で $count シリーズを確認しました';
   }
 
   @override
   String upcomingReleasesDateFormat(String month, int day, int year) {
-    return '$month $day, $year';
+    return '$year年$month$day日';
   }
 
   @override
@@ -6946,52 +6828,51 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get upcomingReleasesBadgeUpcoming => 'UPCOMING';
+  String get upcomingReleasesBadgeUpcoming => '発売予定';
 
   @override
-  String get upcomingReleasesBadgeAdded => 'ADDED';
+  String get upcomingReleasesBadgeAdded => '追加済み';
 
   @override
-  String get upcomingReleasesBadgeMissing => 'MISSING';
+  String get upcomingReleasesBadgeMissing => '不足';
 
   @override
-  String get upcomingReleasesScanSettingsTitle => 'Scan settings';
+  String get upcomingReleasesScanSettingsTitle => 'スキャン設定';
 
   @override
-  String get upcomingReleasesFinishedAfterTitle =>
-      'Consider a series finished after';
+  String get upcomingReleasesFinishedAfterTitle => 'シリーズを完結とみなす期間';
 
   @override
   String get upcomingReleasesFinishedAfterDesc =>
-      'Series whose last book is older than this are skipped during scans and only re-checked every month or two.';
+      '最新の本の発売がこれより前のシリーズは、スキャン時にスキップされ、1~2 か月に一度だけ再確認されます。';
 
   @override
   String upcomingReleasesFinishedAfterYears(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count years',
-      one: '1 year',
+      other: '$count 年',
+      one: '1 年',
     );
     return '$_temp0';
   }
 
   @override
-  String get upcomingReleasesFinishedAfterNever => 'Never';
+  String get upcomingReleasesFinishedAfterNever => 'なし';
 
   @override
-  String get upcomingReleasesSkippedTitle => 'Skipped series';
+  String get upcomingReleasesSkippedTitle => 'スキップしたシリーズ';
 
   @override
-  String get upcomingReleasesSkippedNone => 'Nothing skipped yet';
+  String get upcomingReleasesSkippedNone => 'スキップしたものはありません';
 
   @override
   String upcomingReleasesSkippedCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count skipped',
-      one: '1 skipped',
+      other: 'スキップ $count 件',
+      one: 'スキップ 1 件',
     );
     return '$_temp0';
   }
@@ -7001,105 +6882,103 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Last book $count years ago',
-      one: 'Last book 1 year ago',
-      zero: 'Last book under a year ago',
+      other: '最新の本は $count 年前',
+      one: '最新の本は 1 年前',
+      zero: '最新の本は 1 年以内',
     );
     return '$_temp0';
   }
 
   @override
-  String get upcomingReleasesSkippedUnmatched =>
-      'Couldn\'t match this series on Audible';
+  String get upcomingReleasesSkippedUnmatched => 'Audible でこのシリーズを照合できませんでした';
 
   @override
-  String get upcomingReleasesSkippedScanNow => 'Scan now';
+  String get upcomingReleasesSkippedScanNow => '今すぐスキャン';
 
   @override
-  String get upcomingReleasesSkippedAlwaysScan => 'Always scan';
+  String get upcomingReleasesSkippedAlwaysScan => '常にスキャン';
 
   @override
-  String get upcomingReleasesSkippedNeverScan => 'Never scan';
+  String get upcomingReleasesSkippedNeverScan => 'スキャンしない';
 
   @override
   String upcomingReleasesSkippedScanFound(String name) {
-    return 'Found new releases in $name';
+    return '$name に新刊が見つかりました';
   }
 
   @override
   String upcomingReleasesSkippedScanNone(String name) {
-    return 'Nothing new in $name';
+    return '$name に新しいものはありません';
   }
 
   @override
   String get upcomingReleasesSkippedOtherLibrary =>
-      'This list came from a different library. Run a rescan to refresh it.';
+      'このリストは別のライブラリのものです。再スキャンして更新してください。';
 
   @override
-  String get upcomingReleasesChipUpcoming => 'Upcoming';
+  String get upcomingReleasesChipUpcoming => '発売予定';
 
   @override
   String upcomingReleasesChipMissing(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count missing',
-      one: '1 missing',
-      zero: 'Missing',
+      other: '不足 $count 件',
+      one: '不足 1 件',
+      zero: '不足',
     );
     return '$_temp0';
   }
 
   @override
-  String get upcomingReleasesNoMissing => 'No missing books found';
+  String get upcomingReleasesNoMissing => '不足している本はありません';
 
   @override
-  String get upcomingReleasesScanSeries => 'Scan series';
+  String get upcomingReleasesScanSeries => 'シリーズをスキャン';
 
   @override
-  String get upcomingReleasesScanUpcomingOption => 'Upcoming releases';
+  String get upcomingReleasesScanUpcomingOption => '発売予定';
 
   @override
-  String get upcomingReleasesScanUpcomingOptionDesc =>
-      'Quick scan for new and upcoming books';
+  String get upcomingReleasesScanUpcomingOptionDesc => '新刊と発売予定の本をすばやくスキャン';
 
   @override
-  String get upcomingReleasesScanDeepOption => 'Deep scan';
+  String get upcomingReleasesScanDeepOption => '詳細スキャン';
 
   @override
   String get upcomingReleasesScanDeepOptionDesc =>
-      'Also finds missing books in every series - takes longer';
+      'すべてのシリーズの不足している本も探します。時間がかかります';
 
   @override
   String get upcomingReleasesFirstScanNote =>
-      'The first scan checks every series on Audible and can take a few minutes. Later scans get much quicker once your series are sorted.';
+      '最初のスキャンでは Audible ですべてのシリーズを確認するため、数分かかることがあります。シリーズが整理されると、以降のスキャンはずっと速くなります。';
 
   @override
-  String get upcomingReleasesLastScanReport => 'Last scan report';
+  String get upcomingReleasesLastScanReport => '前回のスキャンレポート';
 
   @override
   String upcomingReleasesReportChecked(int count) {
-    return 'Checked on Audible: $count';
+    return 'Audible で確認: $count';
   }
 
   @override
   String upcomingReleasesReportSkipped(int count) {
-    return 'Skipped: $count';
+    return 'スキップ: $count';
   }
 
   @override
   String upcomingReleasesReportUnmatched(int count) {
-    return 'Couldn\'t match on Audible: $count';
+    return 'Audible で照合できず: $count';
   }
 
   @override
   String upcomingReleasesReportFailed(int count) {
-    return 'Failed to check: $count';
+    return '確認に失敗: $count';
   }
 
   @override
   String upcomingReleasesReportFound(int upcoming, int recent) {
-    return 'Found $upcoming upcoming, $recent recent';
+    return '発売予定 $upcoming 件、最近 $recent 件が見つかりました';
   }
 
   @override
@@ -7108,123 +6987,121 @@ class AppLocalizationsJa extends AppLocalizations {
     int recent,
     int missing,
   ) {
-    return 'Found $upcoming upcoming, $recent recent, $missing missing';
+    return '発売予定 $upcoming 件、最近 $recent 件、不足 $missing 件が見つかりました';
   }
 
   @override
   String upcomingReleasesReportMore(int count) {
-    return '+$count more';
+    return 'ほか $count 件';
   }
 
   @override
-  String get upcomingReleasesBadgeNew => 'NEW';
+  String get upcomingReleasesBadgeNew => '新着';
 
   @override
-  String get upcomingReleasesOpenLibrarySeries => 'Open series in library';
+  String get upcomingReleasesOpenSeries => 'Open series on Audible';
 
   @override
-  String get upcomingReleasesAsinCopied => 'Series ASIN copied';
+  String get upcomingReleasesOpenLibrarySeries => 'ライブラリでシリーズを開く';
 
   @override
-  String get upcomingReleasesSetSeriesAsin => 'Set series ASIN';
+  String get upcomingReleasesAsinCopied => 'シリーズの ASIN をコピーしました';
+
+  @override
+  String get upcomingReleasesSetSeriesAsin => 'シリーズの ASIN を設定';
 
   @override
   String get upcomingReleasesSetAsinInstructions =>
-      'Find the series on audible.com and copy the page link - the ASIN is the 10-character code starting with B0 (like B08S2YN3YS). Pasting the whole link works too.';
+      'audible.com でシリーズを探し、ページのリンクをコピーしてください。ASIN は B0 で始まる 10 文字のコードです (例: B08S2YN3YS)。リンク全体を貼り付けても構いません。';
 
   @override
-  String get upcomingReleasesSetAsinHint => 'B0… or audible.com link';
+  String get upcomingReleasesSetAsinHint => 'B0… または audible.com のリンク';
 
   @override
-  String get upcomingReleasesSetAsinSave => 'Save';
+  String get upcomingReleasesSetAsinSave => '保存';
 
   @override
-  String get upcomingReleasesSetAsinInvalid => 'No ASIN found in that text';
+  String get upcomingReleasesSetAsinInvalid => 'そのテキストに ASIN が見つかりません';
 
   @override
-  String get upcomingReleasesSetAsinSaved => 'Series linked - scanning now';
+  String get upcomingReleasesSetAsinSaved => 'シリーズを関連付けました。スキャン中';
 
   @override
   String upcomingReleasesRemoveTitle(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Remove $count books',
-      one: 'Remove book',
+      other: '$count 冊を削除',
+      one: '本を削除',
     );
     return '$_temp0';
   }
 
   @override
-  String get upcomingReleasesRemoveThisScan => 'Remove from this scan';
+  String get upcomingReleasesRemoveThisScan => '今回のスキャンから削除';
 
   @override
-  String get upcomingReleasesRemoveThisScanDesc =>
-      'Can come back on a future scan';
+  String get upcomingReleasesRemoveThisScanDesc => '今後のスキャンで再び表示されることがあります';
 
   @override
-  String get upcomingReleasesRemoveForever =>
-      'Remove from this and future scans';
+  String get upcomingReleasesRemoveForever => '今回と今後のスキャンから削除';
 
   @override
-  String get upcomingReleasesRemoveForeverDesc =>
-      'Goes to the removed list, restore any time';
+  String get upcomingReleasesRemoveForeverDesc => '削除済みリストに移動します。いつでも復元できます';
 
   @override
-  String get upcomingReleasesRemovedForeverToast =>
-      'Removed - won\'t show on future scans';
+  String get upcomingReleasesRemovedForeverToast => '削除しました。今後のスキャンには表示されません';
 
   @override
-  String get upcomingReleasesRemovedBooksTitle => 'Removed books';
+  String get upcomingReleasesRemovedBooksTitle => '削除した本';
 
   @override
   String upcomingReleasesRemovedCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count 冊',
+      one: '1 冊',
     );
     return '$_temp0';
   }
 
   @override
-  String get upcomingReleasesRemovedNone => 'No removed books';
+  String get upcomingReleasesRemovedNone => '削除した本はありません';
 
   @override
-  String get upcomingReleasesRestore => 'Restore';
+  String get upcomingReleasesRestore => '復元';
 
   @override
-  String get upcomingReleasesRestoredToast => 'Restored';
+  String get upcomingReleasesRestoredToast => '復元しました';
 
   @override
-  String get upcomingReleasesRestoredNextScan =>
-      'Restored - it will show after the next scan';
+  String get upcomingReleasesRestoredNextScan => '復元しました。次回のスキャン後に表示されます';
 
   @override
   String upcomingReleasesSelectedCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count selected',
-      one: '1 selected',
+      other: '$count 件選択中',
+      one: '1 件選択中',
     );
     return '$_temp0';
   }
 
   @override
-  String get upcomingReleasesBulkRequest => 'Request';
+  String get upcomingReleasesBulkRequest => 'リクエスト';
 
   @override
-  String get upcomingReleasesBulkRemove => 'Remove';
+  String get upcomingReleasesBulkRemove => '削除';
 
   @override
   String upcomingReleasesBulkRemoved(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count removed',
-      one: '1 removed',
+      other: '$count 件削除',
+      one: '1 件削除',
     );
     return '$_temp0';
   }
@@ -7234,15 +7111,15 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count requests sent',
-      one: '1 request sent',
+      other: '$count 件のリクエストを送信しました',
+      one: '1 件のリクエストを送信しました',
     );
     return '$_temp0';
   }
 
   @override
   String upcomingReleasesBulkRequestSkipped(int count) {
-    return '$count skipped';
+    return '$count 件スキップ';
   }
 
   @override
@@ -7250,439 +7127,438 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count series rescanned',
-      one: '1 series rescanned',
+      other: '$count シリーズを再スキャンしました',
+      one: '1 シリーズを再スキャンしました',
     );
     return '$_temp0';
   }
 
   @override
   String upcomingReleasesBulkScanFound(int count) {
-    return '$count with new books';
+    return '新刊あり: $count 件';
   }
 
   @override
-  String get seriesExcludeFromScan => 'Exclude from series scan';
+  String get seriesExcludeFromScan => 'シリーズのスキャンから除外';
 
   @override
-  String get seriesIncludeInScan => 'Include in series scan';
+  String get seriesIncludeInScan => 'シリーズのスキャンに含める';
 
   @override
-  String get homeScreenEpisodeFallback => 'Episode';
+  String get homeScreenEpisodeFallback => 'エピソード';
 
   @override
-  String get libraryScreenUnknownTitle => 'Unknown Title';
+  String get libraryScreenUnknownTitle => '不明なタイトル';
 
   @override
-  String get playlistDetailDefaultName => 'Playlist';
+  String get playlistDetailDefaultName => 'プレイリスト';
 
   @override
   String playlistDetailItemCount(int count) {
-    return '$count items';
+    return '$count アイテム';
   }
 
   @override
-  String get playlistDetailUnfinished => 'Unfinished';
+  String get playlistDetailUnfinished => '未完了';
 
   @override
-  String get playlistDetailRemoveFromPlaylist => 'Remove from playlist';
+  String get playlistDetailRemoveFromPlaylist => 'プレイリストから削除';
 
   @override
-  String get playlistDetailDone => 'Done';
+  String get playlistDetailDone => '完了';
 
   @override
   String playlistDetailItemsMarkedFinished(int count) {
-    return '$count items marked finished';
+    return '$count アイテムを完了にしました';
   }
 
   @override
   String playlistDetailItemsMarkedUnfinished(int count) {
-    return '$count items marked unfinished';
+    return '$count アイテムを未完了にしました';
   }
 
   @override
   String playlistDetailItemsRemoved(int count) {
-    return '$count items removed';
+    return '$count アイテムを削除しました';
   }
 
   @override
   String playlistDetailAddedToAbsorbing(String title) {
-    return 'Added \"$title\" to Absorbing';
+    return '「$title」を Absorbing に追加しました';
   }
 
   @override
-  String get collectionDetailDefaultName => 'Collection';
+  String get collectionDetailDefaultName => 'コレクション';
 
   @override
   String smartScopeBookCount(int count) {
-    return 'Smart Scope · $count books';
+    return 'スマートスコープ · $count 冊';
   }
 
   @override
-  String get smartScopeNew => 'New Smart Scope';
+  String get smartScopeNew => '新規スマートスコープ';
 
   @override
-  String get smartScopeNewSubtitle =>
-      'Save a set of filters as a list that keeps itself up to date';
+  String get smartScopeNewSubtitle => 'フィルターの組み合わせを、自動で最新に保たれるリストとして保存します';
 
   @override
-  String get smartScopeEditTitle => 'Edit Smart Scope';
+  String get smartScopeEditTitle => 'スマートスコープを編集';
 
   @override
-  String get smartScopeIcon => 'Icon';
+  String get smartScopeIcon => 'アイコン';
 
   @override
-  String get smartScopePublic => 'Visible to all users';
+  String get smartScopePublic => 'すべてのユーザーに表示';
 
   @override
-  String get smartScopeKobo => 'Sync to Kobo';
+  String get smartScopeKobo => 'Kobo に同期';
 
   @override
-  String get smartScopeRules => 'Rules';
+  String get smartScopeRules => 'ルール';
 
   @override
-  String get smartScopeMatchAll => 'Match all';
+  String get smartScopeMatchAll => 'すべてに一致';
 
   @override
-  String get smartScopeMatchAny => 'Match any';
+  String get smartScopeMatchAny => 'いずれかに一致';
 
   @override
-  String get smartScopeAddRule => 'Add rule';
+  String get smartScopeAddRule => 'ルールを追加';
 
   @override
-  String get smartScopeAddGroup => 'Add group';
+  String get smartScopeAddGroup => 'グループを追加';
 
   @override
-  String get smartScopeGroup => 'Group';
+  String get smartScopeGroup => 'グループ';
 
   @override
-  String get smartScopeStartFrom => 'Start from';
+  String get smartScopeStartFrom => 'テンプレートから開始';
 
   @override
-  String get smartScopeFromScratch => 'Build from scratch';
+  String get smartScopeFromScratch => '最初から作成';
 
   @override
-  String get smartScopeTplHasSeries => 'Has a series';
+  String get smartScopeTplHasSeries => 'シリーズあり';
 
   @override
-  String get smartScopeTplRecent => 'Added recently';
+  String get smartScopeTplRecent => '最近追加';
 
   @override
-  String get smartScopeTplPdf => 'PDF only';
+  String get smartScopeTplPdf => 'PDF のみ';
 
   @override
-  String get smartScopeTplNoGenres => 'No genres';
+  String get smartScopeTplNoGenres => 'ジャンルなし';
 
   @override
-  String get smartScopeTplEpub => 'EPUB only';
+  String get smartScopeTplEpub => 'EPUB のみ';
 
   @override
-  String get smartScopeCounting => 'Counting...';
+  String get smartScopeCounting => '集計中...';
 
   @override
-  String get smartScopeSort => 'Default sort';
+  String get smartScopeSort => '既定の並べ替え';
 
   @override
-  String get smartScopeAddSort => 'Add sort level';
+  String get smartScopeAddSort => '並べ替え条件を追加';
 
   @override
-  String get smartScopeSortNone => 'No sort set, so books sort by title.';
+  String get smartScopeSortNone => '並べ替えが未設定のため、タイトル順になります。';
 
   @override
-  String get smartScopeAscending => 'Ascending';
+  String get smartScopeAscending => '昇順';
 
   @override
-  String get smartScopeDescending => 'Descending';
+  String get smartScopeDescending => '降順';
 
   @override
-  String get smartScopeDelete => 'Delete Smart Scope';
+  String get smartScopeDelete => 'スマートスコープを削除';
 
   @override
-  String get smartScopeSaveFailed => 'Couldn\'t save the Smart Scope';
+  String get smartScopeSaveFailed => 'スマートスコープを保存できませんでした';
 
   @override
-  String get smartScopeDeleteFailed => 'Couldn\'t delete the Smart Scope';
+  String get smartScopeDeleteFailed => 'スマートスコープを削除できませんでした';
 
   @override
-  String get smartScopeLoadFailed => 'Couldn\'t load the Smart Scope';
+  String get smartScopeLoadFailed => 'スマートスコープを読み込めませんでした';
 
   @override
   String get smartScopeUnsupportedRule =>
-      'This rule can only be changed on the BookOrbit web. It\'s kept as it is.';
+      'このルールは BookOrbit の Web でのみ変更できます。そのまま保持されます。';
 
   @override
-  String get smartScopeAnd => 'and';
+  String get smartScopeAnd => 'かつ';
 
   @override
-  String get smartScopeDays => 'days';
+  String get smartScopeDays => '日';
 
   @override
-  String get smartScopeWeeks => 'weeks';
+  String get smartScopeWeeks => '週間';
 
   @override
-  String get smartScopeMonths => 'months';
+  String get smartScopeMonths => 'か月';
 
   @override
-  String get smartScopePickDate => 'Pick a date';
+  String get smartScopePickDate => '日付を選択';
 
   @override
-  String get smartScopeAddValue => 'Add a value';
+  String get smartScopeAddValue => '値を追加';
 
   @override
-  String get smartScopeValue => 'Value';
+  String get smartScopeValue => '値';
 
   @override
-  String get smartScopeCustomFields => 'Custom fields';
+  String get smartScopeCustomFields => 'カスタムフィールド';
 
   @override
-  String get smartScopeAnyProvider => 'Any provider';
+  String get smartScopeAnyProvider => 'すべてのプロバイダー';
 
   @override
-  String get smartScopeScoreOutstanding => 'Outstanding';
+  String get smartScopeScoreOutstanding => '非常に良い';
 
   @override
-  String get smartScopeScoreGood => 'Good';
+  String get smartScopeScoreGood => '良い';
 
   @override
-  String get smartScopeScoreFair => 'Fair';
+  String get smartScopeScoreFair => '普通';
 
   @override
-  String get smartScopeScorePoor => 'Poor';
+  String get smartScopeScorePoor => '低い';
 
   @override
   String get smartScopeMb => 'MB';
 
   @override
-  String get smartScopeMaxValues => 'Up to 20 values';
+  String get smartScopeMaxValues => '最大 20 個';
 
   @override
-  String get scopeFieldTitle => 'Title';
+  String get scopeFieldTitle => 'タイトル';
 
   @override
-  String get scopeFieldAuthor => 'Author';
+  String get scopeFieldAuthor => '著者';
 
   @override
-  String get scopeFieldSeries => 'Series';
+  String get scopeFieldSeries => 'シリーズ';
 
   @override
-  String get scopeFieldSeriesIndex => 'Series number';
+  String get scopeFieldSeriesIndex => 'シリーズ番号';
 
   @override
-  String get scopeFieldGenre => 'Genre';
+  String get scopeFieldGenre => 'ジャンル';
 
   @override
-  String get scopeFieldTag => 'Tag';
+  String get scopeFieldTag => 'タグ';
 
   @override
-  String get scopeFieldReadStatus => 'Read status';
+  String get scopeFieldReadStatus => '読書状況';
 
   @override
-  String get scopeFieldReadProgress => 'Reading progress';
+  String get scopeFieldReadProgress => '読書の進捗';
 
   @override
-  String get scopeFieldRating => 'Your rating';
+  String get scopeFieldRating => 'あなたの評価';
 
   @override
-  String get scopeFieldFormat => 'Format';
+  String get scopeFieldFormat => '形式';
 
   @override
-  String get scopeFieldLibrary => 'Library';
+  String get scopeFieldLibrary => 'ライブラリ';
 
   @override
-  String get scopeFieldCollection => 'Collection';
+  String get scopeFieldCollection => 'コレクション';
 
   @override
-  String get scopeFieldPublisher => 'Publisher';
+  String get scopeFieldPublisher => '出版社';
 
   @override
-  String get scopeFieldLanguage => 'Language';
+  String get scopeFieldLanguage => '言語';
 
   @override
-  String get scopeFieldPublishedDate => 'Published date';
+  String get scopeFieldPublishedDate => '出版日';
 
   @override
-  String get scopeFieldPublishedYear => 'Published year';
+  String get scopeFieldPublishedYear => '出版年';
 
   @override
-  String get scopeFieldAddedAt => 'Date added';
+  String get scopeFieldAddedAt => '追加日';
 
   @override
-  String get scopeFieldStartedAt => 'Date started';
+  String get scopeFieldStartedAt => '開始日';
 
   @override
-  String get scopeFieldFinishedAt => 'Date finished';
+  String get scopeFieldFinishedAt => '完了日';
 
   @override
-  String get scopeFieldPageCount => 'Page count';
+  String get scopeFieldPageCount => 'ページ数';
 
   @override
-  String get scopeFieldFileSize => 'File size';
+  String get scopeFieldFileSize => 'ファイルサイズ';
 
   @override
-  String get scopeFieldCommunityRating => 'Community rating';
+  String get scopeFieldCommunityRating => 'コミュニティの評価';
 
   @override
-  String get scopeFieldCommunityRatingCount => 'Community review count';
+  String get scopeFieldCommunityRatingCount => 'コミュニティのレビュー数';
 
   @override
-  String get scopeFieldMetadataScore => 'Metadata score';
+  String get scopeFieldMetadataScore => 'メタデータスコア';
 
   @override
   String get scopeFieldIsbn => 'ISBN';
 
   @override
-  String get scopeFieldDescription => 'Description';
+  String get scopeFieldDescription => '説明';
 
   @override
-  String get scopeFieldCover => 'Cover';
+  String get scopeFieldCover => 'カバー';
 
   @override
-  String get scopeFieldAudioCover => 'Audiobook cover';
+  String get scopeFieldAudioCover => 'オーディオブックのカバー';
 
   @override
-  String get scopeFieldFileAvailability => 'File availability';
+  String get scopeFieldFileAvailability => 'ファイルの有無';
 
   @override
-  String get scopeFieldLockStatus => 'Lock status';
+  String get scopeFieldLockStatus => 'ロック状態';
 
   @override
-  String get scopeFieldSeriesStatus => 'Series status';
+  String get scopeFieldSeriesStatus => 'シリーズの状態';
 
   @override
-  String get scopeSortUpdatedAt => 'Date updated';
+  String get scopeSortUpdatedAt => '更新日';
 
   @override
-  String get scopeSortLastReadAt => 'Last read';
+  String get scopeSortLastReadAt => '最後に読んだ日';
 
   @override
-  String get scopeSortRandom => 'Random';
+  String get scopeSortRandom => 'ランダム';
 
   @override
-  String get scopeOpContains => 'contains';
+  String get scopeOpContains => 'を含む';
 
   @override
-  String get scopeOpNotContains => 'does not contain';
+  String get scopeOpNotContains => 'を含まない';
 
   @override
-  String get scopeOpStartsWith => 'starts with';
+  String get scopeOpStartsWith => 'で始まる';
 
   @override
-  String get scopeOpEndsWith => 'ends with';
+  String get scopeOpEndsWith => 'で終わる';
 
   @override
-  String get scopeOpEq => 'is';
+  String get scopeOpEq => 'である';
 
   @override
-  String get scopeOpNotEq => 'is not';
+  String get scopeOpNotEq => 'ではない';
 
   @override
-  String get scopeOpIsEmpty => 'is empty';
+  String get scopeOpIsEmpty => 'が空';
 
   @override
-  String get scopeOpIsNotEmpty => 'is not empty';
+  String get scopeOpIsNotEmpty => 'が空でない';
 
   @override
-  String get scopeOpGt => 'greater than';
+  String get scopeOpGt => 'より大きい';
 
   @override
-  String get scopeOpGte => 'at least';
+  String get scopeOpGte => '以上';
 
   @override
-  String get scopeOpLt => 'less than';
+  String get scopeOpLt => 'より小さい';
 
   @override
-  String get scopeOpLte => 'at most';
+  String get scopeOpLte => '以下';
 
   @override
-  String get scopeOpBetween => 'between';
+  String get scopeOpBetween => 'の範囲内';
 
   @override
-  String get scopeOpIncludesAny => 'includes any of';
+  String get scopeOpIncludesAny => 'のいずれかを含む';
 
   @override
-  String get scopeOpIncludesAll => 'includes all of';
+  String get scopeOpIncludesAll => 'のすべてを含む';
 
   @override
-  String get scopeOpExcludesAll => 'excludes all of';
+  String get scopeOpExcludesAll => 'のすべてを除く';
 
   @override
-  String get scopeOpBefore => 'before';
+  String get scopeOpBefore => 'より前';
 
   @override
-  String get scopeOpAfter => 'after';
+  String get scopeOpAfter => 'より後';
 
   @override
-  String get scopeOpWithinLast => 'within the last';
+  String get scopeOpWithinLast => '直近';
 
   @override
-  String get scopeOpIsMissing => 'is missing';
+  String get scopeOpIsMissing => 'がない';
 
   @override
-  String get scopeOpIsPresent => 'is present';
+  String get scopeOpIsPresent => 'がある';
 
   @override
-  String get scopeOpIsUnread => 'is unread';
+  String get scopeOpIsUnread => 'が未読';
 
   @override
-  String get scopeOpIsInProgress => 'is in progress';
+  String get scopeOpIsInProgress => 'が進行中';
 
   @override
-  String get scopeOpIsFinished => 'is finished';
+  String get scopeOpIsFinished => 'が完了';
 
   @override
-  String get scopeOpIsLocked => 'is locked';
+  String get scopeOpIsLocked => 'がロック済み';
 
   @override
-  String get scopeOpIsUnlocked => 'is unlocked';
+  String get scopeOpIsUnlocked => 'がロック解除済み';
 
   @override
-  String get scopeOpIsUpNext => 'is up next';
+  String get scopeOpIsUpNext => 'が次の予定';
 
   @override
-  String get scopeOpIsTrue => 'is yes';
+  String get scopeOpIsTrue => 'がはい';
 
   @override
-  String get scopeOpIsFalse => 'is no';
+  String get scopeOpIsFalse => 'がいいえ';
 
   @override
   String smartScopeMatchCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books match',
-      one: '1 book matches',
-      zero: 'No books match',
+      other: '$count 冊が一致',
+      one: '1 冊が一致',
+      zero: '一致する本はありません',
     );
     return '$_temp0';
   }
 
   @override
   String smartScopeDeleteConfirm(String name) {
-    return 'Delete \"$name\"? This can\'t be undone.';
+    return '「$name」を削除しますか? この操作は元に戻せません。';
   }
 
   @override
   String collectionDetailBookCount(int count) {
-    return '$count books';
+    return '$count 冊';
   }
 
   @override
-  String get collectionDetailDone => 'Done';
+  String get collectionDetailDone => '完了';
 
   @override
   String collectionDetailAddedToAbsorbing(String title) {
-    return 'Added \"$title\" to Absorbing';
+    return '「$title」を Absorbing に追加しました';
   }
 
   @override
-  String get audibleSeriesNoBooksFound => 'No books found on Audible';
+  String get audibleSeriesNoBooksFound => 'Audible に本が見つかりません';
 
   @override
-  String get audibleSeriesFailedToLoad => 'Failed to load series from Audible';
+  String get audibleSeriesFailedToLoad => 'Audible からシリーズを読み込めませんでした';
 
   @override
   String audibleSeriesSummary(int total, int missing) {
-    return '$total on Audible · $missing missing';
+    return 'Audible に $total 冊 · 不足 $missing 冊';
   }
 
   @override
@@ -7691,175 +7567,175 @@ class AppLocalizationsJa extends AppLocalizations {
     int missing,
     int upcoming,
   ) {
-    return '$total on Audible · $missing missing · $upcoming upcoming';
+    return 'Audible に $total 冊 · 不足 $missing 冊 · 発売予定 $upcoming 冊';
   }
 
   @override
   String audibleSeriesFilterMissing(int count) {
-    return 'Missing ($count)';
+    return '不足 ($count)';
   }
 
   @override
   String audibleSeriesFilterUpcoming(int count) {
-    return 'Upcoming ($count)';
+    return '発売予定 ($count)';
   }
 
   @override
   String audibleSeriesFilterAll(int count) {
-    return 'All ($count)';
+    return 'すべて ($count)';
   }
 
   @override
-  String get audibleSeriesSearching => 'Searching Audible...';
+  String get audibleSeriesSearching => 'Audible を検索中...';
 
   @override
-  String get audibleSeriesCompleteSeries => 'You have the complete series!';
+  String get audibleSeriesCompleteSeries => 'シリーズをコンプリートしています!';
 
   @override
-  String get audibleSeriesNoUpcoming => 'No upcoming releases found';
+  String get audibleSeriesNoUpcoming => '発売予定はありません';
 
   @override
-  String get audibleSeriesUpcomingBadge => 'UPCOMING';
+  String get audibleSeriesUpcomingBadge => '発売予定';
 
   @override
-  String get audibleSeriesAbridged => 'Abridged';
+  String get audibleSeriesAbridged => '抄録版';
 
   @override
-  String get audibleSeriesRegionTitle => 'Audible Region';
+  String get audibleSeriesRegionTitle => 'Audible のリージョン';
 
   @override
-  String get audibleSeriesOpenOnAudible => 'Open on Audible';
+  String get audibleSeriesOpenOnAudible => 'Audible で開く';
 
   @override
-  String get audibleSeriesAddToCalendar => 'Add to Calendar';
+  String get audibleSeriesAddToCalendar => 'カレンダーに追加';
 
   @override
-  String get audibleSeriesAddToUpcoming => 'Add to upcoming releases';
+  String get audibleSeriesAddToUpcoming => '発売予定に追加';
 
   @override
-  String get audibleSeriesAddedToUpcoming => 'Added to upcoming releases';
+  String get audibleSeriesAddedToUpcoming => '発売予定に追加しました';
 
   @override
-  String get audibleSeriesAlreadyInUpcoming => 'Already on the upcoming page';
+  String get audibleSeriesAlreadyInUpcoming => 'すでに発売予定ページにあります';
 
   @override
-  String get audibleSeriesCouldNotOpenAudible => 'Could not open Audible';
+  String get audibleSeriesCouldNotOpenAudible => 'Audible を開けませんでした';
 
   @override
-  String get audibleSeriesCouldNotOpenCalendar => 'Could not open calendar';
+  String get audibleSeriesCouldNotOpenCalendar => 'カレンダーを開けませんでした';
 
   @override
   String audibleSeriesCalendarDescription(String seriesName) {
-    return 'New audiobook release in the $seriesName series';
+    return '$seriesName シリーズのオーディオブック新刊';
   }
 
   @override
-  String get authorBooksGroupBySeries => 'Group by series';
+  String get authorBooksGroupBySeries => 'シリーズでグループ化';
 
   @override
-  String get authorBooksList => 'List';
+  String get authorBooksList => 'リスト';
 
   @override
-  String get authorBooksGrid => 'Grid';
+  String get authorBooksGrid => 'グリッド';
 
   @override
   String authorBooksBookCount(int count) {
-    return '$count books';
+    return '$count 冊';
   }
 
   @override
-  String get metadataLookupCover => 'Cover';
+  String get metadataLookupCover => 'カバー';
 
   @override
-  String get metadataLookupChooseFields => 'Choose Fields to Apply';
+  String get metadataLookupChooseFields => '適用する項目を選択';
 
   @override
   String metadataLookupApplyFields(int count) {
-    return 'Apply $count fields';
+    return '$count 項目を適用';
   }
 
   @override
   String metadataLookupFieldsSavedLocally(int count) {
-    return '$count fields saved locally';
+    return '$count 項目をローカルに保存しました';
   }
 
   @override
-  String get metadataLookupOverrideLocalDisplay => 'Override local display';
+  String get metadataLookupOverrideLocalDisplay => 'ローカル表示を上書き';
 
   @override
-  String get equalizerPresetFlat => 'Flat';
+  String get equalizerPresetFlat => 'フラット';
 
   @override
-  String get equalizerPresetVoiceBoost => 'Voice Boost';
+  String get equalizerPresetVoiceBoost => 'ボイスブースト';
 
   @override
-  String get equalizerPresetBassBoost => 'Bass Boost';
+  String get equalizerPresetBassBoost => '低音ブースト';
 
   @override
-  String get equalizerPresetTrebleBoost => 'Treble Boost';
+  String get equalizerPresetTrebleBoost => '高音ブースト';
 
   @override
-  String get equalizerPresetPodcast => 'Podcast';
+  String get equalizerPresetPodcast => 'ポッドキャスト';
 
   @override
-  String get equalizerPresetAudiobook => 'Audiobook';
+  String get equalizerPresetAudiobook => 'オーディオブック';
 
   @override
-  String get equalizerPresetReduceNoise => 'Reduce Noise';
+  String get equalizerPresetReduceNoise => 'ノイズ低減';
 
   @override
-  String get equalizerPresetLoudness => 'Loudness';
+  String get equalizerPresetLoudness => 'ラウドネス';
 
   @override
   String equalizerEditingSavedNamed(String title) {
-    return 'Editing saved EQ for \"$title\"';
+    return '「$title」の保存済み EQ を編集中';
   }
 
   @override
-  String get equalizerEditingSavedGeneric => 'Editing saved EQ';
+  String get equalizerEditingSavedGeneric => '保存済み EQ を編集中';
 
   @override
-  String get equalizerPerBookEq => 'Per-book EQ';
+  String get equalizerPerBookEq => '本ごとの EQ';
 
   @override
-  String get notesDeleteNoteQuestion => 'Delete note?';
+  String get notesDeleteNoteQuestion => 'メモを削除しますか?';
 
   @override
   String notesDeleteNoteContent(String title) {
-    return 'Delete \"$title\"?';
+    return '「$title」を削除しますか?';
   }
 
   @override
-  String get notesExport => 'Export';
+  String get notesExport => 'エクスポート';
 
   @override
-  String get notesNewNote => 'New note';
+  String get notesNewNote => '新規メモ';
 
   @override
-  String get librarySortFilterUpcomingReleases => 'Scan Series';
+  String get librarySortFilterUpcomingReleases => 'シリーズをスキャン';
 
   @override
   String get librarySortFilterMatchAllAuthorsSubtitle =>
-      'Fetch a photo and bio for every author from the metadata provider';
+      'メタデータプロバイダーから全著者の写真と略歴を取得します';
 
   @override
   String get librarySortFilterUpcomingReleasesSubtitle =>
-      'Check Audible for upcoming and missing books in your series';
+      'Audible でシリーズの発売予定と不足している本を確認します';
 
   @override
   String sleepTimerSheetChaptersLeft(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count chapters left',
-      one: '1 chapter left',
+      other: '残り $count チャプター',
+      one: '残り 1 チャプター',
     );
     return '$_temp0';
   }
 
   @override
   String sleepTimerSheetAddMinutesChip(int minutes) {
-    return '+${minutes}m';
+    return '+$minutes分';
   }
 
   @override
@@ -7869,17 +7745,17 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String sleepTimerSheetMinShort(int minutes) {
-    return '${minutes}m';
+    return '$minutes分';
   }
 
   @override
   String sleepTimerSheetSecondsShort(int seconds) {
-    return '${seconds}s';
+    return '$seconds秒';
   }
 
   @override
   String sleepTimerSheetMinSecShort(int minutes, int seconds) {
-    return '${minutes}m ${seconds}s';
+    return '$minutes分$seconds秒';
   }
 
   @override
@@ -7887,8 +7763,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count chapters',
-      one: '1 chapter',
+      other: '$count チャプター',
+      one: '1 チャプター',
     );
     return '$_temp0';
   }
@@ -7903,75 +7779,74 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Sleep after $count chapters',
-      one: 'Sleep after 1 chapter',
+      other: '$count チャプター後にスリープ',
+      one: '1 チャプター後にスリープ',
     );
     return '$_temp0';
   }
 
   @override
-  String get sleepTimerSheetRewindOnSleep => 'Rewind on sleep';
+  String get sleepTimerSheetRewindOnSleep => 'スリープ時に巻き戻す';
 
   @override
-  String get sleepTimerSheetShake => 'Shake';
+  String get sleepTimerSheetShake => 'シェイク';
 
   @override
   String sleepTimerSheetAddsMinutes(int minutes) {
-    return 'Adds $minutes min';
+    return '$minutes 分追加';
   }
 
   @override
-  String get sleepTimerSheetAddsOneChapter => 'Adds 1 chapter';
+  String get sleepTimerSheetAddsOneChapter => '1 チャプター追加';
 
   @override
-  String get sleepTimerSheetResetsToFull => 'Resets to full duration';
+  String get sleepTimerSheetResetsToFull => '全体の長さにリセット';
 
   @override
-  String get sleepTimerSheetTabSpecificChapter => 'Chapter';
+  String get sleepTimerSheetTabSpecificChapter => 'チャプター';
 
   @override
-  String get sleepTimerSheetSpecificNoChapters => 'No chapters available';
+  String get sleepTimerSheetSpecificNoChapters => '利用できるチャプターがありません';
 
   @override
   String sleepTimerSheetSpecificChapterFallback(int number) {
-    return 'Chapter $number';
+    return 'チャプター $number';
   }
 
   @override
-  String get sleepTimerSheetSpecificPassedShort => 'passed';
+  String get sleepTimerSheetSpecificPassedShort => '経過済み';
 
   @override
-  String get sleepTimerSheetSpecificStart => 'Chapter Start';
+  String get sleepTimerSheetSpecificStart => 'チャプターの開始';
 
   @override
-  String get sleepTimerSheetSpecificEnd => 'Chapter End';
+  String get sleepTimerSheetSpecificEnd => 'チャプターの終了';
 
   @override
-  String get sleepTimerSheetSpecificEndsAt => 'Sleep timer will end at';
+  String get sleepTimerSheetSpecificEndsAt => 'スリープタイマーの終了時点';
 
   @override
   String sleepTimerSheetSpecificCountdown(String countdown) {
-    return 'in $countdown';
+    return '$countdown 後';
   }
 
   @override
-  String get sleepTimerSheetSpecificAlreadyPassed =>
-      'This point has already passed';
+  String get sleepTimerSheetSpecificAlreadyPassed => 'この時点はすでに過ぎています';
 
   @override
-  String get sleepTimerSheetSpecificStartButton => 'Start timer';
+  String get sleepTimerSheetSpecificStartButton => 'タイマーを開始';
 
   @override
-  String get sleepTimerSheetSpecificStartButtonPassed => 'Already passed';
+  String get sleepTimerSheetSpecificStartButtonPassed => '経過済み';
 
   @override
-  String get timeAm => 'AM';
+  String get timeAm => '午前';
 
   @override
-  String get timePm => 'PM';
+  String get timePm => '午後';
 
   @override
-  String get collectionPickerCollectionFallback => 'Collection';
+  String get collectionPickerCollectionFallback => 'コレクション';
 
   @override
   String collectionPickerNameWithCount(String name, int count) {
@@ -7979,7 +7854,7 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get playlistPickerPlaylistFallback => 'Playlist';
+  String get playlistPickerPlaylistFallback => 'プレイリスト';
 
   @override
   String playlistPickerNameWithCount(String name, int count) {
@@ -7987,303 +7862,301 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get cardChaptersPlayFromChapterTitle => 'Play from chapter?';
+  String get cardChaptersPlayFromChapterTitle => 'このチャプターから再生しますか?';
 
   @override
   String cardChaptersPlayFromChapterContent(String title) {
-    return 'Start playing from \"$title\"?';
+    return '「$title」から再生を開始しますか?';
   }
 
   @override
-  String get cardChaptersPlay => 'Play';
+  String get cardChaptersPlay => '再生';
 
   @override
-  String get absorbingSharedToday => 'Today';
+  String get absorbingSharedToday => '今日';
 
   @override
-  String get absorbingSharedYesterday => 'Yesterday';
+  String get absorbingSharedYesterday => '昨日';
 
   @override
-  String get absorbingSharedMonday => 'Monday';
+  String get absorbingSharedMonday => '月曜日';
 
   @override
-  String get absorbingSharedTuesday => 'Tuesday';
+  String get absorbingSharedTuesday => '火曜日';
 
   @override
-  String get absorbingSharedWednesday => 'Wednesday';
+  String get absorbingSharedWednesday => '水曜日';
 
   @override
-  String get absorbingSharedThursday => 'Thursday';
+  String get absorbingSharedThursday => '木曜日';
 
   @override
-  String get absorbingSharedFriday => 'Friday';
+  String get absorbingSharedFriday => '金曜日';
 
   @override
-  String get absorbingSharedSaturday => 'Saturday';
+  String get absorbingSharedSaturday => '土曜日';
 
   @override
-  String get absorbingSharedSunday => 'Sunday';
+  String get absorbingSharedSunday => '日曜日';
 
   @override
-  String get absorbingSharedAm => 'AM';
+  String get absorbingSharedAm => '午前';
 
   @override
-  String get absorbingSharedPm => 'PM';
+  String get absorbingSharedPm => '午後';
 
   @override
   String sectionDetailAddedToAbsorbing(String title) {
-    return 'Added \"$title\" to Absorbing';
+    return '「$title」を Absorbing に追加しました';
   }
 
   @override
-  String get sectionDetailDoneBadge => 'Done';
+  String get sectionDetailDoneBadge => '完了';
 
   @override
-  String get homeCustomizeAddGenreTitle => 'Add Genre Section';
+  String get homeCustomizeAddGenreTitle => 'ジャンルのセクションを追加';
 
   @override
-  String get homeCustomizeAddGenreSubtitle =>
-      'Pick a genre to show on your home screen';
+  String get homeCustomizeAddGenreSubtitle => 'ホーム画面に表示するジャンルを選択';
 
   @override
-  String get homeSectionDoneBadge => 'Done';
+  String get homeSectionDoneBadge => '完了';
 
   @override
-  String get tipsSheetQuickBookmarksTitle => 'Quick Bookmarks';
+  String get tipsSheetQuickBookmarksTitle => 'クイックブックマーク';
 
   @override
   String get tipsSheetQuickBookmarksDesc =>
-      'Long-press the bookmark button on any card to instantly drop a bookmark at your current position without opening the bookmark sheet.';
+      'どのカードでも、ブックマークボタンを長押しすると、ブックマークのシートを開かずに現在位置へすぐにブックマークを追加できます。';
 
   @override
-  String get tipsSheetCoverPlayPauseTitle => 'Cover Play/Pause';
+  String get tipsSheetCoverPlayPauseTitle => 'カバーで再生/一時停止';
 
   @override
   String get tipsSheetCoverPlayPauseDesc =>
-      'Tap the cover art on any card to play or pause. Toggle this in Settings under Absorbing Cards. A faint pause icon shows when playing so you know it\'s tappable.';
+      'どのカードでも、カバーアートをタップすると再生または一時停止します。設定の「Absorbing カード」で切り替えられます。再生中はうっすらと一時停止アイコンが表示され、タップできることがわかります。';
 
   @override
-  String get tipsSheetFullScreenPlayerTitle => 'Full Screen Player';
+  String get tipsSheetFullScreenPlayerTitle => 'フルスクリーンプレーヤー';
 
   @override
   String get tipsSheetFullScreenPlayerDesc =>
-      'Swipe up on any absorbing card to open the full screen player. Swipe down to dismiss it.';
+      'Absorbing のカードを上にスワイプすると、フルスクリーンプレーヤーが開きます。下にスワイプすると閉じます。';
 
   @override
-  String get tipsSheetQuickAddAbsorbingTitle => 'Quick Add to Absorbing';
+  String get tipsSheetQuickAddAbsorbingTitle => 'Absorbing にすばやく追加';
 
   @override
   String get tipsSheetQuickAddAbsorbingDesc =>
-      'Swipe right on any book in a list sheet (series, author, search results) to instantly add it to your absorbing queue.';
+      'リストのシート(シリーズ、著者、検索結果)で本を右にスワイプすると、Absorbing のキューにすぐ追加できます。';
 
   @override
-  String get tipsSheetShakeExtendSleepTitle => 'Shake to Extend Sleep';
+  String get tipsSheetShakeExtendSleepTitle => 'シェイクでスリープを延長';
 
   @override
   String get tipsSheetShakeExtendSleepDesc =>
-      'If you have a sleep timer running and shake your phone, it\'ll add extra minutes. Configure the amount in Settings under Sleep Timer.';
+      'スリープタイマーの実行中にスマートフォンを振ると、数分が追加されます。追加する時間は、設定の「スリープタイマー」で変更できます。';
 
   @override
-  String get tipsSheetSeriesNavigationTitle => 'Series Navigation';
+  String get tipsSheetSeriesNavigationTitle => 'シリーズのナビゲーション';
 
   @override
   String get tipsSheetSeriesNavigationDesc =>
-      'Tap the series name in any book\'s detail popup to see all books in the series, sorted in reading order with sequence badges on each cover.';
+      '本の詳細ポップアップでシリーズ名をタップすると、シリーズ内のすべての本が巻数順に表示され、各カバーに巻数バッジが付きます。';
 
   @override
-  String get tipsSheetSwipeBetweenBooksTitle => 'Swipe Between Books';
+  String get tipsSheetSwipeBetweenBooksTitle => 'スワイプで本を切り替え';
 
   @override
   String get tipsSheetSwipeBetweenBooksDesc =>
-      'Swipe left and right on the Absorbing screen to switch between your in-progress books. With Manual queue mode on, the cards also act as your queue, so the next one auto-plays when the current one finishes.';
+      'Absorbing 画面を左右にスワイプすると、再生途中の本を切り替えられます。手動キューモードがオンの場合、カードがキューとしても働き、現在の本が終わると次の本が自動で再生されます。';
 
   @override
-  String get tipsSheetTapToSeekTitle => 'Tap to Seek';
+  String get tipsSheetTapToSeekTitle => 'タップしてシーク';
 
   @override
   String get tipsSheetTapToSeekDesc =>
-      'Tap anywhere on the chapter or book progress bar to jump directly to that position. You can also drag the bars for fine-grained control.';
+      'チャプターまたは本の進捗バーの好きな場所をタップすると、その位置へ直接移動します。バーをドラッグして細かく調整することもできます。';
 
   @override
-  String get tipsSheetSpeedAdjustedTimeTitle => 'Speed-Adjusted Time';
+  String get tipsSheetSpeedAdjustedTimeTitle => '再生速度に合わせた時間表示';
 
   @override
   String get tipsSheetSpeedAdjustedTimeDesc =>
-      'Every time shown - position, remaining, chapters, bookmarks - adjusts to your playback speed. Listening at 1.5x? The times shown reflect how long they\'ll actually take you.';
+      '位置、残り時間、チャプター、ブックマークなど、表示されるすべての時間が再生速度に合わせて調整されます。1.5xで聴いているなら、表示される時間は実際にかかる時間を示します。';
 
   @override
-  String get tipsSheetPlaybackHistoryTitle => 'Playback History';
+  String get tipsSheetPlaybackHistoryTitle => '再生履歴';
 
   @override
   String get tipsSheetPlaybackHistoryDesc =>
-      'Tap the History button on any card to see a timeline of every play, pause, seek, and speed change. Tap any event to jump back to that position.';
+      'どのカードでも「履歴」ボタンをタップすると、再生、一時停止、シーク、速度変更のすべてがタイムラインで表示されます。イベントをタップすると、その位置に戻れます。';
 
   @override
-  String get tipsSheetAutoRewindTitle => 'Auto-Rewind';
+  String get tipsSheetAutoRewindTitle => '自動巻き戻し';
 
   @override
   String get tipsSheetAutoRewindDesc =>
-      'When you resume after a pause, Absorb automatically rewinds a few seconds so you don\'t lose your place. The rewind amount scales with how long you were away. Configure it in Settings.';
+      '一時停止から再開すると、Absorbが数秒ほど自動で巻き戻すので、聴いていた場所を見失いません。巻き戻す量は、離れていた時間に応じて変わります。設定で調整できます。';
 
   @override
-  String get tipsSheetSeriesQueueModeTitle => 'Series Queue Mode';
+  String get tipsSheetSeriesQueueModeTitle => 'シリーズキューモード';
 
   @override
   String get tipsSheetSeriesQueueModeDesc =>
-      'When you finish a book that\'s part of a series, Absorb can automatically play the next book. Set queue mode to \"Series\" in Settings.';
+      'シリーズの本を聴き終えると、Absorbが次の本を自動で再生できます。設定でキューモードを「シリーズ」にしてください。';
 
   @override
-  String get tipsSheetOfflineModeTitle => 'Offline Mode';
+  String get tipsSheetOfflineModeTitle => 'オフラインモード';
 
   @override
   String get tipsSheetOfflineModeDesc =>
-      'Tap the airplane button on the Absorbing screen to enter offline mode. This stops syncing, saves data, and only shows your downloaded books. Great for flights or low signal areas.';
+      'Absorbing 画面の飛行機ボタンをタップすると、オフラインモードになります。同期を止めてデータを節約し、ダウンロード済みの本だけを表示します。フライト中や電波の弱い場所に便利です。';
 
   @override
-  String get tipsSheetUpcomingReleasesTitle => 'Upcoming Releases';
+  String get tipsSheetUpcomingReleasesTitle => '近日発売';
 
   @override
   String get tipsSheetUpcomingReleasesDesc =>
-      'On the Series tab, tap the tab again to open its sort and filter sheet, then choose Upcoming Releases to see new and upcoming books across your series, sorted by release date.';
+      '「シリーズ」タブをもう一度タップすると並べ替えとフィルターのシートが開きます。「近日発売」を選ぶと、シリーズ全体の新刊や発売予定の本が発売日順に表示されます。';
 
   @override
-  String get tipsSheetPerBookEqTitle => 'Per-Book Equalizer';
+  String get tipsSheetPerBookEqTitle => '本ごとのイコライザー';
 
   @override
   String get tipsSheetPerBookEqDesc =>
-      'Each book remembers its own equalizer settings. Tweak EQ once for a sci-fi epic and the next time you play it, it sounds the same.';
+      '本ごとにイコライザーの設定が記憶されます。SF大作のEQを一度調整しておけば、次に再生するときも同じ音で聴けます。';
 
   @override
-  String get tipsSheetPerBookSpeedTitle => 'Per-Book Speed';
+  String get tipsSheetPerBookSpeedTitle => '本ごとの再生速度';
 
   @override
   String get tipsSheetPerBookSpeedDesc =>
-      'Playback speed is saved per book. Run nonfiction at 1.5x and dramatic fiction at 1.0x without setting it every time.';
+      '再生速度は本ごとに保存されます。ノンフィクションは1.5x、ドラマチックな小説は1.0xと、毎回設定し直す必要はありません。';
 
   @override
-  String get tipsSheetAutoSleepWindowTitle => 'Auto Sleep Window';
+  String get tipsSheetAutoSleepWindowTitle => '自動スリープの時間帯';
 
   @override
   String get tipsSheetAutoSleepWindowDesc =>
-      'Pick the hours you usually fall asleep and the sleep timer will start itself when you begin listening in that window.';
+      'いつも眠りにつく時間帯を設定しておくと、その時間帯に再生を始めたときにスリープタイマーが自動で開始します。';
 
   @override
-  String get tipsSheetSleepFadeChimeTitle => 'Sleep Fade and Chime';
+  String get tipsSheetSleepFadeChimeTitle => 'スリープのフェードとチャイム';
 
   @override
   String get tipsSheetSleepFadeChimeDesc =>
-      'When the sleep timer ends, audio gradually fades out and an optional chime plays so it doesn\'t cut off mid-sentence.';
+      'スリープタイマーが終わると、音声が徐々にフェードアウトし、オプションでチャイムが鳴るので、話の途中で突然切れることがありません。';
 
   @override
-  String get tipsSheetCarModeTitle => 'Car Mode';
+  String get tipsSheetCarModeTitle => 'カーモード';
 
   @override
   String get tipsSheetCarModeDesc =>
-      'Tap the car icon to switch to giant-button mode designed for safer use while driving.';
+      '車のアイコンをタップすると、運転中でも安全に使える大きなボタンのモードに切り替わります。';
 
   @override
-  String get tipsSheetAudibleSeriesTitle => 'Audible Series Discovery';
+  String get tipsSheetAudibleSeriesTitle => 'Audibleでシリーズを探す';
 
   @override
   String get tipsSheetAudibleSeriesDesc =>
-      'Open a series and use the overflow menu (the three dots) to pull the full series list from Audible, including missing entries and books you haven\'t started.';
+      'シリーズを開いて、その他のメニュー(3つの点)から、Audibleにあるシリーズの全リストを取得できます。足りない巻や、まだ聴き始めていない本も確認できます。';
 
   @override
-  String get tipsSheetTranscribeBookmarkTitle => 'Transcribe Bookmarks';
+  String get tipsSheetTranscribeBookmarkTitle => 'ブックマークの文字起こし';
 
   @override
   String get tipsSheetTranscribeBookmarkDesc =>
-      'Turn the audio at any bookmark into text, fully on your device. Enable it in Settings under Advanced > Transcription and download a model, then tap Transcribe on a bookmark - the text lands in its note, ready to fix up or share.';
+      'ブックマーク位置の音声を、完全にデバイス上でテキストに変換します。設定の「詳細設定」>「文字起こし」で有効にしてモデルをダウンロードし、ブックマークの「文字起こし」をタップしてください。テキストはメモに入り、修正や共有ができます。';
 
   @override
-  String get tipsSheetFindBetweenFormatsTitle =>
-      'Jump Between Audiobook and Ebook';
+  String get tipsSheetFindBetweenFormatsTitle => 'オーディオブックと電子書籍を行き来';
 
   @override
   String get tipsSheetFindBetweenFormatsDesc =>
-      'With transcription on and the book downloaded, pause and tap Find position in ebook on the player to open the ebook at the passage you just heard. In the reader, select some text and tap the headphones to start the audiobook right there.';
+      '文字起こしがオンで、本がダウンロード済みなら、一時停止してプレーヤーの「電子書籍で位置を探す」をタップすると、いま聴いた箇所で電子書籍が開きます。リーダーでテキストを選択してヘッドホンをタップすると、その場所からオーディオブックが始まります。';
 
   @override
-  String get tipsSheetShareQuoteTitle => 'Share Quotes';
+  String get tipsSheetShareQuoteTitle => '引用を共有';
 
   @override
   String get tipsSheetShareQuoteDesc =>
-      'Share an ebook highlight or a bookmark note as an image with the quote over the book cover. Look for the share option on highlights and in the bookmark sheet.';
+      '電子書籍のハイライトやブックマークのメモを、本のカバーに引用を重ねた画像として共有できます。ハイライトとブックマークのシートに共有オプションがあります。';
 
   @override
-  String get tipsSheetClipExportTitle => 'Export Audio Clips';
+  String get tipsSheetClipExportTitle => '音声クリップを書き出す';
 
   @override
   String get tipsSheetClipExportDesc =>
-      'Open a bookmark and tap Export clip to trim and save a short audio snippet of the book, cover art included - great for sharing a favorite scene.';
+      'ブックマークを開いて「クリップを書き出す」をタップすると、本の短い音声クリップをトリミングして、カバーアート付きで保存できます。お気に入りの場面を共有するのに最適です。';
 
   @override
-  String get tipsSheetAllHighlightsTitle => 'All Highlights in One Place';
+  String get tipsSheetAllHighlightsTitle => 'すべてのハイライトを一か所に';
 
   @override
   String get tipsSheetAllHighlightsDesc =>
-      'The All Bookmarks page has a Highlights tab collecting every ebook highlight from every book. Tap one to share it or jump back into the book.';
+      '「すべてのブックマーク」ページの「ハイライト」タブには、すべての本の電子書籍ハイライトが集まっています。タップして共有したり、その本に戻ったりできます。';
 
   @override
-  String get tipsSheetVolumeKeyPagesTitle => 'Volume-Key Page Turns';
+  String get tipsSheetVolumeKeyPagesTitle => '音量キーでページをめくる';
 
   @override
   String get tipsSheetVolumeKeyPagesDesc =>
-      'Turn ebook pages with the volume keys. Enable it in the reader\'s settings - normal or mirrored direction, and it can stay on even while audio is playing.';
+      '音量キーで電子書籍のページをめくれます。リーダーの設定で有効にしてください。通常の向きと反転した向きを選べ、音声の再生中でもオンのままにできます。';
 
   @override
-  String get tipsSheetSettingsSyncTitle => 'Settings Sync';
+  String get tipsSheetSettingsSyncTitle => '設定の同期';
 
   @override
   String get tipsSheetSettingsSyncDesc =>
-      'Keep your settings, per-book speeds and Absorbing order in step across devices through your own WebDAV server. Set it up in Settings under Backup and sync.';
+      'ご自身のWebDAVサーバーを使って、設定、本ごとの再生速度、Absorbing の順序をデバイス間で同期します。設定の「バックアップと同期」で設定してください。';
 
   @override
-  String get tipsSheetNavLongPressTitle => 'Long-Press the Bottom Tabs';
+  String get tipsSheetNavLongPressTitle => '下部タブの長押し';
 
   @override
   String get tipsSheetNavLongPressDesc =>
-      'Hold the Home tab to switch libraries from any page. Hold the Library tab to jump straight into search.';
+      'ホームタブを長押しすると、どのページからでもライブラリを切り替えられます。ライブラリタブを長押しすると、そのまま検索に移動します。';
 
   @override
-  String get bookCardUnknownTitle => 'Unknown Title';
+  String get bookCardUnknownTitle => '不明なタイトル';
 
   @override
   String get bookCardExplicitBadge => 'E';
 
   @override
-  String get bookCardDone => 'Done';
+  String get bookCardDone => '完了';
 
   @override
-  String get bookCardSaved => 'Saved';
+  String get bookCardSaved => 'ダウンロード済み';
 
   @override
-  String get episodeRowEpisode => 'Episode';
+  String get episodeRowEpisode => 'エピソード';
 
   @override
-  String get episodeRowToday => 'Today';
+  String get episodeRowToday => '今日';
 
   @override
-  String get episodeRowYesterday => 'Yesterday';
+  String get episodeRowYesterday => '昨日';
 
   @override
   String episodeRowDaysAgo(int count) {
-    return '${count}d ago';
+    return '$count日前';
   }
 
   @override
   String episodeRowWeeksAgo(int count) {
-    return '${count}w ago';
+    return '$count週間前';
   }
 
   @override
   String episodeRowDurationHm(int hours, int minutes) {
-    return '${hours}h ${minutes}m';
+    return '$hours時間$minutes分';
   }
 
   @override
   String episodeRowDurationM(int minutes) {
-    return '${minutes}m';
+    return '$minutes分';
   }
 
   @override
@@ -8300,10 +8173,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get librarySearchResultsExplicitBadge => 'E';
 
   @override
-  String get librarySearchResultsDone => 'Done';
+  String get librarySearchResultsDone => '完了';
 
   @override
-  String get librarySearchResultsSaved => 'Saved';
+  String get librarySearchResultsSaved => 'ダウンロード済み';
 
   @override
   String librarySearchResultsSequence(String number) {
@@ -8311,18 +8184,18 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get librarySearchResultsUnknownSeries => 'Unknown Series';
+  String get librarySearchResultsUnknownSeries => '不明なシリーズ';
 
   @override
-  String get librarySearchResultsUnknownEpisode => 'Unknown Episode';
+  String get librarySearchResultsUnknownEpisode => '不明なエピソード';
 
   @override
   String librarySearchResultsBookCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count冊',
+      one: '1冊',
     );
     return '$_temp0';
   }
@@ -8331,10 +8204,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get libraryGridTilesExplicitBadge => 'E';
 
   @override
-  String get libraryGridTilesDone => 'Done';
+  String get libraryGridTilesDone => '完了';
 
   @override
-  String get libraryGridTilesSaved => 'Saved';
+  String get libraryGridTilesSaved => 'ダウンロード済み';
 
   @override
   String libraryGridTilesSequence(String number) {
@@ -8342,133 +8215,132 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get libraryGridTilesUnknownSeries => 'Unknown Series';
+  String get libraryGridTilesUnknownSeries => '不明なシリーズ';
 
   @override
-  String get seriesCardUnknownSeries => 'Unknown Series';
+  String get seriesCardUnknownSeries => '不明なシリーズ';
 
   @override
   String seriesCardBookCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count冊',
+      one: '1冊',
     );
     return '$_temp0';
   }
 
   @override
-  String get cardProgressFineScrubbing => 'Fine Scrubbing';
+  String get cardProgressFineScrubbing => '微調整スクラブ';
 
   @override
-  String get cardProgressQuarterSpeed => 'Quarter Speed';
+  String get cardProgressQuarterSpeed => '1/4速';
 
   @override
-  String get cardProgressHalfSpeed => 'Half Speed';
+  String get cardProgressHalfSpeed => '1/2速';
 
   @override
   String cardProgressChapterPrefix(String number) {
-    return 'Chapter $number';
+    return 'チャプター $number';
   }
 
   @override
-  String get cardEdgeProgressFineScrubbing => 'Fine Scrubbing';
+  String get cardEdgeProgressFineScrubbing => '微調整スクラブ';
 
   @override
-  String get cardEdgeProgressQuarterSpeed => 'Quarter Speed';
+  String get cardEdgeProgressQuarterSpeed => '1/4速';
 
   @override
-  String get cardEdgeProgressHalfSpeed => 'Half Speed';
+  String get cardEdgeProgressHalfSpeed => '1/2速';
 
   @override
-  String get authSessionExpired => 'Session expired. Please log in again.';
+  String get authSessionExpired => 'セッションの有効期限が切れました。もう一度サインインしてください。';
 
   @override
   String authCannotReachServer(String url) {
-    return 'Cannot reach server at $url';
+    return '$url のサーバーに接続できません';
   }
 
   @override
-  String get authInvalidUsernameOrPassword => 'Invalid username or password';
+  String get authInvalidUsernameOrPassword => 'ユーザー名またはパスワードが正しくありません';
 
   @override
-  String get authInvalidApiKey => 'Invalid API key';
+  String get authInvalidApiKey => 'APIキーが正しくありません';
 
   @override
-  String get authLoginFailedDetail =>
-      'Login failed - check your server address and credentials';
+  String get authLoginFailedDetail => 'サインインに失敗しました - サーバーアドレスと認証情報を確認してください';
 
   @override
-  String get authUnexpectedServerResponse => 'Unexpected server response';
+  String get authUnexpectedServerResponse => 'サーバーから予期しない応答が返されました';
 
   @override
-  String get authSsoUnexpectedResponse => 'SSO returned an unexpected response';
+  String get authSsoUnexpectedResponse => 'SSOから予期しない応答が返されました';
 
   @override
-  String get authSwitchedToLocalServer => 'Switched to local server';
+  String get authSwitchedToLocalServer => 'ローカルサーバーに切り替えました';
 
   @override
-  String get authSwitchedToRemoteServer => 'Switched to remote server';
+  String get authSwitchedToRemoteServer => 'リモートサーバーに切り替えました';
 
   @override
-  String get lpDeletedFinishedDownload => 'Deleted finished download';
+  String get lpDeletedFinishedDownload => '完了したダウンロードを削除しました';
 
   @override
   String lpSubscribedPodcastDownloading(String showTitle, int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count new episodes downloading',
-      one: '1 new episode downloading',
+      other: '新しいエピソード$count件をダウンロード中',
+      one: '新しいエピソード1件をダウンロード中',
     );
     return '$showTitle: $_temp0';
   }
 
   @override
   String lpSubscribedEpisodeAddedStart(String showTitle) {
-    return '$showTitle added to the top of your queue';
+    return '$showTitleをキューの先頭に追加しました';
   }
 
   @override
   String lpSubscribedEpisodeAddedSecond(String showTitle) {
-    return '$showTitle added 2nd in your queue';
+    return '$showTitleをキューの2番目に追加しました';
   }
 
   @override
   String lpSubscribedEpisodeAddedEnd(String showTitle) {
-    return '$showTitle added to the end of your queue';
+    return '$showTitleをキューの末尾に追加しました';
   }
 
   @override
   String lpSubscribedEpisodeDownloaded(String showTitle) {
-    return 'New $showTitle episode downloaded';
+    return '$showTitleの新しいエピソードをダウンロードしました';
   }
 
   @override
-  String get statsWeekStartsOn => 'Week starts on';
+  String get statsWeekStartsOn => '週の開始日';
 
   @override
-  String get episodeListNewEpisodePosition => 'New episode position';
+  String get episodeListNewEpisodePosition => '新しいエピソードの位置';
 
   @override
-  String get episodeListPositionTop => 'Top of queue';
+  String get episodeListPositionTop => 'キューの先頭';
 
   @override
-  String get episodeListPositionSecond => 'Second in queue';
+  String get episodeListPositionSecond => 'キューの2番目';
 
   @override
-  String get episodeListPositionEnd => 'End of queue';
+  String get episodeListPositionEnd => 'キューの末尾';
 
   @override
-  String get episodeListPositionNone => 'Don\'t add to queue';
+  String get episodeListPositionNone => 'キューに追加しない';
 
   @override
-  String get episodeListPositionNoneDesc => 'Still notified and downloaded';
+  String get episodeListPositionNoneDesc => '通知とダウンロードは行われます';
 
   @override
   String sleepRewindUndoNote(int minutes) {
-    return 'Hit play within $minutes minutes and the rewind is undone';
+    return '$minutes分以内に再生を押すと、巻き戻しが取り消されます';
   }
 
   @override
@@ -8476,8 +8348,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Queue: downloading $count items',
-      one: 'Queue: downloading 1 item',
+      other: 'キュー: $count件をダウンロード中',
+      one: 'キュー: 1件をダウンロード中',
     );
     return '$_temp0';
   }
@@ -8487,8 +8359,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Downloading $count books',
-      one: 'Downloading 1 book',
+      other: '本$count冊をダウンロード中',
+      one: '本1冊をダウンロード中',
     );
     return '$_temp0';
   }
@@ -8498,71 +8370,68 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Downloading $count episodes',
-      one: 'Downloading 1 episode',
+      other: 'エピソード$count件をダウンロード中',
+      one: 'エピソード1件をダウンロード中',
     );
     return '$_temp0';
   }
 
   @override
-  String get downloadNotifProgressChannelName => 'Download Progress';
+  String get downloadNotifProgressChannelName => 'ダウンロードの進捗';
 
   @override
-  String get downloadNotifProgressChannelDesc =>
-      'Shows progress during audiobook downloads';
+  String get downloadNotifProgressChannelDesc => 'オーディオブックのダウンロード中に進捗を表示します';
 
   @override
-  String get downloadNotifAlertChannelName => 'Download Alerts';
+  String get downloadNotifAlertChannelName => 'ダウンロードのアラート';
 
   @override
-  String get downloadNotifAlertChannelDesc =>
-      'Notifications when downloads finish or fail';
+  String get downloadNotifAlertChannelDesc => 'ダウンロードの完了または失敗を通知します';
 
   @override
-  String get downloadNotifDownloadingTitle => 'Downloading…';
+  String get downloadNotifDownloadingTitle => 'ダウンロード中…';
 
   @override
   String downloadNotifActiveCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count downloads active',
-      one: '1 download active',
+      other: '$count件のダウンロードを実行中',
+      one: '1件のダウンロードを実行中',
     );
     return '$_temp0';
   }
 
   @override
   String downloadNotifSlotTitle(String title) {
-    return 'Downloading: $title';
+    return 'ダウンロード中: $title';
   }
 
   @override
-  String get downloadNotifStartingLabel => 'Starting…';
+  String get downloadNotifStartingLabel => '開始中…';
 
   @override
-  String get downloadNotifCompleteTitle => 'Download Complete';
+  String get downloadNotifCompleteTitle => 'ダウンロード完了';
 
   @override
   String downloadNotifCompleteBody(String title) {
-    return '$title is ready to listen offline';
+    return '$titleをオフラインで聴けるようになりました';
   }
 
   @override
-  String get downloadNotifFailedTitle => 'Download Failed';
+  String get downloadNotifFailedTitle => 'ダウンロード失敗';
 
   @override
-  String get upcomingNotifChannelName => 'Upcoming Release Scan';
+  String get upcomingNotifChannelName => '近日発売のスキャン';
 
   @override
-  String get upcomingNotifChannelDesc =>
-      'Shows progress while scanning for upcoming releases';
+  String get upcomingNotifChannelDesc => '近日発売の作品をスキャン中に進捗を表示します';
 
   @override
-  String get upcomingNotifScanTitle => 'Scanning for upcoming releases';
+  String get upcomingNotifScanTitle => '近日発売の作品をスキャン中';
 
   @override
-  String get upcomingNotifStartingScan => 'Starting scan…';
+  String get upcomingNotifStartingScan => 'スキャンを開始中…';
 
   @override
   String upcomingNotifCheckingSeries(
@@ -8570,51 +8439,49 @@ class AppLocalizationsJa extends AppLocalizations {
     int current,
     int total,
   ) {
-    return 'Checking $seriesName… ($current/$total)';
+    return '$seriesNameを確認中… ($current/$total)';
   }
 
   @override
-  String get upcomingNotifFoundTitle => 'Upcoming releases found!';
+  String get upcomingNotifFoundTitle => '近日発売の作品が見つかりました!';
 
   @override
   String upcomingNotifFoundBody(int books, int series) {
     String _temp0 = intl.Intl.pluralLogic(
       series,
       locale: localeName,
-      other: '$series series',
-      one: '1 series',
+      other: '$seriesシリーズ',
+      one: '1シリーズ',
     );
-    return '$books upcoming across $_temp0';
+    return '$_temp0で$books件が近日発売';
   }
 
   @override
-  String get androidAutoTabContinue => 'Continue';
+  String get androidAutoTabContinue => '続き';
 
   @override
-  String get androidAutoTabLibrary => 'Library';
+  String get androidAutoTabLibrary => 'ライブラリ';
 
   @override
-  String get androidAutoTabDownloads => 'Downloads';
+  String get androidAutoTabDownloads => 'ダウンロード';
 
   @override
-  String get settingsSearchHint => 'Search settings...';
+  String get settingsSearchHint => '設定を検索...';
 
   @override
-  String get settingsSearchNoResults => 'No matching settings';
+  String get settingsSearchNoResults => '一致する設定がありません';
 
   @override
-  String get carConnectAutoplay => 'Start playback when Android Auto connects';
+  String get carConnectAutoplay => 'Android Autoに接続したら再生を開始';
 
   @override
-  String get carConnectAutoplayIos => 'Start playback when CarPlay connects';
+  String get carConnectAutoplayIos => 'CarPlayに接続したら再生を開始';
 
   @override
-  String get carConnectAutoplayOnSubtitle =>
-      'The last book you were listening to starts by itself when the car connects';
+  String get carConnectAutoplayOnSubtitle => '車に接続すると、最後に聴いていた本が自動で始まります';
 
   @override
-  String get carConnectAutoplayOffSubtitle =>
-      'Playback waits for you to press play';
+  String get carConnectAutoplayOffSubtitle => '再生ボタンを押すまで待機します';
 
   @override
   String get sectionCar => 'Android Auto';
@@ -8626,471 +8493,452 @@ class AppLocalizationsJa extends AppLocalizations {
   String get sectionSiri => 'Siri';
 
   @override
-  String get siriUseWithSiri => 'Use with Siri';
+  String get siriUseWithSiri => 'Siriで使用';
 
   @override
-  String get siriStatusOn =>
-      'On. Siri can find and play your books and podcasts by name.';
+  String get siriStatusOn => 'オン。Siriが本やポッドキャストを名前で探して再生できます。';
 
   @override
-  String get siriStatusAsk =>
-      'Let Siri find and play your books and podcasts by name.';
+  String get siriStatusAsk => 'Siriに本やポッドキャストを名前で探して再生させましょう。';
 
   @override
-  String get siriStatusOff =>
-      'Siri is turned off for Absorb. Turn it on in iOS Settings.';
+  String get siriStatusOff => 'AbsorbのSiriはオフです。iOSの設定でオンにしてください。';
 
   @override
-  String get siriAllow => 'Allow';
+  String get siriAllow => '許可';
 
   @override
-  String get siriOpenSettings => 'Open Settings';
+  String get siriOpenSettings => '設定を開く';
 
   @override
-  String get siriThingsToSay => 'Things to say';
+  String get siriThingsToSay => '話しかける例';
 
   @override
   String get siriExamples =>
-      '\"Play [book title] on Absorb\"\n\"Play [series name] on Absorb\"\n\"Play something by [author] on Absorb\"\n\"Play the latest episode of [podcast] on Absorb\"\n\"Resume Absorb\"\n\"Skip back in Absorb\"\n\"Next chapter in Absorb\"\n\"Set a sleep timer in Absorb\"\n\"Add a bookmark in Absorb\"\n\"What am I listening to in Absorb\"';
+      '「Absorbで[本のタイトル]を再生」\n「Absorbで[シリーズ名]を再生」\n「Absorbで[著者]の作品を再生」\n「Absorbで[ポッドキャスト]の最新エピソードを再生」\n「Absorbを再開」\n「Absorbで少し戻って」\n「Absorbで次のチャプター」\n「Absorbでスリープタイマーを設定」\n「Absorbでブックマークを追加」\n「Absorbで今聴いているものは何」';
 
   @override
   String get siriShortcutsNote =>
-      'Resume, pause, skips, chapters, the sleep timer, bookmarks and what\'s playing work even without this permission. They are also in the Shortcuts app for automations and the Action button.';
+      '再開、一時停止、スキップ、チャプター、スリープタイマー、ブックマーク、再生中の内容は、この権限がなくても使えます。オートメーションやアクションボタン用に、ショートカットアプリにもあります。';
 
   @override
-  String get carBookOrder => 'Book order in the car';
+  String get carBookOrder => '車内での本の順序';
 
   @override
-  String get carBookOrderReverse => 'Reverse book order';
+  String get carBookOrderReverse => '本の順序を逆にする';
 
   @override
-  String get carBookOrderReverseSubtitle => 'Z to A, or oldest added first';
+  String get carBookOrderReverseSubtitle => 'ZからA、または追加が古い順';
 
   @override
-  String get carPodcastOrder => 'Podcast order in the car';
+  String get carPodcastOrder => '車内でのポッドキャストの順序';
 
   @override
-  String get carEpisodesOldestFirst => 'Oldest episodes first';
+  String get carEpisodesOldestFirst => '古いエピソードを先に';
 
   @override
-  String get carEpisodesOldestFirstSubtitle =>
-      'For shows you listen to from the start';
+  String get carEpisodesOldestFirstSubtitle => '最初から聴く番組向け';
 
   @override
-  String get androidAutoCatBooks => 'Books';
+  String get androidAutoCatBooks => '本';
 
   @override
-  String get androidAutoCatSeries => 'Series';
+  String get androidAutoCatSeries => 'シリーズ';
 
   @override
-  String get androidAutoCatAuthors => 'Authors';
+  String get androidAutoCatAuthors => '著者';
 
   @override
-  String get androidAutoCatCollections => 'Collections';
+  String get androidAutoCatCollections => 'コレクション';
 
   @override
-  String get androidAutoCatPlaylists => 'Playlists';
+  String get androidAutoCatPlaylists => 'プレイリスト';
 
   @override
-  String get showTipsAgain => 'Show tips again';
+  String get showTipsAgain => 'ヒントをもう一度表示';
 
   @override
-  String get showTipsAgainSubtitle =>
-      'Bring back feature tips you\'ve dismissed';
+  String get showTipsAgainSubtitle => '閉じた機能のヒントを元に戻します';
 
   @override
-  String get tipsRestored => 'Tips restored';
+  String get tipsRestored => 'ヒントを元に戻しました';
 
   @override
-  String get resetSpeedPresets => 'Reset speed presets';
+  String get resetSpeedPresets => '速度プリセットをリセット';
 
   @override
-  String get resetSpeedPresetsSubtitle =>
-      'Restore the default playback speed chips';
+  String get resetSpeedPresetsSubtitle => 'デフォルトの再生速度チップに戻します';
 
   @override
-  String get speedPresetsReset => 'Speed presets reset';
+  String get speedPresetsReset => '速度プリセットをリセットしました';
 
   @override
-  String get editAuthor => 'Edit author';
+  String get editAuthor => '著者を編集';
 
   @override
-  String get authorName => 'Name';
+  String get authorName => '名前';
 
   @override
-  String get authorImage => 'Author image';
+  String get authorImage => '著者の画像';
 
   @override
-  String get authorRemoveImage => 'Remove image';
+  String get authorRemoveImage => '画像を削除';
 
   @override
-  String get authorRemoveImageTitle => 'Remove author image?';
+  String get authorRemoveImageTitle => '著者の画像を削除しますか?';
 
   @override
-  String get authorRemoveImageConfirm =>
-      'This deletes the image on the server.';
+  String get authorRemoveImageConfirm => 'サーバー上の画像が削除されます。';
 
   @override
-  String get authorImageRemoved => 'Image removed';
+  String get authorImageRemoved => '画像を削除しました';
 
   @override
-  String get authorImageFailed => 'Couldn\'t update author image';
+  String get authorImageFailed => '著者の画像を更新できませんでした';
 
   @override
-  String get authorUpdated => 'Author updated';
+  String get authorUpdated => '著者を更新しました';
 
   @override
-  String get authorUpdateFailed => 'Couldn\'t update author';
+  String get authorUpdateFailed => '著者を更新できませんでした';
 
   @override
-  String get authorMatched => 'Author updated from match';
+  String get authorMatched => 'マッチした内容で著者を更新しました';
 
   @override
-  String get authorNoMatchFound => 'No match found';
+  String get authorNoMatchFound => '一致するものが見つかりません';
 
   @override
   String authorMergedInto(String name) {
-    return 'Merged into $name';
+    return '$nameに統合しました';
   }
 
   @override
-  String get authorQuickMatchHint =>
-      'Pull name, ASIN, description and image from Audible for the chosen region.';
+  String get authorQuickMatchHint => '選択した地域のAudibleから、名前、ASIN、説明、画像を取得します。';
 
   @override
-  String get region => 'Region';
+  String get region => '地域';
 
   @override
-  String get editTabDetails => 'Details';
+  String get editTabDetails => '詳細';
 
   @override
-  String get editTabCover => 'Cover';
+  String get editTabCover => 'カバー';
 
   @override
-  String get editTabMatch => 'Match';
+  String get editTabMatch => 'マッチ';
 
   @override
-  String get editTabEmbed => 'Embed';
+  String get editTabEmbed => '埋め込み';
 
   @override
-  String get chapterEditorTitle => 'Edit Chapters';
+  String get chapterEditorTitle => 'チャプターを編集';
 
   @override
-  String get chapterNotConnected => 'Not connected to a server';
+  String get chapterNotConnected => 'サーバーに接続されていません';
 
   @override
-  String get chapterErrorFirstNotZero => 'First chapter must start at 0:00';
+  String get chapterErrorFirstNotZero => '最初のチャプターは0:00から始める必要があります';
 
   @override
-  String get chapterErrorStartAfterPrevious =>
-      'Start must come after the previous chapter';
+  String get chapterErrorStartAfterPrevious => '開始時刻は前のチャプターより後にしてください';
 
   @override
-  String get chapterErrorStartBeforeEnd => 'Start must be before the book ends';
+  String get chapterErrorStartBeforeEnd => '開始時刻は本の終わりより前にしてください';
 
   @override
-  String get chapterErrorTitleRequired => 'Title required';
+  String get chapterErrorTitleRequired => 'タイトルは必須です';
 
   @override
-  String get chapterEditStartTitle => 'Edit start time';
+  String get chapterEditStartTitle => '開始時刻を編集';
 
   @override
-  String get chapterTimeHintSeconds => 'Seconds';
+  String get chapterTimeHintSeconds => '秒';
 
   @override
-  String get chapterTimeHintFull => 'HH:MM:SS or seconds';
+  String get chapterTimeHintFull => 'HH:MM:SS または秒';
 
   @override
-  String get chapterInvalidTime => 'Invalid time';
+  String get chapterInvalidTime => '無効な時刻です';
 
   @override
-  String get chapterLocked => 'Chapter is locked';
+  String get chapterLocked => 'チャプターはロックされています';
 
   @override
-  String get chapterAllLocked => 'All chapters are locked';
+  String get chapterAllLocked => 'すべてのチャプターがロックされています';
 
   @override
   String chapterTrackTitle(int number) {
-    return 'Track $number';
+    return 'トラック $number';
   }
 
   @override
-  String get chapterNoAudioForPosition => 'No audio for this position';
+  String get chapterNoAudioForPosition => 'この位置に音声がありません';
 
   @override
-  String get chapterCouldNotPlayPreview => 'Could not play preview';
+  String get chapterCouldNotPlayPreview => 'プレビューを再生できませんでした';
 
   @override
   String chapterStartSetTo(String time) {
-    return 'Start set to $time';
+    return '開始時刻を$timeに設定しました';
   }
 
   @override
-  String get chapterAddNumberedTitle => 'Add numbered chapters';
+  String get chapterAddNumberedTitle => '連番のチャプターを追加';
 
   @override
   String chapterNextPreview(String first, String second) {
-    return 'Next: \"$first\", \"$second\", ...';
+    return '次: 「$first」「$second」...';
   }
 
   @override
-  String get chapterHowMany => 'How many chapters';
+  String get chapterHowMany => 'チャプター数';
 
   @override
-  String get add => 'Add';
+  String get add => '追加';
 
   @override
-  String get chapterCountRange => 'Enter a count between 1 and 150';
+  String get chapterCountRange => '1～150の数を入力してください';
 
   @override
-  String get chapterTitlesUpdated => 'Chapter titles updated';
+  String get chapterTitlesUpdated => 'チャプターのタイトルを更新しました';
 
   @override
-  String get chaptersApplied => 'Chapters applied';
+  String get chaptersApplied => 'チャプターを適用しました';
 
   @override
-  String get chapterDiscardTitle => 'Discard changes?';
+  String get chapterDiscardTitle => '変更を破棄しますか?';
 
   @override
-  String get chapterDiscardMessage => 'Revert to the saved chapters.';
+  String get chapterDiscardMessage => '保存済みのチャプターに戻します。';
 
   @override
-  String get chapterRemoveAllTitle => 'Remove all chapters?';
+  String get chapterRemoveAllTitle => 'すべてのチャプターを削除しますか?';
 
   @override
-  String get chapterRemoveAllMessage =>
-      'This removes every chapter from this book.';
+  String get chapterRemoveAllMessage => 'この本のすべてのチャプターが削除されます。';
 
   @override
-  String get chapterAllRemoved => 'All chapters removed';
+  String get chapterAllRemoved => 'すべてのチャプターを削除しました';
 
   @override
-  String get chapterFixHighlighted => 'Fix the highlighted chapters first';
+  String get chapterFixHighlighted => '先に、強調表示されたチャプターを修正してください';
 
   @override
-  String get chaptersUpdated => 'Chapters updated';
+  String get chaptersUpdated => 'チャプターを更新しました';
 
   @override
   String get ok => 'OK';
 
   @override
-  String get chapterSaveButton => 'Save chapters';
+  String get chapterSaveButton => 'チャプターを保存';
 
   @override
-  String get chapterAddHint => 'Add chapter (e.g. \"Chapter 01\")';
+  String get chapterAddHint => 'チャプターを追加(例: 「Chapter 01」)';
 
   @override
-  String get chapterAddTooltip => 'Add chapter(s)';
+  String get chapterAddTooltip => 'チャプターを追加';
 
   @override
-  String get chapterRemoveAll => 'Remove All';
+  String get chapterRemoveAll => 'すべて削除';
 
   @override
-  String get chapterShiftTimes => 'Shift Times';
+  String get chapterShiftTimes => '時刻をずらす';
 
   @override
-  String get chapterFromTracks => 'From Tracks';
+  String get chapterFromTracks => 'トラックから';
 
   @override
-  String get chapterLookup => 'Lookup';
+  String get chapterLookup => '検索';
 
   @override
-  String get chapterShowSeconds => 'Show seconds';
+  String get chapterShowSeconds => '秒を表示';
 
   @override
   String chapterWindowMinutes(int minutes) {
-    return '$minutes min';
+    return '$minutes分';
   }
 
   @override
-  String get chapterLoopCut => 'Loop the cut';
+  String get chapterLoopCut => 'カット部分をループ再生';
 
   @override
-  String get chapterFindStart => 'Find the start';
+  String get chapterFindStart => '開始位置を探す';
 
   @override
-  String get chapterFindStartListening => 'Listening around the marker';
+  String get chapterFindStartListening => 'マーカー周辺を聴いています';
 
   @override
-  String get chapterFindStartNone => 'Nothing here sounds like a chapter start';
+  String get chapterFindStartNone => 'チャプターの開始らしき音声が見つかりません';
 
   @override
-  String get chapterFindStartWider => 'Search wider';
+  String get chapterFindStartWider => '範囲を広げて探す';
 
   @override
   String get chapterFindStartCeiling =>
-      'Searched half an hour around the marker. The start is further off than that, or there\'s no chapter announcement to hear.';
+      'マーカーの前後30分を探しました。開始位置はそれより離れているか、チャプターの読み上げがありません。';
 
   @override
-  String get chapterFindStartStrong => 'Sounds like this chapter';
+  String get chapterFindStartStrong => 'このチャプターらしい音声';
 
   @override
-  String get chapterFindStartMaybe => 'Chapter-like words';
+  String get chapterFindStartMaybe => 'チャプターらしい言葉';
 
   @override
   String chapterFindStartGap(String seconds) {
-    return '${seconds}s gap';
+    return '$seconds秒の間';
   }
 
   @override
   String chapterFindStartRange(String from, String to) {
-    return 'Searched $from to $to';
+    return '$from～$toを検索しました';
   }
 
   @override
-  String get chapterFindStartNeedsModel =>
-      'Turn on transcription in Settings and download a model first';
+  String get chapterFindStartNeedsModel => '先に設定で文字起こしをオンにして、モデルをダウンロードしてください';
 
   @override
-  String get chapterFindStartUseThis => 'Use this';
+  String get chapterFindStartUseThis => 'これを使う';
 
   @override
   String chapterFindStartTitle(String title) {
-    return 'Title: $title';
+    return 'タイトル: $title';
   }
 
   @override
-  String get chapterShiftBySeconds => 'Shift by (seconds)';
+  String get chapterShiftBySeconds => 'ずらす量(秒)';
 
   @override
-  String get chapterShiftHint =>
-      'Shifts every unlocked chapter. Use a negative value to move them earlier.';
+  String get chapterShiftHint => 'ロックされていないすべてのチャプターをずらします。前にずらすには負の値を使います。';
 
   @override
-  String get chapterTitleHint => 'Chapter title';
+  String get chapterTitleHint => 'チャプターのタイトル';
 
   @override
-  String get chapterStopPreview => 'Stop preview';
+  String get chapterStopPreview => 'プレビューを停止';
 
   @override
-  String get chapterPreviewFromHere => 'Preview from here';
+  String get chapterPreviewFromHere => 'ここからプレビュー';
 
   @override
-  String get chapterScrubHint => 'Drag or nudge to move the start';
+  String get chapterScrubHint => 'ドラッグまたは微調整して開始位置を動かします';
 
   @override
   String chapterStartAt(String time) {
-    return 'Start at $time';
+    return '開始: $time';
   }
 
   @override
-  String get chapterUnlock => 'Unlock';
+  String get chapterUnlock => 'ロック解除';
 
   @override
-  String get chapterLock => 'Lock';
+  String get chapterLock => 'ロック';
 
   @override
-  String get chapterInsertBelow => 'Insert below';
+  String get chapterInsertBelow => '下に挿入';
 
   @override
-  String get chapterFindTitle => 'Find chapters';
+  String get chapterFindTitle => 'チャプターを探す';
 
   @override
-  String get chapterFindSubtitle =>
-      'Looks up chapters from Audible/Audnexus by ASIN.';
+  String get chapterFindSubtitle => 'ASINをもとに、Audible/Audnexusからチャプターを検索します。';
 
   @override
-  String get chapterEnterAsin => 'Enter an ASIN';
+  String get chapterEnterAsin => 'ASINを入力してください';
 
   @override
-  String get chapterLookupFailed => 'Lookup failed - check the ASIN';
+  String get chapterLookupFailed => '検索に失敗しました - ASINを確認してください';
 
   @override
-  String get chapterNoChaptersFound => 'No chapters found for that ASIN';
+  String get chapterNoChaptersFound => 'そのASINのチャプターが見つかりません';
 
   @override
-  String get chapterRemoveBranding => 'Remove Audible branding (intro/outro)';
+  String get chapterRemoveBranding => 'Audibleのブランド音声(イントロ/アウトロ)を削除';
 
   @override
   String chapterFoundCount(int count) {
-    return '$count chapters found';
+    return '$count件のチャプターが見つかりました';
   }
 
   @override
   String chapterAudibleVsBook(String audible, String book) {
-    return 'Audible $audible  -  Book $book';
+    return 'Audible $audible  -  本 $book';
   }
 
   @override
   String get chapterAudibleLonger =>
-      'The Audible version is longer than your file - later chapters may not line up.';
+      'Audible版はお手元のファイルより長いため、後半のチャプターがずれる可能性があります。';
 
   @override
   String get chapterAudibleShorter =>
-      'The Audible version is shorter than your file - chapters may not line up.';
+      'Audible版はお手元のファイルより短いため、チャプターがずれる可能性があります。';
 
   @override
-  String get chapterTitlesOnly => 'Titles only';
+  String get chapterTitlesOnly => 'タイトルのみ';
 
   @override
-  String get chapterApplyChapters => 'Apply chapters';
+  String get chapterApplyChapters => 'チャプターを適用';
 
   @override
-  String get coverSearchTitle => 'Search for a cover';
+  String get coverSearchTitle => 'カバーを検索';
 
   @override
-  String get coverSearchRefineHint =>
-      'Refine the title/author to clean up results - this does not change the book.';
+  String get coverSearchRefineHint => 'タイトルや著者を調整すると結果を絞り込めます。本の情報は変更されません。';
 
   @override
-  String get coverNoneFound => 'No covers found';
+  String get coverNoneFound => 'カバーが見つかりません';
 
   @override
-  String get coverEnterTitleFirst => 'Enter a title first';
+  String get coverEnterTitleFirst => '先にタイトルを入力してください';
 
   @override
-  String get coverUpdated => 'Cover updated';
+  String get coverUpdated => 'カバーを更新しました';
 
   @override
-  String get coverCouldNotUpdate => 'Could not update cover';
+  String get coverCouldNotUpdate => 'カバーを更新できませんでした';
 
   @override
-  String get coverApply => 'Apply cover';
+  String get coverApply => 'カバーを適用';
 
   @override
-  String get coverUnknownResolution => 'Unknown resolution';
+  String get coverUnknownResolution => '解像度不明';
 
   @override
-  String get embedIntro =>
-      'Embed metadata into audio files including cover image and chapters.';
+  String get embedIntro => 'カバー画像やチャプターを含むメタデータを、音声ファイルに埋め込みます。';
 
   @override
-  String get embedBackupOption => 'Back up audio files first';
+  String get embedBackupOption => '先に音声ファイルをバックアップ';
 
   @override
-  String get embedNoteInFolder =>
-      'Metadata will be embedded in the audio tracks inside your audiobook folder.';
+  String get embedNoteInFolder => 'メタデータは、オーディオブックフォルダー内の音声トラックに埋め込まれます。';
 
   @override
-  String get embedNoteMultiTrack =>
-      'Chapters are not embedded in multi-track audiobooks.';
+  String get embedNoteMultiTrack => '複数トラックのオーディオブックには、チャプターは埋め込まれません。';
 
   @override
-  String get embedNoteNavigateAway =>
-      'Once the task is started you can navigate away from this page.';
+  String get embedNoteNavigateAway => 'タスクを開始した後は、このページから移動しても構いません。';
 
   @override
-  String get embedStartButton => 'Start Metadata Embed';
+  String get embedStartButton => 'メタデータの埋め込みを開始';
 
   @override
   String embedProgress(String percent) {
-    return 'Embedding $percent%';
+    return '埋め込み中 $percent%';
   }
 
   @override
-  String get embedProgressIndeterminate => 'Embedding...';
+  String get embedProgressIndeterminate => '埋め込み中...';
 
   @override
   String taskProgressKeepsRunning(String percent) {
-    return '$percent% - keeps running if you leave this page';
+    return '$percent% - このページを離れても実行を続けます';
   }
 
   @override
-  String get taskStarting => 'Starting...';
+  String get taskStarting => '開始中...';
 
   @override
-  String get embedBackupNoteIntro =>
-      'A backup of your original audio files will be stored on the server in ';
+  String get embedBackupNoteIntro => '元の音声ファイルのバックアップは、サーバー上の次の場所に保存されます: ';
 
   @override
   String embedBackupNotePath(String itemId) {
@@ -9098,1170 +8946,1150 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get embedBackupNoteOutro =>
-      '. Make sure to periodically purge the items cache.';
+  String get embedBackupNoteOutro => '。アイテムのキャッシュを定期的に消去してください。';
 
   @override
-  String get embedDialogTitle => 'Embed metadata';
+  String get embedDialogTitle => 'メタデータを埋め込む';
 
   @override
   String embedConfirmMessage(int count, String backup) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '# audio files',
-      one: '# audio file',
+      other: '音声ファイル#個',
+      one: '音声ファイル#個',
     );
-    return 'Embed metadata into $_temp0? Your audio files will be rewritten$backup.';
+    return '$_temp0にメタデータを埋め込みますか? 音声ファイルは書き換えられます$backup。';
   }
 
   @override
-  String get embedConfirmBackupClause => ' (originals backed up first)';
+  String get embedConfirmBackupClause => '(先に元ファイルをバックアップ)';
 
   @override
-  String get embedConfirmAction => 'Embed';
+  String get embedConfirmAction => '埋め込む';
 
   @override
-  String get embedCouldNotStart => 'Could not start embed';
+  String get embedCouldNotStart => '埋め込みを開始できませんでした';
 
   @override
-  String get embedStarted => 'Embed started';
+  String get embedStarted => '埋め込みを開始しました';
 
   @override
-  String get embedComplete => 'Embed complete';
+  String get embedComplete => '埋め込みが完了しました';
 
   @override
-  String get embedFailed => 'Embed failed';
+  String get embedFailed => '埋め込みに失敗しました';
 
   @override
-  String get encodeComplete => 'Encode complete';
+  String get encodeComplete => 'エンコードが完了しました';
 
   @override
-  String get encodeFailedTask => 'Encode failed';
+  String get encodeFailedTask => 'エンコードに失敗しました';
 
   @override
   String encodeProgress(String percent) {
-    return 'Encoding $percent%';
+    return 'エンコード中 $percent%';
   }
 
   @override
-  String get encodeProgressIndeterminate => 'Encoding...';
+  String get encodeProgressIndeterminate => 'エンコード中...';
 
   @override
-  String get adminApiKeys => 'API Keys';
+  String get adminApiKeys => 'APIキー';
 
   @override
-  String get adminApiKeysSubtitle => 'Programmatic access tokens';
+  String get adminApiKeysSubtitle => 'プログラム用のアクセストークン';
 
   @override
-  String get adminApiKeysNewTitle => 'New API Key';
+  String get adminApiKeysNewTitle => '新しいAPIキー';
 
   @override
-  String get adminApiKeysName => 'Name';
+  String get adminApiKeysName => '名前';
 
   @override
-  String get adminApiKeysNameHint => 'e.g. Home Assistant';
+  String get adminApiKeysNameHint => '例: Home Assistant';
 
   @override
-  String get adminApiKeysOwner => 'User';
+  String get adminApiKeysOwner => 'ユーザー';
 
   @override
-  String get adminApiKeysExpiration => 'Expiration';
+  String get adminApiKeysExpiration => '有効期限';
 
   @override
-  String get adminApiKeysActive => 'Active';
+  String get adminApiKeysActive => '有効';
 
   @override
-  String get adminApiKeysActiveSub => 'Key works as soon as it\'s created';
+  String get adminApiKeysActiveSub => '作成後すぐにキーが使えます';
 
   @override
-  String get adminApiKeysInactive => 'Inactive';
+  String get adminApiKeysInactive => '無効';
 
   @override
-  String get adminApiKeysExpired => 'Expired';
+  String get adminApiKeysExpired => '期限切れ';
 
   @override
-  String get adminApiKeysCreate => 'Create Key';
+  String get adminApiKeysCreate => 'キーを作成';
 
   @override
-  String get adminApiKeysCreated => 'API key created';
+  String get adminApiKeysCreated => 'APIキーを作成しました';
 
   @override
-  String get adminApiKeysTokenLabel => 'Your new API key';
+  String get adminApiKeysTokenLabel => '新しいAPIキー';
 
   @override
-  String get adminApiKeysCopyWarning =>
-      'Copy this key now. For security it won\'t be shown again.';
+  String get adminApiKeysCopyWarning => '今すぐこのキーをコピーしてください。セキュリティのため、再表示されません。';
 
   @override
-  String get adminApiKeysCopy => 'Copy';
+  String get adminApiKeysCopy => 'コピー';
 
   @override
-  String get adminApiKeysCopied => 'Copied to clipboard';
+  String get adminApiKeysCopied => 'クリップボードにコピーしました';
 
   @override
-  String get adminApiKeysDone => 'Done';
+  String get adminApiKeysDone => '完了';
 
   @override
-  String get adminApiKeysDeleteTitle => 'Revoke API key?';
+  String get adminApiKeysDeleteTitle => 'APIキーを失効させますか?';
 
   @override
-  String get adminApiKeysDeleted => 'API key revoked';
+  String get adminApiKeysDeleted => 'APIキーを失効させました';
 
   @override
-  String get adminApiKeysRevoke => 'Revoke';
+  String get adminApiKeysRevoke => '失効させる';
 
   @override
-  String get adminApiKeysSetActive => 'Set active';
+  String get adminApiKeysSetActive => '有効にする';
 
   @override
-  String get adminApiKeysSetInactive => 'Set inactive';
+  String get adminApiKeysSetInactive => '無効にする';
 
   @override
-  String get adminApiKeysFailedCreate => 'Couldn\'t create API key';
+  String get adminApiKeysFailedCreate => 'APIキーを作成できませんでした';
 
   @override
-  String get adminApiKeysFailedDelete => 'Couldn\'t revoke API key';
+  String get adminApiKeysFailedDelete => 'APIキーを失効させられませんでした';
 
   @override
-  String get adminApiKeysFailedUpdate => 'Couldn\'t update API key';
+  String get adminApiKeysFailedUpdate => 'APIキーを更新できませんでした';
 
   @override
-  String get adminApiKeysEmpty => 'No API keys yet';
+  String get adminApiKeysEmpty => 'APIキーはまだありません';
 
   @override
-  String get adminApiKeysEmptySub =>
-      'Create one to let apps and scripts reach your server';
+  String get adminApiKeysEmptySub => '作成すると、アプリやスクリプトからサーバーにアクセスできます';
 
   @override
-  String get adminApiKeysNeverUsed => 'Never used';
+  String get adminApiKeysNeverUsed => '未使用';
 
   @override
-  String get adminApiKeysNeverExpires => 'No expiration';
+  String get adminApiKeysNeverExpires => '期限なし';
 
   @override
-  String get adminApiKeysNameRequired => 'Enter a name';
+  String get adminApiKeysNameRequired => '名前を入力してください';
 
   @override
-  String get adminApiKeysUserRequired => 'Pick a user';
+  String get adminApiKeysUserRequired => 'ユーザーを選択してください';
 
   @override
-  String get adminApiKeysExpNever => 'Never';
+  String get adminApiKeysExpNever => 'なし';
 
   @override
-  String get adminApiKeysExp7d => '7 days';
+  String get adminApiKeysExp7d => '7日';
 
   @override
-  String get adminApiKeysExp30d => '30 days';
+  String get adminApiKeysExp30d => '30日';
 
   @override
-  String get adminApiKeysExp90d => '90 days';
+  String get adminApiKeysExp90d => '90日';
 
   @override
-  String get adminApiKeysExp1y => '1 year';
+  String get adminApiKeysExp1y => '1年';
 
   @override
   String adminApiKeysLastUsed(String time) {
-    return 'Last used $time';
+    return '最終使用: $time';
   }
 
   @override
   String adminApiKeysExpiresOn(String date) {
-    return 'Expires $date';
+    return '有効期限: $date';
   }
 
   @override
   String adminApiKeysDeleteContent(String name) {
-    return 'Revoke \"$name\"? Apps using this key will lose access immediately.';
+    return '「$name」を失効させますか? このキーを使っているアプリは、すぐにアクセスできなくなります。';
   }
 
   @override
-  String get endOfEpisode => 'End of Episode';
+  String get endOfEpisode => 'エピソードの終わり';
 
   @override
-  String get sleepTimerSheetEpisodeSleepStart => 'Sleep at end of episode';
+  String get sleepTimerSheetEpisodeSleepStart => 'エピソードの終わりでスリープ';
 
   @override
-  String get bookmarkListen => 'Listen';
+  String get bookmarkListen => '聴く';
 
   @override
-  String get bookmarkPause => 'Pause';
+  String get bookmarkPause => '一時停止';
 
   @override
-  String get bookmarkPreviewFailed => 'Couldn\'t play this spot.';
+  String get bookmarkPreviewFailed => 'この箇所を再生できませんでした。';
 
   @override
-  String get clipExport => 'Export clip';
+  String get clipExport => 'クリップを書き出す';
 
   @override
-  String get clipJumpToStart => 'Jump to start';
+  String get clipJumpToStart => '開始位置へ移動';
 
   @override
-  String get clipJumpToEnd => 'Jump to end';
+  String get clipJumpToEnd => '終了位置へ移動';
 
   @override
-  String get clipSetStart => 'Set start';
+  String get clipSetStart => '開始位置を設定';
 
   @override
-  String get clipSetEnd => 'Set end';
+  String get clipSetEnd => '終了位置を設定';
 
   @override
-  String get clipInLabel => 'In';
+  String get clipInLabel => '開始';
 
   @override
-  String get clipOutLabel => 'Out';
+  String get clipOutLabel => '終了';
 
   @override
-  String get clipSave => 'Save clip';
+  String get clipSave => 'クリップを保存';
 
   @override
   String clipExportSaved(String filename) {
-    return 'Saved $filename';
+    return '$filenameを保存しました';
   }
 
   @override
-  String get clipExportClamped =>
-      'Clip saved, shortened to the end of this track';
+  String get clipExportClamped => 'クリップを保存しました(このトラックの終わりまでに短縮)';
 
   @override
-  String get clipExportFailed => 'Couldn\'t export the clip.';
+  String get clipExportFailed => 'クリップを書き出せませんでした。';
 
   @override
-  String get clipDownloadToExport =>
-      'Download this book first to export a clip on iPhone.';
+  String get clipDownloadToExport => 'iPhoneでクリップを書き出すには、先にこの本をダウンロードしてください。';
 
   @override
-  String get fsPickerTitle => 'Select folder';
+  String get fsPickerTitle => 'フォルダーを選択';
 
   @override
-  String get fsServerRoot => 'Server root';
+  String get fsServerRoot => 'サーバーのルート';
 
   @override
-  String get fsEmptyFolder => 'No subfolders here';
+  String get fsEmptyFolder => 'ここにサブフォルダーはありません';
 
   @override
-  String get fsUseThisFolder => 'Use this folder';
+  String get fsUseThisFolder => 'このフォルダーを使う';
 
   @override
-  String get adminLibrariesManage => 'Libraries';
+  String get adminLibrariesManage => 'ライブラリ';
 
   @override
-  String get adminLibrariesManageSubtitle => 'Create, edit and reorder';
+  String get adminLibrariesManageSubtitle => '作成、編集、並べ替え';
 
   @override
-  String get adminUploadTitle => 'Upload media';
+  String get adminUploadTitle => 'メディアをアップロード';
 
   @override
-  String get adminUploadSubtitle => 'Add books and podcasts from files';
+  String get adminUploadSubtitle => 'ファイルから本とポッドキャストを追加';
 
   @override
-  String get adminUploadNoLibraries =>
-      'Create a library before uploading media.';
+  String get adminUploadNoLibraries => 'メディアをアップロードする前にライブラリを作成してください。';
 
   @override
-  String get adminUploadDestination => 'Destination';
+  String get adminUploadDestination => 'アップロード先';
 
   @override
-  String get adminUploadFolder => 'Library folder';
+  String get adminUploadFolder => 'ライブラリフォルダー';
 
   @override
-  String get adminUploadDetails => 'Item details';
+  String get adminUploadDetails => 'アイテムの詳細';
 
   @override
-  String get adminUploadOptional => 'Optional';
+  String get adminUploadOptional => '任意';
 
   @override
-  String get adminUploadAutoMetadata => 'Auto-fetch metadata';
+  String get adminUploadAutoMetadata => 'メタデータを自動取得';
 
   @override
-  String get adminUploadAutoMetadataSubtitle =>
-      'Fill title, author and series from the best match';
+  String get adminUploadAutoMetadataSubtitle => '最も一致した結果からタイトル、著者、シリーズを入力します';
 
   @override
-  String get adminUploadMetadataProvider => 'Metadata provider';
+  String get adminUploadMetadataProvider => 'メタデータプロバイダー';
 
   @override
-  String get adminUploadMetadataSearching => 'Searching for metadata...';
+  String get adminUploadMetadataSearching => 'メタデータを検索中...';
 
   @override
   String get adminUploadMetadataNoResults =>
-      'No metadata match found. You can still upload this item.';
+      '一致するメタデータが見つかりませんでした。このアイテムはそのままアップロードできます。';
 
   @override
   String get adminUploadMetadataFailed =>
-      'Couldn\'t search for metadata. You can still upload this item.';
+      'メタデータを検索できませんでした。このアイテムはそのままアップロードできます。';
 
   @override
-  String get adminUploadDestinationPreview => 'Server destination';
+  String get adminUploadDestinationPreview => 'サーバー上の保存先';
 
   @override
-  String get adminUploadFiles => 'Files';
+  String get adminUploadFiles => 'ファイル';
 
   @override
   String adminUploadSelectedFiles(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count 個のファイル',
+      one: '1 個のファイル',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminUploadChooseFiles => 'Choose files';
+  String get adminUploadChooseFiles => 'ファイルを選択';
 
   @override
-  String get adminUploadAddFiles => 'Add files';
+  String get adminUploadAddFiles => 'ファイルを追加';
 
   @override
   String get adminUploadBookFilesHint =>
-      'Choose audio or ebook files. You can also include covers and metadata files.';
+      'オーディオまたは電子書籍のファイルを選択してください。カバーやメタデータのファイルも含められます。';
 
   @override
   String get adminUploadPodcastFilesHint =>
-      'Choose one or more audio files. You can also include covers and metadata files.';
+      'オーディオファイルを1つ以上選択してください。カバーやメタデータのファイルも含められます。';
 
   @override
   String get adminUploadUnsupportedFiles =>
-      'Some selected files are not supported by Audiobookshelf.';
+      '選択したファイルの一部は Audiobookshelf で対応していません。';
 
   @override
-  String get adminUploadFilePickerFailed =>
-      'Couldn\'t open the selected files.';
+  String get adminUploadFilePickerFailed => '選択したファイルを開けませんでした。';
 
   @override
-  String get adminUploadTitleRequired => 'Enter a title';
+  String get adminUploadTitleRequired => 'タイトルを入力してください';
 
   @override
-  String get adminUploadLibraryRequired => 'Choose a library';
+  String get adminUploadLibraryRequired => 'ライブラリを選択してください';
 
   @override
-  String get adminUploadFolderRequired => 'Choose a library folder';
+  String get adminUploadFolderRequired => 'ライブラリフォルダーを選択してください';
 
   @override
-  String get adminUploadFilesRequired => 'Choose at least one file';
+  String get adminUploadFilesRequired => 'ファイルを1つ以上選択してください';
 
   @override
   String get adminUploadPodcastFileRequired =>
-      'Choose at least one audio file for this podcast.';
+      'このポッドキャストのオーディオファイルを1つ以上選択してください。';
 
   @override
   String get adminUploadBookFileRequired =>
-      'Choose at least one audio or ebook file for this book.';
+      'この本のオーディオまたは電子書籍のファイルを1つ以上選択してください。';
 
   @override
   String get adminUploadPathCheckFailed =>
-      'Couldn\'t check the destination folder. Nothing was uploaded.';
+      '保存先フォルダーを確認できませんでした。何もアップロードされていません。';
 
   @override
-  String get adminUploadDestinationExists =>
-      'That destination folder already exists on the server.';
+  String get adminUploadDestinationExists => 'その保存先フォルダーはすでにサーバー上に存在します。';
 
   @override
   String adminUploadDestinationUsedBy(String title) {
-    return 'That destination is already used by \"$title\".';
+    return 'その保存先はすでに「$title」で使われています。';
   }
 
   @override
-  String get adminUploadAddToExistingTitle => 'Folder already exists';
+  String get adminUploadAddToExistingTitle => 'フォルダーがすでに存在します';
 
   @override
   String adminUploadAddToExisting(String title) {
-    return 'That folder belongs to \"$title\". Add the files to it? The server picks them up on its next scan.';
+    return 'そのフォルダーは「$title」のものです。ファイルをそこに追加しますか？サーバーは次回のスキャンで取り込みます。';
   }
 
   @override
   String get adminUploadAddToExistingNoItem =>
-      'That folder already exists on the server. Add the files to it?';
+      'そのフォルダーはすでにサーバー上に存在します。ファイルをそこに追加しますか？';
 
   @override
-  String get adminUploadAddToBook => 'Add to an existing book';
+  String get adminUploadAddToBook => '既存の本に追加';
 
   @override
-  String get adminUploadAddToBookHint => 'Search this library';
+  String get adminUploadAddToBookHint => 'このライブラリを検索';
 
   @override
-  String get adminUploadNoBooksFound => 'No books found';
+  String get adminUploadNoBooksFound => '本が見つかりません';
 
   @override
   String adminUploadAddingTo(String title) {
-    return 'Adding files to \"$title\"';
+    return '「$title」にファイルを追加中';
   }
 
   @override
   String adminUploadAddedTo(String title) {
-    return 'Added files to \"$title\"';
+    return '「$title」にファイルを追加しました';
   }
 
   @override
-  String get adminUploadTargetNoFolder =>
-      'Couldn\'t find that book\'s folder on the server.';
+  String get adminUploadTargetNoFolder => 'サーバー上でその本のフォルダーが見つかりませんでした。';
 
   @override
   String adminUploadTargetFolderMismatch(String preview, String folder) {
-    return 'The server would put these files in \"$preview\", not in that book\'s folder \"$folder\". Nothing was uploaded.';
+    return 'サーバーはこれらのファイルを、その本のフォルダー「$folder」ではなく「$preview」に置こうとしています。何もアップロードされていません。';
   }
 
   @override
-  String get adminUploadUploading => 'Uploading...';
+  String get adminUploadUploading => 'アップロード中...';
 
   @override
   String adminUploadProgress(int percent) {
-    return 'Uploading $percent%';
+    return 'アップロード中 $percent%';
   }
 
   @override
-  String get adminUploadButton => 'Upload';
+  String get adminUploadButton => 'アップロード';
 
   @override
   String adminUploadComplete(String title) {
-    return 'Uploaded \"$title\"';
+    return '「$title」をアップロードしました';
   }
 
   @override
-  String get adminUploadFailed => 'Upload failed';
+  String get adminUploadFailed => 'アップロードに失敗しました';
 
   @override
   String adminUploadFailedReason(String error) {
-    return 'Upload failed: $error';
+    return 'アップロードに失敗しました: $error';
   }
 
   @override
-  String get adminUploadReselectFiles =>
-      'Choose the files again before retrying.';
+  String get adminUploadReselectFiles => '再試行する前にファイルを選択し直してください。';
 
   @override
-  String get adminServerSettings => 'Server settings';
+  String get adminServerSettings => 'サーバー設定';
 
   @override
-  String get adminServerSettingsSubtitle => 'Scanner, storage and sorting';
+  String get adminServerSettingsSubtitle => 'スキャナー、ストレージ、並べ替え';
 
   @override
-  String get adminAuthentication => 'Authentication';
+  String get adminAuthentication => '認証';
 
   @override
-  String get adminAuthenticationSubtitle =>
-      'Password and OpenID Connect sign-in';
+  String get adminAuthenticationSubtitle => 'パスワードと OpenID Connect によるサインイン';
 
   @override
-  String get adminStats => 'Statistics';
+  String get adminStats => '統計';
 
   @override
-  String get adminStatsSubtitle => 'Library and listening totals';
+  String get adminStatsSubtitle => 'ライブラリと再生時間の合計';
 
   @override
-  String get adminAllSessions => 'All sessions';
+  String get adminAllSessions => 'すべてのセッション';
 
   @override
-  String get adminAllSessionsSubtitle =>
-      'View and manage all listening sessions';
+  String get adminAllSessionsSubtitle => 'すべての再生セッションを表示・管理';
 
   @override
-  String get adminSessionsAllUsers => 'All users';
+  String get adminSessionsAllUsers => 'すべてのユーザー';
 
   @override
-  String get adminSessionsEmpty => 'No sessions';
+  String get adminSessionsEmpty => 'セッションなし';
 
   @override
-  String get statsLibraryTotals => 'Library totals';
+  String get statsLibraryTotals => 'ライブラリの合計';
 
   @override
-  String get statsTotalItems => 'Items';
+  String get statsTotalItems => 'アイテム';
 
   @override
-  String get statsAudioFiles => 'Audio files';
+  String get statsAudioFiles => 'オーディオファイル';
 
   @override
-  String get statsTotalSize => 'Total size';
+  String get statsTotalSize => '合計サイズ';
 
   @override
-  String get statsBooks => 'Books';
+  String get statsBooks => '本';
 
   @override
-  String get statsPodcasts => 'Podcasts';
+  String get statsPodcasts => 'ポッドキャスト';
 
   @override
-  String get statsBooksSize => 'Books size';
+  String get statsBooksSize => '本のサイズ';
 
   @override
-  String get statsYearReview => 'Year in review';
+  String get statsYearReview => '今年のまとめ';
 
   @override
-  String get statsNoYearData => 'No data for this year';
+  String get statsNoYearData => 'この年のデータはありません';
 
   @override
-  String get statsListeningTime => 'Listening time';
+  String get statsListeningTime => '再生時間';
 
   @override
-  String get statsSessions => 'Sessions';
+  String get statsSessions => 'セッション';
 
   @override
-  String get statsBooksAdded => 'Books added';
+  String get statsBooksAdded => '追加された本';
 
   @override
-  String get statsAuthorsAdded => 'Authors added';
+  String get statsAuthorsAdded => '追加された著者';
 
   @override
-  String get statsTopAuthors => 'Top authors';
+  String get statsTopAuthors => '上位の著者';
 
   @override
-  String get statsTopNarrators => 'Top narrators';
+  String get statsTopNarrators => '上位のナレーター';
 
   @override
-  String get statsTopGenres => 'Top genres';
+  String get statsTopGenres => '上位のジャンル';
 
   @override
-  String get srvScannerSection => 'Scanner';
+  String get srvScannerSection => 'スキャナー';
 
   @override
-  String get srvFindCovers => 'Find covers';
+  String get srvFindCovers => 'カバーを探す';
 
   @override
-  String get srvCoverProvider => 'Cover provider';
+  String get srvCoverProvider => 'カバープロバイダー';
 
   @override
-  String get srvParseSubtitles => 'Parse subtitles from filename';
+  String get srvParseSubtitles => 'ファイル名からサブタイトルを解析';
 
   @override
-  String get srvPreferMatched => 'Prefer matched metadata';
+  String get srvPreferMatched => '一致したメタデータを優先';
 
   @override
-  String get srvDisableWatcher => 'Disable folder watcher';
+  String get srvDisableWatcher => 'フォルダー監視を無効にする';
 
   @override
-  String get srvStorageSection => 'Storage';
+  String get srvStorageSection => 'ストレージ';
 
   @override
-  String get srvStoreCover => 'Store cover with item';
+  String get srvStoreCover => 'カバーをアイテムと一緒に保存';
 
   @override
-  String get srvStoreMetadata => 'Store metadata with item';
+  String get srvStoreMetadata => 'メタデータをアイテムと一緒に保存';
 
   @override
-  String get srvMetadataFormat => 'Metadata file format';
+  String get srvMetadataFormat => 'メタデータファイルの形式';
 
   @override
-  String get srvFormatSection => 'Display and format';
+  String get srvFormatSection => '表示と形式';
 
   @override
-  String get srvDateFormat => 'Date format';
+  String get srvDateFormat => '日付の形式';
 
   @override
-  String get srvTimeFormat => 'Time format';
+  String get srvTimeFormat => '時刻の形式';
 
   @override
-  String get srvLanguage => 'Server language';
+  String get srvLanguage => 'サーバーの言語';
 
   @override
-  String get srvChromecast => 'Chromecast support';
+  String get srvChromecast => 'Chromecast 対応';
 
   @override
-  String get srvAllowIframe => 'Allow iframe embedding';
+  String get srvAllowIframe => 'iframe への埋め込みを許可';
 
   @override
-  String get srvSortingSection => 'Sorting';
+  String get srvSortingSection => '並べ替え';
 
   @override
-  String get srvIgnorePrefixes => 'Ignore prefixes when sorting';
+  String get srvIgnorePrefixes => '並べ替え時に接頭辞を無視';
 
   @override
-  String get srvSortingPrefixes => 'Sorting prefixes';
+  String get srvSortingPrefixes => '並べ替えの接頭辞';
 
   @override
-  String get srvAddPrefix => 'Add prefix';
+  String get srvAddPrefix => '接頭辞を追加';
 
   @override
-  String get srvSave => 'Save settings';
+  String get srvSave => '設定を保存';
 
   @override
-  String get srvSavePrefixes => 'Save prefixes';
+  String get srvSavePrefixes => '接頭辞を保存';
 
   @override
-  String get srvSaved => 'Settings saved';
+  String get srvSaved => '設定を保存しました';
 
   @override
-  String get srvSaveFailed => 'Couldn\'t save settings';
+  String get srvSaveFailed => '設定を保存できませんでした';
 
   @override
-  String get srvPrefixesSaved => 'Sorting prefixes updated';
+  String get srvPrefixesSaved => '並べ替えの接頭辞を更新しました';
 
   @override
-  String get authSetLoadFailed => 'Couldn\'t load authentication settings';
+  String get authSetLoadFailed => '認証設定を読み込めませんでした';
 
   @override
-  String get authSetCustomMessage => 'Custom message on login';
+  String get authSetCustomMessage => 'ログイン時のカスタムメッセージ';
 
   @override
-  String get authSetMessage => 'Message';
+  String get authSetMessage => 'メッセージ';
 
   @override
-  String get authSetPasswordAuth => 'Password authentication';
+  String get authSetPasswordAuth => 'パスワード認証';
 
   @override
-  String get authSetOpenId => 'OpenID Connect authentication';
+  String get authSetOpenId => 'OpenID Connect 認証';
 
   @override
-  String get authSetGuide => 'Setup guide';
+  String get authSetGuide => 'セットアップガイド';
 
   @override
-  String get authSetIssuerUrl => 'Issuer URL';
+  String get authSetIssuerUrl => '発行者 URL';
 
   @override
-  String get authSetAutoPopulate => 'Auto-populate';
+  String get authSetAutoPopulate => '自動入力';
 
   @override
-  String get authSetAuthorizeUrl => 'Authorize URL';
+  String get authSetAuthorizeUrl => '認可 URL';
 
   @override
-  String get authSetTokenUrl => 'Token URL';
+  String get authSetTokenUrl => 'トークン URL';
 
   @override
-  String get authSetUserinfoUrl => 'Userinfo URL';
+  String get authSetUserinfoUrl => 'ユーザー情報 URL';
 
   @override
   String get authSetJwksUrl => 'JWKS URL';
 
   @override
-  String get authSetLogoutUrl => 'Logout URL';
+  String get authSetLogoutUrl => 'ログアウト URL';
 
   @override
-  String get authSetClientId => 'Client ID';
+  String get authSetClientId => 'クライアント ID';
 
   @override
-  String get authSetClientSecret => 'Client secret';
+  String get authSetClientSecret => 'クライアントシークレット';
 
   @override
-  String get authSetSigningAlgorithm => 'Signing algorithm';
+  String get authSetSigningAlgorithm => '署名アルゴリズム';
 
   @override
-  String get authSetRedirectUris => 'Allowed mobile redirect URIs';
+  String get authSetRedirectUris => '許可するモバイルのリダイレクト URI';
 
   @override
   String get authSetRedirectUrisInfo =>
-      'Apps can only return to these addresses after sign-in. Absorb uses absorb://oauth. An asterisk (*) as the only entry allows any address.';
+      'アプリはサインイン後、これらのアドレスにのみ戻れます。Absorb は absorb://oauth を使用します。アスタリスク (*) だけを入力すると、すべてのアドレスを許可します。';
 
   @override
-  String get authSetAddRedirectUri => 'Add URI';
+  String get authSetAddRedirectUri => 'URI を追加';
 
   @override
-  String get authSetAddAbsorbRedirect => 'Add absorb://oauth';
+  String get authSetAddAbsorbRedirect => 'absorb://oauth を追加';
 
   @override
-  String get authSetSubfolder => 'Subfolder for redirect URLs';
+  String get authSetSubfolder => 'リダイレクト URL のサブフォルダー';
 
   @override
-  String get authSetSubfolderNone => 'None';
+  String get authSetSubfolderNone => 'なし';
 
   @override
   String get authSetWebRedirectInfo =>
-      'Allow these URLs in your OAuth provider so sign-in can return to the web app:';
+      'ウェブアプリにサインインから戻れるよう、OAuth プロバイダーで次の URL を許可してください:';
 
   @override
-  String get authSetButtonText => 'Button text';
+  String get authSetButtonText => 'ボタンのテキスト';
 
   @override
-  String get authSetMatchExisting => 'Match existing users by';
+  String get authSetMatchExisting => '既存ユーザーとの照合方法';
 
   @override
-  String get authSetMatchNone => 'Do not match';
+  String get authSetMatchNone => '照合しない';
 
   @override
-  String get authSetMatchEmail => 'Email';
+  String get authSetMatchEmail => 'メールアドレス';
 
   @override
-  String get authSetMatchUsername => 'Username';
+  String get authSetMatchUsername => 'ユーザー名';
 
   @override
   String get authSetMatchExistingInfo =>
-      'Used to link existing users. Once linked, users are matched by their unique ID from the provider.';
+      '既存ユーザーの紐付けに使用します。紐付け後は、プロバイダーの一意の ID で照合されます。';
 
   @override
-  String get authSetAutoLaunch => 'Auto launch';
+  String get authSetAutoLaunch => '自動起動';
 
   @override
   String get authSetAutoLaunchInfo =>
-      'Open the provider automatically from the web login page. /login?autoLaunch=0 skips it.';
+      'ウェブのログインページからプロバイダーを自動的に開きます。/login?autoLaunch=0 を付けるとスキップします。';
 
   @override
-  String get authSetAutoRegister => 'Auto register';
+  String get authSetAutoRegister => '自動登録';
 
   @override
-  String get authSetAutoRegisterInfo =>
-      'Create new users automatically after they sign in';
+  String get authSetAutoRegisterInfo => 'サインインした新規ユーザーを自動的に作成します';
 
   @override
   String get authSetClaimsInfo =>
-      'Leave these empty to turn off group and permission assignment. New users then get the User role.';
+      'グループと権限の割り当てをオフにするには、これらを空のままにしてください。新規ユーザーにはユーザーロールが付与されます。';
 
   @override
-  String get authSetGroupClaim => 'Group claim';
+  String get authSetGroupClaim => 'グループクレーム';
 
   @override
   String get authSetGroupClaimInfo =>
-      'Claim that lists the user\'s groups, usually groups. Groups named admin, user or guest set the role, and the highest one wins. If no group matches, sign-in is refused.';
+      'ユーザーのグループを列挙するクレームです。通常は groups です。admin、user、guest という名前のグループがロールを決め、最上位のものが優先されます。一致するグループがない場合、サインインは拒否されます。';
 
   @override
-  String get authSetPermsClaim => 'Advanced permission claim';
+  String get authSetPermsClaim => '詳細な権限クレーム';
 
   @override
   String get authSetPermsClaimInfo =>
-      'Claim with permissions for non-admin users. If the claim is missing, sign-in is refused, and a missing option counts as off. Expected format:';
+      '管理者以外のユーザーの権限を持つクレームです。クレームがない場合、サインインは拒否され、存在しないオプションはオフとして扱われます。想定される形式:';
 
   @override
   String get authSetRestartNote =>
-      'Restart the server after saving to apply OpenID Connect changes.';
+      'OpenID Connect の変更を適用するには、保存後にサーバーを再起動してください。';
 
   @override
-  String get authSetNoChanges => 'No changes to save';
+  String get authSetNoChanges => '保存する変更はありません';
 
   @override
-  String get authSetNeedOneMethod => 'Turn on at least one sign-in method';
+  String get authSetNeedOneMethod => 'サインイン方法を少なくとも1つオンにしてください';
 
   @override
   String authSetFieldRequired(String field) {
-    return '$field is required';
+    return '$field は必須です';
   }
 
   @override
   String authSetInvalidRedirectUri(String uri) {
-    return 'Invalid redirect URI: $uri';
+    return '無効なリダイレクト URI: $uri';
   }
 
   @override
-  String get authSetAsteriskAlone =>
-      'An asterisk (*) must be the only redirect URI';
+  String get authSetAsteriskAlone => 'アスタリスク (*) はリダイレクト URI として単独で指定する必要があります';
 
   @override
   String authSetInvalidClaim(String field) {
-    return '$field is not a valid claim name';
+    return '$field は有効なクレーム名ではありません';
   }
 
   @override
   String authSetIssuerFailed(String error) {
-    return 'Couldn\'t read the issuer: $error';
+    return '発行者を読み取れませんでした: $error';
   }
 
   @override
-  String get libNoneYet => 'No libraries yet';
+  String get libNoneYet => 'ライブラリはまだありません';
 
   @override
-  String get libReorderFailed => 'Couldn\'t save the new order';
+  String get libReorderFailed => '新しい順序を保存できませんでした';
 
   @override
-  String get libDeleteTitle => 'Delete library?';
+  String get libDeleteTitle => 'ライブラリを削除しますか？';
 
   @override
-  String get libDeleteBody =>
-      'This permanently removes the library and all of its items from the server.';
+  String get libDeleteBody => 'ライブラリとそのすべてのアイテムがサーバーから完全に削除されます。';
 
   @override
-  String get libDeleted => 'Library deleted';
+  String get libDeleted => 'ライブラリを削除しました';
 
   @override
-  String get libDeleteFailed => 'Couldn\'t delete library';
+  String get libDeleteFailed => 'ライブラリを削除できませんでした';
 
   @override
   String libFolderCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count folders',
-      one: '1 folder',
+      other: '$count 個のフォルダー',
+      one: '1 個のフォルダー',
     );
     return '$_temp0';
   }
 
   @override
-  String get libNewTitle => 'New library';
+  String get libNewTitle => '新しいライブラリ';
 
   @override
-  String get libEditTitle => 'Edit library';
+  String get libEditTitle => 'ライブラリを編集';
 
   @override
-  String get libName => 'Library name';
+  String get libName => 'ライブラリ名';
 
   @override
-  String get libMediaType => 'Media type';
+  String get libMediaType => 'メディアの種類';
 
   @override
-  String get libMediaBook => 'Books';
+  String get libMediaBook => '本';
 
   @override
-  String get libMediaPodcast => 'Podcasts';
+  String get libMediaPodcast => 'ポッドキャスト';
 
   @override
-  String get libProvider => 'Metadata provider';
+  String get libProvider => 'メタデータプロバイダー';
 
   @override
-  String get libIcon => 'Icon';
+  String get libIcon => 'アイコン';
 
   @override
-  String get libFolders => 'Folders';
+  String get libFolders => 'フォルダー';
 
   @override
-  String get libAddFolder => 'Add folder';
+  String get libAddFolder => 'フォルダーを追加';
 
   @override
-  String get libNoFolders => 'Add at least one folder';
+  String get libNoFolders => 'フォルダーを1つ以上追加してください';
 
   @override
-  String get libAdvanced => 'Advanced settings';
+  String get libAdvanced => '詳細設定';
 
   @override
-  String get libCoverShape => 'Cover shape';
+  String get libCoverShape => 'カバーの形';
 
   @override
-  String get libCoverSquare => 'Square';
+  String get libCoverSquare => '正方形';
 
   @override
-  String get libCoverStandard => 'Standard';
+  String get libCoverStandard => '標準';
 
   @override
-  String get libDisableWatcher => 'Disable folder watcher';
+  String get libDisableWatcher => 'フォルダー監視を無効にする';
 
   @override
-  String get libSkipAsin => 'Skip matching books that have an ASIN';
+  String get libSkipAsin => 'ASIN を持つ本の照合をスキップ';
 
   @override
-  String get libSkipIsbn => 'Skip matching books that have an ISBN';
+  String get libSkipIsbn => 'ISBN を持つ本の照合をスキップ';
 
   @override
-  String get libHideSingleSeries => 'Hide single-book series';
+  String get libHideSingleSeries => '1冊だけのシリーズを非表示';
 
   @override
-  String get libAudiobooksOnly => 'Audiobooks only';
+  String get libAudiobooksOnly => 'オーディオブックのみ';
 
   @override
-  String get libEpubScripted => 'Allow scripted ePub content';
+  String get libEpubScripted => 'スクリプト付き ePub コンテンツを許可';
 
   @override
-  String get libLaterBooksOnly => 'Only show later books in Continue Series';
+  String get libLaterBooksOnly => '「シリーズを続ける」で後の巻のみ表示';
 
   @override
-  String get libPodcastRegion => 'Podcast search region';
+  String get libPodcastRegion => 'ポッドキャスト検索の地域';
 
   @override
-  String get libMarkPercent => 'Finished at % complete';
+  String get libMarkPercent => '完了とする進捗率 (%)';
 
   @override
-  String get libMarkTime => 'Finished with seconds left';
+  String get libMarkTime => '完了とする残り秒数';
 
   @override
-  String get libAutoScan => 'Auto-scan schedule (cron)';
+  String get libAutoScan => '自動スキャンのスケジュール (cron)';
 
   @override
-  String get libCreate => 'Create library';
+  String get libCreate => 'ライブラリを作成';
 
   @override
-  String get libUpdate => 'Save changes';
+  String get libUpdate => '変更を保存';
 
   @override
-  String get libNameRequired => 'Enter a library name';
+  String get libNameRequired => 'ライブラリ名を入力してください';
 
   @override
-  String get libCreated => 'Library created';
+  String get libCreated => 'ライブラリを作成しました';
 
   @override
-  String get libCreateFailed => 'Couldn\'t create library';
+  String get libCreateFailed => 'ライブラリを作成できませんでした';
 
   @override
-  String get libUpdated => 'Library updated';
+  String get libUpdated => 'ライブラリを更新しました';
 
   @override
-  String get libUpdateFailed => 'Couldn\'t update library';
+  String get libUpdateFailed => 'ライブラリを更新できませんでした';
 
   @override
-  String get libRemoveFoldersTitle => 'Remove folders?';
+  String get libRemoveFoldersTitle => 'フォルダーを削除しますか？';
 
   @override
   String get libRemoveFoldersBody =>
-      'Removing a folder deletes its items from the library. This can\'t be undone.';
+      'フォルダーを削除すると、そのアイテムもライブラリから削除されます。この操作は元に戻せません。';
 
   @override
-  String get readEbook => 'Read';
+  String get readEbook => '読む';
 
   @override
-  String get ebookDownload => 'Download';
+  String get ebookDownload => 'ダウンロード';
 
   @override
-  String get ebookDownloaded => 'Downloaded';
+  String get ebookDownloaded => 'ダウンロード済み';
 
   @override
-  String get ebookSavedOffline => 'Saved for offline reading';
+  String get ebookSavedOffline => 'オフライン読書用に保存しました';
 
   @override
-  String get ebookRemovedOffline => 'Removed from offline';
+  String get ebookRemovedOffline => 'オフラインから削除しました';
 
   @override
-  String get ebookOfflineFailed => 'Couldn\'t download the ebook';
+  String get ebookOfflineFailed => '電子書籍をダウンロードできませんでした';
 
   @override
-  String get ebookSaveToDevice => 'Save to device';
+  String get ebookSaveToDevice => '端末に保存';
 
   @override
-  String get ebookSaveToDeviceTitle => 'Save to device?';
+  String get ebookSaveToDeviceTitle => '端末に保存しますか？';
 
   @override
   String get ebookSaveToDeviceBody =>
-      'This saves a copy of the ebook file somewhere on your device (you pick where). It won\'t make the book available offline in the reader - use Download for that.';
+      '電子書籍ファイルのコピーを端末内の場所（保存先は選べます）に保存します。リーダーでオフラインで読めるようにはなりません。それにはダウンロードを使ってください。';
 
   @override
-  String get readerFormatUnsupported =>
-      'This ebook format can\'t be opened in the reader yet';
+  String get readerFormatUnsupported => 'この電子書籍の形式はまだリーダーで開けません';
 
   @override
-  String get readerCouldNotOpen =>
-      'This ebook couldn\'t be opened. The file may be damaged.';
+  String get readerCouldNotOpen => 'この電子書籍を開けませんでした。ファイルが破損している可能性があります。';
 
   @override
-  String get moreActions => 'More';
+  String get moreActions => 'その他';
 
   @override
-  String get readerChapters => 'Chapters';
+  String get readerChapters => 'チャプター';
 
   @override
-  String get readerSettings => 'Reader Settings';
+  String get readerSettings => 'リーダー設定';
 
   @override
-  String get readerFontSize => 'Font Size';
+  String get readerFontSize => '文字サイズ';
 
   @override
-  String get readerLineSpacing => 'Line Spacing';
+  String get readerLineSpacing => '行間';
 
   @override
-  String get readerTextAlignment => 'Alignment';
+  String get readerTextAlignment => '配置';
 
   @override
-  String get readerAlignJustified => 'Justified';
+  String get readerAlignJustified => '両端揃え';
 
   @override
-  String get readerAlignLeft => 'Left';
+  String get readerAlignLeft => '左揃え';
 
   @override
-  String get readerSideMargins => 'Side margins';
+  String get readerSideMargins => '左右の余白';
 
   @override
-  String get readerTopBottom => 'Top & bottom';
+  String get readerTopBottom => '上下';
 
   @override
-  String get readerPageLayout => 'Page layout';
+  String get readerPageLayout => 'ページレイアウト';
 
   @override
-  String get readerPinTopBar => 'Keep the title and progress bar on screen';
+  String get readerPinTopBar => 'タイトルと進捗バーを常に表示';
 
   @override
   String get readerPinTopBarHint =>
-      'Pins them above the page instead of showing them on tap. The page gets a little shorter so no text is covered.';
+      'タップで表示する代わりに、ページの上に固定します。文字が隠れないよう、ページが少し短くなります。';
 
   @override
-  String get readerTopBarProgress => 'Top bar progress';
+  String get readerTopBarProgress => 'トップバーの進捗';
 
   @override
-  String get readerTopBarProgressBook => 'Book';
+  String get readerTopBarProgressBook => '本';
 
   @override
-  String get readerTopBarProgressChapter => 'Chapter';
+  String get readerTopBarProgressChapter => 'チャプター';
 
   @override
-  String get readerTopBarProgressBoth => 'Both';
+  String get readerTopBarProgressBoth => '両方';
 
   @override
-  String get readerSectionText => 'Text';
+  String get readerSectionText => 'テキスト';
 
   @override
-  String get readerSectionPage => 'Page';
+  String get readerSectionPage => 'ページ';
 
   @override
-  String get readerSectionTopBar => 'Top bar and screen';
+  String get readerSectionTopBar => 'トップバーと画面';
 
   @override
-  String get readerSectionControls => 'Controls';
+  String get readerSectionControls => '操作';
 
   @override
-  String get readerSectionStats => 'Stats';
+  String get readerSectionStats => '統計';
 
   @override
-  String get readerParagraphSpacing => 'Paragraph spacing';
+  String get readerParagraphSpacing => '段落の間隔';
 
   @override
-  String get readerParagraphSpacingBook => 'Book\'s own';
+  String get readerParagraphSpacingBook => '本の設定';
 
   @override
-  String get readerTapZones => 'Tap zones';
+  String get readerTapZones => 'タップ領域';
 
   @override
   String get readerTapZonesHint =>
-      'Drag the lines to resize the squares. Tap a square to change what it does, or start from a layout.';
+      '線をドラッグして四角のサイズを変えます。四角をタップして動作を変えるか、レイアウトから始めてください。';
 
   @override
-  String get readerTapPrev => 'Previous page';
+  String get readerTapPrev => '前のページ';
 
   @override
-  String get readerTapNext => 'Next page';
+  String get readerTapNext => '次のページ';
 
   @override
-  String get readerTapMenu => 'Show controls';
+  String get readerTapMenu => '操作を表示';
 
   @override
-  String get readerTapNothing => 'Nothing';
+  String get readerTapNothing => 'なし';
 
   @override
-  String get readerTapKeepMenu => 'One square has to show the controls';
+  String get readerTapKeepMenu => 'いずれかの四角で操作を表示する必要があります';
 
   @override
-  String get readerHideControls => 'Hide controls after';
+  String get readerHideControls => '操作を隠すまでの時間';
 
   @override
-  String get readerHideControlsNever => 'Never';
+  String get readerHideControlsNever => 'しない';
 
   @override
-  String get readerBarNotes => 'Notes and highlights';
+  String get readerBarNotes => 'メモとハイライト';
 
   @override
   String readerHideControlsAfter(int seconds) {
-    return '${seconds}s';
+    return '$seconds秒';
   }
 
   @override
   String get playerDownloadStreamingInstead =>
-      'This download couldn\'t be played, so it\'s streaming from the server. Downloading it again may fix it.';
+      'このダウンロードは再生できなかったため、サーバーからストリーミングしています。もう一度ダウンロードすると直る場合があります。';
 
   @override
-  String get readerPageTurn => 'Page turn';
+  String get readerPageTurn => 'ページめくり';
 
   @override
-  String get readerPageTurnNone => 'None';
+  String get readerPageTurnNone => 'なし';
 
   @override
-  String get readerPageTurnSlide => 'Slide';
+  String get readerPageTurnSlide => 'スライド';
 
   @override
-  String get readerPageTurnCurl => 'Curl';
+  String get readerPageTurnCurl => 'カール';
 
   @override
-  String get readerPageTurnRipple => 'Ripple';
+  String get readerPageTurnRipple => 'さざ波';
 
   @override
-  String get readerScrollMode => 'Scroll mode';
+  String get readerScrollMode => 'スクロールモード';
 
   @override
-  String get readerScrollModeHint =>
-      'Scroll down through the book instead of turning pages. Applies to every book.';
+  String get readerScrollModeHint => 'ページをめくる代わりに、本を下へスクロールします。すべての本に適用されます。';
 
   @override
-  String get readerKeepAwake => 'Keep the screen on';
+  String get readerKeepAwake => '画面をオンのままにする';
 
   @override
   String get readerKeepAwakeHint =>
-      'Stops the screen timing out while you read at your own pace. Auto scroll and read along always keep it on.';
+      '自分のペースで読んでいる間、画面が消えないようにします。自動スクロールと読み上げ追従中は常にオンのままです。';
 
   @override
-  String get readerLayoutAuto => 'Auto';
+  String get readerLayoutAuto => '自動';
 
   @override
-  String get readerLayoutSingle => 'Single';
+  String get readerLayoutSingle => '単ページ';
 
   @override
-  String get readerLayoutTwoPage => 'Two-page';
+  String get readerLayoutTwoPage => '見開き';
 
   @override
-  String get readerTheme => 'Theme';
+  String get readerTheme => 'テーマ';
 
   @override
-  String get readerFont => 'Font';
+  String get readerFont => 'フォント';
 
   @override
-  String get readerVolumeNav => 'Volume keys turn pages';
+  String get readerVolumeNav => '音量キーでページをめくる';
 
   @override
-  String get readerVolumeNavOff => 'Off';
+  String get readerVolumeNavOff => 'オフ';
 
   @override
-  String get readerVolumeNavNormal => 'Normal';
+  String get readerVolumeNavNormal => '通常';
 
   @override
-  String get readerVolumeNavMirrored => 'Mirrored';
+  String get readerVolumeNavMirrored => '反転';
 
   @override
-  String get readerAutoScroll => 'Auto scroll';
+  String get readerAutoScroll => '自動スクロール';
 
   @override
   String get readerAutoScrollSubtitle =>
-      'The next page paints over this one from the top down - drag the middle of the screen to change speed, tap to stop';
+      '次のページが上から順に現在のページに重なって表示されます。画面中央をドラッグして速度を変え、タップで停止します';
 
   @override
-  String get readerAutoScrollStarted => 'Auto scroll started';
+  String get readerAutoScrollStarted => '自動スクロールを開始しました';
 
   @override
-  String get readerAutoScrollPaused => 'Paused - press and hold to stop';
+  String get readerAutoScrollPaused => '一時停止中 - 長押しで停止';
 
   @override
-  String get readerAutoScrollResumed => 'Auto scroll resumed';
+  String get readerAutoScrollResumed => '自動スクロールを再開しました';
 
   @override
-  String get readerAutoScrollStopped => 'Auto scroll off';
+  String get readerAutoScrollStopped => '自動スクロールをオフにしました';
 
   @override
-  String get readerAutoScrollEndOfBook => 'End of book - auto scroll off';
+  String get readerAutoScrollEndOfBook => '本の終わりです - 自動スクロールをオフにしました';
 
   @override
   String readerAutoScrollSpeed(int percent) {
-    return 'Speed $percent%';
+    return '速度 $percent%';
   }
 
   @override
-  String get readerMoreControls => 'More controls';
+  String get readerMoreControls => 'その他の操作';
 
   @override
-  String get readerAutoScrollSleep => 'Auto scroll sleep timer';
+  String get readerAutoScrollSleep => '自動スクロールのスリープタイマー';
 
   @override
-  String get readerAutoScrollSleepHint =>
-      'Stops the scrolling after a while and lets the screen go dark.';
+  String get readerAutoScrollSleepHint => 'しばらくするとスクロールを止め、画面を暗くします。';
 
   @override
   String readerAutoScrollSleepMinutes(int minutes) {
-    return '$minutes min';
+    return '$minutes 分';
   }
 
   @override
   String readerAutoScrollSleepLeft(int minutes) {
-    return '$minutes min left';
+    return '残り $minutes 分';
   }
 
   @override
   String readerAutoScrollSleepIn(int minutes) {
-    return 'Auto scroll stops in $minutes min';
+    return '自動スクロールは $minutes 分後に停止します';
   }
 
   @override
-  String get readerAutoScrollSleepOff => 'Auto scroll sleep timer off';
+  String get readerAutoScrollSleepOff => '自動スクロールのスリープタイマーをオフにしました';
 
   @override
-  String get readerAutoScrollSleepEnded => 'Sleep timer - auto scroll off';
+  String get readerAutoScrollSleepEnded => 'スリープタイマー - 自動スクロールをオフにしました';
 
   @override
-  String get readerDownloadStarted => 'Download started';
+  String get readerDownloadStarted => 'ダウンロードを開始しました';
 
   @override
-  String get detailChaptersJumpTitle => 'Jump to this chapter?';
+  String get detailChaptersJumpTitle => 'このチャプターに移動しますか？';
 
   @override
   String detailChaptersJumpContent(String title) {
-    return 'Playback moves to \"$title\".';
+    return '「$title」に再生位置を移動します。';
   }
 
   @override
-  String get detailChaptersJump => 'Jump';
+  String get detailChaptersJump => '移動';
 
   @override
   String detailChaptersFinished(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count chapters finished',
-      one: '1 chapter finished',
+      other: '$count チャプター完了',
+      one: '1 チャプター完了',
     );
     return '$_temp0';
   }
@@ -10271,609 +10099,599 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count other listeners',
-      one: '1 other listener',
-      zero: 'No other listeners',
+      other: '他のリスナー $count 人',
+      one: '他のリスナー 1 人',
+      zero: '他のリスナーはいません',
     );
     return '$_temp0';
   }
 
   @override
-  String get seriesUpNext => 'Up next';
+  String get seriesUpNext => '次の巻';
 
   @override
-  String get seriesJumpToUpNext => 'Jump to up next';
+  String get seriesJumpToUpNext => '次の巻に移動';
 
   @override
-  String get seriesStatsFinished => 'Finished';
+  String get seriesStatsFinished => '完了';
 
   @override
-  String get seriesStatsListened => 'Listened';
+  String get seriesStatsListened => '再生済み';
 
   @override
-  String get seriesStatsLeft => 'Left';
+  String get seriesStatsLeft => '残り';
 
   @override
   String seriesFinishedOf(int done, int total) {
-    return '$done of $total';
+    return '$done / $total';
   }
 
   @override
-  String get detailSessionsNone => 'No listening sessions yet';
+  String get detailSessionsNone => '再生セッションはまだありません';
 
   @override
   String detailSessionsAll(int count) {
-    return 'All $count sessions';
+    return '全 $count セッション';
   }
 
   @override
-  String get readerVolumeNavWhilePlaying => 'Even while audio is playing';
+  String get readerVolumeNavWhilePlaying => '音声の再生中でも有効';
 
   @override
-  String get readerTranslateWith => 'Translate with';
+  String get readerTranslateWith => '翻訳に使うもの';
 
   @override
-  String get readerTranslateApp => 'App on this device';
+  String get readerTranslateApp => 'この端末のアプリ';
 
   @override
-  String get readerTranslateApple => 'Built into iOS';
+  String get readerTranslateApple => 'iOS 内蔵';
 
   @override
-  String get readerTranslateWeb => 'Opens in your browser';
+  String get readerTranslateWeb => 'ブラウザーで開く';
 
   @override
-  String get readerTranslateHint =>
-      'Selected text is sent to the translator you pick.';
+  String get readerTranslateHint => '選択したテキストは、選んだ翻訳サービスに送信されます。';
 
   @override
-  String get readerMoreFonts => 'Download more fonts';
+  String get readerMoreFonts => 'フォントをさらにダウンロード';
 
   @override
-  String get readerFontRemove => 'Remove download';
+  String get readerFontRemove => 'ダウンロードを削除';
 
   @override
   String readerFontDownloadFailed(String font) {
-    return 'Couldn\'t download $font';
+    return '$font をダウンロードできませんでした';
   }
 
   @override
-  String get readerAnnotations => 'Annotations';
+  String get readerAnnotations => '注釈';
 
   @override
   String readerHighlights(int count) {
-    return 'Highlights ($count)';
+    return 'ハイライト ($count)';
   }
 
   @override
   String readerBookmarks(int count) {
-    return 'Bookmarks ($count)';
+    return 'ブックマーク ($count)';
   }
 
   @override
-  String get readerNoHighlights => 'No highlights yet';
+  String get readerNoHighlights => 'ハイライトはまだありません';
 
   @override
-  String get readerHistory => 'History';
+  String get readerHistory => '履歴';
 
   @override
-  String get sessionReading => 'Reading';
+  String get sessionReading => '読書';
 
   @override
-  String get readerHistoryEmpty =>
-      'Pages you leave are listed here, so you can always get back to them.';
+  String get readerHistoryEmpty => '離れたページがここに一覧表示されるので、いつでも戻れます。';
 
   @override
-  String get readerHistoryClosed => 'Closed the book';
+  String get readerHistoryClosed => '本を閉じた時';
 
   @override
-  String get readerHistoryBeforeJump => 'Before a jump';
+  String get readerHistoryBeforeJump => '移動の前';
 
   @override
-  String get readerHistoryBeforeSync => 'Before matching the audio';
+  String get readerHistoryBeforeSync => '音声との同期の前';
 
   @override
-  String get readerLogReading => 'Count reading time in stats';
+  String get readerLogReading => '読書時間を統計に含める';
 
   @override
   String get readerLogReadingHint =>
-      'Logs your time in the reader as a session so it shows in your stats. On Audiobookshelf it counts as listening time.';
+      'リーダーで過ごした時間をセッションとして記録し、統計に表示します。Audiobookshelf では再生時間として数えられます。';
 
   @override
-  String get readerNoBookmarks => 'No bookmarks yet';
+  String get readerNoBookmarks => 'ブックマークはまだありません';
 
   @override
-  String get readerBookmarkDefault => 'Bookmark';
+  String get readerBookmarkDefault => 'ブックマーク';
 
   @override
-  String get readerNoteTitle => 'Note';
+  String get readerNoteTitle => 'メモ';
 
   @override
-  String get readerNoteHint => 'Add a note...';
+  String get readerNoteHint => 'メモを追加...';
 
   @override
-  String get backupAndSync => 'Backup and sync';
+  String get backupAndSync => 'バックアップと同期';
 
   @override
-  String get backupAndSyncSubtitle =>
-      'Save a backup file, or keep settings in step across devices';
+  String get backupAndSyncSubtitle => 'バックアップファイルを保存、または端末間で設定を同期します';
 
   @override
-  String get syncSettingsExperimental => 'Experimental';
+  String get syncSettingsExperimental => '試験的機能';
 
   @override
   String get syncSettingsExperimentalBody =>
-      'Sync is new and still being worked on. If two devices change things while they are apart, one side can lose its changes. Keep a backup file as your safe copy.';
+      '同期は新しい機能で、まだ開発中です。2台の端末が離れている間にそれぞれ変更すると、片方の変更が失われることがあります。安全のため、バックアップファイルを保管してください。';
 
   @override
-  String get syncSettingsNeedServer => 'Need a server?';
+  String get syncSettingsNeedServer => 'サーバーが必要ですか？';
 
   @override
   String get syncSettingsNeedServerSub =>
-      'Any WebDAV server works. Nextcloud is a free self-hosted one.';
+      'WebDAV サーバーならどれでも使えます。Nextcloud は無料のセルフホスト型です。';
 
   @override
-  String get syncSettingsConnection => 'Connection';
+  String get syncSettingsConnection => '接続';
 
   @override
-  String get syncSettingsConnectionNotSet => 'Not set up yet';
+  String get syncSettingsConnectionNotSet => 'まだ設定されていません';
 
   @override
-  String get syncSettingsBackupFile => 'Backup file';
+  String get syncSettingsBackupFile => 'バックアップファイル';
 
   @override
-  String get syncSettingsBackupFilePlain =>
-      'Save everything to a file you keep.';
+  String get syncSettingsBackupFilePlain => 'すべてを自分で保管するファイルに保存します。';
 
   @override
   String get syncSettingsBackupFileWithSync =>
-      'Save everything to a file you keep. Include login info and restoring it on another phone turns sync on there too.';
+      'すべてを自分で保管するファイルに保存します。ログイン情報を含めると、別の端末で復元したときにそこでも同期がオンになります。';
 
   @override
-  String get syncSettingsStatusOff => 'Not syncing';
+  String get syncSettingsStatusOff => '同期していません';
 
   @override
-  String get syncSettingsStatusProblem => 'Could not reach your server';
+  String get syncSettingsStatusProblem => 'サーバーに接続できませんでした';
 
   @override
-  String get syncSettings => 'Sync settings between devices';
+  String get syncSettings => '端末間で設定を同期';
 
   @override
-  String get syncSettingsExtras => 'Also sync';
+  String get syncSettingsExtras => '同期する追加項目';
 
   @override
-  String get syncSettingsIncludeRmab => 'ReadMeABook settings';
+  String get syncSettingsIncludeRmab => 'ReadMeABook の設定';
 
   @override
-  String get syncSettingsIncludeRmabSub =>
-      'Puts your ReadMeABook API token in the synced file';
+  String get syncSettingsIncludeRmabSub => 'ReadMeABook の API トークンを同期ファイルに含めます';
 
   @override
-  String get syncSettingsSubtitle =>
-      'Keep your settings in step through your own WebDAV server';
+  String get syncSettingsSubtitle => '自分の WebDAV サーバー経由で設定を同期します';
 
   @override
-  String get syncSettingsEnable => 'Sync settings';
+  String get syncSettingsEnable => '設定を同期';
 
   @override
-  String get syncSettingsServerUrl => 'WebDAV folder URL';
+  String get syncSettingsServerUrl => 'WebDAV フォルダーの URL';
 
   @override
   String get syncSettingsServerUrlHint =>
       'https://cloud.example.com/remote.php/dav/files/you/Absorb';
 
   @override
-  String get syncSettingsUsername => 'Username';
+  String get syncSettingsUsername => 'ユーザー名';
 
   @override
-  String get syncSettingsPassword => 'Password';
+  String get syncSettingsPassword => 'パスワード';
 
   @override
-  String get syncSettingsHeaders => 'Custom headers (optional)';
+  String get syncSettingsHeaders => 'カスタムヘッダー (任意)';
 
   @override
-  String get syncSettingsHeadersHint =>
-      'One per line, like CF-Access-Client-Id: abc123';
+  String get syncSettingsHeadersHint => '1行に1つ。例: CF-Access-Client-Id: abc123';
 
   @override
-  String get syncSettingsTest => 'Test connection';
+  String get syncSettingsTest => '接続をテスト';
 
   @override
-  String get syncSettingsHoldToUpload => 'Hold to upload now';
+  String get syncSettingsHoldToUpload => '長押しで今すぐアップロード';
 
   @override
-  String get syncSettingsUploadNow => 'Upload now';
+  String get syncSettingsUploadNow => '今すぐアップロード';
 
   @override
-  String get syncSettingsDownloadNow => 'Download now';
+  String get syncSettingsDownloadNow => '今すぐダウンロード';
 
   @override
-  String get syncSettingsOk => 'Connected';
+  String get syncSettingsOk => '接続しました';
 
   @override
-  String get syncSettingsNoRemote => 'Connected - nothing synced yet';
+  String get syncSettingsNoRemote => '接続しました - まだ同期されたものはありません';
 
   @override
-  String get syncSettingsAuthFailed => 'Wrong username or password';
+  String get syncSettingsAuthFailed => 'ユーザー名またはパスワードが違います';
 
   @override
-  String get syncSettingsNetworkError => 'Could not reach that address';
+  String get syncSettingsNetworkError => 'そのアドレスに接続できませんでした';
 
   @override
-  String get syncSettingsNotConfigured =>
-      'Fill in the address, username and password first';
+  String get syncSettingsNotConfigured => '先にアドレス、ユーザー名、パスワードを入力してください';
 
   @override
-  String get syncSettingsTooLarge => 'Your settings are too big to sync';
+  String get syncSettingsTooLarge => '設定が大きすぎて同期できません';
 
   @override
-  String get syncSettingsUploaded => 'Settings uploaded';
+  String get syncSettingsUploaded => '設定をアップロードしました';
 
   @override
-  String get syncSettingsApplied => 'Settings updated from your other device';
+  String get syncSettingsApplied => 'もう一方の端末から設定を更新しました';
 
   @override
   String syncSettingsAppliedCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count settings updated from your other device',
-      one: '1 setting updated from your other device',
+      other: 'もう一方の端末から $count 件の設定を更新しました',
+      one: 'もう一方の端末から 1 件の設定を更新しました',
     );
     return '$_temp0';
   }
 
   @override
-  String get syncSettingsUpToDate => 'Already up to date';
+  String get syncSettingsUpToDate => 'すでに最新です';
 
   @override
   String syncSettingsLastSynced(String when) {
-    return 'Last synced $when';
+    return '最終同期: $when';
   }
 
   @override
-  String get syncSettingsNever => 'Not synced yet';
+  String get syncSettingsNever => 'まだ同期していません';
 
   @override
   String navHoldPickTitle(String tab) {
-    return 'Holding $tab will...';
+    return '$tab を長押しすると...';
   }
 
   @override
-  String get navHoldPickBody =>
-      'Choose what a long press on this tab does. You can change it later in Settings.';
+  String get navHoldPickBody => 'このタブを長押ししたときの動作を選びます。あとで設定から変更できます。';
 
   @override
-  String get navHoldSettingTitle => 'Tab hold shortcuts';
+  String get navHoldSettingTitle => 'タブ長押しのショートカット';
 
   @override
-  String get navHoldSettingSubtitle => 'What holding each tab does';
+  String get navHoldSettingSubtitle => '各タブを長押ししたときの動作';
 
   @override
-  String get navHoldAskNextTime => 'Ask next time';
+  String get navHoldAskNextTime => '次回確認する';
 
   @override
-  String get navHoldNothing => 'Nothing';
+  String get navHoldNothing => 'なし';
 
   @override
-  String get navHoldPlayPause => 'Play / pause';
+  String get navHoldPlayPause => '再生 / 一時停止';
 
   @override
-  String get navHoldOfflineMode => 'Offline mode';
+  String get navHoldOfflineMode => 'オフラインモード';
 
   @override
-  String get navHoldOfflineOn => 'Offline mode on';
+  String get navHoldOfflineOn => 'オフラインモードをオンにしました';
 
   @override
-  String get navHoldOfflineOff => 'Offline mode off';
+  String get navHoldOfflineOff => 'オフラインモードをオフにしました';
 
   @override
-  String get navHoldMenu => 'Always show menu';
+  String get navHoldMenu => '常にメニューを表示';
 
   @override
-  String get navHoldStop => 'Stop playback';
+  String get navHoldStop => '再生を停止';
 
   @override
-  String get navHoldRmabSearch => 'ReadMeABook search';
+  String get navHoldRmabSearch => 'ReadMeABook 検索';
 
   @override
-  String get navHoldRmabRequests => 'My book requests';
+  String get navHoldRmabRequests => '自分の本のリクエスト';
 
   @override
-  String get navHoldRmabWeb => 'ReadMeABook site';
+  String get navHoldRmabWeb => 'ReadMeABook サイト';
 
   @override
-  String get navHoldAdd => 'Add';
+  String get navHoldAdd => '追加';
 
   @override
-  String get navHoldMoveLeft => 'Move left';
+  String get navHoldMoveLeft => '左へ移動';
 
   @override
-  String get navHoldMoveRight => 'Move right';
+  String get navHoldMoveRight => '右へ移動';
 
   @override
-  String get navHoldRemoveFromMenu => 'Remove from menu';
+  String get navHoldRemoveFromMenu => 'メニューから削除';
 
   @override
-  String get navHoldEditHint => 'Hold an item to move or remove it';
+  String get navHoldEditHint => '項目を長押しして移動または削除します';
 
   @override
-  String get navHoldResetMenu => 'Reset the hold menu items';
+  String get navHoldResetMenu => '長押しメニューの項目をリセット';
 
   @override
-  String get navHoldMenuReset => 'Menu items reset';
+  String get navHoldMenuReset => 'メニュー項目をリセットしました';
 
   @override
-  String get bookStatsAction => 'Listening stats';
+  String get bookStatsAction => '再生統計';
 
   @override
-  String get bookStatsYou => 'You';
+  String get bookStatsYou => 'あなた';
 
   @override
-  String get bookStatsEveryone => 'Everyone';
+  String get bookStatsEveryone => '全員';
 
   @override
-  String get bookStatsListened => 'Time listened';
+  String get bookStatsListened => '再生時間';
 
   @override
-  String get bookStatsSessions => 'Sessions';
+  String get bookStatsSessions => 'セッション';
 
   @override
-  String get bookStatsFirst => 'First listened';
+  String get bookStatsFirst => '初めて再生した日';
 
   @override
-  String get bookStatsLast => 'Last listened';
+  String get bookStatsLast => '最後に再生した日';
 
   @override
-  String get bookStatsListeners => 'People who started it';
+  String get bookStatsListeners => '再生を始めた人';
 
   @override
-  String get bookStatsFinishedCount => 'People who finished it';
+  String get bookStatsFinishedCount => '最後まで再生した人';
 
   @override
-  String get bookStatsTotalTime => 'Time listened by everyone';
+  String get bookStatsTotalTime => '全員の再生時間';
 
   @override
-  String get bookStatsNobody => 'Nobody has started this yet';
+  String get bookStatsNobody => 'まだ誰も再生を始めていません';
 
   @override
-  String get bookStatsScanning =>
-      'Scanning through sessions, this could take a while...';
+  String get bookStatsScanning => 'セッションをスキャン中です。時間がかかる場合があります...';
 
   @override
   String bookStatsScanningCount(int done, int total) {
-    return 'Scanning through sessions, $done of $total people...';
+    return 'セッションをスキャン中... $done / $total 人';
   }
 
   @override
   String bookStatsLastChecked(String when) {
-    return 'Checked $when';
+    return '確認: $when';
   }
 
   @override
-  String get activityYourReading => 'Your reading';
+  String get activityYourReading => 'あなたの読書';
 
   @override
-  String get activityYourListening => 'Your listening';
+  String get activityYourListening => 'あなたの再生';
 
   @override
   String activityLastRead(String when) {
-    return 'Last read $when';
+    return '最後に読んだ日: $when';
   }
 
   @override
   String activityLastListened(String when) {
-    return 'Last listened $when';
+    return '最後に再生した日: $when';
   }
 
   @override
-  String get activityNotStarted => 'Not started';
+  String get activityNotStarted => '未開始';
 
   @override
-  String get activityNoReading => 'No reading sessions yet';
+  String get activityNoReading => '読書セッションはまだありません';
 
   @override
-  String get activityTime => 'Time';
+  String get activityTime => '時間';
 
   @override
-  String get activityAverage => 'Avg';
+  String get activityAverage => '平均';
 
   @override
-  String get activityProgress => 'Progress';
+  String get activityProgress => '進捗';
 
   @override
   String activityReached(String percent) {
-    return '$percent reached';
+    return '$percent 到達';
   }
 
   @override
-  String get readingLogTitle => 'Reading log';
+  String get readingLogTitle => '読書ログ';
 
   @override
-  String get readingLogTotalTime => 'Total time';
+  String get readingLogTotalTime => '合計時間';
 
   @override
-  String get readingLogAverageSession => 'Average session';
+  String get readingLogAverageSession => 'セッションの平均';
 
   @override
-  String get readingLogActiveDays => 'Active days';
+  String get readingLogActiveDays => 'アクティブな日数';
 
   @override
   String readingLogActiveDaysOf(int active, int total) {
-    return '$active of $total';
+    return '$active / $total';
   }
 
   @override
-  String get readingLogPace => 'Pace';
+  String get readingLogPace => 'ペース';
 
   @override
   String readingLogPacePerHour(String percent) {
-    return '$percent%/h';
+    return '$percent%/時間';
   }
 
   @override
-  String get readingLogLastRead => 'Last read';
+  String get readingLogLastRead => '最後に読んだ日';
 
   @override
-  String get readingLogStarted => 'Started';
+  String get readingLogStarted => '開始';
 
   @override
-  String get readingLogFinished => 'Finished';
+  String get readingLogFinished => '完了';
 
   @override
-  String get readingLogNotSet => 'Not set';
+  String get readingLogNotSet => '未設定';
 
   @override
   String readingLogLeftMinutes(int m) {
-    return 'About ${m}m to finish';
+    return '完了まで約 $m 分';
   }
 
   @override
   String readingLogLeftHours(int h) {
-    return 'About ${h}h to finish';
+    return '完了まで約 $h 時間';
   }
 
   @override
   String readingLogLeftHoursMinutes(int h, int m) {
-    return 'About ${h}h ${m}m to finish';
+    return '完了まで約 $h 時間 $m 分';
   }
 
   @override
-  String get readingLogLeftMax => 'Over 99h to finish';
+  String get readingLogLeftMax => '完了まで 99 時間以上';
 
   @override
   String readingLogUpOnLastWeek(int percent) {
-    return 'Up $percent% on the week before';
+    return '前の週より $percent% 増加';
   }
 
   @override
   String readingLogDownOnLastWeek(int percent) {
-    return 'Down $percent% on the week before';
+    return '前の週より $percent% 減少';
   }
 
   @override
-  String get readingLogNewThisWeek => 'New this week';
+  String get readingLogNewThisWeek => '今週から';
 
   @override
-  String get readingLogSameAsLastWeek => 'Same as the week before';
+  String get readingLogSameAsLastWeek => '前の週と同じ';
 
   @override
-  String get readingLogQuietTwoWeeks => 'Nothing in the last two weeks';
+  String get readingLogQuietTwoWeeks => '過去2週間は記録なし';
 
   @override
-  String get readingLogWhereYouRead => 'Where you read it';
+  String get readingLogWhereYouRead => '読んだ場所';
 
   @override
-  String get readingLogSourceIos => 'iOS app';
+  String get readingLogSourceIos => 'iOS アプリ';
 
   @override
-  String get readingLogSourceAndroid => 'Android app';
+  String get readingLogSourceAndroid => 'Android アプリ';
 
   @override
-  String get readingLogChartTitle => 'Progress over time';
+  String get readingLogChartTitle => '時間の経過による進捗';
 
   @override
-  String get readingLogChartPosition => 'Position reached';
+  String get readingLogChartPosition => '到達した位置';
 
   @override
-  String get readingLogChartMinutes => 'Minutes';
+  String get readingLogChartMinutes => '分';
 
   @override
-  String get readingLogRecords => 'Records';
+  String get readingLogRecords => '記録';
 
   @override
-  String get readingLogLongestSession => 'Longest session';
+  String get readingLogLongestSession => '最長セッション';
 
   @override
-  String get readingLogBestDay => 'Best day';
+  String get readingLogBestDay => '最も多かった日';
 
   @override
-  String get readingLogLongestStreak => 'Longest streak';
+  String get readingLogLongestStreak => '最長の連続日数';
 
   @override
   String readingLogStreakDays(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count days',
-      one: '1 day',
+      other: '$count 日',
+      one: '1 日',
     );
     return '$_temp0';
   }
 
   @override
-  String get readingLogJumpedBack => 'Jumped back';
+  String get readingLogJumpedBack => '前に戻った回数';
 
   @override
   String readingLogJumpedBackTimes(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count times',
-      one: '1 time',
+      other: '$count 回',
+      one: '1 回',
     );
     return '$_temp0';
   }
 
   @override
-  String get readingLogFirstOpened => 'First opened';
+  String get readingLogFirstOpened => '最初に開いた日';
 
   @override
-  String get readingLogAttempts => 'Attempts';
+  String get readingLogAttempts => '挑戦';
 
   @override
   String readingLogAttempt(int index) {
-    return 'Attempt $index';
+    return '$index 回目';
   }
 
   @override
   String readingLogAttemptBegan(int index) {
-    return 'Attempt $index began';
+    return '$index 回目を開始';
   }
 
   @override
-  String get readingLogOutcomeCompleted => 'Completed';
+  String get readingLogOutcomeCompleted => '読了';
 
   @override
-  String get readingLogOutcomeSkimmed => 'Skimmed';
+  String get readingLogOutcomeSkimmed => '流し読み';
 
   @override
-  String get readingLogOutcomeAbandoned => 'Abandoned';
+  String get readingLogOutcomeAbandoned => '中断';
 
   @override
-  String get readingLogOutcomeInProgress => 'In progress';
+  String get readingLogOutcomeInProgress => '進行中';
 
   @override
   String readingLogSpanRange(String from, String to) {
-    return '$from to $to';
+    return '$from ～ $to';
   }
 
   @override
   String readingLogSpanSince(String from) {
-    return 'Since $from';
+    return '$from から';
   }
 
   @override
   String readingLogSpanEnded(String to) {
-    return 'Ended $to';
+    return '$to に終了';
   }
 
   @override
-  String get readingLogSpanUnknown => 'No dates recorded';
+  String get readingLogSpanUnknown => '日付の記録なし';
 
   @override
   String readingLogSessionCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count sessions',
-      one: '1 session',
+      other: '$count セッション',
+      one: '1 セッション',
     );
     return '$_temp0';
   }
 
   @override
   String readingLogShowing(int shown, int total) {
-    return '$shown of $total';
+    return '$shown / $total';
   }
 
   @override
@@ -10881,748 +10699,719 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count days without reading',
-      one: '1 day without reading',
+      other: '$count 日間読んでいません',
+      one: '1 日間読んでいません',
     );
     return '$_temp0';
   }
 
   @override
-  String get readingLogEmpty => 'No sessions recorded yet';
+  String get readingLogEmpty => '記録されたセッションはまだありません';
 
   @override
   String get readingLogEmptyHint =>
-      'Sessions show up here as you read or listen, from any app or device that syncs with BookOrbit.';
+      'BookOrbit と同期するアプリや端末で読んだり聴いたりすると、セッションがここに表示されます。';
 
   @override
-  String get readingLogNoMatches => 'No sessions in this range';
+  String get readingLogNoMatches => 'この期間のセッションはありません';
 
   @override
-  String get readingLogAllTime => 'All time';
+  String get readingLogAllTime => '全期間';
 
   @override
-  String get readingLogLast30 => 'Last 30 days';
+  String get readingLogLast30 => '過去30日間';
 
   @override
-  String get readingLogLast90 => 'Last 90 days';
+  String get readingLogLast90 => '過去90日間';
 
   @override
-  String get readingLogThisYear => 'This year';
+  String get readingLogThisYear => '今年';
 
   @override
-  String get readingLogAllFormats => 'All formats';
+  String get readingLogAllFormats => 'すべての形式';
 
   @override
-  String get readingLogSortBy => 'Sort by';
+  String get readingLogSortBy => '並べ替え';
 
   @override
-  String get readingLogSortDay => 'Day';
+  String get readingLogSortDay => '日付';
 
   @override
-  String get readingLogSortLength => 'Length';
+  String get readingLogSortLength => '長さ';
 
   @override
-  String get readingLogSortChange => 'Change';
+  String get readingLogSortChange => '変化';
 
   @override
-  String get readingLogSortReached => 'Reached';
+  String get readingLogSortReached => '到達';
 
   @override
-  String get readingLogNewestFirst => 'Newest first';
+  String get readingLogNewestFirst => '新しい順';
 
   @override
-  String get readingLogOldestFirst => 'Oldest first';
+  String get readingLogOldestFirst => '古い順';
 
   @override
-  String get readingLogMostFirst => 'Most first';
+  String get readingLogMostFirst => '多い順';
 
   @override
-  String get readingLogLeastFirst => 'Least first';
+  String get readingLogLeastFirst => '少ない順';
 
   @override
-  String get readingLogDeleteTitle => 'Delete this session?';
+  String get readingLogDeleteTitle => 'このセッションを削除しますか？';
 
   @override
-  String get readingLogDeleteBody =>
-      'It comes off the book\'s reading log and your stats on BookOrbit.';
+  String get readingLogDeleteBody => '本の読書ログと BookOrbit の統計から削除されます。';
 
   @override
-  String get readingLogDeleteFailed => 'Couldn\'t delete the session';
+  String get readingLogDeleteFailed => 'セッションを削除できませんでした';
 
   @override
-  String get readingLogLoadFailed => 'Couldn\'t load the reading log';
+  String get readingLogLoadFailed => '読書ログを読み込めませんでした';
 
   @override
-  String get navHoldServerScan => 'Server scan';
+  String get navHoldServerScan => 'サーバーのスキャン';
 
   @override
-  String get navHoldScanAll => 'Scan all libraries';
+  String get navHoldScanAll => 'すべてのライブラリをスキャン';
 
   @override
   String navHoldScanLibrary(String name) {
-    return 'Scan $name';
+    return '$name をスキャン';
   }
 
   @override
-  String get navHoldScanStarted => 'Scan started';
+  String get navHoldScanStarted => 'スキャンを開始しました';
 
   @override
-  String get navHoldScanFailed => 'Could not start the scan';
+  String get navHoldScanFailed => 'スキャンを開始できませんでした';
 
   @override
-  String get navHoldAdminLogs => 'Server logs';
+  String get navHoldAdminLogs => 'サーバーログ';
 
   @override
   String navHoldAdminPage(String page) {
-    return 'Admin: $page';
+    return '管理: $page';
   }
 
   @override
-  String get navHoldNothingPlaying => 'Nothing to play yet';
+  String get navHoldNothingPlaying => '再生するものがまだありません';
 
   @override
-  String get navHoldReadBook => 'Read current book';
+  String get navHoldReadBook => '現在の本を読む';
 
   @override
-  String get navHoldBookDetails => 'Current book details';
+  String get navHoldBookDetails => '現在の本の詳細';
 
   @override
-  String get syncSourceTitle => 'Which copy should sync keep?';
+  String get syncSourceTitle => '同期でどちらのコピーを使いますか？';
 
   @override
   String get syncSourceBody =>
-      'This backup turned settings sync on. Use the server\'s last sync, or make this backup the source of truth? Choosing the backup replaces the copy on the server for all your synced devices.';
+      'このバックアップで設定の同期がオンになりました。サーバーの最後の同期を使いますか、それともこのバックアップを正とみなしますか？バックアップを選ぶと、同期しているすべての端末のサーバー上のコピーが置き換えられます。';
 
   @override
-  String get syncSourceUseServer => 'Server\'s last sync';
+  String get syncSourceUseServer => 'サーバーの最後の同期';
 
   @override
-  String get syncSourceUseBackup => 'This backup';
+  String get syncSourceUseBackup => 'このバックアップ';
 
   @override
   String get syncSettingsWhatTravels =>
-      'Your preferences, per-book speeds, home layout, Absorbing order, notes and ebook highlights travel. Logins, download folders, auto-download switches, reader looks and anything not yet sent to your server stay on this device.';
+      '設定、本ごとの速度、ホームのレイアウト、「Absorbing」の順序、メモ、電子書籍のハイライトが同期されます。ログイン情報、ダウンロードフォルダー、自動ダウンロードのスイッチ、リーダーの見た目、まだサーバーに送られていないものは、この端末に残ります。';
 
   @override
-  String get syncSettingsDownloadWarnTitle =>
-      'Replace this device\'s settings?';
+  String get syncSettingsDownloadWarnTitle => 'この端末の設定を置き換えますか？';
 
   @override
-  String get syncSettingsDownloadWarnBody =>
-      'The synced copy will overwrite the settings on this device.';
+  String get syncSettingsDownloadWarnBody => '同期されたコピーが、この端末の設定を上書きします。';
 
   @override
-  String get syncSettingsDownloadWarnConfirm => 'Replace';
+  String get syncSettingsDownloadWarnConfirm => '置き換える';
 
   @override
-  String get readerCopied => 'Copied to clipboard';
+  String get readerCopied => 'クリップボードにコピーしました';
 
   @override
-  String get dictionaryNotFound => 'No definition found for this word.';
+  String get dictionaryNotFound => 'この単語の定義が見つかりませんでした。';
 
   @override
-  String get dictionaryError =>
-      'Couldn\'t reach the dictionary. Check your connection.';
+  String get dictionaryError => '辞書に接続できませんでした。接続を確認してください。';
 
   @override
-  String get dictionaryRetry => 'Retry';
+  String get dictionaryRetry => '再試行';
 
   @override
-  String get dictionarySearchWeb => 'Search the web';
+  String get dictionarySearchWeb => 'ウェブで検索';
 
   @override
-  String get readerTooltipCopy => 'Copy';
+  String get readerTooltipCopy => 'コピー';
 
   @override
-  String get readerTooltipSearch => 'Search';
+  String get readerTooltipSearch => '検索';
 
   @override
-  String get readerTooltipDefine => 'Define';
+  String get readerTooltipDefine => '意味を調べる';
 
   @override
-  String get readerTooltipTranslate => 'Translate';
+  String get readerTooltipTranslate => '翻訳';
 
   @override
-  String get readerSearchHint => 'Search this book…';
+  String get readerSearchHint => 'この本を検索…';
 
   @override
   String readerSearchMatches(int count, String query) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count matches for \"$query\"',
-      one: '$count match for \"$query\"',
+      other: '「$query」に一致: $count 件',
+      one: '「$query」に一致: $count 件',
     );
     return '$_temp0';
   }
 
   @override
-  String get readerSearchEmpty => 'Type a word or phrase and tap search.';
+  String get readerSearchEmpty => '単語やフレーズを入力して検索をタップしてください。';
 
   @override
   String readerSearchNoResults(String query) {
-    return 'No matches for \"$query\".';
+    return '「$query」に一致するものはありません。';
   }
 
   @override
-  String get transcriptionTitle => 'Transcription';
+  String get transcriptionTitle => '文字起こし';
 
   @override
   String get transcriptionAdvancedSubtitle =>
-      'For transcribing bookmarks and finding your spot between audiobook and ebook';
+      'ブックマークの文字起こしや、オーディオブックと電子書籍の間で位置を探すために使います';
 
   @override
-  String get transcriptionEnable => 'Enable transcription';
+  String get transcriptionEnable => '文字起こしを有効にする';
 
   @override
   String get transcriptionEnableSubtitle =>
-      'Adds Transcribe to bookmarks, Find position in ebook to the player, and Find in audiobook to the reader';
+      'ブックマークに「文字起こし」、プレーヤーに「電子書籍で位置を探す」、リーダーに「オーディオブックで探す」を追加します';
 
   @override
   String get transcriptionDisclaimer =>
-      'Runs entirely on your device, nothing is sent anywhere. It uses extra battery and processing while it works, and only downloaded books can be transcribed.';
+      'すべて端末内で実行され、どこにも送信されません。動作中は追加のバッテリーと処理能力を使い、ダウンロード済みの本のみ文字起こしできます。';
 
   @override
-  String get transcriptionNeedModelHint =>
-      'Download a model below to start transcribing.';
+  String get transcriptionNeedModelHint => '文字起こしを始めるには、下でモデルをダウンロードしてください。';
 
   @override
-  String get transcriptionModelSection => 'Models';
+  String get transcriptionModelSection => 'モデル';
 
   @override
   String get transcriptionModelTiny => 'Tiny';
 
   @override
-  String get transcriptionModelTinyDesc =>
-      'Quickest, less accurate. About 31 MB.';
+  String get transcriptionModelTinyDesc => '最も速いが精度は低め。約 31 MB。';
 
   @override
   String get transcriptionModelBase => 'Base';
 
   @override
-  String get transcriptionModelBaseDesc => 'A good middle ground. About 57 MB.';
+  String get transcriptionModelBaseDesc => 'ほどよいバランス。約 57 MB。';
 
   @override
   String get transcriptionModelSmall => 'Small';
 
   @override
-  String get transcriptionModelSmallDesc =>
-      'Slower but most accurate - best on a high-end phone. About 182 MB.';
+  String get transcriptionModelSmallDesc => '遅いが最も正確。ハイエンドのスマートフォン向け。約 182 MB。';
 
   @override
   String get transcriptionAutoHint =>
-      'With more than one downloaded, each job picks between them. Books with an ebook get the quickest one, since the exact words come from the ebook anyway. Books without one get the most accurate - except read along, which stays below Small so it can keep up with the narration.';
+      '複数ダウンロードしている場合、ジョブごとに使い分けます。電子書籍がある本は、正確な文字は電子書籍から取得するため最も速いモデルを使います。電子書籍がない本は最も正確なモデルを使います。ただし読み上げ追従は、ナレーションに遅れないよう Small より下のモデルになります。';
 
   @override
-  String get transcriptionDownload => 'Download';
+  String get transcriptionDownload => 'ダウンロード';
 
   @override
-  String get transcriptionDownloadFailed =>
-      'Download failed. Check your connection and try again.';
+  String get transcriptionDownloadFailed => 'ダウンロードに失敗しました。接続を確認してもう一度お試しください。';
 
   @override
-  String get transcribe => 'Transcribe';
+  String get transcribe => '文字起こし';
 
   @override
-  String get transcribing => 'Transcribing...';
+  String get transcribing => '文字起こし中...';
 
   @override
-  String get transcriptionResultTitle => 'Transcript';
+  String get transcriptionResultTitle => '文字起こし';
 
   @override
-  String get transcriptionSaveToNote => 'Save to note';
+  String get transcriptionSaveToNote => 'メモに保存';
 
   @override
-  String get transcriptionSavedToNote => 'Saved to bookmark note';
+  String get transcriptionSavedToNote => 'ブックマークのメモに保存しました';
 
   @override
-  String get transcriptionDisabledHint =>
-      'Turn on bookmark transcription in Settings, under Advanced.';
+  String get transcriptionDisabledHint => '設定の「詳細」で、ブックマークの文字起こしをオンにしてください。';
 
   @override
-  String get transcriptionNoModelDownloaded =>
-      'Download a transcription model in Settings first.';
+  String get transcriptionNoModelDownloaded => '先に設定で文字起こしモデルをダウンロードしてください。';
 
   @override
   String get transcriptionNotDownloadedBook =>
-      'Download this book or connect to your server to transcribe it.';
+      '文字起こしするには、この本をダウンロードするか、サーバーに接続してください。';
 
   @override
   String get transcriptionNoMetadataMsg =>
-      'Can\'t locate this spot in the download. Try re-downloading the book.';
+      'ダウンロードしたデータ内でこの位置を特定できません。本をダウンロードし直してみてください。';
 
   @override
-  String get transcriptionBusyMsg =>
-      'Already transcribing something. Give it a moment.';
+  String get transcriptionBusyMsg => 'すでに文字起こしを実行中です。しばらくお待ちください。';
 
   @override
-  String get transcriptionEmptyMsg => 'No speech was found at this spot.';
+  String get transcriptionEmptyMsg => 'この位置には音声が見つかりませんでした。';
 
   @override
-  String get transcriptionFailedMsg =>
-      'Couldn\'t transcribe this spot. Please try again.';
+  String get transcriptionFailedMsg => 'この位置を文字起こしできませんでした。もう一度お試しください。';
 
   @override
-  String get transcriptionPlaySnippet => 'Listen';
+  String get transcriptionPlaySnippet => '聴く';
 
   @override
-  String get transcriptionPauseSnippet => 'Pause';
+  String get transcriptionPauseSnippet => '一時停止';
 
   @override
   String get transcriptionIntroBody =>
-      'This listens to the chosen amount of audio, starting just before the bookmark, and turns it into text on your device. Longer clips take longer, and transcription isn\'t 100% accurate. The text is saved into the bookmark\'s note when it\'s done, ready to fix up or share.';
+      'ブックマークの少し前から、選んだ長さの音声を聴き取り、端末内でテキストに変換します。長いクリップほど時間がかかり、文字起こしは100%正確ではありません。完了すると、テキストがブックマークのメモに保存されるので、修正や共有ができます。';
 
   @override
-  String get transcriptionUseEbookText =>
-      'Use the ebook\'s exact text when it can be matched';
+  String get transcriptionUseEbookText => '一致できる場合は電子書籍の正確なテキストを使う';
 
   @override
-  String get lyricsMode => 'Live transcript';
+  String get lyricsMode => 'ライブ文字起こし';
 
   @override
-  String get lyricsListeningAhead => 'Listening ahead...';
+  String get lyricsListeningAhead => '先読み中...';
 
   @override
-  String get lyricsDisplaySection => 'Live transcript';
+  String get lyricsDisplaySection => 'ライブ文字起こし';
 
   @override
-  String get lyricsFontSize => 'Line size';
+  String get lyricsFontSize => '行のサイズ';
 
   @override
-  String get lyricsMaxLines => 'Lines shown';
+  String get lyricsMaxLines => '表示する行数';
 
   @override
-  String get lyricsFullCover => 'Use the whole cover';
+  String get lyricsFullCover => 'カバー全体を使う';
 
   @override
-  String get lyricsFullCoverHint =>
-      'Shows the transcript in place of the artwork while it runs, fitting as many lines as there is room for.';
+  String get lyricsFullCoverHint => '実行中はアートワークの代わりに文字起こしを表示し、入る限りの行数を収めます。';
 
   @override
   String get lyricsBatteryInfo =>
-      'Live transcript and read along use extra battery and processing while they run. On phones with slower processors, lines can take longer to appear.';
+      'ライブ文字起こしと読み上げ追従は、動作中に追加のバッテリーと処理能力を使います。処理の遅いスマートフォンでは、行の表示に時間がかかる場合があります。';
 
   @override
-  String get lyricsClearCache => 'Clear transcript cache';
+  String get lyricsClearCache => '文字起こしのキャッシュを消去';
 
   @override
   String lyricsClearCacheHint(String size) {
-    return '$size of saved transcript lines. Cleared books and episodes are transcribed again as you listen.';
+    return '保存済みの文字起こし行 $size。消去した本とエピソードは、再生中にもう一度文字起こしされます。';
   }
 
   @override
   String get lyricsClearCacheConfirm =>
-      'Delete the saved transcripts for every book and episode? They rebuild automatically as you listen.';
+      'すべての本とエピソードの保存済み文字起こしを削除しますか？再生中に自動的に作り直されます。';
 
   @override
-  String get lyricsCacheCleared => 'Transcript cache cleared';
+  String get lyricsCacheCleared => '文字起こしのキャッシュを消去しました';
 
   @override
   String get lyricsIntroBody =>
-      'This listens a little ahead of the narration and shows each line as it is spoken, transcribed on your phone - nothing leaves the device. After turning it on, hold off on pressing play for a few seconds while it gets ahead. The transcript appears once its head start is ready, and starting paused gives it the smoothest run. It uses extra battery and processing while it runs.';
+      'ナレーションの少し先を聴き取り、話された行をスマートフォン上で文字起こしして表示します。何も外部に送信されません。オンにした後は、先読みが進むまで数秒間、再生を押さないでください。先読みの準備ができると文字起こしが表示され、一時停止のまま始めると最もスムーズに動作します。動作中は追加のバッテリーと処理能力を使います。';
 
   @override
   String lyricsBuildingLead(String percent) {
-    return 'Getting ahead of the narration... $percent';
+    return 'ナレーションの先を準備中... $percent';
   }
 
   @override
   String lyricsCantKeepUp(String speed) {
-    return 'Can\'t transcribe as fast as you\'re listening at $speed';
+    return '$speed での再生に文字起こしが追いつきません';
   }
 
   @override
-  String get lyricsTurnOn => 'Turn on';
+  String get lyricsTurnOn => 'オンにする';
 
   @override
-  String get readAlong => 'Read along';
+  String get readAlong => '読み上げ追従';
 
   @override
-  String get readAlongNeedsPlaying => 'Play this book\'s audiobook first';
+  String get readAlongNeedsPlaying => '先にこの本のオーディオブックを再生してください';
 
   @override
-  String get narrationListen => 'Listen';
+  String get narrationListen => '聴く';
 
   @override
-  String get narrationPlayFromHere => 'Play from here';
+  String get narrationPlayFromHere => 'ここから再生';
 
   @override
-  String get narrationPreparing => 'Getting the narration ready';
+  String get narrationPreparing => 'ナレーションを準備中';
 
   @override
-  String get narrationNone => 'This ebook has no narration to play';
+  String get narrationNone => 'この電子書籍には再生できるナレーションがありません';
 
   @override
-  String get narrationDownloadTitle => 'Download to listen';
+  String get narrationDownloadTitle => 'ダウンロードして聴く';
 
   @override
   String get narrationDownloadBody =>
-      'This book is an EPUB3 that reads itself aloud. Audiobookshelf can\'t stream its narration, so the audio needs to be downloaded before it plays.';
+      'この本は自分で読み上げる EPUB3 です。Audiobookshelf ではそのナレーションをストリーミングできないため、再生する前に音声をダウンロードする必要があります。';
 
   @override
   String get narrationDownloadStarted =>
-      'Downloading the narration. Tap Absorb when it finishes.';
+      'ナレーションをダウンロード中です。完了したら Absorb をタップしてください。';
 
   @override
   String get narrationTextBody =>
-      'This book\'s EPUB has its own words for every moment of the audio, so the text is copied straight from the book. Pick how much to add to the bookmark\'s note.';
+      'この本の EPUB には音声の各場面に対応する文章があるため、テキストは本からそのままコピーされます。ブックマークのメモに追加する量を選んでください。';
 
   @override
-  String get narrationTextLoading => 'Getting the words from the book';
+  String get narrationTextLoading => '本から文章を取得中';
 
   @override
-  String get downloadToAbsorb => 'Download to Absorb';
+  String get downloadToAbsorb => 'Absorb にダウンロード';
 
   @override
-  String get narrationUpNextTitle => 'Download what\'s up next';
+  String get narrationUpNextTitle => '次のものをダウンロード';
 
   @override
   String narrationUpNextBody(String title) {
-    return '$title is next in your queue. It\'s an EPUB3 that reads itself aloud, so it needs to be downloaded before it can play.';
+    return 'キューの次は $title です。自分で読み上げる EPUB3 のため、再生するにはダウンロードが必要です。';
   }
 
   @override
   String narrationQueueStopped(String title) {
-    return 'Stopped before $title. Download it to keep going.';
+    return '$title の前で停止しました。続けるにはダウンロードしてください。';
   }
 
   @override
   String get transcriptionNeedsDownload =>
-      'This needs the audio on your phone. Download it now?';
+      'これにはスマートフォン上の音声が必要です。今すぐダウンロードしますか？';
 
   @override
-  String get transcriptionDownloadStarted =>
-      'Downloading. Turn this on again when it finishes';
+  String get transcriptionDownloadStarted => 'ダウンロード中です。完了したらもう一度オンにしてください';
 
   @override
-  String get readAlongFollow => 'Read along follows';
+  String get readAlongFollow => '読み上げ追従の単位';
 
   @override
-  String get syncReadingListening => 'Keep reading and listening in sync';
+  String get syncReadingListening => '読書と再生を同期し続ける';
 
   @override
   String get syncReadingListeningHint =>
-      'For books with an audiobook and an ebook. When you stop listening, the ebook moves to where you stopped. When you leave the reader, the audiobook moves to your page. Only moves forward.';
+      'オーディオブックと電子書籍の両方がある本が対象です。再生を止めると、電子書籍がその位置に移動します。リーダーを閉じると、オーディオブックがあなたのページに移動します。進む方向にのみ移動します。';
 
   @override
-  String get syncEbookMoved => 'Ebook moved to where you stopped listening';
+  String get syncEbookMoved => '電子書籍を再生を止めた位置に移動しました';
 
   @override
-  String get syncAudioMoved => 'Audiobook moved to where you stopped reading';
+  String get syncAudioMoved => 'オーディオブックを読むのをやめた位置に移動しました';
 
   @override
-  String get syncAudioOffer => 'Tap to jump to where you stopped reading';
+  String get syncAudioOffer => 'タップして読むのをやめた位置へ移動';
 
   @override
-  String get syncFindingAudio => 'Finding your page in the audiobook';
+  String get syncFindingAudio => 'オーディオブックであなたのページを探しています';
 
   @override
-  String get syncFindingEbook => 'Finding your spot in the ebook';
+  String get syncFindingEbook => '電子書籍であなたの位置を探しています';
 
   @override
-  String get syncFailed => 'Couldn\'t sync your place';
+  String get syncFailed => '位置を同期できませんでした';
 
   @override
-  String get syncAlreadyTogether => 'Already in sync';
+  String get syncAlreadyTogether => 'すでに同期済みです';
 
   @override
-  String get syncPosition => 'Sync position';
+  String get syncPosition => '位置を同期';
 
   @override
   String get readAlongFollowHint =>
-      'Word timing is worked out between the transcript\'s timestamps, so it can drift slightly inside a sentence.';
+      '単語のタイミングは文字起こしのタイムスタンプの間から算出されるため、文の途中で少しずれる場合があります。';
 
   @override
-  String get readAlongFollowWord => 'Word';
+  String get readAlongFollowWord => '単語';
 
   @override
-  String get readAlongFollowSentence => 'Sentence';
+  String get readAlongFollowSentence => '文';
 
   @override
-  String get readAlongColor => 'Read along color';
+  String get readAlongColor => '読み上げ追従の色';
 
   @override
-  String get readAlongLost => 'Can\'t find the narration on the page';
+  String get readAlongLost => 'ページ上でナレーションが見つかりません';
 
   @override
-  String get readAlongBackToNarration => 'Back to narration';
+  String get readAlongBackToNarration => 'ナレーションに戻る';
 
   @override
-  String get findInEbook => 'Find in ebook';
+  String get findInEbook => '電子書籍で探す';
 
   @override
-  String get findInEbookSearching => 'Finding this spot in the ebook...';
+  String get findInEbookSearching => '電子書籍でこの位置を探しています...';
 
   @override
-  String get findInEbookNotFound => 'Couldn\'t find this spot in the ebook.';
+  String get findInEbookNotFound => '電子書籍でこの位置が見つかりませんでした。';
 
   @override
-  String get findInEbookNeedsEpub => 'Find in ebook needs an EPUB ebook.';
+  String get findInEbookNeedsEpub => '電子書籍で探すには EPUB の電子書籍が必要です。';
 
   @override
-  String get findInEbookNoEbook => 'This book doesn\'t have an ebook.';
+  String get findInEbookNoEbook => 'この本には電子書籍がありません。';
 
   @override
-  String get findInAudiobook => 'Find in audiobook';
+  String get findInAudiobook => 'オーディオブックで探す';
 
   @override
-  String get findInAudiobookSearching =>
-      'Finding this spot in the audiobook...';
+  String get findInAudiobookSearching => 'オーディオブックでこの位置を探しています...';
 
   @override
-  String get findInAudiobookStillSearching =>
-      'Still searching the audio for this spot...';
+  String get findInAudiobookStillSearching => '音声でこの位置をまだ探しています...';
 
   @override
   String get findInAudiobookSearchingLong =>
-      'Long chapter, still searching. This can take a minute or two...';
+      '長いチャプターのため、まだ探しています。1～2分かかることがあります...';
 
   @override
-  String get findInAudiobookNotFound =>
-      'Couldn\'t find this spot in the audiobook.';
+  String get findInAudiobookNotFound => 'オーディオブックでこの位置が見つかりませんでした。';
 
   @override
   String get transcriptionWhisperInfo =>
-      'Transcription is powered by Whisper, an open speech recognition model that listens to the narration and writes out the words - all on this device.';
+      '文字起こしは、ナレーションを聴き取って言葉を書き出すオープンな音声認識モデル Whisper によるもので、すべてこの端末内で処理されます。';
 
   @override
-  String get transcriptionWhisperLearnMore => 'Learn more about Whisper';
+  String get transcriptionWhisperLearnMore => 'Whisper について詳しく見る';
 
   @override
   String get findInAudiobookIntroBody =>
-      'This listens to the audiobook near where you\'re reading and matches it to this passage, all on your device. It can take up to a minute. If the spot can\'t be matched confidently, nothing moves.';
+      '読んでいる位置付近のオーディオブックを聴き取り、この一節と照合します。すべて端末内で行われ、最大1分ほどかかります。確実に一致しない場合は、何も移動しません。';
 
   @override
-  String get findInAudiobookAfterLabel => 'When the spot is found';
+  String get findInAudiobookAfterLabel => '位置が見つかったとき';
 
   @override
-  String get findInAudiobookStay => 'Keep reading';
+  String get findInAudiobookStay => '読み続ける';
 
   @override
-  String get findInAudiobookGoPlayer => 'Open the player';
+  String get findInAudiobookGoPlayer => 'プレーヤーを開く';
 
   @override
-  String get findInAudiobookPlaying => 'Playing this passage in the audiobook';
+  String get findInAudiobookPlaying => 'オーディオブックでこの一節を再生中';
 
   @override
-  String get catchUpAudioAhead =>
-      'The audiobook is further along. Tap to go there.';
+  String get catchUpAudioAhead => 'オーディオブックのほうが先に進んでいます。タップして移動します。';
 
   @override
-  String get catchUpPageAhead =>
-      'This page is ahead of the audiobook. Tap to move the audiobook here.';
+  String get catchUpPageAhead => 'このページはオーディオブックより先です。タップしてオーディオブックをここへ移動します。';
 
   @override
-  String get readerShortcutButton => 'Shortcut button';
+  String get readerShortcutButton => 'ショートカットボタン';
 
   @override
-  String get keepScreenOn => 'Keep screen on';
+  String get keepScreenOn => '画面をオンのままにする';
 
   @override
-  String get keepScreenOnActive => 'Screen stays on';
+  String get keepScreenOnActive => '画面はオンのままです';
 
   @override
-  String get keepScreenOnUntilClosed =>
-      'Screen stays on until you close the app';
+  String get keepScreenOnUntilClosed => 'アプリを閉じるまで画面はオンのままです';
 
   @override
-  String get keepScreenOnOff => 'Screen can turn off again';
+  String get keepScreenOnOff => '画面がまたオフになります';
 
   @override
-  String get keepScreenOnOffUntilRestart =>
-      'Off until the app restarts. The Settings switch stays on';
+  String get keepScreenOnOffUntilRestart => 'アプリを再起動するまでオフです。設定のスイッチはオンのままです';
 
   @override
-  String get keepScreenOnPlayer => 'Keep the screen on in the player';
+  String get keepScreenOnPlayer => 'プレーヤーで画面をオンのままにする';
 
   @override
-  String get keepScreenOnPlayerSubtitle =>
-      'The screen stays on while the player is open';
+  String get keepScreenOnPlayerSubtitle => 'プレーヤーを開いている間、画面はオンのままです';
 
   @override
-  String get keepScreenOnCarMode => 'Keep the screen on in car mode';
+  String get keepScreenOnCarMode => 'カーモードで画面をオンのままにする';
 
   @override
-  String get keepScreenOnCarModeSubtitle =>
-      'The screen stays on while car mode is open';
+  String get keepScreenOnCarModeSubtitle => 'カーモードを開いている間、画面はオンのままです';
 
   @override
-  String get loginServerType => 'Server type';
+  String get loginServerType => 'サーバーの種類';
 
   @override
   String get authBookOrbitDefaultPassword =>
-      'This account still has its default password. Change it in BookOrbit, then sign in again.';
+      'このアカウントはまだ初期パスワードのままです。BookOrbit で変更してから、もう一度サインインしてください。';
 
   @override
   String get authBookOrbitPasswordOff =>
-      'Password sign-in is turned off on this server. Sign in with a magic link or single sign-on.';
+      'このサーバーではパスワードでのサインインが無効です。マジックリンクまたはシングルサインオンでサインインしてください。';
 
   @override
   String get authServerIsBookOrbit =>
-      'This is a BookOrbit server. Choose BookOrbit above the server address.';
+      'これは BookOrbit サーバーです。サーバーアドレスの上で BookOrbit を選んでください。';
 
   @override
   String get authServerIsAudiobookshelf =>
-      'This is an Audiobookshelf server. Choose Audiobookshelf above the server address.';
+      'これは Audiobookshelf サーバーです。サーバーアドレスの上で Audiobookshelf を選んでください。';
 
   @override
-  String get castNotAvailableBookOrbit =>
-      'Casting is not available with BookOrbit servers';
+  String get castNotAvailableBookOrbit => 'BookOrbit サーバーではキャストを利用できません';
 
   @override
-  String get loginMagicLink => 'Magic link';
+  String get loginMagicLink => 'マジックリンク';
 
   @override
   String get loginMagicLinkDescription =>
-      'Sign in with a BookOrbit magic link, or paste a password link to set your password.';
+      'BookOrbit のマジックリンクでサインインするか、パスワードリンクを貼り付けてパスワードを設定します。';
 
   @override
-  String get collectionPublicTitle => 'Public';
+  String get collectionPublicTitle => '公開';
 
   @override
-  String get collectionPublicSubtitle =>
-      'Everyone on this server can see this collection';
+  String get collectionPublicSubtitle => 'このサーバーの全員がこのコレクションを見られます';
 
   @override
   String loginSignInWithProvider(String provider) {
-    return 'Sign in with $provider';
+    return '$provider でサインイン';
   }
 
   @override
-  String get loginSignInWithSso => 'Sign in with SSO';
+  String get loginSignInWithSso => 'SSO でサインイン';
 
   @override
-  String get loginChooseSsoProvider => 'Choose how to sign in';
+  String get loginChooseSsoProvider => 'サインイン方法を選択';
 
   @override
   String get loginRedirectUriBookOrbit =>
-      'Redirect URI: bookorbit://oauth2-callback';
+      'リダイレクト URI: bookorbit://oauth2-callback';
 
   @override
-  String get readStatusTitle => 'Reading status';
+  String get readStatusTitle => '読書状況';
 
   @override
-  String get readStatusHint =>
-      'BookOrbit keeps a status you pick here until you change it.';
+  String get readStatusHint => 'BookOrbit は、ここで選んだ状況を変更するまで保持します。';
 
   @override
-  String get readStatusUnread => 'Unread';
+  String get readStatusUnread => '未読';
 
   @override
-  String get readStatusWantToRead => 'Want to read';
+  String get readStatusWantToRead => '読みたい';
 
   @override
-  String get readStatusReading => 'Reading';
+  String get readStatusReading => '読書中';
 
   @override
-  String get readStatusOnHold => 'On hold';
+  String get readStatusOnHold => '保留中';
 
   @override
-  String get readStatusRereading => 'Rereading';
+  String get readStatusRereading => '再読中';
 
   @override
-  String get readStatusRead => 'Read';
+  String get readStatusRead => '読了';
 
   @override
-  String get readStatusSkimmed => 'Skimmed';
+  String get readStatusSkimmed => '流し読み';
 
   @override
-  String get readStatusAbandoned => 'Abandoned';
+  String get readStatusAbandoned => '中断';
 
   @override
-  String get personalNoteTitle => 'Your note';
+  String get personalNoteTitle => 'あなたのメモ';
 
   @override
-  String get personalNoteAdd => 'Add a private note';
+  String get personalNoteAdd => '非公開メモを追加';
 
   @override
-  String get personalNoteHint => 'Only you can see this note.';
+  String get personalNoteHint => 'このメモはあなただけが見られます。';
 
   @override
-  String get moreLikeThis => 'More like this';
+  String get moreLikeThis => '似た作品';
 
   @override
-  String get coverSlotAudiobook => 'Audiobook cover';
+  String get coverSlotAudiobook => 'オーディオブックのカバー';
 
   @override
-  String get coverSlotBook => 'Book cover';
+  String get coverSlotBook => '本のカバー';
 
   @override
-  String get cardButtonFill => 'Button background';
+  String get cardButtonFill => 'ボタンの背景';
 
   @override
-  String get cardButtonFillSubtitle =>
-      'How the buttons on the player card are filled';
+  String get cardButtonFillSubtitle => 'プレーヤーカードのボタンの塗りつぶし方';
 
   @override
-  String get cardButtonFillClear => 'Clear';
+  String get cardButtonFillClear => 'なし';
 
   @override
-  String get cardButtonFillSubtle => 'Subtle';
+  String get cardButtonFillSubtle => '控えめ';
 
   @override
-  String get cardButtonFillSolid => 'Solid';
+  String get cardButtonFillSolid => 'ソリッド';
 
   @override
   String get loginBookOrbitPreview =>
-      'BookOrbit support is new. Playback, downloads and browsing work, but some screens may still look or act like Audiobookshelf. Follow the progress on GitHub, and let us know if something seems off.';
+      'BookOrbit への対応は新しい機能です。再生、ダウンロード、閲覧は動作しますが、一部の画面は見た目や動作が Audiobookshelf のままの場合があります。進捗は GitHub で確認でき、おかしな点があればお知らせください。';
 
   @override
-  String get signedOutTapToSignIn => 'Signed out. Tap to sign in again.';
+  String get signedOutTapToSignIn => 'サインアウトしました。タップして再度サインインします。';
 
   @override
   String get authSignedOutKeepListening =>
-      'You\'ve been signed out. Downloads still play. Tap the red cloud to sign in again.';
+      'サインアウトされました。ダウンロード済みのものは引き続き再生できます。赤いクラウドをタップして再度サインインしてください。';
 
   @override
   String signedOutSyncNote(String username, String server) {
-    return 'What you listen to while signed out is kept on this phone and syncs when you sign back in as $username on $server. Any way of signing in to that account works.';
+    return 'サインアウト中に再生したものはこのスマートフォンに保持され、$server に $username として再びサインインすると同期されます。そのアカウントであれば、どの方法でサインインしても構いません。';
   }
 
   @override
-  String get comicReadingDirection => 'Reading direction';
+  String get comicReadingDirection => '読む方向';
 
   @override
   String comicPageNumber(int page) {
-    return 'Page $page';
+    return '$page ページ';
   }
 
   @override
   String get comicBookmarkRemoveFailed =>
-      'Couldn\'t remove the bookmark from the server. Try again when you\'re online.';
+      'サーバーからブックマークを削除できませんでした。オンラインのときにもう一度お試しください。';
 
   @override
-  String get comicLeftToRight => 'Left to right';
+  String get comicLeftToRight => '左から右';
 
   @override
-  String get comicRightToLeft => 'Right to left (manga)';
+  String get comicRightToLeft => '右から左 (マンガ)';
 
   @override
-  String get comicNeedsConnection =>
-      'This comic opens page by page from your server, so it needs a connection.';
+  String get comicNeedsConnection => 'このコミックはサーバーから1ページずつ開くため、接続が必要です。';
 
   @override
-  String get comicNoPages => 'No pages found in this comic.';
+  String get comicNoPages => 'このコミックにページが見つかりません。';
 
   @override
-  String get boAdminTitle => 'Server admin';
+  String get boAdminTitle => 'サーバー管理';
 
   @override
-  String get boAdminSubtitle => 'Users and libraries on this BookOrbit server';
+  String get boAdminSubtitle => 'この BookOrbit サーバーのユーザーとライブラリ';
 
   @override
-  String get boAdminUsers => 'Users';
+  String get boAdminUsers => 'ユーザー';
 
   @override
-  String get boAdminLibraries => 'Libraries';
+  String get boAdminLibraries => 'ライブラリ';
 
   @override
   String boAdminUserCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count people',
-      one: '1 person',
+      other: '$count 人',
+      one: '1 人',
     );
     return '$_temp0';
   }
@@ -11632,851 +11421,824 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count libraries',
-      one: '1 library',
+      other: '$count 個のライブラリ',
+      one: '1 個のライブラリ',
     );
     return '$_temp0';
   }
 
   @override
-  String get boAdminSaved => 'Saved';
+  String get boAdminSaved => '保存しました';
 
   @override
-  String get boAdminFailed => 'That didn\'t work. Try again.';
+  String get boAdminFailed => 'うまくいきませんでした。もう一度お試しください。';
 
   @override
-  String get boAdminOffline => 'Couldn\'t reach the server.';
+  String get boAdminOffline => 'サーバーに接続できませんでした。';
 
   @override
-  String get boUsersSearch => 'Search users';
+  String get boUsersSearch => 'ユーザーを検索';
 
   @override
-  String get boUsersNone => 'No users here';
+  String get boUsersNone => 'ユーザーがいません';
 
   @override
-  String get boUsersFilterAll => 'All';
+  String get boUsersFilterAll => 'すべて';
 
   @override
-  String get boUsersFilterAdmins => 'Admins';
+  String get boUsersFilterAdmins => '管理者';
 
   @override
-  String get boUsersFilterActive => 'Active';
+  String get boUsersFilterActive => '有効';
 
   @override
-  String get boUsersFilterInactive => 'Inactive';
+  String get boUsersFilterInactive => '無効';
 
   @override
-  String get boUsersFilterAttention => 'Needs attention';
+  String get boUsersFilterAttention => '要確認';
 
   @override
-  String get boUserBadgeAdmin => 'Admin';
+  String get boUserBadgeAdmin => '管理者';
 
   @override
-  String get boUserBadgeInactive => 'Inactive';
+  String get boUserBadgeInactive => '無効';
 
   @override
-  String get boUserBadgeLocked => 'Locked';
+  String get boUserBadgeLocked => 'ロック中';
 
   @override
-  String get boUserBadgeNoPassword => 'No password yet';
+  String get boUserBadgeNoPassword => 'パスワード未設定';
 
   @override
   String boUserLastActive(String date) {
-    return 'Last active $date';
+    return '最終アクティブ: $date';
   }
 
   @override
-  String get boUserNeverSignedIn => 'Never signed in';
+  String get boUserNeverSignedIn => 'サインインしたことがありません';
 
   @override
-  String get boUserNew => 'New user';
+  String get boUserNew => '新規ユーザー';
 
   @override
-  String get boUserCreate => 'Create';
+  String get boUserCreate => '作成';
 
   @override
-  String get boUserUsername => 'Username';
+  String get boUserUsername => 'ユーザー名';
 
   @override
-  String get boUserUsernameHint =>
-      'At least 3 characters. It cannot be changed later.';
+  String get boUserUsernameHint => '3文字以上。後から変更できません。';
 
   @override
-  String get boUserName => 'Name';
+  String get boUserName => '名前';
 
   @override
-  String get boUserEmail => 'Email';
+  String get boUserEmail => 'メールアドレス';
 
   @override
-  String get boUserEmailInvalid => 'Enter a valid email address';
+  String get boUserEmailInvalid => '有効なメールアドレスを入力してください';
 
   @override
-  String get boUserActive => 'Active';
+  String get boUserActive => '有効';
 
   @override
-  String get boUserActiveSubtitle => 'Inactive users can\'t sign in';
+  String get boUserActiveSubtitle => '無効なユーザーはサインインできません';
 
   @override
-  String get boUserAdmin => 'Administrator';
+  String get boUserAdmin => '管理者';
 
   @override
-  String get boUserAdminSubtitle => 'Full access to everything on the server';
+  String get boUserAdminSubtitle => 'サーバー上のすべてに対するフルアクセス';
 
   @override
-  String get boUserAdminHasAll =>
-      'Administrators have every permission and see every library.';
+  String get boUserAdminHasAll => '管理者はすべての権限を持ち、すべてのライブラリを見られます。';
 
   @override
-  String get boUserPermissions => 'Permissions';
+  String get boUserPermissions => '権限';
 
   @override
-  String get boUserPresetNone => 'None';
+  String get boUserPresetNone => 'なし';
 
   @override
-  String get boUserPresetStandard => 'Standard';
+  String get boUserPresetStandard => '標準';
 
   @override
-  String get boUserPresetEverything => 'Everything';
+  String get boUserPresetEverything => 'すべて';
 
   @override
-  String get boUserLibraries => 'Libraries';
+  String get boUserLibraries => 'ライブラリ';
 
   @override
-  String get boUserLibrariesHint => 'The libraries this person can see.';
+  String get boUserLibrariesHint => 'このユーザーが見られるライブラリ。';
 
   @override
-  String get boUserPasswordLink => 'Send password link';
+  String get boUserPasswordLink => 'パスワードリンクを送る';
 
   @override
-  String get boUserPasswordLinkSubtitle =>
-      'A link to set a new password, valid for 15 minutes';
+  String get boUserPasswordLinkSubtitle => '新しいパスワードを設定するためのリンク。15分間有効';
 
   @override
-  String get boUserExternal =>
-      'Signs in through single sign-on, so the password is managed there.';
+  String get boUserExternal => 'シングルサインオンでサインインするため、パスワードはそちらで管理されます。';
 
   @override
-  String get boUserUnlock => 'Unlock account';
+  String get boUserUnlock => 'アカウントのロックを解除';
 
   @override
-  String get boUserUnlocked => 'Account unlocked';
+  String get boUserUnlocked => 'アカウントのロックを解除しました';
 
   @override
-  String get boUserDelete => 'Delete user';
+  String get boUserDelete => 'ユーザーを削除';
 
   @override
   String boUserDeleteTitle(String name) {
-    return 'Delete $name?';
+    return '$name を削除しますか？';
   }
 
   @override
   String get boUserDeleteBody =>
-      'Their account and everything they have on this server are removed. This cannot be undone.';
+      'このアカウントと、このサーバー上のすべてのデータが削除されます。この操作は元に戻せません。';
 
   @override
-  String get boUserDeleted => 'User deleted';
+  String get boUserDeleted => 'ユーザーを削除しました';
 
   @override
-  String get boUserLinkTitle => 'Password link';
+  String get boUserLinkTitle => 'パスワードリンク';
 
   @override
   String boUserLinkBody(String name) {
-    return 'Share this link with $name. It lets them set a password and works for 15 minutes.';
+    return 'このリンクを $name に共有してください。パスワードを設定でき、15分間有効です。';
   }
 
   @override
-  String get boPasswordRules =>
-      'At least 8 characters, with an uppercase letter, a lowercase letter and a number.';
+  String get boPasswordRules => '8文字以上で、大文字、小文字、数字を含めてください。';
 
   @override
-  String get boSetPasswordTitle => 'Set your password';
+  String get boSetPasswordTitle => 'パスワードを設定';
 
   @override
-  String get boSetPasswordSubmit => 'Set password and sign in';
+  String get boSetPasswordSubmit => 'パスワードを設定してサインイン';
 
   @override
   String boSetPasswordLinkBody(String username, String server) {
-    return 'Choose a password for $username on $server.';
+    return '$server の $username のパスワードを選んでください。';
   }
 
   @override
   String boSetPasswordLinkBodyNoName(String server) {
-    return 'Choose a password for your account on $server.';
+    return '$server のアカウントのパスワードを選んでください。';
   }
 
   @override
   String get boSetPasswordStartingBody =>
-      'This account still has the password it was created with. Choose a new one to finish signing in.';
+      'このアカウントはまだ作成時のパスワードのままです。サインインを完了するには、新しいパスワードを選んでください。';
 
   @override
-  String get boSetPasswordTrust =>
-      'Only continue if you trust who sent this link.';
+  String get boSetPasswordTrust => 'このリンクの送信者を信頼できる場合のみ続行してください。';
 
   @override
   String get boPasswordLinkExpired =>
-      'This link has expired or was already used. Ask your server admin for a new one.';
+      'このリンクは期限切れか、すでに使用済みです。サーバー管理者に新しいリンクを依頼してください。';
 
   @override
   String boPasswordSetSignInFailed(String error) {
-    return 'Your password is set, but signing in failed: $error';
+    return 'パスワードは設定されましたが、サインインに失敗しました: $error';
   }
 
   @override
-  String get boChangePasswordSubtitle => 'Update your BookOrbit password';
+  String get boChangePasswordSubtitle => 'BookOrbit のパスワードを更新';
 
   @override
   String get boPasswordChangeEffect =>
-      'Changing your password signs out your other BookOrbit sessions. This device stays signed in.';
+      'パスワードを変更すると、他の BookOrbit セッションはサインアウトされます。この端末はサインインしたままです。';
 
   @override
-  String get boPasswordChanged =>
-      'Password changed. Other signed-in devices were signed out.';
+  String get boPasswordChanged => 'パスワードを変更しました。サインインしていた他の端末はサインアウトされました。';
 
   @override
   String boPasswordShareDescription(String username) {
-    return 'Send this link or have $username scan the QR code to choose a password and sign in to Absorb. It works for 15 minutes.';
+    return 'このリンクを送るか、$username に QR コードをスキャンしてもらうと、パスワードを選んで Absorb にサインインできます。15分間有効です。';
   }
 
   @override
   String boPasswordShareWarning(String username) {
-    return 'Anyone with this link can choose the password for $username until it is used or expires.';
+    return 'このリンクを知っている人は誰でも、使用または期限切れになるまで $username のパスワードを選べます。';
   }
 
   @override
-  String get setupLinkCopyWebLink => 'Copy web link';
+  String get setupLinkCopyWebLink => 'ウェブリンクをコピー';
 
   @override
-  String get boUserLinkCopy => 'Copy link';
+  String get boUserLinkCopy => 'リンクをコピー';
 
   @override
-  String get boUserLinkCopied => 'Link copied';
+  String get boUserLinkCopied => 'リンクをコピーしました';
 
   @override
-  String get boUserLinkShare => 'Share';
+  String get boUserLinkShare => '共有';
 
   @override
   String get boUserNoLink =>
-      'The user was added, but the server sent no password link. Send one from their page.';
+      'ユーザーは追加されましたが、サーバーからパスワードリンクが送られませんでした。ユーザーのページから送ってください。';
 
   @override
-  String get boPermGroupLibrary => 'Library and books';
+  String get boPermGroupLibrary => 'ライブラリと本';
 
   @override
-  String get boPermGroupRequests => 'Book requests';
+  String get boPermGroupRequests => '本のリクエスト';
 
   @override
-  String get boPermGroupDevices => 'Devices';
+  String get boPermGroupDevices => 'デバイス';
 
   @override
-  String get boPermGroupIntegrations => 'Reading integrations';
+  String get boPermGroupIntegrations => '読書連携';
 
   @override
   String get boPermGroupDock => 'Book Dock';
 
   @override
-  String get boPermGroupEmail => 'Email and notifications';
+  String get boPermGroupEmail => 'メールと通知';
 
   @override
-  String get boPermGroupAdmin => 'Administration';
+  String get boPermGroupAdmin => '管理';
 
   @override
-  String get boPermLibraryDownload => 'Download books';
+  String get boPermLibraryDownload => '本をダウンロード';
 
   @override
-  String get boPermLibraryUpload => 'Upload books';
+  String get boPermLibraryUpload => '本をアップロード';
 
   @override
-  String get boPermLibraryEditMetadata => 'Edit metadata';
+  String get boPermLibraryEditMetadata => 'メタデータを編集';
 
   @override
-  String get boPermLibraryDeleteBooks => 'Delete books';
+  String get boPermLibraryDeleteBooks => '本を削除';
 
   @override
-  String get boPermBookRequestAccess => 'Request books';
+  String get boPermBookRequestAccess => '本をリクエスト';
 
   @override
-  String get boPermBookRequestAutoApprove => 'Requests approved automatically';
+  String get boPermBookRequestAutoApprove => 'リクエストを自動承認';
 
   @override
-  String get boPermBookRequestSelfFulfill =>
-      'Download requested books directly';
+  String get boPermBookRequestSelfFulfill => 'リクエストした本を直接ダウンロード';
 
   @override
-  String get boPermManageBookRequests => 'Manage book requests';
+  String get boPermManageBookRequests => '本のリクエストを管理';
 
   @override
-  String get boPermKoboSync => 'Kobo sync';
+  String get boPermKoboSync => 'Kobo 同期';
 
   @override
-  String get boPermKoreaderSync => 'KOReader sync';
+  String get boPermKoreaderSync => 'KOReader 同期';
 
   @override
-  String get boPermOpdsAccess => 'OPDS access';
+  String get boPermOpdsAccess => 'OPDS アクセス';
 
   @override
-  String get boPermHardcoverSync => 'Hardcover sync';
+  String get boPermHardcoverSync => 'Hardcover 同期';
 
   @override
-  String get boPermReadwiseSync => 'Readwise sync';
+  String get boPermReadwiseSync => 'Readwise 同期';
 
   @override
-  String get boPermStorygraphSync => 'StoryGraph sync';
+  String get boPermStorygraphSync => 'StoryGraph 同期';
 
   @override
-  String get boPermBookDockAccess => 'Use the Book Dock';
+  String get boPermBookDockAccess => 'Book Dock を使用';
 
   @override
-  String get boPermManageBookDock => 'Manage the Book Dock';
+  String get boPermManageBookDock => 'Book Dock を管理';
 
   @override
-  String get boPermEmailSend => 'Send books by email';
+  String get boPermEmailSend => '本をメールで送信';
 
   @override
-  String get boPermNotificationAccess => 'Notifications';
+  String get boPermNotificationAccess => '通知';
 
   @override
-  String get boPermManageEmail => 'Manage email';
+  String get boPermManageEmail => 'メールを管理';
 
   @override
-  String get boPermManageLibraries => 'Manage libraries';
+  String get boPermManageLibraries => 'ライブラリを管理';
 
   @override
-  String get boPermManageMetadataConfig => 'Metadata settings';
+  String get boPermManageMetadataConfig => 'メタデータ設定';
 
   @override
-  String get boPermManageIcons => 'Manage icons';
+  String get boPermManageIcons => 'アイコンを管理';
 
   @override
-  String get boPermManageUsers => 'Manage users';
+  String get boPermManageUsers => 'ユーザーを管理';
 
   @override
-  String get boPermViewUserActivity => 'View user activity';
+  String get boPermViewUserActivity => 'ユーザーのアクティビティを表示';
 
   @override
-  String get boPermViewAuditLog => 'View the audit log';
+  String get boPermViewAuditLog => '監査ログを表示';
 
   @override
-  String get boPermManageAppSettings => 'App settings';
+  String get boPermManageAppSettings => 'アプリ設定';
 
   @override
-  String get boLibsNone => 'No libraries yet';
+  String get boLibsNone => 'ライブラリはまだありません';
 
   @override
   String boLibBookCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books',
-      one: '1 book',
+      other: '$count 冊',
+      one: '1 冊',
     );
     return '$_temp0';
   }
 
   @override
-  String get boLibScanNow => 'Scan now';
+  String get boLibScanNow => '今すぐスキャン';
 
   @override
-  String get boLibScanStarted => 'Scan started';
+  String get boLibScanStarted => 'スキャンを開始しました';
 
   @override
-  String get boLibScanning => 'Scanning';
+  String get boLibScanning => 'スキャン中';
 
   @override
   String boLibLastScan(String date, int added, int updated, int missing) {
-    return 'Scanned $date: $added added, $updated updated, $missing missing';
+    return '$dateにスキャン: 追加$added件、更新$updated件、欠落$missing件';
   }
 
   @override
-  String get boLibScanFailed => 'The last scan failed';
+  String get boLibScanFailed => '前回のスキャンに失敗しました';
 
   @override
-  String get boLibNeverScanned => 'Not scanned yet';
+  String get boLibNeverScanned => 'まだスキャンしていません';
 
   @override
-  String get boLibNew => 'New library';
+  String get boLibNew => '新しいライブラリ';
 
   @override
-  String get boLibName => 'Name';
+  String get boLibName => '名前';
 
   @override
-  String get boLibNeedName => 'Give the library a name';
+  String get boLibNeedName => 'ライブラリの名前を入力してください';
 
   @override
-  String get boLibIcon => 'Icon';
+  String get boLibIcon => 'アイコン';
 
   @override
-  String get boLibFolders => 'Folders';
+  String get boLibFolders => 'フォルダー';
 
   @override
-  String get boLibFoldersHint =>
-      'Folders on the server where this library\'s books live.';
+  String get boLibFoldersHint => 'このライブラリの本があるサーバー上のフォルダーです。';
 
   @override
-  String get boLibNeedFolder => 'Add at least one folder';
+  String get boLibNeedFolder => 'フォルダーを1つ以上追加してください';
 
   @override
-  String get boLibAddFolder => 'Add folder';
+  String get boLibAddFolder => 'フォルダーを追加';
 
   @override
   String boLibFolderFiles(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count files',
-      one: '1 file',
+      other: '$count個のファイル',
+      one: '1個のファイル',
     );
     return '$_temp0';
   }
 
   @override
   String boLibFolderInUse(String library) {
-    return 'Already in $library';
+    return '$libraryで使用中';
   }
 
   @override
-  String get boLibFolderUnreadable => 'The server can\'t read this folder';
+  String get boLibFolderUnreadable => 'サーバーがこのフォルダーを読み取れません';
 
   @override
-  String get boLibFolderRescan => 'Changing the folders rescans the library.';
+  String get boLibFolderRescan => 'フォルダーを変更すると、ライブラリが再スキャンされます。';
 
   @override
-  String get boLibOrganization => 'Books are stored as';
+  String get boLibOrganization => '本の保存形式';
 
   @override
-  String get boLibPerFolder => 'One book per folder';
+  String get boLibPerFolder => '1フォルダーに1冊';
 
   @override
-  String get boLibPerFile => 'One book per file';
+  String get boLibPerFile => '1ファイルに1冊';
 
   @override
-  String get boLibOrganizationFixed =>
-      'This cannot be changed after the library is created.';
+  String get boLibOrganizationFixed => 'ライブラリの作成後は変更できません。';
 
   @override
-  String get boLibWatch => 'Watch for changes';
+  String get boLibWatch => '変更を監視';
 
   @override
-  String get boLibWatchSubtitle =>
-      'Pick up new and changed files as they appear';
+  String get boLibWatchSubtitle => '新規・変更されたファイルを自動的に取り込みます';
 
   @override
-  String get boLibSchedule => 'Scheduled scan';
+  String get boLibSchedule => 'スケジュールスキャン';
 
   @override
-  String get boLibScheduleOff => 'Off';
+  String get boLibScheduleOff => 'オフ';
 
   @override
-  String get boLibScheduleDaily => 'Daily';
+  String get boLibScheduleDaily => '毎日';
 
   @override
-  String get boLibScheduleWeekly => 'Weekly';
+  String get boLibScheduleWeekly => '毎週';
 
   @override
   String boLibScheduleCustom(String cron) {
-    return 'Custom ($cron)';
+    return 'カスタム（$cron）';
   }
 
   @override
-  String get boLibScheduleHint => 'Runs at 3 AM server time.';
+  String get boLibScheduleHint => 'サーバー時間の午前3時に実行します。';
 
   @override
-  String get boLibCovers => 'Cover shape';
+  String get boLibCovers => 'カバーの形';
 
   @override
-  String get boLibCoverBook => 'Book (2:3)';
+  String get boLibCoverBook => '本（2:3）';
 
   @override
-  String get boLibCoverSquare => 'Square (1:1)';
+  String get boLibCoverSquare => '正方形（1:1）';
 
   @override
-  String get boLibAccess => 'Who can see it';
+  String get boLibAccess => '閲覧できるユーザー';
 
   @override
-  String get boLibAccessHint =>
-      'Administrators see every library. Others need access here.';
+  String get boLibAccessHint => '管理者はすべてのライブラリを見られます。それ以外のユーザーはここでアクセス権が必要です。';
 
   @override
-  String get boLibAccessNone => 'Only administrators so far';
+  String get boLibAccessNone => '今のところ管理者のみ';
 
   @override
-  String get boLibAccessAdd => 'Add person';
+  String get boLibAccessAdd => 'ユーザーを追加';
 
   @override
-  String get boLibAccessEveryoneHas => 'Everyone already has access';
+  String get boLibAccessEveryoneHas => '全員がすでにアクセスできます';
 
   @override
-  String get boLibLevelViewer => 'Viewer';
+  String get boLibLevelViewer => '閲覧者';
 
   @override
-  String get boLibLevelEditor => 'Editor';
+  String get boLibLevelEditor => '編集者';
 
   @override
-  String get boLibLevelOwner => 'Owner';
+  String get boLibLevelOwner => 'オーナー';
 
   @override
-  String get boLibAccessRemove => 'Remove access';
+  String get boLibAccessRemove => 'アクセス権を削除';
 
   @override
-  String get boLibDelete => 'Delete library';
+  String get boLibDelete => 'ライブラリを削除';
 
   @override
   String boLibDeleteTitle(String name) {
-    return 'Delete $name?';
+    return '$nameを削除しますか？';
   }
 
   @override
   String get boLibDeleteBody =>
-      'The library is removed from BookOrbit, with its books\' progress and highlights. The files on the server stay where they are.';
+      'ライブラリは、本の進捗やハイライトとともにBookOrbitから削除されます。サーバー上のファイルはそのまま残ります。';
 
   @override
-  String get boLibDeleted => 'Library deleted';
+  String get boLibDeleted => 'ライブラリを削除しました';
 
   @override
-  String get boFolderPickTitle => 'Choose a folder';
+  String get boFolderPickTitle => 'フォルダーを選択';
 
   @override
-  String get boFolderUseThis => 'Use this folder';
+  String get boFolderUseThis => 'このフォルダーを使用';
 
   @override
-  String get boFolderEmpty => 'No folders inside';
+  String get boFolderEmpty => '中にフォルダーはありません';
 
   @override
-  String get statsTotalTime => 'TOTAL TIME';
+  String get statsTotalTime => '合計時間';
 
   @override
-  String get statsTotalReadingTime => 'TOTAL READING TIME';
+  String get statsTotalReadingTime => '合計読書時間';
 
   @override
   String statsDaysOfTime(String days) {
-    return 'That\'s $days days';
+    return '$days日分です';
   }
 
   @override
   String statsHoursOfTime(String hours) {
-    return 'That\'s $hours hours';
+    return '$hours時間分です';
   }
 
   @override
-  String get statsMediaAll => 'All';
+  String get statsMediaAll => 'すべて';
 
   @override
-  String get statsMediaListening => 'Listening';
+  String get statsMediaListening => '聴く';
 
   @override
-  String get statsMediaReading => 'Reading';
+  String get statsMediaReading => '読む';
 
   @override
   String statsZoneMismatch(String server, String phone) {
-    return 'BookOrbit counts your days in $server, but this phone is set to $phone. Time late in the day can land on the wrong day.';
+    return 'BookOrbitは$serverで日付を数えていますが、この端末は$phoneに設定されています。深夜の時間が別の日に記録されることがあります。';
   }
 
   @override
   String statsZoneUse(String zone) {
-    return 'Use $zone';
+    return '$zoneを使用';
   }
 
   @override
   String statsZoneSaved(String zone) {
-    return 'BookOrbit now uses $zone. Older days can take a few minutes to catch up.';
+    return 'BookOrbitは$zoneを使用するようになりました。過去の日付の反映には数分かかることがあります。';
   }
 
   @override
-  String get statsZoneFailed => 'Couldn\'t change the time zone on BookOrbit';
+  String get statsZoneFailed => 'BookOrbitのタイムゾーンを変更できませんでした';
 
   @override
-  String get statsTimeOfDay => 'Time of day';
+  String get statsTimeOfDay => '時間帯';
 
   @override
   String statsBusiestAround(String time) {
-    return 'Busiest around $time';
+    return '$timeごろが最も多い時間帯';
   }
 
   @override
-  String get statsFinishedByMonth => 'Books finished by month';
+  String get statsFinishedByMonth => '月別の完了数';
 
   @override
   String statsFinishedLast12(int count) {
-    return '$count in the last 12 months';
+    return '過去12か月で$count冊';
   }
 
   @override
-  String get statsWhereTitle => 'Where you listen and read';
+  String get statsWhereTitle => '聴く場所・読む場所';
 
   @override
-  String get statsLast12Months => 'Last 12 months';
+  String get statsLast12Months => '過去12か月';
 
   @override
-  String get statsHabits => 'Habits';
+  String get statsHabits => '習慣';
 
   @override
-  String get statsTypicalSession => 'Typical session';
+  String get statsTypicalSession => '標準的なセッション';
 
   @override
-  String get statsProgressPerSession => 'Progress per session';
+  String get statsProgressPerSession => 'セッションごとの進捗';
 
   @override
-  String get statsTimeToFinish => 'Time to finish';
+  String get statsTimeToFinish => '完了までの期間';
 
   @override
   String statsDayCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count days',
-      one: '1 day',
+      other: '$count日',
+      one: '1日',
     );
     return '$_temp0';
   }
 
   @override
-  String get statsBooksStarted => 'Books started';
+  String get statsBooksStarted => '開始した本';
 
   @override
-  String get statsBooksInProgress => 'In progress';
+  String get statsBooksInProgress => '進行中';
 
   @override
-  String get statsAverageProgress => 'Average progress';
+  String get statsAverageProgress => '平均進捗';
 
   @override
-  String get statsTopBooks => 'Top books';
+  String get statsTopBooks => '上位の本';
 
   @override
-  String get statsYearRead => 'Read';
+  String get statsYearRead => '読書';
 
   @override
   String boNotificationsUnread(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count unread',
-      one: '1 unread',
-      zero: 'Nothing new',
+      other: '未読$count件',
+      one: '未読1件',
+      zero: '新着なし',
     );
     return '$_temp0';
   }
 
   @override
-  String get boNotificationsMarkAllRead => 'Mark all read';
+  String get boNotificationsMarkAllRead => 'すべて既読にする';
 
   @override
-  String get boNotificationsClearAll => 'Clear all';
+  String get boNotificationsClearAll => 'すべて消去';
 
   @override
-  String get boNotificationsClearTitle => 'Clear all notifications?';
+  String get boNotificationsClearTitle => 'すべての通知を消去しますか？';
 
   @override
-  String get boNotificationsClearBody =>
-      'This removes every notification from your BookOrbit account.';
+  String get boNotificationsClearBody => 'BookOrbitアカウントのすべての通知が削除されます。';
 
   @override
-  String get boNotificationsEmpty => 'No notifications yet';
+  String get boNotificationsEmpty => '通知はまだありません';
 
   @override
-  String get boNotificationsLoadFailed => 'Couldn\'t load notifications';
+  String get boNotificationsLoadFailed => '通知を読み込めませんでした';
 
   @override
-  String get boNotificationsUpdateFailed =>
-      'Couldn\'t update notifications on BookOrbit';
+  String get boNotificationsUpdateFailed => 'BookOrbitの通知を更新できませんでした';
 
   @override
   String boNotificationsOccurrences(int count) {
-    return 'Happened $count times';
+    return '$count回発生しました';
   }
 
   @override
-  String get boNotificationsSettings => 'Notification settings';
+  String get boNotificationsSettings => '通知設定';
 
   @override
-  String get boNotificationsSettingsIntro =>
-      'Choose which notifications BookOrbit keeps for you.';
+  String get boNotificationsSettingsIntro => 'BookOrbitが保存する通知を選択します。';
 
   @override
-  String get boNotificationsProblemsHint =>
-      'Problems only notifies you when something fails or needs attention.';
+  String get boNotificationsProblemsHint => '「問題」は、失敗したときや対応が必要なときだけ通知します。';
 
   @override
-  String get boNotificationLevelOff => 'Off';
+  String get boNotificationLevelOff => 'オフ';
 
   @override
-  String get boNotificationLevelProblems => 'Problems';
+  String get boNotificationLevelProblems => '問題';
 
   @override
-  String get boNotificationLevelAll => 'All';
+  String get boNotificationLevelAll => 'すべて';
 
   @override
-  String get boNotificationsSaved => 'Notification settings saved';
+  String get boNotificationsSaved => '通知設定を保存しました';
 
   @override
-  String get boNotificationsSaveFailed =>
-      'Couldn\'t save notification settings';
+  String get boNotificationsSaveFailed => '通知設定を保存できませんでした';
 
   @override
-  String get boNotificationGroupLibrary => 'Library';
+  String get boNotificationGroupLibrary => 'ライブラリ';
 
   @override
-  String get boNotificationGroupFiles => 'Files';
+  String get boNotificationGroupFiles => 'ファイル';
 
   @override
-  String get boNotificationGroupIntegrations => 'Integrations';
+  String get boNotificationGroupIntegrations => '連携';
 
   @override
-  String get boNotificationGroupPersonal => 'Personal';
+  String get boNotificationGroupPersonal => '個人';
 
   @override
-  String get boNotifyScanning => 'Library scanning';
+  String get boNotifyScanning => 'ライブラリのスキャン';
 
   @override
-  String get boNotifyScanningDesc =>
-      'When a library scan finishes, fails, or finds missing books.';
+  String get boNotifyScanningDesc => 'ライブラリのスキャンが完了・失敗したとき、または欠落した本が見つかったとき。';
 
   @override
-  String get boNotifyMetadata => 'Metadata fetching';
+  String get boNotifyMetadata => 'メタデータの取得';
 
   @override
-  String get boNotifyMetadataDesc =>
-      'When metadata lookups for your books finish or fail.';
+  String get boNotifyMetadataDesc => '本のメタデータの検索が完了・失敗したとき。';
 
   @override
-  String get boNotifyAuthorEnrichment => 'Author details';
+  String get boNotifyAuthorEnrichment => '著者の詳細';
 
   @override
-  String get boNotifyAuthorEnrichmentDesc =>
-      'When author biographies and photos finish downloading.';
+  String get boNotifyAuthorEnrichmentDesc => '著者の経歴や写真のダウンロードが完了したとき。';
 
   @override
-  String get boNotifyFileWriteBack => 'Saving to files';
+  String get boNotifyFileWriteBack => 'ファイルへの保存';
 
   @override
-  String get boNotifyFileWriteBackDesc =>
-      'When edited details are saved into the book files on disk.';
+  String get boNotifyFileWriteBackDesc => '編集した詳細情報がディスク上の本のファイルに保存されたとき。';
 
   @override
-  String get boNotifyFileRename => 'File renaming';
+  String get boNotifyFileRename => 'ファイル名の変更';
 
   @override
-  String get boNotifyFileRenameDesc =>
-      'When a book file is renamed to match your naming pattern.';
+  String get boNotifyFileRenameDesc => '本のファイル名が命名パターンに合わせて変更されたとき。';
 
   @override
-  String get boNotifyBulkRename => 'Bulk renaming';
+  String get boNotifyBulkRename => '一括名前変更';
 
   @override
-  String get boNotifyBulkRenameDesc =>
-      'When renaming many books, or moving books between libraries, finishes or fails.';
+  String get boNotifyBulkRenameDesc => '多数の本の名前変更や、ライブラリ間の移動が完了・失敗したとき。';
 
   @override
-  String get boNotifyMigration => 'Imports';
+  String get boNotifyMigration => 'インポート';
 
   @override
-  String get boNotifyMigrationDesc =>
-      'When an import from another library app finishes or fails.';
+  String get boNotifyMigrationDesc => '他のライブラリアプリからのインポートが完了・失敗したとき。';
 
   @override
   String get boNotifyBookDock => 'Book Dock';
 
   @override
-  String get boNotifyBookDockDesc =>
-      'When Book Dock finishes adding books or runs into problems.';
+  String get boNotifyBookDockDesc => 'Book Dockが本の追加を完了したとき、または問題が発生したとき。';
 
   @override
-  String get boNotifyBookRequests => 'Book requests';
+  String get boNotifyBookRequests => '本のリクエスト';
 
   @override
-  String get boNotifyBookRequestsDesc =>
-      'When a book request is submitted or decided, or the book becomes available.';
+  String get boNotifyBookRequestsDesc => '本のリクエストが送信・決定されたとき、または本が利用可能になったとき。';
 
   @override
-  String get boNotifyEmail => 'Email delivery';
+  String get boNotifyEmail => 'メール配信';
 
   @override
-  String get boNotifyEmailDesc =>
-      'When sending a book by email works or fails.';
+  String get boNotifyEmailDesc => '本のメール送信が成功・失敗したとき。';
 
   @override
-  String get boNotifyAchievements => 'Achievements';
+  String get boNotifyAchievements => '実績';
 
   @override
-  String get boNotifyAchievementsDesc => 'When you unlock a new achievement.';
+  String get boNotifyAchievementsDesc => '新しい実績を獲得したとき。';
 
   @override
-  String get achievementsTitle => 'Achievements';
+  String get achievementsTitle => '実績';
 
   @override
   String achievementsEarnedSummary(int earned, int total) {
-    return '$earned of $total earned';
+    return '$total個中$earned個を獲得';
   }
 
   @override
-  String get achievementsFilterAll => 'All';
+  String get achievementsFilterAll => 'すべて';
 
   @override
-  String get achievementsFilterEarned => 'Earned';
+  String get achievementsFilterEarned => '獲得済み';
 
   @override
-  String get achievementsFilterInProgress => 'In progress';
+  String get achievementsFilterInProgress => '進行中';
 
   @override
-  String get achievementsFilterLocked => 'Locked';
+  String get achievementsFilterLocked => '未解除';
 
   @override
-  String get achievementsCategoryReading => 'Reading';
+  String get achievementsCategoryReading => '読書';
 
   @override
-  String get achievementsCategoryLibrary => 'Library';
+  String get achievementsCategoryLibrary => 'ライブラリ';
 
   @override
-  String get achievementsCategoryExploration => 'Exploration';
+  String get achievementsCategoryExploration => '探求';
 
   @override
-  String get achievementsCategoryDedication => 'Dedication';
+  String get achievementsCategoryDedication => '継続';
 
   @override
-  String get achievementsCategoryDevices => 'Devices';
+  String get achievementsCategoryDevices => 'デバイス';
 
   @override
-  String get achievementsRarityCommon => 'Common';
+  String get achievementsRarityCommon => 'コモン';
 
   @override
-  String get achievementsRarityRare => 'Rare';
+  String get achievementsRarityRare => 'レア';
 
   @override
-  String get achievementsRarityEpic => 'Epic';
+  String get achievementsRarityEpic => 'エピック';
 
   @override
-  String get achievementsRarityLegendary => 'Legendary';
+  String get achievementsRarityLegendary => 'レジェンダリー';
 
   @override
-  String get achievementsLoadFailed => 'Couldn\'t load achievements';
+  String get achievementsLoadFailed => '実績を読み込めませんでした';
 
   @override
-  String get achievementsNoneMatch => 'No achievements match this filter';
+  String get achievementsNoneMatch => 'このフィルターに一致する実績はありません';
 
   @override
-  String get achievementsSecretName => 'Secret achievement';
+  String get achievementsSecretName => 'シークレット実績';
 
   @override
-  String get achievementsSecretHint => 'Keep reading to reveal this one.';
+  String get achievementsSecretHint => '読み進めると明らかになります。';
 
   @override
   String achievementsEarnedOn(String date) {
-    return 'Earned $date';
+    return '$dateに獲得';
   }
 
   @override
   String achievementsWhileReading(String title) {
-    return 'While reading $title';
+    return '$titleを読んでいるとき';
   }
 
   @override
   String achievementsTierOf(int earned, int total) {
-    return 'Tier $earned of $total';
+    return 'ティア $earned / $total';
   }
 
   @override
-  String get achievementsTiers => 'Tiers';
+  String get achievementsTiers => 'ティア';
 
   @override
-  String get achievementsAllTiers => 'Every tier earned';
+  String get achievementsAllTiers => 'すべてのティアを獲得';
 
   @override
   String achievementsProgress(String current, String threshold) {
@@ -12485,54 +12247,54 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String achievementsProgressBooks(String current, String threshold) {
-    return '$current / $threshold books';
+    return '$current / $threshold冊';
   }
 
   @override
   String achievementsProgressPages(String current, String threshold) {
-    return '$current / $threshold pages';
+    return '$current / $thresholdページ';
   }
 
   @override
   String achievementsProgressHours(String current, String threshold) {
-    return '$current / $threshold hours';
+    return '$current / $threshold時間';
   }
 
   @override
   String achievementsProgressAnnotations(String current, String threshold) {
-    return '$current / $threshold highlights and notes';
+    return '$current / $threshold件のハイライトとメモ';
   }
 
   @override
   String achievementsProgressRatings(String current, String threshold) {
-    return '$current / $threshold ratings';
+    return '$current / $threshold件の評価';
   }
 
   @override
   String achievementsProgressGenres(String current, String threshold) {
-    return '$current / $threshold genres';
+    return '$current / $thresholdジャンル';
   }
 
   @override
   String achievementsProgressLanguages(String current, String threshold) {
-    return '$current / $threshold languages';
+    return '$current / $threshold言語';
   }
 
   @override
   String achievementsProgressDays(String current, String threshold) {
-    return '$current / $threshold days';
+    return '$current / $threshold日';
   }
 
   @override
-  String get achievementsHowToGetIt => 'How to get it';
+  String get achievementsHowToGetIt => '獲得方法';
 
   @override
   String achievementsHintReadingPace(int count, int days) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'You read $count hours in the last $days days.',
-      one: 'You read 1 hour in the last $days days.',
+      other: '過去$days日間で$count時間読みました。',
+      one: '過去$days日間で1時間読みました。',
     );
     return '$_temp0';
   }
@@ -12542,8 +12304,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'About $count days at this pace.',
-      one: 'About 1 day at this pace.',
+      other: 'このペースであと約$count日です。',
+      one: 'このペースであと約1日です。',
     );
     return '$_temp0';
   }
@@ -12553,8 +12315,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'About $count weeks at this pace.',
-      one: 'About 1 week at this pace.',
+      other: 'このペースであと約$count週間です。',
+      one: 'このペースであと約1週間です。',
     );
     return '$_temp0';
   }
@@ -12564,8 +12326,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'About $count months at this pace.',
-      one: 'About 1 month at this pace.',
+      other: 'このペースであと約$countか月です。',
+      one: 'このペースであと約1か月です。',
     );
     return '$_temp0';
   }
@@ -12575,8 +12337,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books from the ${decade}s are waiting on your shelves.',
-      one: '1 book from the ${decade}s is waiting on your shelves.',
+      other: '$decade年代の本が$count冊、本棚で待っています。',
+      one: '$decade年代の本が1冊、本棚で待っています。',
     );
     return '$_temp0';
   }
@@ -12586,32 +12348,32 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books from the ${century}s are waiting on your shelves.',
-      one: '1 book from the ${century}s is waiting on your shelves.',
+      other: '$century年代の本が$count冊、本棚で待っています。',
+      one: '$century年代の本が1冊、本棚で待っています。',
     );
     return '$_temp0';
   }
 
   @override
   String achievementsHintStalled(String title, String percent, String date) {
-    return '$title is $percent read and was started on $date.';
+    return '$titleは$percentまで読み進めており、$dateに開始しました。';
   }
 
   @override
   String achievementsHintStalledNoProgress(String title, String date) {
-    return '$title was started on $date.';
+    return '$titleは$dateに開始しました。';
   }
 
   @override
-  String get achievementsHintUntitledBook => 'A book in progress';
+  String get achievementsHintUntitledBook => '進行中の本';
 
   @override
   String achievementsHintNearlyFinished(int count, String percent) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books in progress are past $percent.',
-      one: '1 book in progress is past $percent.',
+      other: '進行中の本$count冊が$percentを超えています。',
+      one: '進行中の本1冊が$percentを超えています。',
     );
     return '$_temp0';
   }
@@ -12621,8 +12383,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books you finished have no rating yet.',
-      one: '1 book you finished has no rating yet.',
+      other: '完了した本$count冊にまだ評価がありません。',
+      one: '完了した本1冊にまだ評価がありません。',
     );
     return '$_temp0';
   }
@@ -12632,8 +12394,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books under $pages pages are waiting on your shelves.',
-      one: '1 book under $pages pages is waiting on your shelves.',
+      other: '$pagesページ未満の本が$count冊、本棚で待っています。',
+      one: '$pagesページ未満の本が1冊、本棚で待っています。',
     );
     return '$_temp0';
   }
@@ -12643,8 +12405,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count are already in progress.',
-      one: '1 is already in progress.',
+      other: '$count冊はすでに進行中です。',
+      one: '1冊はすでに進行中です。',
     );
     return '$_temp0';
   }
@@ -12654,9 +12416,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other:
-          '$count books of $pages pages or more are waiting on your shelves.',
-      one: '1 book of $pages pages or more is waiting on your shelves.',
+      other: '$pagesページ以上の本が$count冊、本棚で待っています。',
+      one: '$pagesページ以上の本が1冊、本棚で待っています。',
     );
     return '$_temp0';
   }
@@ -12666,15 +12427,15 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books published before $year are waiting on your shelves.',
-      one: '1 book published before $year is waiting on your shelves.',
+      other: '$year年より前に出版された本が$count冊、本棚で待っています。',
+      one: '$year年より前に出版された本が1冊、本棚で待っています。',
     );
     return '$_temp0';
   }
 
   @override
   String achievementsHintAuthorUnread(String author, int finished, int count) {
-    return '$author: $finished finished, $count more on your shelves.';
+    return '$author: 完了$finished冊、本棚にあと$count冊。';
   }
 
   @override
@@ -12682,8 +12443,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count books in $language are waiting on your shelves.',
-      one: '1 book in $language is waiting on your shelves.',
+      other: '$languageの本が$count冊、本棚で待っています。',
+      one: '$languageの本が1冊、本棚で待っています。',
     );
     return '$_temp0';
   }
@@ -12693,8 +12454,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'You have read in $count months of $year so far.',
-      one: 'You have read in 1 month of $year so far.',
+      other: '$year年はこれまでに$countか月読書しました。',
+      one: '$year年はこれまでに1か月読書しました。',
     );
     return '$_temp0';
   }
@@ -12704,20 +12465,20 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$months are left.',
-      one: '$months is left.',
+      other: '残りは$monthsです。',
+      one: '残りは$monthsです。',
     );
     return '$_temp0';
   }
 
   @override
   String achievementsHintNoLongBook(String pages) {
-    return 'No book on your shelves has $pages pages or more yet.';
+    return '$pagesページ以上の本は、まだ本棚にありません。';
   }
 
   @override
   String achievementsHintNothingBefore(String year) {
-    return 'Nothing on your shelves was published before $year.';
+    return '$year年より前に出版された本は、本棚にありません。';
   }
 
   @override
@@ -12725,8 +12486,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Your shelves span only $count decades so far.',
-      one: 'Your shelves span only 1 decade so far.',
+      other: '本棚はまだ$countつの年代にしか及んでいません。',
+      one: '本棚はまだ1つの年代にしか及んでいません。',
     );
     return '$_temp0';
   }
@@ -12736,652 +12497,3539 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Your shelves span only $count centuries so far.',
-      one: 'Your shelves span only 1 century so far.',
+      other: '本棚はまだ$countつの世紀にしか及んでいません。',
+      one: '本棚はまだ1つの世紀にしか及んでいません。',
     );
     return '$_temp0';
   }
 
   @override
   String achievementsHintMissedMonth(String month, String year) {
-    return 'You did not read in $month, so $year is out of reach. The count starts again in January.';
+    return '$monthに読書しなかったため、$year年は達成できません。カウントは1月に再開します。';
   }
 
   @override
-  String get achievementsSwitch => 'Achievements';
+  String get achievementsSwitch => '実績';
 
   @override
   String get achievementsSwitchSubtitle =>
-      'Track achievements on BookOrbit. Turning this off hides them here and on the web.';
+      'BookOrbitで実績を記録します。オフにすると、こことWebで非表示になります。';
 
   @override
-  String get achievementsTurnedOn => 'Achievements turned on';
+  String get achievementsTurnedOn => '実績をオンにしました';
 
   @override
-  String get achievementsTurnedOff => 'Achievements turned off';
+  String get achievementsTurnedOff => '実績をオフにしました';
 
   @override
-  String get achievementsSwitchFailed =>
-      'Couldn\'t change achievements on BookOrbit';
+  String get achievementsSwitchFailed => 'BookOrbitの実績設定を変更できませんでした';
 
   @override
-  String get downloadsFailed => 'Failed downloads';
+  String get boNotifyReadAlong => '読み上げ追従';
 
   @override
-  String get absorbingReorderQueue => 'Reorder queue';
+  String get boNotifyReadAlongDesc => '開始した読み上げ追従が完了したとき、確認が必要なとき、失敗したとき。';
 
   @override
-  String get playAction => 'Play';
+  String get readAlongCreate => '読み上げ追従を作成';
 
   @override
-  String get pauseAction => 'Pause';
+  String get readAlongLoadFailed => 'この本で読み上げ追従を作成できるか確認できませんでした。';
 
   @override
-  String get rmabImportBooks => 'Import books';
+  String get readAlongCheckAgain => '再確認';
 
   @override
-  String get rmabImportBooksSubtitle =>
-      'Search ReadMeABook and choose books to request';
+  String get readAlongWhyWorkerOffline => 'BookOrbit の読み上げ追従ワーカーが現在オフラインです。';
+
+  @override
+  String get readAlongWhyWorkerOutdated =>
+      'このサーバーで使うには、BookOrbit の読み上げ追従ワーカーの更新が必要です。';
+
+  @override
+  String get readAlongWhyFilesMissing => 'この本の欠けているファイルを復元すると、読み上げ追従を作成できます。';
+
+  @override
+  String get readAlongWhyNoEpub => '読み上げ追従を作成するには、通常の EPUB をこの本に追加してください。';
+
+  @override
+  String get readAlongWhyNoEpubHasOne =>
+      'この本にはすでに読み上げ追従があり、新たに作成する元の通常の EPUB がありません。';
+
+  @override
+  String get readAlongWhyTooManyTracks =>
+      'このオーディオブックはファイル数が多すぎて、読み上げ追従を作成できません。';
+
+  @override
+  String get readAlongWhyEpubNotAllowed =>
+      'このライブラリは EPUB ファイルを受け付けないため、読み上げ追従を追加できません。';
+
+  @override
+  String get readAlongWhyNotMounted =>
+      'BookOrbit の読み上げ追従ワーカーがこのライブラリのフォルダーにアクセスできません。';
+
+  @override
+  String get readAlongWhyRunning => 'この本の読み上げ追従はすでに作成中です。';
+
+  @override
+  String get readAlongWhyUnknown => '現在この本の読み上げ追従を作成できません。';
+
+  @override
+  String get readAlongSheetTitle => '読み上げ追従を作成';
+
+  @override
+  String get readAlongSheetIntro =>
+      'BookOrbit がナレーションを電子書籍のテキストと照合し、音声に合わせてハイライトされる EPUB を追加します。';
+
+  @override
+  String get readAlongEbook => '電子書籍';
+
+  @override
+  String get readAlongEbookHint => 'ナレーションに対応する通常の EPUB を選択してください。';
+
+  @override
+  String get readAlongAudio => 'オーディオブック';
+
+  @override
+  String readAlongTracks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count トラック',
+      one: '1 トラック',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String readAlongExistingTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'この本にはすでに $count 件の読み上げ追従があります',
+      one: 'この本にはすでに読み上げ追従があります',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String readAlongReplace(String name) {
+    return '$name を置き換える';
+  }
+
+  @override
+  String readAlongKeepBoth(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'すべて残す',
+      one: '両方残す',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readAlongKeepHint => '新しい読み上げ追従は別のファイルとして追加されます。';
+
+  @override
+  String get readAlongReplaceHint =>
+      '古いファイルは、新しいファイルがチェックを通過した後にのみ置き換えられ、読書位置は引き継がれます。';
+
+  @override
+  String get readAlongReplaceNotAllowed =>
+      '読み上げ追従を置き換えるには本を削除する権限が必要なため、新しいものは別のファイルとして追加されます。';
+
+  @override
+  String get readAlongMadeByBookOrbit => 'BookOrbit で作成';
+
+  @override
+  String get readAlongImported => 'インポート済み';
+
+  @override
+  String get readAlongLanguage => 'ナレーションの言語';
+
+  @override
+  String get readAlongPickLanguage => '言語を選択';
+
+  @override
+  String readAlongLanguageUnsupported(String language) {
+    return '音声モデルがこの本の言語（$language）に対応していません。';
+  }
+
+  @override
+  String get readAlongLanguageFromBook => 'この本の詳細から取得しました。';
+
+  @override
+  String get readAlongLanguageIsDefault => '既定の言語です。';
+
+  @override
+  String get readAlongLanguageSaved => '既定の言語として保存しました。';
+
+  @override
+  String get readAlongSetDefault => '既定にする';
+
+  @override
+  String get readAlongDefaultFailed => '既定の言語を保存できませんでした。';
+
+  @override
+  String get readAlongHighlighting => 'ハイライト';
+
+  @override
+  String get readAlongSentence => '文';
+
+  @override
+  String get readAlongSentenceHint => '1 文ずつハイライトします。推奨。';
+
+  @override
+  String get readAlongWord => '単語';
+
+  @override
+  String get readAlongWordHint =>
+      '単語ごとにハイライトします。時間がかかり、ファイルも大きくなります。まだ試験的な機能です。';
+
+  @override
+  String readAlongEstimatedSize(String size) {
+    return '推定サイズ: $size';
+  }
+
+  @override
+  String get readAlongBackgroundNote =>
+      'サーバー上で実行されるので、この画面を閉じても構いません。長いオーディオブックは数時間かかることがあり、その言語で最初に実行するときは音声モデルをダウンロードします。';
+
+  @override
+  String readAlongLowDisk(String needed, String free) {
+    return 'ディスクの空き容量が不足しています。ワーカーで約 $needed の作業領域が必要ですが、空きは $free です。';
+  }
+
+  @override
+  String get readAlongStart => '開始';
+
+  @override
+  String get readAlongStartFailed => '読み上げ追従を開始できませんでした。もう一度お試しください。';
+
+  @override
+  String get readAlongStartInvalid =>
+      '選択したファイルの一部がこの本からなくなっています。確認してからもう一度お試しください。';
+
+  @override
+  String get readAlongStartOffline =>
+      'BookOrbit の読み上げ追従ワーカーがオフラインです。後でもう一度お試しください。';
+
+  @override
+  String get readAlongNotAllowed => 'この操作を行う権限がありません。';
+
+  @override
+  String get readAlongGone => 'この読み上げ追従のジョブは存在しません。';
+
+  @override
+  String get readAlongMovedOn => 'このジョブはすでに先へ進んでいました。現在の状態を表示しています。';
+
+  @override
+  String get readAlongActionFailed => '実行できませんでした。もう一度お試しください。';
+
+  @override
+  String readAlongStartedBy(String name) {
+    return '開始: $name';
+  }
+
+  @override
+  String get readAlongStartedByOther => '他のユーザーが開始';
+
+  @override
+  String get readAlongWaiting => '開始待ち';
+
+  @override
+  String get readAlongNextInLine => '次の順番';
+
+  @override
+  String readAlongJobsAhead(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '前に $count 件のジョブ',
+      one: '前に 1 件のジョブ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readAlongStopping => '停止中';
+
+  @override
+  String get readAlongStoppingHint => '現在のステップを終えてから停止します。この本には何も追加されません。';
+
+  @override
+  String get readAlongStagePreparingAudio => '音声を準備中';
+
+  @override
+  String get readAlongStageDownloadingModel => '音声モデルをダウンロード中';
+
+  @override
+  String get readAlongStageListening => 'ナレーションを聞き取り中';
+
+  @override
+  String get readAlongStageMarkingUp => '電子書籍のテキストを整形中';
+
+  @override
+  String get readAlongStageAligning => 'テキストとナレーションを照合中';
+
+  @override
+  String get readAlongStageChecking => '結果をチェック中';
+
+  @override
+  String get readAlongStagePublishing => 'この本に読み上げ追従を追加中';
+
+  @override
+  String get readAlongStageWorking => '処理中';
+
+  @override
+  String readAlongFileOf(int current, int total) {
+    return 'ファイル $current / $total';
+  }
+
+  @override
+  String readAlongTrackOf(int current, int total) {
+    return 'トラック $current / $total';
+  }
+
+  @override
+  String readAlongChapterOf(int current, int total) {
+    return 'チャプター $current / $total';
+  }
+
+  @override
+  String readAlongStepOf(int current, int total) {
+    return 'ステップ $current / $total';
+  }
+
+  @override
+  String get readAlongFirstRun => 'この言語では初回の実行';
+
+  @override
+  String get readAlongJustStarted => '開始したばかり';
+
+  @override
+  String readAlongRunningFor(String duration) {
+    return '実行時間: $duration';
+  }
+
+  @override
+  String get readAlongStepAudio => '音声';
+
+  @override
+  String get readAlongStepSpeech => '音声認識';
+
+  @override
+  String get readAlongStepText => 'テキスト';
+
+  @override
+  String get readAlongStepAlign => '照合';
+
+  @override
+  String get readAlongStepCheck => 'チェック';
+
+  @override
+  String get readAlongStepAdd => '追加';
+
+  @override
+  String get readAlongReviewTitle => '確認待ち';
+
+  @override
+  String readAlongReviewMatched(String percent) {
+    return 'テキストの $percent がナレーションと一致しました。本に追加する前に確認してください。';
+  }
+
+  @override
+  String get readAlongReviewPlain => '本に追加する前に確認してください。';
+
+  @override
+  String get readAlongReviewWeb =>
+      'チャプターを除外して再照合するには、Web 版の BookOrbit でこの本を開いてください。';
+
+  @override
+  String readAlongReviewExpires(String date) {
+    return '確認しない場合、$date に自動的に破棄されます。';
+  }
+
+  @override
+  String get readAlongAddAnyway => 'このまま追加';
+
+  @override
+  String get readAlongDiscard => '破棄';
+
+  @override
+  String get readAlongDiscardPrompt => 'この読み上げ追従を破棄しますか?';
+
+  @override
+  String get readAlongKeepIt => '残す';
+
+  @override
+  String get readAlongReady => '読み上げ追従の準備ができました';
+
+  @override
+  String get readAlongReadyWarnings => '読み上げ追従の準備ができました（警告あり）';
+
+  @override
+  String get readAlongAdded => '新しい EPUB としてこの本に追加しました。';
+
+  @override
+  String get readAlongReplaced => '古い読み上げ追従を置き換えました。読書位置は引き継がれます。';
+
+  @override
+  String readAlongMatchedSentences(String matched, String total) {
+    return '$total 文中 $matched 文がナレーションと一致しました';
+  }
+
+  @override
+  String readAlongAudioUsed(String percent) {
+    return '音声の $percent を使用';
+  }
+
+  @override
+  String readAlongOutside(String chapters) {
+    return 'ナレーションに含まれないため、音声なしのままです: $chapters。';
+  }
+
+  @override
+  String readAlongOutsideMore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ほか $count チャプター',
+      one: 'ほか 1 チャプター',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readAlongWarnUnaligned => '一部の音声トラックを照合できませんでした。';
+
+  @override
+  String get readAlongWarnUnmatched => '電子書籍のテキストのかなりの部分がナレーションと一致しませんでした。';
+
+  @override
+  String get readAlongWarnInterpolated => '一致が確実な箇所の間で、一部のテキストのタイミングを推定しています。';
+
+  @override
+  String get readAlongWarnDropped => '電子書籍のテキストの一部がハイライトの対象から外れました。';
+
+  @override
+  String get readAlongFailed => '読み上げ追従に失敗しました';
+
+  @override
+  String get readAlongCancelled => '読み上げ追従をキャンセルしました';
+
+  @override
+  String get readAlongDiscarded => '読み上げ追従を破棄しました';
+
+  @override
+  String get readAlongNothingAdded => 'この本には何も追加されていません。';
+
+  @override
+  String get readAlongExpired => '14 日以内に確認されなかったため、この本には何も追加されていません。';
+
+  @override
+  String readAlongRetryUntil(String date) {
+    return '$date までは、再試行すると最後に完了したステップから再開します。';
+  }
+
+  @override
+  String get readAlongStartOver => '最初からやり直す';
+
+  @override
+  String get readAlongCancel => '読み上げ追従をキャンセル';
+
+  @override
+  String get readAlongCancelPrompt => 'この読み上げ追従をキャンセルしますか?';
+
+  @override
+  String get readAlongKeepRunning => '続行する';
+
+  @override
+  String get readAlongErrorWorkerOffline => 'BookOrbit が読み上げ追従ワーカーに接続できませんでした。';
+
+  @override
+  String get readAlongErrorWorkerCrashed => '読み上げ追従ワーカーが予期せず停止しました。';
+
+  @override
+  String get readAlongErrorSourceMissing => '選択したファイルが見つかりません。';
+
+  @override
+  String get readAlongErrorSourceChanged => 'ジョブの開始後に、選択したファイルが変更されました。';
+
+  @override
+  String get readAlongErrorInvalidSource => 'EPUB またはオーディオブックを読み取れませんでした。';
+
+  @override
+  String get readAlongErrorLanguage => '音声モデルが選択した言語に対応していません。';
+
+  @override
+  String get readAlongErrorStorage => '完了するのに必要なディスクの空き容量がワーカーにありません。';
+
+  @override
+  String get readAlongErrorAudio => 'オーディオブックを準備できませんでした。';
+
+  @override
+  String get readAlongErrorModel => '音声モデルをダウンロードできませんでした。';
+
+  @override
+  String get readAlongErrorListening => 'ナレーションの聞き取り中に音声認識が失敗しました。';
+
+  @override
+  String get readAlongErrorMarkup => '照合のための電子書籍テキストの準備ができませんでした。';
+
+  @override
+  String get readAlongErrorAlignment => 'テキストをナレーションと照合できませんでした。';
+
+  @override
+  String get readAlongErrorOutput => '新しい EPUB がチェックを通過しませんでした。';
+
+  @override
+  String get readAlongErrorPublish => '新しい EPUB をこの本に追加できませんでした。';
+
+  @override
+  String get readAlongErrorDiscarded => '確認時に破棄されました。';
+
+  @override
+  String get readAlongErrorCancelled => 'キャンセルされました。';
+
+  @override
+  String get readAlongErrorUnknown => '読み上げ追従の作成中に問題が発生しました。';
+
+  @override
+  String get fileInfoNoAudiobook => 'オーディオブックはまだありません';
+
+  @override
+  String get fileInfoNoEbook => '電子書籍はまだありません';
+
+  @override
+  String get fileInfoRequestedBySomeone => '他のユーザーがリクエスト済み';
+
+  @override
+  String get fileInfoOwnedSeparately => '別の本としてライブラリにあります';
+
+  @override
+  String get fileInfoCopyPath => 'パスをコピー';
+
+  @override
+  String get fileInfoDeleteTitle => 'ファイルを削除しますか?';
+
+  @override
+  String fileInfoDeletePrompt(String name) {
+    return '「$name」をサーバーから削除します。この操作は元に戻せません。';
+  }
+
+  @override
+  String get fileInfoDeleteLast => 'この本の最後の音声または電子書籍ファイルのため、本は欠落として表示されます。';
+
+  @override
+  String get fileInfoDeleteNotAllowed => 'ファイルを削除する権限がありません';
+
+  @override
+  String get chapterSourceEmbedded => '音声ファイルから読み取り';
+
+  @override
+  String get chapterSourceTracks => '音声ファイルごとに 1 チャプター（未保存）';
+
+  @override
+  String get chapterSourceProvider => '取得したメタデータから';
+
+  @override
+  String get chapterSourceMigration => 'Audiobookshelf からインポート';
+
+  @override
+  String get chapterSourceManual => 'BookOrbit で編集';
+
+  @override
+  String chapterSourceManualBy(String name) {
+    return '$name が編集';
+  }
+
+  @override
+  String get chapterSourceNone => 'チャプターはまだありません';
+
+  @override
+  String get chapterProtected => '再スキャンから保護されています';
+
+  @override
+  String get chapterNotProtected => '再スキャンで置き換えられる場合があります';
+
+  @override
+  String get chapterProtectOnSave => '再スキャンから保護';
+
+  @override
+  String get chapterGetFrom => 'チャプターの取得元';
+
+  @override
+  String get chapterFromFiles => '音声ファイル';
+
+  @override
+  String get chapterFromEbookToc => '電子書籍の目次';
+
+  @override
+  String get chapterFromReadAlong => '読み上げ追従';
+
+  @override
+  String get chapterFromHistory => '以前のバージョン';
+
+  @override
+  String get chapterHistoryTitle => '以前のバージョン';
+
+  @override
+  String get chapterHistoryEmpty => '保存したバージョンはここに表示されます。';
+
+  @override
+  String chapterHistoryBy(String source, String name) {
+    return '$source（$name）';
+  }
+
+  @override
+  String get chapterReadingFiles => '音声ファイルを読み取り中...';
+
+  @override
+  String get chapterRevertToFiles => 'ファイルの内容に戻す';
+
+  @override
+  String get chapterRevertTitle => 'ファイル内のチャプターに戻しますか?';
+
+  @override
+  String get chapterRevertMessage =>
+      'BookOrbit が音声ファイル内のチャプターを読み取り直し、再スキャンからの保護を解除します。未保存の編集は失われます。現在の一覧は以前のバージョンに残ります。';
+
+  @override
+  String get chapterReverted => 'チャプターを音声ファイルの内容に戻しました';
+
+  @override
+  String get chapterWriteFiles => 'ファイルに書き込む';
+
+  @override
+  String get chapterWriteTitle => 'チャプターを音声ファイルに書き込みますか?';
+
+  @override
+  String chapterWriteMessage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'このチャプターで本の $count 個の音声ファイルを書き換えます。',
+      one: 'このチャプターで本の音声ファイルを書き換えます。',
+    );
+    return '$_temp0音声自体は変更せずにコピーされます。すでにこの本をダウンロードしたスマホでは、再ダウンロードするまで元のコピーが使われます。';
+  }
+
+  @override
+  String get chapterWriteConfirm => '書き込む';
+
+  @override
+  String get chapterWriting => 'チャプターを音声ファイルに書き込み中...';
+
+  @override
+  String chapterWritten(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'チャプターを $count 個すべての音声ファイルに書き込みました',
+      one: 'チャプターを音声ファイルに書き込みました',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String chapterWrittenPartly(int written, int total) {
+    return '$total 個中 $written 個のファイルにチャプターを書き込みました。残りは変更されていません。';
+  }
+
+  @override
+  String get chapterStaleTitle => 'チャプターが変更されました';
+
+  @override
+  String get chapterStaleMessage =>
+      'このチャプターを開いた後に、他のユーザーが保存しました。再読み込みすると相手のバージョンが表示されます。再読み込みするまで、あなたの編集は残ります。';
+
+  @override
+  String get chapterReload => '再読み込み';
+
+  @override
+  String get chapterKeepEditing => '編集を続ける';
+
+  @override
+  String get matchExplicitYes => '露骨な表現あり';
+
+  @override
+  String get matchExplicitNo => '露骨な表現なし';
+
+  @override
+  String get matchAbridgedYes => '抄録版';
+
+  @override
+  String get matchAbridgedNo => '完全版';
+
+  @override
+  String boQuickMatchBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'これら $count 冊の本',
+      one: 'この本',
+    );
+    return 'BookOrbit が$_temp0を検索し、メタデータ設定に従って見つかった内容を反映します。';
+  }
+
+  @override
+  String get boQuickMatchIgnoreCache => 'すべてのソースに再問い合わせ';
+
+  @override
+  String get boQuickMatchIgnoreCacheHint =>
+      '保存済みの結果を使いません。遅くなり、各ソースのリクエスト上限をより多く消費します。';
+
+  @override
+  String boAdminServerCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'メールサーバー $count 件',
+      one: 'メールサーバー 1 件',
+      zero: 'まだありません',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get boEmailTitle => 'メールで送信';
+
+  @override
+  String get boEmailSubtitle => '本を送信するためのデバイス、メールサーバー、テンプレート';
+
+  @override
+  String get boEmailTabDevices => 'デバイス';
+
+  @override
+  String get boEmailTabServers => 'メールサーバー';
+
+  @override
+  String get boEmailTabTemplates => 'テンプレート';
+
+  @override
+  String get boEmailTabHistory => '履歴';
+
+  @override
+  String get boEmailName => '名前';
+
+  @override
+  String boEmailDeleteTitle(String name) {
+    return '$name を削除しますか?';
+  }
+
+  @override
+  String get boEmailMakeDefault => '既定にする';
+
+  @override
+  String get boEmailBadgeDefault => '既定';
+
+  @override
+  String get boEmailBadgeShared => '共有';
+
+  @override
+  String get boEmailBadgeSystem => 'パスワードリセット';
+
+  @override
+  String get boEmailBadgeBuiltIn => '組み込み';
+
+  @override
+  String get boEmailDevicesEmpty =>
+      'デバイスはまだありません。電子書籍リーダーのメールアドレスを追加すると、本を送信できます。';
+
+  @override
+  String get boEmailAddDevice => 'デバイスを追加';
+
+  @override
+  String get boEmailNewDevice => '新しいデバイス';
+
+  @override
+  String get boEmailDeviceNameHint => '私の Kindle';
+
+  @override
+  String get boEmailDeviceAddress => 'メールアドレス';
+
+  @override
+  String get boEmailDeviceType => 'デバイス';
+
+  @override
+  String get boEmailDeviceNone => '個人または受信箱';
+
+  @override
+  String get boEmailDeviceKindle => 'Kindle';
+
+  @override
+  String get boEmailDeviceKobo => 'Kobo';
+
+  @override
+  String get boEmailDeviceOther => 'その他の電子書籍リーダー';
+
+  @override
+  String get boEmailKindleHint =>
+      'Kindle には件名「convert」で送られ、メールで受け付けるのは EPUB と PDF のみです。';
+
+  @override
+  String boEmailKindleApprove(String address) {
+    return 'Kindle は未知のアドレスからのメールを破棄します。Amazon の「パーソナル・ドキュメント設定」で、承認済みリストに $address を追加してください。';
+  }
+
+  @override
+  String get boEmailKindleApproveNoServer =>
+      'Kindle で承認が必要なアドレスを確認するには、先にメールサーバーを追加してください。';
+
+  @override
+  String get boEmailFormat => '形式';
+
+  @override
+  String get boEmailFormatPrimary => '本のメインファイル';
+
+  @override
+  String get boEmailFormatHint => 'この形式がない本には、メインファイルが送られます。';
+
+  @override
+  String get boEmailReadAlong => '読み上げ追従の本';
+
+  @override
+  String get boEmailReadAlongAuto => '自動';
+
+  @override
+  String get boEmailReadAlongAutoHint => 'コピーを作成できる場合はテキストのみ、できない場合は元のファイル。';
+
+  @override
+  String get boEmailReadAlongText => 'テキストのみ';
+
+  @override
+  String get boEmailReadAlongTextHint => 'ナレーションを除去します。メールで送れるサイズです。';
+
+  @override
+  String get boEmailReadAlongOriginal => 'ナレーション付き';
+
+  @override
+  String get boEmailReadAlongOriginalHint =>
+      'ナレーションを残します。100 MB 以上になることが多く、ほとんどのメールサーバーの上限を超えます。';
+
+  @override
+  String get boEmailTemplate => 'テンプレート';
+
+  @override
+  String get boEmailTemplateYourDefault => 'あなたの既定';
+
+  @override
+  String get boEmailTemplateKindleHint =>
+      'Kindle ではメッセージが表示されないため、テンプレートは使われません。';
+
+  @override
+  String get boEmailDefaultDevice => '既定のデバイス';
+
+  @override
+  String get boEmailDefaultDeviceHint => '本を送信するときに最初に選択されます。';
+
+  @override
+  String get boEmailSendTest => 'テストメールを送信';
+
+  @override
+  String get boEmailTestSubject => 'Absorb からのテストメール';
+
+  @override
+  String boEmailTestBody(String name) {
+    return 'これは Absorb からのテストです。このメールを読めていれば、$name に送った本もここに届きます。';
+  }
+
+  @override
+  String boEmailTestSent(String name) {
+    return '$name にテストメールを送信しました';
+  }
+
+  @override
+  String boEmailTestFailed(String error) {
+    return 'テストメールを送信できませんでした: $error';
+  }
+
+  @override
+  String get boEmailDeleteDevice => 'デバイスを削除';
+
+  @override
+  String get boEmailDeleteDeviceBody => '送信履歴は残ります。';
+
+  @override
+  String get boEmailDeviceRequired => '名前とメールアドレスを入力してください';
+
+  @override
+  String get boEmailLastSendFailed => '前回の送信に失敗';
+
+  @override
+  String get boEmailGroups => 'グループ';
+
+  @override
+  String get boEmailGroupsHint => '複数のデバイスに一度に送信します。';
+
+  @override
+  String get boEmailNewGroup => '新しいグループ';
+
+  @override
+  String get boEmailGroupNameHint => '読書会';
+
+  @override
+  String get boEmailGroupMembers => 'このグループのデバイス';
+
+  @override
+  String get boEmailGroupMembersEmpty => '先にデバイスを追加してください。';
+
+  @override
+  String boEmailGroupMemberCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'デバイス $count 台',
+      one: 'デバイス 1 台',
+      zero: 'デバイスなし',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get boEmailDeleteGroup => 'グループを削除';
+
+  @override
+  String get boEmailDeleteGroupBody => 'グループ内のデバイスは残ります。';
+
+  @override
+  String get boEmailGroupRequired => 'グループ名を入力してください';
+
+  @override
+  String get boEmailServersEmptyManage => 'メールサーバーはまだありません。本を送信するには追加してください。';
+
+  @override
+  String get boEmailServersEmpty => 'メールサーバーはまだありません。管理者に追加を依頼してください。';
+
+  @override
+  String get boEmailAddServer => 'メールサーバーを追加';
+
+  @override
+  String get boEmailNewServer => '新しいメールサーバー';
+
+  @override
+  String get boEmailServerPresetOther => 'その他';
+
+  @override
+  String get boEmailServerPresetHint =>
+      'プリセットを選ぶとホスト、ポート、セキュリティが入力されます。あとから変更もできます。';
+
+  @override
+  String get boEmailServerHost => 'ホスト';
+
+  @override
+  String get boEmailServerPort => 'ポート';
+
+  @override
+  String get boEmailServerSecurity => 'セキュリティ';
+
+  @override
+  String get boEmailServerSecurityNone => 'なし';
+
+  @override
+  String get boEmailServerSecurityHint => 'ポート 587 は STARTTLS、465 は SSL/TLS。';
+
+  @override
+  String get boEmailServerNeedsPassword => 'パスワードでサインイン';
+
+  @override
+  String get boEmailServerUsername => 'ユーザー名';
+
+  @override
+  String get boEmailServerPassword => 'パスワード';
+
+  @override
+  String get boEmailServerAppPassword => 'アプリパスワード';
+
+  @override
+  String get boEmailServerPasswordKeep => '保存済み。入力すると置き換えます';
+
+  @override
+  String get boEmailServerAppPasswordHint =>
+      'Gmail と iCloud ではアカウントのパスワードではなく、アプリパスワードが必要です。';
+
+  @override
+  String get boEmailServerFromName => '差出人名';
+
+  @override
+  String get boEmailServerFromAddress => '差出人アドレス';
+
+  @override
+  String get boEmailServerFromAddressHint => 'Kindle をお使いの場合は、このアドレスの承認が必要です。';
+
+  @override
+  String get boEmailServerShare => '全員と共有';
+
+  @override
+  String get boEmailServerShareHint => '他のユーザーもパスワードを見ることなく、このサーバー経由で本を送信できます。';
+
+  @override
+  String get boEmailServerSystem => 'パスワードリセットとサインインリンクを送信';
+
+  @override
+  String get boEmailServerSystemHint => 'BookOrbit 自身のメールに使うサーバーです。';
+
+  @override
+  String get boEmailServerVerifyTls => 'サーバーの証明書を確認';
+
+  @override
+  String get boEmailServerVerifyTlsHint =>
+      '自己署名証明書を使う自分のネットワーク内のサーバーの場合にのみ、オフにしてください。';
+
+  @override
+  String get boEmailServerTest => '接続をテスト';
+
+  @override
+  String get boEmailServerTestSaveFirst => '先に保存してからテストしてください';
+
+  @override
+  String get boEmailServerTestOk => '接続しました';
+
+  @override
+  String boEmailServerTestFailed(String error) {
+    return '接続できません: $error';
+  }
+
+  @override
+  String get boEmailServerDelete => 'メールサーバーを削除';
+
+  @override
+  String get boEmailServerDeleteBody => '共有先のユーザー全員が使えなくなります。';
+
+  @override
+  String get boEmailServerSystemFirst => '削除する前に、このサーバーでのパスワードリセットをオフにしてください。';
+
+  @override
+  String get boEmailServerRequired => '名前とホストを入力してください';
+
+  @override
+  String get boEmailServerNotYours => 'このサーバーは他のユーザーが追加したため、本人のみ変更できます。';
+
+  @override
+  String get boEmailTemplatesEmpty => 'テンプレートはまだありません。';
+
+  @override
+  String get boEmailNewTemplate => '新しいテンプレート';
+
+  @override
+  String get boEmailTemplateSubject => '件名';
+
+  @override
+  String get boEmailTemplateMessage => 'メッセージ';
+
+  @override
+  String get boEmailTemplateInsert => '挿入';
+
+  @override
+  String get boEmailTemplateInsertHint => 'カーソル位置に入ります。本にない詳細は何も表示されません。';
+
+  @override
+  String get boEmailVarBook => '本';
+
+  @override
+  String get boEmailVarFile => 'ファイル';
+
+  @override
+  String get boEmailVarOther => 'その他';
+
+  @override
+  String get boEmailTemplatePreview => 'プレビュー';
+
+  @override
+  String get boEmailTemplatePreviewNone => 'テンプレートをプレビューするには、一度本を送信してください。';
+
+  @override
+  String boEmailTemplateAttached(String name) {
+    return '添付: $name';
+  }
+
+  @override
+  String get boEmailTemplateBuiltIn => '組み込みです。変更できるのは管理者のみです。';
+
+  @override
+  String get boEmailTemplateKindleNote =>
+      'Kindle ではテンプレートは表示されません。件名は常に「convert」になります。';
+
+  @override
+  String get boEmailTemplateDelete => 'テンプレートを削除';
+
+  @override
+  String get boEmailTemplateDeleteBody =>
+      'このテンプレートを使うデバイスは、あなたの既定のテンプレートに戻ります。';
+
+  @override
+  String get boEmailTemplateRequired => '名前と件名を入力してください';
+
+  @override
+  String get boEmailHistoryEmpty => '送信したものはまだありません。';
+
+  @override
+  String get boEmailHistoryAll => 'すべて';
+
+  @override
+  String get boEmailHistoryEveryone => '全員';
+
+  @override
+  String get boEmailStatusSent => '送信済み';
+
+  @override
+  String get boEmailStatusSending => '送信中';
+
+  @override
+  String boEmailStatusRetrying(int attempt) {
+    return '再試行中（$attempt）';
+  }
+
+  @override
+  String get boEmailStatusFailed => '失敗';
+
+  @override
+  String boEmailTo(String name) {
+    return '宛先: $name';
+  }
+
+  @override
+  String get boEmailResend => '再送信';
+
+  @override
+  String get boEmailResent => '再送信中';
+
+  @override
+  String get boEmailForget => '履歴から削除';
+
+  @override
+  String get boEmailLoadMore => 'さらに読み込む';
+
+  @override
+  String get boEmailUnknownBook => '削除された本';
+
+  @override
+  String get boEmailSendNoServer => 'このサーバーにはメールサーバーがまだ設定されていません。';
+
+  @override
+  String get boEmailSendAskAdmin => '管理者に追加を依頼してください。';
+
+  @override
+  String get boEmailSendNoDevices => 'この本の送信先となるデバイスを追加してください。';
+
+  @override
+  String get boEmailSendOptions => 'オプション';
+
+  @override
+  String get boEmailSendFormatEach => '各デバイスの設定';
+
+  @override
+  String get boEmailSendServer => 'メールサーバー';
+
+  @override
+  String get boEmailSendButton => '送信';
+
+  @override
+  String boEmailSendGets(String format, String size) {
+    return '$format · $size が届きます';
+  }
+
+  @override
+  String boEmailSendMissing(String format, String got) {
+    return '$format がないため $got が届きます';
+  }
+
+  @override
+  String boEmailSendKindleRejects(String format) {
+    return 'Kindle はメールで $format を受け付けません';
+  }
+
+  @override
+  String boEmailSendOverKindle(String size) {
+    return '$size、Kindle の上限 50 MB を超えています';
+  }
+
+  @override
+  String boEmailSendOverGmail(String size) {
+    return '$size、Gmail の上限 25 MB を超えています';
+  }
+
+  @override
+  String boEmailSendNarrated(String size) {
+    return 'ナレーション付きのコピーが届きます · $size';
+  }
+
+  @override
+  String boEmailSendHanding(String server) {
+    return '$server 経由で送信中';
+  }
+
+  @override
+  String boEmailSendAccepted(String server) {
+    return '$server 経由で送信しました';
+  }
+
+  @override
+  String boEmailSendFailedLine(String error) {
+    return '送信できませんでした: $error';
+  }
+
+  @override
+  String get boEmailSendStillGoing => 'まだ送信中です。完了すると通知されます。';
+
+  @override
+  String get boEmailKindleOriginal =>
+      'Kindle はナレーション付きのコピーを受け付けません。テキストのみに設定してください。';
+
+  @override
+  String get boEmailNoCopy => 'ナレーションなしのコピーを作成できませんでした。';
+
+  @override
+  String get boForgotLink => 'Forgot password?';
+
+  @override
+  String get boForgotTitle => 'Reset your password';
+
+  @override
+  String get boForgotBody =>
+      'Enter the email on your account and the server will send you a link to choose a new password.';
+
+  @override
+  String get boForgotSend => 'Send link';
+
+  @override
+  String get boForgotSent =>
+      'If that email is on an account, a link is on its way. Open it to choose a new password, then sign in here.';
+
+  @override
+  String get boForgotNotSetUp =>
+      'This server isn\'t set up to send email. Ask whoever runs it for a password link.';
+
+  @override
+  String get boForgotTooMany => 'Too many tries. Wait a while and try again.';
+
+  @override
+  String get boActivityTitle => 'Reading activity';
+
+  @override
+  String get boActivityPrivate => 'Keeps their reading activity private';
+
+  @override
+  String get boActivitySharesSummary =>
+      'Shares a summary. They can see when you view it.';
+
+  @override
+  String get boActivitySharesDetails =>
+      'Shares details, including books. They can see when you view it.';
+
+  @override
+  String get boActivityNotice => 'This person can see that you viewed this.';
+
+  @override
+  String get boActivityNowPrivate =>
+      'This person isn\'t sharing their reading activity anymore.';
+
+  @override
+  String get boActivityLoadFailed => 'Couldn\'t load reading activity.';
+
+  @override
+  String get boActivityEmpty => 'No reading in this period';
+
+  @override
+  String get boActivityReadingTime => 'Reading time';
+
+  @override
+  String get boActivitySessions => 'Sessions';
+
+  @override
+  String get boActivityActiveDays => 'Active days';
+
+  @override
+  String get boActivityStarted => 'Books started';
+
+  @override
+  String get boActivityFinished => 'Books finished';
+
+  @override
+  String get boActivityTrend => 'Daily reading';
+
+  @override
+  String get boActivitySources => 'Read on';
+
+  @override
+  String get boActivityFormats => 'Formats';
+
+  @override
+  String get boActivityGenres => 'Genres';
+
+  @override
+  String get boActivityTopBooks => 'Most read';
+
+  @override
+  String get boActivityRecentBooks => 'Recently read';
+
+  @override
+  String get boActivityTopAuthors => 'Top authors';
+
+  @override
+  String get boActivityTopGenres => 'Top genres';
+
+  @override
+  String get boActivityTopSeries => 'Top series';
+
+  @override
+  String get boActivityTopNarrators => 'Top narrators';
+
+  @override
+  String get boActivityUntitled => 'Untitled book';
+
+  @override
+  String get boActivitySourceWeb => 'Web reader';
+
+  @override
+  String get boActivitySourceIos => 'iOS app';
+
+  @override
+  String get boActivitySourceWatch => 'Apple Watch';
+
+  @override
+  String get boActivitySourceAndroid => 'Android app';
+
+  @override
+  String get boActivitySourceManual => 'Manual';
+
+  @override
+  String get boActivitySourceUnknown => 'Unknown';
+
+  @override
+  String get boActivityGenreSciFi => 'Science fiction';
+
+  @override
+  String get boActivityGenreFantasy => 'Fantasy';
+
+  @override
+  String get boActivityGenreMystery => 'Mystery and thriller';
+
+  @override
+  String get boActivityGenreRomance => 'Romance';
+
+  @override
+  String get boActivityGenreHorror => 'Horror';
+
+  @override
+  String get boActivityGenreHistory => 'History and biography';
+
+  @override
+  String get boActivityGenreScience => 'Science and technology';
+
+  @override
+  String get boActivityGenreBusiness => 'Business and economics';
+
+  @override
+  String get boActivityGenreSelf => 'Self-development';
+
+  @override
+  String get boActivityGenreSociety => 'Society and culture';
+
+  @override
+  String get boActivityGenreChildren => 'Children and young adult';
+
+  @override
+  String get boActivityGenreComics => 'Comics and graphic novels';
+
+  @override
+  String get boActivityGenrePoetry => 'Poetry';
+
+  @override
+  String get boActivityGenreOther => 'Other';
+
+  @override
+  String boActivityDays(int count) {
+    return '$count days';
+  }
+
+  @override
+  String boActivityMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String boActivityHours(double count) {
+    return '$count h';
+  }
+
+  @override
+  String get recentSearchesTitle => '最近の検索';
+
+  @override
+  String get recentSearchesClear => '消去';
+
+  @override
+  String get recentSearchesRemove => '削除';
+
+  @override
+  String get removedSeriesTapToUndo => '「シリーズの続き」から削除しました。タップで元に戻します。';
+
+  @override
+  String get seriesBackOnContinueSeries => '「シリーズの続き」に戻しました';
+
+  @override
+  String get desktopShortcutPlayPause => '再生 / 一時停止';
+
+  @override
+  String get desktopShortcutRewind => '巻き戻し';
+
+  @override
+  String get desktopShortcutForward => '早送り';
+
+  @override
+  String get desktopShortcutSlower => '再生速度を下げる';
+
+  @override
+  String get desktopShortcutFaster => '再生速度を上げる';
+
+  @override
+  String get desktopShortcutNormalSpeed => '再生速度をリセット';
+
+  @override
+  String get desktopShortcutSearch => '検索を開く';
+
+  @override
+  String get desktopShortcutLibrary => 'ライブラリを開く';
+
+  @override
+  String get desktopShortcutNowPlaying => '再生中画面を開く';
+
+  @override
+  String get desktopShortcutFullScreen => '全画面表示';
+
+  @override
+  String get desktopShortcutClosePlayer => '全画面プレーヤーを閉じる';
+
+  @override
+  String get desktopShortcutBack => '戻る (一番上のページまたはシートを閉じる)';
+
+  @override
+  String get desktopShortcutRefresh => '表示中のリストを更新';
+
+  @override
+  String get desktopShortcutPreviousCard => '前の Absorbing カード';
+
+  @override
+  String get desktopShortcutNextCard => '次の Absorbing カード';
+
+  @override
+  String get desktopShortcutContextMenu => '長押しメニューを開く';
+
+  @override
+  String get desktopShortcutMouseBack => 'マウスの戻るボタン';
+
+  @override
+  String get desktopShortcutRightClick => '右クリック';
+
+  @override
+  String get desktopShortcutDragShelves => 'シェルフとカードを横にドラッグ';
+
+  @override
+  String get desktopShortcutMouseDrag => 'クリックしてドラッグ';
+
+  @override
+  String get fileHealthAction => 'ファイルをチェック';
+
+  @override
+  String get fileHealthTitle => 'ファイルをチェック';
+
+  @override
+  String fileHealthAllFine(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ファイルすべてに問題はありません',
+      one: 'ファイルに問題はありません',
+      zero: '問題は見つかりませんでした',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fileHealthProblems(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '問題が $count 件見つかりました',
+      one: '問題が 1 件見つかりました',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fileHealthReadOnlyNote => 'サーバーがすでに報告している内容を読み取るだけで、何も変更しません。';
+
+  @override
+  String get fileHealthLocalChecked => 'このデバイスのダウンロード済みファイルもチェックしました。';
+
+  @override
+  String get fileHealthItemMissing => '本のフォルダーが見つかりません';
+
+  @override
+  String get fileHealthItemMissingInfo =>
+      'サーバーでこの本のフォルダーが見つかりません。移動、名前変更、削除されたか、ドライブがオフラインの可能性があります。サーバーでライブラリをスキャンすると再び見つかることがあります。';
+
+  @override
+  String get fileHealthItemInvalid => '本が無効とされています';
+
+  @override
+  String get fileHealthItemInvalidInfo =>
+      'サーバーはこの本の使えるオーディオ/電子書籍ファイルを見つけられませんでした。';
+
+  @override
+  String get fileHealthInvalidFiles => '読み取れないファイル';
+
+  @override
+  String get fileHealthInvalidFilesInfo =>
+      'サーバーがこれらのファイルを読み取れませんでした。破損しているか、非対応の形式の可能性があり、再生が止まったりスキップされたりすることがあります。';
+
+  @override
+  String get fileHealthEmptyFiles => '長さのないファイル';
+
+  @override
+  String get fileHealthEmptyFilesInfo =>
+      'これらのファイルは長さがゼロと報告されており、再生できるものがありません。空か、途中で切れていることがよくあります。';
+
+  @override
+  String get fileHealthTrackGaps => 'ファイル間の隙間';
+
+  @override
+  String get fileHealthTrackGapsInfo =>
+      'これらのファイルの間で本のタイムラインが飛んでおり、何も再生されない区間があります。';
+
+  @override
+  String get fileHealthTrackOverlaps => '重なっているファイル';
+
+  @override
+  String get fileHealthTrackOverlapsInfo =>
+      'これらのファイルは本のタイムライン上で重なっているため、一部がスキップされたり、位置が飛んだりすることがあります。';
+
+  @override
+  String get fileHealthDurationMismatch => '長さが合いません';
+
+  @override
+  String fileHealthDurationMismatchInfo(String actual, String expected) {
+    return 'ファイルの合計は $actual ですが、本の長さは $expected となっています。進捗やチャプターがずれることがあります。サーバーで再スキャンすると通常は直ります。';
+  }
+
+  @override
+  String get fileHealthLowBitrate => '低品質のオーディオ';
+
+  @override
+  String get fileHealthLowBitrateInfo =>
+      'これらのファイルは 32 kbps 未満でエンコードされており、こもって聞こえることがあります。';
+
+  @override
+  String get fileHealthMixedSampleRates => 'サンプルレートが混在';
+
+  @override
+  String get fileHealthMixedSampleRatesInfo =>
+      'ファイルが異なるサンプルレートで録音されています。ほとんどのプレーヤーは対応しますが、ファイルの切り替わりでノイズが入ったり速度が変わったりする場合があります。';
+
+  @override
+  String get fileHealthMixedChannels => 'モノラルとステレオが混在';
+
+  @override
+  String get fileHealthMixedChannelsInfo =>
+      '一部のファイルはチャンネル数が他と異なるため、ファイルの間で音が変わることがあります。';
+
+  @override
+  String get fileHealthChaptersPastEnd => '終端を過ぎたチャプター';
+
+  @override
+  String get fileHealthChaptersPastEndInfo =>
+      'これらのチャプターはオーディオの終了後に始まる、または終わるため、ジャンプしても何も起こらないことがあります。';
+
+  @override
+  String get fileHealthLocalMissing => 'ダウンロード済みファイルがありません';
+
+  @override
+  String get fileHealthLocalMissingInfo =>
+      'これらのダウンロード済みファイルがこのデバイスにありません。オフライン再生では、その部分が再生できません。';
+
+  @override
+  String get fileHealthLocalSizeMismatch => 'ダウンロード済みファイルが異なります';
+
+  @override
+  String get fileHealthLocalSizeMismatchInfo =>
+      'これらのダウンロード済みファイルはサーバー上のコピーとサイズが異なるため、不完全または破損している可能性があります。';
+
+  @override
+  String fileHealthStartsAt(String time) {
+    return '$time に開始';
+  }
+
+  @override
+  String fileHealthSizeHere(String local, String server) {
+    return 'この端末 $local、サーバー $server';
+  }
+
+  @override
+  String fileHealthSampleRate(String value) {
+    return '$value kHz';
+  }
+
+  @override
+  String get fileHealthMono => 'モノラル';
+
+  @override
+  String get fileHealthStereo => 'ステレオ';
+
+  @override
+  String get fileHealthRedownload => 'この本を再ダウンロード';
+
+  @override
+  String get fileHealthRedownloadQuestion => 'この本を再ダウンロードしますか?';
+
+  @override
+  String get fileHealthRedownloadInfo =>
+      'このデバイス上のコピーを削除し、サーバーから再ダウンロードします。再生中の場合は停止します。サーバー上のデータは変更されません。';
+
+  @override
+  String get fileHealthNotAvailableOffline => '再ダウンロードするにはサーバーに接続してください';
+
+  @override
+  String get playerReconnecting => '接続が切れました。再接続しています…';
+
+  @override
+  String get playerReconnectFailed => 'サーバーに再接続できなかったため、再生を停止しました。';
+
+  @override
+  String get downloadsFailed => '失敗したダウンロード';
+
+  @override
+  String get absorbingReorderQueue => 'キューを並べ替え';
+
+  @override
+  String get playAction => '再生';
+
+  @override
+  String get pauseAction => '一時停止';
+
+  @override
+  String get rmabImportBooks => '本をインポート';
+
+  @override
+  String get rmabImportBooksSubtitle => 'ReadMeABookを検索してリクエストする本を選択します';
 
   @override
   String get rmabImportBooksConnectSubtitle =>
-      'Connect ReadMeABook with a URL and token first';
+      '先にURLとトークンでReadMeABookに接続してください';
 
   @override
-  String get windowsSettingsTitle => 'Windows Settings';
+  String get windowsSettingsTitle => 'Windows設定';
 
   @override
-  String get updateCheckFrequency => 'Automatic update checks';
+  String get updateCheckFrequency => '自動アップデート確認';
 
   @override
-  String get updateCheckFrequencySubtitle =>
-      'Checks for updates only; installation is always manual.';
+  String get updateCheckFrequencySubtitle => 'アップデートの確認のみ行います。インストールは常に手動です。';
 
   @override
-  String get updateCheckOnStartup => 'On startup (once per 12 hours)';
+  String get updateCheckOnStartup => '起動時（12時間に1回）';
 
   @override
-  String get updateCheckEverySixHours => 'Every 6 hours';
+  String get updateCheckEverySixHours => '6時間ごと';
 
   @override
-  String get updateCheckEveryTwelveHours => 'Every 12 hours';
+  String get updateCheckEveryTwelveHours => '12時間ごと';
 
   @override
-  String get updateCheckDaily => 'Daily';
+  String get updateCheckDaily => '毎日';
 
   @override
-  String get updateCheckNever => 'Never automatically';
+  String get updateCheckNever => '自動では確認しない';
 
   @override
   String onLatestVersionDetail(String version) {
-    return 'You\'re on the latest version ($version)';
+    return '最新バージョン（$version）です';
   }
 
   @override
   String get updateCheckFailed =>
-      'Couldn\'t reach GitHub to check for updates. Check your connection and try again.';
+      'GitHubに接続してアップデートを確認できませんでした。接続を確認して、もう一度お試しください。';
 
   @override
-  String get playlistDetailAddBooks => 'Add books to playlist';
+  String get playlistDetailAddBooks => 'プレイリストに本を追加';
 
   @override
-  String get playlistDetailSwitchToList => 'Switch to list view';
+  String get playlistDetailSwitchToList => 'リスト表示に切り替え';
 
   @override
-  String get playlistDetailSwitchToGrid => 'Switch to grid view';
+  String get playlistDetailSwitchToGrid => 'グリッド表示に切り替え';
 
   @override
   String get adminUploadIndexing =>
-      'Upload complete; waiting for Audiobookshelf to index...';
+      'アップロード完了。Audiobookshelfのインデックス作成を待っています...';
 
   @override
   String adminUploadCompletePendingIndex(String title) {
-    return 'Uploaded \"$title\"; Audiobookshelf is still indexing it';
+    return '「$title」をアップロードしました。Audiobookshelfがインデックスを作成中です';
   }
 
   @override
   String get adminUploadPermissionDenied =>
-      'Your Audiobookshelf account does not have upload permission. Ask a server administrator to enable upload access for your account.';
+      'あなたのAudiobookshelfアカウントにはアップロード権限がありません。サーバー管理者にアップロード権限の有効化を依頼してください。';
 
   @override
-  String get uiThemeLabel => 'UI theme';
+  String get uiThemeLabel => 'UIテーマ';
 
   @override
-  String get uiThemePickerTitle => 'Choose a look';
+  String get uiThemePickerTitle => '外観を選択';
 
   @override
-  String get uiThemePickerIntro =>
-      'You can change this any time in Settings > Appearance > UI theme.';
+  String get uiThemePickerIntro => '設定 > 外観 > UIテーマでいつでも変更できます。';
 
   @override
-  String get uiThemePlusName => 'Standard';
+  String get uiThemePlusName => '標準';
 
   @override
   String get uiThemePlusDescription =>
-      'The usual Absorb Plus look, with filled panels and a soft glow from your cover colors.';
+      '塗りつぶしのパネルと、カバーの色によるやわらかな光が特徴の、いつものAbsorb Plusの外観です。';
 
   @override
-  String get uiThemeMidnightName => 'Midnight';
+  String get uiThemeMidnightName => 'ミッドナイト';
 
   @override
-  String get uiThemeMidnightDescription =>
-      'Pure black with thin outlines and no glow, made for OLED screens.';
+  String get uiThemeMidnightDescription => '細い枠線で光のない純黒。OLED画面向けです。';
 
   @override
-  String get uiThemeContinue => 'Continue';
+  String get uiThemeContinue => '続ける';
 
   @override
-  String get uiThemeFrostedName => 'Frosted';
+  String get uiThemeFrostedName => 'フロスト';
 
   @override
-  String get uiThemeFrostedDescription =>
-      'Soft frosted-glass panels with your cover colors glowing through.';
+  String get uiThemeFrostedDescription => 'カバーの色が透けて光る、やわらかなすりガラス風のパネルです。';
 
   @override
-  String get uiThemeColorTitle => 'Choose a color';
+  String get uiThemeColorTitle => '色を選択';
 
   @override
-  String get uiThemeColorIntro =>
-      'This is the same setting as Settings > Appearance > Color source.';
+  String get uiThemeColorIntro => '設定 > 外観 > 色のソースと同じ設定です。';
 
   @override
-  String get uiThemeColorFromCover => 'From cover';
+  String get uiThemeColorFromCover => 'カバーから';
 
   @override
-  String get uiThemeBack => 'Back';
+  String get uiThemeBack => '戻る';
 
   @override
-  String get uiThemeTryIt => 'Try it';
+  String get uiThemeTryIt => '試す';
 
   @override
   String uiThemePreviewing(String name) {
-    return 'Previewing $name';
+    return '$nameをプレビュー中';
   }
 
   @override
-  String get uiThemeKeep => 'Keep';
+  String get uiThemeKeep => 'このまま使う';
 
   @override
-  String get uiThemeGoBack => 'Go back';
+  String get uiThemeGoBack => '元に戻す';
 
   @override
-  String get uiThemeGlass => 'Glass';
+  String get uiThemeGlass => 'ガラス';
 
   @override
-  String get uiThemeGlassLight => 'Light';
+  String get uiThemeGlassLight => '弱';
 
   @override
-  String get uiThemeGlassMedium => 'Medium';
+  String get uiThemeGlassMedium => '中';
 
   @override
-  String get uiThemeGlassStrong => 'Strong';
+  String get uiThemeGlassStrong => '強';
 
   @override
-  String get uiThemeDetails => 'Look details';
+  String get uiThemeDetails => '外観の詳細';
 
   @override
-  String get uiThemeFullCovers => 'Full-quality covers';
+  String get uiThemeFullCovers => 'フル画質のカバー';
 
   @override
-  String get uiThemeFullCoversSubtitle => 'Sharper covers that use more memory';
+  String get uiThemeFullCoversSubtitle => 'より鮮明になりますが、メモリを多く使用します';
 
   @override
-  String get uiThemeExtraBadges => 'Extra cover badges';
+  String get uiThemeExtraBadges => '追加のカバーバッジ';
 
   @override
-  String get uiThemeExtraBadgesSubtitle =>
-      'Ebook badge and the saved strip on Continue Listening';
+  String get uiThemeExtraBadgesSubtitle => '電子書籍バッジと、「続きを聴く」の保存済みストリップ';
 
   @override
-  String get uiThemeReadingShelf => 'Continue Reading as a shelf';
+  String get uiThemeReadingShelf => '「続きを読む」を棚で表示';
 
   @override
-  String get uiThemeReadingShelfSubtitle =>
-      'A normal Home shelf instead of big cards';
+  String get uiThemeReadingShelfSubtitle => '大きなカードではなく、通常のホームの棚にします';
 
   @override
-  String get uiThemeCompactHeader => 'Compact header buttons';
+  String get uiThemeCompactHeader => 'コンパクトなヘッダーボタン';
 
   @override
-  String get uiThemeCompactHeaderSubtitle =>
-      'Page header buttons keep their small size';
+  String get uiThemeCompactHeaderSubtitle => 'ページヘッダーのボタンを小さいサイズのままにします';
 
   @override
-  String get uiThemePlainWording => 'Plain wording';
+  String get uiThemePlainWording => 'わかりやすい表現';
 
   @override
-  String get uiThemePlainWordingOnSubtitle =>
-      'Using \"Play\", \"Now Playing\", \"Finished\"';
+  String get uiThemePlainWordingOnSubtitle => '「再生」「再生中」「完了」を使用';
 
   @override
   String get uiThemePlainWordingOffSubtitle =>
-      'Using \"Absorb\", \"Absorbing\", \"Fully Absorbed\"';
+      '「Absorb」「Absorbing」「Fully Absorbed」を使用';
 
   @override
-  String get uiThemeSearchClassic => 'Classic';
+  String get uiThemeSearchClassic => 'クラシック';
 
   @override
   String whatsNewSheetTitle(String name) {
-    return 'What\'s new in $name';
+    return '$nameの新機能';
   }
 
   @override
   String whatsNewUpdatedFrom(String name) {
-    return 'Updated from $name';
+    return '$nameからアップデートしました';
   }
 
   @override
   String whatsNewBuildLabel(int number) {
-    return 'build $number';
+    return 'ビルド$number';
   }
 
   @override
-  String get whatsNewFullNotes => 'Full notes on GitHub';
+  String get whatsNewFullNotes => 'GitHubで全文を見る';
 
   @override
-  String get whatsNewLoading => 'Loading what\'s new';
+  String get whatsNewLoading => '新機能を読み込み中';
 
   @override
-  String get whatsNewLoadFailed => 'Couldn\'t load the notes';
+  String get whatsNewLoadFailed => 'ノートを読み込めませんでした';
 
   @override
-  String get whatsNewLoadFailedHint =>
-      'Check your connection, or read them on GitHub.';
+  String get whatsNewLoadFailedHint => '接続を確認するか、GitHubでご覧ください。';
 
   @override
-  String get whatsNewOpenGitHub => 'Open on GitHub';
+  String get whatsNewOpenGitHub => 'GitHubで開く';
 
   @override
-  String get settingsSeeWhatsNew => 'See what\'s new';
+  String get settingsSeeWhatsNew => '新機能を見る';
 
   @override
-  String get settingsSeeWhatsNewSubtitle =>
-      'The release notes for this version';
+  String get settingsSeeWhatsNewSubtitle => 'このバージョンのリリースノート';
 
   @override
-  String get windowsCloseToTray => 'Close to tray';
+  String get windowsCloseToTray => 'トレイに閉じる';
 
   @override
   String get windowsCloseToTraySubtitle =>
-      'Closing the window keeps Absorb Plus running in the notification area. Quit from the tray icon.';
+      'ウィンドウを閉じても、Absorb Plusは通知領域で動作し続けます。終了はトレイアイコンから行います。';
 
   @override
-  String get windowsStartWithWindows => 'Start with Windows';
+  String get windowsStartWithWindows => 'Windowsと同時に起動';
 
   @override
   String get windowsStartWithWindowsSubtitle =>
-      'Open Absorb Plus when you sign in to Windows';
+      'WindowsにサインインしたときにAbsorb Plusを開きます';
 
   @override
   String windowsStartWithWindowsRegistered(String command) {
-    return 'Starts: $command';
+    return '起動: $command';
   }
 
   @override
   String windowsStartWithWindowsOtherCopy(String command) {
-    return 'Another copy is set to start: $command. Turn on to use this copy instead.';
+    return '別のコピーが起動するよう設定されています: $command。このコピーを使うにはオンにしてください。';
   }
 
   @override
   String get windowsStartupDisabledBySystem =>
-      'Switched off in Task Manager\'s Startup apps. Turn it back on there.';
+      'タスクマネージャーのスタートアップアプリでオフになっています。そこでオンに戻してください。';
 
   @override
-  String get windowsStartMinimized => 'Start minimized';
+  String get windowsStartMinimized => '最小化して起動';
 
   @override
   String get windowsStartMinimizedSubtitle =>
-      'When it starts with Windows, keep it in the tray (or minimized if Close to tray is off)';
+      'Windowsと同時に起動するとき、トレイに格納します（トレイに閉じるがオフの場合は最小化）';
 
   @override
-  String get windowsAlwaysOnTop => 'Always on top';
+  String get windowsAlwaysOnTop => '常に手前に表示';
 
   @override
-  String get windowsAlwaysOnTopSubtitle =>
-      'Keep the window above other windows';
+  String get windowsAlwaysOnTopSubtitle => 'ウィンドウを他のウィンドウより前面に保ちます';
 
   @override
-  String get windowsKeepAwake => 'Keep PC awake while playing or downloading';
+  String get windowsKeepAwake => '再生中・ダウンロード中はPCをスリープさせない';
 
   @override
-  String get windowsKeepAwakeSubtitle =>
-      'Stops the PC from going to sleep. The screen can still turn off.';
+  String get windowsKeepAwakeSubtitle => 'PCがスリープ状態になるのを防ぎます。画面はオフになることがあります。';
 
   @override
-  String get windowsSettingFailed => 'Windows didn\'t accept that change';
+  String get windowsSettingFailed => 'Windowsがこの変更を受け付けませんでした';
 
   @override
-  String get windowsTrayShow => 'Show Absorb Plus';
+  String get windowsGlobalHotkeys => 'グローバルホットキー';
 
   @override
-  String get windowsTrayQuit => 'Quit Absorb Plus';
+  String get windowsGlobalHotkeysSubtitle =>
+      'Absorb Plusがバックグラウンドでも動作します: Ctrl+Alt+Spaceで再生/一時停止、Ctrl+Alt+Left/Rightで戻る/進む、Ctrl+Alt+Up/Downで音量、Ctrl+Alt+Bでブックマークを追加';
 
   @override
-  String get windowsTaskbarPlay => 'Play';
+  String windowsGlobalHotkeysUnavailable(String keys) {
+    return '他のアプリが使用中のため利用できません: $keys';
+  }
 
   @override
-  String get windowsTaskbarPause => 'Pause';
+  String get windowsTrayShow => 'Absorb Plusを表示';
 
   @override
-  String get windowsTaskbarRewind => 'Rewind';
+  String get windowsTrayQuit => 'Absorb Plusを終了';
 
   @override
-  String get windowsTaskbarForward => 'Fast-forward';
+  String get windowsTaskbarPlay => '再生';
 
   @override
-  String get supportContactSubtitle =>
-      'Ask a question on the Absorb Plus GitHub';
+  String get windowsTaskbarPause => '一時停止';
 
   @override
-  String get githubProjectTitle => 'Absorb Plus on GitHub';
+  String get windowsTaskbarRewind => '巻き戻し';
 
   @override
-  String get precacheTitle => 'Pre-load covers and book pages';
+  String get windowsTaskbarForward => '早送り';
+
+  @override
+  String windowsJumpListResume(String title) {
+    return '$titleを再開';
+  }
+
+  @override
+  String get githubProjectTitle => 'GitHubのAbsorb Plus';
+
+  @override
+  String get precacheTitle => 'カバーと本のページを先読み';
 
   @override
   String get precacheSubtitle =>
-      'Fetches them in the background on Wi-Fi or a wired connection, so screens open instantly. Uses a little disk space, not memory.';
+      'Wi-Fiまたは有線接続時にバックグラウンドで取得し、画面をすぐに開けるようにします。メモリではなく、少しのディスク容量を使用します。';
 
   @override
-  String get githubProjectSubtitle => 'Releases, source code and project news';
+  String get githubProjectSubtitle => 'リリース、ソースコード、プロジェクトのニュース';
 
   @override
-  String get supportSaveLogsSubtitle =>
-      'Save the log file to attach to a GitHub issue';
+  String get supportSaveLogsSubtitle => 'GitHubのIssueに添付するログファイルを保存します';
 
   @override
-  String get supportSaveLogsDialogTitle => 'Save Absorb Plus logs';
+  String get supportSaveLogsDialogTitle => 'Absorb Plusのログを保存';
 
   @override
   String supportLogsSaved(String path) {
-    return 'Logs saved to $path';
+    return 'ログを$pathに保存しました';
   }
 
   @override
   String supportLogsSaveFailed(String error) {
-    return 'Couldn\'t save the logs: $error';
+    return 'ログを保存できませんでした: $error';
   }
 
   @override
-  String get supportOpenLogsFolder => 'Open logs folder';
+  String get supportOpenLogsFolder => 'ログフォルダーを開く';
 
   @override
-  String get supportOpenLogsFolderSubtitle =>
-      'Show the log file in your file manager';
+  String get supportOpenLogsFolderSubtitle => 'ログファイルをファイルマネージャーで表示します';
 
   @override
-  String get supportOpenLogsFolderFailed => 'Couldn\'t open the logs folder';
+  String get supportOpenLogsFolderFailed => 'ログフォルダーを開けませんでした';
 
   @override
-  String get desktopDownloadFolderOpen => 'Open in Explorer';
+  String get desktopDownloadFolderOpen => 'エクスプローラーで開く';
 
   @override
-  String get desktopDownloadFolderOpenLinux => 'Open folder';
+  String get desktopDownloadFolderOpenLinux => 'フォルダーを開く';
 
   @override
-  String get desktopDownloadFolderOpenFailed => 'Couldn\'t open the folder';
+  String get desktopDownloadFolderOpenFailed => 'フォルダーを開けませんでした';
 
   @override
   String get desktopDownloadFolderNotWritable =>
-      'Absorb can\'t save files in that folder. Choose another one.';
+      'Absorbはそのフォルダーにファイルを保存できません。別のフォルダーを選択してください。';
 
   @override
-  String get desktopDownloadFolderPickFailed =>
-      'Couldn\'t show the folder picker';
+  String get desktopDownloadFolderPickFailed => 'フォルダー選択を表示できませんでした';
 
   @override
   String get desktopDownloadFolderNetworkPath =>
-      'Network folders (\\\\server\\share) can\'t hold downloads. Map the share to a drive letter in File Explorer, such as Z:, and choose that instead.';
+      'ネットワークフォルダー（\\\\server\\share）にはダウンロードを保存できません。ファイルエクスプローラーで共有をZ:などのドライブ文字に割り当て、そちらを選択してください。';
 
   @override
-  String get desktopDownloadFolderDefault => 'Default folder';
+  String get desktopDownloadFolderDefault => '既定のフォルダー';
 
   @override
-  String get bookSettingsTitle => 'Book settings';
+  String get bookSettingsTitle => '本の設定';
 
   @override
   String bookSettingsSeries(String name) {
-    return 'Series: $name';
+    return 'シリーズ: $name';
   }
 
   @override
-  String get bookSettingsSpeed => 'Speed';
+  String get bookSettingsSpeed => '速度';
 
   @override
-  String get bookSettingsSpeedFromSeries =>
-      'From the last book you played in this series';
+  String get bookSettingsSpeedFromSeries => 'このシリーズで最後に再生した本から引き継ぎます';
 
   @override
-  String get bookSettingsSkipIntro => 'Skip intro';
+  String get bookSettingsSkipIntro => 'イントロをスキップ';
 
   @override
-  String get bookSettingsSkipIntroHint =>
-      'Only when the book starts from the beginning';
+  String get bookSettingsSkipIntroHint => '本を最初から再生するときのみ';
 
   @override
-  String get bookSettingsSkipOutro => 'Skip outro';
+  String get bookSettingsSkipOutro => 'アウトロをスキップ';
 
   @override
-  String get bookSettingsSkipOutroHint =>
-      'Ends the book early and marks it finished';
+  String get bookSettingsSkipOutroHint => '本を早めに終了し、完了にします';
 
   @override
-  String get bookSettingsSkipOff => 'Off';
+  String get bookSettingsSkipOff => 'オフ';
 
   @override
   String bookSettingsSeconds(int seconds) {
-    return '$seconds s';
+    return '$seconds秒';
   }
 
   @override
-  String get bookSettingsWholeSeries => 'Use for the whole series';
+  String get bookSettingsWholeSeries => 'シリーズ全体に適用';
 
   @override
-  String get bookSettingsWholeSeriesHint =>
-      'Intro and outro apply to every book in this series';
+  String get bookSettingsWholeSeriesHint => 'イントロとアウトロをこのシリーズのすべての本に適用します';
 
   @override
-  String get bookSettingsReset => 'Reset';
+  String get bookSettingsReset => 'リセット';
 
   @override
-  String get bookSettingsResetDone => 'Book settings reset';
+  String get bookSettingsResetDone => '本の設定をリセットしました';
 
   @override
-  String get adminDashTitle => 'Dashboard';
+  String get adminDashTitle => 'ダッシュボード';
 
   @override
-  String get adminDashSubtitle =>
-      'Who\'s listening, libraries, users and server warnings at a glance';
+  String get adminDashSubtitle => '再生中のユーザー、ライブラリ、ユーザー、サーバーの警告をひと目で確認';
 
   @override
-  String get adminDashNobodyListening => 'Nobody is listening right now';
+  String get adminDashNobodyListening => '現在、再生中のユーザーはいません';
 
   @override
   String adminDashOnlineNames(String names) {
-    return 'Online: $names';
+    return 'オンライン: $names';
   }
 
   @override
-  String get adminDashListeningHistory => 'Listening history';
+  String get adminDashListeningHistory => '再生履歴';
 
   @override
-  String get adminDashCouldNotLoad => 'Couldn\'t load this from the server';
+  String get adminDashCouldNotLoad => 'サーバーから読み込めませんでした';
 
   @override
   String adminDashItemCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count items',
-      one: '1 item',
+      other: '$count件',
+      one: '1件',
     );
     return '$_temp0';
   }
 
   @override
-  String get adminDashScanAll => 'Scan all';
+  String get adminDashScanAll => 'すべてスキャン';
 
   @override
-  String get adminDashScanAllTitle => 'Scan all libraries?';
+  String get adminDashScanAllTitle => 'すべてのライブラリをスキャンしますか？';
 
   @override
   String get adminDashScanAllContent =>
-      'Audiobookshelf will look for new, changed and missing files in every library. This can take a while on big libraries.';
+      'Audiobookshelfがすべてのライブラリで、新規・変更・欠落したファイルを探します。大きなライブラリでは時間がかかることがあります。';
 
   @override
   String adminDashScanAllStarted(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Scan started for $count libraries',
-      one: 'Scan started for 1 library',
+      other: '$count個のライブラリのスキャンを開始しました',
+      one: '1個のライブラリのスキャンを開始しました',
     );
     return '$_temp0';
   }
 
   @override
   String adminDashScanAllPartial(int failed, int total) {
-    return '$failed of $total scans couldn\'t start';
+    return '$total件中$failed件のスキャンを開始できませんでした';
   }
 
   @override
-  String get adminDashNoLibraries => 'No libraries yet';
+  String get adminDashNoLibraries => 'ライブラリはまだありません';
 
   @override
-  String get adminDashBackUpNow => 'Back up now';
+  String get adminDashBackUpNow => '今すぐバックアップ';
 
   @override
   String adminDashLastBackup(String time) {
-    return 'Last backup $time';
+    return '前回のバックアップ: $time';
   }
 
   @override
-  String get adminDashNoBackups => 'No backups yet';
+  String get adminDashNoBackups => 'バックアップはまだありません';
 
   @override
-  String get adminDashManageUsers => 'Manage users';
+  String get adminDashManageUsers => 'ユーザーを管理';
 
   @override
-  String get adminDashNeverSeen => 'Never signed in';
+  String get adminDashNeverSeen => 'サインイン履歴なし';
 
   @override
-  String get adminDashDisabled => 'Disabled';
+  String get adminDashDisabled => '無効';
 
   @override
-  String get adminDashLocked => 'Locked';
+  String get adminDashLocked => 'ロック中';
 
   @override
-  String get adminDashServerWarnings => 'Server warnings';
+  String get adminDashServerWarnings => 'サーバーの警告';
 
   @override
-  String get adminDashNoProblems => 'No warnings or errors in today\'s log';
+  String get adminDashNoProblems => '今日のログに警告やエラーはありません';
 
   @override
-  String get adminDashAllLogs => 'All server logs';
+  String get adminDashAllLogs => 'すべてのサーバーログ';
 
   @override
-  String get tailscaleBuiltInTitle => 'Tailscale (built-in)';
+  String get tailscaleBuiltInTitle => 'Tailscale（内蔵）';
 
   @override
   String get tailscaleChip => 'Tailscale';
 
   @override
-  String get desktopShortcutsTitle => 'Keyboard shortcuts';
+  String get desktopShortcutsTitle => 'キーボードショートカット';
 
   @override
-  String get desktopShortcutsSubtitle =>
-      'Playback, speed, search, and navigation controls';
+  String get desktopShortcutsSubtitle => '再生、速度、検索、ナビゲーションの操作';
 
   @override
-  String get desktopShortcutsClose => 'Close';
+  String get desktopShortcutsClose => '閉じる';
 
   @override
-  String get tailscaleConnect => 'Connect with Tailscale';
+  String get tailscaleConnect => 'Tailscaleで接続';
 
   @override
-  String get tailscaleConnectHint =>
-      'Opens the Tailscale login in your browser';
+  String get tailscaleConnectHint => 'ブラウザーでTailscaleのログインを開きます';
 
   @override
-  String get tailscaleTurnOff => 'Turn off';
+  String get tailscaleTurnOff => 'オフにする';
 
   @override
-  String get tailscaleCardPitch =>
-      'Reach your server on your tailnet without turning on the Tailscale VPN';
+  String get tailscaleCardPitch => 'TailscaleのVPNをオンにせずに、tailnet上のサーバーに接続します';
 
   @override
   String get tailscaleIntro =>
-      'Reach a server on your tailnet without turning on the Tailscale app\'s VPN. Absorb joins your tailnet as its own device, for its own connections only. Test feature, off by default.';
+      'TailscaleアプリのVPNをオンにせずに、tailnet上のサーバーに接続します。Absorbは独自のデバイスとしてtailnetに参加し、自身の接続にのみ使用します。テスト機能で、既定ではオフです。';
 
   @override
-  String get tailscaleUseSwitch => 'Use built-in Tailscale';
+  String get tailscaleUseSwitch => '内蔵Tailscaleを使用';
 
   @override
-  String get tailscaleStatusOff => 'Off';
+  String get tailscaleStatusOff => 'オフ';
 
   @override
-  String get tailscaleStatusStarting => 'Connecting…';
+  String get tailscaleStatusStarting => '接続中…';
 
   @override
-  String get tailscaleStatusNeedsLogin =>
-      'Sign in to add this device to your tailnet';
+  String get tailscaleStatusNeedsLogin => 'このデバイスをtailnetに追加するにはサインインしてください';
 
   @override
-  String get tailscaleStatusNeedsApproval =>
-      'Waiting for an admin to approve this device';
+  String get tailscaleStatusNeedsApproval => '管理者がこのデバイスを承認するのを待っています';
 
   @override
   String tailscaleStatusConnected(String user) {
-    return 'Connected as $user';
+    return '$userとして接続済み';
   }
 
   @override
-  String get tailscaleStatusConnectedNoUser => 'Connected';
+  String get tailscaleStatusConnectedNoUser => '接続済み';
 
   @override
   String tailscaleStatusError(String error) {
-    return 'Problem: $error';
+    return '問題: $error';
   }
 
   @override
-  String get tailscaleNotIncluded => 'Not included in this build';
+  String get tailscaleNotIncluded => 'このビルドには含まれていません';
 
   @override
-  String get tailscaleSignIn => 'Sign in with Tailscale';
+  String get tailscaleSignIn => 'Tailscaleでサインイン';
 
   @override
-  String get tailscaleSignInNoLink =>
-      'No sign-in link yet. Try again in a moment.';
+  String get tailscaleSignInNoLink => 'サインインリンクはまだありません。しばらくしてからもう一度お試しください。';
 
   @override
-  String get tailscaleToggleFailed =>
-      'Couldn\'t turn built-in Tailscale on or off. Try again.';
+  String get tailscaleToggleFailed => '内蔵Tailscaleをオン/オフにできませんでした。もう一度お試しください。';
 
   @override
-  String get tailscaleSignOut => 'Sign out of Tailscale';
+  String get tailscaleSignOut => 'Tailscaleからサインアウト';
 
   @override
   String tailscaleDeviceAddress(String address) {
-    return 'This device: $address';
+    return 'このデバイス: $address';
   }
 
   @override
   String tailscaleServerRouted(String server) {
-    return 'Your server ($server) is reached through Tailscale.';
+    return 'サーバー（$server）にはTailscale経由で接続しています。';
   }
 
   @override
   String tailscaleServerNotRouted(String server) {
-    return 'Your server ($server) isn\'t a tailnet address, so it\'s reached as usual. If it is on your tailnet, add its host name below.';
+    return 'サーバー（$server）はtailnetのアドレスではないため、通常どおり接続します。tailnet上にある場合は、下にホスト名を追加してください。';
   }
 
   @override
-  String get tailscaleExtraHostsLabel => 'Other tailnet host names';
+  String get tailscaleExtraHostsLabel => 'その他のtailnetホスト名';
 
   @override
   String get tailscaleExtraHostsHint => 'nas, abs.example.com';
 
   @override
   String get tailscaleExtraHostsHelp =>
-      'Addresses in 100.64.0.0/10 and names ending in .ts.net or your tailnet\'s MagicDNS name always go through Tailscale. Separate names with commas.';
+      '100.64.0.0/10のアドレスと、.ts.netまたはtailnetのMagicDNS名で終わる名前は、常にTailscale経由になります。名前はカンマで区切ります。';
+
+  @override
+  String playerChapterEndsAt(String time) {
+    return 'チャプター終了: $time';
+  }
+
+  @override
+  String playerEndsAt(String time) {
+    return '終了: $time';
+  }
+
+  @override
+  String lastPlayedOnDevice(String device, String ago) {
+    return '最後の再生: $device · $ago';
+  }
+
+  @override
+  String lastPlayedElsewhere(String ago) {
+    return '最後の再生: 別のデバイス · $ago';
+  }
+
+  @override
+  String get opmlExportAction => 'OPMLをエクスポート';
+
+  @override
+  String get opmlExportDialogTitle => 'ポッドキャストのフィードをOPMLとして保存';
+
+  @override
+  String opmlExportSaved(String path) {
+    return 'OPMLを$pathに保存しました';
+  }
+
+  @override
+  String get opmlExportDownloaded => 'OPMLをダウンロードしました';
+
+  @override
+  String get opmlExportFailed => 'OPMLファイルをエクスポートできませんでした';
+
+  @override
+  String get bookCopySaveAction => 'コピーを保存…';
+
+  @override
+  String get bookCopyDialogTitle => 'この本のコピーを保存';
+
+  @override
+  String get bookCopySaving => 'コピーを保存中…';
+
+  @override
+  String bookCopySaved(String path) {
+    return 'コピーを$pathに保存しました';
+  }
+
+  @override
+  String get bookCopyFailed => 'この本のコピーを保存できませんでした';
+
+  @override
+  String get exclusiveAudioTitle => '排他オーディオ';
+
+  @override
+  String get exclusiveAudioSubtitle =>
+      'Windowsのサウンドエフェクトを経由しないことで、ノイズや音量の乱れを改善します。Absorbの再生中は他のアプリがミュートされます。反映するにはAbsorbを再起動してください。';
+
+  @override
+  String get exclusiveAudioFallback =>
+      'サウンドデバイスが排他オーディオを拒否したため、Absorb は通常モードで再生しています';
+
+  @override
+  String homeRecentlyAddedNewBadge(int count) {
+    return '新規$count件';
+  }
+
+  @override
+  String seekUndoBackTo(String time) {
+    return '$timeに戻る';
+  }
+
+  @override
+  String get goToTime => '時間に移動';
+
+  @override
+  String get goToTimeLabel => '時間';
+
+  @override
+  String get goToTimeHint => 'h:mm:ss、mm:ss、または分';
+
+  @override
+  String get goToTimeGo => '移動';
+
+  @override
+  String goToTimeLength(String time) {
+    return '長さ $time';
+  }
+
+  @override
+  String get goToTimeInvalid => '1:23:45、23:45、90 のような形式で入力してください';
+
+  @override
+  String goToTimePastEnd(String time) {
+    return '終了位置（$time）を超えています';
+  }
+
+  @override
+  String get desktopShortcutGoToTime => '開いているプレーヤーで時間に移動';
+
+  @override
+  String fellAsleepJumpBack(String time) {
+    return '$time ごろに寝落ち · 戻る';
+  }
+
+  @override
+  String get surpriseMe => 'おまかせ';
+
+  @override
+  String get surpriseMeNoneLeft => 'このライブラリの本をすべて聴き終えました';
+
+  @override
+  String get surpriseMeFailed => '本を選べませんでした。もう一度お試しください。';
+
+  @override
+  String get surpriseMeOffline => '「おまかせ」にはサーバーへの接続が必要です';
+
+  @override
+  String get surpriseMeBooksOnly => '「おまかせ」は本を選びます。本のライブラリに切り替えてください。';
+
+  @override
+  String get autoDownloadNextInSeries => 'シリーズの次の本を自動でダウンロード';
+
+  @override
+  String get autoDownloadNextInSeriesSubtitle =>
+      '再生中の本が80%に達したか、残り1時間未満になったときに行います。Wi-Fiのみの設定に従います。';
+
+  @override
+  String get emptyStateBrowseLibrary => 'ライブラリを見る';
+
+  @override
+  String get emptyStateClearSearch => '検索をクリア';
+
+  @override
+  String get statsNoListeningYet => 'まだ再生していません';
+
+  @override
+  String get desktopShortcutQuickSwitcher => 'クイックスイッチャー: 本を探す、どこへでも移動';
+
+  @override
+  String get desktopShortcutHelp => 'キーボードショートカットを表示';
+
+  @override
+  String get quickSwitcherTooltip => 'クイックスイッチャー（Ctrl+K）';
+
+  @override
+  String get quickSwitcherHint => 'このライブラリを検索、またはコマンドを入力';
+
+  @override
+  String get quickSwitcherNoResults => '一致なし';
+
+  @override
+  String get quickSwitcherGoHome => 'ホームへ移動';
+
+  @override
+  String get quickSwitcherGoLibrary => 'ライブラリへ移動';
+
+  @override
+  String get quickSwitcherGoAbsorbing => 'Absorbingへ移動';
+
+  @override
+  String get quickSwitcherGoStats => '統計へ移動';
+
+  @override
+  String get quickSwitcherGoSettings => '設定へ移動';
+
+  @override
+  String get quickSwitcherGoDownloads => 'ダウンロードへ移動';
+
+  @override
+  String get quickSwitcherPlayPause => '再生 / 一時停止';
+
+  @override
+  String get quickSwitcherSleepTimer => 'スリープタイマー';
+
+  @override
+  String get quickSwitcherKeywordsAbsorbing => '再生中 プレーヤー now playing player';
+
+  @override
+  String get quickSwitcherKeywordsSettings => '設定 オプション preferences options';
+
+  @override
+  String get quickSwitcherKeywordsDownloads => 'ダウンロード オフライン offline';
+
+  @override
+  String get quickSwitcherKeywordsPlayPause => '再生 一時停止 resume pause';
+
+  @override
+  String get quickSwitcherKeywordsSleepTimer => 'スリープ タイマー timer';
+
+  @override
+  String get quickSwitcherKeywordsShortcuts =>
+      'ショートカット キー ヘルプ キーボード keys help hotkeys keyboard';
+
+  @override
+  String get quickSwitcherKindAction => '操作';
+
+  @override
+  String get quickSwitcherKindBook => '本';
+
+  @override
+  String get quickSwitcherKindPodcast => 'ポッドキャスト';
+
+  @override
+  String get quickSwitcherKindSeries => 'シリーズ';
+
+  @override
+  String get quickSwitcherKindAuthor => '著者';
+
+  @override
+  String get alphabetScrollerLabel => '文字へジャンプ';
+
+  @override
+  String get stepperDecrease => '減らす';
+
+  @override
+  String get stepperIncrease => '増やす';
+
+  @override
+  String get statsStreakKeepGoing => '今日5分聴くと連続記録が続きます';
+
+  @override
+  String get statsStreakHowTo => '毎日5分聴くと連続記録になります';
+
+  @override
+  String get statsDailyGoalSheetTitle => '1日の再生目標';
+
+  @override
+  String get statsDailyGoalSheetBody => '今日聴くと、連続記録カードのリングが満たされていきます。';
+
+  @override
+  String get statsDailyGoalSet => '1日の目標を設定';
+
+  @override
+  String get statsMonthListened => '再生';
+
+  @override
+  String get statsMonthTime => '時間';
+
+  @override
+  String get statsMonthTopBook => '上位の本';
+
+  @override
+  String bookmarksSearchResults(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count件の結果',
+      one: '1件の結果',
+      zero: '結果なし',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bookmarksViewMenu => '並べ替えとグループ化';
+
+  @override
+  String get bookmarksViewByBook => '本ごと';
+
+  @override
+  String get bookmarksViewNewest => '新しい順';
+
+  @override
+  String get bookmarksViewPosition => '位置順';
+
+  @override
+  String get bookmarksExportAction => 'ブックマークをエクスポート';
+
+  @override
+  String get bookmarksExportDialogTitle => 'ブックマークをMarkdownとして保存';
+
+  @override
+  String bookmarksExportSaved(String path) {
+    return 'ブックマークを$pathに保存しました';
+  }
+
+  @override
+  String get bookmarksExportDownloaded => 'ブックマークをダウンロードしました';
+
+  @override
+  String get bookmarksExportFailed => 'ブックマークをエクスポートできませんでした';
+
+  @override
+  String get chapterSearchHint => 'チャプターを検索、または時間を入力（1:23:00）';
+
+  @override
+  String get chapterSearchNoResults => '一致するチャプターはありません';
+
+  @override
+  String get dropUploadNotAllowed => 'お使いのアカウントはこのサーバーにアップロードできません';
+
+  @override
+  String get dropUploadNothingUsable => 'ドロップしたファイルはいずれもアップロードできません';
+
+  @override
+  String get dropUploadAlreadyOpen => '開いているアップロードを先に完了するか閉じてください';
+
+  @override
+  String get remoteHostTitle => 'スマホから操作';
+
+  @override
+  String get remoteHostSubtitleOff => 'スマホをこの PC の Absorb のリモコンとして使います';
+
+  @override
+  String remoteHostSubtitleOn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'スマホ $count 台が接続中',
+      one: 'スマホ 1 台が接続中',
+      zero: '接続中のスマホなし',
+    );
+    return 'オン · $_temp0';
+  }
+
+  @override
+  String get remoteHostSheetBody =>
+      'スマホをこの PC のリモコンとして使います。音声は引き続き PC で再生され、スマホには再生中の内容とボタンが表示されます。スマホとこの PC は同じ Wi-Fi に接続してください。';
+
+  @override
+  String get remoteHostSwitch => 'オンにする';
+
+  @override
+  String get remoteHostSwitchSubtitle =>
+      '初回は、Windows が Absorb Plus のファイアウォール通過の許可を求めることがあります。許可してください。';
+
+  @override
+  String get remoteHostKeepOn => 'Absorb の起動時もオンにする';
+
+  @override
+  String get remoteHostKeepOnSubtitle => 'オフの場合、Absorb を閉じるたびにオフになります。';
+
+  @override
+  String remoteHostPortsBusy(int first, int last) {
+    return '開始できません: ポート $first から $last がすべて使用中です。';
+  }
+
+  @override
+  String get remoteHostPairTitle => 'スマホをペアリング';
+
+  @override
+  String get remoteHostStep1 => '1. ここでオンにします。';
+
+  @override
+  String get remoteHostStep2 =>
+      '2. スマホのカメラでコードをスキャンするか、スマホで Absorb を開いて設定 > パソコンを操作 に進みます。';
+
+  @override
+  String get remoteHostStep3 => '3. スマホでコードを入力し、ここで「許可」を選びます。';
+
+  @override
+  String get remoteHostCodeLabel => 'コード';
+
+  @override
+  String remoteHostCodeExpires(String time) {
+    return '有効時間: $time';
+  }
+
+  @override
+  String get remoteHostPairFirst => 'スマホをペアリング';
+
+  @override
+  String get remoteHostPairAnother => '別のデバイスをペアリング';
+
+  @override
+  String get remoteHostPairingClosed =>
+      'ペアリングは終了しています。ボタンをタップして新しいコードを取得してください。コードは 2 分間、1 台のデバイスのみ有効です。';
+
+  @override
+  String get remoteHostFull =>
+      'ペアリング済みのデバイスが上限の 5 台に達しています。別のデバイスをペアリングするには、1 台を削除してください。';
+
+  @override
+  String remoteHostAddresses(String addresses) {
+    return 'この PC のアドレス: $addresses';
+  }
+
+  @override
+  String get remoteHostNoAddress => 'この PC には現在ネットワークアドレスがありません。';
+
+  @override
+  String get remoteHostNoDiscovery =>
+      'スマホがこの PC を自動で見つけられない場合があります。その場合は、スマホにこの PC のアドレスを入力してください。';
+
+  @override
+  String get remoteHostConnectedTitle => '現在接続中';
+
+  @override
+  String get remoteHostPairedTitle => 'ペアリング済みのデバイス';
+
+  @override
+  String get remoteHostNoDevices => 'ペアリング済みのデバイスはまだありません';
+
+  @override
+  String get remoteHostUnusedNote => '90 日間使われなかったデバイスは削除されます。';
+
+  @override
+  String remoteHostLastUsed(String date) {
+    return '最終使用: $date';
+  }
+
+  @override
+  String remoteHostConnectedFrom(String address, String time) {
+    return '$address、$time から接続中';
+  }
+
+  @override
+  String get remoteHostForget => '削除';
+
+  @override
+  String get remoteHostForgetAll => 'すべて削除';
+
+  @override
+  String get remoteHostForgetAllConfirm =>
+      'ペアリング済みのデバイスをすべて削除しますか? この PC を操作するには、各デバイスを再度ペアリングする必要があります。';
+
+  @override
+  String get remoteHostDisconnect => '切断';
+
+  @override
+  String remoteHostAllowTitle(String name) {
+    return '「$name」にこの PC の Absorb の操作を許可しますか?';
+  }
+
+  @override
+  String get remoteHostAllowBody =>
+      '知っているデバイスのみ許可してください。許可すると、ここでの再生、一時停止、再生内容の変更ができます。応答しなければ拒否されます。';
+
+  @override
+  String get remoteHostAllow => '許可';
+
+  @override
+  String get remoteHostDeny => '拒否';
+
+  @override
+  String get remoteControlAnother => 'パソコンを操作';
+
+  @override
+  String get remoteControlAnotherSubtitle => 'このスマホを PC の Absorb のリモコンとして使います';
+
+  @override
+  String get remoteConnectIntro =>
+      'このスマホを PC の Absorb のリモコンとして使います。音声は引き続き PC で再生されます。スマホと PC は同じ Wi-Fi に接続してください。PC で 設定 > スマホから操作 を開き、オンにしてください。';
+
+  @override
+  String get remoteConnectSearching => 'Wi-Fi 上のパソコンを探しています…';
+
+  @override
+  String get remoteConnectNoneFound =>
+      'パソコンが見つかりません。PC で 設定 > スマホから操作 を開いてオンにするか、アドレスを入力してください。';
+
+  @override
+  String get remoteConnectSearchAgain => '再検索';
+
+  @override
+  String get remoteConnectPaired => 'ペアリング済み';
+
+  @override
+  String get remoteConnectFound => 'Wi-Fi 上';
+
+  @override
+  String get remoteConnectEnterAddress => 'アドレスを入力';
+
+  @override
+  String get remoteConnectAddressHint => '192.168.1.20:47390';
+
+  @override
+  String get remoteConnectAddressInvalid =>
+      '192.168.1.20 または 192.168.1.20:47390 のような形式で入力してください';
+
+  @override
+  String get remoteConnectNext => '次へ';
+
+  @override
+  String remoteConnectCodeTitle(String name) {
+    return '$name とペアリング';
+  }
+
+  @override
+  String get remoteConnectCodeHelp => 'PC の「スマホから操作」に表示されている 6 桁のコードを入力してください。';
+
+  @override
+  String get remoteConnectWaiting => 'PC で「許可」を選んでください…';
+
+  @override
+  String get remoteConnectPair => 'ペアリング';
+
+  @override
+  String get remoteConnectForget => 'このパソコンを削除';
+
+  @override
+  String get remotePairBadCode => 'コードが正しくありません。PC を確認して、もう一度お試しください。';
+
+  @override
+  String get remotePairExpired =>
+      'コードの有効期限が切れました。PC で「別のデバイスをペアリング」から新しいコードを取得してください。';
+
+  @override
+  String get remotePairClosed =>
+      'PC でペアリングが開始されていません。PC で「別のデバイスをペアリング」をタップして新しいコードを取得してください。';
+
+  @override
+  String get remotePairDenied => 'PC がこのスマホを許可しませんでした。もう一度試し、PC で「許可」を選んでください。';
+
+  @override
+  String get remotePairTooManyDevices =>
+      'その PC にはすでに 5 台のデバイスがペアリングされています。先に PC で 1 台を削除してください。';
+
+  @override
+  String get remotePairTooMany => '試行回数が多すぎます。1 分待ってからもう一度お試しください。';
+
+  @override
+  String get remotePairUnreachable =>
+      'スマホと PC が同じ Wi-Fi にないか、PC で機能がオンになっていません。両方を確認してもう一度お試しください。';
+
+  @override
+  String get remotePairFailed => 'ペアリングできませんでした。もう一度お試しください。';
+
+  @override
+  String get remoteVersionMismatch =>
+      'リモコンを使うには、両方のデバイスで Absorb Plus を更新してください。';
+
+  @override
+  String get remoteConnecting => '接続中…';
+
+  @override
+  String get remoteReconnecting => '再接続中…';
+
+  @override
+  String get remoteUnreachableHint =>
+      'PC に接続できません。PC がスリープしていないこと、Absorb が開いていること、両方が同じ Wi-Fi にあることを確認してください。';
+
+  @override
+  String remoteNothingPlaying(String name) {
+    return '$name では何も再生されていません';
+  }
+
+  @override
+  String get remoteNothingLoaded => '先に PC で再生を開始してください。';
+
+  @override
+  String get remoteCommandFailed => 'PC で実行できませんでした。';
+
+  @override
+  String get remoteNotOnList => 'その本は PC のリストにもうありません。';
+
+  @override
+  String get remoteDisconnectedByHost => 'PC がこのデバイスを切断しました。';
+
+  @override
+  String get remoteUnauthorized => 'PC がこのデバイスを認識しなくなりました。もう一度ペアリングしてください。';
+
+  @override
+  String get remotePairAgain => '再ペアリング';
+
+  @override
+  String get remoteConnectAgain => '再接続';
+
+  @override
+  String get remotePlay => '再生';
+
+  @override
+  String get remotePause => '一時停止';
+
+  @override
+  String get remoteStop => '停止';
+
+  @override
+  String get remotePreviousChapter => '前のチャプター';
+
+  @override
+  String get remoteNextChapter => '次のチャプター';
+
+  @override
+  String remoteSkipBack(int seconds) {
+    return '$seconds 秒戻る';
+  }
+
+  @override
+  String remoteSkipForward(int seconds) {
+    return '$seconds 秒進む';
+  }
+
+  @override
+  String get remoteSpeed => '速度';
+
+  @override
+  String get remoteSpeedSlower => '遅く';
+
+  @override
+  String get remoteSpeedFaster => '速く';
+
+  @override
+  String get remoteSleepTimer => 'スリープタイマー';
+
+  @override
+  String remoteSleepMinutes(int minutes) {
+    return '$minutes 分';
+  }
+
+  @override
+  String get remoteSleepEndOfChapter => 'チャプターの終わり';
+
+  @override
+  String get remoteSleepEndOfEpisode => 'エピソードの終わり';
+
+  @override
+  String remoteSleepChapters(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count チャプター',
+      one: '1 チャプター',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get remoteSleepCancel => 'スリープタイマーをオフにする';
+
+  @override
+  String get remoteVolume => '音量';
+
+  @override
+  String get remoteMute => 'ミュート';
+
+  @override
+  String get remoteUnmute => 'ミュート解除';
+
+  @override
+  String get remoteChapters => 'チャプター';
+
+  @override
+  String get remoteBookmark => 'ブックマーク';
+
+  @override
+  String get remoteBookmarkTitle => 'ここにブックマークを追加';
+
+  @override
+  String get remoteBookmarkNoteHint => 'メモ（任意）';
+
+  @override
+  String get remoteBookmarkAdd => '追加';
+
+  @override
+  String get remoteBookmarkAdded => 'PC にブックマークを追加しました';
+
+  @override
+  String get remoteContinueListening => '続きを聴く';
+
+  @override
+  String get remoteContinueEmpty => 'PC に再生中の項目はありません。';
+
+  @override
+  String remoteTimeLeft(String time) {
+    return '残り $time';
+  }
+
+  @override
+  String remoteChapterTimeLeft(String time) {
+    return 'チャプターの残り $time';
+  }
+
+  @override
+  String get remoteLockScreenControls => 'Show controls on the lock screen';
+
+  @override
+  String get remoteMoreOptions => 'More options';
+
+  @override
+  String remoteHostBrowserAddress(String url) {
+    return 'Or open $url in any browser on the same Wi-Fi (iPhone, tablet, laptop) and type the code there.';
+  }
+
+  @override
+  String get remoteHostBrowserDevice => 'Web browser';
+
+  @override
+  String get remoteCustomize => 'カスタマイズ';
+
+  @override
+  String get remoteCustomizeTitle => 'リモコンをカスタマイズ';
+
+  @override
+  String get remoteCustomizeHintPortrait =>
+      '縦向きのレイアウトを編集中です。ブロックのハンドルをドラッグするか長押しして移動します。横向きを編集するにはスマホを回してください。';
+
+  @override
+  String get remoteCustomizeHintLandscape =>
+      '横向きのレイアウトを編集中です。ブロックを列内または 2 つの列の間でドラッグします。縦向きを編集するにはスマホを回してください。';
+
+  @override
+  String get remoteCustomizeReset => '既定に戻す';
+
+  @override
+  String get remoteCustomizePresets => 'プリセット';
+
+  @override
+  String get remoteCustomizeAddTitle => '画面に追加';
+
+  @override
+  String get remoteCustomizeDropHere => 'ここにブロックをドロップ';
+
+  @override
+  String get remoteCustomizeMove => 'ドラッグして移動';
+
+  @override
+  String get remoteCustomizeEmpty =>
+      'この画面には何もありません。「カスタマイズ」をタップしてコントロールを追加してください。';
+
+  @override
+  String get remotePresetDefault => '標準';
+
+  @override
+  String get remotePresetMinimal => 'ミニマル';
+
+  @override
+  String get remotePresetNightstand => 'ナイトスタンド';
+
+  @override
+  String get remotePresetFull => 'フル';
+
+  @override
+  String get remoteBlockCover => 'カバー';
+
+  @override
+  String get remoteBlockTitle => 'タイトルと著者';
+
+  @override
+  String get remoteBlockChapterTitle => 'チャプター名';
+
+  @override
+  String get remoteBlockProgress => 'プログレスバー';
+
+  @override
+  String get remoteBlockTimeLeft => '残り時間';
+
+  @override
+  String get remoteBlockTransport => '再生ボタン';
+
+  @override
+  String get remoteBlockClock => '時計';
+
+  @override
+  String get remoteBlockSpacer => 'スペース';
+
+  @override
+  String get remoteSizeSmall => '小';
+
+  @override
+  String get remoteSizeMedium => '中';
+
+  @override
+  String get remoteSizeLarge => '大';
+
+  @override
+  String get remoteSizeCompact => 'コンパクト';
+
+  @override
+  String get remoteSizeNormal => '標準';
+
+  @override
+  String get remoteDisplayBackground => '背景';
+
+  @override
+  String get remoteDisplayBackgroundTheme => 'テーマ';
+
+  @override
+  String get remoteDisplayBackgroundCover => 'ぼかしたカバー';
+
+  @override
+  String get remoteDisplayBackgroundBlack => '黒';
+
+  @override
+  String get remoteDisplayTextSize => '文字サイズ';
+
+  @override
+  String get remoteDisplayTextHuge => '特大';
+
+  @override
+  String get remoteDisplay24Hour => '24 時間表示';
+
+  @override
+  String get remoteDisplayDim => '画面を暗くするまでの時間';
+
+  @override
+  String get remoteDisplayDimNever => 'しない';
+
+  @override
+  String get remoteFullScreen => 'Full screen';
+
+  @override
+  String get remoteFullScreenHint => 'Tap empty space to exit full screen';
+
+  @override
+  String get remoteBlockOptions => 'Options';
+
+  @override
+  String get remoteOptSize => 'Size';
+
+  @override
+  String get remoteOptAlign => 'Alignment';
+
+  @override
+  String get remoteOptAlignLeft => 'Left';
+
+  @override
+  String get remoteOptAlignCenter => 'Center';
+
+  @override
+  String get remoteOptAlignRight => 'Right';
+
+  @override
+  String get remoteOptGap => 'Space above';
+
+  @override
+  String get remoteOptDefault => 'Default';
+
+  @override
+  String get remoteOptNone => 'None';
+
+  @override
+  String get remoteOptCorners => 'Corners';
+
+  @override
+  String get remoteOptCornersSquare => 'Square';
+
+  @override
+  String get remoteOptCornersRounded => 'Rounded';
+
+  @override
+  String get remoteOptCornersCircle => 'Circle';
+
+  @override
+  String get remoteOptShadow => 'Shadow';
+
+  @override
+  String get remoteOptLines => 'Lines';
+
+  @override
+  String get remoteOptTime => 'Time on the right';
+
+  @override
+  String get remoteOptTimeTotal => 'Total length';
+
+  @override
+  String get remoteOptSpan => 'Range';
+
+  @override
+  String get remoteOptSpanChapter => 'Chapter';
+
+  @override
+  String get remoteOptSpanBook => 'Whole book';
+
+  @override
+  String get remoteOptButtons => 'Buttons';
+
+  @override
+  String get remoteOptButtonBack => 'Skip back';
+
+  @override
+  String get remoteOptButtonPlay => 'Play/pause';
+
+  @override
+  String get remoteOptButtonForward => 'Skip forward';
+
+  @override
+  String get remoteOptSkipSeconds => 'Show the skip seconds';
+
+  @override
+  String get remoteOptStyle => 'Style';
+
+  @override
+  String get remoteOptStyleSlider => 'Slider';
+
+  @override
+  String get remoteOptStyleButtons => '− and + buttons';
+
+  @override
+  String get remoteOptPresets => 'Choices';
+
+  @override
+  String get remoteOptHours => 'Clock format';
+
+  @override
+  String get remoteOptHoursPhone => 'Phone setting';
+
+  @override
+  String get remoteOpt12Hour => '12-hour clock';
+
+  @override
+  String get remoteOptDate => 'Show the date';
+
+  @override
+  String get remoteVolumeDown => 'Volume down';
+
+  @override
+  String get remoteVolumeUp => 'Volume up';
+
+  @override
+  String get remoteLook => 'Look';
+
+  @override
+  String get remoteLookAccent => 'Accent color';
+
+  @override
+  String get remoteLookAccentCover => 'From cover';
+
+  @override
+  String get remoteLookAccentTheme => 'App theme';
+
+  @override
+  String remoteLookSwatch(int number) {
+    return 'Color $number';
+  }
+
+  @override
+  String get remoteLookBackgroundGradient => 'Soft gradient';
+
+  @override
+  String get remoteLookButtons => 'Button style';
+
+  @override
+  String get remoteLookButtonsFilled => 'Filled';
+
+  @override
+  String get remoteLookButtonsOutlined => 'Outlined';
+
+  @override
+  String get remoteLookButtonsPlain => 'Plain';
+
+  @override
+  String get remoteLookCornersSharp => 'Sharp';
+
+  @override
+  String get remoteLookCornersExtra => 'Extra round';
+
+  @override
+  String get remoteLookSpacing => 'Spacing';
+
+  @override
+  String get remoteLookSpacingComfortable => 'Comfortable';
+
+  @override
+  String get remoteLookReset => 'Reset look';
+
+  @override
+  String get quickSwitcherKeywordsRemote =>
+      'リモコン スマホ 操作 ペアリング remote phone control pc link pair';
+
+  @override
+  String get quickSwitcherKeywordsSurprise =>
+      'おまかせ ランダム シャッフル random pick shuffle';
+
+  @override
+  String get developerModeOn => '開発者モードをオンにしました';
+
+  @override
+  String get developerModeAlreadyOn => '開発者モードはすでにオンです';
+
+  @override
+  String get developerTitle => '開発者';
+
+  @override
+  String get developerSubtitle => 'テストビルドと開発用ツール';
+
+  @override
+  String get developerModeSwitch => '開発者モード';
+
+  @override
+  String get developerModeSwitchSubtitle =>
+      'オフにするとこのページが非表示になります。バージョンを 7 回タップすると再び表示されます。';
+
+  @override
+  String get testChannelTitle => 'テストチャンネル';
+
+  @override
+  String get testChannelSubtitle => '最新のテストビルドをインストール';
+
+  @override
+  String get testChannelUnavailable => 'テストビルドは Android の GitHub 版でのみ利用できます。';
+
+  @override
+  String get testChannelCodeLabel => 'テストチャンネルのコード';
+
+  @override
+  String get testChannelUnlock => 'ロック解除';
+
+  @override
+  String get testChannelUnlocked => 'テストチャンネルのロックを解除しました';
+
+  @override
+  String get testChannelWrongCode => 'コードが正しくありません';
+
+  @override
+  String get testChannelLaunchCheck => '起動時にテストビルドを確認';
+
+  @override
+  String get testChannelLaunchCheckSubtitle =>
+      'アプリの起動時に、新しいテストビルドのインストールを確認します';
+
+  @override
+  String get testChannelWarning =>
+      'テストビルドは未完成で、不具合が出る可能性があります。インストール済みのアプリを置き換えますが、データは保持されます。';
+
+  @override
+  String testChannelInstalled(String version) {
+    return 'インストール済み: $version';
+  }
+
+  @override
+  String testChannelNewest(String version) {
+    return '最新のテストビルド: $version';
+  }
+
+  @override
+  String get testChannelNone => 'テストビルドはまだありません';
+
+  @override
+  String get testChannelUpToDate => '最新です';
+
+  @override
+  String get testChannelInstall => 'インストール';
+
+  @override
+  String get testChannelCheckNow => '今すぐ確認';
+
+  @override
+  String get testChannelNotes => '変更内容';
+
+  @override
+  String testBuildNotesTitle(int build) {
+    return 'What\'s new in build $build';
+  }
+
+  @override
+  String get patchNotesTitle => 'Patch notes';
+
+  @override
+  String get patchNotesSubtitle =>
+      'What changed in each test build on this phone';
+
+  @override
+  String get patchNotesEmpty =>
+      'No patch notes yet. They show up here after the next test build is installed.';
+
+  @override
+  String patchNotesBuild(int build) {
+    return 'Build $build';
+  }
+
+  @override
+  String get testBuildAvailable => 'テストビルドがあります';
+
+  @override
+  String testBuildDialogContent(String latest, String current) {
+    return 'テストビルド $latest が公開されました。\n\n現在のバージョンは $current です。';
+  }
+
+  @override
+  String testBuildPackageLabel(int build) {
+    return 'テストビルド $build';
+  }
+
+  @override
+  String get githubSignIn => 'GitHub でサインイン';
+
+  @override
+  String get githubSignInSubtitle => 'テストビルドは非公開です。入手するにはサインインしてください';
+
+  @override
+  String get githubSignInNotSetUp => 'このビルドでは GitHub サインインがまだ設定されていません';
+
+  @override
+  String get githubSignInAgain => '再度サインイン';
+
+  @override
+  String get githubSignInExpired => 'GitHub のサインインの有効期限が切れました';
+
+  @override
+  String githubSignedInAs(String login) {
+    return 'GitHub に $login としてサインイン中';
+  }
+
+  @override
+  String get githubSignedIn => 'GitHub にサインイン済み';
+
+  @override
+  String get githubSignOut => 'サインアウト';
+
+  @override
+  String get githubSignInEnterCode => 'GitHub で次のコードを入力してください:';
+
+  @override
+  String get githubSignInOpen => 'github.com/login/device を開く';
+
+  @override
+  String get githubSignInCopyCode => 'コードをコピー';
+
+  @override
+  String get githubSignInCodeCopied => 'コードをコピーしました';
+
+  @override
+  String get githubSignInWaiting => 'GitHub での承認を待っています...';
+
+  @override
+  String get githubSignInDenied => 'GitHub でサインインがキャンセルされました。';
+
+  @override
+  String get githubSignInCodeExpired => 'コードの有効期限が切れました。もう一度お試しください。';
+
+  @override
+  String get githubSignInFailed => 'GitHub にサインインできませんでした。もう一度お試しください。';
+
+  @override
+  String get githubSignInTryAgain => '再試行';
+
+  @override
+  String get testChannelSignInNeeded => 'テストビルドを入手するには GitHub でサインインしてください';
+
+  @override
+  String get downloadEtaUnderMinute => '残り 1 分未満';
+
+  @override
+  String downloadEtaMinutes(int minutes) {
+    return '残り $minutes 分';
+  }
+
+  @override
+  String downloadEtaHours(int hours) {
+    return '残り $hours 時間';
+  }
+
+  @override
+  String downloadEtaHoursMinutes(int hours, int minutes) {
+    return '残り $hours 時間 $minutes 分';
+  }
+
+  @override
+  String get sameSpeedAllBooksTitle => 'すべての本で同じ速度';
+
+  @override
+  String get sameSpeedAllBooksSubtitle =>
+      'すべての本を既定の速度で再生し、プレーヤーで速度を変えるとすべての本に反映されます。オフ: 本（またはシリーズ）ごとに速度を保持します。';
+
+  @override
+  String setupStepOf(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get setupNext => 'Next';
+
+  @override
+  String get setupBack => 'Back';
+
+  @override
+  String get setupSkip => 'Skip';
+
+  @override
+  String get setupWelcomeBody =>
+      'Listen to the audiobooks and podcasts on your own Audiobookshelf server. A few quick steps and you\'re in.';
+
+  @override
+  String get setupConnectTitle => 'Connect to your server';
+
+  @override
+  String setupSignedInAs(String user) {
+    return 'Signed in as $user';
+  }
+
+  @override
+  String get setupLookIntro => 'Tap a look or a color to use it right away.';
+
+  @override
+  String get setupListeningTitle => 'Listening';
+
+  @override
+  String get setupListeningIntro =>
+      'The basics. Settings > Playback has the rest.';
+
+  @override
+  String get setupDownloadsTitle => 'Downloads';
+
+  @override
+  String get setupDownloadsIntro =>
+      'Download books to listen without a connection.';
+
+  @override
+  String get setupPermissionsTitle => 'Permissions';
+
+  @override
+  String get setupPermissionsIntro =>
+      'Android asks you before Absorb can do these.';
+
+  @override
+  String get setupAllow => 'Allow';
+
+  @override
+  String get setupAllowed => 'Allowed';
+
+  @override
+  String get setupDoneTitle => 'You\'re all set';
+
+  @override
+  String get setupDoneLater => 'Change any of this later in Settings.';
+
+  @override
+  String get setupDoneStart => 'Start listening';
+
+  @override
+  String setupSummaryLook(String name) {
+    return 'Look: $name';
+  }
+
+  @override
+  String setupSummarySpeed(String speed) {
+    return 'Default speed: ${speed}x';
+  }
+
+  @override
+  String setupSummarySkip(int back, int forward) {
+    return 'Skip back ${back}s, forward ${forward}s';
+  }
+
+  @override
+  String get setupRunAgain => 'Run setup again';
+
+  @override
+  String get setupRunAgainSubtitle =>
+      'The look, playback basics and more, step by step';
+
+  @override
+  String get loginDesignTitle => 'Sign-in screen design';
+
+  @override
+  String get loginDesignPreviewTitle => 'Preview sign-in designs';
+
+  @override
+  String get loginDesignClassic => 'Current';
+
+  @override
+  String get loginDesignClassicName => 'Classic';
+
+  @override
+  String get loginDesignSteps => 'B · Two steps';
+
+  @override
+  String get loginDesignStepsGlass => 'B2 · Glass steps';
+
+  @override
+  String get loginDesignStepsDesktop => 'B3 · Desktop steps';
+
+  @override
+  String get loginStepLibrary => 'Your library';
+
+  @override
+  String get loginStepSignIn => 'Sign in';
+
+  @override
+  String get loginStepsKeyboardHint => 'Enter to continue, Esc to go back';
+
+  @override
+  String get loginDesignUse => 'Use this design';
+
+  @override
+  String get loginDesignInUse => 'In use';
+
+  @override
+  String get loginDesignPreviewNote =>
+      'Preview: this design would sign you in here';
+
+  @override
+  String get loginDesignAdvancedSubtitle =>
+      'Custom headers, API key and certificates';
+
+  @override
+  String get loginMoreWays => 'More ways to sign in';
+
+  @override
+  String get loginRecentServers => 'Recent servers';
+
+  @override
+  String get loginWhereIsLibrary => 'Where is your library?';
+
+  @override
+  String get loginWhereIsLibraryIntro =>
+      'Enter your server\'s address, the same one you open in a browser.';
+
+  @override
+  String get loginContinue => 'Continue';
+
+  @override
+  String get loginChangeServer => 'Change server';
+
+  @override
+  String loginSignInToNamed(String server) {
+    return 'Sign in to $server';
+  }
+
+  @override
+  String get loginSignInToNamedIntro =>
+      'Use the account you have on this server.';
+
+  @override
+  String get quickSwitcherKeywordsLoginDesign =>
+      'login sign in screen design layout preview';
+
+  @override
+  String get appBackgroundLabel => 'Background';
+
+  @override
+  String get appBackgroundGlow => 'Soft glow';
+
+  @override
+  String get appBackgroundCover => 'Book colors';
+
+  @override
+  String get appBackgroundGradient => 'Gradient';
+
+  @override
+  String get appBackgroundPlain => 'Plain';
+
+  @override
+  String get appBackgroundCoverHint =>
+      'Follows the cover of the book you\'re listening to. Soft glow while nothing is playing.';
 }

@@ -35,7 +35,21 @@ class ScopedPrefs {
     'widget_item_id', 'widget_episode_id',
     'cached_stats', 'cached_sessions',
     'update_last_check', 'update_dismissed_version',
+    // Absorb Plus: the refresh token is global; a scoped copy was never
+    // read, rotated or deleted, so it outlived sign-out in plain prefs.
+    'refresh_token', 'token_saved_at', 'wear_token_pair_pending',
+    // Absorb Plus: the test channel's GitHub sign-in is device-wide.
+    'fork_test_channel_gh_access_token', 'fork_test_channel_gh_refresh_token',
+    'fork_test_channel_gh_expires_at', 'fork_test_channel_gh_login',
   };
+
+  /// Absorb Plus: the scope-suffixed copies earlier migrations made of the
+  /// global keys holding a credential. Nothing reads them.
+  static const _strayCredentialCopies = <String>[
+    'refresh_token',
+    'fork_test_channel_gh_access_token',
+    'fork_test_channel_gh_refresh_token',
+  ];
 
   /// One-time migration: copy unscoped settings to the active scope.
   /// This handles the case where settings were written before scope was
@@ -46,6 +60,12 @@ class ScopedPrefs {
     if (scope.isEmpty) return;
 
     final prefs = await SharedPreferences.getInstance();
+    // Scope keys can hold a colon themselves (host:port), so match the tail.
+    for (final key in prefs.getKeys().toList()) {
+      if (_strayCredentialCopies.any((k) => key.endsWith(':$k'))) {
+        await prefs.remove(key);
+      }
+    }
     final flag = '$scope:_scope_migrated';
     if (prefs.getBool(flag) == true) return;
 
@@ -139,11 +159,21 @@ class ScopedPrefs {
 
   // ── Double ──
 
+  // A number saved under one type and read as the other (an older build, a
+  // restored backup, the browser store where every whole number comes back
+  // as an int) must not blow up the read: SharedPreferences hard-casts.
+  static num? _number(SharedPreferences prefs, String key) {
+    final value = prefs.get(key);
+    return value is num ? value : null;
+  }
+
   static Future<double?> getDouble(String key) async {
     final prefs = await SharedPreferences.getInstance();
     final scoped = _scope(key);
-    if (prefs.containsKey(scoped)) return prefs.getDouble(scoped);
-    if (_shouldFallback && prefs.containsKey(key)) return prefs.getDouble(key);
+    if (prefs.containsKey(scoped)) return _number(prefs, scoped)?.toDouble();
+    if (_shouldFallback && prefs.containsKey(key)) {
+      return _number(prefs, key)?.toDouble();
+    }
     return null;
   }
 
@@ -157,8 +187,10 @@ class ScopedPrefs {
   static Future<int?> getInt(String key) async {
     final prefs = await SharedPreferences.getInstance();
     final scoped = _scope(key);
-    if (prefs.containsKey(scoped)) return prefs.getInt(scoped);
-    if (_shouldFallback && prefs.containsKey(key)) return prefs.getInt(key);
+    if (prefs.containsKey(scoped)) return _number(prefs, scoped)?.round();
+    if (_shouldFallback && prefs.containsKey(key)) {
+      return _number(prefs, key)?.round();
+    }
     return null;
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
 import 'desktop_input.dart';
 
 /// One action in an [ActionPillGrid]: a centered icon over a short label.
