@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../utils/episode_key.dart';
 import 'api_service.dart';
 import 'local_session_service.dart';
 import 'progress_sync_service.dart';
@@ -43,9 +44,9 @@ class OfflineListeningUpload {
     required double currentTime,
     required double duration,
   }) async {
-    final isCompound = itemId.length > 36;
-    final apiItemId = isCompound ? itemId.substring(0, 36) : itemId;
-    final episodeId = isCompound ? itemId.substring(37) : null;
+    final parts = splitEpisodeKey(itemId);
+    final apiItemId = parts.itemId;
+    final episodeId = parts.episodeId;
 
     // Stored before the first send, so a reply lost to a timeout (or the app
     // dying mid-request) is resent under the same id.
