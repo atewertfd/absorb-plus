@@ -5,6 +5,8 @@
 // id, which picks the wrong ids for any other shape (audit D17). Records now
 // keep the episode id; older ones still fall back to the UUID rule.
 
+import '../utils/episode_key.dart';
+
 /// The library item id and episode id behind download key [key].
 /// [episodeId] is the one stored with the record, when there is one.
 ({String itemId, String? episodeId}) downloadKeyParts(
@@ -20,9 +22,9 @@
       episodeId: episodeId,
     );
   }
-  // Older records: a UUID show id, a dash, then the episode id.
-  if (key.length > 37 && key[36] == '-') {
-    return (itemId: key.substring(0, 36), episodeId: key.substring(37));
-  }
+  // Older records: the shared key rule (a UUID show id, or a pre-2.3
+  // `li_…-ep_…` key).
+  final parts = splitEpisodeKey(key);
+  if (parts.episodeId?.isNotEmpty ?? false) return parts;
   return (itemId: key, episodeId: null);
 }
