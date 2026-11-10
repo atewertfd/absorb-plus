@@ -571,7 +571,7 @@ class ChromecastService extends ChangeNotifier {
       await _syncProgressToServer();
     }
     if (_playbackSessionId != null && _api != null) {
-      try { await _api!.closePlaybackSession(_playbackSessionId!); } catch (_) {}
+      try { await _api!.closePlaybackSession(_playbackSessionId!); } catch (e) { debugPrint('[Cast] Closing the session failed: $e'); } // Absorb Plus (IMP-012)
       _playbackSessionId = null;
     }
     // User-initiated - don't let the disconnect event this triggers attempt a
@@ -1071,7 +1071,7 @@ class ChromecastService extends ChangeNotifier {
 
     // Close the playback session so stats are finalized
     if (_playbackSessionId != null && _api != null) {
-      try { await _api!.closePlaybackSession(_playbackSessionId!); } catch (_) {}
+      try { await _api!.closePlaybackSession(_playbackSessionId!); } catch (e) { debugPrint('[Cast] Closing the session failed: $e'); } // Absorb Plus (IMP-012)
       _playbackSessionId = null;
     }
 
@@ -1137,7 +1137,7 @@ class ChromecastService extends ChangeNotifier {
 
     // Close playback session
     if (_playbackSessionId != null && _api != null) {
-      try { await _api!.closePlaybackSession(_playbackSessionId!); } catch (_) {}
+      try { await _api!.closePlaybackSession(_playbackSessionId!); } catch (e) { debugPrint('[Cast] Closing the session failed: $e'); } // Absorb Plus (IMP-012)
       _playbackSessionId = null;
     }
 
@@ -1175,18 +1175,20 @@ class ChromecastService extends ChangeNotifier {
       if (_playbackSessionId != null) {
         debugPrint('[CastSync] ct=${ct.toStringAsFixed(1)}s timeListened=${elapsed}s sid=${_playbackSessionId!.substring(0, 8)}...');
         // Sync via playback session so timeListened is tracked in stats
-        await _api!.syncPlaybackSession(
+        final ok = await _api!.syncPlaybackSession(
           _playbackSessionId!,
           currentTime: ct,
           duration: _castingDuration,
           timeListened: elapsed,
         );
+        if (!ok) debugPrint('[CastSync] The server did not take the sync'); // Absorb Plus (IMP-012)
       } else {
         // Fallback to progress update if no session
         final progressId = _castingEpisodeId != null
             ? '$_castingItemId-$_castingEpisodeId'
             : _castingItemId!;
-        await _api!.updateProgress(progressId, currentTime: ct, duration: _castingDuration);
+        final ok = await _api!.updateProgress(progressId, currentTime: ct, duration: _castingDuration);
+        if (!ok) debugPrint('[CastSync] The server did not take the progress'); // Absorb Plus (IMP-012)
       }
     } catch (e) {
       debugPrint('[Cast] Server sync error: $e');
