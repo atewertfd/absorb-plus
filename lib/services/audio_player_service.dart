@@ -3254,7 +3254,7 @@ class AudioPlayerService extends ChangeNotifier {
 
   /// Check if BT audio (A2DP/SCO) is currently connected via native AudioManager.
   static Future<bool> _isBluetoothAudioConnected() async {
-    if (AppPlatform.lacksPhonePlugins) return false;
+    if (!AppPlatform.isAndroid) return false; // Absorb Plus: Android-only channel
     try {
       final result = await _eqChannel.invokeMethod<bool>(
         'isBluetoothAudioConnected',
@@ -5745,7 +5745,6 @@ class AudioPlayerService extends ChangeNotifier {
     String? effectiveCoverUrl;
     if (Platform.isWindows) {
       // Absorb Plus: the Windows media flyout can't read content:// covers.
-      // Checked before lacksPhonePlugins, which is true on Windows too.
       effectiveCoverUrl = windowsMediaCoverUri(
         localCoverPath: DownloadService().getInfo(itemId).localCoverPath,
         coverUrl: coverUrl,

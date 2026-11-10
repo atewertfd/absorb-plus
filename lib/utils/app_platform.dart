@@ -16,5 +16,5 @@ abstract final class AppPlatform {
   /// The phone's plugins - audio engine, downloads, widgets, car, cast,
   /// notifications - exist on Android and iOS only. The browser and, for now,
   /// the desktop OSes run without them and take the web code paths.
-  static bool get lacksPhonePlugins => isWeb || isDesktop;
+  static bool get lacksPhonePlugins => isWeb; // Absorb Plus: desktop has the plugins (ForkPlatform)
 }

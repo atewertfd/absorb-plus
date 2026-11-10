@@ -48,8 +48,13 @@ void main() {
       r"^import 'dart:io'(?! hide Platform)(?! show (?![^;]*\bPlatform\b))",
       multiLine: true,
     );
+    // Upstream's web port reads AppPlatform (web-safe) in most of these
+    // files now; only a file that still names dart:io's Platform needs the
+    // stand-in.
+    final readsPlatform = RegExp(r'(?<![A-Za-z_])Platform\.[a-z]');
     for (final path in _webReachable) {
       final source = io.File(path).readAsStringSync();
+      if (!readsPlatform.hasMatch(source)) continue;
       expect(source, contains('web_safe_platform.dart'), reason: path);
       expect(dartIoPlatform.hasMatch(source), isFalse, reason: path);
     }
