@@ -638,7 +638,7 @@ class AuthProvider extends ChangeNotifier {
             legacyCustomHeaders = Map<String, String>.from(
               jsonDecode(headersJson) as Map,
             );
-          } catch (_) {}
+          } catch (e) { debugPrint('[Auth] tryRestoreSession failed: ${e.runtimeType}'); }
         }
         SavedAccount? restoredAccount;
         for (final account in UserAccountService().accounts) {
@@ -708,7 +708,7 @@ class AuthProvider extends ChangeNotifier {
             debugPrint(
               '[Auth] authorize/me done (${sw.elapsedMilliseconds}ms)',
             );
-          } catch (_) {}
+          } catch (e) { debugPrint('[Auth] tryRestoreSession failed: ${e.runtimeType}'); }
           if (!versionKnown) _fetchServerVersion(activeServerUrl!);
         }
       } else if (savedUrl != null) {
@@ -1028,7 +1028,7 @@ class AuthProvider extends ChangeNotifier {
               'This is an Audiobookshelf server. Choose Audiobookshelf above the server address.';
         }
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Auth] _wrongServerTypeMessage failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -1478,7 +1478,7 @@ class AuthProvider extends ChangeNotifier {
       final ctx = rootNavigatorKey.currentContext;
       if (ctx == null) return;
       showOverlayToast(ctx, message, icon: Icons.dns_rounded);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Auth] _showServerToast failed: ${e.runtimeType}'); }
   }
 
   /// Update local server settings from the UI.
@@ -1509,7 +1509,7 @@ class AuthProvider extends ChangeNotifier {
         _serverVersion = version;
         notifyListeners();
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Auth] _fetchServerVersion failed: ${e.runtimeType}'); }
   }
 
   Future<void> logout({
@@ -1532,7 +1532,7 @@ class AuthProvider extends ChangeNotifier {
         await player.pause();
         await player.stop();
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Auth] logout failed: ${e.runtimeType}'); }
 
     if (!AppPlatform.lacksPhonePlugins) {
       AndroidAutoService().clearCache();
@@ -1640,7 +1640,7 @@ class AuthProvider extends ChangeNotifier {
         await player.pause();
         await player.stop();
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Auth] switchToAccount failed: ${e.runtimeType}'); }
 
     if (!AppPlatform.lacksPhonePlugins) {
       AndroidAutoService().clearCache();
@@ -1853,7 +1853,7 @@ class AuthProvider extends ChangeNotifier {
         } else {
           await prefs.remove('custom_headers');
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[Auth] editServerConnection failed: ${e.runtimeType}'); }
       final token = _accessToken;
       if (token != null) {
         SocketService().onTokenExpired = () async => await apiService?.refreshAccessTokenNow() ?? false;

@@ -154,7 +154,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
             }
           }
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[Library] _loadRollingDownloadSeries failed: ${e.runtimeType}'); }
     }
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('rollingDownload')) {
@@ -526,7 +526,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
               session['displayTitle'] as String?;
           ebookFile = resolveEbookFile(
               session['libraryItem'] as Map<String, dynamic>?);
-        } catch (_) {}
+        } catch (e) { debugPrint('[Library] _buildOfflineSections failed: ${e.runtimeType}'); }
       }
 
       final isCompound = dl.itemId.length > 36;
@@ -583,7 +583,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       try {
         item = (sessionJsonCache[kept.sessionData ?? '{}'] // Absorb Plus: decoded once
             as Map<String, dynamic>)['libraryItem'] as Map<String, dynamic>?;
-      } catch (_) {}
+      } catch (e) { debugPrint('[Library] _buildOfflineSections failed: ${e.runtimeType}'); }
       final ebookFile = resolveEbookFile(item);
       downloadedEntities.add({
         'id': kept.itemId,
@@ -690,7 +690,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
               session['displayTitle'] as String?;
           ebookFile = resolveEbookFile(
               session['libraryItem'] as Map<String, dynamic>?);
-        } catch (_) {}
+        } catch (e) { debugPrint('[Library] _injectDownloadedSection failed: ${e.runtimeType}'); }
       }
 
       final isCompound = dl.itemId.length > 36;
@@ -1241,7 +1241,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
           (this as _AbsorbingMixin)
               ._pruneRemotelyFinishedBooks(_progressMap.keys);
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Library] _refreshProgress failed: ${e.runtimeType}'); }
   }
 
   // ── Connectivity ──
@@ -1756,7 +1756,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         BookSearchIndex().patchItem(item);
       }
       if (changed) notifyListeners();
-    } catch (_) {}
+    } catch (e) { debugPrint('[Library] _catchUpAfterBackground failed: ${e.runtimeType}'); }
   }
 
   void onPlaybackStarted() {
@@ -2571,8 +2571,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
           await (this as _AbsorbingMixin)._updateAbsorbingCache();
           notifyListeners();
         }
-      } catch (_) {
-      } finally {
+      } catch (e) { debugPrint('[Library] _hydrateRssFeedFieldsDeferred failed: ${e.runtimeType}'); } finally {
         _rssHydrationInFlight = false;
       }
     }());
@@ -2745,7 +2744,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         _collections = loaded;
         _collectionsCooldown.markFetched(libId, loaded);
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Library] _doLoadCollections failed: ${e.runtimeType}'); }
     _isLoadingCollections = false;
     notifyListeners();
     unawaited(_catchUpQueueAutoDownloads());
