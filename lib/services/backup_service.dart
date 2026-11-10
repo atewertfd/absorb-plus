@@ -11,6 +11,7 @@ import 'sleep_timer_service.dart';
 import 'user_account_service.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import 'imported_settings_reload.dart';
+import 'fork_backup_settings.dart';
 
 class BackupService {
   /// [includeRmabSecrets] is for settings sync's opt-in RMAB sharing; a
@@ -464,6 +465,7 @@ class BackupService {
       if (settingsSync.isNotEmpty) 'settingsSync': settingsSync,
       'accounts': accounts,
       'customHeaders': customHeaders,
+      ForkBackupSettings.payloadSection: await ForkBackupSettings.export(), // fork
     };
   }
 
@@ -1075,6 +1077,7 @@ class BackupService {
       await prefs.setString('custom_download_path', customDownloadPath);
     }
 
+    await ForkBackupSettings.import(data[ForkBackupSettings.payloadSection]); // fork
     await reload.apply();
     PlayerSettings.notifySettingsChanged();
   }
