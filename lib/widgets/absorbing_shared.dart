@@ -11,13 +11,14 @@ import 'overlay_toast.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import 'absorb_plus_logo.dart';
 import 'text_scale_room.dart';
+import '../utils/calendar_days.dart'; // Absorb Plus
 
 String dateLabel(DateTime dt, [AppLocalizations? l]) {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
   final date = DateTime(dt.year, dt.month, dt.day);
   if (date == today) return l?.absorbingSharedToday ?? 'Today';
-  if (date == today.subtract(const Duration(days: 1))) return l?.absorbingSharedYesterday ?? 'Yesterday';
+  if (date == addCalendarDays(today, -1)) return l?.absorbingSharedYesterday ?? 'Yesterday';
   if (now.difference(dt).inDays < 7) {
     if (l != null) {
       switch (dt.weekday) {

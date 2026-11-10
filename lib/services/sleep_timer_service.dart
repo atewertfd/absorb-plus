@@ -10,6 +10,7 @@ import 'chromecast_service.dart';
 import 'sleep_timer_tick_policy.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import 'fell_asleep_marker.dart'; // Absorb Plus
+import '../utils/calendar_days.dart'; // Absorb Plus
 
 enum SleepTimerMode { off, time, chapters, episodes }
 
@@ -860,7 +861,7 @@ class SleepTimerService extends ChangeNotifier {
 
     final now = DateTime.now();
     final todayStart = DateTime(now.year, now.month, now.day, settings.startHour, settings.startMinute);
-    final nextStart = todayStart.isAfter(now) ? todayStart : todayStart.add(const Duration(days: 1));
+    final nextStart = todayStart.isAfter(now) ? todayStart : addCalendarDays(todayStart, 1);
     final delay = nextStart.difference(now);
 
     debugPrint('[SleepTimer] Window boundary timer set for ${delay.inMinutes}m from now');

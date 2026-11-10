@@ -21,6 +21,7 @@ import 'wear_player_service.dart';
 import 'sleep_timer_service.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/web_safe_platform.dart';
+import '../utils/calendar_days.dart'; // Absorb Plus
 
 const String _androidWidgetName = 'NowPlayingWidget';
 const String _androidWidgetCompactName = 'NowPlayingWidgetCompact';
@@ -1338,7 +1339,7 @@ class HomeWidgetService {
     final now = DateTime.now();
     final startOffset = _daySeconds(dailyMap, _dateKey(now)) > 0 ? 0 : 1;
     for (int i = startOffset; i < 365; i++) {
-      if (_daySeconds(dailyMap, _dateKey(now.subtract(Duration(days: i)))) >
+      if (_daySeconds(dailyMap, _dateKey(addCalendarDays(now, -i))) >
           0) {
         streak++;
       } else {

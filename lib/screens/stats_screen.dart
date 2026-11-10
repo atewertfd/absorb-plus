@@ -27,6 +27,7 @@ import '../widgets/empty_state.dart'; // Absorb Plus
 import '../services/listening_streaks.dart'; // Absorb Plus
 import '../widgets/listening_streak_card.dart'; // Absorb Plus
 import '../ui_themes/app_backdrop.dart'; // Absorb Plus
+import '../utils/calendar_days.dart'; // Absorb Plus
 
 class StatsScreen extends StatefulWidget {
   const StatsScreen({super.key});
@@ -2146,7 +2147,7 @@ class _StatsScreenState extends State<StatsScreen>
     final now = DateTime.now();
     double total = 0;
     for (int i = 0; i < 30; i++) {
-      total += _daySeconds(dailyMap, _dateKey(now.subtract(Duration(days: i))));
+      total += _daySeconds(dailyMap, _dateKey(addCalendarDays(now, -i)));
     }
     return total;
   }
@@ -2238,7 +2239,7 @@ class _StatsScreenState extends State<StatsScreen>
     int daysWithData = 0;
     for (int i = 0; i < 30; i++) {
       final s =
-          _daySeconds(dailyMap, _dateKey(now.subtract(Duration(days: i))));
+          _daySeconds(dailyMap, _dateKey(addCalendarDays(now, -i)));
       if (s > 0) {
         total += s;
         daysWithData++;
@@ -2251,7 +2252,7 @@ class _StatsScreenState extends State<StatsScreen>
     final l = AppLocalizations.of(context)!;
     final now = DateTime.now();
     return List.generate(n, (i) {
-      final date = now.subtract(Duration(days: n - 1 - i));
+      final date = addCalendarDays(now, -(n - 1 - i));
       return _DayData(
         label: n <= 7 ? _dayLabel(date, l) : '${date.day}',
         fullLabel: _dateKey(date),
