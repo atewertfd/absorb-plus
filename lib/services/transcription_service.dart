@@ -18,6 +18,8 @@ import 'audio_player_service.dart';
 import 'download_service.dart';
 import 'remote_audio_slice.dart';
 import '../utils/whisper_language.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import '../utils/episode_key.dart';
 
 /// On-device bookmark transcription using Whisper (whisper.cpp via
 /// whisper_ggml_plus). Opt-in. Downloaded books decode from their files;
@@ -344,8 +346,8 @@ class TranscriptionService {
     if (cached != null) return cached;
     final api = _streamingApi();
     if (api == null) return null;
-    final isEpisode = itemId.length > 36;
-    final apiItemId = isEpisode ? itemId.substring(0, 36) : itemId;
+    final isEpisode = isEpisodeKey(itemId);
+    final apiItemId = isEpisode ? itemIdOfKey(itemId) : itemId;
     final item = await api.getLibraryItem(apiItemId);
     final media = item?['media'] as Map<String, dynamic>?;
     if (media == null) return null;
@@ -354,7 +356,7 @@ class TranscriptionService {
     if (named != null) _rememberMetadataLanguage(itemId, named);
     final raw = <Map<String, dynamic>>[];
     if (isEpisode) {
-      final episodeId = itemId.substring(37);
+      final episodeId = episodeIdOfKey(itemId)!;
       final episode = (media['episodes'] as List<dynamic>? ?? const [])
           .whereType<Map<String, dynamic>>()
           .where((e) => e['id'] == episodeId)

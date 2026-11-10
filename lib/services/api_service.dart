@@ -33,6 +33,7 @@ import 'tailscale_service.dart';
 import '../utils/keep_alive_client.dart';
 import '../utils/json_body.dart';
 import 'library_item_request_cache.dart';
+import '../utils/episode_key.dart';
 
 part 'bookorbit_api_service.dart';
 part 'bookorbit_admin_api.dart';
@@ -2806,8 +2807,8 @@ class ApiService {
     try {
       // Podcast episodes use compound key "showId-episodeId" →
       // ABS endpoint: /api/me/progress/{showId}/{episodeId}
-      final progressPath = itemId.length > 36
-          ? '${itemId.substring(0, 36)}/${itemId.substring(37)}'
+      final progressPath = isEpisodeKey(itemId)
+          ? '${itemIdOfKey(itemId)}/${episodeIdOfKey(itemId)!}'
           : itemId;
       final resp = await _authGet(
         Uri.parse('$_cleanBaseUrl/api/me/progress/$progressPath'),
@@ -2972,8 +2973,8 @@ class ApiService {
     bool? isFinished,
   }) async {
     try {
-      final progressPath = itemId.length > 36
-          ? '${itemId.substring(0, 36)}/${itemId.substring(37)}'
+      final progressPath = isEpisodeKey(itemId)
+          ? '${itemIdOfKey(itemId)}/${episodeIdOfKey(itemId)!}'
           : itemId;
       final url = Uri.parse('$_cleanBaseUrl/api/me/progress/$progressPath');
       if (isFinished == false) {
@@ -3025,8 +3026,8 @@ class ApiService {
         // false here would un-finish the book and wipe the audiobook's position.
         if (ebookProgress >= 1.0) 'isFinished': true,
       });
-      final progressPath = itemId.length > 36
-          ? '${itemId.substring(0, 36)}/${itemId.substring(37)}'
+      final progressPath = isEpisodeKey(itemId)
+          ? '${itemIdOfKey(itemId)}/${episodeIdOfKey(itemId)!}'
           : itemId;
       debugPrint('[API] updateEbookProgress PATCH /api/me/progress/$progressPath');
       final resp = await _authPatch(
@@ -3071,12 +3072,12 @@ class ApiService {
   Future<bool> resetProgress(String itemId, double duration,
       {String? progressId}) async {
     try {
-      final progressPath = itemId.length > 36
-          ? '${itemId.substring(0, 36)}/${itemId.substring(37)}'
+      final progressPath = isEpisodeKey(itemId)
+          ? '${itemIdOfKey(itemId)}/${episodeIdOfKey(itemId)!}'
           : itemId;
-      final isCompound = itemId.length > 36;
-      final apiItemId = isCompound ? itemId.substring(0, 36) : itemId;
-      final episodeId = isCompound ? itemId.substring(37) : null;
+      final isCompound = isEpisodeKey(itemId);
+      final apiItemId = isCompound ? itemIdOfKey(itemId) : itemId;
+      final episodeId = isCompound ? episodeIdOfKey(itemId)! : null;
 
       if (progressId != null) await deleteMediaProgress(progressId);
 
