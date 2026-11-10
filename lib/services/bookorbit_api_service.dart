@@ -16,7 +16,7 @@ class _BoHttpError implements Exception {
       final m = decoded['message'];
       if (m is String && m.trim().isNotEmpty) return m.trim();
       if (m is List && m.isNotEmpty) return m.join('\n');
-    } catch (_) {}
+    } catch (e) { debugPrint('[BookOrbit] serverMessage failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -26,7 +26,7 @@ class _BoHttpError implements Exception {
       final decoded = jsonDecode(body);
       if (decoded is Map && decoded['code'] is String) return decoded['code'] as String;
       if (decoded is Map && decoded['errorCode'] is String) return decoded['errorCode'] as String;
-    } catch (_) {}
+    } catch (e) { debugPrint('[BookOrbit] serverCode failed: ${e.runtimeType}'); }
     return null;
   }
 }
@@ -442,7 +442,7 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
     try {
       final m = (jsonDecode(r.body) as Map)['message'];
       if (m != null) return '$m';
-    } catch (_) {}
+    } catch (e) { debugPrint('[BookOrbit] _errorText failed: ${e.runtimeType}'); }
     return r.body.length > 200 ? r.body.substring(0, 200) : r.body;
   }
 
@@ -776,7 +776,7 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
           return label;
         }
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[BookOrbit] _fetchVersion failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -937,7 +937,7 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
       try {
         final decoded = jsonDecode(body);
         if (decoded is Map<String, dynamic>) json = decoded;
-      } catch (_) {}
+      } catch (e) { debugPrint('[BookOrbit] _route failed: ${e.runtimeType}'); }
     }
     try {
       final result = await _dispatch(method, seg, q, json);
@@ -3932,7 +3932,7 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
             return MatchSearchEvent.status('${decoded['provider']}', '${decoded['outcome']}');
           }
           if (name == null || name == 'message') return MatchSearchEvent.result(MatchCandidate(decoded));
-        } catch (_) {}
+        } catch (e) { debugPrint('[BookOrbit] searchMatches failed: ${e.runtimeType}'); }
         return null;
       }
       final lines = response.stream.transform(utf8.decoder).transform(const LineSplitter());
@@ -3984,7 +3984,7 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
       try {
         final c = jsonDecode(data);
         if (c is Map<String, dynamic>) out.add(BookOrbitMapper.searchResult(c));
-      } catch (_) {}
+      } catch (e) { debugPrint('[BookOrbit] _searchBooks failed: ${e.runtimeType}'); }
     }
     return out;
   }
@@ -4425,7 +4425,7 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
       try {
         fp = await _boGet('/books/$bookId/progress') as List<dynamic>;
         ebook = _ebookFrom(detail, fp);
-      } catch (_) {}
+      } catch (e) { debugPrint('[BookOrbit] _itemProgress failed: ${e.runtimeType}'); }
     }
     // A narrated EPUB with no audiobook: listening progress is the narration
     // position kept on the EPUB.
@@ -5355,7 +5355,7 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
     if (overlay == null) {
       try {
         overlay = await keptNarration?.call(bookId);
-      } catch (_) {}
+      } catch (e) { debugPrint('[BookOrbit] _placeNarrationSpot failed: ${e.runtimeType}'); }
     }
     if (overlay == null) {
       debugPrint('[BookOrbit] $bookId: reading the narration timings from the server to place its spot');
@@ -5566,7 +5566,7 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
       if (manifest == null) {
         try {
           fileId = (await _narration(s.bookId))?.fileId;
-        } catch (_) {}
+        } catch (e) { debugPrint('[BookOrbit] _checkpoint failed: ${e.runtimeType}'); }
       }
       s.fileId = fileId;
     }
@@ -5621,7 +5621,7 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
         map.remove(map.keys.first);
       }
       await prefs.setString(_sessionDevicesKey, jsonEncode(map));
-    } catch (_) {}
+    } catch (e) { debugPrint('[BookOrbit] _rememberSessionDevice failed: ${e.runtimeType}'); }
   }
 
   static String _sourceLabel(Object? source) => switch (source) {
@@ -5696,7 +5696,7 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
       if (manifest == null) {
         try {
           total = (await _narration(bookId))?.overlay.duration ?? 0.0;
-        } catch (_) {}
+        } catch (e) { debugPrint('[BookOrbit] _localSession failed: ${e.runtimeType}'); }
       }
       final startTime = (session['startTime'] as num?)?.toDouble();
       if (total > 0 && currentTime != null) s.lastPercent = (currentTime / total * 100).clamp(0.0, 100.0);
@@ -5728,7 +5728,7 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
     final ids = <String>{};
     try {
       ids.addAll((await _shelfCards('continue-listening', 50)).map((c) => '${c['id']}'));
-    } catch (_) {}
+    } catch (e) { debugPrint('[BookOrbit] _recentBookmarks failed: ${e.runtimeType}'); }
     final lists = await _pool(ids.map((id) => () async {
           try {
             return await _bookmarksFor(id);
@@ -5922,7 +5922,7 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
           out[e.key] = {'clientName': client, 'deviceName': '${e.value}'};
         }
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[BookOrbit] _sessionDevices failed: ${e.runtimeType}'); }
     return out;
   }
 
@@ -6019,7 +6019,7 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
         items = (await _cached('listening-stats', const Duration(minutes: 5), _listeningStats))['items']
                 as Map<String, dynamic>? ??
             const {};
-      } catch (_) {}
+      } catch (e) { debugPrint('[BookOrbit] getListeningSessionsForDay failed: ${e.runtimeType}'); }
       final devices = await _sessionDevices();
       return [
         for (final s in (res['sessions'] as List<dynamic>? ?? const []).whereType<Map<String, dynamic>>())
@@ -6296,7 +6296,7 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
     Map<String, dynamic>? manifest;
     try {
       manifest = await _manifest(bookId);
-    } catch (_) {}
+    } catch (e) { debugPrint('[BookOrbit] _itemListeningSessions failed: ${e.runtimeType}'); }
     // A narrated EPUB with no audiobook: reading and listening both happen in
     // the one file, so every session on it is this book's, timed against the
     // narration.
@@ -6304,7 +6304,7 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
     if (manifest == null) {
       try {
         narration = (BookOrbitMapper.item(detail: await _detail(bookId))['media'] as Map)['narration'] as Map?;
-      } catch (_) {}
+      } catch (e) { debugPrint('[BookOrbit] _itemListeningSessions failed: ${e.runtimeType}'); }
     }
     final bookSeconds = manifest != null
         ? BookOrbitMapper.totalSeconds(manifest)
@@ -6321,7 +6321,7 @@ class BookOrbitApiService extends ApiService implements BookOrbitTokenSource {
             .map((a) => a is Map ? '${a['name'] ?? ''}' : '$a')
             .where((a) => a.isNotEmpty)
             .join(', ');
-      } catch (_) {}
+      } catch (e) { debugPrint('[BookOrbit] _itemListeningSessions failed: ${e.runtimeType}'); }
     }
     final mine = await _sessionDevices();
     final sessions = (res['items'] as List<dynamic>? ?? const [])

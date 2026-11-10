@@ -331,7 +331,7 @@ class ReadListenSync {
     try {
       final server = (await api.getEbookPosition(itemId))?['ebookLocation'] as String?;
       if (server != null && server.startsWith('epubcfi(')) return server;
-    } catch (_) {}
+    } catch (e) { debugPrint('[SyncSpot] _ebookSpot failed: ${e.runtimeType}'); }
     return local != null && local.startsWith('epubcfi(') ? local : null;
   }
 

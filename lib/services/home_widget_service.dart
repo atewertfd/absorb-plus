@@ -409,7 +409,7 @@ class HomeWidgetService {
         customHeaders = Map<String, String>.from(
           jsonDecode(headersJson) as Map,
         );
-      } catch (_) {}
+      } catch (e) { debugPrint('[HomeWidget] _handlePlayItem failed: ${e.runtimeType}'); }
     }
 
     final api = ApiService.forSession(
@@ -636,7 +636,7 @@ class HomeWidgetService {
         customHeaders = Map<String, String>.from(
           jsonDecode(headersJson) as Map,
         );
-      } catch (_) {}
+      } catch (e) { debugPrint('[HomeWidget] _apiFromPrefs failed: ${e.runtimeType}'); }
     }
     return ApiService.forSession(
       backend: ServerBackend.loadActive(prefs),
@@ -677,7 +677,7 @@ class HomeWidgetService {
         final session = jsonDecode(sessionJson) as Map<String, dynamic>;
         duration = (session['duration'] as num?)?.toDouble() ?? 0;
         chapters = session['chapters'] as List<dynamic>? ?? const [];
-      } catch (_) {}
+      } catch (e) { debugPrint('[HomeWidget] _resumeFromDownloadRecord failed: ${e.runtimeType}'); }
     }
     final title = info.title ?? '';
     debugPrint(
@@ -1254,7 +1254,7 @@ class HomeWidgetService {
         customHeaders = Map<String, String>.from(
           jsonDecode(headersJson) as Map,
         );
-      } catch (_) {}
+      } catch (e) { debugPrint('[HomeWidget] _buildApiService failed: ${e.runtimeType}'); }
     }
     final headers = customHeaders ?? const <String, String>{};
 

@@ -177,7 +177,7 @@ class EqualizerService extends ChangeNotifier {
     // Effects apply independently of the band-EQ master switch on both platforms.
     try {
       await _channel.invokeMethod('setBassBoost', {'strength': (_bassBoost * 1000).round()});
-    } catch (_) {}
+    } catch (e) { debugPrint('[EQ] setBassBoost failed: ${e.runtimeType}'); }
     _tapApplier?.call(anyProcessingActive);
     await _saveSettings();
     notifyListeners();
@@ -189,7 +189,7 @@ class EqualizerService extends ChangeNotifier {
     if (_enabled) {
       try {
         await _channel.invokeMethod('setVirtualizer', {'strength': (_virtualizer * 1000).round()});
-      } catch (_) {}
+      } catch (e) { debugPrint('[EQ] setVirtualizer failed: ${e.runtimeType}'); }
     }
     await _saveSettings();
     notifyListeners();
@@ -200,7 +200,7 @@ class EqualizerService extends ChangeNotifier {
     _mono = value;
     try {
       await _channel.invokeMethod('setMono', {'enabled': _mono});
-    } catch (_) {}
+    } catch (e) { debugPrint('[EQ] setMono failed: ${e.runtimeType}'); }
     _tapApplier?.call(anyProcessingActive);
     await _saveSettings();
     notifyListeners();
@@ -251,7 +251,7 @@ class EqualizerService extends ChangeNotifier {
     _loudnessGain = value.clamp(0.0, 1.0);
     try {
       await _channel.invokeMethod('setLoudness', {'gain': (_loudnessGain * 1500).round()});
-    } catch (_) {}
+    } catch (e) { debugPrint('[EQ] setLoudnessGain failed: ${e.runtimeType}'); }
     _tapApplier?.call(anyProcessingActive);
     await _saveSettings();
     notifyListeners();
@@ -312,7 +312,7 @@ class EqualizerService extends ChangeNotifier {
       await _channel.invokeMethod('setLoudness', {'gain': (_loudnessGain * 1500).round()});
       await _channel.invokeMethod('setEnabled', {'enabled': _enabled});
       await _channel.invokeMethod('setMono', {'enabled': _mono});
-    } catch (_) {}
+    } catch (e) { debugPrint('[EQ] _applyCurrentSettings failed: ${e.runtimeType}'); }
   }
 
   Future<void> _applyBand(int index, double level) async {
@@ -321,7 +321,7 @@ class EqualizerService extends ChangeNotifier {
         'band': index,
         'level': (level * 100).round(), // millibels
       });
-    } catch (_) {}
+    } catch (e) { debugPrint('[EQ] _applyBand failed: ${e.runtimeType}'); }
   }
 
   Future<void> _resetPlatform() async {
@@ -332,7 +332,7 @@ class EqualizerService extends ChangeNotifier {
       await _channel.invokeMethod('setMono', {'enabled': _mono});
       await _channel.invokeMethod('setBassBoost', {'strength': (_bassBoost * 1000).round()});
       await _channel.invokeMethod('setLoudness', {'gain': (_loudnessGain * 1500).round()});
-    } catch (_) {}
+    } catch (e) { debugPrint('[EQ] _resetPlatform failed: ${e.runtimeType}'); }
   }
 
   /// Toggle per-item EQ scoping.

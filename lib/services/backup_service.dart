@@ -12,6 +12,7 @@ import 'user_account_service.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import 'imported_settings_reload.dart';
 import 'fork_backup_settings.dart';
+import 'package:flutter/foundation.dart';
 
 class BackupService {
   /// [includeRmabSecrets] is for settings sync's opt-in RMAB sharing; a
@@ -414,7 +415,7 @@ class BackupService {
       if (headersJson != null) {
         try {
           customHeaders = Map<String, String>.from(jsonDecode(headersJson) as Map);
-        } catch (_) {}
+        } catch (e) { debugPrint('[Backup] exportSettings failed: ${e.runtimeType}'); }
       }
     }
 
@@ -1002,7 +1003,7 @@ class BackupService {
           try {
             final pos = (jsonDecode(raw) as Map<String, dynamic>)['pos'] as num?;
             if (pos != null) positions.add(pos.toDouble());
-          } catch (_) {}
+          } catch (e) { debugPrint('[Backup] importSettings failed: ${e.runtimeType}'); }
         }
         for (final raw in incoming) {
           double? pos;

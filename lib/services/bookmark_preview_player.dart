@@ -203,7 +203,7 @@ class BookmarkPreviewPlayer extends ChangeNotifier {
     try {
       final f = File(path);
       if (f.existsSync()) await f.delete();
-    } catch (_) {}
+    } catch (e) { debugPrint('[BookmarkPreview] _deleteClip failed: ${e.runtimeType}'); }
   }
 
   Future<void> _disposePlayer() async {

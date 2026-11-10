@@ -282,7 +282,7 @@ class SettingsSyncService {
       if (decoded is Map) {
         return safeCustomHeaders(decoded.map((k, v) => MapEntry('$k', '$v')));
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[SettingsSync] getCustomHeaders failed: ${e.runtimeType}'); }
     return const {};
   }
 

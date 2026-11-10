@@ -3,6 +3,8 @@ import 'dart:convert';
 import '../utils/episode_key.dart';
 import 'api_service.dart';
 import 'download_service.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'package:flutter/foundation.dart';
 
 /// One playable track of a book: a local file path / SAF content URI, or a
 /// streamed per-file URL, plus its duration in seconds.
@@ -42,7 +44,7 @@ class BookTrackResolver {
               ),
           ];
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[TrackResolver] resolve failed: ${e.runtimeType}'); }
     }
 
     // Streamed book: build per-file URLs from the library item.

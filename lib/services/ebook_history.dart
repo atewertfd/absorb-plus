@@ -93,7 +93,7 @@ class EbookHistory {
       try {
         final s = EbookSpot.fromJson(jsonDecode(raw) as Map<String, dynamic>);
         if (s != null) out.add(s);
-      } catch (_) {}
+      } catch (e) { debugPrint('[EbookHistory] spots failed: ${e.runtimeType}'); }
     }
     return out;
   }

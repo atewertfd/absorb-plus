@@ -168,14 +168,14 @@ class TranscriptionService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_stepMarkerKey,
           '${DateTime.now().millisecondsSinceEpoch}|$memory|$step');
-    } catch (_) {}
+    } catch (e) { debugPrint('[Transcribe] _stampStep failed: ${e.runtimeType}'); }
   }
 
   Future<void> _clearStepMarker() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_stepMarkerKey);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Transcribe] _clearStepMarker failed: ${e.runtimeType}'); }
   }
 
   Future<String> _memoryNumbers() async {
@@ -202,7 +202,7 @@ class TranscriptionService {
           .inMinutes;
       debugPrint('[Transcribe] previous run ended during "${parts.sublist(2).join('|')}" '
           '${ago}min ago (${parts[1]})');
-    } catch (_) {}
+    } catch (e) { debugPrint('[Transcribe] reportInterruptedRun failed: ${e.runtimeType}'); }
   }
 
   /// Which model the last run actually used, after [_modelFor] had its say.
@@ -229,7 +229,7 @@ class TranscriptionService {
       final session = jsonDecode(raw) as Map<String, dynamic>;
       final meta = session['mediaMetadata'] as Map<String, dynamic>?;
       named = whisperLanguageCode(meta?['language'] as String?);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Transcribe] _langFor failed: ${e.runtimeType}'); }
     if (named == null) return 'auto';
     _rememberMetadataLanguage(itemId, named);
     return named;
@@ -295,7 +295,7 @@ class TranscriptionService {
         await sink.flush();
         await sink.close();
       } catch (_) {
-        await sink.close().catchError((_) {});
+        await sink.close().catchError((e) { debugPrint('[Transcribe] downloadModel failed: ${e.runtimeType}'); });
         if (part.existsSync()) await part.delete().catchError((_) => part);
         rethrow;
       }
@@ -489,7 +489,7 @@ class TranscriptionService {
     } finally {
       try {
         File(slice.path).deleteSync();
-      } catch (_) {}
+      } catch (e) { debugPrint('[Transcribe] _decodeWindow failed: ${e.runtimeType}'); }
     }
   }
 
@@ -624,7 +624,7 @@ class TranscriptionService {
         try {
           final f = File(wavPath);
           if (f.existsSync()) await f.delete();
-        } catch (_) {}
+        } catch (e) { debugPrint('[Transcribe] transcribeAt failed: ${e.runtimeType}'); }
       }
     }
   }
@@ -726,7 +726,7 @@ class TranscriptionService {
         try {
           final f = File(wavPath);
           if (f.existsSync()) await f.delete();
-        } catch (_) {}
+        } catch (e) { debugPrint('[Transcribe] transcribeWindowSegments failed: ${e.runtimeType}'); }
       }
     }
   }

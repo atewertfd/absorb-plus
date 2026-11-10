@@ -147,14 +147,14 @@ class LogService {
       _closeAppender();
       try {
         _logFile!.writeAsStringSync(line, mode: FileMode.append);
-      } catch (_) {}
+      } catch (_) { /* the logger cannot log its own write failure */ }
     }
   }
 
   void _closeAppender() {
     try {
       _appender?.closeSync();
-    } catch (_) {}
+    } catch (_) { /* the logger cannot log its own close failure */ }
     _appender = null;
   }
 
@@ -260,7 +260,7 @@ class LogService {
         createdAtFile.writeAsStringSync(
           DateTime.now().millisecondsSinceEpoch.toString(),
         );
-      } catch (_) {}
+      } catch (e) { debugPrint('[Log] clearLogs failed: ${e.runtimeType}'); }
     }
   }
 

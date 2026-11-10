@@ -206,7 +206,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
       _lastPlaybackStateUpdate = DateTime.now();
       _lastPlaying = _player.playing;
       _lastProcessingState = _player.processingState;
-    } catch (_) {}
+    } catch (e) { debugPrint('[Player] refreshPlaybackState failed: ${e.runtimeType}'); }
   }
 
   AudioPlayerHandler() {
@@ -2996,7 +2996,7 @@ class AudioPlayerService extends ChangeNotifier {
       _pauseSwap = null;
       try {
         await swap;
-      } catch (_) {}
+      } catch (e) { debugPrint('[Player] _seekAbsolute failed: ${e.runtimeType}'); }
       if (_player == null) return;
     }
     _lastSeekTargetSec = absoluteSeconds;
@@ -3657,14 +3657,14 @@ class AudioPlayerService extends ChangeNotifier {
         '${DateTime.now().millisecondsSinceEpoch}|${m.footprintMb}|'
         '${m.availableMb}|$playing',
       );
-    } catch (_) {}
+    } catch (e) { debugPrint('[Player] _logBackgroundMemory failed: ${e.runtimeType}'); }
   }
 
   static Future<void> _logForegroundMemory() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_bgMarkerKey);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Player] _logForegroundMemory failed: ${e.runtimeType}'); }
     final m = await iosMemoryInfo();
     debugPrint('[Memory] Foregrounded: footprint=${m.footprintMb}MB '
         'available=${m.availableMb}MB');
@@ -3685,7 +3685,7 @@ class AudioPlayerService extends ChangeNotifier {
       debugPrint('[Memory] Previous process ended in the background, '
           '${ago}min after it went there (or was swiped away): '
           'footprint=${part(1)}MB available=${part(2)}MB playing=${part(3)}');
-    } catch (_) {}
+    } catch (e) { debugPrint('[Player] _reportPreviousBackgroundDeath failed: ${e.runtimeType}'); }
   }
 
   /// Flutter forwards iOS memory warnings here (and drops its image cache on
@@ -3781,7 +3781,7 @@ class AudioPlayerService extends ChangeNotifier {
     if (service.isPlaying) {
       try {
         await _setAudioSessionActive(true);
-      } catch (_) {}
+      } catch (e) { debugPrint('[Player] onAppForegrounded failed: ${e.runtimeType}'); }
     } else if (AppPlatform.isIOS && service.hasBook) {
       // Paused with a book loaded: an interruption while iOS had this app
       // suspended may have silently dropped the Now Playing claim. The
@@ -4024,7 +4024,7 @@ class AudioPlayerService extends ChangeNotifier {
             startTime = engine.globalPositionS;
             localTimestampAtStart = DateTime.now().millisecondsSinceEpoch;
           }
-        } catch (_) {}
+        } catch (e) { debugPrint('[Player] playItem failed: ${e.runtimeType}'); }
       }
     }
 
@@ -4197,7 +4197,7 @@ class AudioPlayerService extends ChangeNotifier {
             Map<String, dynamic>? lateSession;
             try {
               lateSession = await pendingSession;
-            } catch (_) {}
+            } catch (e) { debugPrint('[Player] playItem failed: ${e.runtimeType}'); }
             result = await _playFromServer(
               api,
               itemId,
@@ -4695,7 +4695,7 @@ class AudioPlayerService extends ChangeNotifier {
             );
           }
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[Player] _playFromLocal failed: ${e.runtimeType}'); }
     }
 
     try {
@@ -4824,7 +4824,7 @@ class AudioPlayerService extends ChangeNotifier {
       await Future.delayed(const Duration(milliseconds: 200));
       try {
         await _setAudioSessionActive(true);
-      } catch (_) {}
+      } catch (e) { debugPrint('[Player] _playFromLocal failed: ${e.runtimeType}'); }
       if (_startSuperseded(gen)) {
         return _abandonStart(null, null, 'local, before play');
       }
@@ -4932,7 +4932,7 @@ class AudioPlayerService extends ChangeNotifier {
       pendingSession?.then((s) {
         final id = s?['id'] as String?;
         if (id != null) unawaited(api.closePlaybackSession(id));
-      }).catchError((_) {});
+      }).catchError((e) { debugPrint('[Player] _playFromSessionCache failed: ${e.runtimeType}'); });
     }
 
     if (_startSuperseded(playbackGeneration)) {
@@ -5052,7 +5052,7 @@ class AudioPlayerService extends ChangeNotifier {
       await Future.delayed(const Duration(milliseconds: 200));
       try {
         await _setAudioSessionActive(true);
-      } catch (_) {}
+      } catch (e) { debugPrint('[Player] _playFromSessionCache failed: ${e.runtimeType}'); }
       if (_startSuperseded(playbackGeneration)) {
         dropPendingSession();
         return _abandonStart(null, null, 'cached start, before play');
@@ -5400,7 +5400,7 @@ class AudioPlayerService extends ChangeNotifier {
             startTime = serverPos;
             useServer = true;
           }
-        } catch (_) {}
+        } catch (e) { debugPrint('[Player] _playFromServer failed: ${e.runtimeType}'); }
       }
       if (!useServer) {
         if (hasPending) {
@@ -5517,7 +5517,7 @@ class AudioPlayerService extends ChangeNotifier {
       await Future.delayed(const Duration(milliseconds: 200));
       try {
         await _setAudioSessionActive(true);
-      } catch (_) {}
+      } catch (e) { debugPrint('[Player] _playFromServer failed: ${e.runtimeType}'); }
       if (_startSuperseded(gen)) {
         return _abandonStart(api, ownSessionId, 'before play');
       }
@@ -5560,7 +5560,7 @@ class AudioPlayerService extends ChangeNotifier {
         if (ownSessionId != null) {
           try {
             await api.closePlaybackSession(ownSessionId);
-          } catch (_) {}
+          } catch (e) { debugPrint('[Player] _playFromServer failed: ${e.runtimeType}'); }
           if (_playbackSessionId == ownSessionId) _playbackSessionId = null;
         }
         return _playFromServer(
@@ -6226,7 +6226,7 @@ class AudioPlayerService extends ChangeNotifier {
       debugPrint('[StreamUpgrade] Swap failed after replacing the source - resetting the player: $e');
       try {
         await _player?.stop();
-      } catch (_) {}
+      } catch (e) { debugPrint('[Player] _applyPendingSessionUpgrade failed: ${e.runtimeType}'); }
       if (resumeAfter) unawaited(_attemptStreamRetry(e, resume: true));
       return false;
     }
@@ -8488,7 +8488,7 @@ class AudioPlayerService extends ChangeNotifier {
         try {
           debugPrint('[Player] Closing session (stop)');
           await _api!.closePlaybackSession(_playbackSessionId!);
-        } catch (_) {}
+        } catch (e) { debugPrint('[Player] stop failed: ${e.runtimeType}'); }
       } else if (_currentItemId != null && _api != null) {
         // Episodes keep their progress under the compound key, as in pause().
         await _progressSync.syncToServer(api: _api!, itemId: _mediaItemKey);
@@ -8523,7 +8523,7 @@ class AudioPlayerService extends ChangeNotifier {
       debugPrint('[Battery] AudioSession DEACTIVATED (stop)');
       try {
         await _setAudioSessionActive(false);
-      } catch (_) {}
+      } catch (e) { debugPrint('[Player] stop failed: ${e.runtimeType}'); }
     }
   }
 
@@ -8537,7 +8537,7 @@ class AudioPlayerService extends ChangeNotifier {
       try {
         debugPrint('[Player] Closing session (reset progress)');
         await _api!.closePlaybackSession(_playbackSessionId!);
-      } catch (_) {}
+      } catch (e) { debugPrint('[Player] stopWithoutSaving failed: ${e.runtimeType}'); }
     }
     // Local-session play: queue the accrued listening for replay (the user did
     // listen; resetting position shouldn't erase that).

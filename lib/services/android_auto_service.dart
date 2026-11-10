@@ -262,11 +262,11 @@ class AndroidAutoService {
         try {
           // ignore: deprecated_member_use
           await AudioServiceBackground.notifyChildrenChanged(AutoMediaIds.downloads);
-        } catch (_) {}
+        } catch (e) { debugPrint('[AutoBrowse] _onDownloadsChanged failed: ${e.runtimeType}'); }
       }
       try {
         onServerDataChanged?.call();
-      } catch (_) {}
+      } catch (e) { debugPrint('[AutoBrowse] _onDownloadsChanged failed: ${e.runtimeType}'); }
     });
   }
 
@@ -339,7 +339,7 @@ class AndroidAutoService {
     if (headersJson != null && headersJson.isNotEmpty) {
       try {
         customHeaders = Map<String, String>.from(jsonDecode(headersJson) as Map);
-      } catch (_) {}
+      } catch (e) { debugPrint('[AutoBrowse] getApi failed: ${e.runtimeType}'); }
     }
     return ApiService.forSession(
       backend: ServerBackend.loadActive(prefs),
@@ -456,7 +456,7 @@ class AndroidAutoService {
           try {
             // ignore: deprecated_member_use
             await AudioServiceBackground.notifyChildrenChanged(id);
-          } catch (_) {}
+          } catch (e) { debugPrint('[AutoBrowse] _refreshServerInBackground failed: ${e.runtimeType}'); }
         }
       }
       try {
@@ -508,7 +508,7 @@ class AndroidAutoService {
       // ignore: deprecated_member_use
       unawaited(AudioServiceBackground
           .notifyChildrenChanged(AutoMediaIds.root)
-          .catchError((_) {}));
+          .catchError((e) { debugPrint('[AutoBrowse] notifyItemUpdated failed: ${e.runtimeType}'); }));
     }
   }
 
@@ -519,7 +519,7 @@ class AndroidAutoService {
       // ignore: deprecated_member_use
       unawaited(AudioServiceBackground
           .notifyChildrenChanged(AutoMediaIds.root)
-          .catchError((_) {}));
+          .catchError((e) { debugPrint('[AutoBrowse] browseOrderChanged failed: ${e.runtimeType}'); }));
     }
   }
 
@@ -537,7 +537,7 @@ class AndroidAutoService {
           final session = jsonDecode(dl.sessionData!) as Map<String, dynamic>;
           duration = (session['duration'] as num?)?.toDouble() ?? 0;
           chapters = session['chapters'] as List<dynamic>? ?? [];
-        } catch (_) {}
+        } catch (e) { debugPrint('[AutoBrowse] _refreshDownloaded failed: ${e.runtimeType}'); }
       }
 
       // GH #361: ebook-only books register as downloads with no audio files -
@@ -566,7 +566,7 @@ class AndroidAutoService {
             final prev = _itemUpdatedAt[coverKey];
             if (prev == null || ms > prev) _itemUpdatedAt[coverKey] = ms;
           }
-        } catch (_) {}
+        } catch (e) { debugPrint('[AutoBrowse] _refreshDownloaded failed: ${e.runtimeType}'); }
       }
       String coverUrl;
       if (Platform.isIOS && dl.localCoverPath != null && dl.localCoverPath!.isNotEmpty) {

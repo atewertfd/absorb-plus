@@ -293,7 +293,7 @@ class ChromecastService extends ChangeNotifier {
         await GoogleCastSessionManager.instance
             .endSession()
             .timeout(const Duration(milliseconds: 500));
-      } catch (_) {}
+      } catch (e) { debugPrint('[Cast] _tryReconnect failed: ${e.runtimeType}'); }
       if (!_reconnecting) return;
       try {
         debugPrint('[Cast] Reconnect backstop: connecting to ${device.friendlyName}');
@@ -889,7 +889,7 @@ class ChromecastService extends ChangeNotifier {
         await Future.delayed(const Duration(milliseconds: 300));
         try {
           await GoogleCastRemoteMediaClient.instance.setPlaybackRate(_castSpeed);
-        } catch (_) {}
+        } catch (e) { debugPrint('[Cast] _advanceToNextTrack failed: ${e.runtimeType}'); }
       }
     } catch (e) {
       debugPrint('[Cast] Auto-advance error: $e');
@@ -938,7 +938,7 @@ class ChromecastService extends ChangeNotifier {
       if (session != null) {
         _volume = session.currentDeviceVolume.clamp(0.0, 1.0);
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Cast] _updateVolumeFromSession failed: ${e.runtimeType}'); }
   }
 
   Future<void> setVolume(double value) async {
@@ -955,7 +955,7 @@ class ChromecastService extends ChangeNotifier {
 
   Future<void> play() async {
     if (!isConnected) return;
-    try { await GoogleCastRemoteMediaClient.instance.play(); } catch (_) {}
+    try { await GoogleCastRemoteMediaClient.instance.play(); } catch (e) { debugPrint('[Cast] play failed: ${e.runtimeType}'); }
     // Reset the sync clock so the first tick after resume only counts the
     // seconds actually played since now, not the wall-clock elapsed since
     // the last sync (which would include the entire pause).
@@ -963,7 +963,7 @@ class ChromecastService extends ChangeNotifier {
   }
   Future<void> pause() async {
     if (!isConnected) return;
-    try { await GoogleCastRemoteMediaClient.instance.pause(); } catch (_) {}
+    try { await GoogleCastRemoteMediaClient.instance.pause(); } catch (e) { debugPrint('[Cast] pause failed: ${e.runtimeType}'); }
     await _saveProgressLocal();
     await _syncProgressToServer();
   }
@@ -1068,7 +1068,7 @@ class ChromecastService extends ChangeNotifier {
     if (!isConnected) return;
     await _saveProgressLocal();
     await _syncProgressToServer();
-    try { await GoogleCastRemoteMediaClient.instance.stop(); } catch (_) {}
+    try { await GoogleCastRemoteMediaClient.instance.stop(); } catch (e) { debugPrint('[Cast] stopCasting failed: ${e.runtimeType}'); }
 
 
     // Close the playback session so stats are finalized
