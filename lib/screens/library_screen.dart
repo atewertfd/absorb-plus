@@ -519,6 +519,10 @@ class LibraryScreenState extends State<LibraryScreen>
   bool _hasMoreAuthors = true;
   int _totalAuthors = 0;
   int _authorsGen = 0;
+  // Absorb Plus (BUG-005): bumped by every Series / Narrators reset so an
+  // answer for the list before it is dropped, like _authorsGen.
+  int _seriesGen = 0;
+  int _narratorsGen = 0;
   static const _authorsPageSize = 100;
   LibrarySort _authorSort = LibrarySort.alphabetical;
   bool _authorSortAsc = true;
@@ -740,6 +744,7 @@ class LibraryScreenState extends State<LibraryScreen>
         _seriesItems.clear();
         _seriesPage = 0;
         _hasMoreSeries = true;
+        _seriesGen++; // Absorb Plus
         _isLoadingSeriesPage = false;
         _totalSeries = 0;
         _authors.clear();
@@ -752,6 +757,7 @@ class LibraryScreenState extends State<LibraryScreen>
         _narrators.clear();
         _narratorCounts = {};
         _narratorsLoaded = false;
+        _narratorsGen++; // Absorb Plus
         _isLoadingNarrators = false;
         _listsFailed = false;
         _allNarratorsCache = null;
@@ -1524,6 +1530,7 @@ class LibraryScreenState extends State<LibraryScreen>
       setState(() => _isLoadingSeriesPage = false);
       return;
     }
+    final gen = _seriesGen; // Absorb Plus (BUG-005)
 
     String sort;
     switch (_seriesSort) {
@@ -1565,7 +1572,7 @@ class LibraryScreenState extends State<LibraryScreen>
         sort: sort,
         desc: _seriesSortAsc ? 0 : 1,
       );
-      if (!mounted) return;
+      if (!mounted || gen != _seriesGen) return; // Absorb Plus (BUG-005)
       if (result == null) {
         setState(() => _isLoadingSeriesPage = false);
         return;
@@ -1614,7 +1621,7 @@ class LibraryScreenState extends State<LibraryScreen>
               _isLoadingSeriesPage = false;
             });
             // Refresh in background
-            _refreshSeriesInBackground(api, lib, sort, cacheKey);
+            _refreshSeriesInBackground(api, lib, sort, cacheKey, gen);
             return;
           }
         }
@@ -1629,6 +1636,7 @@ class LibraryScreenState extends State<LibraryScreen>
       sort: sort,
       desc: _seriesSortAsc ? 0 : 1,
     );
+    if (gen != _seriesGen) return; // Absorb Plus (BUG-005): reset meanwhile
 
     if (result != null && mounted) {
       final results = (result['results'] as List<dynamic>?) ?? [];
@@ -1670,6 +1678,7 @@ class LibraryScreenState extends State<LibraryScreen>
     LibraryProvider lib,
     String sort,
     String cacheKey,
+    int gen, // Absorb Plus (BUG-005)
   ) async {
     final allItems = <Map<String, dynamic>>[];
     int page = 0;
@@ -1686,6 +1695,7 @@ class LibraryScreenState extends State<LibraryScreen>
         sort: sort,
         desc: _seriesSortAsc ? 0 : 1,
       );
+      if (gen != _seriesGen) return; // Absorb Plus (BUG-005)
       if (result == null) break;
       final results = (result['results'] as List<dynamic>?) ?? [];
       total = (result['total'] as int?) ?? 0;
@@ -1820,8 +1830,9 @@ class LibraryScreenState extends State<LibraryScreen>
     }
 
     final libId = lib.selectedLibraryId!;
+    final gen = _narratorsGen; // Absorb Plus (BUG-005)
     final narrators = await api.getLibraryNarrators(libId);
-    if (!mounted) return;
+    if (!mounted || gen != _narratorsGen) return;
     setState(() {
       _narrators = narrators;
       _sortNarrators();
@@ -1831,7 +1842,7 @@ class LibraryScreenState extends State<LibraryScreen>
     // Book counts come from a separate endpoint that walks every book with a
     // narrator, so they land after the names and re-sort the list then.
     final counts = await api.getLibraryNarratorCounts(libId);
-    if (!mounted || counts.isEmpty || lib.selectedLibraryId != libId) return;
+    if (!mounted || counts.isEmpty || lib.selectedLibraryId != libId || gen != _narratorsGen) return;
     setState(() {
       _narratorCounts = counts;
       _sortNarrators();
@@ -1943,6 +1954,7 @@ class LibraryScreenState extends State<LibraryScreen>
       _seriesItems.clear();
       _seriesPage = 0;
       _hasMoreSeries = true;
+      _seriesGen++; // Absorb Plus
       _isLoadingSeriesPage = false;
     });
     PlayerSettings.setSeriesSort(_seriesSort.name);
@@ -2067,6 +2079,7 @@ class LibraryScreenState extends State<LibraryScreen>
       _seriesItems.clear();
       _seriesPage = 0;
       _hasMoreSeries = true;
+      _seriesGen++; // Absorb Plus
       _isLoadingSeriesPage = false;
     });
     PlayerSettings.setLibrarySeriesFilter(_seriesFilter.name);
@@ -2611,6 +2624,7 @@ class LibraryScreenState extends State<LibraryScreen>
               _seriesItems.clear();
               _seriesPage = 0;
               _hasMoreSeries = true;
+              _seriesGen++; // Absorb Plus
               _isLoadingSeriesPage = false;
             });
             PlayerSettings.setSeriesSortAsc(_seriesSortAsc);
@@ -3706,6 +3720,7 @@ class LibraryScreenState extends State<LibraryScreen>
       _seriesItems.clear();
       _seriesPage = 0;
       _hasMoreSeries = true;
+      _seriesGen++; // Absorb Plus
       _isLoadingSeriesPage = false;
     });
     await _loadSeriesPage();
@@ -4033,6 +4048,7 @@ class LibraryScreenState extends State<LibraryScreen>
       _narrators.clear();
       _narratorCounts = {};
       _narratorsLoaded = false;
+      _narratorsGen++; // Absorb Plus
       _isLoadingNarrators = false;
     });
     await _loadNarrators();
