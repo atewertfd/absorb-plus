@@ -9,6 +9,7 @@ import 'chapter_lookup.dart';
 import 'progress_sync_service.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/web_safe_platform.dart'; // web-safe Platform
+import 'sync_logic.dart'; // Absorb Plus
 
 enum CastConnectionState { disconnected, connecting, connected }
 enum CastPlaybackState { idle, loading, playing, paused, buffering }
@@ -637,14 +638,29 @@ class ChromecastService extends ChangeNotifier {
       }
       debugPrint('[Cast] Got session data, keys: ${sessionData.keys.toList()}');
 
-      final serverPos = (sessionData['currentTime'] as num?)?.toDouble() ?? 0;
+      // Absorb Plus (BUG-006): the new session's own updatedAt says nothing
+      // about when the progress was saved. Pick with the progress row's
+      // lastUpdate and keep a spot that is still waiting to sync, the way a
+      // local start does (SyncLogic.resumePosition).
+      final serverRow = await api
+          .getItemProgress(progressKey)
+          .timeout(const Duration(seconds: 5), onTimeout: () => null)
+          .catchError((Object _) => null);
+      final serverPos = (serverRow?['currentTime'] as num?)?.toDouble() ??
+          (sessionData['currentTime'] as num?)?.toDouble() ??
+          0;
+      final serverTs = (serverRow?['lastUpdate'] as num?)?.toInt() ?? 0;
       debugPrint('[Cast] Server position: $serverPos');
       if (serverPos > 0) {
         final localData = await _progressSync.getLocal(progressKey);
         final lt = (localData?['timestamp'] as num?)?.toInt() ?? 0;
-        final st = (sessionData['updatedAt'] as num?)?.toInt() ?? 0;
-        if (st > lt && (serverPos - startTime).abs() > 1.0) startTime = serverPos;
-        else if (startTime == 0 && serverPos > 0) startTime = serverPos;
+        startTime = SyncLogic.resumePosition(
+          local: startTime,
+          localTimestamp: lt,
+          hasPendingSync: await _progressSync.hasPendingSync(progressKey),
+          server: serverPos,
+          serverLastUpdate: serverTs,
+        );
       }
 
       // Update duration from server if we don't have it (common for podcast episodes)

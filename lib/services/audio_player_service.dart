@@ -4528,6 +4528,15 @@ class AudioPlayerService extends ChangeNotifier {
         final serverLastUpdate =
             (serverProgress?['lastUpdate'] as num?)?.toInt() ?? 0;
         final localTs = await _progressSync.getSavedTimestamp(pKey);
+        // Absorb Plus (IMP-002): the shared rule cast starts use too.
+        final hasPending = await _progressSync.hasPendingSync(pKey);
+        final picked = SyncLogic.resumePosition(
+          local: startTime,
+          localTimestamp: localTs,
+          hasPendingSync: hasPending,
+          server: serverPos,
+          serverLastUpdate: serverLastUpdate,
+        );
         if (serverPos > startTime + 1.0) {
           debugPrint(
             '[Player] Server position is ahead: server=${serverPos}s vs local=${startTime}s — using server',
@@ -4539,41 +4548,18 @@ class AudioPlayerService extends ChangeNotifier {
             duration: totalDuration,
             speed: 1.0,
           );
+        } else if (picked != startTime) {
+          debugPrint(
+            startTime > 0
+                ? '[Player] Local position is ahead but stale: local=${startTime}s (ts=$localTs) vs server=${serverPos}s (ts=$serverLastUpdate) — using server'
+                : '[Player] No local position, using server: ${serverPos}s',
+          );
+          startTime = picked;
         } else if (startTime > 0) {
-          // Local is ahead — verify via timestamp that this isn't stale data.
-          // Skip the override if we have a pending local sync: local is the
-          // truth, we just haven't shipped it to the server yet.
-          bool useServer = false;
-          final hasPending = await _progressSync.hasPendingSync(pKey);
-          final gap = startTime - serverPos;
-          if (localTs > 0 &&
-              !hasPending &&
-              gap <= SyncLogic.localAheadSafetySeconds &&
-              serverLastUpdate > localTs) {
-            debugPrint(
-              '[Player] Local position is ahead but stale: local=${startTime}s (ts=$localTs) vs server=${serverPos}s (ts=$serverLastUpdate) — using server',
-            );
-            startTime = serverPos;
-            useServer = true;
-          }
-          if (!useServer) {
-            if (hasPending) {
-              debugPrint(
-                '[Player] Local position is ahead: local=${startTime}s vs server=${serverPos}s — keeping local (pending sync)',
-              );
-            } else if (gap > SyncLogic.localAheadSafetySeconds) {
-              debugPrint(
-                '[Player] Local position is ahead: local=${startTime}s vs server=${serverPos}s — keeping local (gap ${gap.toStringAsFixed(1)}s exceeds safety threshold)',
-              );
-            } else {
-              debugPrint(
-                '[Player] Local position is ahead: local=${startTime}s vs server=${serverPos}s — keeping local',
-              );
-            }
-          }
-        } else if (serverPos > 0) {
-          debugPrint('[Player] No local position, using server: ${serverPos}s');
-          startTime = serverPos;
+          debugPrint(
+            '[Player] Local position is ahead: local=${startTime}s vs server=${serverPos}s — keeping local'
+            '${hasPending ? ' (pending sync)' : ''}',
+          );
         }
       } catch (e) {
         debugPrint('[Player] Local-play progress reconcile failed: $e');
