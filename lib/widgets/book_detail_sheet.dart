@@ -84,6 +84,7 @@ import '../utils/cover_cache.dart';
 import '../utils/cover_palette.dart';
 import 'bookmark_list_controls.dart';
 import '../ui_themes/app_backdrop.dart'; // Absorb Plus
+import '../services/authenticated_get.dart'; // Absorb Plus
 
 // ─── BOOK DETAIL BOTTOM SHEET ───────────────────────────────
 
@@ -3371,25 +3372,10 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         // Use streamed download with proper headers (including custom
         // reverse-proxy headers) and manual redirect following so auth
         // headers are preserved across redirects.
-        final request = http.Request('GET', Uri.parse(url));
-        request.followRedirects = false;
-        api.mediaHeaders.forEach((k, v) => request.headers[k] = v);
         final client = http.Client();
         try {
-          var response = await client.send(request);
-
-          // Manually follow redirects while preserving auth headers
-          var redirects = 0;
-          while ([301, 302, 303, 307, 308].contains(response.statusCode) && redirects < 5) {
-            final location = response.headers['location'];
-            if (location == null) break;
-            final redirectUrl = Uri.parse(url).resolve(location);
-            final rReq = http.Request('GET', redirectUrl);
-            api.mediaHeaders.forEach((k, v) => rReq.headers[k] = v);
-            rReq.followRedirects = false;
-            response = await client.send(rReq);
-            redirects++;
-          }
+          // Absorb Plus (BUG-001): headers only on the server's own origin.
+          final response = await authenticatedGet(client, Uri.parse(url), api.mediaHeaders);
 
           if (response.statusCode != 200) {
             if (mounted) {

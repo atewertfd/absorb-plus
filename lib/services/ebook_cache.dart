@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'api_service.dart';
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'authenticated_get.dart'; // Absorb Plus
 
 /// File extension (with leading dot) for an ABS ebookFile, or '' if unknown.
 /// Prefers the explicit `ebookFormat` field over the filename extension so a
@@ -307,23 +309,10 @@ Future<File> _downloadEbook(
   debugPrint('[EbookCache] downloading item=$itemId path=/api/items/$itemId/file/$ino');
   final startedAt = DateTime.now();
   final partFile = File('${cachedFile.path}.part');
-  final request = http.Request('GET', Uri.parse(url));
-  request.followRedirects = false;
-  api.mediaHeaders.forEach((k, v) => request.headers[k] = v);
   final client = http.Client();
   try {
-    var response = await client.send(request);
-    var redirects = 0;
-    while ([301, 302, 303, 307, 308].contains(response.statusCode) && redirects < 5) {
-      final location = response.headers['location'];
-      if (location == null) break;
-      final redirectUrl = Uri.parse(url).resolve(location);
-      final rReq = http.Request('GET', redirectUrl);
-      api.mediaHeaders.forEach((k, v) => rReq.headers[k] = v);
-      rReq.followRedirects = false;
-      response = await client.send(rReq);
-      redirects++;
-    }
+    // Absorb Plus (BUG-001): headers only on the server's own origin.
+    final response = await authenticatedGet(client, Uri.parse(url), api.mediaHeaders);
     if (response.statusCode != 200) {
       throw Exception('Failed to download ebook (${response.statusCode})');
     }

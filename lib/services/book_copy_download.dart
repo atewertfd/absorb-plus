@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../utils/fork_platform.dart';
+import 'authenticated_get.dart' as authenticated;
 
 /// Absorb Plus: "Save a copy…" of a book on desktop (audit C8).
 ///
@@ -62,23 +63,9 @@ class BookCopyDownload {
     final part = File('$destPath.part');
     try {
       if (_cancelled) throw const BookCopyCancelled();
-      var response = await _send(url, headers);
-      // Follow redirects by hand so the sign-in headers come along, but only
-      // to the server itself: another host (a CDN, a misconfigured proxy)
-      // gets neither the headers nor the token query (audit D14).
-      var target = url;
-      for (var i = 0;
-          i < 5 && const {301, 302, 303, 307, 308}.contains(response.statusCode);
-          i++) {
-        final location = response.headers['location'];
-        if (location == null) break;
-        await response.stream.drain<void>().catchError((_) {
-          // The redirect's body is thrown away; only the next hop matters.
-        });
-        target = redirectTarget(url, target, location);
-        response = await _send(
-            target, sameOrigin(url, target) ? headers : const {});
-      }
+      // Redirects keep the sign-in headers only on the server itself
+      // (audit D14, shared with the ebook downloads: authenticated_get.dart).
+      final response = await authenticated.authenticatedGet(_client, url, headers);
       if (response.statusCode != 200) {
         throw BookCopyFailed('HTTP ${response.statusCode}');
       }
@@ -124,38 +111,13 @@ class BookCopyDownload {
 
   /// Whether [b] is on the same scheme, host and port as [a].
   @visibleForTesting
-  static bool sameOrigin(Uri a, Uri b) =>
-      a.scheme.toLowerCase() == b.scheme.toLowerCase() &&
-      a.host.toLowerCase() == b.host.toLowerCase() &&
-      a.port == b.port;
+  static bool sameOrigin(Uri a, Uri b) => authenticated.sameOrigin(a, b);
 
   /// Where a redirect from [current] to [location] goes. Off the server
   /// [original] names, any `token` query parameter is dropped.
   @visibleForTesting
-  static Uri redirectTarget(Uri original, Uri current, String location) {
-    final next = current.resolve(location);
-    if (sameOrigin(original, next) ||
-        !next.queryParametersAll.containsKey('token')) {
-      return next;
-    }
-    final query = Map.of(next.queryParametersAll)..remove('token');
-    return Uri(
-      scheme: next.scheme,
-      userInfo: next.userInfo,
-      host: next.host,
-      port: next.hasPort ? next.port : null,
-      path: next.path,
-      queryParameters: query.isEmpty ? null : query,
-      fragment: next.hasFragment ? next.fragment : null,
-    );
-  }
-
-  Future<http.StreamedResponse> _send(Uri url, Map<String, String> headers) {
-    final request = http.Request('GET', url)
-      ..followRedirects = false
-      ..headers.addAll(headers);
-    return _client.send(request);
-  }
+  static Uri redirectTarget(Uri original, Uri current, String location) =>
+      authenticated.redirectTarget(original, current, location);
 }
 
 class BookCopyCancelled implements Exception {
