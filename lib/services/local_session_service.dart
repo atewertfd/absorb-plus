@@ -162,10 +162,12 @@ class LocalSessionService {
   /// next connection, and start clean.
   Future<void> init() async {
     await _loadActive();
-    if (_active != null) {
-      debugPrint('[LocalSession] Recovering orphaned active session ${_active!['id']} into pending');
-      await _enqueue(_active!);
-      _active = null;
+    // Absorb Plus (IMP-008): work on a copy taken before any await.
+    final active = _active;
+    if (active != null) {
+      debugPrint('[LocalSession] Recovering orphaned active session ${active['id']} into pending');
+      await _enqueue(active);
+      if (identical(_active, active)) _active = null;
       await _persistActive();
     }
   }
@@ -211,7 +213,7 @@ class LocalSessionService {
     if (_active != null) {
       await finalizeActive();
     }
-    _active = {
+    final session = <String, dynamic>{
       'id': _uuid(),
       'progressKey': progressKey,
       'libraryItemId': libraryItemId,
@@ -231,8 +233,9 @@ class LocalSessionService {
       'displayAuthor': displayAuthor,
       if (playMethod != null) 'playMethod': playMethod,
     };
+    _active = session;
     await _persistActive();
-    debugPrint('[LocalSession] Began session ${_active!['id']} for $progressKey ($today)');
+    debugPrint('[LocalSession] Began session ${session['id']} for $progressKey ($today)');
   }
 
   /// Accrue [seconds] of listening at [currentTime]. Rolls over to a new
@@ -247,17 +250,20 @@ class LocalSessionService {
     if (seconds <= 0) return;
     if (DownloadService().isFromOtherAccount(progressKey)) return;
     await _loadActive();
-    if (_active == null) {
+    // Absorb Plus (IMP-008): work on a copy; the session can be finalized
+    // (stop, finish) while this awaits.
+    var active = _active;
+    if (active == null) {
       debugPrint('[LocalSession] accrue with no active session — skipping');
       return;
     }
-    if (_active!['progressKey'] != progressKey) {
-      debugPrint('[LocalSession] accrue key mismatch (${_active!['progressKey']} != $progressKey) — finalizing stale session');
+    if (active['progressKey'] != progressKey) {
+      debugPrint('[LocalSession] accrue key mismatch (${active['progressKey']} != $progressKey) — finalizing stale session');
       await finalizeActive();
       return;
     }
 
-    final lastMs = (_active!['updatedAt'] as num).toInt();
+    final lastMs = (active['updatedAt'] as num).toInt();
     // A backward device clock must never move the session to an earlier day or
     // mint a spurious session — clamp to the last accrual time so the day is
     // derived from a non-decreasing timestamp.
@@ -266,13 +272,14 @@ class LocalSessionService {
     final effective = DateTime.fromMillisecondsSinceEpoch(nowMs);
     final today = _dateKey(effective);
 
-    if (_active!['date'] != today) {
+    if (active['date'] != today) {
       // Day boundary: freeze the old session (verbatim timestamps) and start a
       // new one for today so listening is attributed to the correct day.
-      final old = _active!;
+      final old = active;
       debugPrint('[LocalSession] Day rollover: ${old['date']} -> $today (session ${old['id']})');
       await _enqueue(old);
-      _active = {
+      if (!identical(_active, old)) return; // finalized meanwhile
+      active = _active = {
         'id': _uuid(),
         'progressKey': progressKey,
         'libraryItemId': old['libraryItemId'],
@@ -292,13 +299,14 @@ class LocalSessionService {
       };
       // Ship the just-closed day promptly when online.
       if (api != null) await flushPending(api: api);
+      if (!identical(_active, active)) return; // finalized meanwhile
     }
 
-    _active!['timeListening'] = (_active!['timeListening'] as num).toInt() + seconds;
-    _active!['currentTime'] = currentTime;
-    _active!['updatedAt'] = nowMs;
-    _active!['date'] = today;
-    _active!['dayOfWeek'] = _dayOfWeek(effective);
+    active['timeListening'] = (active['timeListening'] as num).toInt() + seconds;
+    active['currentTime'] = currentTime;
+    active['updatedAt'] = nowMs;
+    active['date'] = today;
+    active['dayOfWeek'] = _dayOfWeek(effective);
     await _persistActive();
 
     if (api != null) await pushActive(api: api);
@@ -308,24 +316,29 @@ class LocalSessionService {
   /// true when the server durably recorded it (so the caller can skip queuing).
   Future<bool> pushActive({required ApiService api}) async {
     await _loadActive();
-    if (_active == null) return true;
+    // Absorb Plus (BUG-007, upstream 4e0c6865): the session can end while
+    // the push is away (a book finishing during a server timeout), so work
+    // from the copy taken here.
+    final active = _active;
+    if (active == null) return true;
     if (_localUnsupportedOn.contains(api.baseUrl)) {
       return _legacyPushActive(api);
     }
     final result =
-        await api.syncLocalSession(await _trustedPayload(api, _active!));
+        await api.syncLocalSession(await _trustedPayload(api, active));
     if (result.serverTooOld) {
       debugPrint('[LocalSession] Server lacks /api/session/local — falling back to /play');
       _localUnsupportedOn.add(api.baseUrl);
+      if (_active == null) return false; // ended meanwhile: finalize queued it
       return _legacyPushActive(api);
     }
-    final ct = (_active!['currentTime'] as num?)?.toDouble() ?? 0;
+    final ct = (active['currentTime'] as num?)?.toDouble() ?? 0;
     if (!result.ok) {
-      debugPrint('[LocalSession] Push failed for ${_active!['id']} at ${ct.toStringAsFixed(0)}s');
+      debugPrint('[LocalSession] Push failed for ${active['id']} at ${ct.toStringAsFixed(0)}s');
     } else if (_lastPushLogAt == null ||
         clock().difference(_lastPushLogAt!) >= const Duration(minutes: 5)) {
       _lastPushLogAt = clock();
-      debugPrint('[LocalSession] Pushed ${_active!['id']} at ${ct.toStringAsFixed(0)}s');
+      debugPrint('[LocalSession] Pushed ${active['id']} at ${ct.toStringAsFixed(0)}s');
     }
     return result.ok;
   }
@@ -360,9 +373,10 @@ class LocalSessionService {
   /// already on the server so we just drop it.
   Future<void> finalizeActive({bool pushed = false}) async {
     await _loadActive();
-    if (_active == null) return;
-    if (!pushed) await _enqueue(_active!);
-    _active = null;
+    final active = _active; // Absorb Plus (IMP-008)
+    if (active == null) return;
+    if (!pushed) await _enqueue(active);
+    if (identical(_active, active)) _active = null;
     await _persistActive();
   }
 
