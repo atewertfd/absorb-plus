@@ -871,7 +871,8 @@ class ApiService {
           debugPrint('[API] The server no longer accepts this API key');
           onAuthExpired?.call();
         }
-      } catch (e) { debugPrint('[API] _checkRevokedApiKey failed: ${e.runtimeType}'); } finally {
+      } catch (e) { debugPrint('[API] _checkRevokedApiKey failed: ${e.runtimeType}');
+      } finally {
         _apiKeyCheckRunning = false;
       }
     }();

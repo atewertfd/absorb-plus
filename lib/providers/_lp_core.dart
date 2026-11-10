@@ -2571,7 +2571,8 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
           await (this as _AbsorbingMixin)._updateAbsorbingCache();
           notifyListeners();
         }
-      } catch (e) { debugPrint('[Library] _hydrateRssFeedFieldsDeferred failed: ${e.runtimeType}'); } finally {
+      } catch (e) { debugPrint('[Library] _hydrateRssFeedFieldsDeferred failed: ${e.runtimeType}');
+      } finally {
         _rssHydrationInFlight = false;
       }
     }());
