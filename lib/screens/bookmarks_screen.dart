@@ -234,13 +234,13 @@ class _BookmarksScreenState extends State<BookmarksScreen>
           if (k is String && v is String) _titleCache[k] = v;
         });
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Bookmarks] _loadTitleCache failed: ${e.runtimeType}'); }
   }
 
   Future<void> _saveTitleCache() async {
     try {
       await ScopedPrefs.setString(_titleCacheKey, jsonEncode(_titleCache));
-    } catch (_) {}
+    } catch (e) { debugPrint('[Bookmarks] _saveTitleCache failed: ${e.runtimeType}'); }
   }
 
   Future<void> _load() async {

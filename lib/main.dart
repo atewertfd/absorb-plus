@@ -277,7 +277,7 @@ void main() async {
   ApiService.pageReadElsewhere = NarrationService.pageReadElsewhere;
   try {
     await NarratedBooks.load().timeout(const Duration(seconds: 2));
-  } catch (_) {}
+  } catch (e) { debugPrint('[Init] main failed: ${e.runtimeType}'); }
   final setupLinkStream = AppPlatform.lacksPhonePlugins ? null : AppLinks().uriLinkStream;
 
   // These calls use platform channels that require an Activity. When Android
@@ -287,12 +287,12 @@ void main() async {
   if (!AppPlatform.lacksPhonePlugins) {
     try {
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Init] main failed: ${e.runtimeType}'); }
   }
 
   try {
     await applyOrientationLock().timeout(const Duration(seconds: 2));
-  } catch (_) {}
+  } catch (e) { debugPrint('[Init] main failed: ${e.runtimeType}'); }
 
   // Load saved theme preference so we render the correct theme immediately
   try {
@@ -333,12 +333,12 @@ void main() async {
         );
       }
     }
-  } catch (_) {}
+  } catch (e) { debugPrint('[Init] main failed: ${e.runtimeType}'); }
 
   // Trust user-installed / self-signed certificates if the user opted in
   try {
     trustAllCerts = await PlayerSettings.getTrustAllCerts();
-  } catch (_) {}
+  } catch (e) { debugPrint('[Init] main failed: ${e.runtimeType}'); }
 
   // Capture Flutter framework errors (widget build failures, etc.)
   FlutterError.onError = (details) {
@@ -356,7 +356,7 @@ void main() async {
   if (!AppPlatform.lacksPhonePlugins) {
     try {
       FlutterNativeSplash.remove();
-    } catch (_) {}
+    } catch (e) { debugPrint('[Init] main failed: ${e.runtimeType}'); }
   }
 
   WidgetsBinding.instance
@@ -753,7 +753,7 @@ class _AuthGateState extends State<AuthGate> {
     super.initState();
     _setupLinkSubscription = widget.setupLinkStream?.listen(
       _queueSetupLink,
-      onError: (_) {},
+      onError: (e) { debugPrint('[Init] initState failed: ${e.runtimeType}'); },
     );
     _initServices();
   }
@@ -836,17 +836,17 @@ class _AuthGateState extends State<AuthGate> {
         ApiService.deviceManufacturer = 'Apple';
         ApiService.deviceModel = info.utsname.machine;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Init] _initServices failed: ${e.runtimeType}'); }
 
     // Initialize log service early so all debugPrint calls are captured in the
     // log file. This is critical for diagnosing startup freezes in production.
     try {
       await BetaLoggingNotice.applyDefault(ApiService.appVersionFull);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Init] _initServices failed: ${e.runtimeType}'); }
     try {
       final loggingEnabled = await PlayerSettings.getLoggingEnabled();
       await LogService().init(loggingEnabled);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Init] _initServices failed: ${e.runtimeType}'); }
 
     final sw = Stopwatch()..start();
     debugPrint('[Init] _initServices started');
@@ -893,7 +893,7 @@ class _AuthGateState extends State<AuthGate> {
     // wedges the entire init - the browse tree never builds.
     try {
       await applyOrientationLock().timeout(const Duration(seconds: 2));
-    } catch (_) {}
+    } catch (e) { debugPrint('[Init] _initServices failed: ${e.runtimeType}'); }
     // Background new-episode notifications: re-register the periodic job
     // (self-healing after OEM kills) and wire up notification taps.
     if (!AppPlatform.lacksPhonePlugins) {

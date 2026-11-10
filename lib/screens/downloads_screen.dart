@@ -269,7 +269,7 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
         final session = jsonDecode(sessionJson) as Map<String, dynamic>;
         duration = (session['duration'] as num?)?.toDouble() ?? 0;
         chapters = session['chapters'] as List<dynamic>? ?? const [];
-      } catch (_) {}
+      } catch (e) { debugPrint('[Downloads] _play failed: ${e.runtimeType}'); }
     }
     final title = info.title ?? '';
     // Episode downloads store the episode as the title and the show as the

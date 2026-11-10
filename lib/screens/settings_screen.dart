@@ -4372,7 +4372,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                               onPressed: () async {
                                 try {
                                   await AudioPlayer.clearStreamingCache();
-                                } catch (_) {}
+                                } catch (e) { debugPrint('[Settings] build failed: ${e.runtimeType}'); }
                                 if (mounted) {
                                   showOverlayToast(context, l.streamingCacheCleared,
                                       icon: Icons.delete_outline_rounded);
