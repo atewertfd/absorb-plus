@@ -185,12 +185,12 @@ class _LoginScreenState extends State<LoginScreen>
     try {
       final info = await PackageInfo.fromPlatform();
       if (mounted) setState(() => _appVersion = 'v${info.version}');
-    } catch (_) {}
+    } catch (e) { debugPrint('[Login] _loadVersion failed: ${e.runtimeType}'); }
     if (!AppPlatform.isWeb) {
       try {
         final trust = await PlayerSettings.getTrustAllCerts();
         if (mounted) setState(() => _trustAllCerts = trust);
-      } catch (_) {}
+      } catch (e) { debugPrint('[Login] _loadVersion failed: ${e.runtimeType}'); }
     }
   }
 

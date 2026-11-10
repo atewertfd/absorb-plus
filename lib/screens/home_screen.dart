@@ -1170,7 +1170,7 @@ class _ContinueListeningCardState extends State<_ContinueListeningCard> {
             if (mounted) setState(() => _accent = picked);
           });
         })
-        .catchError((_) {});
+        .catchError((e) { debugPrint('[Home] _deriveScheme failed: ${e.runtimeType}'); });
   }
 
   @override
@@ -1541,7 +1541,7 @@ class _ContinueListeningCardState extends State<_ContinueListeningCard> {
       if (api != null) {
         try {
           ebookFile = resolveEbookFile(await api.getLibraryItem(itemId));
-        } catch (_) {}
+        } catch (e) { debugPrint('[Home] _openEbook failed: ${e.runtimeType}'); }
       }
     }
     if (!mounted) return;
@@ -1649,7 +1649,7 @@ class _ContinueListeningCardState extends State<_ContinueListeningCard> {
           if (chapters.isEmpty) {
             chapters = session['chapters'] as List<dynamic>? ?? [];
           }
-        } catch (_) {}
+        } catch (e) { debugPrint('[Home] _startBook failed: ${e.runtimeType}'); }
       }
     } else {
       final fullItem = await api.getLibraryItem(itemId);

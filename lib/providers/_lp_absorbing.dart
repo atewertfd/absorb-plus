@@ -59,7 +59,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
         final m = jsonDecode(s) as Map<String, dynamic>;
         final key = m['_absorbingKey'] as String? ?? m['id'] as String?;
         if (key != null) _absorbingItemCache[key] = m;
-      } catch (_) {}
+      } catch (e) { debugPrint('[Library] _loadManualAbsorbing failed: ${e.runtimeType}'); }
     }
     if (_dedupeAbsorbingIds()) {
       await _saveManualAbsorbing();
@@ -394,7 +394,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
             _absorbingItemCache[key] = cached;
           }
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[Library] _enrichEpisodeTitles failed: ${e.runtimeType}'); }
     }
     if (needsEnrich.isNotEmpty) {
       await _saveManualAbsorbing();

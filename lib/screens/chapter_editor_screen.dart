@@ -836,7 +836,7 @@ class _ChapterEditBodyState extends State<ChapterEditBody>
       try {
         await p.stop();
         await p.dispose();
-      } catch (_) {}
+      } catch (e) { debugPrint('[ChapterEditor] _stopPreview failed: ${e.runtimeType}'); }
     }
     if (mounted) {
       setState(() {

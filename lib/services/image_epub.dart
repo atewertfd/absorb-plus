@@ -242,14 +242,14 @@ Future<int> imageEpubPageCount(File file) async {
   try {
     final saved = marker.existsSync() ? marker.readAsStringSync() : '';
     if (saved.startsWith('$key:')) return int.tryParse(saved.substring(key.length + 1)) ?? 0;
-  } catch (_) {}
+  } catch (e) { debugPrint('[ImageEpub] imageEpubPageCount failed: ${e.runtimeType}'); }
   final result = await compute(countImageEpubPages, file.path);
   final count = result[0] as int;
   debugPrint('[ImageEpub] ${file.uri.pathSegments.last}: '
       '${count > 0 ? 'picture book' : 'regular EPUB'} - ${result[1]}');
   try {
     marker.writeAsStringSync('$key:$count');
-  } catch (_) {}
+  } catch (e) { debugPrint('[ImageEpub] imageEpubPageCount failed: ${e.runtimeType}'); }
   return count;
 }
 

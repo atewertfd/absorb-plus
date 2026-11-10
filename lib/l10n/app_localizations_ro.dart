@@ -4836,6 +4836,9 @@ class AppLocalizationsRo extends AppLocalizations {
   String get deleteCollectionFailed => 'Nu s-a putut șterge colecția';
 
   @override
+  String get deletePlaylistFailed => 'Couldn\'t delete the playlist';
+
+  @override
   String get deletePermissionRequired =>
       'Este necesară permisiunea de ștergere. Cere administratorului root să ți-o acorde.';
 

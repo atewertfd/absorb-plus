@@ -196,7 +196,7 @@ class EpisodeNotificationService {
                   builder: (_) => const UpcomingReleasesScreen()));
               return;
             }
-          } catch (_) {}
+          } catch (e) { debugPrint('[EpisodeNotif] _handleTap failed: ${e.runtimeType}'); }
         }
         await Future.delayed(const Duration(milliseconds: 500));
       }
@@ -219,7 +219,7 @@ class EpisodeNotificationService {
             }
             return;
           }
-        } catch (_) {}
+        } catch (e) { debugPrint('[EpisodeNotif] _handleTap failed: ${e.runtimeType}'); }
       }
       await Future.delayed(const Duration(milliseconds: 500));
     }
@@ -488,7 +488,7 @@ Future<ApiService?> _buildApiService() async {
   if (headersJson != null) {
     try {
       customHeaders = Map<String, String>.from(jsonDecode(headersJson) as Map);
-    } catch (_) {}
+    } catch (e) { debugPrint('[EpisodeNotif] _buildApiService failed: ${e.runtimeType}'); }
   }
   final headers = customHeaders ?? const <String, String>{};
 

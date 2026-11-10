@@ -27,6 +27,7 @@ import 'stackable_sheet.dart';
 import 'swipe_action.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
+import 'list_order_save_feedback.dart';
 
 class PlaylistDetailSheet extends StatefulWidget {
   final String playlistId;
@@ -315,8 +316,13 @@ class _PlaylistDetailSheetState extends State<PlaylistDetailSheet> {
       ),
     );
     if (confirmed == true && context.mounted) {
-      await lib.deletePlaylist(widget.playlistId);
-      if (context.mounted) Navigator.pop(context);
+      final ok = await lib.deletePlaylist(widget.playlistId); // Absorb Plus: a failed delete says so
+      if (!context.mounted) return;
+      if (ok) {
+        Navigator.pop(context);
+      } else {
+        showOverlayToast(context, l.deletePlaylistFailed, icon: Icons.error_outline_rounded);
+      }
     }
   }
 
@@ -335,7 +341,7 @@ class _PlaylistDetailSheetState extends State<PlaylistDetailSheet> {
     if (items != null) {
       // Persist in the background so "Done" closes instantly instead of
       // hanging on the PATCH + playlists reload.
-      unawaited(lib.reorderPlaylistItems(widget.playlistId, items));
+      unawaited(lib.reorderPlaylistItems(widget.playlistId, items).then(reportListOrderSave));
     }
     Navigator.pop(context);
   }

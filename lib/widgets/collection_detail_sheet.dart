@@ -26,6 +26,7 @@ import '../screens/app_shell.dart';
 import '../screens/smart_scope_editor_screen.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/local_path.dart';
+import 'list_order_save_feedback.dart';
 
 class CollectionDetailSheet extends StatefulWidget {
   final String collectionId;
@@ -217,7 +218,7 @@ class _CollectionDetailSheetState extends State<CollectionDetailSheet> {
           .toList();
       // Persist in the background so "Done" closes instantly instead of
       // hanging on the PATCH + collections reload.
-      unawaited(lib.reorderCollectionBooks(widget.collectionId, bookIds));
+      unawaited(lib.reorderCollectionBooks(widget.collectionId, bookIds).then(reportListOrderSave));
     }
     Navigator.pop(context);
   }

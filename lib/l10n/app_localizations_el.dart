@@ -4857,6 +4857,9 @@ class AppLocalizationsEl extends AppLocalizations {
   String get deleteCollectionFailed => 'Αδυναμία διαγραφής της συλλογής';
 
   @override
+  String get deletePlaylistFailed => 'Couldn\'t delete the playlist';
+
+  @override
   String get deletePermissionRequired =>
       'Απαιτείται άδεια διαγραφής. Ζητήστε από τον root διαχειριστή να σας τη χορηγήσει.';
 

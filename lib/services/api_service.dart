@@ -282,7 +282,7 @@ class ApiService {
       appVersion = info.version;
       appBuild = info.buildNumber;
       if (info.packageName.isNotEmpty) packageName = info.packageName;
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] initVersion failed: ${e.runtimeType}'); }
   }
 
   final String baseUrl;
@@ -872,7 +872,7 @@ class ApiService {
           debugPrint('[API] The server no longer accepts this API key');
           onAuthExpired?.call();
         }
-      } catch (_) {
+      } catch (e) { debugPrint('[API] _checkRevokedApiKey failed: ${e.runtimeType}');
       } finally {
         _apiKeyCheckRunning = false;
       }
@@ -1342,7 +1342,7 @@ class ApiService {
         cacheServerVersion(serverUrl, version);
         return version;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] getServerVersion failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -1768,7 +1768,7 @@ class ApiService {
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] getListeningStats failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -1806,7 +1806,7 @@ class ApiService {
       if (response.statusCode == 200) {
         return await decodeJsonBody(response.body) as Map<String, dynamic>;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] getListeningSessions failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -1869,7 +1869,7 @@ class ApiService {
       if (response.statusCode == 200) {
         return await decodeJsonBody(response.body) as Map<String, dynamic>;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] getUserListeningSessions failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -2647,7 +2647,7 @@ class ApiService {
       try {
         await updateProgress(id,
             currentTime: (session['currentTime'] as num?)?.toDouble() ?? 0, duration: narration);
-      } catch (_) {}
+      } catch (e) { debugPrint('[API] _besideProgressRead failed: ${e.runtimeType}'); }
       row = await getItemProgress(id);
     }
     final rowAt = (row?['lastUpdate'] as num?)?.toInt();
@@ -3505,7 +3505,7 @@ class ApiService {
       if (resp.statusCode == 200) {
         return jsonDecode(resp.body) as Map<String, dynamic>;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] getSeriesInfo failed: ${e.runtimeType}'); }
     for (final libraryId in libraryIds) {
       try {
         final resp = await _authGet(
@@ -3514,7 +3514,7 @@ class ApiService {
         if (resp.statusCode == 200) {
           return jsonDecode(resp.body) as Map<String, dynamic>;
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[API] getSeriesInfo failed: ${e.runtimeType}'); }
     }
     return null;
   }
@@ -3806,7 +3806,7 @@ class ApiService {
         'asin': asin,
         'fetchedAt': DateTime.now().millisecondsSinceEpoch,
       }));
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] setCachedAudibleRating failed: ${e.runtimeType}'); }
   }
 
   /// Search Audible via the audiobookshelf server for an ASIN by title+author,
@@ -4823,7 +4823,7 @@ class ApiService {
             podcastPath = '$folderPath/$cleanTitle';
           }
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[API] createPodcast failed: ${e.runtimeType}'); }
 
       final body = <String, dynamic>{
         'libraryId': libraryId,
@@ -4918,7 +4918,7 @@ class ApiService {
             Uri.parse('$_cleanBaseUrl/api/podcasts/$id/checknew'),
             timeout: const Duration(seconds: 10));
           if (r.statusCode == 200) success++;
-        } catch (_) {}
+        } catch (e) { debugPrint('[API] checkNewEpisodes failed: ${e.runtimeType}'); }
       }
       return success > 0;
     } catch (e) { debugPrint('checkNewEpisodes error: $e'); }
@@ -5246,7 +5246,7 @@ class ApiService {
       if (resp.statusCode == 200) {
         return await decodeJsonBody(resp.body) as Map<String, dynamic>;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] getPlaylist failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -5268,7 +5268,7 @@ class ApiService {
       if (resp.statusCode == 200) {
         return jsonDecode(resp.body) as Map<String, dynamic>;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] createPlaylist failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -5289,7 +5289,7 @@ class ApiService {
       if (resp.statusCode == 200) {
         return jsonDecode(resp.body) as Map<String, dynamic>;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] updatePlaylist failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -5300,7 +5300,7 @@ class ApiService {
         Uri.parse('$_cleanBaseUrl/api/playlists/$playlistId'),
         timeout: const Duration(seconds: 10));
       return resp.statusCode == 200;
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] deletePlaylist failed: ${e.runtimeType}'); }
     return false;
   }
 
@@ -5320,7 +5320,7 @@ class ApiService {
       if (resp.statusCode == 200) {
         return jsonDecode(resp.body) as Map<String, dynamic>;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] addItemToPlaylist failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -5339,7 +5339,7 @@ class ApiService {
       if (resp.statusCode == 200) {
         return jsonDecode(resp.body) as Map<String, dynamic>;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] removeItemFromPlaylist failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -5360,7 +5360,7 @@ class ApiService {
       if (resp.statusCode == 200) {
         return jsonDecode(resp.body) as Map<String, dynamic>;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] getCollection failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -5385,7 +5385,7 @@ class ApiService {
       if (resp.statusCode == 200) {
         return jsonDecode(resp.body) as Map<String, dynamic>;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] createCollection failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -5408,7 +5408,7 @@ class ApiService {
       if (resp.statusCode == 200) {
         return jsonDecode(resp.body) as Map<String, dynamic>;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] updateCollection failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -5421,7 +5421,7 @@ class ApiService {
         Uri.parse('$_cleanBaseUrl/api/collections/$collectionId'),
         timeout: const Duration(seconds: 10));
       return resp.statusCode;
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] deleteCollection failed: ${e.runtimeType}'); }
     return 0;
   }
 
@@ -5438,7 +5438,7 @@ class ApiService {
       if (resp.statusCode == 200) {
         return jsonDecode(resp.body) as Map<String, dynamic>;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] addBookToCollection failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -5454,7 +5454,7 @@ class ApiService {
       if (resp.statusCode == 200) {
         return jsonDecode(resp.body) as Map<String, dynamic>;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[API] removeBookFromCollection failed: ${e.runtimeType}'); }
     return null;
   }
 }

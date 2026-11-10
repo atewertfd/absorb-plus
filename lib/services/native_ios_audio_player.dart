@@ -262,7 +262,7 @@ class NativeIosAudioPlayer {
     _eventSub = null;
     try {
       await _methodChannel.invokeMethod('dispose');
-    } catch (_) {}
+    } catch (e) { debugPrint('[IosPlayer] dispose failed: ${e.runtimeType}'); }
     await _positionController.close();
     await _durationController.close();
     await _bufferedPositionController.close();

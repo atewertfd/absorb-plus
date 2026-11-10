@@ -810,7 +810,7 @@ class _AppShellState extends State<AppShell>
     PlayerSettings.settingsChanged.removeListener(_loadPodcastTabPrefs);
     try {
       context.read<LibraryProvider>().removeListener(_onLibraryChanged);
-    } catch (_) {}
+    } catch (e) { debugPrint('[AppShell] dispose failed: ${e.runtimeType}'); }
     DesktopWorkspaceNavigator.exitGuardChanges.removeListener(
       _onDesktopExitGuardChanged,
     );
@@ -2032,7 +2032,7 @@ class _AppShellState extends State<AppShell>
     if (raw != null && raw.isNotEmpty) {
       try {
         saved = (jsonDecode(raw) as List<dynamic>).cast<String>();
-      } catch (_) {}
+      } catch (e) { debugPrint('[AppShell] _launcherIds failed: ${e.runtimeType}'); }
     }
     final ids = saved ??
         navHoldDefaultMenu(
@@ -2568,7 +2568,7 @@ class _AppShellState extends State<AppShell>
         try {
           final item = await api.getLibraryItem(itemId);
           ebookFile = resolveEbookFile(item);
-        } catch (_) {}
+        } catch (e) { debugPrint('[AppShell] _openCurrentEbook failed: ${e.runtimeType}'); }
       }
     }
     if (!mounted) return;

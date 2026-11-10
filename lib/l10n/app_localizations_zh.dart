@@ -4625,6 +4625,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteCollectionFailed => '无法删除合集';
 
   @override
+  String get deletePlaylistFailed => 'Couldn\'t delete the playlist';
+
+  @override
   String get deletePermissionRequired => '需要删除权限。请让 root 管理员授予你删除权限。';
 
   @override

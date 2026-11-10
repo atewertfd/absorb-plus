@@ -2079,7 +2079,7 @@ class _MetadataEditViewState extends State<MetadataEditView>
       });
       stream.addListener(listener);
       size = await completer.future.timeout(const Duration(seconds: 10));
-    } catch (_) {}
+    } catch (e) { debugPrint('[EditMetadata] _showCoverPreview failed: ${e.runtimeType}'); }
 
     if (!mounted) return;
     final l = AppLocalizations.of(context)!;

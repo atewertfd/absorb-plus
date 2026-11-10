@@ -4846,6 +4846,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get deleteCollectionFailed => 'Impossible d\'effacer la collection';
 
   @override
+  String get deletePlaylistFailed => 'Couldn\'t delete the playlist';
+
+  @override
   String get deletePermissionRequired =>
       'La permission de suppression est requise. Demandez à l\'administrateur root de vous accorder la permission de suppression.';
 

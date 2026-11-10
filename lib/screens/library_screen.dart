@@ -1292,7 +1292,7 @@ class LibraryScreenState extends State<LibraryScreen>
       final lib = context.read<LibraryProvider>();
       lib.removeListener(_onLibraryChanged);
       lib.removeListener(_onLibraryProviderChanged);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Library] dispose failed: ${e.runtimeType}'); }
     super.dispose();
   }
 
@@ -1577,7 +1577,7 @@ class LibraryScreenState extends State<LibraryScreen>
           final session = jsonDecode(dl.sessionData!) as Map<String, dynamic>;
           duration = (session['duration'] as num?)?.toDouble() ?? 0;
           chapters = session['chapters'] as List<dynamic>? ?? [];
-        } catch (_) {}
+        } catch (e) { debugPrint('[Library] _loadOfflinePage failed: ${e.runtimeType}'); }
       }
       items.add({
         'id': dl.itemId,

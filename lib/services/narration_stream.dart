@@ -189,7 +189,7 @@ class NarrationStream {
         if (d.path.split(Platform.pathSeparator).last != _safe(itemId)) {
           try {
             d.deleteSync(recursive: true);
-          } catch (_) {}
+          } catch (e) { debugPrint('[NarrationStream] _serve failed: ${e.runtimeType}'); }
         }
       }
     }
@@ -266,7 +266,7 @@ class NarrationStream {
 
     var (req, res) = await send(await _freshHeaders());
     if (res.statusCode == HttpStatus.unauthorized) {
-      await res.drain<void>().catchError((_) {});
+      await res.drain<void>().catchError((e) { debugPrint('[NarrationStream] _upstream failed: ${e.runtimeType}'); });
       (req, res) = await send(await _freshHeaders(renew: true));
     }
     if (res.statusCode != HttpStatus.partialContent) {
@@ -345,7 +345,7 @@ class NarrationStream {
       _server = null;
       try {
         await server.close(force: true);
-      } catch (_) {}
+      } catch (e) { debugPrint('[NarrationStream] _ensure failed: ${e.runtimeType}'); }
     }
     final prefs = await SharedPreferences.getInstance();
     var secret = prefs.getString(_secretKey);
@@ -496,7 +496,7 @@ class NarrationStream {
       try {
         res.statusCode = HttpStatus.badGateway;
         await res.close();
-      } catch (_) {}
+      } catch (e) { debugPrint('[NarrationStream] _handle failed: ${e.runtimeType}'); }
     }
   }
 }

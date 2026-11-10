@@ -55,7 +55,7 @@ class MetadataOverrideService {
         if (cover != null && cover.toString().isNotEmpty) {
           _coverCache[itemId] = cover.toString();
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[MetadataOverride] loadAll failed: ${e.runtimeType}'); }
     }
     debugPrint(
         '[MetadataOverride] Loaded ${_coverCache.length} cover override(s) for scope "$scope"');

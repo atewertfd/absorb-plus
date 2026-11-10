@@ -162,7 +162,7 @@ class DownloadInfo {
         // Try direct displayTitle/displayAuthor
         title ??= session['displayTitle'] as String?;
         author ??= session['displayAuthor'] as String?;
-      } catch (_) {}
+      } catch (e) { debugPrint('[Download] DownloadInfo.fromJson failed: ${e.runtimeType}'); }
     }
 
     return DownloadInfo(
@@ -422,7 +422,7 @@ String? _stripLibraryItem(String? sessionJson) {
       if (own != null) media['episodes'] = [own];
     }
     return jsonEncode(session);
-  } catch (_) {}
+  } catch (e) { debugPrint('[Download] _stripLibraryItem failed: ${e.runtimeType}'); }
   return sessionJson;
 }
 
@@ -795,7 +795,7 @@ class DownloadService extends ChangeNotifier {
             if (file.existsSync()) {
               total += file.lengthSync();
             }
-          } catch (_) {}
+          } catch (e) { debugPrint('[Download] totalDownloadSize failed: ${e.runtimeType}'); }
         }
         total += cachedEbookBytesSync(info.itemId);
       }
@@ -815,7 +815,7 @@ class DownloadService extends ChangeNotifier {
         if (file.existsSync()) {
           total += file.lengthSync();
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[Download] getItemFileSize failed: ${e.runtimeType}'); }
     }
     return total + cachedEbookBytesSync(itemId);
   }
@@ -928,7 +928,7 @@ class DownloadService extends ChangeNotifier {
         await f.writeAsBytes(resp.bodyBytes);
         coverPath = f.path;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Download] keepEbook failed: ${e.runtimeType}'); }
     // Absorb Plus: an audio download of this id keeps its own account (D9).
     if (!_downloads.containsKey(itemId)) _noteOrigin(itemId);
     _keptEbooks[itemId] = DownloadInfo(
@@ -964,7 +964,7 @@ class DownloadService extends ChangeNotifier {
         final media = ((jsonDecode(info.sessionData ?? '') as Map)['libraryItem'] as Map?)?['media'] as Map?;
         final audioFiles = (media?['audioFiles'] as List?) ?? const [];
         fromEbook = audioFiles.isEmpty && (media?['narration'] != null || NarratedBooks.contains(itemId));
-      } catch (_) {}
+      } catch (e) { debugPrint('[Download] onPhone failed: ${e.runtimeType}'); }
     }
     int? audioBytes;
     if (audio) {
@@ -978,7 +978,7 @@ class DownloadService extends ChangeNotifier {
         try {
           final f = File(path);
           if (f.existsSync()) total += f.lengthSync();
-        } catch (_) {}
+        } catch (e) { debugPrint('[Download] onPhone failed: ${e.runtimeType}'); }
       }
       // Files in a custom folder can't be measured here; the server's sizes
       // for the book's audio stand in.
@@ -991,7 +991,7 @@ class DownloadService extends ChangeNotifier {
         final f = await ebookCacheFileFor(itemId, entry);
         if (f.existsSync()) ebookBytes = f.lengthSync();
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Download] onPhone failed: ${e.runtimeType}'); }
     return (audio: audio, audioBytes: audioBytes, ebookBytes: ebookBytes, fromEbook: fromEbook);
   }
 
@@ -1027,7 +1027,7 @@ class DownloadService extends ChangeNotifier {
       Map<String, dynamic>? stored;
       try {
         stored = (jsonDecode(info.sessionData ?? '') as Map<String, dynamic>)['libraryItem'] as Map<String, dynamic>?;
-      } catch (_) {}
+      } catch (e) { debugPrint('[Download] deleteAudioKeepEbook failed: ${e.runtimeType}'); }
       String? cover;
       try {
         final from = info.localCoverPath == null ? null : File(info.localCoverPath!);
@@ -1036,7 +1036,7 @@ class DownloadService extends ChangeNotifier {
           await from.copy(to.path);
           cover = to.path;
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[Download] deleteAudioKeepEbook failed: ${e.runtimeType}'); }
       _keptEbooks[itemId] = DownloadInfo(
         itemId: itemId,
         status: DownloadStatus.downloaded,
@@ -1653,7 +1653,7 @@ class DownloadService extends ChangeNotifier {
           // If dest exists already (partial prior run), remove it first.
           final newFile = File(newPath);
           if (newFile.existsSync()) {
-            try { newFile.deleteSync(); } catch (_) {}
+            try { newFile.deleteSync(); } catch (e) { debugPrint('[Download] _migrateIOSAudioToAppGroup failed: ${e.runtimeType}'); }
           }
           await oldFile.rename(newPath);
           await _excludeFromBackup(newPath);
@@ -1848,7 +1848,7 @@ class DownloadService extends ChangeNotifier {
                 await dir.exists()) {
               await dir.delete(recursive: true);
             }
-          } catch (_) {}
+          } catch (e) { debugPrint('[Download] _validateDownloads failed: ${e.runtimeType}'); }
           try {
             final coverDir = Directory('$internalBase/$id');
             if (DownloadFolderGuard.mayDeleteTree(coverDir.path, [internalBase],
@@ -1856,7 +1856,7 @@ class DownloadService extends ChangeNotifier {
                 await coverDir.exists()) {
               await coverDir.delete(recursive: true);
             }
-          } catch (_) {}
+          } catch (e) { debugPrint('[Download] _validateDownloads failed: ${e.runtimeType}'); }
         }
       }
     } catch (e) {
@@ -2927,13 +2927,13 @@ class DownloadService extends ChangeNotifier {
     var bytes = 0;
     try {
       bytes = File(epubPath).lengthSync();
-    } catch (_) {}
+    } catch (e) { debugPrint('[Download] _finishNarration failed: ${e.runtimeType}'); }
     debugPrint('[Download] narration EPUB for "${p.title}" ($itemId) landed ($bytes bytes) - taking its audio out');
     Map<String, dynamic>? item;
     try {
       item = (jsonDecode(p.slimSessionJson ?? '{}') as Map<String, dynamic>)['libraryItem']
           as Map<String, dynamic>?;
-    } catch (_) {}
+    } catch (e) { debugPrint('[Download] _finishNarration failed: ${e.runtimeType}'); }
     var ok = false;
     try {
       if (item != null) {
@@ -3556,7 +3556,7 @@ class DownloadService extends ChangeNotifier {
       for (final i in wrongSize) {
         try {
           File(localPaths[i]).deleteSync();
-        } catch (_) {}
+        } catch (e) { debugPrint('[Download] _finalizeSuccess failed: ${e.runtimeType}'); }
       }
       p.finalizing = false; // let _failBook proceed
       await _failBook(itemId, cause: 'Downloaded files have the wrong size',
@@ -3923,7 +3923,7 @@ class DownloadService extends ChangeNotifier {
     try {
       DownloadFolderGuard.removeBookFolder(bookDir, await _downloadRoots(),
           windows: Platform.isWindows);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Download] _cleanupBookDir failed: ${e.runtimeType}'); }
   }
 
   /// Folders downloads may be made in: the default one, plus every folder
@@ -3935,7 +3935,7 @@ class DownloadService extends ChangeNotifier {
     try {
       roots.add(await _internalBasePath);
       roots.add(await downloadBasePath);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Download] _downloadRoots failed: ${e.runtimeType}'); }
     if (_desktopDownloadDir != null) roots.add(_desktopDownloadDir!);
     roots.addAll(_knownDesktopRoots);
     return roots;
@@ -4053,7 +4053,7 @@ class DownloadService extends ChangeNotifier {
         } else {
           await FileDownloader().database.deleteRecordWithId(taskId);
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[Download] _deleteDbRecords failed: ${e.runtimeType}'); }
     }
   }
 
@@ -4099,7 +4099,7 @@ class DownloadService extends ChangeNotifier {
   Future<Map<String, dynamic>> _foreignPending(SharedPreferences prefs) async {
     try {
       await prefs.reload();
-    } catch (_) {}
+    } catch (e) { debugPrint('[Download] _foreignPending failed: ${e.runtimeType}'); }
     try {
       final json = prefs.getString('pending_downloads');
       if (json == null) return {};
@@ -4332,7 +4332,7 @@ class DownloadService extends ChangeNotifier {
         // recursive, and it may be the user's own (Absorb Plus, audit D1).
         try {
           await _storageChannel.invokeMethod('deleteSafDirIfEmpty', {'dirUri': dirPath});
-        } catch (_) {}
+        } catch (e) { debugPrint('[Download] deleteDownload failed: ${e.runtimeType}'); }
       } else if (dirPath != null && Directory(dirPath).existsSync()) {
         // Absorb Plus: only inside a known download folder, and the emptied
         // Author folder too - never a picked folder itself (A9).
@@ -4344,7 +4344,7 @@ class DownloadService extends ChangeNotifier {
         DownloadFolderGuard.removeBookFolder('$basePath/$itemId', [basePath],
             windows: Platform.isWindows);
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Download] deleteDownload failed: ${e.runtimeType}'); }
 
     await _removeCoverCache(itemId, force: true);
 

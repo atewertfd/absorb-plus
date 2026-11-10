@@ -117,7 +117,7 @@ class UserAccountService {
       try {
         legacyCustomHeaders =
             Map<String, String>.from(jsonDecode(headersJson) as Map);
-      } catch (_) {}
+      } catch (e) { debugPrint('[UserAccount] init failed: ${e.runtimeType}'); }
     }
 
     // Load saved accounts

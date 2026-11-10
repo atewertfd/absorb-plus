@@ -1538,7 +1538,7 @@ class _ExistingBookPickerState extends State<_ExistingBookPicker> {
           if (!seen.contains(item['id'])) results.add(item);
         }
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[AdminUpload] _search failed: ${e.runtimeType}'); }
     if (!mounted) return;
     setState(() {
       _results = results;

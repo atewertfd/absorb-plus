@@ -634,7 +634,7 @@ class BookmarkService {
       for (final json in stored) {
         try {
           bookmarks.add(Bookmark.fromJson(jsonDecode(json)));
-        } catch (_) {}
+        } catch (e) { debugPrint('[Bookmarks] getAllBookmarks failed: ${e.runtimeType}'); }
       }
       if (bookmarks.isNotEmpty) {
         if (sort == 'position') {

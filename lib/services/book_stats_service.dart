@@ -380,7 +380,7 @@ class BookStatsService {
           .toList();
       s.loading = false;
       s.bump();
-    } catch (_) {}
+    } catch (e) { debugPrint('[BookStats] _loadCache failed: ${e.runtimeType}'); }
   }
 
   Future<void> _saveCache(BookStats s) async {

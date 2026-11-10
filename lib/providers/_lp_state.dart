@@ -388,7 +388,7 @@ mixin _StateMixin on ChangeNotifier {
         final (sid, _) = _extractSeries(libItem);
         if (sid != null) return libItem;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Library] _itemDataWithSeries failed: ${e.runtimeType}'); }
     return cached;
   }
 
