@@ -7452,7 +7452,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
                   _setupPageInfoHandler();
                   _setupTapHandler();
                   _applyTurnStyle();
-                  if (AppPlatform.lacksPhonePlugins) {
+                  if (AppPlatform.lacksPhonePlugins || AppPlatform.isDesktop) { // Absorb Plus: desktop too
                     _hideDesktopScrollbar();
                     // Desktop page moves into the app log while the jump
                     // back after a turn is being chased.
@@ -7753,7 +7753,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     // Keys land here when the Flutter side of the reader has focus (after a
     // tap on an overlay button, say); the web view handles its own.
     return Focus(
-      autofocus: AppPlatform.lacksPhonePlugins,
+      autofocus: AppPlatform.lacksPhonePlugins || AppPlatform.isDesktop, // Absorb Plus: desktop too
       onKeyEvent: (node, event) {
         if (!node.hasPrimaryFocus || event is KeyUpEvent) return KeyEventResult.ignored;
         final key = event.logicalKey;

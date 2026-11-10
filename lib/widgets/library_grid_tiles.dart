@@ -91,6 +91,7 @@ class _GridBookTileState extends State<GridBookTile> {
     // thumbnail, which is sharp at their tile size and a fraction of the
     // download.
     final bigCover = AppPlatform.lacksPhonePlugins ||
+        AppPlatform.isDesktop || // Absorb Plus: desktop runs the phone paths
         coverGridDecodeWidth(context) > 400;
     final snapshot = context.select<LibraryProvider, LibraryItemSnapshot>((lib) {
       final isPodcastLibrary = lib.isPodcastLibrary;

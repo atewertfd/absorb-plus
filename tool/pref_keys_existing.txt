@@ -39,3 +39,5 @@ remote_link_paired_devices
 streamingPending
 update_check_frequency
 windows_global_hotkeys
+# Shipped in 1.12.1+364 (bug hunt BUG-003): renaming would drop queued offline bookmark edits.
+bookmarks_pending_edits
