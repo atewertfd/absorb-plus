@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../utils/fork_platform.dart';
+import '../utils/safe_file_name.dart';
 import 'authenticated_get.dart' as authenticated;
 
 /// Absorb Plus: "Save a copy…" of a book on desktop (audit C8).
@@ -35,8 +36,7 @@ class BookCopyDownload {
   /// The suggested file name: the title plus `.zip`, or the file's own
   /// extension when the item is a single file (the server sends it as is).
   static String suggestedFileName(String title, Map<String, dynamic>? item) {
-    var safe = title.replaceAll(RegExp(r'[^\w\s-]'), '').trim();
-    if (safe.isEmpty) safe = 'book';
+    final safe = safeFileName(title, fallback: 'book');
     if (item?['isFile'] == true) {
       final rel = (item?['relPath'] ?? item?['path'] ?? '') as String;
       final dot = rel.lastIndexOf('.');

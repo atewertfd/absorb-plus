@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../utils/fork_platform.dart';
+import '../utils/safe_file_name.dart';
 import '../utils/text_file_download.dart';
 import 'api_service.dart';
 
@@ -46,8 +47,7 @@ abstract final class OpmlExport {
 
   /// A file name made from the library's name.
   static String fileNameFor(String libraryName) {
-    final safe = libraryName.replaceAll(RegExp(r'[^\w\s-]'), '').trim();
-    return '${safe.isEmpty ? 'podcasts' : safe}.opml';
+    return '${safeFileName(libraryName, fallback: 'podcasts')}.opml';
   }
 
   static Future<({OpmlExportStatus status, String? path})> export(

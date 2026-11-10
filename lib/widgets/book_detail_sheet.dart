@@ -85,6 +85,7 @@ import '../utils/cover_palette.dart';
 import 'bookmark_list_controls.dart';
 import '../ui_themes/app_backdrop.dart'; // Absorb Plus
 import '../services/authenticated_get.dart'; // Absorb Plus
+import '../utils/safe_file_name.dart'; // Absorb Plus
 
 // ─── BOOK DETAIL BOTTOM SHEET ───────────────────────────────
 
@@ -3357,11 +3358,13 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
 
       final ebookName = ebookFile['metadata']?['filename'] as String? ?? ebookFile['name'] as String? ?? 'book.epub';
       final ext = ebookName.contains('.') ? ebookName.substring(ebookName.lastIndexOf('.')) : '.epub';
-      final safeTitle = bookTitle.replaceAll(RegExp(r'[^\w\s-]'), '').trim();
+      final safeTitle = safeFileName(bookTitle, fallback: 'book'); // Absorb Plus (BUG-002)
 
-      // Download to cache first (reuse if already cached)
+      // Download to cache first (reuse if already cached). Absorb Plus
+      // (BUG-002): keyed by item and file, written to .part and renamed only
+      // once complete, so another book or a cut-off download is never reused.
       final cacheDir = await getTemporaryDirectory();
-      final cachedFile = File('${cacheDir.path}/$safeTitle$ext');
+      final cachedFile = File(ebookExportCachePath(cacheDir.path, widget.itemId, ino, ext));
 
       if (!cachedFile.existsSync()) {
         final cleanBase = api.baseUrl.endsWith('/') ? api.baseUrl.substring(0, api.baseUrl.length - 1) : api.baseUrl;
@@ -3403,12 +3406,17 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
             return;
           }
 
-          final sink = cachedFile.openWrite();
+          final part = File('${cachedFile.path}.part');
+          final sink = part.openWrite();
           try {
             await response.stream.pipe(sink);
-          } finally {
+          } catch (_) {
             await sink.close();
+            if (await part.exists()) await part.delete();
+            rethrow;
           }
+          await sink.close();
+          await part.rename(cachedFile.path);
         } finally {
           client.close();
         }
@@ -4109,7 +4117,7 @@ class _FullCoverViewerState extends State<_FullCoverViewer> {
       final response = await http.get(Uri.parse(widget.url), headers: widget.headers);
       if (response.statusCode != 200) throw Exception('Download failed');
       final ext = widget.url.contains('.png') ? '.png' : '.jpg';
-      final safeTitle = widget.title.replaceAll(RegExp(r'[^\w\s-]'), '').trim();
+      final safeTitle = safeFileName(widget.title, fallback: 'cover'); // Absorb Plus
       final dir = await getTemporaryDirectory();
       final file = File('${dir.path}/$safeTitle$ext');
       await file.writeAsBytes(response.bodyBytes);
