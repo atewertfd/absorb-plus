@@ -1343,9 +1343,9 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     }
 
     // Detect podcast episodes via compound key (showId-episodeId, length > 36)
-    final isEpisode = absId.length > 36;
-    final showId = isEpisode ? absId.substring(0, 36) : null;
-    final episodeId = isEpisode ? absId.substring(37) : null;
+    final isEpisode = isEpisodeKey(absId);
+    final showId = isEpisode ? itemIdOfKey(absId) : null;
+    final episodeId = isEpisode ? episodeIdOfKey(absId)! : null;
     // For API calls, use the show ID (not compound key) for podcast episodes
     final apiItemId = showId ?? absId;
 

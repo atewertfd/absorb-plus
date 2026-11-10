@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'offline_listening_upload.dart';
 import 'streaming_pending_ledger.dart';
 import 'user_account_service.dart';
+import '../utils/episode_key.dart';
 
 /// Manages local progress storage and server sync.
 /// Progress is ALWAYS saved locally first, then synced to server when online.
@@ -239,9 +240,9 @@ class ProgressSyncService {
       ApiService api, String itemId, double localDuration) async {
     final cached = _serverDurationCache[itemId];
     if (cached != null) return cached;
-    final isCompound = itemId.length > 36;
-    final apiItemId = isCompound ? itemId.substring(0, 36) : itemId;
-    final episodeId = isCompound ? itemId.substring(37) : null;
+    final isCompound = isEpisodeKey(itemId);
+    final apiItemId = isCompound ? itemIdOfKey(itemId) : itemId;
+    final episodeId = isCompound ? episodeIdOfKey(itemId)! : null;
     try {
       final item = await api.getLibraryItem(apiItemId);
       final media = item?['media'] as Map<String, dynamic>?;
@@ -453,9 +454,9 @@ class ProgressSyncService {
           // playback session.  Creating a session can invalidate the
           // player's active session on the server, causing subsequent
           // in-playback syncs to silently fail.
-          final isCompound = itemId.length > 36;
-          final apiItemId = isCompound ? itemId.substring(0, 36) : itemId;
-          final episodeId = isCompound ? itemId.substring(37) : null;
+          final isCompound = isEpisodeKey(itemId);
+          final apiItemId = isCompound ? itemIdOfKey(itemId) : itemId;
+          final episodeId = isCompound ? episodeIdOfKey(itemId)! : null;
 
           final localFinished = data['isFinished'] as bool? ?? false;
           final syncDuration =

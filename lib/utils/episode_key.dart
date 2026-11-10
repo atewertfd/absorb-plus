@@ -4,7 +4,12 @@
 /// substring arithmetic in one place.
 library;
 
-bool isEpisodeKey(String key) => key.length > 36;
+// Absorb Plus imports, kept in one block for clean upstream merges.
+import 'episode_key_rules.dart';
+
+export 'episode_key_rules.dart' show itemIdOfKey, episodeIdOfKey;
+
+bool isEpisodeKey(String key) => forkSplitEpisodeKey(key).episodeId != null; // Absorb Plus: IMP-007
 
 String episodeKeyFor(String itemId, String? episodeId) =>
     (episodeId != null && episodeId.isNotEmpty) ? '$itemId-$episodeId' : itemId;
@@ -12,6 +17,4 @@ String episodeKeyFor(String itemId, String? episodeId) =>
 /// Split a storage key back into the item id the server knows and, for a
 /// podcast, the episode inside it.
 ({String itemId, String? episodeId}) splitEpisodeKey(String key) =>
-    isEpisodeKey(key)
-        ? (itemId: key.substring(0, 36), episodeId: key.substring(37))
-        : (itemId: key, episodeId: null);
+    forkSplitEpisodeKey(key); // Absorb Plus: IMP-007

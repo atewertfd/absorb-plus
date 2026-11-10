@@ -89,7 +89,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
         ? '${player.currentItemId}-${player.currentEpisodeId}'
         : player.currentItemId;
     for (final key in keys) {
-      if (key.length > 36 ||
+      if (isEpisodeKey(key) ||
           shouldIncludeBookInAbsorbing(
             isFinished: (this as LibraryProvider).isItemFinishedByKey(key),
             addedAfterFinish: _finishedManualAbsorbAdds.contains(key),
@@ -201,7 +201,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
         if (finSeriesId != null && finSeq != null) {
           double lowestSeq = double.infinity;
           for (final key in _absorbingBookIds) {
-            if (key.length > 36) continue;
+            if (isEpisodeKey(key)) continue;
             if ((this as LibraryProvider).isItemFinishedByKey(key)) continue;
             final data = _absorbingItemCache[key];
             if (data == null) continue;
@@ -238,22 +238,22 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
     if (isPodcastLibrary) {
       final knownShowIds = <String>{};
       for (final key in _absorbingBookIds) {
-        if (key.length > 36) {
-          knownShowIds.add(key.substring(0, 36));
+        if (isEpisodeKey(key)) {
+          knownShowIds.add(itemIdOfKey(key));
         }
       }
       knownShowIds.addAll(showEntities.keys);
 
       for (final entry in _progressMap.entries) {
         final key = entry.key;
-        if (key.length <= 36) continue;
+        if (!isEpisodeKey(key)) continue;
         final mp = entry.value;
         if (mp['isFinished'] == true) continue;
         final progress = (mp['progress'] as num?)?.toDouble() ?? 0;
         if (progress <= 0) continue;
 
-        final showId = key.substring(0, 36);
-        final episodeId = key.substring(37);
+        final showId = itemIdOfKey(key);
+        final episodeId = episodeIdOfKey(key)!;
 
         if (_absorbingBookIds.contains(key)) continue;
         if (_manualAbsorbRemoves.contains(key)) continue;
@@ -292,7 +292,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
 
     final toRemove = <String>[];
     for (final key in _absorbingBookIds) {
-      if (key.length <= 36 &&
+      if (!isEpisodeKey(key) &&
           (!shouldIncludeBook(key) ||
               (_isEbookOnlyEntry(_absorbingItemCache[key]) &&
                   !(player.hasBook && key == activeKey)))) {
@@ -301,7 +301,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
       }
       if (allowedKeys.contains(key)) continue;
       if (_manualAbsorbAdds.contains(key)) continue;
-      final hasProgress = key.length > 36
+      final hasProgress = isEpisodeKey(key)
           ? _progressMap.containsKey(key)
           : _progressMap.keys.any((k) => k == key || k.startsWith('$key-'));
       if (!hasProgress) {
@@ -319,7 +319,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
     for (final id in toRemove) {
       _absorbingBookIds.remove(id);
       _absorbingItemCache.remove(id);
-      if (id.length <= 36 &&
+      if (!isEpisodeKey(id) &&
           (this as LibraryProvider).isItemFinishedByKey(id) &&
           !_finishedManualAbsorbAdds.contains(id)) {
         _manualAbsorbAdds.remove(id);
@@ -329,7 +329,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
     final migrateRemove = <String>[];
     final migrateAdd = <String, Map<String, dynamic>>{};
     for (final key in _absorbingBookIds) {
-      if (key.length > 36) continue;
+      if (isEpisodeKey(key)) continue;
       final cached = _absorbingItemCache[key];
       if (cached == null) continue;
       final re = cached['recentEpisode'] as Map<String, dynamic>?;
@@ -527,7 +527,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
     final playingKey = player.currentEpisodeId == null
         ? player.currentItemId
         : '${player.currentItemId}-${player.currentEpisodeId}';
-    final startingEpisode = key.length > 36 && playingKey == key;
+    final startingEpisode = isEpisodeKey(key) && playingKey == key;
     unblockFromAbsorbing(
       key,
       episodeTitle: startingEpisode
@@ -567,16 +567,16 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
       _progressMap[key] = {...pm, 'isFinished': false};
     }
     bool changed = _manualAbsorbRemoves.remove(key);
-    final isCompound = key.length > 36;
+    final isCompound = isEpisodeKey(key);
     if (!_absorbingBookIds.contains(key)) {
       _absorbingIdsAdd(key);
       changed = true;
-      final showId = isCompound ? key.substring(0, 36) : key;
+      final showId = isCompound ? itemIdOfKey(key) : key;
       for (final section in _personalizedSections) {
         for (final e in (section['entities'] as List<dynamic>? ?? [])) {
           if (e is Map<String, dynamic> && (e['id'] as String?) == showId) {
             if (isCompound) {
-              final episodeId = key.substring(37);
+              final episodeId = episodeIdOfKey(key)!;
               final cached = Map<String, dynamic>.from(e);
               cached['_absorbingKey'] = key;
               cached['recentEpisode'] = _episodeStub(
@@ -597,7 +597,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
     if (isCompound && _absorbingItemCache.containsKey(key)) {
       final cached = _absorbingItemCache[key]!;
       if (cached['_absorbingKey'] == null) cached['_absorbingKey'] = key;
-      final episodeId = key.substring(37);
+      final episodeId = episodeIdOfKey(key)!;
       final re = cached['recentEpisode'] as Map<String, dynamic>?;
       final storedTitle = re?['title'] as String?;
       if (re == null || (re['id'] as String?) != episodeId) {
@@ -679,8 +679,8 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
         'autoAdvance=${!skipAutoAdvance} playing=${AudioPlayerService().currentItemId})');
     _resetItems.remove(itemId);
     final existing = _progressMap[itemId] ?? {};
-    if (itemId.length > 36 && existing['isFinished'] != true) {
-      nudgeUnfinishedEpisodeCount(itemId.substring(0, 36), -1);
+    if (isEpisodeKey(itemId) && existing['isFinished'] != true) {
+      nudgeUnfinishedEpisodeCount(itemIdOfKey(itemId), -1);
     }
     // Finished from here is BookOrbit's "read", not "skimmed".
     _progressMap[itemId] = {...existing, 'isFinished': true, if (!fromRemote) 'skimmed': false};
@@ -697,7 +697,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
     } else if (_absorbingBookIds.remove(itemId)) {
       _absorbingBookIds.insert(0, itemId);
     }
-    if (itemId.length > 36) {
+    if (isEpisodeKey(itemId)) {
       final cached = _absorbingItemCache[itemId];
       if (cached != null && cached['_absorbingKey'] == null) {
         cached['_absorbingKey'] = itemId;
@@ -705,7 +705,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
     }
     notifyListeners();
 
-    if (itemId.length <= 36) {
+    if (!isEpisodeKey(itemId)) {
       // Only a book that ran out here moves playback on. Marking one finished
       // by hand, or finishing it on another device, just lines the next one
       // up - otherwise ticking off a few earlier books started each next one.
@@ -714,7 +714,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
     }
 
     if (!skipAutoAdvance) {
-      final isPodcast = itemId.length > 36;
+      final isPodcast = isEpisodeKey(itemId);
       final modeFuture = isPodcast
           ? PlayerSettings.getPodcastQueueMode()
           : PlayerSettings.getBookQueueMode();
@@ -751,10 +751,10 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
       });
     }
 
-    final isCompound = itemId.length > 36;
+    final isCompound = isEpisodeKey(itemId);
     if (isCompound && !skipRefresh && _api != null && !isOffline) {
-      final showId = itemId.substring(0, 36);
-      final episodeId = itemId.substring(37);
+      final showId = itemIdOfKey(itemId);
+      final episodeId = episodeIdOfKey(itemId)!;
       PlayerSettings.getPodcastQueueMode().then((queueMode) {
         if (queueMode == 'auto_next') {
           _addNextPodcastEpisode(showId, episodeId, itemId).then((_) {
@@ -910,7 +910,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
 
     final finishedCached = _absorbingItemCache[finishedKey];
     final finishedLibId = finishedCached?['libraryId'] as String?;
-    final finishedIsPodcast = finishedKey.length > 36;
+    final finishedIsPodcast = isEpisodeKey(finishedKey);
 
     final finishedIdx = _absorbingBookIds.indexOf(finishedKey);
     final startIdx = finishedIdx >= 0 ? finishedIdx + 1 : 0;
@@ -927,7 +927,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
         continue;
       }
 
-      final candidateIsPodcast = key.length > 36;
+      final candidateIsPodcast = isEpisodeKey(key);
       final candidateMode = candidateIsPodcast ? podMode : bookMode;
       if (candidateMode == 'off') {
         debugPrint('[Queue]   [$i] $key SKIP - ${candidateIsPodcast ? "podcast" : "book"} mode is off');
@@ -964,9 +964,9 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
         return;
       }
 
-      if (key.length > 36) {
-        final showId = key.substring(0, 36);
-        final epId = key.substring(37);
+      if (isEpisodeKey(key)) {
+        final showId = itemIdOfKey(key);
+        final epId = episodeIdOfKey(key)!;
         final ep = cached['recentEpisode'] as Map<String, dynamic>?;
         final epDuration = (ep?['duration'] as num?)?.toDouble() ??
             (media['duration'] as num?)?.toDouble() ??
@@ -1009,7 +1009,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
       return;
     }
 
-    final isCompound = finishedKey.length > 36;
+    final isCompound = isEpisodeKey(finishedKey);
     if (isCompound) {
       _autoAdvanceOfflinePodcast(finishedKey);
     } else {
@@ -1092,7 +1092,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
     if (!usedServerList) {
       for (final entry in _absorbingItemCache.entries) {
         final key = entry.key;
-        if (key == finishedBookId || key.length > 36) continue;
+        if (key == finishedBookId || isEpisodeKey(key)) continue;
         if ((this as LibraryProvider).isItemFinishedByKey(key)) continue;
         final (sid, seq) = _StateMixin._extractSeries(entry.value);
         if (sid != seriesId || seq == null || seq <= currentSeq) continue;
@@ -1101,7 +1101,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
 
       for (final dlInfo in DownloadService().downloadedItems) {
         final id = dlInfo.itemId;
-        if (id == finishedBookId || id.length > 36) continue;
+        if (id == finishedBookId || isEpisodeKey(id)) continue;
         if (candidates.values.any((e) => e.key == id)) continue;
         if (_progressMap[id]?['isFinished'] == true) continue;
         final data = _itemDataWithSeries(id);
@@ -1191,7 +1191,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
       for (final dlInfo in dl.downloadedItems) {
         final id = dlInfo.itemId;
         if (id == finishedBookId) continue;
-        if (id.length > 36) continue;
+        if (isEpisodeKey(id)) continue;
         if (_progressMap[id]?['isFinished'] == true) continue;
 
         final data = _itemDataWithSeries(id);
@@ -1238,8 +1238,8 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
       if (mode != 'auto_next') return;
       if (AudioPlayerService.wasNoisyPause) return;
 
-      final showId = finishedKey.substring(0, 36);
-      final finishedEpId = finishedKey.substring(37);
+      final showId = itemIdOfKey(finishedKey);
+      final finishedEpId = episodeIdOfKey(finishedKey)!;
 
       final prefs = await SharedPreferences.getInstance();
       final advanceNewestFirst =
@@ -1269,7 +1269,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
       // own publish date, so they join the pick in date order too.
       for (final info in dl.downloadedItems) {
         if (!info.itemId.startsWith('$showId-')) continue;
-        final epId = info.itemId.substring(37);
+        final epId = episodeIdOfKey(info.itemId)!;
         if (epId != finishedEpId &&
             (episodes.values.any((e) => e.key == info.itemId) ||
                 _progressMap[info.itemId]?['isFinished'] == true)) {
@@ -1570,10 +1570,10 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
     Map<String, dynamic> libraryItem, {
     Map<String, dynamic>? episode,
   }) {
-    final isPodcast = key.length > 36;
+    final isPodcast = isEpisodeKey(key);
     return {
-      'libraryItemId': isPodcast ? key.substring(0, 36) : key,
-      if (isPodcast) 'episodeId': key.substring(37),
+      'libraryItemId': isPodcast ? itemIdOfKey(key) : key,
+      if (isPodcast) 'episodeId': episodeIdOfKey(key)!,
       'libraryItem': libraryItem,
       if (episode != null) 'episode': episode,
     };
@@ -1596,19 +1596,19 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
     final self = this as LibraryProvider;
 
     if (mode == 'manual') {
-      final currentIsPodcast = currentKey.length > 36;
+      final currentIsPodcast = isEpisodeKey(currentKey);
 
       Future<Map<String, dynamic>?> resolveItem(String key) async {
         final cached = _absorbingItemCache[key];
         if (cached != null) return cached;
-        final isPodcast = key.length > 36;
-        final libraryItemId = isPodcast ? key.substring(0, 36) : key;
+        final isPodcast = isEpisodeKey(key);
+        final libraryItemId = isPodcast ? itemIdOfKey(key) : key;
         final fetched = await api.getLibraryItem(libraryItemId);
         if (fetched == null || isStale()) return null;
         final resolved = Map<String, dynamic>.from(fetched);
         resolved['_absorbingKey'] = key;
         if (isPodcast) {
-          final episodeId = key.substring(37);
+          final episodeId = episodeIdOfKey(key)!;
           final media = resolved['media'] as Map<String, dynamic>? ?? const {};
           for (final episode
               in (media['episodes'] as List<dynamic>? ?? const [])) {
@@ -1633,8 +1633,8 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
         currentKey: currentKey,
         keyOf: (key) => key,
         isFinished: self.isItemFinishedByKey,
-        isPodcast: (key) => key.length > 36,
-        queueMode: (key) => key.length > 36 ? podcastMode : bookMode,
+        isPodcast: isEpisodeKey,
+        queueMode: (key) => isEpisodeKey(key) ? podcastMode : bookMode,
         libraryId: (key) =>
             _absorbingItemCache[key]?['libraryId'] as String?,
         merged: merged,
@@ -1736,9 +1736,9 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
 
     if (mode != 'auto_next') return const [];
 
-    if (currentKey.length > 36) {
-      final showId = currentKey.substring(0, 36);
-      final currentEpisodeId = currentKey.substring(37);
+    if (isEpisodeKey(currentKey)) {
+      final showId = itemIdOfKey(currentKey);
+      final currentEpisodeId = episodeIdOfKey(currentKey)!;
       Map<String, dynamic>? show;
       for (final cached in _absorbingItemCache.values) {
         if (cached['id'] != showId) continue;
@@ -1985,7 +1985,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
 
   Future<Map<String, dynamic>?> fetchLibraryItem(String itemId) async {
     if (_api == null) return null;
-    final id = itemId.length > 36 ? itemId.substring(0, 36) : itemId;
+    final id = itemIdOfKey(itemId);
     return _api!.getLibraryItem(id);
   }
 
@@ -2038,7 +2038,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
   Future<Map<String, dynamic>?> peekNextQueueItemForPreBuffer(
       String currentItemId) async {
     final self = this as LibraryProvider;
-    final isPodCurrent = currentItemId.length > 36;
+    final isPodCurrent = isEpisodeKey(currentItemId);
     final mode = isPodCurrent
         ? await PlayerSettings.getPodcastQueueMode()
         : await PlayerSettings.getBookQueueMode();
@@ -2055,7 +2055,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
     for (var i = start; i < _absorbingBookIds.length; i++) {
       final key = _absorbingBookIds[i];
       if (self.isItemFinishedByKey(key)) continue;
-      final candidateIsPodcast = key.length > 36;
+      final candidateIsPodcast = isEpisodeKey(key);
       final candidateMode = candidateIsPodcast ? podMode : bookMode;
       if (candidateMode == 'off') continue;
       if (!merged && candidateIsPodcast != isPodCurrent) continue;
@@ -2066,8 +2066,8 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
         if (candidateLibId != null && candidateLibId != currentLibId) continue;
       }
 
-      final itemIdRaw = candidateIsPodcast ? key.substring(0, 36) : key;
-      final episodeIdRaw = candidateIsPodcast ? key.substring(37) : null;
+      final itemIdRaw = candidateIsPodcast ? itemIdOfKey(key) : key;
+      final episodeIdRaw = candidateIsPodcast ? episodeIdOfKey(key)! : null;
 
       // Try downloaded first; fall back to cached session for streaming so
       // the pre-buffer + native handover path works for non-downloaded books.
@@ -2150,7 +2150,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
     final self = this as LibraryProvider;
     if (currentItemId == null) return null;
 
-    final isPodCurrent = currentItemId.length > 36;
+    final isPodCurrent = isEpisodeKey(currentItemId);
     final mode = isPodCurrent
         ? await PlayerSettings.getPodcastQueueMode()
         : await PlayerSettings.getBookQueueMode();
@@ -2226,7 +2226,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
           debugPrint('[Queue]   peek [$i] $key SKIP - already finished');
           continue;
         }
-        final candidateIsPodcast = key.length > 36;
+        final candidateIsPodcast = isEpisodeKey(key);
         final candidateMode = candidateIsPodcast ? podMode : bookMode;
         if (candidateMode == 'off') {
           debugPrint('[Queue]   peek [$i] $key SKIP - ${candidateIsPodcast ? "podcast" : "book"} mode is off');
@@ -2320,7 +2320,7 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
       final dl = DownloadService();
       for (final dlInfo in dl.downloadedItems) {
         final id = dlInfo.itemId;
-        if (id.length > 36) continue;
+        if (isEpisodeKey(id)) continue;
         if (candidates.values.any((d) => d['id'] == id)) continue;
         final d = _itemDataWithSeries(id);
         if (d != null) consider(id, d);
@@ -2340,9 +2340,9 @@ mixin _AbsorbingMixin on ChangeNotifier, _StateMixin, _CoreMixin {
   }
 
   Future<String?> _peekNextPodcastEpisode(String currentCompoundKey) async {
-    if (currentCompoundKey.length < 37) return null;
-    final showId = currentCompoundKey.substring(0, 36);
-    final currentEpId = currentCompoundKey.substring(37);
+    if (!isEpisodeKey(currentCompoundKey)) return null;
+    final showId = itemIdOfKey(currentCompoundKey);
+    final currentEpId = episodeIdOfKey(currentCompoundKey)!;
     final self = this as LibraryProvider;
 
     // Mirror _addNextPodcastEpisode: the absorbing cache stores per-episode

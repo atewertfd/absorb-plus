@@ -108,6 +108,7 @@ import '../widgets/desktop_shortcut_help.dart'; // Absorb Plus
 import '../widgets/developer_mode_tiles.dart'; // Absorb Plus
 import '../widgets/test_build_notes_sheet.dart'; // Absorb Plus
 import '../fork/remote_link_hooks.dart'; // Absorb Plus
+import '../utils/episode_key.dart';
 
 
 class AppShell extends StatefulWidget {
@@ -843,7 +844,7 @@ class _AppShellState extends State<AppShell>
       if (ids.isNotEmpty) {
         final key = ids.first;
         // Composite keys are "itemId-episodeId"; extract the item ID
-        itemId = key.length > 36 ? key.substring(0, 36) : key;
+        itemId = itemIdOfKey(key);
       }
     }
     if (itemId == null) {

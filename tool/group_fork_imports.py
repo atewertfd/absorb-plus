@@ -71,7 +71,14 @@ def group(text: str, upstream_text: str) -> tuple[str, list[str]]:
     if last_up is None:
         first_code = next((i for i, l in enumerate(keep)
                            if l.strip() and not l.strip().startswith("//")), 0)
-        new_lines = keep[:first_code] + block + [""] + keep[first_code:]
+        if re.match(r"library\b", keep[first_code].strip()):
+            # Directives can't come before `library;`.
+            rest = keep[first_code + 1:]
+            while rest and not rest[0].strip():
+                rest = rest[1:]
+            new_lines = keep[:first_code + 1] + [""] + block + [""] + rest
+        else:
+            new_lines = keep[:first_code] + block + [""] + keep[first_code:]
     else:
         new_lines = keep[:last_up + 1] + block + keep[last_up + 1:]
     new_text = "\n".join(new_lines)

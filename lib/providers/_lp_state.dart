@@ -411,8 +411,8 @@ mixin _StateMixin on ChangeNotifier {
   String? getCoverUrl(String? itemId, {int width = 400}) {
     if (itemId == null) return null;
 
-    final isCompositeKey = itemId.length > 36;
-    final apiItemId = isCompositeKey ? itemId.substring(0, 36) : itemId;
+    final isCompositeKey = isEpisodeKey(itemId);
+    final apiItemId = isCompositeKey ? itemIdOfKey(itemId) : itemId;
 
     if (_itemsWithoutCover.contains(apiItemId)) return null;
 

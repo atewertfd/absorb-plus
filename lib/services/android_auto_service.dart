@@ -20,6 +20,7 @@ import '../main.dart' show rootNavigatorKey;
 import '../utils/web_safe_platform.dart';
 import '../utils/fork_platform.dart';
 import 'tailscale_cover_route.dart';
+import '../utils/episode_key.dart';
 
 // ─── Media ID scheme ─────────────────────────────────────────────────
 //
@@ -547,12 +548,12 @@ class AndroidAutoService {
       final localPos = await ProgressSyncService().getSavedPosition(dl.itemId);
 
       // Detect podcast episode downloads via compound key (showId-episodeId).
-      final isEpisode = dl.itemId.length > 36;
+      final isEpisode = isEpisodeKey(dl.itemId);
       String? showId;
       String? episodeId;
       if (isEpisode) {
-        showId = dl.itemId.substring(0, 36);
-        episodeId = dl.itemId.substring(37);
+        showId = itemIdOfKey(dl.itemId);
+        episodeId = episodeIdOfKey(dl.itemId)!;
       }
 
       // Podcast episode covers use the show ID so the provider can fall back

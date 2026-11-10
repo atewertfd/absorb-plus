@@ -70,6 +70,15 @@ void main() {}
                                  "import '../fork_two.dart' show x;",
                                  "import '../fork_three.dart';"])
 
+    def test_import_into_import_free_library_goes_after_library_directive(self):
+        upstream = "/// Doc.\nlibrary;\n\nbool f() => true;\n"
+        ours = "/// Doc.\nlibrary;\n\nimport 'fork.dart';\n\nbool f() => g();\n"
+        new, _ = g.group(ours, upstream)
+        self.assertEqual(new, "/// Doc.\nlibrary;\n\n" + g.MARKER
+                         + "\nimport 'fork.dart';\n\nbool f() => g();\n")
+        again, moved = g.group(new, upstream)
+        self.assertEqual((again, moved), (new, []))
+
 
 if __name__ == "__main__":
     unittest.main()
