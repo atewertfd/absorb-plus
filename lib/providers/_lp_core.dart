@@ -484,7 +484,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
           _selectedLibraryId != null) {
         return libraryId == _selectedLibraryId;
       }
-      return (dl.itemId.length > 36) == isPodcast;
+      return isEpisodeKey(dl.itemId) == isPodcast;
     }).toList();
     final downloadedIds = downloads.map((d) => d.itemId).toSet();
     final keptEbooks = isPodcast
@@ -529,11 +529,11 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         } catch (_) {}
       }
 
-      final isCompound = dl.itemId.length > 36;
+      final isCompound = isEpisodeKey(dl.itemId);
       late final Map<String, dynamic> entity;
       if (isCompound) {
-        final showId = dl.itemId.substring(0, 36);
-        final episodeId = dl.itemId.substring(37);
+        final showId = itemIdOfKey(dl.itemId);
+        final episodeId = episodeIdOfKey(dl.itemId)!;
         entity = {
           'id': showId,
           '_absorbingKey': dl.itemId,
@@ -671,7 +671,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
           _selectedLibraryId != null) {
         return libraryId == _selectedLibraryId;
       }
-      return (dl.itemId.length > 36) == isPodcast;
+      return isEpisodeKey(dl.itemId) == isPodcast;
     }).toList();
     if (downloads.isEmpty) return;
 
@@ -693,10 +693,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         } catch (_) {}
       }
 
-      final isCompound = dl.itemId.length > 36;
+      final isCompound = isEpisodeKey(dl.itemId);
       if (isCompound) {
-        final showId = dl.itemId.substring(0, 36);
-        final episodeId = dl.itemId.substring(37);
+        final showId = itemIdOfKey(dl.itemId);
+        final episodeId = episodeIdOfKey(dl.itemId)!;
         entities.add({
           'id': showId,
           '_absorbingKey': dl.itemId,
@@ -1079,15 +1079,15 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
   }
 
   void resetProgressFor(String itemId) {
-    if (itemId.length > 36 && _progressMap[itemId]?['isFinished'] == true) {
-      nudgeUnfinishedEpisodeCount(itemId.substring(0, 36), 1);
+    if (isEpisodeKey(itemId) && _progressMap[itemId]?['isFinished'] == true) {
+      nudgeUnfinishedEpisodeCount(itemIdOfKey(itemId), 1);
     }
     // The widget stash is a third copy of the position, outside the scoped
     // prefs. Left alone it wins the resume race and the first sync writes the
     // old spot back to the server.
     unawaited(HomeWidgetService().clearStashedNowPlayingPosition(
-      itemId.length > 36 ? itemId.substring(0, 36) : itemId,
-      itemId.length > 36 ? itemId.substring(37) : null,
+      itemIdOfKey(itemId),
+      episodeIdOfKey(itemId),
     ));
     _progressMap.remove(itemId);
     _localProgressOverrides.remove(itemId);
@@ -2196,7 +2196,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       for (final e in (section['entities'] as List<dynamic>? ?? const [])) {
         if (e is! Map<String, dynamic>) continue;
         final id = e['id'] as String?;
-        if (id == null || id.length > 36) continue;
+        if (id == null || isEpisodeKey(id)) continue;
         home.add(id);
         if (continueListening || n < 2) detail.add(id);
         n++;
@@ -3455,12 +3455,12 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         if (!_hasListened(data)) continue;
         final lastUpdate = data['lastUpdate'] as num? ?? 0;
 
-        if (key.length > 36 && key.substring(0, 36) == seriesOrShowId) {
+        if (isEpisodeKey(key) && itemIdOfKey(key) == seriesOrShowId) {
           if (lastUpdate > latestPodcastUpdate) {
             latestPodcastUpdate = lastUpdate;
             latestPodcastKey = key;
           }
-        } else if (key.length <= 36) {
+        } else if (!isEpisodeKey(key)) {
           final itemData = _itemDataWithSeries(key);
           if (itemData != null) {
             final (sid, _) = _StateMixin._extractSeries(itemData);
@@ -3496,7 +3496,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         : '${player.currentItemId}-${player.currentEpisodeId}';
     final activeQueueMode = activeKey == null
         ? 'off'
-        : activeKey.length > 36
+        : isEpisodeKey(activeKey)
             ? await PlayerSettings.getPodcastQueueMode()
             : await PlayerSettings.getBookQueueMode();
     final globalQueueAutoDownload =
@@ -3505,10 +3505,10 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     final count = await PlayerSettings.getRollingDownloadCount();
     _checkListRollingDownloads(playingKey, count);
 
-    if (playingKey.length > 36) {
-      final showId = playingKey.substring(0, 36);
-      final activeShowId = activeKey != null && activeKey.length > 36
-          ? activeKey.substring(0, 36)
+    if (isEpisodeKey(playingKey)) {
+      final showId = itemIdOfKey(playingKey);
+      final activeShowId = activeKey != null && isEpisodeKey(activeKey)
+          ? itemIdOfKey(activeKey)
           : null;
       // Only an auto_next queue follows this same show; playlist and
       // collection queues plan their own list's window instead, so they
@@ -3542,7 +3542,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         notifyListeners();
       }
       String? activeSeriesId;
-      if (activeKey != null && activeKey.length <= 36) {
+      if (activeKey != null && !isEpisodeKey(activeKey)) {
         if (activeKey == playingKey) {
           activeSeriesId = seriesId;
         } else {
@@ -3608,7 +3608,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
     }
     if (sources.isEmpty) return;
 
-    final activeQueueMode = playingKey.length > 36
+    final activeQueueMode = isEpisodeKey(playingKey)
         ? await PlayerSettings.getPodcastQueueMode()
         : await PlayerSettings.getBookQueueMode();
     final globalAutoDownload = await PlayerSettings.getQueueAutoDownload();
@@ -3744,7 +3744,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       return PlayerSettings.getQueueCollectionId();
     }
     if (queueMode != 'auto_next') return null;
-    if (playingKey.length > 36) return playingKey.substring(0, 36);
+    if (isEpisodeKey(playingKey)) return itemIdOfKey(playingKey);
 
     var data = _itemDataWithSeries(playingKey);
     var (seriesId, _) = data != null
@@ -3816,7 +3816,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
 
       debugPrint('[QueueDL] check start key=$playingKey');
       if (stop('start')) return;
-      final isPodcastKey = playingKey.length > 36;
+      final isPodcastKey = isEpisodeKey(playingKey);
       final bookMode = await PlayerSettings.getBookQueueMode();
       if (stop('read book mode')) return;
       final podcastMode = await PlayerSettings.getPodcastQueueMode();
@@ -3864,7 +3864,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
       if (stop('read keep-next count')) return;
       final podcastAdvanceDir = isPodcastKey && queueMode == 'auto_next'
           ? await PlayerSettings.getPodcastAdvanceDir(
-              playingKey.substring(0, 36))
+              itemIdOfKey(playingKey))
           : null;
       if (stop('read podcast advance dir')) return;
 
@@ -3919,7 +3919,7 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
         }
         if (podcastAdvanceDir != null &&
             await PlayerSettings.getPodcastAdvanceDir(
-                    playingKey.substring(0, 36)) !=
+                    itemIdOfKey(playingKey)) !=
                 podcastAdvanceDir) {
           return false;
         }
@@ -4215,8 +4215,8 @@ mixin _CoreMixin on ChangeNotifier, _StateMixin {
 
   Future<void> _rollingDownloadPodcast(String compoundKey, int count) async {
     if (AppPlatform.lacksPhonePlugins) return;
-    final showId = compoundKey.substring(0, 36);
-    final episodeId = compoundKey.substring(37);
+    final showId = itemIdOfKey(compoundKey);
+    final episodeId = episodeIdOfKey(compoundKey)!;
 
     final fullItem = await _api!.getLibraryItem(showId);
     if (fullItem == null) return;

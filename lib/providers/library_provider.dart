@@ -47,6 +47,7 @@ import '../utils/lru_cache.dart';
 import '../services/startup_overlap.dart';
 import '../services/account_epoch.dart';
 import '../utils/session_json.dart';
+import '../utils/episode_key.dart';
 
 part '_lp_state.dart';
 part '_lp_core.dart';
@@ -750,9 +751,9 @@ class LibraryProvider extends ChangeNotifier
 
   bool isItemFinishedByKey(String key) {
     if (_locallyFinishedItems.contains(key)) return true;
-    if (key.length > 36) {
-      final showId = key.substring(0, 36);
-      final epId = key.substring(37);
+    if (isEpisodeKey(key)) {
+      final showId = itemIdOfKey(key);
+      final epId = episodeIdOfKey(key)!;
       return getEpisodeProgressData(showId, epId)?['isFinished'] == true;
     }
     return getProgressData(key)?['isFinished'] == true;
