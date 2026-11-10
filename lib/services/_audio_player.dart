@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:just_audio/just_audio.dart' as ja;
 import 'native_ios_audio_player.dart';
+import '../utils/app_platform.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/web_safe_platform.dart'; // web-safe Platform
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -28,7 +29,7 @@ class AudioPlayer {
     bool useProxyForRequestHeaders = true,
     ja.AudioLoadConfiguration? audioLoadConfiguration,
   }) {
-    if (!kIsWeb && Platform.isIOS) {
+    if (AppPlatform.isIOS) {
       _native = NativeIosAudioPlayer();
     } else {
       _ja = ja.AudioPlayer(
@@ -184,6 +185,10 @@ class AudioPlayer {
       _isNative ? _native!.setVolume(volume) : _ja!.setVolume(volume);
   Future<void> setSkipSilenceEnabled(bool enabled) =>
       _isNative ? _native!.setSkipSilenceEnabled(enabled) : _ja!.setSkipSilenceEnabled(enabled);
+  // The native iOS engine ties pitch to speed, so only ExoPlayer takes it.
+  Future<void> setPitch(double pitch) async {
+    if (!_isNative) await _ja!.setPitch(pitch);
+  }
   Future<Duration?> setAsset(String asset) =>
       _isNative ? _native!.setAsset(asset) : _ja!.setAsset(asset);
   Future<void> dispose() =>
@@ -198,7 +203,7 @@ class AudioPlayer {
   }
 
   static Future<void> clearStreamingCache() async {
-    if (Platform.isIOS) return;
+    if (AppPlatform.isIOS) return;
     await ja.AudioPlayer.clearStreamingCache();
   }
 }

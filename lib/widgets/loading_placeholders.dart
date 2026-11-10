@@ -229,7 +229,7 @@ class _LibraryGridPlaceholderState extends State<LibraryGridPlaceholder>
       mainAxisSpacing: 10,
     );
     return SliverPadding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, libraryGridBottomPadding),
+      padding: EdgeInsets.fromLTRB(16, 8, 16, libraryGridBottomPadding(context)),
       sliver: SliverFadeTransition(
         opacity: pulse,
         sliver: SliverGrid(

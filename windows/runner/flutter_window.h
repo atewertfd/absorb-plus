@@ -6,6 +6,7 @@
 
 #include <memory>
 
+#include "audio_window_channel.h"
 #include "global_hotkeys.h"
 #include "win32_window.h"
 #include "jump_list.h"
@@ -48,6 +49,9 @@ class FlutterWindow : public Win32Window {
 
   // Opt-in global hotkeys (play/pause, skip, volume, bookmark).
   std::unique_ptr<GlobalHotkeys> hotkeys_;
+
+  // Decodes audio windows for transcription.
+  std::unique_ptr<AudioWindowChannel> audio_window_channel_;
 };
 
 #endif  // RUNNER_FLUTTER_WINDOW_H_

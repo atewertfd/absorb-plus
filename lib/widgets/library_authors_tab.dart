@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../screens/library_screen.dart';
+import '../utils/desktop_workspace.dart';
 import 'library_grid_tiles.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import 'text_scale_room.dart';
@@ -9,6 +10,7 @@ class LibraryAuthorsTab extends StatelessWidget {
   final List<Map<String, dynamic>> authors;
   final bool isLoadingAuthors;
   final bool authorsLoaded;
+  final double desktopMaxCrossAxisExtent;
 
   /// More pages exist past [authors]: the grid shows a loader cell and calls
   /// [onLoadMore] as the user nears the bottom.
@@ -28,6 +30,7 @@ class LibraryAuthorsTab extends StatelessWidget {
     required this.authors,
     required this.isLoadingAuthors,
     required this.authorsLoaded,
+    this.desktopMaxCrossAxisExtent = kDesktopLibraryTileMaxExtent,
     this.hasMore = false,
     this.onLoadMore,
     required this.onRefresh,
@@ -72,11 +75,16 @@ class LibraryAuthorsTab extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.people_outline_rounded,
-                      size: 56, color: cs.onSurfaceVariant.withValues(alpha: 0.3)),
+                  Icon(
+                    Icons.people_outline_rounded,
+                    size: 56,
+                    color: cs.onSurfaceVariant.withValues(alpha: 0.3),
+                  ),
                   const SizedBox(height: 12),
-                  Text(l.libraryNoAuthorsFound,
-                      style: tt.bodyLarge?.copyWith(color: cs.onSurfaceVariant)),
+                  Text(
+                    l.libraryNoAuthorsFound,
+                    style: tt.bodyLarge?.copyWith(color: cs.onSurfaceVariant),
+                  ),
                 ],
               ),
             ),
@@ -106,15 +114,28 @@ class LibraryAuthorsTab extends StatelessWidget {
         slivers: [
           ...headers,
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, libraryGridBottomPadding),
+            padding: EdgeInsets.fromLTRB(
+              16,
+              8,
+              16,
+              libraryGridBottomPadding(context),
+            ),
             sliver: SliverGrid(
-              gridDelegate: LabelRoomGridDelegate(
-                labelRoom: textScaleRoom(context, 30),
-                crossAxisCount: cols,
-                childAspectRatio: 0.68,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
+              gridDelegate: isDesktopWorkspace(context)
+                  ? libraryGridDelegate(
+                      context,
+                      childAspectRatio: 0.68,
+                      desktopMaxCrossAxisExtent: desktopMaxCrossAxisExtent,
+                      crossAxisCount: cols,
+                    )
+                  // Absorb Plus: phone cells grow with the text size.
+                  : LabelRoomGridDelegate(
+                      labelRoom: textScaleRoom(context, 30),
+                      crossAxisCount: cols,
+                      childAspectRatio: 0.68,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   maybeLoadAhead(index);
@@ -146,6 +167,8 @@ class LibraryAuthorsTab extends StatelessWidget {
       );
     }
 
-    return RefreshIndicator(onRefresh: onRefresh, child: body);
+    return isDesktopWorkspace(context)
+        ? body
+        : RefreshIndicator(onRefresh: onRefresh, child: body);
   }
 }

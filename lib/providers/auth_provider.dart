@@ -21,6 +21,7 @@ import '../services/wear_auth_service.dart';
 import '../l10n/app_localizations.dart';
 import '../main.dart' show rootNavigatorKey;
 import '../widgets/overlay_toast.dart';
+import '../utils/app_platform.dart';
 import '../utils/server_url.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import '../services/account_scoped_caches.dart';
@@ -170,6 +171,12 @@ class AuthProvider extends ChangeNotifier {
     return isAdmin;
   }
 
+  /// True when the server allows this user to download library item files.
+  bool get canDownload {
+    final perms = _userJson?['permissions'] as Map<String, dynamic>?;
+    return perms?['download'] == true;
+  }
+
   /// Replace the live app shell with the startup loading view while a saved
   /// account is being activated and its library is prepared.
   void beginAccountSwitch() {
@@ -288,18 +295,34 @@ class AuthProvider extends ChangeNotifier {
     }).toList();
   }
 
+  // The client for the current session, kept until any of its inputs
+  // change. This getter runs from build methods, and a new client each time
+  // was a new BookOrbit cover proxy check each time, hundreds a second.
+  ApiService? _sessionApi;
+  String? _sessionApiKey;
+
   ApiService? get apiService {
     // Signed out, every server call fails straight away as unreachable,
     // which playback and sync already treat as offline.
     if (isSignedOut) return SignedOutPlayback.api();
     final url = activeServerUrl;
     if (url != null && _accessToken != null) {
-      return _createSessionApi(
-        baseUrl: url,
-        token: _accessToken!,
-        refreshToken: _refreshToken,
-        isLegacyToken: _isLegacyToken,
-      );
+      final headers = (_customHeaders.entries.toList()
+            ..sort((a, b) => a.key.compareTo(b.key)))
+          .map((e) => '${e.key}=${e.value}')
+          .join('&');
+      final key = '${_backend.name}|$url|$_accessToken|$_refreshToken|'
+          '$_isLegacyToken|$_serverUrl|$_username|$headers';
+      if (key != _sessionApiKey || _sessionApi == null) {
+        _sessionApi = _createSessionApi(
+          baseUrl: url,
+          token: _accessToken!,
+          refreshToken: _refreshToken,
+          isLegacyToken: _isLegacyToken,
+        );
+        _sessionApiKey = key;
+      }
+      return _sessionApi;
     }
     return null;
   }
@@ -400,6 +423,7 @@ class AuthProvider extends ChangeNotifier {
   /// to call unconditionally — the service is a no-op on non-Android
   /// platforms and when no watch is connected.
   void _pushSessionToWear() {
+    if (AppPlatform.lacksPhonePlugins) return;
     final url = _serverUrl;
     final token = _accessToken;
     if (url == null || token == null) return;
@@ -509,10 +533,12 @@ class AuthProvider extends ChangeNotifier {
     AudioPlayerService().cancelRecovery('signed out'); // fork: no reconnect without the sign-in
     AudioPlayerService().useApi(SignedOutPlayback.api());
     SignedOutPlayback.started();
-    AndroidAutoService().clearCache();
-    CarPlayService().clearAndRefresh();
+    if (!AppPlatform.lacksPhonePlugins) {
+      AndroidAutoService().clearCache();
+      CarPlayService().clearAndRefresh();
+      WearAuthService.instance.clear();
+    }
     BookOrbitApiService.clearCaches();
-    WearAuthService.instance.clear();
     try {
       if (server != null && user != null) {
         await UserAccountService().clearTokens(server, user);
@@ -634,6 +660,11 @@ class AuthProvider extends ChangeNotifier {
             ? await _authorizeWhilePinging(restoredUrl, sw)
             : ((reachable: await _pingServers(restoredUrl, sw), auth: null), null);
         _serverReachable = reachable;
+        if (AppPlatform.isWeb && !reachable) {
+          _accessToken = null;
+          _refreshToken = null;
+          _isLegacyToken = false;
+        }
 
         // Fetch full user info (needed for isAdmin, permissions, etc.)
         if (reachable) {
@@ -870,6 +901,7 @@ class AuthProvider extends ChangeNotifier {
     _isLegacyToken = tokens.isLegacy;
     _accessToken = tokens.token;
     _refreshToken = tokens.refreshToken;
+    _serverReachable = true;
     debugPrint('[Auth] Login response keys: ${result.keys.toList()}');
     final serverSettings = result['serverSettings'];
     debugPrint('[Auth] Server version='
@@ -955,11 +987,11 @@ class AuthProvider extends ChangeNotifier {
     await _onAccountActivated();
     await apiService?.ensureMediaReady();
 
-    // Wipe any previous user's stats from the widget and pull this user's.
-    await HomeWidgetService().clearStats();
-    HomeWidgetService().refreshStats(force: true);
-
-    _pushSessionToWear();
+    if (!AppPlatform.lacksPhonePlugins) {
+      await HomeWidgetService().clearStats();
+      HomeWidgetService().refreshStats(force: true);
+      _pushSessionToWear();
+    }
     _startOnAbsorbingAfterAccountChange = true;
     _isLoading = false;
     notifyListeners();
@@ -1053,6 +1085,7 @@ class AuthProvider extends ChangeNotifier {
     _defaultLibraryId = null;
     _userJson = user;
     _serverSettings = null;
+    _serverReachable = true;
     _customHeaders = customHeaders;
 
     _fetchServerVersion(url);
@@ -1098,10 +1131,11 @@ class AuthProvider extends ChangeNotifier {
 
     await _onAccountActivated();
 
-    await HomeWidgetService().clearStats();
-    HomeWidgetService().refreshStats(force: true);
-
-    _pushSessionToWear();
+    if (!AppPlatform.lacksPhonePlugins) {
+      await HomeWidgetService().clearStats();
+      HomeWidgetService().refreshStats(force: true);
+      _pushSessionToWear();
+    }
     _startOnAbsorbingAfterAccountChange = true;
     _isLoading = false;
     notifyListeners();
@@ -1228,11 +1262,11 @@ class AuthProvider extends ChangeNotifier {
     await _onAccountActivated();
     await apiService?.ensureMediaReady();
 
-    // Wipe any previous user's stats from the widget and pull this user's.
-    await HomeWidgetService().clearStats();
-    HomeWidgetService().refreshStats(force: true);
-
-    _pushSessionToWear();
+    if (!AppPlatform.lacksPhonePlugins) {
+      await HomeWidgetService().clearStats();
+      HomeWidgetService().refreshStats(force: true);
+      _pushSessionToWear();
+    }
     _startOnAbsorbingAfterAccountChange = true;
     _isLoading = false;
     notifyListeners();
@@ -1241,6 +1275,12 @@ class AuthProvider extends ChangeNotifier {
 
   /// Load local server settings from PlayerSettings.
   Future<void> _loadLocalServerSettings() async {
+    if (AppPlatform.lacksPhonePlugins) {
+      _localServerEnabled = false;
+      _localServerUrl = '';
+      _useLocalServer = false;
+      return;
+    }
     _localServerEnabled = await PlayerSettings.getLocalServerEnabled();
     final savedUrl = await PlayerSettings.getLocalServerUrl();
     _localServerUrl = normalizeServerUrl(savedUrl);
@@ -1262,7 +1302,9 @@ class AuthProvider extends ChangeNotifier {
   Future<void> _onAccountActivated() async {
     PlayerSettings.notifySettingsChanged();
     await reloadAccountScopedCaches(); // fork (C8)
-    await EqualizerService().reloadForActiveAccount();
+    if (!AppPlatform.lacksPhonePlugins) {
+      await EqualizerService().reloadForActiveAccount();
+    }
 
     await _loadLocalServerSettings();
     _useLocalServer = false;
@@ -1387,6 +1429,7 @@ class AuthProvider extends ChangeNotifier {
   /// Check if the configured local server is reachable.
   /// Called on WiFi connectivity changes by LibraryProvider.
   Future<void> checkLocalServer() async {
+    if (AppPlatform.lacksPhonePlugins) return;
     if (!_localServerEnabled || _localServerUrl.isEmpty || _serverUrl == null)
       return;
     final wasLocal = _useLocalServer;
@@ -1443,6 +1486,7 @@ class AuthProvider extends ChangeNotifier {
     required bool enabled,
     required String url,
   }) async {
+    if (AppPlatform.lacksPhonePlugins) return;
     final normalizedUrl = normalizeServerUrl(url);
     _localServerEnabled = enabled;
     _localServerUrl = normalizedUrl;
@@ -1490,15 +1534,15 @@ class AuthProvider extends ChangeNotifier {
       }
     } catch (_) {}
 
-    // Clear Android Auto / CarPlay browse tree cache so it doesn't show stale data
-    AndroidAutoService().clearCache();
-    CarPlayService().clearAndRefresh();
+    if (!AppPlatform.lacksPhonePlugins) {
+      AndroidAutoService().clearCache();
+      CarPlayService().clearAndRefresh();
+    }
 
     // Drop the per-library search index so the next account can't reuse it.
     BookSearchIndex().clear();
 
-    // Clear the stats widget so the previous user's numbers don't linger.
-    await HomeWidgetService().clearStats();
+    if (!AppPlatform.lacksPhonePlugins) await HomeWidgetService().clearStats();
 
     // Clear cached session metadata for this user (track URLs would be invalid
     // on next login anyway)
@@ -1574,8 +1618,7 @@ class AuthProvider extends ChangeNotifier {
       });
     }
 
-    // Sign the paired watch out too.
-    WearAuthService.instance.clear();
+    if (!AppPlatform.lacksPhonePlugins) WearAuthService.instance.clear();
 
     notifyListeners();
   }
@@ -1599,9 +1642,10 @@ class AuthProvider extends ChangeNotifier {
       }
     } catch (_) {}
 
-    // Clear Android Auto / CarPlay browse tree cache so it refreshes for the new user
-    AndroidAutoService().clearCache();
-    CarPlayService().clearAndRefresh();
+    if (!AppPlatform.lacksPhonePlugins) {
+      AndroidAutoService().clearCache();
+      CarPlayService().clearAndRefresh();
+    }
     BookOrbitApiService.clearCaches();
 
     // Set the new account as active in the account service. It may have been
@@ -1632,7 +1676,9 @@ class AuthProvider extends ChangeNotifier {
     // Reload EQ settings from the new account's scope. Without this the
     // EqualizerService singleton keeps the previous account's in-memory
     // state and would write it back into the new scope on any change.
-    await EqualizerService().reloadForActiveAccount();
+    if (!AppPlatform.lacksPhonePlugins) {
+      await EqualizerService().reloadForActiveAccount();
+    }
 
     final restore = await _captureSession(rescope: true); // Absorb Plus: put back if the token can't be saved
     // Set credentials
@@ -1685,10 +1731,10 @@ class AuthProvider extends ChangeNotifier {
       debugPrint('[Auth] Saving session extras failed: ${e.runtimeType}'); // Absorb Plus
     }
 
-    // Clear the stats widget so the previous account's numbers don't linger
-    // while the new user's data is fetched, then force a refresh.
-    await HomeWidgetService().clearStats();
-    HomeWidgetService().refreshStats(force: true);
+    if (!AppPlatform.lacksPhonePlugins) {
+      await HomeWidgetService().clearStats();
+      HomeWidgetService().refreshStats(force: true);
+    }
 
     // Ping first, the way a launch does. Without it a server this phone
     // can't reach (a home address while away) sat through every sign-in

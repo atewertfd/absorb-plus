@@ -18,8 +18,13 @@ import '../services/bookorbit_email.dart';
 import '../services/bookorbit_mapper.dart';
 import 'absorb_placement.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import 'package:palette_generator/palette_generator.dart';
 import '../utils/cover_accent.dart';
+import '../utils/app_platform.dart';
+import '../utils/audible_url.dart';
+import '../utils/desktop_workspace.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
@@ -64,9 +69,11 @@ import 'playlist_picker_sheet.dart';
 import 'collection_picker_sheet.dart';
 import 'delete_confirm_dialog.dart';
 import 'absorb_wave_icon.dart';
+import 'adaptive_modal.dart';
 import 'stackable_sheet.dart';
 import 'ebook_router.dart';
 import '../utils/duration_format.dart';
+import '../utils/url_file_download.dart';
 import '../utils/share_origin.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import 'save_book_copy.dart';
@@ -165,6 +172,7 @@ void showQuickActionsSheet(
     useSafeArea: true,
     initialChildSize: 0.6,
     maxChildSize: 0.92,
+    desktopWidth: 520,
     builder: (ctx, sc) => _BookDetailSheetContent(
       itemId: itemId,
       scrollController: sc,
@@ -494,8 +502,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       me: auth.username,
       meId: auth.userId,
       onOpen: () => bookOrbit
-          ? Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-              builder: (_) => ReadingLogScreen(itemId: widget.itemId, title: title, item: _item, accent: accent)))
+          ? _openReadingLog(title, accent)
           : showBookStatsSheet(context, itemId: widget.itemId, title: title),
       onOthers: () => showBookStatsSheet(context, itemId: widget.itemId, title: title),
       onAllSessions: bookOrbit
@@ -507,6 +514,17 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
                 accent: accent,
               ),
     );
+  }
+
+  void _openReadingLog(String title, Color accent) {
+    final itemId = widget.itemId;
+    final item = _item;
+    final nav = contentNavigator(context);
+    if (isDesktopWorkspace(context)) {
+      Navigator.of(context, rootNavigator: true).popUntil((r) => r.isFirst);
+    }
+    nav.push(MaterialPageRoute(
+        builder: (_) => ReadingLogScreen(itemId: itemId, title: title, item: item, accent: accent)));
   }
 
   Future<void> _loadBookmarks() async {
@@ -578,7 +596,10 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
             unawaited(_loadSimilar(api));
           }
 
-          // Fetch Audible rating
+          // Fetch Audible rating, unless the stars are switched off in
+          // Library settings; then nothing is looked up or shown. BookOrbit
+          // sends its ratings with the book, so the switch is ABS only.
+          if (!api.isBookOrbit && !await PlayerSettings.getShowAudibleRating()) return;
           final media = finalItem['media'] as Map<String, dynamic>? ?? {};
           final metadata = media['metadata'] as Map<String, dynamic>? ?? {};
           final asin = metadata['asin'] as String?;
@@ -705,7 +726,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       provider = FileImage(File(url));
     } else {
       final lib = context.read<LibraryProvider>();
-      provider = CachedNetworkImageProvider(url, cacheKey: stableCoverCacheKey(url), cacheManager: coverCacheManager, headers: lib.mediaHeaders);
+      provider = CachedNetworkImageProvider(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, url, cacheKey: stableCoverCacheKey(url), cacheManager: coverCacheManager, headers: lib.mediaHeaders);
     }
     final t0 = DateTime.now();
     debugPrint('[BookDetail] _deriveCoverScheme start url=$url');
@@ -756,9 +777,17 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
     final l = AppLocalizations.of(context)!;
+    // In a desktop dialog the dialog already rounds and frames it; a sheet's
+    // rounded top inside that read as a phone sheet stuck in a box.
+    final inDialog = ModalSurface.isDesktopOf(context);
     return Container(
       clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(color: pageSurfaceColor(context), borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
+      decoration: BoxDecoration(
+        color: pageSurfaceColor(context),
+        borderRadius: inDialog
+            ? BorderRadius.zero
+            : const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       child: Stack(children: [
         // Cover-derived color gradient background - lighter than blurred image.
         Positioned.fill(child: DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(
@@ -862,7 +891,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     }
 
     return ListView(controller: widget.scrollController, padding: EdgeInsets.fromLTRB(20, 8, 20, 32 + MediaQuery.of(context).viewPadding.bottom), children: [
-      Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+      if (!ModalSurface.isDesktopOf(context)) Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(color: cs.onSurface.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(2)))),
       if (_coverUrl != null) ...[
         Center(child: GestureDetector(
@@ -884,19 +913,19 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
                             errorBuilder: (_, __, ___) => const SizedBox()),
                       )
                     : BlurPaddedCover(
-                        blurChild: CachedNetworkImage(
+                        blurChild: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                           imageUrl: _coverUrl!, cacheKey: stableCoverCacheKey(_coverUrl!), cacheManager: coverCacheManager, fit: BoxFit.cover,
                           httpHeaders: lib.mediaHeaders,
                           errorWidget: (_, __, ___) => const SizedBox.shrink(),
                         ),
-                        child: CachedNetworkImage(
+                        child: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                           imageUrl: _coverUrl!, cacheKey: stableCoverCacheKey(_coverUrl!), cacheManager: coverCacheManager, fit: BoxFit.contain,
                           httpHeaders: lib.mediaHeaders,
                           placeholder: (_, __) => const SizedBox(),
                           errorWidget: (_, __, ___) => const SizedBox(),
                         ),
                       ))
-                : CachedNetworkImage(
+                : CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                     imageUrl: _coverUrl!, cacheKey: stableCoverCacheKey(_coverUrl!), cacheManager: coverCacheManager, fit: BoxFit.contain,
                     httpHeaders: lib.mediaHeaders,
                     placeholder: (_, __) => const SizedBox(),
@@ -988,6 +1017,14 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       const SizedBox(height: 12),
       if (_lookingForNarration)
         _lookingButton(accent, _coverScheme?.onPrimary ?? cs.onPrimary)
+      else if (isEbookOnly && AppPlatform.isWeb)
+        SizedBox(height: 52, child: FilledButton.icon(
+          onPressed: null,
+          icon: const Icon(Icons.menu_book_rounded, size: 24),
+          label: Text(l.ebookOnlyNoAudio,
+            style: tt.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+          style: FilledButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+        ))
       else if (isEbookOnly && ebookFile != null && canReadEbook(ebookFile))
         // Reading progress fills the button the same way listening progress
         // fills Absorb.
@@ -1337,7 +1374,11 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       // Primary action row: Download | Fully Absorb | ebook download (ebook-only)
       const SizedBox(height: 12),
       Row(children: [
-        if (!isEbookOnly) ...[
+        if (AppPlatform.lacksPhonePlugins && auth.canDownload) ...[
+          Expanded(child: _webDownloadButton(context, cs, l, auth)),
+          const SizedBox(width: 8),
+        ],
+        if (!isEbookOnly && !AppPlatform.lacksPhonePlugins) ...[
           Expanded(child: DownloadWideButton(itemId: widget.itemId, coverUrl: _coverUrl, title: title, author: authorName, accent: accent)),
           const SizedBox(width: 8),
         ],
@@ -1371,7 +1412,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
             ]),
           ),
         )),
-        if (isEbookOnly && !_lookingForNarration && ebookFile != null && canReadEbook(ebookFile)) ...[
+        if (!AppPlatform.lacksPhonePlugins && isEbookOnly && !_lookingForNarration && ebookFile != null && canReadEbook(ebookFile)) ...[
           const SizedBox(width: 8),
           // For ebook-only books the big button above is already "Read", so this
           // slot is the offline download (matching the audiobook download
@@ -1626,6 +1667,66 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       ]);
   }
 
+  Widget _webDownloadButton(
+    BuildContext context,
+    ColorScheme cs,
+    AppLocalizations l,
+    AuthProvider auth,
+  ) {
+    return GestureDetector(
+      onTap: () => _downloadToComputer(context, auth),
+      child: Container(
+        height: 36,
+        decoration: BoxDecoration(
+          color: cs.onSurface.withValues(alpha: 0.06),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: cs.onSurface.withValues(alpha: 0.08),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.download_outlined,
+              size: 16,
+              color: cs.onSurfaceVariant,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              l.download,
+              style: TextStyle(
+                color: cs.onSurfaceVariant,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _downloadToComputer(
+    BuildContext context,
+    AuthProvider auth,
+  ) async {
+    final api = auth.apiService;
+    if (api == null) return;
+
+    final uri = Uri.parse(
+      '${api.cleanBaseUrl}/api/items/${Uri.encodeComponent(widget.itemId)}/download',
+    ).replace(queryParameters: {'token': api.token});
+    final started = await downloadUrlFile(uri);
+    if (!started && context.mounted) {
+      showOverlayToast(
+        context,
+        AppLocalizations.of(context)!.downloadNotifFailedTitle,
+        icon: Icons.error_outline_rounded,
+      );
+    }
+  }
+
   Future<void> _loadSimilar(ApiService api) async {
     final list = await api.getSimilarBooks(widget.itemId);
     if (mounted && list.isNotEmpty) setState(() => _similar = list.take(20).toList());
@@ -1653,6 +1754,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
               child: url == null
                   ? blank
                   : CachedNetworkImage(
+                      imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
                       imageUrl: url, cacheKey: stableCoverCacheKey(url), cacheManager: coverCacheManager,
                       httpHeaders: lib.mediaHeaders,
                       fit: BoxFit.cover,
@@ -1692,7 +1794,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
 
   Future<void> _pickReadStatus(AuthProvider auth, LibraryProvider lib, String current) async {
     final l = AppLocalizations.of(context)!;
-    final picked = await showModalBottomSheet<String>(
+    final picked = await showAdaptiveActionMenu<String>(
       context: context,
       showDragHandle: true,
       builder: (ctx) {
@@ -1701,7 +1803,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         return SafeArea(
           child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 4),
+              padding: EdgeInsets.fromLTRB(24, ModalSurface.isDesktopOf(ctx) ? 20 : 0, 24, 4),
               child: Text(l.readStatusTitle, style: tt.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
             ),
             Padding(
@@ -1949,7 +2051,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       controller: widget.scrollController,
       padding: EdgeInsets.fromLTRB(20, 8, 20, 24 + MediaQuery.of(context).viewPadding.bottom),
       children: [
-        Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+        if (!ModalSurface.isDesktopOf(context)) Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(color: cs.onSurface.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(2)))),
         // Header: cover thumb + title/author
         Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -1972,8 +2074,10 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         else if (!isEbookOnly)
           Row(children: [
             Expanded(child: _quickAbsorbButton(context, cs, tt, auth, accent, onAccent, title, authorName, duration, chapters, isFinished, progress)),
-            const SizedBox(width: 10),
-            Expanded(child: DownloadWideButton(itemId: widget.itemId, coverUrl: _coverUrl, title: title, author: authorName, accent: accent)),
+            if (!AppPlatform.lacksPhonePlugins) ...[
+              const SizedBox(width: 10),
+              Expanded(child: DownloadWideButton(itemId: widget.itemId, coverUrl: _coverUrl, title: title, author: authorName, accent: accent)),
+            ],
           ])
         else
           SizedBox(height: 44, child: Center(child: Text(l.ebookOnlyNoAudio,
@@ -2051,17 +2155,19 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         if (!lib.isOffline && !lib.isPodcastLibrary && (auth.isAdmin || auth.isBookOrbit)) {
           add(Icons.collections_bookmark_rounded, l.addToCollection, () => CollectionPickerSheet.show(context, widget.itemId));
         }
-        if (ebookFile != null && canReadEbook(ebookFile)) {
+        if (!AppPlatform.isWeb && ebookFile != null && canReadEbook(ebookFile)) {
           add(Icons.menu_book_rounded, l.readEbook, () => _openEbookReader(context, auth, ebookFile, title));
         }
         // Save/Send push the file elsewhere, which needs the server's own file
         // entry (with ino) - the cache-synthesized fallback can't serve them.
         final serverEbookFile = resolveEbookFile(_item);
-        if (serverEbookFile != null) {
+        if (!AppPlatform.lacksPhonePlugins && serverEbookFile != null) {
           add(_ebookSaved ? Icons.download_done_rounded : Icons.save_alt_rounded,
             l.ebookSaveToDevice, () => _saveEbook(context, auth, exportEbookFile(_item) ?? serverEbookFile, title));
         }
-        if (serverEbookFile != null && auth.ereaderDevices.isNotEmpty) {
+        if (!AppPlatform.lacksPhonePlugins &&
+            serverEbookFile != null &&
+            auth.ereaderDevices.isNotEmpty) {
           add(Icons.send_to_mobile_rounded, l.sendToEreader, () => _sendToEreader(context, auth));
         }
         if (!isEbookOnly && !lib.isPodcastLibrary) { // Absorb Plus
@@ -2158,7 +2264,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       img = Image.file(File(url), fit: BoxFit.cover,
         errorBuilder: (_, __, ___) => Container(color: cs.surfaceContainerHighest));
     } else {
-      img = CachedNetworkImage(imageUrl: url, cacheKey: stableCoverCacheKey(url), cacheManager: coverCacheManager, fit: BoxFit.cover, httpHeaders: headers,
+      img = CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, imageUrl: url, cacheKey: stableCoverCacheKey(url), cacheManager: coverCacheManager, fit: BoxFit.cover, httpHeaders: headers,
         placeholder: (_, __) => Container(color: cs.surfaceContainerHighest),
         errorWidget: (_, __, ___) => Container(color: cs.surfaceContainerHighest));
     }
@@ -2309,9 +2415,11 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       if (id.isNotEmpty) bookSeriesIds.add(id);
     }
     final continueSeriesId = lib.continueSeriesShelfMatch(bookSeriesIds);
-    showModalBottomSheet(
+    showAdaptiveActionMenu(
       context: context,
       isScrollControlled: true,
+      desktopWidth: 520,
+      desktopScrollWrap: false,
       backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -2321,7 +2429,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+              if (!ModalSurface.isDesktopOf(ctx)) Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(color: cs.onSurface.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(2)))),
               Flexible(
                 child: SingleChildScrollView(
@@ -2397,19 +2505,29 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     final audioFiles = (media['audioFiles'] as List<dynamic>?) ?? const [];
     final libraryFiles = (_item!['libraryFiles'] as List<dynamic>?) ?? const [];
     final rel = _item!['relPath'] as String? ?? '';
-    Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+    final itemId = widget.itemId;
+    final libraryId = _item!['libraryId'] as String?;
+    final isAdmin = auth.isAdmin;
+    final isBookDock = BookDockInfo.of(_item) != null;
+    final nav = contentNavigator(context);
+    // On desktop the detail surface is a root-navigator dialog while the
+    // editor lands in the content pane below it; close the dialogs first.
+    if (isDesktopWorkspace(context)) {
+      Navigator.of(context, rootNavigator: true).popUntil((r) => r.isFirst);
+    }
+    nav.push(MaterialPageRoute(
       builder: (_) => BookEditScreen(
-        itemId: widget.itemId,
+        itemId: itemId,
         bookTitle: title,
         metadata: meta,
         tags: mediaTags,
         audioFiles: audioFiles,
-          libraryFiles: libraryFiles,
-          relPath: rel,
+        libraryFiles: libraryFiles,
+        relPath: rel,
         isEbookOnly: isEbookOnly,
-        isAdmin: auth.isAdmin,
-        libraryId: _item!['libraryId'] as String?,
-        isBookDock: BookDockInfo.of(_item) != null,
+        isAdmin: isAdmin,
+        libraryId: libraryId,
+        isBookDock: isBookDock,
       ),
     ));
   }
@@ -2452,7 +2570,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     };
 
     return ListView(controller: widget.scrollController, padding: EdgeInsets.fromLTRB(20, 8, 20, 32 + MediaQuery.of(context).viewPadding.bottom), children: [
-      Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+      if (!ModalSurface.isDesktopOf(context)) Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(color: cs.onSurface.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(2)))),
       if (_coverUrl != null) ...[
         Center(child: Container(
@@ -2462,7 +2580,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
             boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 16, offset: const Offset(0, 4))],
           ),
           clipBehavior: Clip.antiAlias,
-          child: CachedNetworkImage(
+          child: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
             imageUrl: _coverUrl!, cacheKey: stableCoverCacheKey(_coverUrl!), cacheManager: coverCacheManager, fit: BoxFit.contain,
             httpHeaders: lib.mediaHeaders,
             placeholder: (_, __) => const SizedBox(width: 140),
@@ -2772,10 +2890,11 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     for (final d in destinations) {
       folderCount[d.libraryId] = (folderCount[d.libraryId] ?? 0) + 1;
     }
-    return showModalBottomSheet<BookDockDestination>(
+    return showAdaptiveActionMenu<BookDockDestination>(
       context: context,
       useSafeArea: true,
       isScrollControlled: true,
+      desktopScrollWrap: false,
       builder: (ctx) => SafeArea(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.6),
@@ -3008,6 +3127,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     return stars;
   }
 
+  // ignore: unused_element (Absorb Plus: upstream leaves this unused too)
   static String get _audibleDomain {
     final code = (ui.PlatformDispatcher.instance.locale.countryCode ?? 'US').toUpperCase();
     const domains = {
@@ -3037,24 +3157,30 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
   void _showAudibleReviews(BuildContext context) {
     final asin = _asin;
     if (asin == null) return;
-    final url = 'https://www.$_audibleDomain/pd/$asin#customer-reviews';
-    if (ForkPlatform.openInBrowserInstead(url)) return;
+    final uri = audibleReviewsUri(
+      asin,
+      countryCode: ui.PlatformDispatcher.instance.locale.countryCode,
+    );
+    if (AppPlatform.lacksPhonePlugins || !ForkPlatform.hasInAppWebView) { // Absorb Plus: web view is Android-only
+      unawaited(_launchAudibleReviews(context, uri));
+      return;
+    }
     final cs = Theme.of(context).colorScheme;
 
     final controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(cs.surface)
-      ..loadRequest(Uri.parse(url));
+      ..loadRequest(uri);
 
-    showModalBottomSheet(
+    showAdaptiveActionMenu(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
+      desktopWidth: 720,
+      desktopScrollWrap: false,
       backgroundColor: Colors.transparent,
-      enableDrag: true,
-      builder: (ctx) => FractionallySizedBox(
-        heightFactor: 0.92,
-        child: Container(
+      builder: (ctx) {
+        final body = Container(
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(
             color: cs.surface,
@@ -3096,9 +3222,25 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
               ),
             ),
           ]),
-        ),
-      ),
+        );
+        if (ModalSurface.isDesktopOf(ctx)) return body;
+        return FractionallySizedBox(heightFactor: 0.92, child: body);
+      },
     );
+  }
+
+  Future<void> _launchAudibleReviews(BuildContext context, Uri uri) async {
+    var opened = false;
+    try {
+      opened = await launchUrl(uri, webOnlyWindowName: '_blank');
+    } catch (_) {}
+    if (!opened && context.mounted) {
+      showOverlayToast(
+        context,
+        AppLocalizations.of(context)!.audibleSeriesCouldNotOpenAudible,
+        icon: Icons.error_outline_rounded,
+      );
+    }
   }
 
   // The name and its comma are one Wrap child so the comma can never start
@@ -3497,8 +3639,9 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
       BuildContext context, List<Map<String, dynamic>> devices) {
     final cs = Theme.of(context).colorScheme;
     final l = AppLocalizations.of(context)!;
-    return showModalBottomSheet<String>(
+    return showAdaptiveActionMenu<String>(
       context: context,
+      desktopScrollWrap: false,
       backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -3508,7 +3651,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+              if (!ModalSurface.isDesktopOf(ctx)) Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(color: cs.onSurface.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(2)))),
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
@@ -3840,8 +3983,9 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
         }
       }
     } catch (_) {
+      await ProgressSyncService().saveFinishedOffline(widget.itemId, duration);
       if (context.mounted) {
-        showOverlayToast(context, l.failedToUpdateCheckConnection, icon: Icons.error_outline_rounded);
+        showOverlayToast(context, l.markedFinishedWillSync, icon: Icons.cloud_off_rounded);
       }
     }
   }
@@ -4013,31 +4157,29 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
   void _openMetadataLookup(BuildContext context, AuthProvider auth, String title, String author) {
     final api = auth.apiService;
     if (api == null) return;
-    showModalBottomSheet(
+    showAdaptiveSheetDialog(
       context: context,
-      isScrollControlled: true,
+      useSafeArea: false,
       backgroundColor: Colors.transparent,
-      builder: (_) => DraggableScrollableSheet(
-        expand: false,
-        initialChildSize: 0.85,
-        minChildSize: 0.05, snap: true,
-        maxChildSize: 0.95,
-        builder: (ctx, sc) => MetadataLookupSheet(
-          scrollController: sc,
-          itemId: widget.itemId,
-          api: api,
-          initialTitle: title,
-          initialAuthor: author,
-          currentMetadata: (_item?['media'] as Map<String, dynamic>?)?['metadata'] as Map<String, dynamic>?,
-          onApplied: () {
-            // Reload the item to show the new override, and repaint the
-            // library so the grid/absorbing card pick up the override cover.
-            _loadItem();
-            if (mounted) {
-              context.read<LibraryProvider>().notifyCoverOverridesChanged();
-            }
-          },
-        ),
+      expand: false,
+      initialChildSize: 0.85,
+      minChildSize: 0.05, snap: true,
+      maxChildSize: 0.95,
+      builder: (ctx, sc) => MetadataLookupSheet(
+        scrollController: sc,
+        itemId: widget.itemId,
+        api: api,
+        initialTitle: title,
+        initialAuthor: author,
+        currentMetadata: (_item?['media'] as Map<String, dynamic>?)?['metadata'] as Map<String, dynamic>?,
+        onApplied: () {
+          // Reload the item to show the new override, and repaint the
+          // library so the grid/absorbing card pick up the override cover.
+          _loadItem();
+          if (mounted) {
+            context.read<LibraryProvider>().notifyCoverOverridesChanged();
+          }
+        },
       ),
     );
   }
@@ -4180,7 +4322,7 @@ class _FullCoverViewerState extends State<_FullCoverViewer> {
                   }
                 },
                 child: Center(
-                  child: CachedNetworkImage(
+                  child: CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                     imageUrl: widget.url, cacheKey: stableCoverCacheKey(widget.url), cacheManager: coverCacheManager,
                     httpHeaders: widget.headers,
                     fit: BoxFit.contain,

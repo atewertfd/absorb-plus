@@ -1,3 +1,4 @@
+import '../utils/app_platform.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,7 @@ import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../services/api_service.dart';
 import '../services/audio_player_service.dart';
+import '../widgets/adaptive_modal.dart';
 import '../services/bookorbit_chapters.dart';
 import '../services/chapter_start_finder.dart';
 import '../services/download_service.dart';
@@ -15,7 +17,6 @@ import '../services/remote_audio_slice.dart';
 import '../services/transcription_service.dart';
 import '../widgets/overlay_toast.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
-import '../utils/web_safe_platform.dart'; // web-safe Platform
 
 /// Mutable working copy of one chapter. [uid] is a stable identity that
 /// survives reindexing/add/remove (used for controllers + locks); [id] is the
@@ -390,15 +391,17 @@ class _ChapterEditBodyState extends State<ChapterEditBody>
       return;
     }
     final ml = MaterialLocalizations.of(context);
-    final picked = await showModalBottomSheet<BoChapterVersion>(
+    final picked = await showAdaptiveActionMenu<BoChapterVersion>(
       context: context,
       useSafeArea: true,
       showDragHandle: true,
+      desktopScrollWrap: false,
       builder: (sctx) => ListView(
         shrinkWrap: true,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+            padding: EdgeInsets.fromLTRB(
+                20, ModalSurface.isDesktopOf(sctx) ? 20 : 0, 20, 8),
             child: Text(l.chapterHistoryTitle, style: Theme.of(sctx).textTheme.titleMedium),
           ),
           if (versions.isEmpty)
@@ -1002,12 +1005,13 @@ class _ChapterEditBodyState extends State<ChapterEditBody>
   Future<void> _openLookup() async {
     final api = context.read<AuthProvider>().apiService;
     if (api == null) return;
-    final result = await showModalBottomSheet<_LookupResult>(
+    final result = await showAdaptiveActionMenu<_LookupResult>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      desktopScrollWrap: false,
       builder: (_) => _ChapterLookupSheet(
         api: api,
         itemId: widget.itemId,
@@ -1758,9 +1762,10 @@ class _ChapterEditBodyState extends State<ChapterEditBody>
     final trackIndex = _tracks.indexOf(track);
     final offset = (track['startOffset'] as num?)?.toDouble() ?? 0;
     final trackDur = (track['duration'] as num?)?.toDouble() ?? 0;
-    // Android's decoder opens a stream URL itself. Apple's only reads local
-    // files, so on iOS a streamed book gets the window's bytes pulled down
-    // and rewrapped first.
+    // Android's decoder opens a stream URL itself. Apple's and Windows' read
+    // local files (Windows' could open a URL, but not with our auth header),
+    // so there a streamed book gets the window's bytes pulled down and
+    // rewrapped first.
     final String source;
     RemoteTrack? remote;
     if (downloaded && trackIndex >= 0 && trackIndex < localPaths.length) {
@@ -1769,7 +1774,7 @@ class _ChapterEditBodyState extends State<ChapterEditBody>
       final contentUrl = track['contentUrl'] as String?;
       if (contentUrl == null) return;
       source = api.buildTrackUrl(contentUrl);
-      if (Platform.isIOS) {
+      if (AppPlatform.isIOS || AppPlatform.isWindows) {
         remote = RemoteTrack(
           url: source,
           headers: api.mediaHeaders,
@@ -2272,6 +2277,7 @@ class _FindStartSheetState extends State<_FindStartSheet> {
           },
         );
       } on TranscriptionException catch (e) {
+        debugPrint('[ChapterFind] ${e.kind.name}: ${e.detail}');
         if (!mounted) return;
         final l = AppLocalizations.of(context)!;
         setState(() {

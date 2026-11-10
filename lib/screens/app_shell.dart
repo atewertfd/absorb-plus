@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/auth_provider.dart';
 import '../providers/library_provider.dart';
 import '../services/api_service.dart';
@@ -11,9 +13,14 @@ import '../services/screen_wake.dart';
 import '../services/volume_key_service.dart';
 import '../services/chromecast_service.dart';
 import '../services/home_widget_service.dart';
+import '../services/server_task_tracker.dart';
+import '../services/socket_service.dart';
 import '../services/sleep_timer_service.dart';
+import '../services/audiobookshelf_update_service.dart';
 import 'dart:io' hide Platform; // web-safe Platform below
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import 'package:palette_generator/palette_generator.dart';
 import '../utils/cover_accent.dart';
 import '../main.dart'
@@ -57,6 +64,10 @@ import '../services/wording.dart';
 import '../services/android_auto_service.dart';
 import '../services/carplay_service.dart';
 import '../widgets/expanded_card.dart';
+import '../widgets/desktop_account_button.dart';
+import '../widgets/desktop_collapsible_sidebar.dart';
+import '../widgets/desktop_now_playing_bar.dart';
+import '../widgets/admin_task_indicator.dart';
 import 'absorbing_screen.dart';
 import 'home_screen.dart';
 import 'library_screen.dart';
@@ -72,6 +83,8 @@ import '../services/settings_sync_service.dart';
 import '../services/update_checker_service.dart';
 import '../widgets/update_dialog.dart';
 import '../widgets/overlay_toast.dart';
+import '../utils/app_platform.dart';
+import '../utils/desktop_workspace.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/web_safe_platform.dart';
 import '../utils/memory_policy.dart';
@@ -118,6 +131,9 @@ class AppShell extends StatefulWidget {
     _AppShellState._instance?._expandedIsOpen = open;
   }
 
+  static ServerTaskTracker? serverTaskTrackerOf(BuildContext context) =>
+      context.findAncestorStateOfType<_AppShellState>()?._serverTaskTracker;
+
   /// Switch to the Library tab and focus the search bar. Used by the
   /// app-icon "Search" shortcut. Returns false when the shell isn't mounted
   /// yet so callers can retry during cold start.
@@ -156,35 +172,7 @@ class AppShell extends StatefulWidget {
   ) {
     final inst = _AppShellState._instance;
     if (inst == null) return false;
-    // If the full-screen expanded player is on top of the shell, pop it
-    // first. Otherwise switching to the Library tab leaves the player
-    // covering the filtered library underneath. Caller (e.g. the book
-    // detail sheet) has already popped its own modal route at this point.
-    if (inst._expandedIsOpen && inst.mounted) {
-      Navigator.of(inst.context, rootNavigator: true).maybePop();
-    }
-    inst._navigateTo(1);
-    // The retry budget has to survive the fade transition (~200ms by
-    // default, see `_fadeController` and `_navigateTo`) plus the library
-    // widget's own mount + first build. On cold start that easily takes
-    // 300-500ms before `_libraryKey.currentState` becomes non-null. ~3s
-    // worth of frames is generous enough to cover slow devices and stingy
-    // enough to give up if something is genuinely broken.
-    const maxAttempts = 180; // ~3s at 60fps
-    var attempts = 0;
-    void tryApply() {
-      if (!inst.mounted) return;
-      final state = inst._libraryKey.currentState;
-      if (state != null) {
-        apply(state);
-        return;
-      }
-      if (++attempts < maxAttempts) {
-        WidgetsBinding.instance.addPostFrameCallback((_) => tryApply());
-      }
-    }
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => tryApply());
+    unawaited(inst._applyLibraryFilterAfterPaneReset(apply));
     return true;
   }
 
@@ -202,9 +190,40 @@ class AppShell extends StatefulWidget {
   State<AppShell> createState() => _AppShellState();
 }
 
+class _PaneNavigatorObserver extends NavigatorObserver {
+  _PaneNavigatorObserver(this.onStackChanged);
+
+  final VoidCallback onStackChanged;
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPush(route, previousRoute);
+    onStackChanged();
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPop(route, previousRoute);
+    onStackChanged();
+  }
+
+  @override
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didRemove(route, previousRoute);
+    onStackChanged();
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
+    onStackChanged();
+  }
+}
+
 class _AppShellState extends State<AppShell>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   static _AppShellState? _instance;
+  static const _desktopSidebarPinnedKey = 'desktop_sidebar_pinned';
 
   // Tabs: 0=Home, 1=Library, 2=Absorbing (default), 3=Stats, 4=Settings
   int _currentIndex = 2; // overridden by user preference in initState
@@ -217,6 +236,7 @@ class _AppShellState extends State<AppShell>
   String _podcastTabLibraryId = '';
   final _homeKey = GlobalKey<HomeScreenState>();
   final _libraryKey = GlobalKey<LibraryScreenState>();
+  final _settingsKey = GlobalKey<SettingsScreenState>();
   final _player = AudioPlayerService();
   final _cast = ChromecastService();
   bool _playerHadBook = false;
@@ -242,8 +262,120 @@ class _AppShellState extends State<AppShell>
   // work until the user actually visits those tabs.
   final List<Widget?> _pages = List<Widget?>.filled(5, null, growable: false);
 
-  void _openSearch() {
-    if (!mounted) return;
+  // Desktop workspace content-pane navigator: full-page pushes land here so
+  // the sidebar and now-playing bar stay visible around them.
+  final _paneNavigatorKey = GlobalKey<NavigatorState>();
+  late final _PaneNavigatorObserver _paneNavigatorObserver;
+  bool _paneRouteOpen = false;
+  bool _adminRouteOpen = false;
+  bool _desktopWorkspaceWasActive = false;
+  bool _desktopCollapseAllowed = false;
+  bool _desktopCollapseCheckScheduled = false;
+  bool _desktopSidebarPinned = false;
+  int _desktopSidebarPreferenceGeneration = 0;
+  ServerTaskTracker? _serverTaskTracker;
+  Timer? _serverTaskRefreshTimer;
+  bool _refreshingServerTasks = false;
+  Object? _serverTaskPollingApi;
+  bool _serverTaskPollingEnabled = false;
+  bool _serverTaskPollingSyncScheduled = false;
+  final AudiobookshelfUpdateController _serverUpdateController =
+      AudiobookshelfUpdateController.instance;
+
+  Future<void> _loadDesktopSidebarPreference() async {
+    final generation = _desktopSidebarPreferenceGeneration;
+    final prefs = await SharedPreferences.getInstance();
+    final pinned = prefs.getBool(_desktopSidebarPinnedKey) ?? false;
+    if (!mounted ||
+        generation != _desktopSidebarPreferenceGeneration ||
+        pinned == _desktopSidebarPinned) {
+      return;
+    }
+    setState(() => _desktopSidebarPinned = pinned);
+  }
+
+  void _setDesktopSidebarPinned(bool pinned) {
+    _desktopSidebarPreferenceGeneration++;
+    if (pinned == _desktopSidebarPinned) return;
+    setState(() => _desktopSidebarPinned = pinned);
+    unawaited(_saveDesktopSidebarPreference(pinned));
+  }
+
+  Future<void> _saveDesktopSidebarPreference(bool pinned) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_desktopSidebarPinnedKey, pinned);
+  }
+
+  void _startServerTaskRefreshTimer() {
+    _serverTaskRefreshTimer?.cancel();
+    _serverTaskRefreshTimer = null;
+    if (!mounted || !AppPlatform.lacksPhonePlugins) return;
+    final auth = context.read<AuthProvider>();
+    if (!auth.isAdmin || auth.apiService == null || _serverTaskTracker == null) {
+      return;
+    }
+    unawaited(_refreshServerTasks());
+    _serverTaskRefreshTimer = Timer.periodic(const Duration(seconds: 3), (_) {
+      // The socket already delivers task start, progress and finish. Polling
+      // every 3s regardless cost each open admin tab ~1200 requests an hour;
+      // only poll fast while something runs or the socket is down, and
+      // otherwise catch up once a minute.
+      final tracker = _serverTaskTracker;
+      final busy = tracker != null && tracker.runningCount > 0;
+      final last = _lastServerTaskRefresh;
+      final due = last == null ||
+          DateTime.now().difference(last) >= const Duration(minutes: 1);
+      if (busy || !SocketService().isConnected || due) {
+        unawaited(_refreshServerTasks());
+      }
+    });
+  }
+
+  DateTime? _lastServerTaskRefresh;
+
+  void _syncServerTaskPolling({
+    required bool isAdmin,
+    required Object? api,
+  }) {
+    final enabled = isAdmin && api != null && _serverTaskTracker != null;
+    if (enabled == _serverTaskPollingEnabled &&
+        identical(api, _serverTaskPollingApi)) {
+      return;
+    }
+    _serverTaskPollingEnabled = enabled;
+    _serverTaskPollingApi = api;
+    if (_serverTaskPollingSyncScheduled) return;
+    _serverTaskPollingSyncScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _serverTaskPollingSyncScheduled = false;
+      if (!mounted) return;
+      if (_serverTaskPollingEnabled && !_lifecycleBackgrounded) {
+        _startServerTaskRefreshTimer();
+      } else {
+        _serverTaskRefreshTimer?.cancel();
+        _serverTaskRefreshTimer = null;
+      }
+    });
+  }
+
+  Future<void> _refreshServerTasks() async {
+    if (!mounted || _refreshingServerTasks) return;
+    final tracker = _serverTaskTracker;
+    final api = context.read<AuthProvider>().apiService;
+    if (tracker == null || api == null) return;
+    _refreshingServerTasks = true;
+    _lastServerTaskRefresh = DateTime.now();
+    try {
+      await tracker.refresh(api);
+    } finally {
+      _refreshingServerTasks = false;
+    }
+  }
+
+  void _openSearch() => unawaited(_openSearchAfterPaneReset());
+
+  Future<void> _openSearchAfterPaneReset() async {
+    if (!await _preparePaneForNavigation()) return;
     // If the user triggered Search while a pushed route (Downloads, Bookmarks,
     // Settings pages, etc.) is on top of the shell, pop back so the shell's
     // Library tab actually becomes visible.
@@ -251,9 +383,14 @@ class _AppShellState extends State<AppShell>
     if (nav != null && nav.canPop()) {
       nav.popUntil((r) => r.isFirst);
     }
-    _navigateTo(1);
-    // Library tab may need a frame to mount its state before we can focus
-    // the search field. Retry up to a few frames to cover fade transitions.
+    final lib = context.read<LibraryProvider>();
+    final podcastsShown = _podcastsShown(lib);
+    if (podcastsShown) _syncTabLibrary(1, true);
+    _navigateToPrepared(1);
+    // The Library tab can take a few hundred ms to mount after the switch.
+    // Retry on a timer, not on post-frame callbacks: those don't schedule a
+    // frame, so once the page went idle the chain stopped and Search never
+    // focused the box on a fresh load.
     int attempts = 0;
     void tryFocus() {
       if (!mounted) return;
@@ -262,25 +399,44 @@ class _AppShellState extends State<AppShell>
         state.focusSearch();
         return;
       }
-      if (++attempts < 10) {
-        WidgetsBinding.instance.addPostFrameCallback((_) => tryFocus());
+      if (++attempts < 60) {
+        Future.delayed(const Duration(milliseconds: 50), tryFocus);
       }
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) => tryFocus());
   }
 
-  void _switchToAbsorbing() {
-    if (mounted) {
-      _navigateTo(2);
-      // Scroll to the currently playing book after the tab switch
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        AbsorbingScreen.scrollToActive();
-      });
-    }
+  void _switchToAbsorbing() => unawaited(_switchToAbsorbingAfterPaneReset());
+
+  Future<void> _switchToAbsorbingAfterPaneReset() async {
+    if (!mounted || !await _navigateToAfterPaneReset(2)) return;
+    // Scroll to the currently playing book after the tab switch
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AbsorbingScreen.scrollToActive();
+    });
   }
 
-  void _navigateTo(int index) {
+  void _navigateTo(int index) => unawaited(_navigateToAfterPaneReset(index));
+
+  Future<bool> _preparePaneForNavigation() async {
+    if (!mounted ||
+        !await DesktopWorkspaceNavigator.prepareForPaneReset() ||
+        !mounted) {
+      return false;
+    }
+    // A tab click while a pushed page fills the pane should reveal the tab.
+    _paneNavigatorKey.currentState?.popUntil((r) => r.isFirst);
+    return true;
+  }
+
+  Future<bool> _navigateToAfterPaneReset(int index) async {
+    if (!await _preparePaneForNavigation()) return false;
+    _navigateToPrepared(index);
+    return true;
+  }
+
+  void _navigateToPrepared(int index) {
     if (index == 3) StatsTabRefresh.instance.tabActivated(); // Absorb Plus
     if (index == _currentIndex) {
       // Already on this tab — handle re-tap actions
@@ -324,6 +480,42 @@ class _AppShellState extends State<AppShell>
 
   void _syncPlayerOnScreen() {
     PlayerScreenWake.onScreen.value = _currentIndex == 2 || _expandedIsOpen;
+  }
+
+  Future<void> _applyLibraryFilterAfterPaneReset(
+    void Function(LibraryScreenState) apply,
+  ) async {
+    if (!await _preparePaneForNavigation()) return;
+    // If the full-screen expanded player is on top of the shell, pop it
+    // first. Otherwise switching to the Library tab leaves the player
+    // covering the filtered library underneath. Caller (e.g. the book
+    // detail sheet) has already popped its own modal route at this point.
+    if (_expandedIsOpen && mounted) {
+      await Navigator.of(context, rootNavigator: true).maybePop();
+      if (!mounted) return;
+    }
+    _navigateToPrepared(1);
+    // The retry budget has to survive the fade transition (~200ms by
+    // default, see `_fadeController` and `_navigateTo`) plus the library
+    // widget's own mount + first build. On cold start that easily takes
+    // 300-500ms before `_libraryKey.currentState` becomes non-null. ~3s
+    // worth of frames is generous enough to cover slow devices and stingy
+    // enough to give up if something is genuinely broken.
+    const maxAttempts = 180; // ~3s at 60fps
+    var attempts = 0;
+    void tryApply() {
+      if (!mounted) return;
+      final state = _libraryKey.currentState;
+      if (state != null) {
+        apply(state);
+        return;
+      }
+      if (++attempts < maxAttempts) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => tryApply());
+      }
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => tryApply());
   }
 
   /// Subscribe to the active screen's barsRevealNotifier when on Home or
@@ -397,7 +589,7 @@ class _AppShellState extends State<AppShell>
         _pages[index] = const StatsScreen();
         break;
       case 4:
-        _pages[index] = const SettingsScreen();
+        _pages[index] = SettingsScreen(key: _settingsKey);
         break;
     }
   }
@@ -427,11 +619,25 @@ class _AppShellState extends State<AppShell>
     _incomingNotifications =
         BookOrbitNotificationSocket.instance.incoming.listen(showIncomingNotificationToast);
     EreaderVolumeNav.ensureHandler();
-    PlayerScreenWake.start();
+    if (AppPlatform.lacksPhonePlugins) {
+      _serverTaskTracker = ServerTaskTracker();
+      _serverUpdateController.addListener(_onServerUpdateChanged);
+    }
+    _paneNavigatorObserver = _PaneNavigatorObserver(_syncPaneRouteState);
+    DesktopWorkspaceNavigator.register(() => _paneNavigatorKey.currentState);
+    DesktopWorkspaceNavigator.exitGuardChanges.addListener(
+      _onDesktopExitGuardChanged,
+    );
+    unawaited(_loadDesktopSidebarPreference());
+    if (!AppPlatform.lacksPhonePlugins) PlayerScreenWake.start();
     unawaited(WindowsShell.instance.start());
     RemoteLinkHooks.attachShell(context); // Absorb Plus: phone remote (off by default)
     _jumpListLaunch = attachWindowsJumpList(context); // Absorb Plus
-    if (!widget.startOnAbsorbing) _loadStartScreen();
+    if (AppPlatform.lacksPhonePlugins) {
+      _currentIndex = 0;
+    } else if (!widget.startOnAbsorbing) {
+      _loadStartScreen();
+    }
     _ensurePageBuilt(_currentIndex);
     _syncPlayerOnScreen();
     _playerHadBook = _player.hasBook;
@@ -455,7 +661,10 @@ class _AppShellState extends State<AppShell>
     PlayerSettings.settingsChanged.addListener(_loadPodcastTabPrefs);
     // Update check after the launch prompts, so its dialog never lands on
     // What's new; then hourly, for a copy that stays open for days (tray).
-    _showLaunchPrompts().whenComplete(() {
+    final launchPrompts = AppPlatform.lacksPhonePlugins
+        ? Future<void>.value()
+        : _showLaunchPrompts();
+    launchPrompts.whenComplete(() {
       if (mounted) _checkForUpdate();
     });
     _updateTimer = Timer.periodic(const Duration(hours: 1), (_) => _checkForUpdate());
@@ -560,7 +769,7 @@ class _AppShellState extends State<AppShell>
   static bool get _updatesEnabled => !kTestBuild && (_isGithubBuild || Platform.isWindows);
 
   void _checkForUpdate() async {
-    if (!_updatesEnabled || _updateDialogOpen) return;
+    if (AppPlatform.isWeb || !_updatesEnabled || _updateDialogOpen) return;
     final includePreReleases = await PlayerSettings.getIncludePreReleases();
     final info = await UpdateCheckerService.checkAutomatically(
       includePreReleases: includePreReleases,
@@ -572,6 +781,10 @@ class _AppShellState extends State<AppShell>
     } finally {
       _updateDialogOpen = false;
     }
+  }
+
+  void _onServerUpdateChanged() {
+    if (mounted) setState(() {});
   }
 
   StreamSubscription<ServerNotification>? _incomingNotifications;
@@ -588,11 +801,22 @@ class _AppShellState extends State<AppShell>
     _navBarAnimController.dispose();
     _player.removeListener(_onPlayerChanged);
     _cast.removeListener(_onCastChanged);
+    _serverTaskRefreshTimer?.cancel();
+    _serverTaskTracker?.dispose();
+    if (AppPlatform.lacksPhonePlugins) {
+      _serverUpdateController.removeListener(_onServerUpdateChanged);
+    }
     PlayerSettings.settingsChanged.removeListener(_loadPodcastTabPrefs);
     try {
       context.read<LibraryProvider>().removeListener(_onLibraryChanged);
     } catch (_) {}
-    if (_instance == this) _instance = null;
+    DesktopWorkspaceNavigator.exitGuardChanges.removeListener(
+      _onDesktopExitGuardChanged,
+    );
+    if (_instance == this) {
+      _instance = null;
+      DesktopWorkspaceNavigator.unregister();
+    }
     if (identical(DesktopShortcutScope.handlers, _desktopShortcutHandlers)) {
       DesktopShortcutScope.handlers = null;
     }
@@ -638,7 +862,7 @@ class _AppShellState extends State<AppShell>
     if (isLocalCoverPath(coverUrl)) {
       provider = FileImage(File(coverUrl));
     } else {
-      provider = CachedNetworkImageProvider(
+      provider = CachedNetworkImageProvider(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
         coverUrl,
         headers: lib.mediaHeaders,
       );
@@ -697,6 +921,7 @@ class _AppShellState extends State<AppShell>
   }
 
   Future<void> _maybeAutoExpand() async {
+    if (AppPlatform.lacksPhonePlugins) return;
     // Only auto-open the full-screen player from the Absorbing tab - starting
     // playback from elsewhere (another tab, the nav long-press) shouldn't
     // yank the user into the player.
@@ -706,7 +931,12 @@ class _AppShellState extends State<AppShell>
     // reading", volume-key play) must not pop the full player underneath it.
     if (context.read<LibraryProvider>().readerQuiet) return;
     final enabled = await PlayerSettings.getFullScreenPlayer();
-    if (!enabled || !mounted || !_player.hasBook) return;
+    if (!enabled) return;
+    await _openExpandedPlayer();
+  }
+
+  Future<void> _openExpandedPlayer() async {
+    if (!mounted || !_player.hasBook || _expandedIsOpen) return;
 
     // Synthesize item data from player state
     final itemId = _player.currentItemId;
@@ -798,6 +1028,7 @@ class _AppShellState extends State<AppShell>
   void _handleAppForegrounded() {
     if (!_lifecycleBackgrounded) return;
     _lifecycleBackgrounded = false;
+    _startServerTaskRefreshTimer();
     // The rotation lock lives on the Activity, and Android can recreate the
     // activity over the still-running cached engine (swipe away from recents
     // while playback keeps the service alive). main() doesn't re-run then, so
@@ -811,8 +1042,10 @@ class _AppShellState extends State<AppShell>
     context.read<LibraryProvider>().onAppForegrounded();
     SleepTimerService().onAppForegrounded();
     AudioPlayerService.onAppForegrounded();
-    HomeWidgetService().onAppForegrounded();
-    ReviewService.onAppForegrounded();
+    if (!AppPlatform.lacksPhonePlugins) {
+      HomeWidgetService().onAppForegrounded();
+      ReviewService.onAppForegrounded();
+    }
     unawaited(SettingsSyncService().onAppForegrounded());
     _refreshDataForTab(_currentIndex);
     // Check auto sleep in case we resumed into the window
@@ -824,10 +1057,12 @@ class _AppShellState extends State<AppShell>
     if (_lifecycleBackgrounded) return;
     _lifecycleBackgrounded = true;
     trimDecodedImageCacheForBackground(PaintingBinding.instance.imageCache);
+    _serverTaskRefreshTimer?.cancel();
+    _serverTaskRefreshTimer = null;
     context.read<LibraryProvider>().onAppBackgrounded();
     SleepTimerService().onAppBackgrounded();
     AudioPlayerService.onAppBackgrounded();
-    HomeWidgetService().onAppBackgrounded();
+    if (!AppPlatform.lacksPhonePlugins) HomeWidgetService().onAppBackgrounded();
     unawaited(SettingsSyncService().onAppBackgrounded());
   }
 
@@ -838,6 +1073,50 @@ class _AppShellState extends State<AppShell>
     _navBarAnimController.value = 1.0;
     _homeKey.currentState?.resetReveal();
     _libraryKey.currentState?.resetReveal();
+  }
+
+  void _onDesktopExitGuardChanged() {
+    if (!mounted || !_desktopWorkspaceWasActive || _desktopCollapseAllowed) {
+      return;
+    }
+    _scheduleDesktopWorkspaceCollapseCheck();
+  }
+
+  void _syncPaneRouteState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final paneRouteOpen = _paneNavigatorKey.currentState?.canPop() ?? false;
+      if (paneRouteOpen != _paneRouteOpen) {
+        setState(() => _paneRouteOpen = paneRouteOpen);
+      }
+    });
+  }
+
+  void _scheduleDesktopWorkspaceCollapseCheck() {
+    if (_desktopCollapseCheckScheduled) return;
+    _desktopCollapseCheckScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(_checkDesktopWorkspaceCollapse());
+    });
+  }
+
+  Future<void> _checkDesktopWorkspaceCollapse() async {
+    if (!mounted) return;
+    final view = View.of(context);
+    final width = view.physicalSize.width / view.devicePixelRatio;
+    if (width >= kDesktopWorkspaceBreakpoint) {
+      _desktopCollapseCheckScheduled = false;
+      return;
+    }
+    final allowed = await DesktopWorkspaceNavigator.prepareForPaneReset();
+    if (!mounted) return;
+    _desktopCollapseCheckScheduled = false;
+    final currentView = View.of(context);
+    final currentWidth =
+        currentView.physicalSize.width / currentView.devicePixelRatio;
+    if (allowed && currentWidth < kDesktopWorkspaceBreakpoint) {
+      setState(() => _desktopCollapseAllowed = true);
+    }
   }
 
   DateTime? _lastRefresh;
@@ -862,69 +1141,628 @@ class _AppShellState extends State<AppShell>
       _lastRefresh = now;
       lib.refresh();
       // Keep Android Auto / CarPlay browse tree in sync
-      AndroidAutoService().refresh();
-      CarPlayService().refreshTemplates();
+      if (!AppPlatform.lacksPhonePlugins) {
+        AndroidAutoService().refresh();
+        CarPlayService().refreshTemplates();
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, _) {
-        if (didPop) return;
-
-        // If on Library tab with active search, clear search first
-        if (_currentIndex == 1 &&
-            _libraryKey.currentState?.isSearchActive == true) {
-          _libraryKey.currentState?.clearSearch();
-          return;
+    if (AppPlatform.lacksPhonePlugins) {
+      final taskAccess = context.select<AuthProvider, (bool, Object?)>(
+        (auth) => (auth.isAdmin, auth.apiService),
+      );
+      _syncServerTaskPolling(isAdmin: taskAccess.$1, api: taskAccess.$2);
+    }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final workspaceTier = AppPlatform.lacksPhonePlugins
+            ? workspaceLayoutTierForWidth(constraints.maxWidth)
+            : WorkspaceLayoutTier.mobile;
+        final desktopRequested = workspaceTier != WorkspaceLayoutTier.mobile;
+        var useDesktopWorkspace = desktopRequested;
+        if (desktopRequested) {
+          _desktopWorkspaceWasActive = true;
+          _desktopCollapseAllowed = false;
+        } else if (_desktopWorkspaceWasActive && !_desktopCollapseAllowed) {
+          useDesktopWorkspace = true;
+          _scheduleDesktopWorkspaceCollapseCheck();
+        } else {
+          _desktopWorkspaceWasActive = false;
+          _desktopCollapseAllowed = false;
         }
-
-        // If already on Absorbing tab, require double-back to exit
-        if (_currentIndex == 2) {
-          final now = DateTime.now();
-          if (_lastBackPress != null &&
-              now.difference(_lastBackPress!) < const Duration(seconds: 2)) {
-            SystemChannels.platform.invokeMethod('SystemNavigator.pop', true);
-            return;
-          }
-          _lastBackPress = now;
-          showOverlayToast(
-            context,
-            AppLocalizations.of(context)!.appShellPressBackToExit,
-            icon: Icons.exit_to_app_rounded,
-          );
-          return;
-        }
-
-        // From any other tab, go to Absorbing
-        _switchToAbsorbing();
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: _handleBack,
+          // The desktop shortcuts live above the navigator (DesktopShortcutScope,
+          // so they also work over the full-screen player and readers); the
+          // shell runs them through _desktopShortcutHandlers.
+          child: Focus(
+            focusNode: desktopShellFocusNode,
+            autofocus: true,
+            child: useDesktopWorkspace
+              ? _buildDesktopWorkspace(
+                  context,
+                  allowPinnedSidebar: desktopRequested &&
+                      usesExtendedDesktopSidebar(workspaceTier),
+                )
+              : Scaffold(
+                  body: _buildPageStack(context),
+                  bottomNavigationBar: FrostedNavBar(child: _buildBottomNav(context)),
+                ),
+          ),
+        );
       },
-      // The desktop shortcuts live above the navigator (DesktopShortcutScope,
-      // so they also work over the full-screen player and readers); the
-      // shell runs them through _desktopShortcutHandlers.
-      child: Focus(
-        focusNode: desktopShellFocusNode,
-        autofocus: true,
-        child: Scaffold(
-        body: FadeTransition(
-          opacity: _fadeController,
-          child: IndexedStack(
-            index: _currentIndex,
-            children: List<Widget>.generate(
-              _pages.length,
-              (i) => withActiveSurfaceTickers(
-                      active: i == _currentIndex,
-                      child: _pages[i] ?? const SizedBox.shrink(),
+    );
+  }
+
+  void _handleBack(bool didPop, Object? _) {
+    if (didPop) return;
+
+    if (AppPlatform.lacksPhonePlugins) {
+      final pane = _paneNavigatorKey.currentState;
+      if (pane != null && pane.canPop()) {
+        unawaited(pane.maybePop());
+        return;
+      }
+      if (_currentIndex == 1 &&
+          _libraryKey.currentState?.isSearchActive == true) {
+        _libraryKey.currentState?.clearSearch();
+        return;
+      }
+      if (_currentIndex != 0) _navigateTo(0);
+      return;
+    }
+
+    if (_currentIndex == 1 &&
+        _libraryKey.currentState?.isSearchActive == true) {
+      _libraryKey.currentState?.clearSearch();
+      return;
+    }
+
+    if (_currentIndex == 2) {
+      final now = DateTime.now();
+      if (_lastBackPress != null &&
+          now.difference(_lastBackPress!) < const Duration(seconds: 2)) {
+        SystemChannels.platform.invokeMethod('SystemNavigator.pop', true);
+        return;
+      }
+      _lastBackPress = now;
+      showOverlayToast(
+        context,
+        AppLocalizations.of(context)!.appShellPressBackToExit,
+        icon: Icons.exit_to_app_rounded,
+      );
+      return;
+    }
+
+    _switchToAbsorbing();
+  }
+
+  Widget _buildPageStack(BuildContext context) {
+    return FadeTransition(
+      opacity: _fadeController,
+      child: IndexedStack(
+        index: _currentIndex,
+        children: List<Widget>.generate(
+          _pages.length,
+          (i) => withActiveSurfaceTickers(
+                  active: i == _currentIndex,
+                  child: _pages[i] ?? const SizedBox.shrink(),
+                ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDesktopWorkspace(
+    BuildContext context, {
+    required bool allowPinnedSidebar,
+  }) {
+    final lib = context.watch<LibraryProvider>();
+    final podcastsShown = _podcastsShown(lib);
+    final destinations = _buildDestinations(context, podcastsShown);
+    final sidebarPinned = allowPinnedSidebar && _desktopSidebarPinned;
+
+    return Scaffold(
+      body: DesktopSidebarLayout(
+        pinned: sidebarPinned,
+        canPin: allowPinnedSidebar,
+        onPinnedChanged: _setDesktopSidebarPinned,
+        sidebarBuilder: (sidebarContext, extended) => _buildDesktopSidebar(
+          sidebarContext,
+          lib: lib,
+          podcastsShown: podcastsShown,
+          destinations: destinations,
+          extended: extended,
+        ),
+        child: LayoutBuilder(
+          // The MediaQuery override sits outside the pane Navigator so pushed
+          // pages also lay out against the pane, not the window. The tab stack
+          // is declarative so it keeps rebuilding below imperative routes.
+          builder: (context, constraints) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              size: Size(constraints.maxWidth, constraints.maxHeight),
+            ),
+            child: DesktopWorkspaceScope(
+              child: ClipRect(
+                child: Navigator(
+                  key: _paneNavigatorKey,
+                  observers: [_paneNavigatorObserver],
+                  onDidRemovePage: (page) {},
+                  pages: [
+                    MaterialPage(child: _buildPageStack(context)),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: shouldShowDesktopNowPlayingBar(
+        _currentIndex,
+        paneRouteOpen: _paneRouteOpen,
+      )
+          ? DesktopNowPlayingBar(
+              player: _player,
+              library: lib,
+              onOpenNowPlaying: _switchToAbsorbing,
+            )
+          : null,
+    );
+  }
+
+  Widget _buildDesktopSidebar(
+    BuildContext context, {
+    required LibraryProvider lib,
+    required bool podcastsShown,
+    required List<NavigationDestination> destinations,
+    required bool extended,
+  }) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final l = AppLocalizations.of(context)!;
+    final auth = context.watch<AuthProvider>();
+    final libraryName =
+        lib.selectedLibrary?['name'] as String? ?? l.libraryFallback;
+    final username = auth.username?.trim();
+    final accountName = username == null || username.isEmpty
+        ? 'Account'
+        : username;
+    final serverUrl = auth.serverUrl ?? '';
+    final parsedServer = Uri.tryParse(serverUrl);
+    final serverLabel = parsedServer?.host.isNotEmpty == true
+        ? parsedServer!.host
+        : serverUrl;
+    final serverVersion = auth.serverVersion?.trim();
+    if (serverVersion != null &&
+        serverVersion.isNotEmpty &&
+        _serverUpdateController.shouldCheck(serverVersion)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          unawaited(
+            _serverUpdateController.check(currentVersion: serverVersion),
+          );
+        }
+      });
+    }
+    final taskTracker = _serverTaskTracker;
+    void openSearch() => _openSearch();
+
+    Widget buildBranding(List<ServerTask> tasks) {
+      final showTasks = auth.isAdmin && tasks.isNotEmpty && taskTracker != null;
+      return DesktopSidebarBranding(
+        extended: extended,
+        leading: showTasks
+            ? AdminTaskIndicator(
+                tasks: tasks,
+                onPressed: () => showAdminTasksSheet(context, taskTracker),
+              )
+            : Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: cs.primaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.graphic_eq_rounded,
+                  color: cs.onPrimaryContainer,
+                ),
+              ),
+        title: l.appTitle,
+        titleStyle: theme.textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.w800,
+          letterSpacing: 1.4,
         ),
-              bottomNavigationBar: FrostedNavBar(child: _buildBottomNav(context)),
+      );
+    }
+
+    // BookOrbit admins get their own pages; Audiobookshelf admins the
+    // server admin screen.
+    final showAdmin = auth.isBookOrbit
+        ? auth.bookOrbitAdmin?.any == true
+        : auth.isAdmin;
+    void openAdmin() {
+      if (_adminRouteOpen) return;
+      final navigator = _paneNavigatorKey.currentState;
+      if (navigator == null) return;
+      _adminRouteOpen = true;
+      unawaited(navigator
+          .push(MaterialPageRoute<void>(
+            builder: (_) => auth.isBookOrbit
+                ? const BookOrbitAdminScreen()
+                : AdminScreen(taskTracker: _serverTaskTracker),
+          ))
+          .whenComplete(() => _adminRouteOpen = false));
+    }
+
+    void openAccountMenu() {
+      final wasBuilt = _pages[4] != null;
+      _ensurePageBuilt(4);
+
+      final state = _settingsKey.currentState;
+      if (state != null) {
+        state.showAccountMenu();
+        return;
+      }
+
+      if (!wasBuilt) setState(() {});
+      var attempts = 0;
+      void tryOpen() {
+        if (!mounted) return;
+        final settings = _settingsKey.currentState;
+        if (settings != null) {
+          settings.showAccountMenu();
+          return;
+        }
+        if (++attempts < 10) {
+          WidgetsBinding.instance.addPostFrameCallback((_) => tryOpen());
+        }
+      }
+
+      WidgetsBinding.instance.addPostFrameCallback((_) => tryOpen());
+    }
+
+    return SafeArea(
+      child: SizedBox(
+        width: extended
+            ? DesktopCollapsibleSidebar.expandedWidth
+            : DesktopCollapsibleSidebar.collapsedWidth,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: extended
+                  ? const EdgeInsets.fromLTRB(12, 13, 60, 7)
+                  : const EdgeInsets.fromLTRB(12, 13, 12, 7),
+              child: auth.isAdmin && taskTracker != null
+                  ? ListenableBuilder(
+                      listenable: taskTracker,
+                      builder: (_, __) => buildBranding(
+                        taskTracker.visibleTasks,
+                      ),
+                    )
+                  : buildBranding(const []),
             ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 4, 12, 10),
+              child: Tooltip(
+                message: l.switchLibraryTooltip,
+                child: InkWell(
+                  onTap: lib.libraries.length > 1
+                      ? () => showLibraryPickerSheet(context, lib)
+                      : null,
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: cs.surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: cs.outlineVariant.withValues(alpha: 0.45),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: extended
+                          ? MainAxisAlignment.start
+                          : MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.library_books_rounded,
+                          size: 20,
+                          color: cs.primary,
+                        ),
+                        if (extended) ...[
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              libraryName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.labelLarge,
+                            ),
+                          ),
+                          if (lib.libraries.length > 1)
+                            const Icon(Icons.expand_more_rounded, size: 20),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: extended
+                  ? FilledButton.tonalIcon(
+                      onPressed: openSearch,
+                      icon: const Icon(Icons.search_rounded, size: 20),
+                      label: Text(l.search),
+                      style: FilledButton.styleFrom(
+                        alignment: Alignment.centerLeft,
+                        minimumSize: const Size.fromHeight(44),
+                      ),
+                    )
+                  : Tooltip(
+                      message: l.search,
+                      child: IconButton.filledTonal(
+                        onPressed: openSearch,
+                        icon: const Icon(Icons.search_rounded, size: 20),
+                      ),
+                    ),
+            ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: NavigationRail(
+                extended: extended,
+                minWidth: 72,
+                minExtendedWidth: 248,
+                groupAlignment: -1,
+                backgroundColor: Colors.transparent,
+                selectedIndex: _selectedDest(lib, podcastsShown),
+                onDestinationSelected: (dest) =>
+                    _selectDestination(dest, podcastsShown),
+                destinations: [
+                  for (final destination in destinations)
+                    NavigationRailDestination(
+                      icon: destination.icon,
+                      selectedIcon: destination.selectedIcon,
+                      label: Text(destination.label),
+                    ),
+                ],
+              ),
+            ),
+            if (showAdmin)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: extended
+                    ? TextButton.icon(
+                        onPressed: openAdmin,
+                        icon: const Icon(Icons.admin_panel_settings_outlined),
+                        label: Text(l.serverAdmin),
+                        // Same height as the collapsed IconButton. The rail
+                        // expands on hover, and the footer is bottom-anchored,
+                        // so any height change here moved the rows away from
+                        // the icon the pointer was already on - a click on
+                        // the shield landed on empty space.
+                        style: TextButton.styleFrom(
+                          alignment: Alignment.centerLeft,
+                          minimumSize: const Size.fromHeight(48),
+                        ),
+                      )
+                    : Tooltip(
+                        message: l.serverAdmin,
+                        child: IconButton(
+                          onPressed: openAdmin,
+                          icon: const Icon(
+                            Icons.admin_panel_settings_outlined,
+                          ),
+                        ),
+                      ),
+              ),
+            if (serverVersion != null && serverVersion.isNotEmpty)
+              // One slot for both layouts (two-line collapsed, one-row
+              // expanded) so the rows above stay put when the rail expands.
+              SizedBox(
+                height: 58,
+                child: Center(
+                  child: _buildDesktopServerVersion(
+                    context,
+                    version: serverVersion,
+                    extended: extended,
+                  ),
+                ),
+              ),
+            Divider(
+              height: 1,
+              color: cs.outlineVariant.withValues(alpha: 0.45),
+            ),
+            DesktopAccountButton(
+              accountName: accountName,
+              serverLabel: serverLabel,
+              extended: extended,
+              onPressed: openAccountMenu,
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  Widget _buildDesktopServerVersion(
+    BuildContext context, {
+    required String version,
+    required bool extended,
+  }) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final l = AppLocalizations.of(context)!;
+    final checkedFor = _serverUpdateController.checkedFor;
+    final isCurrentVersion = checkedFor == version;
+    final update = isCurrentVersion ? _serverUpdateController.update : null;
+    final isChecking = isCurrentVersion && _serverUpdateController.isChecking;
+    final versionLabel = l.serverVersionLabel(version);
+    final updateLabel = update == null
+        ? null
+        : l.serverUpdateAvailable(update.latestVersion);
+    final tooltip = updateLabel == null
+        ? versionLabel
+        : '$versionLabel\n$updateLabel';
+
+    void openUpdate() {
+      if (update == null) return;
+      unawaited(
+        launchUrl(
+          Uri.parse(update.releaseUrl),
+          mode: LaunchMode.externalApplication,
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 2, 8, 6),
+      child: Tooltip(
+        message: tooltip,
+        child: Material(
+          color: update == null
+              ? Colors.transparent
+              : cs.primaryContainer.withValues(alpha: 0.45),
+          borderRadius: BorderRadius.circular(10),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: update == null ? null : openUpdate,
+            borderRadius: BorderRadius.circular(10),
+            child: Padding(
+              padding: extended
+                  ? const EdgeInsets.symmetric(horizontal: 12, vertical: 8)
+                  : const EdgeInsets.symmetric(horizontal: 4, vertical: 7),
+              child: extended
+                  ? Row(
+                      children: [
+                        Icon(
+                          update == null
+                              ? Icons.dns_outlined
+                              : Icons.system_update_alt_rounded,
+                          size: 18,
+                          color: update == null
+                              ? cs.onSurfaceVariant
+                              : cs.primary,
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                versionLabel,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: cs.onSurfaceVariant,
+                                ),
+                              ),
+                              if (updateLabel != null)
+                                Text(
+                                  updateLabel,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.labelSmall?.copyWith(
+                                    color: cs.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        if (isChecking)
+                          SizedBox(
+                            width: 14,
+                            height: 14,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: cs.onSurfaceVariant,
+                            ),
+                          )
+                        else if (update != null)
+                          Icon(
+                            Icons.open_in_new_rounded,
+                            size: 16,
+                            color: cs.primary,
+                          ),
+                      ],
+                    )
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (isChecking)
+                          SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: cs.onSurfaceVariant,
+                            ),
+                          )
+                        else
+                          Icon(
+                            update == null
+                                ? Icons.dns_outlined
+                                : Icons.system_update_alt_rounded,
+                            size: 18,
+                            color: update == null
+                                ? cs.onSurfaceVariant
+                                : cs.primary,
+                          ),
+                        const SizedBox(height: 3),
+                        Text(
+                          version,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: update == null
+                                ? cs.onSurfaceVariant
+                                : cs.primary,
+                            fontSize: 10,
+                            fontWeight: update == null
+                                ? FontWeight.w500
+                                : FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _selectDestination(int dest, bool podcastsShown) =>
+      unawaited(_selectDestinationAfterPaneReset(dest, podcastsShown));
+
+  Future<void> _selectDestinationAfterPaneReset(
+    int dest,
+    bool podcastsShown,
+  ) async {
+    if (!await _preparePaneForNavigation()) return;
+    final lib = context.read<LibraryProvider>();
+    final page = _pageForDest(dest, podcastsShown);
+    if (page == 1 &&
+        _currentIndex == 1 &&
+        dest == _selectedDest(lib, podcastsShown) &&
+        _libraryKey.currentState?.isSearchActive == true) {
+      _libraryKey.currentState?.clearSearch();
+      return;
+    }
+    _syncTabLibrary(dest, podcastsShown);
+    _navigateToPrepared(page);
+    if (page >= 0 && page <= 3) _refreshDataForTab(page);
   }
 
   Widget _buildBottomNav(BuildContext context) {
@@ -1004,23 +1842,8 @@ class _AppShellState extends State<AppShell>
           labelBehavior: isPhoneLandscape
               ? NavigationDestinationLabelBehavior.alwaysHide
               : NavigationDestinationLabelBehavior.alwaysShow,
-          onDestinationSelected: (dest) {
-            final page = _pageForDest(dest, podcastsShown);
-            // Re-tapping the active library-ish destination clears search
-            if (page == 1 &&
-                _currentIndex == 1 &&
-                dest == _selectedDest(lib, podcastsShown) &&
-                _libraryKey.currentState?.isSearchActive == true) {
-              _libraryKey.currentState?.clearSearch();
-              return;
-            }
-            _syncTabLibrary(dest, podcastsShown);
-            _navigateTo(page);
-            // Refresh data on switching to Library, Home, Absorbing, or Stats
-            if (page == 0 || page == 1 || page == 2 || page == 3) {
-              _refreshDataForTab(page);
-            }
-          },
+          onDestinationSelected: (dest) =>
+              _selectDestination(dest, podcastsShown),
           destinations: destinations,
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../providers/library_provider.dart';
+import '../utils/app_platform.dart';
 import 'overlay_toast.dart';
 import 'sign_in_again.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
@@ -20,6 +21,7 @@ class OfflineStatusIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (AppPlatform.lacksPhonePlugins) return const SizedBox.shrink();
     final lib = context.watch<LibraryProvider>();
     final auth = context.watch<AuthProvider>();
     final l = AppLocalizations.of(context)!;

@@ -19,3 +19,8 @@ bool shouldRecheckLibraryAfterSettings({
   required bool podcastTabChanged,
 }) =>
     firstLoad || podcastTabChanged;
+
+bool shouldShowDesktopNowPlayingBar(
+  int pageIndex, {
+  bool paneRouteOpen = false,
+}) => pageIndex != 2 || paneRouteOpen;

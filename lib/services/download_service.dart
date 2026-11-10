@@ -20,6 +20,7 @@ import 'narrated_books.dart';
 import 'narration_service.dart';
 import 'offline_source.dart';
 import 'server_backend.dart';
+import '../utils/app_platform.dart';
 import '../utils/percent_escapes.dart';
 import 'user_account_service.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
@@ -675,6 +676,14 @@ class DownloadService extends ChangeNotifier {
   /// before they call, or they announce work that never happens.
   bool isAutoDownloadBlocked(String itemId) =>
       _autoDownloadBlocked.contains(itemId);
+
+  /// The queue's next-up books are wanted whatever happened to an earlier
+  /// download of them, so the planner lifts the block before it downloads.
+  Future<void> liftAutoDownloadBlock(String itemId) async {
+    if (!_autoDownloadBlocked.remove(itemId)) return;
+    debugPrint('[Download] $itemId is next in the queue - auto-download may fetch it again');
+    await _saveAutoDownloadBlocks();
+  }
   static const _autoDownloadBlockedKey = 'auto_download_blocked';
 
   /// The current Android SAF folder URI (content://), or null if using default.
@@ -771,6 +780,10 @@ class DownloadService extends ChangeNotifier {
 
   /// Calculate total size of all downloaded files.
   Future<int> get totalDownloadSize async {
+    // No downloads in a browser, and no app directory to look in: asking for
+    // one threw, which failed the Settings load and left every control there
+    // disabled on the web.
+    if (AppPlatform.isWeb) return 0;
     await hydrateEbookCacheDir();
     int total = 0;
     for (final info in _downloads.values) {
@@ -1284,6 +1297,10 @@ class DownloadService extends ChangeNotifier {
       _queue.map((q) => _downloads[q.itemId]).whereType<DownloadInfo>().toList();
 
   Future<void> init() {
+    if (AppPlatform.lacksPhonePlugins) {
+      _initialized = true;
+      return Future.value();
+    }
     if (_initialized) return Future.value();
     final inFlight = _initFuture;
     if (inFlight != null) return inFlight;
@@ -2103,6 +2120,9 @@ class DownloadService extends ChangeNotifier {
     // that block, since the user asked for it back.
     bool automatic = false,
   }) async {
+    if (AppPlatform.lacksPhonePlugins) {
+      return 'Downloads are not available in the browser.';
+    }
     if (shouldStart?.call() == false) return null;
     // Episodes are keyed "podcastId-episodeId" everywhere below. A caller
     // holding the bare podcast id (the transcription download prompt did)

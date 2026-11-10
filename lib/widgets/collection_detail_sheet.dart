@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'overlay_toast.dart';
 import 'absorb_placement.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import '../l10n/app_localizations.dart';
 import 'cover_badges.dart';
 import '../services/wording.dart';
@@ -590,7 +592,7 @@ class _CollectionDetailSheetState extends State<CollectionDetailSheet> {
                             ? (isLocalCoverPath(coverUrl)
                                 ? Image.file(File(coverUrl), fit: BoxFit.cover,
                                     errorBuilder: (_, __, ___) => _placeholder(cs))
-                                : CachedNetworkImage(
+                                : CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                                     imageUrl: coverUrl, fit: BoxFit.cover,
                                     httpHeaders: lib.mediaHeaders,
                                     placeholder: (_, __) => _placeholder(cs),
@@ -727,7 +729,7 @@ class _CollectionDetailSheetState extends State<CollectionDetailSheet> {
                           ? (isLocalCoverPath(coverUrl)
                               ? Image.file(File(coverUrl), fit: BoxFit.cover,
                                   errorBuilder: (_, __, ___) => _placeholder(cs))
-                              : CachedNetworkImage(
+                              : CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                                   imageUrl: coverUrl, fit: BoxFit.cover,
                                   httpHeaders: lib.mediaHeaders,
                                   placeholder: (_, __) => _placeholder(cs),

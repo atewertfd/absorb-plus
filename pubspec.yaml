@@ -26,6 +26,9 @@ dependencies:
   # Image caching
   cached_network_image: ^3.3.0
   flutter_cache_manager: ^3.4.1 # cover disk cache size (lib/utils/cover_cache.dart)
+  # For ImageRenderMethodForWeb: web covers decode through Flutter instead of
+  # borrowing <img> elements the browser can empty (they drew black).
+  cached_network_image_platform_interface: ^4.1.1
 
   # Audio playback
   just_audio:
@@ -142,6 +145,14 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
+
+dependency_overrides:
+  audio_service_web:
+    path: packages/audio_service_web
+  # Vendored for a null-pointer fix in its JavaScript handler reply, which
+  # crashed the Windows app whenever the reader loaded a book.
+  flutter_inappwebview_windows:
+    path: packages/flutter_inappwebview_windows
 
 flutter:
   generate: true

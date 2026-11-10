@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../services/audio_player_service.dart';
 import '../services/sleep_timer_service.dart';
+import 'adaptive_modal.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import '../utils/fork_platform.dart';
 
 // ─── SHARED SLEEP TIMER SHEET ─────────────────────────────────
 void showSleepTimerSheet(BuildContext context, Color accent) {
-  showModalBottomSheet(
+  showAdaptiveActionMenu(
     context: context,
     backgroundColor: Colors.transparent,
     isScrollControlled: true,
@@ -165,13 +166,12 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 _buildRewindSection(accent, tt, l),
 
                 if (ForkPlatform.supportsShakeToReset) ...[
-                const SizedBox(height: 12),
-                Container(
-                    height: 0.5, color: cs.onSurface.withValues(alpha: 0.08)),
-                const SizedBox(height: 12),
-
-                // Shake toggle
-                _buildShakeToggle(accent, tt, l),
+                  const SizedBox(height: 12),
+                  Container(
+                      height: 0.5,
+                      color: cs.onSurface.withValues(alpha: 0.08)),
+                  const SizedBox(height: 12),
+                  _buildShakeToggle(accent, tt, l),
                 ],
               ],
             ]),
@@ -286,10 +286,10 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
       const SizedBox(height: 12),
       _buildRewindSection(accent, tt, l),
       if (ForkPlatform.supportsShakeToReset) ...[
-      const SizedBox(height: 12),
-      Container(height: 0.5, color: cs.onSurface.withValues(alpha: 0.08)),
-      const SizedBox(height: 12),
-      _buildShakeToggle(accent, tt, l),
+        const SizedBox(height: 12),
+        Container(height: 0.5, color: cs.onSurface.withValues(alpha: 0.08)),
+        const SizedBox(height: 12),
+        _buildShakeToggle(accent, tt, l),
       ],
     ]);
   }

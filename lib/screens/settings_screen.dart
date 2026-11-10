@@ -23,6 +23,7 @@ import '../screens/app_shell.dart';
 import '../build_info.dart';
 import '../services/update_checker_service.dart';
 import '../services/audiobookshelf_update_service.dart';
+import '../widgets/adaptive_modal.dart';
 import '../widgets/update_dialog.dart';
 import '../widgets/nav_hold_options.dart';
 import '../widgets/now_playing_text_sheet.dart';
@@ -44,6 +45,7 @@ import '../screens/auth_sessions_screen.dart';
 import '../screens/transcription_settings_screen.dart';
 import '../main.dart' show applyThemeMode, applyTrustAllCerts, applyFlatBackground, applyColorSource, applyManualSeed, applyGradientIntensity, applyUseColorEverywhere, applyEinkModeTheme, applyOrientationLock, localeNotifier, flatNotifier, gradientIntensityNotifier, snappyTransitionsNotifier;
 import '../services/wording.dart';
+import '../utils/app_platform.dart';
 import '../utils/share_origin.dart';
 import '../widgets/settings_search.dart';
 import 'settings_search_index.dart';
@@ -62,6 +64,7 @@ import '../widgets/rmab_config_sheet.dart';
 import '../widgets/server_connection_editor.dart';
 import '../widgets/server_admin_status_badges.dart';
 import '../l10n/app_localizations.dart';
+import '../utils/desktop_workspace.dart';
 import '../widgets/sign_in_again.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import 'setup/run_setup_again_tile.dart';
@@ -93,14 +96,140 @@ import '../widgets/developer_mode_tiles.dart'; // fork
 import '../ui_themes/app_backdrop.dart'; // fork
 import '../ui_themes/app_background_tile.dart'; // fork
 
+class _SettingsSectionDestination {
+  final String id;
+  final IconData icon;
+  final String label;
+
+  const _SettingsSectionDestination(this.id, this.icon, this.label);
+}
+
+/// Desktop: a section list on the left as a table of contents, the
+/// settings on the right. Off the desktop workspace it is just [child].
+class _SettingsAdaptiveFrame extends StatelessWidget {
+  final bool desktopMode;
+  final String? selectedSection;
+  final List<_SettingsSectionDestination> destinations;
+  final ValueChanged<String> onSectionSelected;
+  final ScrollController scrollController;
+  final Widget child;
+
+  const _SettingsAdaptiveFrame({
+    required this.desktopMode,
+    required this.selectedSection,
+    required this.destinations,
+    required this.onSectionSelected,
+    required this.scrollController,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (!desktopMode) return child;
+    final cs = Theme.of(context).colorScheme;
+    final tt = Theme.of(context).textTheme;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SizedBox(
+          width: 224,
+          child: Material(
+            color: cs.surface.withValues(alpha: 0.38),
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(14, 20, 14, 20),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                  child: Text(
+                    AppLocalizations.of(context)!.settingsTitle,
+                    style: tt.labelMedium?.copyWith(
+                      color: cs.onSurfaceVariant,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                ),
+                for (final destination in destinations)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Material(
+                      color: selectedSection == destination.id
+                          ? cs.primary.withValues(alpha: 0.14)
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(11),
+                      clipBehavior: Clip.antiAlias,
+                      child: InkWell(
+                        onTap: () => onSectionSelected(destination.id),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 11,
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                destination.icon,
+                                size: 19,
+                                color: selectedSection == destination.id
+                                    ? cs.primary
+                                    : cs.onSurfaceVariant,
+                              ),
+                              const SizedBox(width: 11),
+                              Expanded(
+                                child: Text(
+                                  destination.label,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: tt.bodyMedium?.copyWith(
+                                    color: selectedSection == destination.id
+                                        ? cs.onSurface
+                                        : cs.onSurfaceVariant,
+                                    fontWeight:
+                                        selectedSection == destination.id
+                                        ? FontWeight.w700
+                                        : FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        VerticalDivider(
+          width: 1,
+          thickness: 1,
+          color: cs.outlineVariant.withValues(alpha: 0.35),
+        ),
+        Expanded(
+          // Absorb Plus: native wheel scrolling (desktop_wheel_scroll_region
+          // was removed in the fork).
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 880),
+              child: SizedBox.expand(child: child),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  State<SettingsScreen> createState() => SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class SettingsScreenState extends State<SettingsScreen> {
   static const _isPlayStoreBuild = bool.fromEnvironment('PLAYSTORE_BUILD');
   static const _isGithubBuild = bool.fromEnvironment('GITHUB_BUILD');
   static const _isDevBuild = bool.fromEnvironment('DEV_BUILD');
@@ -108,12 +237,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _checkingForUpdate = false;
   // Distribution label shown next to the version. The F-Droid build passes
   // no define, so it falls through here.
-  static String get _flavorLabel => _isDevBuild
-      ? 'Dev'
-      : _isGithubBuild ? 'GitHub' : _isPlayStoreBuild ? 'Play Store' : 'F-Droid';
+  static String get _flavorLabel => AppPlatform.isWeb
+      ? 'Web'
+      : _isDevBuild
+          ? 'Dev'
+          : _isGithubBuild ? 'GitHub' : _isPlayStoreBuild ? 'Play Store' : 'F-Droid';
 
   String _versionLine(AppLocalizations l) {
-    final base = Platform.isIOS
+    final base = AppPlatform.isIOS
         ? l.appVersionFormat(_appVersion)
         : '$_flavorLabel - $_appVersion';
     final beta = betaNumberFor(_appVersion);
@@ -157,6 +288,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _notifChapterProgress = false;
   bool _notifSpeedBookmark = false;
   bool _duckBriefInterruptions = false;
+  bool _keepPlayingWithOtherApps = false;
   bool _autoplayOnCarConnect = false;
   bool _keepScreenOnPlayer = false;
   bool _keepScreenOnCarMode = false;
@@ -208,6 +340,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _episodeNotifMinutes = 0;
   int _maxConcurrentDownloads = 1;
   bool _hideEbookOnly = false;
+  bool _showAudibleRating = true;
   bool _showGoodreadsButton = false;
   bool _homeCardsOpenDetails = false;
   bool _showExplicitBadge = true;
@@ -231,6 +364,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _curLibSkipOverride = false;
   int _curLibSkipForward = 30;
   int _curLibSkipBack = 10;
+  bool _curLibSpeedOverride = false;
+  double _curLibSpeed = 1.0;
   bool _coverPlayButton = false;
   String _cardBackground = 'blurred';
   double _progressTextScale = 1.0;
@@ -382,7 +517,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final TextEditingController _settingsSearchController = TextEditingController();
   String _settingsQuery = '';
 
+  /// The desktop sidebar's account button opens the same sheet the profile
+  /// card does.
+  void showAccountMenu() {
+    if (mounted) _showAccountSheet(context);
+  }
+
   GlobalKey _keyFor(String section) => _sectionKeys.putIfAbsent(section, () => GlobalKey());
+
+  final _settingsScrollController = ScrollController();
+
+  /// The desktop sidebar: open the section and bring it into view.
+  void _jumpToSection(String section) {
+    setState(() => _expandedSection = section);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = _keyFor(section).currentContext;
+      if (!mounted || ctx == null) return;
+      Scrollable.ensureVisible(
+        ctx,
+        alignment: 0.02,
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOut,
+      );
+    });
+  }
 
   void _onSectionExpanded(String section, bool expanded) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -472,6 +630,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     PlayerSettings.settingsChanged.removeListener(_onExternalSettingsChange);
     _localServerController.dispose();
     _settingsSearchController.dispose();
+    _settingsScrollController.dispose();
     super.dispose();
   }
 
@@ -1105,7 +1264,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await EpisodeNotificationService.syncRegistration();
     // Make sure notifications are allowed when turning the feature on.
     if (picked > 0) {
-      if (Platform.isIOS) {
+      if (AppPlatform.isIOS) {
         await EpisodeNotificationService.requestIosPermission();
       } else {
         await Permission.notification.request();
@@ -1199,6 +1358,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final coverSize = await PlayerSettings.getCoverSize();
     final cardButtonFill = await PlayerSettings.getCardButtonFill();
     final flatBackground = await PlayerSettings.getFlatBackground();
+    final showAudibleRating = await PlayerSettings.getShowAudibleRating();
     final showSubtitles = await PlayerSettings.getShowSubtitles();
     final showEbookBadge = await PlayerSettings.getShowEbookBadge();
     final einkMode = await PlayerSettings.getEinkMode();
@@ -1279,6 +1439,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final podcastTabLibraryId = await PlayerSettings.getPodcastTabLibraryId();
     final episodeNotifMinutes = await PlayerSettings.getEpisodeNotifIntervalMinutes();
     final duckBriefInterruptions = await PlayerSettings.getDuckBriefInterruptions();
+    final keepPlayingWithOtherApps = await PlayerSettings.getKeepPlayingWithOtherApps();
     final autoplayOnCarConnect = await PlayerSettings.getAutoplayOnCarConnect();
     final keepScreenOnPlayer = await PlayerSettings.getKeepScreenOnInPlayer();
     final keepScreenOnCarMode = await PlayerSettings.getKeepScreenOnInCarMode();
@@ -1305,6 +1466,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _notifChapterProgress = notifChapter;
       _notifSpeedBookmark = notifSpeedBookmark;
       _duckBriefInterruptions = duckBriefInterruptions;
+      _keepPlayingWithOtherApps = keepPlayingWithOtherApps;
       _autoplayOnCarConnect = autoplayOnCarConnect;
       _keepScreenOnPlayer = keepScreenOnPlayer;
       _keepScreenOnCarMode = keepScreenOnCarMode;
@@ -1327,6 +1489,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _mergeAbsorbingLibraries = mergeLibs;
       _maxConcurrentDownloads = maxConc;
       _hideEbookOnly = hideEbook;
+      _showAudibleRating = showAudibleRating;
       _showGoodreadsButton = showGoodreads;
       _loggingEnabled = logging;
       _fullScreenPlayer = fullScreen;
@@ -1392,7 +1555,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (mounted) setState(() => _homeCardsOpenDetails = cardsOpenDetails);
     final libId = mounted ? context.read<LibraryProvider>().selectedLibraryId : null;
     if (libId != null) _loadCurrentLibraryOverrides(libId);
-    if (Platform.isIOS) _refreshSiriStatus();
+    if (AppPlatform.isIOS) _refreshSiriStatus();
   }
 
   Future<void> _refreshSiriStatus() async {
@@ -1407,8 +1570,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final shape = await PlayerSettings.getRectangleCoversOverride(libraryId);
     final subtitles = await PlayerSettings.getShowSubtitlesOverride(libraryId);
     final skip = await PlayerSettings.getSkipOverride(libraryId);
+    final speed = await PlayerSettings.getSpeedOverride(libraryId);
     if (mounted) setState(() {
       _curLibId = libraryId;
+      _curLibSpeedOverride = speed != null;
+      _curLibSpeed = speed ?? _defaultSpeed;
       _curLibCoverShape = shape ?? 'default';
       _curLibSubtitles = subtitles ?? 'default';
       _curLibSkipOverride = skip != null;
@@ -1822,6 +1988,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
       });
     }
 
+    final isDesktopSettings = isDesktopWorkspace(context);
+    // Media controls, downloads and permissions are phone matters; the rest
+    // is what the desktop sidebar lists.
+    final destinations = <_SettingsSectionDestination>[
+      _SettingsSectionDestination('Appearance', Icons.palette_outlined, l.sectionAppearance),
+      _SettingsSectionDestination('Customize Stats', Icons.bar_chart_rounded, l.settingsCustomizeStats),
+      _SettingsSectionDestination('Absorbing Cards', Icons.style_rounded, Wording.of(context).sectionAbsorbingCards),
+      _SettingsSectionDestination('Playback', Icons.play_circle_outline_rounded, l.sectionPlayback),
+      _SettingsSectionDestination('Sleep Timer', Icons.bedtime_outlined, l.sectionSleepTimer),
+      _SettingsSectionDestination('Library', Icons.auto_stories_outlined, l.sectionLibrary),
+      _SettingsSectionDestination('Issues & Support', Icons.support_agent_rounded, l.sectionIssuesAndSupport),
+      _SettingsSectionDestination('Advanced', Icons.tune_rounded, l.sectionAdvanced),
+    ];
     return Scaffold(
       body: Container(
         decoration: flatNotifier.value || AppBackdrop.isActive(context) ? null : BoxDecoration(
@@ -1837,11 +2016,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ),
         child: SafeArea(
+        child: _SettingsAdaptiveFrame(
+        desktopMode: isDesktopSettings,
+        selectedSection: _expandedSection,
+        destinations: destinations,
+        scrollController: _settingsScrollController,
+        onSectionSelected: _jumpToSection,
         child: CustomScrollView(
+        controller: _settingsScrollController,
         slivers: [
           SliverToBoxAdapter(
             child: AbsorbPageHeader(
               title: l.settingsTitle,
+              showBranding: !isDesktopSettings,
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
             ),
           ),
@@ -1894,6 +2081,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 8),
 
                 // ── Tips & Tricks ──
+                if (!isDesktopSettings)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   child: GestureDetector(
@@ -1930,6 +2118,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 8),
 
                 // ── User Profile ──
+                if (!isDesktopSettings)
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                   child: GestureDetector(
@@ -2036,7 +2225,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
 
                 // ── Admin Controls ──
-                if (auth.isAdmin)
+                // The desktop sidebar carries the admin button instead.
+                if (auth.isAdmin && !isDesktopWorkspace(context))
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                     child: Material(
@@ -2084,7 +2274,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
 
-                if (auth.bookOrbitAdmin?.any == true)
+                if (auth.bookOrbitAdmin?.any == true && !isDesktopWorkspace(context))
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                     child: Material(
@@ -2475,7 +2665,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     // iPadOS ignores orientation preferences for multitasking
                     // apps, so the lock can't work there - hide it on iPad.
-                    if (ForkPlatform.supportsOrientationLock && !(Platform.isIOS && MediaQuery.sizeOf(context).shortestSide >= 600)) ...[
+                    if (ForkPlatform.supportsOrientationLock && !(AppPlatform.isIOS && MediaQuery.sizeOf(context).shortestSide >= 600)) ...[
                       const Divider(height: 1, indent: 16, endIndent: 16),
                       SwitchListTile(
                         title: const Text('Lock rotation'),
@@ -3059,6 +3249,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                     const Divider(height: 1, indent: 16, endIndent: 16),
+                    const Divider(height: 1, indent: 16, endIndent: 16),
                     ListTile(
                       leading: Icon(Icons.refresh_rounded, color: cs.onSurfaceVariant),
                       title: Text(l.resetSpeedPresets),
@@ -3111,7 +3302,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         PlayerSettings.setForwardSkip(v.round());
                       } : null,
                     ),
-                    if (Platform.isIOS)
+                    if (AppPlatform.isIOS)
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
                         child: Text(
@@ -3353,6 +3544,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 16),
 
                 // ── Media Controls ──
+                if (!isDesktopSettings)
                 CollapsibleSection(
                   key: _keyFor('Media Controls'),
                   icon: Icons.dvr_rounded,
@@ -3363,12 +3555,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     if (ForkPlatform.hasMediaNotification) ...[
                     SwitchListTile(
-                      title: Text(Platform.isIOS
+                      title: Text(AppPlatform.isIOS
                           ? l.chapterProgressInNotificationIos
                           : l.chapterProgressInNotification),
                       subtitle: Text(
                         _notifChapterProgress
-                            ? (Platform.isIOS
+                            ? (AppPlatform.isIOS
                                 ? l.chapterProgressOnSubtitleIos
                                 : l.chapterProgressOnSubtitle)
                             : l.chapterProgressOffSubtitle,
@@ -3406,7 +3598,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ],
                     // Android only: chooses which pair fills the phone media
                     // player's two extra slots. iOS uses CarPlay's own buttons.
-                    if (Platform.isAndroid) ...[
+                    if (AppPlatform.isAndroid) ...[
                       const Divider(height: 1, indent: 16, endIndent: 16),
                       SwitchListTile(
                         title: const Text('Duck brief interruptions'),
@@ -3419,6 +3611,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         onChanged: _loaded ? (v) {
                           setState(() => _duckBriefInterruptions = v);
                           PlayerSettings.setDuckBriefInterruptions(v);
+                        } : null,
+                      ),
+                      const Divider(height: 1, indent: 16, endIndent: 16),
+                      SwitchListTile(
+                        title: const Text('Play with other audio'),
+                        subtitle: Text(
+                          _keepPlayingWithOtherApps
+                              ? 'Keeps playing when another app starts its own audio'
+                              : 'Pauses when another app starts its own audio',
+                          style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
+                        value: _keepPlayingWithOtherApps,
+                        onChanged: _loaded ? (v) {
+                          setState(() => _keepPlayingWithOtherApps = v);
+                          PlayerSettings.setKeepPlayingWithOtherApps(v);
                         } : null,
                       ),
                       const Divider(height: 1, indent: 16, endIndent: 16),
@@ -3442,17 +3648,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 16),
 
                 // ── Car ──
-                if (ForkPlatform.hasCarMode) ...[
+                if (ForkPlatform.hasCarMode && !AppPlatform.lacksPhonePlugins) ...[
                 CollapsibleSection(
                   key: _keyFor('Car'),
                   icon: Icons.directions_car_rounded,
-                  title: Platform.isIOS ? l.sectionCarIos : l.sectionCar,
+                  title: AppPlatform.isIOS ? l.sectionCarIos : l.sectionCar,
                   cs: cs,
                   isExpanded: _expandedSection == 'Car',
                   onExpansionChanged: (v) => _onSectionExpanded('Car', v),
                   children: [
                     SwitchListTile(
-                      title: Text(Platform.isIOS
+                      title: Text(AppPlatform.isIOS
                           ? l.carConnectAutoplayIos
                           : l.carConnectAutoplay),
                       subtitle: Text(
@@ -3528,7 +3734,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 16),
                 ],
 
-                if (Platform.isIOS) ...[
+                if (AppPlatform.isIOS) ...[
                   // ── Siri ──
                   CollapsibleSection(
                     key: _keyFor('Siri'),
@@ -3591,6 +3797,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   isExpanded: _expandedSection == 'Sleep Timer',
                   onExpansionChanged: (v) => _onSectionExpanded('Sleep Timer', v),
                   children: [
+                    // Browsers and computers have no motion sensor to shake.
                     if (ForkPlatform.supportsShakeToReset) ...[
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
@@ -3939,6 +4146,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 16),
 
                 // ── Downloads & Storage ──
+                if (!isDesktopSettings)
                 CollapsibleSection(
                   key: _keyFor('Downloads & Storage'),
                   icon: Icons.download_outlined,
@@ -4089,7 +4297,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       } : null,
                     ),
                     const Divider(height: 1, indent: 16, endIndent: 16),
-                    if (!Platform.isIOS && _canPickDownloadLocation)
+                    if (!AppPlatform.isIOS && _canPickDownloadLocation)
                     ListTile(
                       leading: Icon(Icons.folder_outlined, color: cs.primary),
                       title: Text(l.downloadLocation),
@@ -4245,6 +4453,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       } : null,
                     ),
                     const Divider(height: 1, indent: 16, endIndent: 16),
+                    // BookOrbit sends ratings with the book, so the switch
+                    // only applies to Audiobookshelf's live Audible lookup.
+                    if (!context.read<AuthProvider>().isBookOrbit) ...[
+                      SwitchListTile(
+                        title: Text(l.audibleRatings),
+                        subtitle: Text(
+                          _showAudibleRating
+                              ? l.audibleRatingsOnSubtitle
+                              : l.audibleRatingsOffSubtitle,
+                          style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
+                        value: _showAudibleRating,
+                        onChanged: _loaded ? (v) {
+                          setState(() => _showAudibleRating = v);
+                          PlayerSettings.setShowAudibleRating(v);
+                        } : null,
+                      ),
+                      const Divider(height: 1, indent: 16, endIndent: 16),
+                    ],
                     SwitchListTile(
                       title: Text(l.homeCardsOpenDetails),
                       subtitle: Text(
@@ -4416,13 +4642,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           } : null,
                         ),
                       ],
+                      const Divider(height: 1, indent: 16, endIndent: 16),
+                      SwitchListTile(
+                        title: Text(l.currentLibrarySpeedOverride),
+                        subtitle: Text(
+                          _curLibSpeedOverride
+                              ? l.currentLibrarySpeedOverrideOnSubtitle
+                              : l.currentLibrarySpeedOverrideOffSubtitle,
+                          style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+                        ),
+                        value: _curLibSpeedOverride,
+                        onChanged: _loaded ? (v) {
+                          setState(() => _curLibSpeedOverride = v);
+                          PlayerSettings.setSpeedOverride(_curLibId!, v ? _curLibSpeed : null);
+                        } : null,
+                      ),
+                      if (_curLibSpeedOverride) ...[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(l.currentLibrarySpeed, style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant)),
+                              Text(l.speedValue(_curLibSpeed.toStringAsFixed(2)), style: tt.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w600, color: cs.primary)),
+                            ],
+                          ),
+                        ),
+                        AbsorbSlider(
+                          value: _curLibSpeed,
+                          min: 0.5, max: 5.0, divisions: 90,
+                          onChanged: _loaded ? (v) {
+                            final s = (v * 20).round() / 20.0;
+                            setState(() => _curLibSpeed = s);
+                            PlayerSettings.setSpeedOverride(_curLibId!, s);
+                          } : null,
+                        ),
+                      ],
                     ],
                   ],
                 ),
                 const SizedBox(height: 16),
 
                 // ── Permissions ──
-                if (ForkPlatform.hasPermissionSettings) ...[
+                if (ForkPlatform.hasPermissionSettings && !isDesktopSettings) ...[
                 CollapsibleSection(
                   key: _keyFor('Permissions'),
                   icon: Icons.shield_outlined,
@@ -4450,7 +4713,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         }
                       },
                     ),
-                    if (Platform.isAndroid || Platform.isIOS) ...[
+                    if (AppPlatform.isMobile) ...[
                     const Divider(height: 1, indent: 16, endIndent: 16),
                     ListTile(
                       leading: const Icon(Icons.notifications_active_outlined),
@@ -4462,7 +4725,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       onTap: _loaded ? _pickEpisodeNotifInterval : null,
                     ),
                     ],
-                    if (Platform.isAndroid) ...[
+                    if (AppPlatform.isAndroid) ...[
                     const Divider(height: 1, indent: 16, endIndent: 16),
                     ListTile(
                       leading: const Icon(Icons.battery_saver_outlined),
@@ -4674,6 +4937,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       trailing: const Icon(Icons.chevron_right_rounded),
                       onTap: _showNavHoldDialog,
                     ),
+                    // The page origin is the server and the browser owns TLS, so
+                    // neither a LAN switch nor a certificate override applies.
+                    if (!AppPlatform.isWeb) ...[
                     const Divider(height: 1, indent: 16, endIndent: 16),
                     SwitchListTile(
                       title: Row(children: [
@@ -4746,7 +5012,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         applyTrustAllCerts(v);
                       } : null,
                     ),
-                    if (Platform.isAndroid) ...[
+                    ],
+                    if (AppPlatform.isAndroid) ...[
                       const Divider(height: 1, indent: 16, endIndent: 16),
                       SwitchListTile(
                         title: Row(children: [
@@ -5088,6 +5355,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
         ],
+      ),
       ),
       ),
       ),
@@ -5472,7 +5740,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final userType = auth.isRoot ? l.rootAdmin : auth.isAdmin ? l.admin : l.userFallback;
     final libraryCount = lib.libraries.length;
 
-    showModalBottomSheet(
+    showAdaptiveActionMenu(
+      desktopScrollWrap: false,
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
@@ -5483,7 +5752,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (ctx) => SafeArea(
         child: SingleChildScrollView(
           child: Column(mainAxisSize: MainAxisSize.min, children: [
-            Center(child: Container(margin: const EdgeInsets.only(top: 12), width: 36, height: 4,
+            if (!ModalSurface.isDesktopOf(ctx)) Center(child: Container(margin: const EdgeInsets.only(top: 12), width: 36, height: 4,
               decoration: BoxDecoration(color: cs.onSurface.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(2)))),
             const SizedBox(height: 16),
           // Current user info

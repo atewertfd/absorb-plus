@@ -16,6 +16,7 @@ import '../services/settings_sync_service.dart';
 import '../services/user_account_service.dart';
 import 'bookorbit_set_password_screen.dart';
 import '../widgets/absorb_wave_icon.dart';
+import '../widgets/bookorbit_forgot_password_dialog.dart';
 import '../widgets/overlay_toast.dart';
 import '../widgets/setup_link_login.dart';
 import '../services/signed_out_playback.dart';
@@ -23,6 +24,8 @@ import '../services/audio_player_service.dart';
 import '../main.dart' show applyTrustAllCerts, flatNotifier;
 import '../l10n/app_localizations.dart';
 import '../services/wording.dart';
+import '../utils/app_platform.dart';
+import '../utils/server_url.dart';
 // Absorb Plus imports, kept in one block for clean upstream merges.
 import '../widgets/support_actions.dart';
 import '../services/tailscale_service.dart'; // fork
@@ -117,6 +120,15 @@ class _LoginScreenState extends State<LoginScreen>
       if (_forkForm.prefillPreview()) return; // fork: design preview
       final auth = context.read<AuthProvider>();
       final account = widget.prefillAccount;
+      if (AppPlatform.isWeb) {
+        final serverUrl = serverUrlFromWebOrigin(Uri.base);
+        if (serverUrl != null) {
+          _setInitialHeaders(account?.customHeaders ?? auth.customHeaders);
+          setState(() => _backend = account?.backend ?? auth.backend);
+          _prefillLogin(serverUrl, account?.username ?? auth.username ?? '');
+          return;
+        }
+      }
       if (account != null) {
         _setInitialHeaders(account.customHeaders);
         setState(() => _backend = account.backend);
@@ -138,14 +150,17 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   void _prefillLogin(String serverUrl, String username) {
-    final uri = Uri.tryParse(serverUrl);
+    final resolvedServerUrl = AppPlatform.isWeb
+        ? serverUrlFromWebOrigin(Uri.base) ?? serverUrl
+        : serverUrl;
+    final uri = Uri.tryParse(resolvedServerUrl);
     final protocol = uri?.scheme == 'http' || uri?.scheme == 'https'
         ? '${uri!.scheme}://'
         : _protocol;
     setState(() => _protocol = protocol);
-    _serverController.text = serverUrl.startsWith(protocol)
-        ? serverUrl.substring(protocol.length)
-        : serverUrl;
+    _serverController.text = resolvedServerUrl.startsWith(protocol)
+        ? resolvedServerUrl.substring(protocol.length)
+        : resolvedServerUrl;
     _usernameController.text = username;
   }
 
@@ -170,10 +185,12 @@ class _LoginScreenState extends State<LoginScreen>
       final info = await PackageInfo.fromPlatform();
       if (mounted) setState(() => _appVersion = 'v${info.version}');
     } catch (_) {}
-    try {
-      final trust = await PlayerSettings.getTrustAllCerts();
-      if (mounted) setState(() => _trustAllCerts = trust);
-    } catch (_) {}
+    if (!AppPlatform.isWeb) {
+      try {
+        final trust = await PlayerSettings.getTrustAllCerts();
+        if (mounted) setState(() => _trustAllCerts = trust);
+      } catch (_) {}
+    }
   }
 
   @override
@@ -186,16 +203,41 @@ class _LoginScreenState extends State<LoginScreen>
     _apiKeyController.dispose();
     _usernameFocus.dispose();
     for (final (k, v) in _headerControllers) { k.dispose(); v.dispose(); }
-    OidcService().cancel();
+    if (!AppPlatform.lacksPhonePlugins) OidcService().cancel();
     _forkForm.dispose(); // fork
     super.dispose();
   }
 
   String _lastValidatedServer = '';
 
+  String get _resolvedServerUrl {
+    if (AppPlatform.isWeb) {
+      return serverUrlFromWebOrigin(Uri.base) ?? '';
+    }
+
+    final serverText = _serverController.text.trim();
+    final cleanUrl = serverText.replaceAll(RegExp(r'^https?://'), '');
+    return '$_protocol$cleanUrl';
+  }
+
+  /// BookOrbit only says whether it can send email once someone asks, so the
+  /// link shows wherever password sign-in is on and the dialog handles a no.
+  bool get _canOfferPasswordReset =>
+      _backend.isBookOrbit && _serverValid && _oidcConfig?.hasLocalAuth != false;
+
+  void _forgotPassword() {
+    final username = _usernameController.text.trim();
+    showBookOrbitForgotPassword(
+      context,
+      serverUrl: _resolvedServerUrl,
+      customHeaders: _collectHeaders(),
+      initialEmail: username.contains('@') ? username : '',
+    );
+  }
+
   /// Re-trigger server validation when custom headers change.
   void _revalidateServer() {
-    if (_serverController.text.trim().isEmpty) return;
+    if (_resolvedServerUrl.isEmpty) return;
     _lastValidatedServer = ''; // Force re-check
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 800), () => _checkServer());
@@ -216,8 +258,7 @@ class _LoginScreenState extends State<LoginScreen>
     }
 
     // Only invalidate if the server text actually changed from what we validated
-    final cleanUrl = text.replaceAll(RegExp(r'^https?://'), '');
-    final fullUrl = '$_protocol$cleanUrl';
+    final fullUrl = _resolvedServerUrl;
     if (fullUrl != _lastValidatedServer) {
       setState(() {
         _serverValid = false;
@@ -247,11 +288,9 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Future<void> _checkServer() async {
-    final text = _serverController.text.trim();
-    if (text.isEmpty) return;
-
-    final cleanUrl = text.replaceAll(RegExp(r'^https?://'), '');
-    final fullUrl = '$_protocol$cleanUrl';
+    if (!AppPlatform.isWeb && _serverController.text.trim().isEmpty) return;
+    final fullUrl = _resolvedServerUrl;
+    if (fullUrl.isEmpty) return;
     if (_forkForm.previewServerCheck(fullUrl)) return; // fork: design preview
 
     try {
@@ -264,7 +303,7 @@ class _LoginScreenState extends State<LoginScreen>
       );
       final ok = result.ok;
       if (!mounted) return;
-      if (_serverController.text.trim() != text || _backend != backend) return;
+      if (_resolvedServerUrl != fullUrl || _backend != backend) return;
 
       setState(() {
         _serverChecking = false;
@@ -279,13 +318,12 @@ class _LoginScreenState extends State<LoginScreen>
         }
       });
 
-      if (ok) {
-        // Also check if OIDC is available
+      if (ok && !AppPlatform.lacksPhonePlugins) {
         final check = backend.isBookOrbit
             ? OidcService.checkBookOrbitOidc(fullUrl, customHeaders: headers)
             : OidcService.checkOidcEnabled(fullUrl, customHeaders: headers);
         check.then((config) {
-          if (mounted && _serverController.text.trim() == text && _backend == backend) {
+          if (mounted && _resolvedServerUrl == fullUrl && _backend == backend) {
             setState(() => _oidcConfig = config);
           }
         });
@@ -349,9 +387,7 @@ class _LoginScreenState extends State<LoginScreen>
     });
 
     final auth = context.read<AuthProvider>();
-    final serverText = _serverController.text.trim();
-    final cleanUrl = serverText.replaceAll(RegExp(r'^https?://'), '');
-    final fullUrl = '$_protocol$cleanUrl';
+    final fullUrl = _resolvedServerUrl;
 
     final headers = _collectHeaders();
 
@@ -417,7 +453,7 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Future<void> _handleOidcLogin() async {
-    if (!_serverValid) return;
+    if (AppPlatform.lacksPhonePlugins || !_serverValid) return;
     if (_forkForm.blockedInPreview()) return; // fork: design preview
 
     setState(() {
@@ -425,9 +461,7 @@ class _LoginScreenState extends State<LoginScreen>
       _loginError = null;
     });
 
-    final serverText = _serverController.text.trim();
-    final cleanUrl = serverText.replaceAll(RegExp(r'^https?://'), '');
-    final fullUrl = '$_protocol$cleanUrl';
+    final fullUrl = _resolvedServerUrl;
 
     final headers = _collectHeaders();
     final oidc = OidcService();
@@ -543,14 +577,30 @@ class _LoginScreenState extends State<LoginScreen>
         ),
         child: SafeArea(
           child: LayoutBuilder(
-            builder: (context, constraints) => SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight - 48),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                children: [
+            builder: (context, constraints) {
+              final isWide = constraints.maxWidth >= 720;
+              final horizontalPadding = isWide ? 40.0 : 28.0;
+              final verticalPadding = isWide ? 32.0 : 24.0;
+              final availableHeight =
+                  constraints.maxHeight - (verticalPadding * 2);
+              return SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: horizontalPadding,
+                  vertical: verticalPadding,
+                ),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: 520,
+                      minHeight: availableHeight > 0 ? availableHeight : 0,
+                    ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
                   // ── Logo + Tagline ──
                   FadeTransition(
                     opacity: _fadeAnim,
@@ -643,7 +693,7 @@ class _LoginScreenState extends State<LoginScreen>
                                   Padding(
                                     padding: const EdgeInsets.only(left: 4, bottom: 16),
                                     child: Text(
-                                      l.loginConnectToServer,
+                                      AppPlatform.isWeb ? l.loginSignIn : l.loginConnectToServer,
                                       style: tt.titleSmall?.copyWith(
                                         color: cs.onSurfaceVariant.withValues(alpha: 0.7),
                                         fontWeight: FontWeight.w500,
@@ -662,7 +712,7 @@ class _LoginScreenState extends State<LoginScreen>
                                   ],
                                   const SizedBox(height: 14),
 
-                                  _buildInputField(
+                                  if (!AppPlatform.isWeb) _buildInputField(
                                     controller: _serverController,
                                     label: l.loginServerAddress,
                                     hint: l.loginServerHint,
@@ -843,32 +893,34 @@ class _LoginScreenState extends State<LoginScreen>
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 8),
-                                    const Divider(height: 1),
-                                    const SizedBox(height: 4),
-                                    Text(l.loginSelfSignedCertificates, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: cs.onSurfaceVariant.withValues(alpha: 0.7))),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            l.loginTrustAllCertificates,
-                                            style: TextStyle(fontSize: 11, color: cs.onSurfaceVariant.withValues(alpha: 0.4)),
+                                    if (!AppPlatform.isWeb) ...[
+                                      const SizedBox(height: 8),
+                                      const Divider(height: 1),
+                                      const SizedBox(height: 4),
+                                      Text(l.loginSelfSignedCertificates, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: cs.onSurfaceVariant.withValues(alpha: 0.7))),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              l.loginTrustAllCertificates,
+                                              style: TextStyle(fontSize: 11, color: cs.onSurfaceVariant.withValues(alpha: 0.4)),
+                                            ),
                                           ),
-                                        ),
-                                        Transform.scale(
-                                          scale: 0.8,
-                                          child: Switch(
-                                            value: _trustAllCerts,
-                                            onChanged: (v) async {
-                                              setState(() => _trustAllCerts = v);
-                                              await PlayerSettings.setTrustAllCerts(v);
-                                              applyTrustAllCerts(v);
-                                              _revalidateServer();
-                                            },
+                                          Transform.scale(
+                                            scale: 0.8,
+                                            child: Switch(
+                                              value: _trustAllCerts,
+                                              onChanged: (v) async {
+                                                setState(() => _trustAllCerts = v);
+                                                await PlayerSettings.setTrustAllCerts(v);
+                                                applyTrustAllCerts(v);
+                                                _revalidateServer();
+                                              },
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
+                                        ],
+                                      ),
+                                    ],
                                     const SizedBox(height: 8),
                                     const Divider(height: 1),
                                     const SizedBox(height: 8),
@@ -998,13 +1050,16 @@ class _LoginScreenState extends State<LoginScreen>
 
                   // ── Saved accounts quick-switch ──
                   _buildSavedAccounts(cs, tt),
-                ],
-              ),
-            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),
-    ),
     );
   }
 
@@ -1194,11 +1249,27 @@ class _LoginScreenState extends State<LoginScreen>
   Future<void> _restoreFromBackup() async {
     if (_forkForm.blockedInPreview()) return; // fork: design preview
     try {
-      final result = await FilePicker.platform.pickFiles(type: FileType.any);
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.any,
+        withData: AppPlatform.lacksPhonePlugins,
+      );
       if (result == null || result.files.isEmpty) return;
 
-      final file = File(result.files.single.path!);
-      final jsonStr = await file.readAsString();
+      final pickedFile = result.files.single;
+      final bytes = pickedFile.bytes;
+      final jsonStr = bytes != null
+          ? utf8.decode(bytes)
+          : pickedFile.path != null
+              ? await File(pickedFile.path!).readAsString()
+              : null;
+      if (jsonStr == null) {
+        if (mounted) {
+          final l = AppLocalizations.of(context)!;
+          showOverlayToast(context, l.loginInvalidBackupFile,
+              icon: Icons.error_outline_rounded);
+        }
+        return;
+      }
       final data = jsonDecode(jsonStr) as Map<String, dynamic>;
 
       if (!data.containsKey('version')) {
@@ -1563,6 +1634,14 @@ class _LoginScreenState extends State<LoginScreen>
             ),
             // No validator — ABS allows passwordless accounts
           ),
+          if (_canOfferPasswordReset)
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: TextButton(
+                onPressed: _forgotPassword,
+                child: Text(l.boForgotLink),
+              ),
+            ),
         ],
         const SizedBox(height: 24),
 
@@ -1607,7 +1686,8 @@ class _LoginScreenState extends State<LoginScreen>
           duration: const Duration(milliseconds: 350),
           curve: Curves.easeOutCubic,
           alignment: Alignment.topCenter,
-          child: _serverValid && _oidcConfig != null && _oidcConfig!.enabled
+          child: !AppPlatform.lacksPhonePlugins &&
+                  _serverValid && _oidcConfig != null && _oidcConfig!.enabled
               ? _buildOidcButton(cs, tt)
               : const SizedBox.shrink(),
         ),

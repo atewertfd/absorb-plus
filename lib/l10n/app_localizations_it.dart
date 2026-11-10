@@ -715,6 +715,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get absorbingManageQueue => 'Gestisci coda';
 
   @override
+  String get desktopAbsorbingQueueHint =>
+      'Use Add to Absorbing on a book or episode to put it here. Items play in this order.';
+
+  @override
   String get absorbingDone => 'Fine';
 
   @override
@@ -1785,6 +1789,20 @@ class AppLocalizationsIt extends AppLocalizations {
       'Disattivo: questa libreria usa i valori di salto globali';
 
   @override
+  String get currentLibrarySpeedOverride => 'Custom default speed';
+
+  @override
+  String get currentLibrarySpeedOverrideOnSubtitle =>
+      'On - new items in this library start at their own speed';
+
+  @override
+  String get currentLibrarySpeedOverrideOffSubtitle =>
+      'Off - new items in this library start at the global default speed';
+
+  @override
+  String get currentLibrarySpeed => 'Default speed';
+
+  @override
   String get currentLibrarySkipBack => 'Salta indietro';
 
   @override
@@ -1809,6 +1827,18 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get chapterProgressOnSubtitleIos =>
       'Attivo: schermata di blocco e CarPlay mostrano il progresso del capitolo';
+
+  @override
+  String get chapterProgressInNowPlayingBar =>
+      'Chapter progress in now playing bar';
+
+  @override
+  String get chapterProgressInNowPlayingBarOnSubtitle =>
+      'On - the bottom player shows current chapter progress';
+
+  @override
+  String get chapterProgressInNowPlayingBarOffSubtitle =>
+      'Off - the bottom player shows full book progress';
 
   @override
   String get nowPlayingText => 'Testo di riproduzione';
@@ -3201,6 +3231,16 @@ class AppLocalizationsIt extends AppLocalizations {
       'Off: tutti gli elementi della libreria sono mostrati';
 
   @override
+  String get audibleRatings => 'Audible ratings';
+
+  @override
+  String get audibleRatingsOnSubtitle =>
+      'On - book details show the Audible rating';
+
+  @override
+  String get audibleRatingsOffSubtitle => 'Off - no Audible lookup or stars';
+
+  @override
   String get homeCardsOpenDetails => 'Apri i dettagli dalla Home';
 
   @override
@@ -4366,6 +4406,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Aggiornamento non riuscito: controlla la connessione';
 
   @override
+  String get markedFinishedWillSync =>
+      'Marked as finished - will sync when you\'re back online';
+
+  @override
   String get markAsNotFinishedQuestion => 'Segnare come non completato?';
 
   @override
@@ -4760,6 +4804,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get loudness => 'Loudness';
 
   @override
+  String get pitch => 'Pitch';
+
+  @override
   String get monoAudio => 'Audio mono';
 
   @override
@@ -4973,6 +5020,15 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get refreshTooltip => 'Aggiorna';
+
+  @override
+  String get openNowPlayingTooltip => 'Open Now Playing';
+
+  @override
+  String get previousChapterTooltip => 'Previous chapter';
+
+  @override
+  String get nextChapterTooltip => 'Next chapter';
 
   @override
   String get noBooksFound => 'Nessun libro trovato';
@@ -7170,6 +7226,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get upcomingReleasesBadgeNew => 'NUOVO';
+
+  @override
+  String get upcomingReleasesOpenSeries => 'Open series on Audible';
 
   @override
   String get upcomingReleasesOpenLibrarySeries =>
@@ -14105,6 +14164,180 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get boEmailNoCopy =>
       'Impossibile creare una copia senza la narrazione.';
+
+  @override
+  String get boForgotLink => 'Forgot password?';
+
+  @override
+  String get boForgotTitle => 'Reset your password';
+
+  @override
+  String get boForgotBody =>
+      'Enter the email on your account and the server will send you a link to choose a new password.';
+
+  @override
+  String get boForgotSend => 'Send link';
+
+  @override
+  String get boForgotSent =>
+      'If that email is on an account, a link is on its way. Open it to choose a new password, then sign in here.';
+
+  @override
+  String get boForgotNotSetUp =>
+      'This server isn\'t set up to send email. Ask whoever runs it for a password link.';
+
+  @override
+  String get boForgotTooMany => 'Too many tries. Wait a while and try again.';
+
+  @override
+  String get boActivityTitle => 'Reading activity';
+
+  @override
+  String get boActivityPrivate => 'Keeps their reading activity private';
+
+  @override
+  String get boActivitySharesSummary =>
+      'Shares a summary. They can see when you view it.';
+
+  @override
+  String get boActivitySharesDetails =>
+      'Shares details, including books. They can see when you view it.';
+
+  @override
+  String get boActivityNotice => 'This person can see that you viewed this.';
+
+  @override
+  String get boActivityNowPrivate =>
+      'This person isn\'t sharing their reading activity anymore.';
+
+  @override
+  String get boActivityLoadFailed => 'Couldn\'t load reading activity.';
+
+  @override
+  String get boActivityEmpty => 'No reading in this period';
+
+  @override
+  String get boActivityReadingTime => 'Reading time';
+
+  @override
+  String get boActivitySessions => 'Sessions';
+
+  @override
+  String get boActivityActiveDays => 'Active days';
+
+  @override
+  String get boActivityStarted => 'Books started';
+
+  @override
+  String get boActivityFinished => 'Books finished';
+
+  @override
+  String get boActivityTrend => 'Daily reading';
+
+  @override
+  String get boActivitySources => 'Read on';
+
+  @override
+  String get boActivityFormats => 'Formats';
+
+  @override
+  String get boActivityGenres => 'Genres';
+
+  @override
+  String get boActivityTopBooks => 'Most read';
+
+  @override
+  String get boActivityRecentBooks => 'Recently read';
+
+  @override
+  String get boActivityTopAuthors => 'Top authors';
+
+  @override
+  String get boActivityTopGenres => 'Top genres';
+
+  @override
+  String get boActivityTopSeries => 'Top series';
+
+  @override
+  String get boActivityTopNarrators => 'Top narrators';
+
+  @override
+  String get boActivityUntitled => 'Untitled book';
+
+  @override
+  String get boActivitySourceWeb => 'Web reader';
+
+  @override
+  String get boActivitySourceIos => 'iOS app';
+
+  @override
+  String get boActivitySourceWatch => 'Apple Watch';
+
+  @override
+  String get boActivitySourceAndroid => 'Android app';
+
+  @override
+  String get boActivitySourceManual => 'Manual';
+
+  @override
+  String get boActivitySourceUnknown => 'Unknown';
+
+  @override
+  String get boActivityGenreSciFi => 'Science fiction';
+
+  @override
+  String get boActivityGenreFantasy => 'Fantasy';
+
+  @override
+  String get boActivityGenreMystery => 'Mystery and thriller';
+
+  @override
+  String get boActivityGenreRomance => 'Romance';
+
+  @override
+  String get boActivityGenreHorror => 'Horror';
+
+  @override
+  String get boActivityGenreHistory => 'History and biography';
+
+  @override
+  String get boActivityGenreScience => 'Science and technology';
+
+  @override
+  String get boActivityGenreBusiness => 'Business and economics';
+
+  @override
+  String get boActivityGenreSelf => 'Self-development';
+
+  @override
+  String get boActivityGenreSociety => 'Society and culture';
+
+  @override
+  String get boActivityGenreChildren => 'Children and young adult';
+
+  @override
+  String get boActivityGenreComics => 'Comics and graphic novels';
+
+  @override
+  String get boActivityGenrePoetry => 'Poetry';
+
+  @override
+  String get boActivityGenreOther => 'Other';
+
+  @override
+  String boActivityDays(int count) {
+    return '$count days';
+  }
+
+  @override
+  String boActivityMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String boActivityHours(double count) {
+    return '$count h';
+  }
 
   @override
   String get recentSearchesTitle => 'Ricerche recenti';

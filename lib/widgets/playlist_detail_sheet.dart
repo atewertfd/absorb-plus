@@ -2,11 +2,14 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../services/player_settings.dart';
+import '../services/progress_sync_service.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'overlay_toast.dart';
 import 'absorb_placement.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart'
+    show ImageRenderMethodForWeb;
 import '../l10n/app_localizations.dart';
 import 'cover_badges.dart';
 import '../services/wording.dart';
@@ -153,8 +156,11 @@ class _PlaylistDetailSheetState extends State<PlaylistDetailSheet> {
 
       if (episodeId != null) {
         if (finished) {
-          await api.updateEpisodeProgress(libraryItemId, episodeId,
+          final pushed = await api.updateEpisodeProgress(libraryItemId, episodeId,
             currentTime: duration, duration: duration, isFinished: true);
+          if (!pushed) {
+            await ProgressSyncService().saveFinishedOffline('$libraryItemId-$episodeId', duration);
+          }
           lib.markFinishedLocally('$libraryItemId-$episodeId', skipAutoAdvance: true);
         } else {
           final pd = lib.getProgressData('$libraryItemId-$episodeId');
@@ -165,7 +171,11 @@ class _PlaylistDetailSheetState extends State<PlaylistDetailSheet> {
         }
       } else {
         if (finished) {
-          await api.markFinished(libraryItemId, duration);
+          try {
+            await api.markFinished(libraryItemId, duration);
+          } catch (_) {
+            await ProgressSyncService().saveFinishedOffline(libraryItemId, duration);
+          }
           lib.markFinishedLocally(libraryItemId, skipAutoAdvance: true);
         } else {
           final pd = lib.getProgressData(libraryItemId);
@@ -669,7 +679,7 @@ class _PlaylistDetailSheetState extends State<PlaylistDetailSheet> {
                               ? (isLocalCoverPath(coverUrl)
                                   ? Image.file(File(coverUrl), fit: BoxFit.cover,
                                       errorBuilder: (_, __, ___) => _placeholder(cs))
-                                  : CachedNetworkImage(
+                                  : CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                                       imageUrl: coverUrl, fit: BoxFit.cover,
                                       httpHeaders: lib.mediaHeaders,
                                       placeholder: (_, __) => _placeholder(cs),
@@ -773,7 +783,7 @@ class _PlaylistDetailSheetState extends State<PlaylistDetailSheet> {
                           ? (isLocalCoverPath(coverUrl)
                               ? Image.file(File(coverUrl), fit: BoxFit.cover,
                                   errorBuilder: (_, __, ___) => _placeholder(cs))
-                              : CachedNetworkImage(
+                              : CachedNetworkImage(imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet, 
                                   imageUrl: coverUrl, fit: BoxFit.cover,
                                   httpHeaders: lib.mediaHeaders,
                                   placeholder: (_, __) => _placeholder(cs),

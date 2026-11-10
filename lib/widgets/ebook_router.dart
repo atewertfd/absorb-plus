@@ -42,6 +42,7 @@ Future<void> openHighlightInReader(
   required String itemId,
   required String cfi,
   String? title,
+  bool playNarration = false,
 }) async {
   final l = AppLocalizations.of(context)!;
   final api = context.read<AuthProvider>().apiService;
@@ -70,6 +71,7 @@ Future<void> openHighlightInReader(
     title: title ?? '',
     ebookFile: ebookFile,
     openAtCfi: cfi,
+    playFromOpenCfi: playNarration,
   );
 }
 
@@ -89,6 +91,7 @@ Future<void> openEbookReader(
   double? findPositionSeconds,
   double? openAtAudioSeconds,
   bool startReadAlong = false,
+  bool playFromOpenCfi = false,
 }) async {
   final ext = ForkPlatform.canOpenEbookFormat(ebookExt(ebookFile)) ? ebookExt(ebookFile) : ''; // '' shows 'unsupported'
   final Widget viewer;
@@ -101,7 +104,7 @@ Future<void> openEbookReader(
           itemId: itemId, title: title, ebookFile: file, openAtCfi: openAtCfi,
           findText: findText, findChapterHint: findChapterHint,
           findPositionSeconds: findPositionSeconds, openAtAudioSeconds: openAtAudioSeconds,
-          startReadAlong: startReadAlong),
+          startReadAlong: startReadAlong, playFromOpenCfi: playFromOpenCfi),
     );
   } else if (comicEbookFormats.contains(ext)) {
     viewer = ComicReaderView(itemId: itemId, title: title, ebookFile: ebookFile);

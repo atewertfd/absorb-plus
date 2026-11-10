@@ -36,7 +36,7 @@
   "whatsNewKeepShowing": "Show this after every update",
   "whatsNewKeepShowingHint": "You can turn it back on in Settings",
   "settingsWhatsNew": "Show what's new after updates",
-  "settingsWhatsNewSubtitle": "After an update, show what's new in the app",
+  "settingsWhatsNewSubtitle": "After Absorb updates, a popup links to the release notes",
   "gotIt": "Got it",
   "betaLoggingTitle": "Logs are on",
   "betaLoggingContent": "Since this is a beta, Absorb now keeps logs to help track down problems. They stay on this device unless you share them.\n\nYou can send them or turn them off in Settings, under Issues & Support. If you turn them off, later betas leave them off.",
@@ -320,6 +320,7 @@
   "absorbingTitle": "Absorbing",
   "absorbingStop": "Stop",
   "absorbingManageQueue": "Manage Queue",
+  "desktopAbsorbingQueueHint": "Use Add to Absorbing on a book or episode to put it here. Items play in this order.",
   "absorbingDone": "Done",
   "absorbingNoDownloadedEpisodes": "No downloaded episodes",
   "absorbingNoDownloadedBooks": "No downloaded books",
@@ -736,7 +737,7 @@
   "fullBookScrubber": "Full book scrubber",
   "fullBookScrubberOnSubtitle": "On - seekable slider across entire book",
   "fullBookScrubberOffSubtitle": "Off - progress bar only",
-  "cardScrubbers": "Card scrubbers",
+  "cardScrubbers": "Progress bars",
   "cardScrubbersBoth": "Both",
   "cardScrubbersChapter": "Chapter",
   "cardScrubbersLocked": "Locked",
@@ -754,17 +755,17 @@
   "whenAbsorbedSubtitle": "What happens to the absorbing card when a book or episode finishes",
   "whenAbsorbedShowOverlay": "Show Overlay",
   "whenAbsorbedAutoRelease": "Auto-release",
-  "mergeLibraries": "Unified Absorbing page",
-  "mergeLibrariesInfoTitle": "Unified Absorbing Page",
-  "mergeLibrariesInfoContent": "When enabled, the Absorbing screen shows all your in-progress books and podcasts from every library in a single view. When disabled, only items from the library you currently have selected are shown.",
-  "mergeLibrariesOnSubtitle": "Absorbing page shows items from all libraries",
-  "mergeLibrariesOffSubtitle": "Absorbing page shows current library only",
+  "mergeLibraries": "Unified Absorbing",
+  "mergeLibrariesInfoTitle": "Unified Absorbing",
+  "mergeLibrariesInfoContent": "When enabled, Absorbing shows and queues books and podcast episodes from every library together. When disabled, the page and Manual queue stay within the current library or media type.",
+  "mergeLibrariesOnSubtitle": "Show and queue items from all libraries together",
+  "mergeLibrariesOffSubtitle": "Keep the page and Manual queue in the current library",
   "queueMode": "Queue mode",
   "queueModeInfoTitle": "Queue Mode",
   "queueModeInfoOff": "Off",
   "queueModeInfoOffDesc": "Playback stops when the current book or episode finishes.",
   "queueModeInfoManual": "Manual Queue",
-  "queueModeInfoManualDesc": "Your absorbing cards act as a playlist. When one finishes, the next non-finished card auto-plays. Add items with the \"Add to Absorbing\" button on a book or episode and reorder from the absorbing screen.",
+  "queueModeInfoManualDesc": "Items in Absorbing are your manual queue. When one finishes, the next unfinished item plays. Use Add to Absorbing on a book or episode, then reorder it in the Queue panel.",
   "queueModeOff": "Off",
   "queueModeManual": "Manual",
   "queueModeAuto": "Auto",
@@ -845,6 +846,10 @@
   "currentLibrarySkipOverride": "Custom skip amounts",
   "currentLibrarySkipOverrideOnSubtitle": "On - this library uses its own skip amounts",
   "currentLibrarySkipOverrideOffSubtitle": "Off - this library uses the global skip amounts",
+  "currentLibrarySpeedOverride": "Custom default speed",
+  "currentLibrarySpeedOverrideOnSubtitle": "On - new items in this library start at their own speed",
+  "currentLibrarySpeedOverrideOffSubtitle": "Off - new items in this library start at the global default speed",
+  "currentLibrarySpeed": "Default speed",
   "currentLibrarySkipBack": "Skip back",
   "currentLibrarySkipForward": "Skip forward",
   "chapterProgressInNotification": "Chapter progress in notification & Android Auto",
@@ -852,6 +857,9 @@
   "chapterProgressOffSubtitle": "Off - they show full book progress",
   "chapterProgressInNotificationIos": "Chapter progress on lock screen & CarPlay",
   "chapterProgressOnSubtitleIos": "On - lock screen & CarPlay show chapter progress",
+  "chapterProgressInNowPlayingBar": "Chapter progress in now playing bar",
+  "chapterProgressInNowPlayingBarOnSubtitle": "On - the bottom player shows current chapter progress",
+  "chapterProgressInNowPlayingBarOffSubtitle": "Off - the bottom player shows full book progress",
   "nowPlayingText": "Now playing text",
   "nowPlayingTextSubtitle": "Choose what the media controls show on each line",
   "nowPlayingTopLine": "Top line",
@@ -1657,6 +1665,9 @@
   "hideEbookOnlyTitles": "Hide eBook-only titles",
   "hideEbookOnlyOnSubtitle": "Books with no audio files are hidden",
   "hideEbookOnlyOffSubtitle": "Off - all library items shown",
+  "audibleRatings": "Audible ratings",
+  "audibleRatingsOnSubtitle": "On - book details show the Audible rating",
+  "audibleRatingsOffSubtitle": "Off - no Audible lookup or stars",
   "homeCardsOpenDetails": "Open details from Home",
   "homeCardsOpenDetailsOnSubtitle": "Tapping a Continue Listening or Continue Reading card opens its details",
   "homeCardsOpenDetailsOffSubtitle": "Tapping a Continue Listening or Continue Reading card picks up where you left off",
@@ -1678,13 +1689,13 @@
   "contact": "Contact",
   "contactSubtitle": "Send device info via email",
   "enableLogging": "Enable logging",
-  "enableLoggingOnSubtitle": "On - logs saved to file (restart to apply)",
+  "enableLoggingOnSubtitle": "On - logs are being captured (restart to apply)",
   "enableLoggingOffSubtitle": "Off - no logs captured",
   "loggingEnabledSnackbar": "Logging enabled - restart app to start capturing",
   "loggingDisabledSnackbar": "Logging disabled - restart app to stop capturing",
-  "sendLogs": "Send logs",
-  "sendLogsSubtitle": "Share log file as attachment",
-  "failedToShare": "Failed to share: {error}",
+  "sendLogs": "Export logs",
+  "sendLogsSubtitle": "Download or share the .txt log file",
+  "failedToShare": "Failed to export: {error}",
   "@failedToShare": {
     "placeholders": {
       "error": {
@@ -2252,6 +2263,7 @@
   "markAsFullyAbsorbedContent": "This will set your progress to 100% and stop playback if this book is playing.",
   "markedAsFinishedNiceWork": "Marked as finished - nice work!",
   "failedToUpdateCheckConnection": "Failed to update - check your connection",
+  "markedFinishedWillSync": "Marked as finished - will sync when you're back online",
   "markAsNotFinishedQuestion": "Mark as Not Finished?",
   "markAsNotFinishedContent": "This will clear the finished status and put your position back at the start.",
   "unmark": "Unmark",
@@ -2416,6 +2428,7 @@
   "bassBoost": "Bass Boost",
   "surround": "Surround",
   "loudness": "Loudness",
+  "pitch": "Pitch",
   "monoAudio": "Mono Audio",
   "skipSilence": "Skip Silence",
   "resetAll": "Reset All",
@@ -2477,7 +2490,7 @@
   "disconnect": "Disconnect",
   "audioOutput": "Audio Output",
   "noOutputDevicesFound": "No output devices found",
-  "welcomeToAbsorb": "Welcome to Absorb Plus",
+  "welcomeToAbsorb": "Welcome to Absorb",
   "welcomeTagline": "An Audiobookshelf client.",
   "welcomeAbsorbingTitle": "Absorbing",
   "welcomeAbsorbingIntro": "We use \"absorb\" in place of \"play\" and \"listen\". Prefer the classic wording? Switch it in Settings.",
@@ -2501,6 +2514,9 @@
   "selectLibrary": "Select Library",
   "switchLibraryTooltip": "Switch library",
   "refreshTooltip": "Refresh",
+  "openNowPlayingTooltip": "Open Now Playing",
+  "previousChapterTooltip": "Previous chapter",
+  "nextChapterTooltip": "Next chapter",
   "noBooksFound": "No books found",
   "userFallback": "User",
   "rootAdmin": "Root Admin",
@@ -4055,6 +4071,7 @@
     }
   },
   "upcomingReleasesBadgeNew": "NEW",
+  "upcomingReleasesOpenSeries": "Open series on Audible",
   "upcomingReleasesOpenLibrarySeries": "Open series in library",
   "upcomingReleasesAsinCopied": "Series ASIN copied",
   "upcomingReleasesSetSeriesAsin": "Set series ASIN",
@@ -7413,6 +7430,63 @@
   "boEmailSendStillGoing": "Still sending. You'll get a notification when it's done.",
   "boEmailKindleOriginal": "A Kindle can't take the narrated copy. Set it to text only.",
   "boEmailNoCopy": "Couldn't make a copy without the narration.",
+  "boForgotLink": "Forgot password?",
+  "boForgotTitle": "Reset your password",
+  "boForgotBody": "Enter the email on your account and the server will send you a link to choose a new password.",
+  "boForgotSend": "Send link",
+  "boForgotSent": "If that email is on an account, a link is on its way. Open it to choose a new password, then sign in here.",
+  "boForgotNotSetUp": "This server isn't set up to send email. Ask whoever runs it for a password link.",
+  "boForgotTooMany": "Too many tries. Wait a while and try again.",
+  "boActivityTitle": "Reading activity",
+  "boActivityPrivate": "Keeps their reading activity private",
+  "boActivitySharesSummary": "Shares a summary. They can see when you view it.",
+  "boActivitySharesDetails": "Shares details, including books. They can see when you view it.",
+  "boActivityNotice": "This person can see that you viewed this.",
+  "boActivityNowPrivate": "This person isn't sharing their reading activity anymore.",
+  "boActivityLoadFailed": "Couldn't load reading activity.",
+  "boActivityEmpty": "No reading in this period",
+  "boActivityReadingTime": "Reading time",
+  "boActivitySessions": "Sessions",
+  "boActivityActiveDays": "Active days",
+  "boActivityStarted": "Books started",
+  "boActivityFinished": "Books finished",
+  "boActivityTrend": "Daily reading",
+  "boActivitySources": "Read on",
+  "boActivityFormats": "Formats",
+  "boActivityGenres": "Genres",
+  "boActivityTopBooks": "Most read",
+  "boActivityRecentBooks": "Recently read",
+  "boActivityTopAuthors": "Top authors",
+  "boActivityTopGenres": "Top genres",
+  "boActivityTopSeries": "Top series",
+  "boActivityTopNarrators": "Top narrators",
+  "boActivityUntitled": "Untitled book",
+  "boActivitySourceWeb": "Web reader",
+  "boActivitySourceIos": "iOS app",
+  "boActivitySourceWatch": "Apple Watch",
+  "boActivitySourceAndroid": "Android app",
+  "boActivitySourceManual": "Manual",
+  "boActivitySourceUnknown": "Unknown",
+  "boActivityGenreSciFi": "Science fiction",
+  "boActivityGenreFantasy": "Fantasy",
+  "boActivityGenreMystery": "Mystery and thriller",
+  "boActivityGenreRomance": "Romance",
+  "boActivityGenreHorror": "Horror",
+  "boActivityGenreHistory": "History and biography",
+  "boActivityGenreScience": "Science and technology",
+  "boActivityGenreBusiness": "Business and economics",
+  "boActivityGenreSelf": "Self-development",
+  "boActivityGenreSociety": "Society and culture",
+  "boActivityGenreChildren": "Children and young adult",
+  "boActivityGenreComics": "Comics and graphic novels",
+  "boActivityGenrePoetry": "Poetry",
+  "boActivityGenreOther": "Other",
+  "boActivityDays": "{count} days",
+  "@boActivityDays": {"placeholders": {"count": {"type": "int"}}},
+  "boActivityMinutes": "{count} min",
+  "@boActivityMinutes": {"placeholders": {"count": {"type": "int"}}},
+  "boActivityHours": "{count} h",
+  "@boActivityHours": {"placeholders": {"count": {"type": "double"}}},
   "recentSearchesTitle": "Recent searches",
   "recentSearchesClear": "Clear",
   "recentSearchesRemove": "Remove",
@@ -8328,9 +8402,13 @@
     }
   },
   "remoteLockScreenControls": "Show controls on the lock screen",
-  "@remoteLockScreenControls": {"description": "Phone remote: menu switch. While connected and the phone itself isn't playing, the notification, lock screen and earbud buttons control the PC."},
+  "@remoteLockScreenControls": {
+    "description": "Phone remote: menu switch. While connected and the phone itself isn't playing, the notification, lock screen and earbud buttons control the PC."
+  },
   "remoteMoreOptions": "More options",
-  "@remoteMoreOptions": {"description": "Phone remote: tooltip of the app bar menu."},
+  "@remoteMoreOptions": {
+    "description": "Phone remote: tooltip of the app bar menu."
+  },
   "remoteHostBrowserAddress": "Or open {url} in any browser on the same Wi-Fi (iPhone, tablet, laptop) and type the code there.",
   "@remoteHostBrowserAddress": {
     "description": "Phone remote, PC sheet: the address of the browser remote the PC serves (plain http on the local network).",
@@ -8341,82 +8419,156 @@
     }
   },
   "remoteHostBrowserDevice": "Web browser",
-  "@remoteHostBrowserDevice": {"description": "Phone remote, PC sheet: tooltip of the icon for a device that paired from a web browser."},
+  "@remoteHostBrowserDevice": {
+    "description": "Phone remote, PC sheet: tooltip of the icon for a device that paired from a web browser."
+  },
   "remoteCustomize": "Customize",
-  "@remoteCustomize": {"description": "Phone remote: app bar button that opens edit mode for the screen's layout."},
+  "@remoteCustomize": {
+    "description": "Phone remote: app bar button that opens edit mode for the screen's layout."
+  },
   "remoteCustomizeTitle": "Customize the remote",
-  "@remoteCustomizeTitle": {"description": "Phone remote: app bar title while editing the layout."},
+  "@remoteCustomizeTitle": {
+    "description": "Phone remote: app bar title while editing the layout."
+  },
   "remoteCustomizeHintPortrait": "Editing the portrait layout. Drag a block by its handle, or hold it, to move it. Turn the phone to edit landscape.",
   "remoteCustomizeHintLandscape": "Editing the landscape layout. Drag blocks within or between the two columns. Turn the phone to edit portrait.",
   "remoteCustomizeReset": "Reset to default",
-  "@remoteCustomizeReset": {"description": "Phone remote edit mode: puts back the default layout for the orientation being edited."},
+  "@remoteCustomizeReset": {
+    "description": "Phone remote edit mode: puts back the default layout for the orientation being edited."
+  },
   "remoteCustomizePresets": "Presets",
-  "@remoteCustomizePresets": {"description": "Phone remote edit mode: menu of ready-made layouts."},
+  "@remoteCustomizePresets": {
+    "description": "Phone remote edit mode: menu of ready-made layouts."
+  },
   "remoteCustomizeAddTitle": "Add to the screen",
-  "@remoteCustomizeAddTitle": {"description": "Phone remote edit mode: title of the sheet listing blocks that are not on the screen."},
+  "@remoteCustomizeAddTitle": {
+    "description": "Phone remote edit mode: title of the sheet listing blocks that are not on the screen."
+  },
   "remoteCustomizeDropHere": "Drop blocks here",
-  "@remoteCustomizeDropHere": {"description": "Phone remote edit mode: an empty landscape column."},
+  "@remoteCustomizeDropHere": {
+    "description": "Phone remote edit mode: an empty landscape column."
+  },
   "remoteCustomizeMove": "Drag to move",
-  "@remoteCustomizeMove": {"description": "Tooltip on a block's drag handle in the phone remote's edit mode."},
+  "@remoteCustomizeMove": {
+    "description": "Tooltip on a block's drag handle in the phone remote's edit mode."
+  },
   "remoteCustomizeEmpty": "Nothing on this screen. Tap Customize to add controls.",
-  "@remoteCustomizeEmpty": {"description": "Phone remote: the layout has no blocks."},
+  "@remoteCustomizeEmpty": {
+    "description": "Phone remote: the layout has no blocks."
+  },
   "remotePresetDefault": "Default",
-  "@remotePresetDefault": {"description": "Phone remote layout preset: the standard screen."},
+  "@remotePresetDefault": {
+    "description": "Phone remote layout preset: the standard screen."
+  },
   "remotePresetMinimal": "Minimal",
-  "@remotePresetMinimal": {"description": "Phone remote layout preset: title, progress and playback buttons."},
+  "@remotePresetMinimal": {
+    "description": "Phone remote layout preset: title, progress and playback buttons."
+  },
   "remotePresetNightstand": "Nightstand",
-  "@remotePresetNightstand": {"description": "Phone remote layout preset: big cover, clock and time left."},
+  "@remotePresetNightstand": {
+    "description": "Phone remote layout preset: big cover, clock and time left."
+  },
   "remotePresetFull": "Full",
-  "@remotePresetFull": {"description": "Phone remote layout preset: every control."},
+  "@remotePresetFull": {
+    "description": "Phone remote layout preset: every control."
+  },
   "remoteBlockCover": "Cover",
-  "@remoteBlockCover": {"description": "Phone remote layout block name."},
+  "@remoteBlockCover": {
+    "description": "Phone remote layout block name."
+  },
   "remoteBlockTitle": "Title and author",
-  "@remoteBlockTitle": {"description": "Phone remote layout block name."},
+  "@remoteBlockTitle": {
+    "description": "Phone remote layout block name."
+  },
   "remoteBlockChapterTitle": "Chapter title",
-  "@remoteBlockChapterTitle": {"description": "Phone remote layout block name."},
+  "@remoteBlockChapterTitle": {
+    "description": "Phone remote layout block name."
+  },
   "remoteBlockProgress": "Progress bar",
-  "@remoteBlockProgress": {"description": "Phone remote layout block name."},
+  "@remoteBlockProgress": {
+    "description": "Phone remote layout block name."
+  },
   "remoteBlockTimeLeft": "Time left",
-  "@remoteBlockTimeLeft": {"description": "Phone remote layout block name."},
+  "@remoteBlockTimeLeft": {
+    "description": "Phone remote layout block name."
+  },
   "remoteBlockTransport": "Playback buttons",
-  "@remoteBlockTransport": {"description": "Phone remote layout block name: previous/next chapter, skip back/forward, play/pause."},
+  "@remoteBlockTransport": {
+    "description": "Phone remote layout block name: previous/next chapter, skip back/forward, play/pause."
+  },
   "remoteBlockClock": "Clock",
-  "@remoteBlockClock": {"description": "Phone remote layout block name."},
+  "@remoteBlockClock": {
+    "description": "Phone remote layout block name."
+  },
   "remoteBlockSpacer": "Space",
-  "@remoteBlockSpacer": {"description": "Phone remote layout block name: empty space between blocks."},
+  "@remoteBlockSpacer": {
+    "description": "Phone remote layout block name: empty space between blocks."
+  },
   "remoteSizeSmall": "Small",
-  "@remoteSizeSmall": {"description": "Phone remote block size."},
+  "@remoteSizeSmall": {
+    "description": "Phone remote block size."
+  },
   "remoteSizeMedium": "Medium",
-  "@remoteSizeMedium": {"description": "Phone remote block size."},
+  "@remoteSizeMedium": {
+    "description": "Phone remote block size."
+  },
   "remoteSizeLarge": "Large",
-  "@remoteSizeLarge": {"description": "Phone remote block size; also a display mode text size."},
+  "@remoteSizeLarge": {
+    "description": "Phone remote block size; also a display mode text size."
+  },
   "remoteSizeCompact": "Compact",
-  "@remoteSizeCompact": {"description": "Phone remote block size."},
+  "@remoteSizeCompact": {
+    "description": "Phone remote block size."
+  },
   "remoteSizeNormal": "Normal",
-  "@remoteSizeNormal": {"description": "Phone remote block size; also a display mode text size."},
+  "@remoteSizeNormal": {
+    "description": "Phone remote block size; also a display mode text size."
+  },
   "remoteDisplayBackground": "Background",
-  "@remoteDisplayBackground": {"description": "Phone remote display mode option."},
+  "@remoteDisplayBackground": {
+    "description": "Phone remote display mode option."
+  },
   "remoteDisplayBackgroundTheme": "Theme",
-  "@remoteDisplayBackgroundTheme": {"description": "Display mode background: the app's normal background."},
+  "@remoteDisplayBackgroundTheme": {
+    "description": "Display mode background: the app's normal background."
+  },
   "remoteDisplayBackgroundCover": "Blurred cover",
-  "@remoteDisplayBackgroundCover": {"description": "Display mode background choice."},
+  "@remoteDisplayBackgroundCover": {
+    "description": "Display mode background choice."
+  },
   "remoteDisplayBackgroundBlack": "Black",
-  "@remoteDisplayBackgroundBlack": {"description": "Display mode background choice."},
+  "@remoteDisplayBackgroundBlack": {
+    "description": "Display mode background choice."
+  },
   "remoteDisplayTextSize": "Text size",
-  "@remoteDisplayTextSize": {"description": "Phone remote display mode option."},
+  "@remoteDisplayTextSize": {
+    "description": "Phone remote display mode option."
+  },
   "remoteDisplayTextHuge": "Huge",
-  "@remoteDisplayTextHuge": {"description": "Display mode text size choice."},
+  "@remoteDisplayTextHuge": {
+    "description": "Display mode text size choice."
+  },
   "remoteDisplay24Hour": "24-hour clock",
-  "@remoteDisplay24Hour": {"description": "Phone remote display mode option; off follows the phone's setting."},
+  "@remoteDisplay24Hour": {
+    "description": "Phone remote display mode option; off follows the phone's setting."
+  },
   "remoteDisplayDim": "Dim the screen after",
-  "@remoteDisplayDim": {"description": "Phone remote display mode option, followed by Never / 5 minutes / ..."},
+  "@remoteDisplayDim": {
+    "description": "Phone remote display mode option, followed by Never / 5 minutes / ..."
+  },
   "remoteDisplayDimNever": "Never",
-  "@remoteDisplayDimNever": {"description": "Display mode dim choice."},
+  "@remoteDisplayDimNever": {
+    "description": "Display mode dim choice."
+  },
   "remoteFullScreen": "Full screen",
-  "@remoteFullScreen": {"description": "Phone remote: shows the same layout without the app bar and system bars, keeping the screen on."},
+  "@remoteFullScreen": {
+    "description": "Phone remote: shows the same layout without the app bar and system bars, keeping the screen on."
+  },
   "remoteFullScreenHint": "Tap empty space to exit full screen",
   "remoteBlockOptions": "Options",
-  "@remoteBlockOptions": {"description": "Phone remote edit mode: opens a block's own options."},
+  "@remoteBlockOptions": {
+    "description": "Phone remote edit mode: opens a block's own options."
+  },
   "remoteOptSize": "Size",
   "remoteOptAlign": "Alignment",
   "remoteOptAlignLeft": "Left",
@@ -8432,10 +8584,14 @@
   "remoteOptShadow": "Shadow",
   "remoteOptLines": "Lines",
   "remoteOptTime": "Time on the right",
-  "@remoteOptTime": {"description": "Phone remote progress bar option: show the time left or the total length on the right."},
+  "@remoteOptTime": {
+    "description": "Phone remote progress bar option: show the time left or the total length on the right."
+  },
   "remoteOptTimeTotal": "Total length",
   "remoteOptSpan": "Range",
-  "@remoteOptSpan": {"description": "Phone remote option: whether the bar or time counts the chapter or the whole book."},
+  "@remoteOptSpan": {
+    "description": "Phone remote option: whether the bar or time counts the chapter or the whole book."
+  },
   "remoteOptSpanChapter": "Chapter",
   "remoteOptSpanBook": "Whole book",
   "remoteOptButtons": "Buttons",
@@ -8447,7 +8603,9 @@
   "remoteOptStyleSlider": "Slider",
   "remoteOptStyleButtons": "− and + buttons",
   "remoteOptPresets": "Choices",
-  "@remoteOptPresets": {"description": "Phone remote speed or sleep timer option: which choices its picker shows."},
+  "@remoteOptPresets": {
+    "description": "Phone remote speed or sleep timer option: which choices its picker shows."
+  },
   "remoteOptHours": "Clock format",
   "remoteOptHoursPhone": "Phone setting",
   "remoteOpt12Hour": "12-hour clock",
@@ -8455,7 +8613,9 @@
   "remoteVolumeDown": "Volume down",
   "remoteVolumeUp": "Volume up",
   "remoteLook": "Look",
-  "@remoteLook": {"description": "Phone remote edit mode: the whole remote's colours, background, buttons and text size."},
+  "@remoteLook": {
+    "description": "Phone remote edit mode: the whole remote's colours, background, buttons and text size."
+  },
   "remoteLookAccent": "Accent color",
   "remoteLookAccentCover": "From cover",
   "remoteLookAccentTheme": "App theme",
@@ -8612,113 +8772,259 @@
     }
   },
   "sameSpeedAllBooksTitle": "Same speed for every book",
-  "@sameSpeedAllBooksTitle": {"description": "Settings > Playback switch: all books use the default speed instead of each remembering its own."},
+  "@sameSpeedAllBooksTitle": {
+    "description": "Settings > Playback switch: all books use the default speed instead of each remembering its own."
+  },
   "sameSpeedAllBooksSubtitle": "Every book plays at the default speed, and changing the speed in the player changes it for all books. Off: each book (or its series) keeps its own speed.",
-  "@sameSpeedAllBooksSubtitle": {"description": "Explains the Same speed for every book switch."},
+  "@sameSpeedAllBooksSubtitle": {
+    "description": "Explains the Same speed for every book switch."
+  },
   "setupStepOf": "Step {current} of {total}",
-  "@setupStepOf": {"description": "First-run setup: progress above each page.", "placeholders": {"current": {"type": "int"}, "total": {"type": "int"}}},
+  "@setupStepOf": {
+    "description": "First-run setup: progress above each page.",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "setupNext": "Next",
-  "@setupNext": {"description": "First-run setup: go to the next page."},
+  "@setupNext": {
+    "description": "First-run setup: go to the next page."
+  },
   "setupBack": "Back",
-  "@setupBack": {"description": "First-run setup: go to the previous page."},
+  "@setupBack": {
+    "description": "First-run setup: go to the previous page."
+  },
   "setupSkip": "Skip",
-  "@setupSkip": {"description": "First-run setup: leave an optional page as it is and go on."},
+  "@setupSkip": {
+    "description": "First-run setup: leave an optional page as it is and go on."
+  },
   "setupWelcomeBody": "Listen to the audiobooks and podcasts on your own Audiobookshelf server. A few quick steps and you're in.",
-  "@setupWelcomeBody": {"description": "First-run setup: the one line on the Welcome page."},
+  "@setupWelcomeBody": {
+    "description": "First-run setup: the one line on the Welcome page."
+  },
   "setupConnectTitle": "Connect to your server",
-  "@setupConnectTitle": {"description": "First-run setup: title of the sign-in page once signed in."},
+  "@setupConnectTitle": {
+    "description": "First-run setup: title of the sign-in page once signed in."
+  },
   "setupSignedInAs": "Signed in as {user}",
-  "@setupSignedInAs": {"description": "First-run setup: the account in use.", "placeholders": {"user": {"type": "String"}}},
+  "@setupSignedInAs": {
+    "description": "First-run setup: the account in use.",
+    "placeholders": {
+      "user": {
+        "type": "String"
+      }
+    }
+  },
   "setupLookIntro": "Tap a look or a color to use it right away.",
-  "@setupLookIntro": {"description": "First-run setup: under the look page title."},
+  "@setupLookIntro": {
+    "description": "First-run setup: under the look page title."
+  },
   "setupListeningTitle": "Listening",
-  "@setupListeningTitle": {"description": "First-run setup: playback basics page title."},
+  "@setupListeningTitle": {
+    "description": "First-run setup: playback basics page title."
+  },
   "setupListeningIntro": "The basics. Settings > Playback has the rest.",
-  "@setupListeningIntro": {"description": "First-run setup: under the listening page title."},
+  "@setupListeningIntro": {
+    "description": "First-run setup: under the listening page title."
+  },
   "setupDownloadsTitle": "Downloads",
-  "@setupDownloadsTitle": {"description": "First-run setup: downloads page title."},
+  "@setupDownloadsTitle": {
+    "description": "First-run setup: downloads page title."
+  },
   "setupDownloadsIntro": "Download books to listen without a connection.",
-  "@setupDownloadsIntro": {"description": "First-run setup: under the downloads page title."},
+  "@setupDownloadsIntro": {
+    "description": "First-run setup: under the downloads page title."
+  },
   "setupPermissionsTitle": "Permissions",
-  "@setupPermissionsTitle": {"description": "First-run setup: Android permissions page title."},
+  "@setupPermissionsTitle": {
+    "description": "First-run setup: Android permissions page title."
+  },
   "setupPermissionsIntro": "Android asks you before Absorb can do these.",
-  "@setupPermissionsIntro": {"description": "First-run setup: under the permissions page title."},
+  "@setupPermissionsIntro": {
+    "description": "First-run setup: under the permissions page title."
+  },
   "setupAllow": "Allow",
-  "@setupAllow": {"description": "First-run setup: asks Android for one permission."},
+  "@setupAllow": {
+    "description": "First-run setup: asks Android for one permission."
+  },
   "setupAllowed": "Allowed",
-  "@setupAllowed": {"description": "First-run setup: a permission already granted."},
+  "@setupAllowed": {
+    "description": "First-run setup: a permission already granted."
+  },
   "setupDoneTitle": "You're all set",
-  "@setupDoneTitle": {"description": "First-run setup: last page title."},
+  "@setupDoneTitle": {
+    "description": "First-run setup: last page title."
+  },
   "setupDoneLater": "Change any of this later in Settings.",
-  "@setupDoneLater": {"description": "First-run setup: last page, under the summary."},
+  "@setupDoneLater": {
+    "description": "First-run setup: last page, under the summary."
+  },
   "setupDoneStart": "Start listening",
-  "@setupDoneStart": {"description": "First-run setup: finishes the setup and opens the app."},
+  "@setupDoneStart": {
+    "description": "First-run setup: finishes the setup and opens the app."
+  },
   "setupSummaryLook": "Look: {name}",
-  "@setupSummaryLook": {"description": "First-run setup summary: the chosen look.", "placeholders": {"name": {"type": "String"}}},
+  "@setupSummaryLook": {
+    "description": "First-run setup summary: the chosen look.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "setupSummarySpeed": "Default speed: {speed}x",
-  "@setupSummarySpeed": {"description": "First-run setup summary: the default speed.", "placeholders": {"speed": {"type": "String"}}},
+  "@setupSummarySpeed": {
+    "description": "First-run setup summary: the default speed.",
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
   "setupSummarySkip": "Skip back {back}s, forward {forward}s",
-  "@setupSummarySkip": {"description": "First-run setup summary: skip amounts in seconds.", "placeholders": {"back": {"type": "int"}, "forward": {"type": "int"}}},
+  "@setupSummarySkip": {
+    "description": "First-run setup summary: skip amounts in seconds.",
+    "placeholders": {
+      "back": {
+        "type": "int"
+      },
+      "forward": {
+        "type": "int"
+      }
+    }
+  },
   "setupRunAgain": "Run setup again",
-  "@setupRunAgain": {"description": "Settings > Issues & Support: opens the first-run setup again."},
+  "@setupRunAgain": {
+    "description": "Settings > Issues & Support: opens the first-run setup again."
+  },
   "setupRunAgainSubtitle": "The look, playback basics and more, step by step",
-  "@setupRunAgainSubtitle": {"description": "Subtitle of Run setup again."},
+  "@setupRunAgainSubtitle": {
+    "description": "Subtitle of Run setup again."
+  },
   "loginDesignTitle": "Sign-in screen design",
-  "@loginDesignTitle": {"description": "Settings > Appearance: opens the sign-in design preview."},
+  "@loginDesignTitle": {
+    "description": "Settings > Appearance: opens the sign-in design preview."
+  },
   "loginDesignPreviewTitle": "Preview sign-in designs",
-  "@loginDesignPreviewTitle": {"description": "Title of the sign-in design preview; also a quick switcher action."},
+  "@loginDesignPreviewTitle": {
+    "description": "Title of the sign-in design preview; also a quick switcher action."
+  },
   "loginDesignClassic": "Current",
-  "@loginDesignClassic": {"description": "Sign-in design preview: label of the current (classic) design's page."},
+  "@loginDesignClassic": {
+    "description": "Sign-in design preview: label of the current (classic) design's page."
+  },
   "loginDesignClassicName": "Classic",
-  "@loginDesignClassicName": {"description": "Settings > Appearance: the classic sign-in design is in use."},
+  "@loginDesignClassicName": {
+    "description": "Settings > Appearance: the classic sign-in design is in use."
+  },
   "loginDesignSteps": "B · Two steps",
-  "@loginDesignSteps": {"description": "Sign-in design B: server first, then the sign-in."},
+  "@loginDesignSteps": {
+    "description": "Sign-in design B: server first, then the sign-in."
+  },
   "loginDesignStepsGlass": "B2 · Glass steps",
-  "@loginDesignStepsGlass": {"description": "Sign-in design B2: the two steps on a see-through frosted panel."},
+  "@loginDesignStepsGlass": {
+    "description": "Sign-in design B2: the two steps on a see-through frosted panel."
+  },
   "loginDesignStepsDesktop": "B3 · Desktop steps",
-  "@loginDesignStepsDesktop": {"description": "Sign-in design B3: the two steps in a wide panel with a step list, for big windows."},
+  "@loginDesignStepsDesktop": {
+    "description": "Sign-in design B3: the two steps in a wide panel with a step list, for big windows."
+  },
   "loginStepLibrary": "Your library",
-  "@loginStepLibrary": {"description": "Sign-in step list, step 1: entering the server address."},
+  "@loginStepLibrary": {
+    "description": "Sign-in step list, step 1: entering the server address."
+  },
   "loginStepSignIn": "Sign in",
-  "@loginStepSignIn": {"description": "Sign-in step list, step 2: username and password."},
+  "@loginStepSignIn": {
+    "description": "Sign-in step list, step 2: username and password."
+  },
   "loginStepsKeyboardHint": "Enter to continue, Esc to go back",
-  "@loginStepsKeyboardHint": {"description": "Keyboard hint under the sign-in step list on desktop."},
+  "@loginStepsKeyboardHint": {
+    "description": "Keyboard hint under the sign-in step list on desktop."
+  },
   "loginDesignUse": "Use this design",
-  "@loginDesignUse": {"description": "Sign-in design preview: makes this design the one the app shows."},
+  "@loginDesignUse": {
+    "description": "Sign-in design preview: makes this design the one the app shows."
+  },
   "loginDesignInUse": "In use",
-  "@loginDesignInUse": {"description": "Sign-in design preview: this design is the one the app shows."},
+  "@loginDesignInUse": {
+    "description": "Sign-in design preview: this design is the one the app shows."
+  },
   "loginDesignPreviewNote": "Preview: this design would sign you in here",
-  "@loginDesignPreviewNote": {"description": "Toast in the sign-in design preview instead of signing in."},
+  "@loginDesignPreviewNote": {
+    "description": "Toast in the sign-in design preview instead of signing in."
+  },
   "loginDesignAdvancedSubtitle": "Custom headers, API key and certificates",
-  "@loginDesignAdvancedSubtitle": {"description": "Sign-in, More ways to sign in: the row that opens the full sign-in screen."},
+  "@loginDesignAdvancedSubtitle": {
+    "description": "Sign-in, More ways to sign in: the row that opens the full sign-in screen."
+  },
   "loginMoreWays": "More ways to sign in",
-  "@loginMoreWays": {"description": "Sign-in: expander holding the secondary options."},
+  "@loginMoreWays": {
+    "description": "Sign-in: expander holding the secondary options."
+  },
   "loginRecentServers": "Recent servers",
-  "@loginRecentServers": {"description": "Sign-in: label above the saved server addresses."},
+  "@loginRecentServers": {
+    "description": "Sign-in: label above the saved server addresses."
+  },
   "loginWhereIsLibrary": "Where is your library?",
-  "@loginWhereIsLibrary": {"description": "Two-step sign-in, first page title."},
+  "@loginWhereIsLibrary": {
+    "description": "Two-step sign-in, first page title."
+  },
   "loginWhereIsLibraryIntro": "Enter your server's address, the same one you open in a browser.",
-  "@loginWhereIsLibraryIntro": {"description": "Two-step sign-in, under the first page title."},
+  "@loginWhereIsLibraryIntro": {
+    "description": "Two-step sign-in, under the first page title."
+  },
   "loginContinue": "Continue",
-  "@loginContinue": {"description": "Two-step sign-in: checks the server and goes to the sign-in page."},
+  "@loginContinue": {
+    "description": "Two-step sign-in: checks the server and goes to the sign-in page."
+  },
   "loginChangeServer": "Change server",
-  "@loginChangeServer": {"description": "Two-step sign-in: back to the server address page."},
+  "@loginChangeServer": {
+    "description": "Two-step sign-in: back to the server address page."
+  },
   "loginSignInToNamed": "Sign in to {server}",
-  "@loginSignInToNamed": {"description": "Two-step sign-in, second page title.", "placeholders": {"server": {"type": "String"}}},
+  "@loginSignInToNamed": {
+    "description": "Two-step sign-in, second page title.",
+    "placeholders": {
+      "server": {
+        "type": "String"
+      }
+    }
+  },
   "loginSignInToNamedIntro": "Use the account you have on this server.",
-  "@loginSignInToNamedIntro": {"description": "Two-step sign-in, under the second page title."},
+  "@loginSignInToNamedIntro": {
+    "description": "Two-step sign-in, under the second page title."
+  },
   "quickSwitcherKeywordsLoginDesign": "login sign in screen design layout preview",
-  "@quickSwitcherKeywordsLoginDesign": {"description": "Quick switcher: extra search words for Preview sign-in designs."},
+  "@quickSwitcherKeywordsLoginDesign": {
+    "description": "Quick switcher: extra search words for Preview sign-in designs."
+  },
   "appBackgroundLabel": "Background",
-  "@appBackgroundLabel": {"description": "Settings > Appearance: the app-wide background drawn behind every screen."},
+  "@appBackgroundLabel": {
+    "description": "Settings > Appearance: the app-wide background drawn behind every screen."
+  },
   "appBackgroundGlow": "Soft glow",
-  "@appBackgroundGlow": {"description": "App background option: the accent glow at the top of the screen."},
+  "@appBackgroundGlow": {
+    "description": "App background option: the accent glow at the top of the screen."
+  },
   "appBackgroundCover": "Book colors",
-  "@appBackgroundCover": {"description": "App background option: a soft gradient from the playing book's cover colors."},
+  "@appBackgroundCover": {
+    "description": "App background option: a soft gradient from the playing book's cover colors."
+  },
   "appBackgroundGradient": "Gradient",
-  "@appBackgroundGradient": {"description": "App background option: a two-color diagonal blend of the app color."},
+  "@appBackgroundGradient": {
+    "description": "App background option: a two-color diagonal blend of the app color."
+  },
   "appBackgroundPlain": "Plain",
-  "@appBackgroundPlain": {"description": "App background option: a flat background (same as Flat background)."},
+  "@appBackgroundPlain": {
+    "description": "App background option: a flat background (same as Flat background)."
+  },
   "appBackgroundCoverHint": "Follows the cover of the book you're listening to. Soft glow while nothing is playing.",
-  "@appBackgroundCoverHint": {"description": "Settings > Appearance > Background: shown under the options when Book colors is picked."}
+  "@appBackgroundCoverHint": {
+    "description": "Settings > Appearance > Background: shown under the options when Book colors is picked."
+  }
 }

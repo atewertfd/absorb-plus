@@ -31,6 +31,11 @@ bool FlutterWindow::OnCreate() {
   // All but the in-app WebView, which follows the first frame.
   RegisterStartupPlugins(flutter_controller_->engine());
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
+  // Upstream: decodes audio windows for transcription (Media Foundation).
+  // Upstream's MediaControlsChannel (SMTC) is not created: Absorb Plus
+  // drives the media flyout through audio_service_win.
+  audio_window_channel_ = std::make_unique<AudioWindowChannel>(
+      flutter_controller_->engine()->messenger(), GetHandle());
   shell_ = std::make_unique<WindowsShell>(
       this, flutter_controller_->engine()->messenger(), launch_);
   jump_list_ = std::make_unique<JumpList>(
@@ -73,6 +78,7 @@ void FlutterWindow::OnDestroy() {
   hotkeys_ = nullptr;
   shell_ = nullptr;
   jump_list_ = nullptr;
+  audio_window_channel_ = nullptr;
   if (flutter_controller_) {
     flutter_controller_ = nullptr;
   }
@@ -116,6 +122,9 @@ FlutterWindow::MessageHandler(HWND hwnd, UINT const message,
         flutter_controller_->engine()->ReloadSystemFonts();
       }
       break;
+    case AudioWindowChannel::kDoneMessage:
+      if (audio_window_channel_) audio_window_channel_->DrainResults();
+      return 0;
   }
 
   return Win32Window::MessageHandler(hwnd, message, wparam, lparam);
