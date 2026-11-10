@@ -55,6 +55,7 @@ import '../widgets/recent_searches_panel.dart';
 import '../services/recent_searches.dart';
 import '../widgets/surprise_me_button.dart'; // Absorb Plus
 import '../ui_themes/app_backdrop.dart'; // Absorb Plus
+import 'library_paging.dart'; // Absorb Plus
 
 /// Responsive grid column count based on available width and the cover size
 /// setting; scales up on tablets/iPads.
@@ -523,6 +524,8 @@ class LibraryScreenState extends State<LibraryScreen>
   // answer for the list before it is dropped, like _authorsGen.
   int _seriesGen = 0;
   int _narratorsGen = 0;
+  // Absorb Plus (BUG-008): whether page 0 of the grid was requested wide.
+  bool? _pageWide;
   static const _authorsPageSize = 100;
   LibrarySort _authorSort = LibrarySort.alphabetical;
   bool _authorSortAsc = true;
@@ -1339,15 +1342,19 @@ class LibraryScreenState extends State<LibraryScreen>
         });
       }
     } else {
-      if (_page == 0) _loadedCount = 0;
+      if (_page == 0) {
+        _loadedCount = 0;
+        _pageWide = null; // Absorb Plus (BUG-008)
+      }
       // Each size divides the count loaded so far (20, 40, 80, 160, ...),
       // which is what a page*limit offset needs. A wide window shows more
       // than 20 covers at once, so it starts at 40 (one request, not two).
-      final wide = MediaQuery.sizeOf(context).width >= 900;
-      final limit = _loadedCount < 40
-          ? (wide ? 40 : 20)
-          : (_loadedCount < 80 ? 40 : _pageSize);
-      final pageIndex = _loadedCount ~/ limit;
+      // Absorb Plus (BUG-008): the width decision of page 0 sticks, so a
+      // window widened mid-listing can't ask for page 0 again.
+      final wide = _pageWide ??= MediaQuery.sizeOf(context).width >= 900;
+      final request = libraryGridPageRequest(_loadedCount, wide: wide, maxLimit: _pageSize);
+      final limit = request.limit;
+      final pageIndex = request.page;
       debugPrint('[LibPage] request page=$pageIndex limit=$limit loaded=$_loadedCount');
       final sw = Stopwatch()..start();
       final result = await api.getLibraryItems(
