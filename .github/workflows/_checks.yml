@@ -39,6 +39,12 @@ jobs:
         run: flutter analyze --no-pub --no-fatal-infos
       - name: Flutter tests
         run: flutter test --no-pub
+      # CI runs in UTC, where the daylight-saving regression test (BUG-004)
+      # can't fail; run it again in a zone that has DST changes.
+      - name: Calendar-day tests in a DST time zone
+        run: flutter test --no-pub test/calendar_days_test.dart
+        env:
+          TZ: America/New_York
       - name: Tooling tests (hooks, merge tool)
         run: python3 -m unittest discover -s tool/tests
       - uses: actions/setup-go@v5
