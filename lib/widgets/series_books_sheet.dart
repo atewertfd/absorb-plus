@@ -199,7 +199,7 @@ class _SeriesBooksSheetState extends State<SeriesBooksSheet> {
   void _onLibraryChanged() {
     // Just rebuild to pick up progress/cover changes — don't re-fetch
     if (mounted) {
-      try { setState(() {}); } catch (_) {}
+      try { setState(() {}); } catch (e) { debugPrint('[SeriesSheet] _onLibraryChanged failed: ${e.runtimeType}'); }
     }
   }
 
@@ -532,7 +532,7 @@ class _SeriesBooksSheetState extends State<SeriesBooksSheet> {
     _subSeriesLoaded = true;
     // Cache the results
     if (seriesId != null) {
-      try { context.read<LibraryProvider>().setSubSeriesCache(seriesId, _subSeriesList, _assignedBookIds); } catch (_) {}
+      try { context.read<LibraryProvider>().setSubSeriesCache(seriesId, _subSeriesList, _assignedBookIds); } catch (e) { debugPrint('[SeriesSheet] _loadSubSeriesData failed: ${e.runtimeType}'); }
     }
     if (mounted) setState(() {});
   }
@@ -769,7 +769,7 @@ class _SeriesBooksSheetState extends State<SeriesBooksSheet> {
         if (!_didAutoScroll) _scrollToUpNext();
         try {
           lib.setSeriesBooksCache(seriesId, items, items.length);
-        } catch (_) {}
+        } catch (e) { debugPrint('[SeriesSheet] _fetchFromApi failed: ${e.runtimeType}'); }
         if (_collapseSeries && !_subSeriesLoaded) _loadSubSeriesData();
         return;
       }
@@ -809,7 +809,7 @@ class _SeriesBooksSheetState extends State<SeriesBooksSheet> {
         if (!_didAutoScroll) _scrollToUpNext();
         // Update cache - re-read lib safely, only cache non-empty results
         if (mounted && books.isNotEmpty) {
-          try { context.read<LibraryProvider>().setSeriesBooksCache(seriesId, books, total); } catch (_) {}
+          try { context.read<LibraryProvider>().setSeriesBooksCache(seriesId, books, total); } catch (e) { debugPrint('[SeriesSheet] _fetchFromApi failed: ${e.runtimeType}'); }
         }
       },
     );

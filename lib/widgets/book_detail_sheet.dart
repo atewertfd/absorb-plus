@@ -679,7 +679,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
           _deriveCoverScheme();
           return;
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[BookDetail] _loadItem failed: ${e.runtimeType}'); }
     }
     // Minimal fallback from DownloadInfo metadata
     if (dl.title != null && mounted) {
@@ -3233,7 +3233,7 @@ class _BookDetailSheetContentState extends State<_BookDetailSheetContent> {
     var opened = false;
     try {
       opened = await launchUrl(uri, webOnlyWindowName: '_blank');
-    } catch (_) {}
+    } catch (e) { debugPrint('[BookDetail] _launchAudibleReviews failed: ${e.runtimeType}'); }
     if (!opened && context.mounted) {
       showOverlayToast(
         context,

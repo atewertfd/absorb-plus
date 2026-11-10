@@ -738,7 +738,7 @@ Future<void> _addToCalendar(BuildContext context, String title, String seriesNam
     try {
       await launchUrl(uri);
       return;
-    } catch (_) {}
+    } catch (e) { debugPrint('[RMAB] _addToCalendar failed: ${e.runtimeType}'); }
   }
 
   final dateFormatted = '${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}';

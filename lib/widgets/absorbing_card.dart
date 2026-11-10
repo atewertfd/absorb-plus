@@ -447,7 +447,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
           }
         }
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Card] _fetchChaptersIfNeeded failed: ${e.runtimeType}'); }
   }
 
   /// Re-fetch the full item when the server reports this book changed (socket
@@ -655,7 +655,7 @@ class AbsorbingCardState extends State<AbsorbingCard> with AutomaticKeepAliveCli
             });
           }
         })
-        .catchError((_) {});
+        .catchError((e) { debugPrint('[Card] _rederiveCoverScheme failed: ${e.runtimeType}'); });
   }
 
   /// Resolve the image, render it blurred to an offscreen canvas, cache the result.

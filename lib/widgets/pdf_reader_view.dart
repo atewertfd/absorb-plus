@@ -275,7 +275,7 @@ class _PdfReaderViewState extends State<PdfReaderView> with WidgetsBindingObserv
                   try {
                     final o = await document.loadOutline();
                     if (mounted) setState(() => _outline = o);
-                  } catch (_) {}
+                  } catch (e) { debugPrint('[Pdf] build failed: ${e.runtimeType}'); }
                   if (mounted) setState(() {});
                 },
                 onPageChanged: _onPageChanged,

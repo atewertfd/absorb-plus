@@ -117,7 +117,7 @@ class _BookmarkDetailSheetState extends State<BookmarkDetailSheet> {
       try {
         final item = await widget.api!.getLibraryItem(widget.itemId);
         ef = resolveEbookFile(item);
-      } catch (_) {}
+      } catch (e) { debugPrint('[Bookmark] _resolveEpubForCrossRef failed: ${e.runtimeType}'); }
     }
     if (ef == null || ebookExtFromFile(ef) != '.epub') return;
     if (mounted) setState(() => _epubForCrossRef = ef);
@@ -254,7 +254,7 @@ class _BookmarkDetailSheetState extends State<BookmarkDetailSheet> {
         if (author.isEmpty) author = title;
         if (epTitle != null && epTitle.isNotEmpty) title = epTitle;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Bookmark] _startDownload failed: ${e.runtimeType}'); }
     await DownloadService().downloadItem(
       api: api,
       itemId: widget._key,
@@ -352,7 +352,7 @@ class _BookmarkDetailSheetState extends State<BookmarkDetailSheet> {
       try {
         final f = File(result.audioPath);
         if (f.existsSync()) await f.delete();
-      } catch (_) {}
+      } catch (e) { debugPrint('[Bookmark] _transcribe failed: ${e.runtimeType}'); }
       text = result.text.trim();
       // Cross-reference the ebook: a confident match swaps Whisper's
       // approximation for the book's actual words. Still under the progress
@@ -522,7 +522,7 @@ class _BookmarkDetailSheetState extends State<BookmarkDetailSheet> {
           if (duration <= 0) {
             duration = (session['duration'] as num?)?.toDouble() ?? 0;
           }
-        } catch (_) {}
+        } catch (e) { debugPrint('[Bookmark] _quoteMetadata failed: ${e.runtimeType}'); }
       }
     }
 
@@ -551,7 +551,7 @@ class _BookmarkDetailSheetState extends State<BookmarkDetailSheet> {
         if (duration <= 0) {
           duration = ((ep?['duration'] ?? media['duration']) as num?)?.toDouble() ?? 0;
         }
-      } catch (_) {}
+      } catch (e) { debugPrint('[Bookmark] _quoteMetadata failed: ${e.runtimeType}'); }
     }
 
     String? chapterTitle;

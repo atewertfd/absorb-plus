@@ -514,7 +514,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
           }
         }
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[ExpandedCard] _fetchChaptersIfNeeded failed: ${e.runtimeType}'); }
   }
 
   void _onCoverLoaded(ImageProvider provider) {
@@ -551,7 +551,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
             });
           }
         })
-        .catchError((_) {});
+        .catchError((e) { debugPrint('[ExpandedCard] _rederiveCoverScheme failed: ${e.runtimeType}'); });
   }
 
   /// Generate our own blurred cover from the current cover URL.
@@ -613,7 +613,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
       // Also derive cover scheme if needed
       if (_rawCoverScheme == null) _onCoverLoaded(provider);
-    } catch (_) {}
+    } catch (e) { debugPrint('[ExpandedCard] _generateBlur failed: ${e.runtimeType}'); }
   }
 
   @override

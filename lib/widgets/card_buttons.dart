@@ -919,7 +919,7 @@ class _SimpleBookmarkSheetState extends State<SimpleBookmarkSheet> {
         await BookmarkService()
             .syncBookmarks(widget._key, api)
             .timeout(const Duration(seconds: 12));
-      } catch (_) {}
+      } catch (e) { debugPrint('[CardButtons] _loadSort failed: ${e.runtimeType}'); }
       await _load();
     }
   }

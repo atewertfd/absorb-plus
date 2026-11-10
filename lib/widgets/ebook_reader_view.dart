@@ -611,7 +611,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
         _audioTotal = dur;
         _audioIsNarration = media['narration'] != null;
       });
-    } catch (_) {}
+    } catch (e) { debugPrint('[Reader] _loadAudioMeta failed: ${e.runtimeType}'); }
   }
 
   Future<void> _startThisBook() async {
@@ -3521,7 +3521,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
           if (d['matched'] == true && d['liveCfi'] is String) {
             liveCfi = d['liveCfi'] as String;
           }
-        } catch (_) {}
+        } catch (e) { debugPrint('[Reader] _jumpToSearchResult failed: ${e.runtimeType}'); }
       }
       _highlightSearchHit(liveCfi);
     });
@@ -3580,7 +3580,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
           try {
             final f = File(longer.audioPath);
             if (f.existsSync()) await f.delete();
-          } catch (_) {}
+          } catch (e) { debugPrint('[Reader] _runFindInEbook failed: ${e.runtimeType}'); }
           decision = await _decideFindTarget(longer.text.trim(), chapterHint,
               nearSeconds: pos);
         } on TranscriptionException catch (e) {
@@ -3910,7 +3910,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
         if (flash) _highlightSearchHit(d['cfi'] as String);
         return true;
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Reader] _jumpToFindHit failed: ${e.runtimeType}'); }
     return false;
   }
 
@@ -4054,7 +4054,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
       try {
         final f = File(r.audioPath);
         if (f.existsSync()) await f.delete();
-      } catch (_) {}
+      } catch (e) { debugPrint('[Reader] _catchUpPageToAudio failed: ${e.runtimeType}'); }
     } on TranscriptionException catch (e) {
       error = switch (e.kind) {
         TranscriptionError.busy => l.transcriptionBusyMsg,
@@ -4340,7 +4340,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     try {
       final d = jsonDecode(raw) as Map<String, dynamic>;
       if (d['si'] is num && d['offset'] is num && d['total'] is num) return d;
-    } catch (_) {}
+    } catch (e) { debugPrint('[Reader] _selectionSectionInfo failed: ${e.runtimeType}'); }
     return null;
   }
 
@@ -5134,7 +5134,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
         try {
           final f = File(r.audioPath);
           if (f.existsSync()) await f.delete();
-        } catch (_) {}
+        } catch (e) { debugPrint('[Reader] _transcribeForJump failed: ${e.runtimeType}'); }
         final t = r.text.trim();
         return t.isEmpty ? null : t;
       } on TranscriptionException catch (e) {
@@ -5370,14 +5370,14 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
         _epubController?.webViewController
             ?.evaluateJavascript(source: 'window.__absorbMO && __absorbMO.clear()')
             .catchError((_) => null);
-      } catch (_) {}
+      } catch (e) { debugPrint('[Reader] _stopReadAlong failed: ${e.runtimeType}'); }
     }
     // Runs from dispose() too, when the WebView may already be on its way out.
     try {
       _epubController?.webViewController
           ?.evaluateJavascript(source: 'window.__absorbRA && __absorbRA.stop()')
           .catchError((_) => null);
-    } catch (_) {}
+    } catch (e) { debugPrint('[Reader] _stopReadAlong failed: ${e.runtimeType}'); }
     _readAlongLineStart = null;
     _readAlongPageWords = 0;
     _readAlongLineWords = 0;
@@ -5613,7 +5613,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     if (raw is String && raw.isNotEmpty) {
       try {
         d = jsonDecode(raw) as Map<String, dynamic>;
-      } catch (_) {}
+      } catch (_) { /* runs every 100 ms; the next tick asks again */ }
     }
     // The page turned into a different section and took the anchor with it:
     // locate the sentence again on the next tick.
@@ -5799,7 +5799,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     if (raw is String && raw.isNotEmpty) {
       try {
         d = jsonDecode(raw) as Map<String, dynamic>;
-      } catch (_) {}
+      } catch (_) { /* runs from the 100 ms read-along tick; the next tick repaints */ }
     }
     final head = needle.length > 50 ? '${needle.substring(0, 50)}...' : needle;
     if (d != null && d['found'] == true) {
@@ -5918,7 +5918,7 @@ class EbookReaderViewState extends State<EbookReaderView> with WidgetsBindingObs
     String href = '';
     try {
       href = (jsonDecode(hraw) as Map<String, dynamic>)['href'] as String? ?? '';
-    } catch (_) {}
+    } catch (_) { /* runs from the 100 ms read-along tick; the next tick repaints */ }
     if (href.isEmpty) return;
     // Land on the sentence itself, the way Find in ebook does, and let the
     // next tick paint it. Only if the sentence can't be pinned in the live

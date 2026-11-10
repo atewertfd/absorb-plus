@@ -317,7 +317,7 @@ class _ComicReaderViewState extends State<ComicReaderView> with WidgetsBindingOb
       for (final old in others.skip(2)) {
         old.deleteSync(recursive: true);
       }
-    } catch (_) {}
+    } catch (e) { debugPrint('[Comic] _unpack failed: ${e.runtimeType}'); }
     return _FilePages(paths);
   }
 
@@ -532,7 +532,7 @@ class _ComicReaderViewState extends State<ComicReaderView> with WidgetsBindingOb
     if (pages == null || !mounted) return;
     for (final i in [index + 1, index + 2, index - 1]) {
       if (i >= 0 && i < pages.count) {
-        precacheImage(pages.image(i), context).catchError((_) {});
+        precacheImage(pages.image(i), context).catchError((e) { debugPrint('[Comic] _precacheAround failed: ${e.runtimeType}'); });
       }
     }
   }
