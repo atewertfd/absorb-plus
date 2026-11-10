@@ -8482,6 +8482,12 @@ abstract class AppLocalizations {
   /// **'Couldn\'t delete the collection'**
   String get deleteCollectionFailed;
 
+  /// No description provided for @deletePlaylistFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t delete the playlist'**
+  String get deletePlaylistFailed;
+
   /// No description provided for @deletePermissionRequired.
   ///
   /// In en, this message translates to:

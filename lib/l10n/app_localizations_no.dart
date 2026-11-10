@@ -4796,6 +4796,9 @@ class AppLocalizationsNo extends AppLocalizations {
   String get deleteCollectionFailed => 'Kunne ikke slette samlingen';
 
   @override
+  String get deletePlaylistFailed => 'Couldn\'t delete the playlist';
+
+  @override
   String get deletePermissionRequired =>
       'Slettetillatelse kreves. Be root-administratoren om å gi deg slettetillatelsen.';
 

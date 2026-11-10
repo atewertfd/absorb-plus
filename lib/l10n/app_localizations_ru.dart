@@ -4844,6 +4844,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get deleteCollectionFailed => 'Не удалось удалить коллекцию';
 
   @override
+  String get deletePlaylistFailed => 'Couldn\'t delete the playlist';
+
+  @override
   String get deletePermissionRequired =>
       'Нужно разрешение на удаление. Попросите главного администратора предоставить его.';
 

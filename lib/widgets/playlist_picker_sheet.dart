@@ -52,16 +52,17 @@ class _PlaylistPickerSheetState extends State<PlaylistPickerSheet> {
     final playlist = await lib.createPlaylist(name);
     if (playlist != null) {
       final playlistId = playlist['id'] as String;
-      await lib.addToPlaylist(
+      final ok = await lib.addToPlaylist( // Absorb Plus: a failed add says so
         playlistId, widget.libraryItemId, episodeId: widget.episodeId,
       );
       if (mounted) {
         final l = AppLocalizations.of(context)!;
-        showOverlayToast(context, l.addedToName(name), icon: Icons.playlist_add_check_rounded);
+        showOverlayToast(context, ok ? l.addedToName(name) : l.failedToAdd, icon: ok ? Icons.playlist_add_check_rounded : Icons.error_outline_rounded);
         Navigator.pop(context);
       }
-    } else {
+    } else if (mounted) {
       setState(() => _adding = false);
+      showOverlayToast(context, AppLocalizations.of(context)!.failedToAdd, icon: Icons.error_outline_rounded);
     }
   }
 
