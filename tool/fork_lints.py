@@ -6,7 +6,9 @@ fodder); the future/subscription/dynamic-call lints in LINTS aren't on there
 at all. This script turns them on for one analyzer run and fails only for hits
 in files the fork added, i.e. paths that don't exist in upstream's tree (the
 LIB_ONLY_LINTS only under lib/). It also fails on truly empty catch blocks in
-fork files under lib/ (EMPTY_CATCH), which the analyzer lets through.
+fork files under lib/ (EMPTY_CATCH), which the analyzer lets through, and
+counts (without failing) the ones in upstream files. Catches inside string
+literals, such as injected JavaScript, don't count.
 
 How it works, in one extra analyzer run:
   1. Mirror lib/ and test/ into build/fork_lints/ (plain file copies, no
@@ -241,20 +243,105 @@ def classify(diags: list[dict], upstream: set[str], lints=LINTS):
     return fork, up
 
 
-def empty_catches(root: Path, upstream: set[str]) -> list[dict]:
-    """Truly empty catch blocks (no code, no comment) in fork files under lib/."""
+def code_mask(text: str) -> bytearray:
+    """1 for each character of Dart code, 0 inside string literals and
+    comments, so JavaScript held in a Dart string doesn't count as Dart.
+    Handles '', "", triple quotes, raw strings, ${} interpolation and nested
+    block comments."""
+    n = len(text)
+    mask = bytearray(n)
+    stack = [["code", 0]]  # ["code", brace depth] or ["str", quote, raw]
+    i = 0
+    while i < n:
+        top = stack[-1]
+        c = text[i]
+        if top[0] == "code":
+            if text.startswith("//", i):
+                j = text.find("\n", i)
+                i = n if j < 0 else j
+                continue
+            if text.startswith("/*", i):
+                depth = 0
+                while i < n:
+                    if text.startswith("/*", i):
+                        depth += 1
+                        i += 2
+                    elif text.startswith("*/", i):
+                        depth -= 1
+                        i += 2
+                        if depth == 0:
+                            break
+                    else:
+                        i += 1
+                continue
+            raw = False
+            if (c in "rR" and i + 1 < n and text[i + 1] in "'\""
+                    and (i == 0 or not (text[i - 1].isalnum() or text[i - 1] == "_"))):
+                raw = True
+                i += 1
+                c = text[i]
+            if c in "'\"":
+                quote = text[i:i + 3] if text[i:i + 3] in ("'''", '"""') else c
+                stack.append(["str", quote, raw])
+                i += len(quote)
+                continue
+            if c == "{":
+                top[1] += 1
+            elif c == "}":
+                if top[1] == 0 and len(stack) > 1:
+                    stack.pop()  # end of ${...}
+                    i += 1
+                    continue
+                top[1] -= 1
+            mask[i] = 1
+            i += 1
+            continue
+        quote, raw = top[1], top[2]
+        if not raw and c == "\\":
+            i += 2
+        elif text.startswith(quote, i):
+            stack.pop()
+            i += len(quote)
+        elif not raw and text.startswith("${", i):
+            stack.append(["code", 0])
+            i += 2
+        else:
+            i += 1
+    return mask
+
+
+def _empty_catch_hits(root: Path, rel: str) -> list[dict]:
+    text = (root / rel).read_text(encoding="utf-8", errors="replace")
+    mask = code_mask(text)
     hits = []
+    for m in EMPTY_CATCH.finditer(text):
+        if not (mask[m.start()] and mask[m.end() - 1]):
+            continue
+        line = text.count("\n", 0, m.start()) + 1
+        col = m.start() - (text.rfind("\n", 0, m.start()) + 1) + 1
+        hits.append({"severity": "INFO", "code": "empty_catch", "path": rel, "line": line,
+                     "col": col, "message": EMPTY_CATCH_MESSAGE})
+    return hits
+
+
+def _lib_files(root: Path):
     for p in sorted((root / "lib").rglob("*.dart")):
         rel = p.relative_to(root).as_posix()
-        if rel in upstream or rel.startswith("lib/l10n/"):
-            continue
-        text = p.read_text(encoding="utf-8", errors="replace")
-        for m in EMPTY_CATCH.finditer(text):
-            line = text.count("\n", 0, m.start()) + 1
-            col = m.start() - (text.rfind("\n", 0, m.start()) + 1) + 1
-            hits.append({"severity": "INFO", "code": "empty_catch", "path": rel, "line": line,
-                         "col": col, "message": EMPTY_CATCH_MESSAGE})
-    return hits
+        if not rel.startswith("lib/l10n/"):
+            yield rel
+
+
+def empty_catches(root: Path, upstream: set[str]) -> list[dict]:
+    """Truly empty catch blocks (no code, no comment) in fork files under lib/."""
+    return [h for rel in _lib_files(root) if rel not in upstream
+            for h in _empty_catch_hits(root, rel)]
+
+
+def upstream_empty_catches(root: Path, upstream: set[str]) -> list[dict]:
+    """The same hits in upstream files: reported, not enforced (IMP-012 cleared
+    them on 2026-11-10; this shows any that upstream merges bring back)."""
+    return [h for rel in _lib_files(root) if rel in upstream
+            for h in _empty_catch_hits(root, rel)]
 
 
 def find_dart(explicit: str | None = None) -> str:
@@ -306,9 +393,12 @@ def main(argv=None) -> int:
         return 1
     fork, up = classify(diags, upstream)
     fork += empty_catches(ROOT, upstream)
+    up_catches = upstream_empty_catches(ROOT, upstream)
+    up += up_catches
     shown = [(d, "") for d in fork] + ([(d, " (upstream)") for d in up] if args.all else [])
     for d, tag in shown:
         print(f"  {d['path']}:{d['line']}:{d['col']} {d['code']}{tag}: {d['message']}")
+    print(f"  empty catches in upstream files: {len(up_catches)} (report only; --all lists them)")
     took = f"{time.monotonic() - start:.0f}s"
     if fork:
         print(f"FAIL: {len(fork)} hit(s) in fork files ({len(up)} in upstream files, "
