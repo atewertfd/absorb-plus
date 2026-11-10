@@ -2105,14 +2105,17 @@ class AudioPlayerService extends ChangeNotifier {
           ? '$nextItemId-${next['episodeId']}'
           : nextItemId;
       double localS = 0;
+      int localTs = 0;
       final saved = await _progressSync.getLocal(progressKey);
       if (saved != null && !(saved['isFinished'] as bool? ?? false)) {
         localS = (saved['currentTime'] as num?)?.toDouble() ?? 0;
+        localTs = (saved['timestamp'] as num?)?.toInt() ?? 0;
       }
       startS = localS;
       // Local storage can be empty or behind when the progress lives on the
-      // server (another device, fresh install). Server-ahead wins, same as
-      // the playItem position pick.
+      // server (another device, fresh install). Absorb Plus: the same rule as
+      // playItem and cast starts (SyncLogic.resumePosition), so a pending
+      // local sync or a newer local save isn't overridden by an older server row.
       double serverS = 0;
       if (_api != null && !_isOfflineMode) {
         try {
@@ -2122,7 +2125,13 @@ class AudioPlayerService extends ChangeNotifier {
           final serverTime = (server?['currentTime'] as num?)?.toDouble() ?? 0;
           final serverFinished = server?['isFinished'] as bool? ?? false;
           if (!serverFinished) serverS = serverTime;
-          if (serverS > startS) startS = serverS;
+          startS = SyncLogic.resumePosition(
+            local: localS,
+            localTimestamp: localTs,
+            hasPendingSync: await _progressSync.hasPendingSync(progressKey),
+            server: serverS,
+            serverLastUpdate: (server?['lastUpdate'] as num?)?.toInt() ?? 0,
+          );
         } catch (e) { debugPrint('[Player] Server-ahead resume check failed: ${e.runtimeType}'); } // Absorb Plus
       }
       debugPrint(
